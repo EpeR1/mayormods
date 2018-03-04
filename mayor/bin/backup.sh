@@ -58,7 +58,8 @@ while [ $# -ge 1 ]; do
         --skip-lock | -l )		SKIPLOCK=1
 					;;
 
-        --now | -n )			DATE=$(date "+%Y%m%d_%H%M%S")
+        --now | -n )			shift
+        				DATE=$(date "+%Y%m%d_%H%M%S")
 					BACKUPFILE="$DATE"
                                         #echo "Backup fájl: $BACKUPFILE.tgz"
                                         ;;
@@ -310,3 +311,5 @@ fi
 #
 freeup_lock
 if [ $VERBOSE -gt 0 ]; then echo -e "* Backup-script vége.\n"; fi
+
+###

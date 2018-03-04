@@ -101,7 +101,7 @@ if [ ! -e "${RREVISIONFILE}"  ]; then
     echo -e "      A helyreállításhoz először telepíteni kell egy azonos, vagy újabb verziójú rendszert.\n"
     exit 1
 fi
-INST_REV=`cat $RREVISIONFILE`
+INST_REV=$(cat $RREVISIONFILE)
 echo "A telepített rendszer revision száma: ${INST_REV}"
 
 if [ ! -e "${RBACKUPFILE}" ]; then
@@ -143,7 +143,7 @@ if [ ! -e "${RREVISIONFILE}"  ]; then
     cleartmp
     exit 5
 fi
-BAK_REV=`cat $RREVISIONFILE`
+BAK_REV=$(cat $RREVISIONFILE)
 echo "A mentett rendszer revision száma: ${BAK_REV}"
 
 if [ ${BAK_REV} -gt ${INST_REV} ]; then
@@ -164,9 +164,9 @@ else
 fi
 
 # Az adatbázisok betöltése
-NAPLOUSER=`egrep 'userWrite.*=' $BASEDIR/config/module-naplo/config.php | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
-NAPLOUSERREAD=`egrep 'userRead.*=' $BASEDIR/config/module-naplo/config.php | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
-DBS=`$MYSQL -h$MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PW -e"SHOW DATABASES"`
+NAPLOUSER=$(egrep 'userWrite.*=' $BASEDIR/config/module-naplo/config.php | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
+NAPLOUSERREAD=$(egrep 'userRead.*=' $BASEDIR/config/module-naplo/config.php | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
+DBS=$($MYSQL -h$MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PW -e"SHOW DATABASES")
 if [ "$RESTORE_PARENT" == "1" ]; then
     FILES="mayor_naplo.sql mayor_parent.sql intezmeny_*.sql naplo_*.sql"
 else
@@ -198,19 +198,19 @@ done
 bNCDIR="${RTMPDIR}/restore/${DT}/config/module-naplo"
 iNCDIR="${BASEDIR}/config/module-naplo"
 cd ${bNCDIR}
-bDB=`grep db ${bNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | grep naplo_base | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
-bUSER=`egrep 'userWrite.*=' ${bNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
-bUSERREAD=`egrep 'userRead.*=' ${bNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
-bPW=`egrep 'pwWrite.*=' ${bNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
-bPWREAD=`egrep 'pwRead.*=' ${bNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
+bDB=$(grep db ${bNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | grep naplo_base | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
+bUSER=$(egrep 'userWrite.*=' ${bNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
+bUSERREAD=$(egrep 'userRead.*=' ${bNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
+bPW=$(egrep 'pwWrite.*=' ${bNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
+bPWREAD=$(egrep 'pwRead.*=' ${bNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
 #echo "mentett: $bDB : $bUSER : $bUSERREAD : $bPW : $bPWREAD"
 # Az új telepítés user és jelszó adatai
 if [ -e "${iNCDIR}/config.php" ] && [ "${KEEP_OLD_PASSWORDS}" != "1" ]; then
-    iDB=`grep db ${iNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | grep naplo_base | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
-    iUSER=`egrep 'userWrite.*=' ${iNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
-    iUSERREAD=`egrep 'userRead.*=' ${iNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
-    iPW=`egrep 'pwWrite.*=' ${iNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
-    iPWREAD=`egrep 'pwRead.*=' ${iNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
+    iDB=$(grep db ${iNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | grep naplo_base | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
+    iUSER=$(egrep 'userWrite.*=' ${iNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
+    iUSERREAD=$(egrep 'userRead.*=' ${iNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
+    iPW=$(egrep 'pwWrite.*=' ${iNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
+    iPWREAD=$(egrep 'pwRead.*=' ${iNCDIR}/config.php | egrep -v '^[[:space:]]*(//|/\*.*\*/$)' | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
 else
     iDB=$bDB
     iUSER=$bUSER
