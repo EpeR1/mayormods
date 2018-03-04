@@ -93,8 +93,9 @@ fi
 
 ### A lockfile beállítása
 
+LOCK_MARAD=0
 if [ "$SKIPLOCK" != "1" ]; then
-    if [ ! -z $LOCKFILE ]; then
+    if [ ! -z $LOCKFILE ] && [ ! -f $LOCKFILE ]; then
 	if [ "$VERBOSE" -gt 0 ]; then
             echo -e "* A web-es elérés letiltása:"
             echo -n "- Lock-file létrehozása... "
@@ -105,18 +106,19 @@ if [ "$SKIPLOCK" != "1" ]; then
 #        $MYSQL $MYSQL_PARAMETERS -e"DELETE FROM mayor_login.session"
 #        echo "kész."
     else
-	if [ $VERBOSE -gt 0 ]; then   echo -e "* A web-es elérés már le van tiltva...";	fi
+	if [ $VERBOSE -gt 1 ]; then   echo -e "* A web-es elérés már le van tiltva...";	fi
+	LOCK_MARAD=1
     fi
 else
-	if [ $VERBOSE -gt 0 ]; then  echo -e "* A lock-olást a kérésedre kihagytam...";	fi
+	if [ $VERBOSE -gt 1 ]; then  echo -e "* A lock-olást a kérésedre kihagytam...";	fi
 fi
 
 function freeup_lock {
 if [ -e $LOCKFILE ]; then
-    if [ ! -z $LOCKFILE ]; then
-	if [ $VERBOSE -gt 0 ]; then echo -e "-"; echo -n "* A web-es hozzáférés engedélyezése:..."; fi
+    if [ ! -z $LOCKFILE ] && [ $LOCK_MARAD != 1 ]; then
+	if [ $VERBOSE -gt 1 ]; then echo -e "-"; echo -n "* A web-es hozzáférés engedélyezése:..."; fi
     rm $LOCKFILE
-	if [ $VERBOSE -gt 0 ]; then echo -e "kész."; echo -e "-"; fi
+	if [ $VERBOSE -gt 1 ]; then echo -e "kész."; echo -e "-"; fi
     fi
 fi
 }
@@ -128,7 +130,7 @@ fi
 
 if [ ! -e  $BACKUPDIR ]; then
     mkdir $BACKUPDIR > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
+    if [ $? -ne 1 ]; then
 	echo "*** Nem sikerült a $BACKUPDIR könyvtárat létrehozni!"
 	echo "**** MaYoR Backup failure! ****"
 	freeup_lock
@@ -167,7 +169,7 @@ if [ -f $MYSQL ] && [ -f $MYSQLDUMP ]; then
 	TEST=$(echo "SHOW VARIABLES LIKE '%character_set_client%'" | $MYSQL "$MYSQL_CONFIG" | tail -n+2 | cut -f 2) 	
 ### 	Csak character_set_client=utf8 engedélyezett
 	if [ "$TEST" == "utf8" ]; then
-	    if [ $VERBOSE -gt 1 ]; then echo -e "-   MySQL-connect OK (my.cnf)" ; fi
+	    if [ $VERBOSE -gt 2 ]; then echo -e "-   MySQL-connect OK (my.cnf)" ; fi
 	else
 	    MYSQL_CONFIG="-h$MYSQL_HOST -u$MYSQL_USER -p$MYSQL_PW --default-character-set=utf8"
 	fi
@@ -178,7 +180,7 @@ if [ -f $MYSQL ] && [ -f $MYSQLDUMP ]; then
 ### Ellenőrizzük
     TEST=$(echo "SHOW VARIABLES LIKE '%character_set_client%'" | $MYSQL $MYSQL_CONFIG | tail -n+2 | cut -f 2)
     if [ "$TEST" == "utf8" ]; then
-	if [ $VERBOSE -gt 1 ]; then  echo -e "-   MySQL-connect OK (utf8+user/passw)"; fi
+	if [ $VERBOSE -gt 2 ]; then  echo -e "-   MySQL-connect OK (utf8+user/passw)"; fi
     else
 	echo -e "*** MySQL-connect ERROR (nem utf8 vagy hibás user/passw)"
 	exit 2
@@ -203,7 +205,7 @@ fi
 # Adatbázisok mentése
 ##
 
-if [ $VERBOSE -gt 0 ]; then echo -e "* Adatbázisok mentése:"; fi
+if [ $VERBOSE -gt 2 ]; then echo -e "* Adatbázisok mentése:"; fi
 
 for DATABASE in $DATABASES; do
     if [ ! -z $MYSQLDUMP ]; then
@@ -214,28 +216,28 @@ for DATABASE in $DATABASES; do
     else
 	 mysqldump $MYSQL_CONFIG -R --set-charset --result-file="$BACKUPDIR/$BACKUPFILE/$DATABASE.sql" $DATABASE
     fi
-    if [ $VERBOSE -gt 1 ]; then echo -e "-   $DATABASE"; fi
+    if [ $VERBOSE -gt 3 ]; then echo -e "-   $DATABASE"; fi
 done
 
 
 ##
 # A honlap mentése
 ##
-if [ $VERBOSE -gt 0 ]; then echo -e "* Fájlok mentése:"; fi
+if [ $VERBOSE -gt 2 ]; then echo -e "* Fájlok mentése:"; fi
 mkdir $BACKUPDIR/$BACKUPFILE/log
 cp -a $BASEDIR/log/revision $BACKUPDIR/$BACKUPFILE/log/revision
-if [ $VERBOSE -gt 1 ]; then echo -e "-   revision"; fi
+if [ $VERBOSE -gt 3 ]; then echo -e "-   revision"; fi
 cp -a $BASEDIR/www $BACKUPDIR/$BACKUPFILE/www
-if [ $VERBOSE -gt 1 ]; then echo -e "-   www/*"; fi
+if [ $VERBOSE -gt 3 ]; then echo -e "-   www/*"; fi
 cp -a $BASEDIR/config $BACKUPDIR/$BACKUPFILE/config
-if [ $VERBOSE -gt 1 ]; then echo -e "-   config/*"; fi
+if [ $VERBOSE -gt 3 ]; then echo -e "-   config/*"; fi
 
-if [ $VERBOSE -gt 0 ]; then echo -e "* Templétek mentése:"; fi
+if [ $VERBOSE -gt 2 ]; then echo -e "* Templétek mentése:"; fi
 for RN in $(echo $DB_INTEZMENYEK); do	## a nyomtatási templétek is legyenek benne a mentésben
 if [ -d "$BASEDIR/print/module-naplo/templates/$RN" ]; then
    mkdir -p $BACKUPDIR/$BACKUPFILE/print/module-naplo/templates/
    cp -a $BASEDIR/print/module-naplo/templates/$RN $BACKUPDIR/$BACKUPFILE/print/module-naplo/templates/$RN
-   if [ $VERBOSE -gt 1 ]; then  echo -e "-   $RN/*"; fi
+   if [ $VERBOSE -gt 3 ]; then  echo -e "-   $RN/*"; fi
 fi
 done
 
@@ -244,7 +246,7 @@ if [ "$SAVELDAP" == 1 ]; then
     ##
     # Az LDAP adatbázis
     ##
-    if [ $VERBOSE -gt 0 ]; then  echo -e "* LDAP mentése"; fi
+    if [ $VERBOSE -gt 1 ]; then  echo -e "* LDAP mentése"; fi
 
     /etc/init.d/slapd stop
     sleep 1
@@ -268,7 +270,7 @@ fi
 # Becsomagolás
 ##
 
-if [ $VERBOSE -gt 0 ]; then echo -e "* Becsaomagolás"; fi
+if [ $VERBOSE -gt 2 ]; then echo -e "* Becsaomagolás"; fi
 cd $BACKUPDIR
 #### Ez a korábbi szerintem hibás:
 #### tar cfz ${BACKUPFILE}.tgz ${DATE}
@@ -286,7 +288,7 @@ if [ $VERBOSE -gt 0 ]; then echo -e "* Takarítás"; fi
 ##
 
 if [ "$RSYNC" == 1 ]; then
-    if [ $VERBOSE -gt 0 ]; then echo -e "* RSYNC küldés"; fi
+    if [ $VERBOSE -gt 2 ]; then echo -e "* RSYNC küldés"; fi
     RSYNCBIN=$(which rsync)
     if [ "$RSYNCBIN" != "" ]; then
        echo $RSYNCBIN -auvE $BACKUPDIR/   $RUSER@$RHOST:$RPATH/
@@ -310,6 +312,6 @@ fi
 ## Végül a lock-olás feloldása
 #
 freeup_lock
-if [ $VERBOSE -gt 0 ]; then echo -e "* Backup-script vége.\n"; fi
+if [ $VERBOSE -gt 1 ]; then echo -e "* Backup-script vége.\n"; fi
 
 ###
