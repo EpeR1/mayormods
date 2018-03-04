@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# A helyes környezet beállítása (svn alapú frissítés esetén az ékezetes file-nevekhez)
+export LANG=hu_HU.UTF-8
+
+# Napló napi mentése
+/usr/local/sbin/mayor backup
+
+# Heti frissítés
+if [ `date +'%w'` == 0 ]; then
+    /usr/local/sbin/mayor update
+fi
+
