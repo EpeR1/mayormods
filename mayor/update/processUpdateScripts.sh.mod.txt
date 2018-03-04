@@ -1,6 +1,6 @@
---- processUpdateScripts.sh	2016-03-04 13:44:39.000000000 +0100
-+++ processUpdateScripts.sh.txt	2018-03-03 19:41:10.453438603 +0100
-@@ -6,22 +6,31 @@
+--- processUpdateScripts.sh.orig	2016-03-04 13:44:39.000000000 +0100
++++ processUpdateScripts.sh	2018-03-04 14:10:13.835309914 +0100
+@@ -6,22 +6,26 @@
  echo -e "[mysqld]
  character-set-server = utf8
  collation-server = utf8_hungarian_ci
@@ -11,14 +11,9 @@
  user=$MYSQL_USER
  password=$MYSQL_PW
  " > $BASEDIR/config/my.cnf
-+
-+PRECHARSET="SET character_set_client = utf8; 
-+SET character_set_database = utf8; 
-+SET character_set_server = utf8;
-+SET character_set_results = utf8;  
-+SET collation_connection = utf8_hungarian_ci; 
-+SET collation_database = utf8_general_ci; 
-+SET collation_server = utf8_general_ci; " ## fontos, hogy a ";" ott legyen a végén!!
++ 
++PRECHARSET="SET NAMES 'utf8' COLLATE 'utf8_hungarian_ci'; " ## fontos, hogy a ";" ott legyen a végén!!
++#PRECHARSET="$PRECHARSET SET collation_connection = utf8_hungarian_ci; " ## ha a mysql server esetleg régebbi lenne.
 +
  MYSQL_CONFIG="--defaults-extra-file=$BASEDIR/config/my.cnf"
  MYSQL_PARAMETERS=""
@@ -35,7 +30,7 @@
  if [ $? == "0" ]; then 
      echo "SQL-connect test #1 OK"
      MYSQL_PARAMETERS=$MYSQL_CONFIG
-@@ -31,8 +40,12 @@
+@@ -31,8 +35,12 @@
  echo "Karakterkódolás ellenőrzése"
  echo "SHOW VARIABLES LIKE 'character%';" | $MYSQL $MYSQL_PARAMETERS
  # patch by Acsai Gabor <acsi@c3.hu> - FreeBSD
@@ -50,7 +45,7 @@
      echo "SQL-UTF8 test OK"
  else
      echo -e "\n\nERROR: Hibás - nem utf8 - MySQL kliens karakterkódolás!\n"
-@@ -42,7 +55,7 @@
+@@ -42,7 +50,7 @@
  # --
  
  run_script() {
@@ -59,7 +54,7 @@
      FILEREV=${FILEELEJE: -6}
      LOGSQL=""
      if [ "$FILEREV" != "" ]; then
-@@ -51,14 +64,14 @@
+@@ -51,14 +59,14 @@
  	fi
      fi
      if [ ! "${FILEREV}" \< "${REVSTR}" ]; then
@@ -76,7 +71,7 @@
  	    case "$FILEDB" in
  	        naplo)
  		    DBS=$DB_NAPLO
-@@ -78,7 +91,7 @@
+@@ -78,7 +86,7 @@
  
  		if [ "$FILEREV" != "" ]; then
  		    if [ "$FILEREV" -gt 3399 ]; then
@@ -85,7 +80,7 @@
  			if [ "$TEST" == "0" ]; then 
  			    echo "      Hiányzik a mayorUpdateLog tábla... tovább..."
  			    continue
-@@ -88,21 +101,21 @@
+@@ -88,21 +96,21 @@
  
  		case "$FILEDB" in
  		    naplo)
@@ -115,7 +110,7 @@
  		    ;;
  		esac
  		if [ $? != 0 ]; then 
-@@ -116,8 +129,8 @@
+@@ -116,8 +124,8 @@
  
  echo "   Az új változat verziószáma: $UJ_REV"
  
@@ -126,7 +121,7 @@
  
  # mysql host beállítása
  if [ "$MYSQL_HOST" == "" ]; then
-@@ -129,9 +142,9 @@
+@@ -129,9 +137,9 @@
  echo -e "\n * Adatbázisok lekérdezése..."
  if [ -f $MYSQL ]
  then
@@ -139,7 +134,7 @@
  #    DB_INTEZMENY=`$MYSQL $MYSQL_PARAMETERS -e"SHOW DATABASES LIKE 'intezmeny\_%'" | grep -e '^intezmeny\_[^\_]*$'`
      if [ $? != 0 ]; then exit 12; fi
      DB_AUTH=""
-@@ -153,7 +166,7 @@
+@@ -153,7 +161,7 @@
  	echo "kész."
  
  	echo -n "    - Aktív munkamenetek törlése... "
@@ -148,7 +143,7 @@
  	echo "kész."
      fi
  else
-@@ -161,7 +174,7 @@
+@@ -161,7 +169,7 @@
  fi
  
  echo -e "\n * Az előzetes frissítő állományok feldolgozása (pre*, rev*):\n"
@@ -157,7 +152,7 @@
      run_script
  done
  
-@@ -175,8 +188,8 @@
+@@ -175,8 +183,8 @@
  	else
  	    # Ha rpm csomag futtatja, akkor már ki van csomagolva minden és nincs md5sum
  	    if [ -f $TMPDIR/md5sum ]; then 
@@ -168,7 +163,7 @@
  		if [ -f $TMPDIR/$FILE ]; then
      		    tar xfz $TMPDIR/$FILE -C $BASEDIR
  		    if [ $? != 0 ]; then exit 13; fi
-@@ -189,7 +202,7 @@
+@@ -189,7 +197,7 @@
  fi
  
  echo -e "\n * Az utólagos frissítő állományok feldolgozása (post*):\n"
@@ -177,7 +172,7 @@
      run_script
  done
  
-@@ -219,7 +232,7 @@
+@@ -219,7 +227,7 @@
      for POLICY in $POLICIES; do
          eval "LIST=\$${POLICY}Link"
          for f in $LIST; do

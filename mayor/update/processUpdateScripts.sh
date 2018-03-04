@@ -12,14 +12,9 @@ host=$MYSQL_HOST
 user=$MYSQL_USER
 password=$MYSQL_PW
 " > $BASEDIR/config/my.cnf
-
-PRECHARSET="SET character_set_client = utf8; 
-SET character_set_database = utf8; 
-SET character_set_server = utf8;
-SET character_set_results = utf8;  
-SET collation_connection = utf8_hungarian_ci; 
-SET collation_database = utf8_general_ci; 
-SET collation_server = utf8_general_ci; " ## fontos, hogy a ";" ott legyen a végén!!
+ 
+PRECHARSET="SET NAMES 'utf8' COLLATE 'utf8_hungarian_ci'; " ## fontos, hogy a ";" ott legyen a végén!!
+#PRECHARSET="$PRECHARSET SET collation_connection = utf8_hungarian_ci; " ## ha a mysql server esetleg régebbi lenne.
 
 MYSQL_CONFIG="--defaults-extra-file=$BASEDIR/config/my.cnf"
 MYSQL_PARAMETERS=""
