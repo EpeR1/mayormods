@@ -1,20 +1,25 @@
 #!/bin/bash
 
 VERSION="2.0"
-echo -e "\nmayor szkript - verzió: $VERSION (" `date '+%Y-%m-%d'` ")\n"
+echo -e "\nmayor szkript - verzió: $VERSION (" $(date '+%Y-%m-%d') ")"
 
-CMDS=(backup update crypt-backup decrypt-backup remote-backup restore help)
+CMDS=(backup update lock unlock crypt-backup decrypt-backup remote-backup restore help)
 MODS=(mayor-base mayor-portal mayor-naplo mayor-naplo-sni mayor-wiki mayor-felveteli mayor-installer mayor-installer-sulix mayor-jatek mayor-locales-de_DE mayor-locales-en_US mayor-local-jp_JP)
-DESC=('a rendszer mentése' 'a rendszer frissítése' 'a mentés titkosítása (ß)' 'a titkosított mentés visszakódolása (ß)' 'mentés a központi (távoli) szerverre' 'mentés visszatöltése' 'A parancs működésének leírása')
+DESC=('a rendszer mentése' 'a rendszer frissítése' 'a rendszer zárolása (lockfile)' 'a rendszer feloldása' 'a mentés titkosítása (ß)' 'a titkosított mentés visszakódolása (ß)' 'mentés a központi (távoli) szerverre' 'mentés visszatöltése' 'A parancs működésének leírása')
 #OPTS=('--skip-lock')
 #OPTDESC=('a rendszer zárolásának kihagyása')
-DATE=`date "+%Y%m%d"`
-DATETIME=`date "+%Y-%m-%d %H:%M:%S"`
+DATE=$(date "+%Y%m%d")
+DATETIME=$(date "+%Y-%m-%d %H:%M:%S")
 
 print_help() {
     echo -e "\nHasználat: mayor [parancs] [opciók]\n\nParancs"
     for ((i=0; i<${#CMDS[@]}; i=i+1)); do 
-	echo "    - ${CMDS[$i]}: ${DESC[$i]}"
+	len=$(echo ${CMDS[$i]} | wc -m)
+	if [ "$len" -lt 13 ]; then 
+	    echo -e "    - ${CMDS[$i]}:\t\t${DESC[$i]}"
+	else
+	    echo -e "    - ${CMDS[$i]}:\t${DESC[$i]}"
+	fi
     done
 #    echo -e "\nOpciók"
 #    for ((i=0; i<${#OPTS[@]}; i=i+1)); do 
@@ -27,7 +32,7 @@ print_help() {
 if [ -f /etc/mayor/main.conf ]; then
     . /etc/mayor/main.conf
 else
-    echo -e "\nHIBA: hiányzó konfigurációs file: /etc/mayor/main.conf\n"
+    echo -e "\n*** HIBA: hiányzó konfigurációs file: /etc/mayor/main.conf\n"
     exit 1
 fi
 
@@ -46,9 +51,11 @@ for ((i=0; i<${#CMDS[@]}; i=i+1)); do
 done
 
 if [ -z $CMD ]; then
-    echo -e "\nHIBA: ismeretlen parancs: $1\n"
+    echo -e "\n(>>> HIBA: ismeretlen parancs: $1)\n"
     print_help
     exit 1
+else
+   echo -e "(>>> $CMD)\n"
 fi
 
 # Alapértelmezés                                                                                                                                                                                                       
@@ -59,6 +66,7 @@ fi
 shift
 # A parancs végrehajtása
 cd $BASEDIR/bin
+cd "/home/honlap-naplo/h002/mayor/bin"
 if [ -z $UPDATELOG ]; then
     . ./$CMD.sh
 else

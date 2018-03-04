@@ -117,7 +117,7 @@ if [ -z "${REV:-}" ]; then
 	exit 9
     fi
     if [ -f $REVISION_FILE ]; then
-	REV=`cat $REVISION_FILE`
+	REV=$(cat $REVISION_FILE)
     else
 	REV=0
     fi
@@ -142,7 +142,7 @@ if [ "$EXECONLY" != "1" ]; then
 		    echo -n "     $MODULE... "
 		    chmod +x $BASEDIR/bin/mayor
 		    if [ $? != 0 ]; then exit 2; fi
-		    UJ_REV=`$SVN --force export https://svn.mayor.hu/svn/trunk/$MODULE/update "$BASEDIR/update" | grep revision | cut -d ' ' -f 3 | uniq | sed -e 's/\.//g'`
+		    UJ_REV=$($SVN --force export https://svn.mayor.hu/svn/trunk/$MODULE/update "$BASEDIR/update" | grep revision | cut -d ' ' -f 3 | uniq | sed -e 's/\.//g')
 		    if [ $? != 0 ]; then exit 3; fi
 		    echo "kész."
 		done
@@ -168,13 +168,13 @@ if [ "$EXECONLY" != "1" ]; then
 		if [[ ! $HTTP_SERVER =~ .*$VERSION.* ]]; then HTTP_SERVER="$HTTP_SERVER/$VERSION"; fi
 	    fi
 	    if [ $? != 0 ]; then exit 5; fi
-	    UJ_REV=`grep Revision md5sum | cut -d ' ' -f 2`
+	    UJ_REV=$(grep Revision md5sum | cut -d ' ' -f 2)
 	    if [ "$REV" -lt "$UJ_REV" ]; then
 		# csomagok leszedése
 		for MODULE in $MODULES; do
 		    echo -n "     $MODULE... "
-		    MOD=`echo $MODULE | sed "s#/#-#"`
-		    FILE=`grep "$MOD-rev" md5sum | cut -d ' ' -f 3`
+		    MOD=$(echo $MODULE | sed "s#/#-#")
+		    FILE=$(grep "$MOD-rev" md5sum | cut -d ' ' -f 3)
 		    if [ "$FILE" != '' ]; then
 			wget "$HTTP_SERVER/$FILE"
 			if [ $? != 0 ]; then
@@ -199,7 +199,7 @@ if [ "$EXECONLY" != "1" ]; then
     fi
 else # exec-only
     if [ -f $REVISION_FILE ]; then
-	UJ_REV=`cat $REVISION_FILE`
+	UJ_REV=$(cat $REVISION_FILE)
     else
 	UJ_REV=0 # nem frissítünk semmit
     fi
@@ -215,7 +215,7 @@ else
     . $BASEDIR/update/processUpdateScripts.sh
 fi
 
-PWDTEX=`pwd`
+PWDTEX=$(pwd)
 echo -e "\nMaYoR TeX formátum állomány újragenerálása... "
 cd $BASEDIR/print/module-naplo/tex/ && fmtutil-sys --cnffile $BASEDIR/print/module-naplo/tex/mayor.cnf --fmtdir $BASEDIR/print/module-naplo/ --byfmt mayor > /dev/null 2>&1
 echo -e "\nMaYoR XeTeX formátum állomány újragenerálása... "
