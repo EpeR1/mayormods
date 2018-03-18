@@ -16,22 +16,22 @@ if (isset($argv[1]) and $argv[1] == "config"){
         $cf  = "host_name ".$set['naplo_host']."\n";
         $cf .= "graph_title Napló rendszerterhelés (Mayor)\n";
         $cf .= "graph_args --base 1000 \n";
-        $cf .= "graph_vlabel fő\n";
+        $cf .= "graph_vlabel db/fő\n";
         $cf .= "graph_category mayor\n";
         $cf .= "graph_info Naplo users\n";
 
         $cf .= "mayor_ip_sum.label Összes\n";
-        $cf .= "mayor_ip_sum.draw LINE2\n";
+        $cf .= "mayor_ip_sum.draw AREA\n";
         $cf .= "mayor_ip_sum.info Összes\n";
 
+        $cf .= "mayor_ip_k.label Külső IP\n";
+        $cf .= "mayor_ip_k.draw AREA\n";
+        $cf .= "mayor_ip_k.info Külső IP\n";
+
         $cf .= "mayor_ip_b.label Belső IP\n";
-        $cf .= "mayor_ip_b.draw LINE2\n";
+        $cf .= "mayor_ip_b.draw AREA\n";
         $cf .= "mayor_ip_b.info Belső IP\n";
 
-        $cf .= "mayor_ip_k.label Kulső IP\n";
-        $cf .= "mayor_ip_k.draw LINE2\n";
-        $cf .= "mayor_ip_k.info Kulső IP\n";
-        
         $cf .= "mayor_p_pri.label Policy pri.\n";
         $cf .= "mayor_p_pri.draw LINE1.2\n";
         $cf .= "mayor_p_pri.info Policy pri.\n";
@@ -41,15 +41,15 @@ if (isset($argv[1]) and $argv[1] == "config"){
         $cf .= "mayor_p_par.info Policy par.\n";
 
         $cf .= "mayor_a_t1.label Aktív: ".$set['t_active']."perc\n";
-        $cf .= "mayor_a_t1.draw LINE2\n";
+        $cf .= "mayor_a_t1.draw AREA\n";
         $cf .= "mayor_a_t1.info Aktív: ".$set['t_active']."perc\n";
 
         $cf .= "mayor_a_t2.label Aktív: ".($set['t_active']*2)."perc\n";
-        $cf .= "mayor_a_t2.draw LINE1.2\n";
+        $cf .= "mayor_a_t2.draw LINE1\n";
         $cf .= "mayor_a_t2.info Aktív: ".($set['t_active']*2)."perc\n";
 
         $cf .= "mayor_a_tt.label Aktív: tétlen\n";
-        $cf .= "mayor_a_tt.draw LINE1.2\n";
+        $cf .= "mayor_a_tt.draw LINE1\n";
         $cf .= "mayor_a_tt.info Aktív: tétlen\n";
 	
 	echo iconv("UTF-8", "ISO-8859-2", $cf), PHP_EOL;
@@ -108,7 +108,7 @@ if (isset($argv[1]) and $argv[1] == "config"){
 	    
 	    @mysqli_free_result($r);
 	    @mysqli_close($l);
-	    echo "mayor_ip_sum.value ".($ret['ip_b']+$ret['ip_k'])."\n".  "mayor_ip_b.value ".$ret['ip_b']."\n".  "mayor_ip_k.value ".$ret['ip_k']."\n" ;
+	    echo "mayor_ip_sum.value ".($ret['ip_b']+$ret['ip_k'])."\n".  "mayor_ip_k.value ".$ret['ip_k']."\n".  "mayor_ip_b.value ".$ret['ip_b']."\n" ;
 	    echo "mayor_p_pri.value ".$ret['p_pri']."\n".  "mayor_p_par.value ".$ret['p_par']."\n";
 	    echo "mayor_a_t1.value ".$ret['a_t1']."\n".  "mayor_a_t2.value ".$ret['a_t2']."\n".  "mayor_a_tt.value ".$ret['a_tt']."\n" ;
 	
