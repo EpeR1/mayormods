@@ -314,7 +314,7 @@ EOF
 #ex -fmt '._MAYOR_DIR.'/print/module-naplo/tex/mayor '.$outputFile.'.tex');
 	} else {
 	    // utf8 --> cork (t1)
-    	    $ret = exec('cd '.$outputDir.'; cat '.$outputFile.'-u8.tex | recode u8..T1 > '.$outputFile.'.tex');
+    	    $ret = exec('cd '.$outputDir.'; cat '.$outputFile.'-u8.tex | sed -e "s/\xc2\xa0/\x20/g" | recode u8..T1 > '.$outputFile.'.tex');
 	    // DVI, PS, PFD generálás (a rotate miatt nem megy a pdftex közvetlenül :o(
     	    $ret = exec('cd '.$outputDir.'; tex -fmt '._MAYOR_DIR.'/print/module-naplo/tex/mayor '.$outputFile.'.tex');
 	    if ($ret === false) { $_SESSION['alert'][] = 'message:futási_hiba:generatePDF:tex'; return false; }
