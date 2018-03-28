@@ -1,0 +1,34 @@
+#!/bin/bash
+clear
+echo "-------------------------------------------"
+echo "             MaYoR Setup               "
+echo "-------------------------------------------"
+
+MAYORDIR="/var/mayor"
+TMPDIR="/tmp"
+MYSQLROOTPW=""
+VERSION="current"
+export MAYORDIR
+export TMPDIR
+export MYSQLROOTPW
+export VERSION
+
+echo -e "A MaYoR keretrendszer és elektronikus napló telepítője a továbbiakban
+több lépésben, az egyes lépésekre jóváhagyást kérve fogja végrehajtani a 
+telepítés és konfigurálás lépéseit.
+
+A telepítő egy tipikus telepítés esetén alkalmazható, speciális igények esetén 
+célszerűbb az egyes lépéseket a telepítési útmutató alapján manuálisan végezni.\n"
+
+read -n 1 -p "Folytatja? (i/N)" -s DO
+if [ "$DO" != "i" ]; then echo " ok, kiléptem..."; exit 1; fi
+echo -e "\n"
+
+for f in install.d/*
+do
+    echo -e "\n----------------------------------------------\n$f\n----------------------------------------------\n"
+    ./$f $@
+    if [ "$?" == 255 ]; then echo "Fatális hiba! A telepítő kilép."; exit 255; fi;
+done
+
+echo -e "MaYoR (c) setup\n"
