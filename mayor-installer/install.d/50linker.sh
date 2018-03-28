@@ -34,7 +34,7 @@ POLICIES="parent public"
 for POLICY in $POLICIES; do
     eval "LIST=\$${POLICY}Link"
     for f in $LIST; do
-        DIR=`echo $f | cut -d / -f 1-2`
+        DIR=$(echo $f | cut -d / -f 1-2)
         if [ ! -d $MAYORDIR/www/policy/$POLICY/$DIR ]; then
             echo "    Könyvtár: $MAYORDIR/www/policy/$POLICY/$DIR"
             mkdir -p $MAYORDIR/www/policy/$POLICY/$DIR

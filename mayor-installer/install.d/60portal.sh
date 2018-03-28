@@ -40,7 +40,7 @@ echo -e "\nA porál modul konfigurációs állományának létrehozása"
 file="module-portal/config.php"
 if [ -e "${MAYORDIR}/config/${file}" ]; then echo "  $file létezik."; else
 	echo -n "  $file.example --> "
-	PW=`pwgen -s1`
+	PW=$(pwgen -s1 32)
 	if [ "$ROVID" = "" ]; then
 		ROVID="demo"
 	fi
@@ -53,16 +53,16 @@ if [ ! -d $TMPDIR/mysql ]; then
 	mkdir -p $TMPDIR/mysql
 fi
 cd $TMPDIR/mysql
-PDB=`grep db $MAYORDIR/config/$file | sed -e "s/.*=\ *['\"]//g" -e "s/['\"];//g"`
-USER=`grep user $MAYORDIR/config/$file | sed -e "s/.*=\ *['\"]//g" -e "s/['\"];//g"`
-PW=`grep pw $MAYORDIR/config/$file | sed -e "s/.*=\ *['\"]//g" -e "s/['\"];//g"`
+PDB=$(grep db $MAYORDIR/config/$file | sed -e "s/.*=\ *['\"]//g" -e "s/['\"];//g")
+USER=$(grep user $MAYORDIR/config/$file | sed -e "s/.*=\ *['\"]//g" -e "s/['\"];//g")
+PW=$(grep pw $MAYORDIR/config/$file | sed -e "s/.*=\ *['\"]//g" -e "s/['\"];//g")
 
 cat $MAYORDIR/install/mayor-portal/mysql/mayor-portal.sql | sed \
 	-e "s/%MYSQL_PORTAL_DB%/$PDB/g" \
 	-e "s/%MYSQL_PORTAL_USER%/$USER/g" \
 	-e "s/%MYSQL_PORTAL_PW%/$PW/g" > mayor-portal.sql
 
-DB=`grep db $MAYORDIR/config/private-conf.php | sed -e "s/^.*>\ *['|\"]//g" -e "s/['|\"],//g"`
+DB=$(grep db $MAYORDIR/config/private-conf.php | sed -e "s/^.*>\ *['|\"]//g" -e "s/['|\"],//g")
 cat $MAYORDIR/install/mayor-portal/mysql/portal-init.sql | sed \
 	-e "s/%MYSQL_PRIVATE_DB%/$DB/g" \
 	-e "s/%MYSQL_PORTAL_DB%/$PDB/g" > portal-init.sql

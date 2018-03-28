@@ -32,6 +32,11 @@ fi
 	echo -e "\n  Az /usr/local/sbin/ alá létrejött a mayor szimbolikus link.";
     fi
     if [ ! -e $MAYORDIR/config/main.conf ]; then cp $MAYORDIR/config/main.conf.example $MAYORDIR/config/main.conf; fi
+    # A BASEDIR változó pontosítása
+    BDIR=$(echo $MAYORDIR | sed -e 's:\/:\\\/:g')
+    sed -e "s/BASEDIR=\"\/var\/mayor\"/BASEDIR=\"$BDIR\"/g" -i $MAYORDIR/config/main.conf
+    # A webserver_user lecserélése, ha nem www-data lenne
+    sed -e "s/WEB_SERVER_USER=\"www-data\"/WEB_SERVER_USER=\"$WEB_SERVER_USER\"/g" -i $MAYORDIR/config/main.conf
     # A konfig könyvtár védelme
     chown -R $WEB_SERVER_USER $MAYORDIR/config/
     chmod 700 $MAYORDIR/config/

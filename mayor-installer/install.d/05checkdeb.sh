@@ -2,15 +2,15 @@
 #
 DEBIAN=false;
 UBUNTU=false;
-if [ `which lsb_release || echo "notinstalled"` == "notinstalled" ]
+if [ $(which lsb_release || echo "notinstalled") == "notinstalled" ]
 then
-    ISSUE=`cat /etc/issue | cut -d " " -f 1`
+    ISSUE=$(cat /etc/issue | cut -d " " -f 1)
     if [ "x${ISSUE}" == "xDebian" ]; then
 	DEBIAN=true;
-	RELEASE=`cat /etc/issue | cut -d " " -f 3`
+	RELEASE=$(cat /etc/issue | cut -d " " -f 3)
     elif [ "x${ISSUE}" == "xUbuntu" ]; then
 	UBUNTU=true;
-	RELEASE=`cat /etc/issue | cut -d " " -f 2`
+	RELEASE=$(cat /etc/issue | cut -d " " -f 2)
     fi
 else
     DISTRIBUTOR=$(lsb_release -i -s)
@@ -25,7 +25,7 @@ echo "Debian:" ${DEBIAN}
 echo "Ubuntu:" ${UBUNTU}
 echo "Version:" ${RELEASE}
 
-TEST=`grep contrib /etc/apt/sources.list`
+TEST=$(grep contrib /etc/apt/sources.list)
 if [ "$TEST" == "" ]
 then
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
@@ -35,16 +35,36 @@ then
     deb http://ftp.hu.debian.org/debian/ jessie main contrib non-free
     deb http://security.debian.org/ jessie/updates main contrib non-free
     deb http://ftp.hu.debian.org/debian/ jessie-updates main contrib non-free
-	"
+
+Debian 9 esetén például:
+    deb http://ftp.hu.debian.org/debian/ stretch main contrib non-free
+    deb http://security.debian.org/debian-security stretch/updates main contrib non-free
+    deb http://ftp.hu.debian.org/debian/ stretch-updates main contrib non-free    
+        \n"
+
+        read -n 1 -p "Hozzáadhatom? (egyelőre csak Debian9 esetén működik) (i/N)" -s DO
+        if [ "$DO" != "i" ]; then echo -e "\nA hozzáadást kihagytam.\n"; exit 255; fi
+
+        if [[ "x${RELEASE}" =~ ^x9.* ]]; then
+                echo -e "#mayor miatt is:
+deb http://ftp.hu.debian.org/debian/ stretch contrib non-free
+deb http://security.debian.org/debian-security stretch/updates contrib non-free
+deb http://ftp.hu.debian.org/debian/ stretch-updates contrib non-free"  >> /etc/apt/sources.list
+
+        fi
+        echo -e "\n ----  csomaglista frissítése ---- \n"
+        apt update  ## frisítés
+        echo -e "\n -------------  kész ------------- \n"
+        
     fi
-    exit 255;
+#    exit 255;
 fi
 
 if [[ "x${RELEASE}" =~ ^x9.* ]]
 then
-    PKGS="apache2 php php-json php-mysql php-ldap php-mbstring php-mcrypt php-curl mariadb-server-10.1 recode texlive texlive-fonts-extra texlive-latex-extra texlive-binaries texlive-xetex ntp wget ssl-cert ssh pwgen texlive-lang-european"
+    PKGS="apache2 php libapache2-mod-php php-json php-mysql php-ldap php-mbstring php-mcrypt php-curl mariadb-server recode texlive texlive-fonts-extra texlive-latex-extra texlive-binaries texlive-xetex ntp wget ssl-cert ssh pwgen texlive-lang-european"
 else
-    PKGS="apache2 php5 php5-json php5-mysqlnd php5-ldap php5-mcrypt php5-curl mysql-server recode texlive texlive-fonts-extra texlive-latex-extra texlive-binaries texlive-xetex ttf-mscorefonts-installer ntp wget ssl-cert ssh pwgen texlive-lang-european texlive-lang-hungarian"
+    PKGS="apache2 php5 libapache2-mod-php5 php5-json php5-mysqlnd php5-ldap php5-mcrypt php5-curl mysql-server recode texlive texlive-fonts-extra texlive-latex-extra texlive-binaries texlive-xetex ttf-mscorefonts-installer ntp wget ssl-cert ssh pwgen texlive-lang-european texlive-lang-hungarian"
 fi
 
 if [ "$1" == "--no-deb" ]; then
@@ -69,7 +89,7 @@ MISSING=""
 for pkg in $PKGS
 do
     echo -n "  $pkg ... "
-    STAT=`dpkg -l $pkg | grep $pkg | cut -f 1 -d ' '`
+    STAT=$(dpkg -l $pkg | grep $pkg | cut -f 1 -d ' ')
     if [ "$STAT" == "ii" ]; then
 	echo ok
     else
@@ -81,6 +101,6 @@ if [ "$MISSING" != "" ]; then
     echo Még nem telepített csomagok: $MISSING
     read -n 1 -p "Telepítsem? (i/N)" -s DO
     if [ "$DO" != "i" ]; then echo " ok, kiléptem..."; exit 1; fi
-    apt-get update
-    apt-get -m -f install $MISSING
+    apt update
+    apt -m -f install $MISSING
 fi

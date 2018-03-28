@@ -26,13 +26,13 @@ echo -e "\n"
 OMKOD=""
 while [ "$OMKOD" = "" ]; do
     read -p "Kérem az intézmény OM kódját: " OMKOD
-    OMKOD=`echo ${OMKOD} | sed "s/[^[0-9]]*//g"`
+    OMKOD=$(echo ${OMKOD} | sed "s/[^[0-9]]*//g")
 done
 read -p "Kérem az intézmény nevét: " INTEZMENYNEV
 ROVID=""
 while [ "$ROVID" = "" ]; do
     read -p "Kérem az intézmény rövid nevét (néhány karakteres rövidítés, mint \"vmg\", \"illyes\"...: " ROVID
-    ROVID=`echo ${ROVID} | sed "s/[^[:alnum:]]*//g" | sed "y, űáéúőóüöíŰÁÉÚŐÓÜÖÍ,_uaeuoouoiUAEUOOUOI," | sed 's/\(.*\)/\L\1/'`
+    ROVID=$(echo ${ROVID} | sed "s/[^[:alnum:]]*//g" | sed "y, űáéúőóüöíŰÁÉÚŐÓÜÖÍ,_uaeuoouoiUAEUOOUOI," | sed 's/\(.*\)/\L\1/')
 done
 echo -e "\nOM: ${OMKOD}; Rövidnév: ${ROVID}\n"
 
@@ -40,9 +40,9 @@ echo -n "  Az intézmény konfigurációs állománya: "
 cp "$MAYORDIR/config/module-naplo/config-pl.php.example" "$MAYORDIR/config/module-naplo/config-$ROVID.php"
 echo "$MAYORDIR/config/module-naplo/config-$ROVID.php"
 
-DB=`grep db $MAYORDIR/config/module-naplo/config.php | grep naplo_base | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
-USER=`egrep 'userWrite.*=' $MAYORDIR/config/module-naplo/config.php | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
-USERREAD=`egrep 'userRead.*=' $MAYORDIR/config/module-naplo/config.php | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
+DB=$(grep db $MAYORDIR/config/module-naplo/config.php | grep naplo_base | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
+USER=$(egrep 'userWrite.*=' $MAYORDIR/config/module-naplo/config.php | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
+USERREAD=$(egrep 'userRead.*=' $MAYORDIR/config/module-naplo/config.php | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g")
 
 echo -e "\nAz adatbázis létrehozása\n"
 cat <<EOF > $TMPDIR/mysql/intezmeny.sql
