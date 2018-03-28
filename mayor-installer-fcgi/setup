@@ -12,21 +12,35 @@ export MAYORDIR
 export TMPDIR
 export MYSQLROOTPW
 export VERSION
+export MAYORUSER="mayor-web"
 
 echo -e "A MaYoR keretrendszer és elektronikus napló telepítője a továbbiakban
 több lépésben, az egyes lépésekre jóváhagyást kérve fogja végrehajtani a 
 telepítés és konfigurálás lépéseit.
 
 A telepítő egy tipikus telepítés esetén alkalmazható, speciális igények esetén 
-célszerűbb az egyes lépéseket a telepítési útmutató alapján manuálisan végezni.\n"
+célszerűbb az egyes lépéseket a telepítési útmutató alapján manuálisan végezni.
+
+Lehetőség van a Mayor, az apache2 úgynevezett mod_uexec/mod_fcgi alá történő telepítésére is.\n"
 
 read -n 1 -p "Folytatja? (i/N)" -s DO
 if [ "$DO" != "i" ]; then echo " ok, kiléptem..."; exit 1; fi
 echo -e "\n"
 
-for f in install.d/*
+read -n 1 -p "Telepítés: (H)agyományos vagy (F)cgi/suexec-módban? (s/H)" -s DO
+if [ "$DO" != "h" ]; then echo " ok, mod_Suexec/mod_fcgid használata."
+  installer="fcgi_install.d"
+  export MAYORDIR="/home/$MAYORUSER/mayor"
+else  
+  installer="install.d"
+  echo " ok, Hagyományos módon."; fi
+  echo -e "\n"
+
+
+
+for f in $installer/*
 do
-    echo -e "\n----------------------------------------------\n$f\n----------------------------------------------\n"
+    echo -e "\n----------------------------------------------\n$f\nMAYORDIR:$MAYORDIR\nMAYORUSER:$MAYORUSER\n----------------------------------------------\n"
     ./$f $@
     if [ "$?" == 255 ]; then echo "Fatális hiba! A telepítő kilép."; exit 255; fi;
 done
