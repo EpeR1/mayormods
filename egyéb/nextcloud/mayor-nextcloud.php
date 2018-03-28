@@ -23,6 +23,10 @@ $m2n['csoport_prefix'] = "(tk) ";
 $m2n['default_email'] = "indulo@iskola.hu";
 $m2n['default_passw'] = "EHYmGktzrdfS7wxJR6DFqxjJ";
 $m2n['default_quota'] = "10GB";
+$m2n['min_osztalyok'] =  array('9.a','11.a');
+//$m2n['min_osztalyok'] =  array();
+$m2n['csoportnev_hossz'] = 40;
+$m2n['felhasznalo_hossz'] = 45;
 $m2n['default_lang']  = "hu";
 $m2n['mindenki_csop'] = "naplós_felhasználók";
 $m2n['verbose'] = 3 ;  
@@ -35,7 +39,7 @@ $search = array( 'á', 'ä', 'é', 'í', 'ó', 'ö', 'ő', 'ú', 'ü', 'ű', 'Á
 $replace = array( 'aa', 'ae', 'ee', 'ii', 'oo', 'oe', 'ooe', 'uu', 'ue', 'uue', 'Aa', 'Aae', 'Ee', 'Ii', 'Oo', 'Oe', 'Ooe', 'Uu', 'Ue', 'Uue');
 
 $log['verbose'] = $m2n['verbose'];
-if($argv[1] == "--loglevel" and is_numeric($argv[2])){$log['verbose'] = $argv[2];}
+if(@$argv[1] == "--loglevel" and is_numeric($argv[2])){$log['verbose'] = $argv[2];}
 
 
 if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Improved) és php7  kell!
@@ -235,7 +239,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
 
     
-    function user_set($userAccount, array $params){	//beállítja az e-mailt, quota-t, nyelvet a kapott értékekere
+    function user_set($userAccount, array $params){	//beállítja az e-mailt, quota-t, nyelvet a kapott értékekre
         global $occ_path,$occ_user,$log;        
         if(isset($params['quota']))
             $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:setting $userAccount files quota \"".$params['quota']."\"'";
@@ -263,14 +267,14 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
     
     function group_del($groupName){	// Csoport törlése a Nextcloud-ból
-        global $occ_user,$occ_path,$db,$link,$log;
+        global $occ_user,$occ_path,$db,$link,$log,$m2n;
         $grp = nxt_group_list();
         if(isset($grp[$groupName])){	// Mivel erre még nincs hivatalos "occ" parancs, ezért közvetlenül kell...
             foreach($grp[$groupName] as $key => $user){
                 $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:removeuser \"$groupName\" $user'";
                 if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
                 shell_exec($e);
-                if ($log['verbose'] > 1 ){ echo "*--\t\tTörölve ($user) a:\t$groupName\t csoportból.\n"; }
+                if ($log['verbose'] > 1 ){ echo "*--\t\tTörölve".po(" ($user) a: $groupName",$m2n['csoportnev_hossz']+5,1)."\t csoportból.\n"; }
             }
             $q = "DELETE FROM ".$db['nxt_dbname'].".".$db['nxt_prefix']."groups WHERE gid='".$groupName."'; " ;
             if ($log['verbose'] > 5 ){ echo "NXT ->\t".$q."\n"; }
@@ -292,10 +296,26 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         shell_exec($e);
     }
 
+    function po($inp,$ll,$dir){
+            while(grapheme_strlen($inp) < $ll){
+                if($dir == 0){
+                    $inp = " ".$inp." ";
+                } else if($dir == 1){
+                    $inp = $inp." ";
+                } else if ($dir == -1){
+                    $inp = " ".$inp;
+                }
+            }
+        return $inp;
+    }
 
-    function get_mayor_tankor($link){		// A tankörök neveinek lekérdezése a mayorból
+    function get_mayor_tankor($link){				// A tankörök neveinek lekérdezése a mayorból
         global $m2n,$log;
         $ret = array();
+        $req_oszt = "'#'";
+        foreach($m2n['min_osztalyok'] as $key => $val){		//A megadott konkrét osztályokra
+            $req_oszt .= ",'$val'";
+        }
 //Létező összes tankör:
 /*        $q = "SELECT tankorId, TRIM(BOTH ' '
             FROM CONCAT('".$m2n['csoport_prefix']."',tankorNev)) AS tankorNev
@@ -309,7 +329,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter
             WHERE statusz = 'aktív' AND kezdesDt <= CURRENT_DATE() AND CURRENT_DATE() <= zarasDt);        ";
 */             
-//csak a megadott évfeolyamokhoz tartozó tankörök:
+//csak a megadott évfeolyamokhoz kötődő tankörök:
         $q = "SELECT tanev FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter WHERE statusz = 'aktív' GROUP BY tanev; ";
         if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }
         if( ($r = mysqli_query($link, $q)) !== FALSE ){
@@ -330,7 +350,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 WHERE osztalyId IN (
                 SELECT osztalyId
                 FROM naplo_".$m2n['isk_rovidnev']."_".$ev['tanev'].".osztalyNaplo
-                WHERE evfolyamJel >= ".$m2n['min_evfolyam']." 
+                WHERE evfolyamJel >= ".$m2n['min_evfolyam']."  OR osztalyJel IN(".$req_oszt.") 
                 ORDER BY osztalyId)
                 ORDER BY tankorId ); 
             ";
@@ -383,6 +403,10 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     function get_mayor_diak($link){	// diákok lekérdezése
         global $m2n,$log;
         $ret = array();
+        $req_oszt = "'#'";
+        foreach($m2n['min_osztalyok'] as $key => $val){         //A megadott konkrét osztályokra
+            $req_oszt .= ",'$val'";
+        }
         $q = "SELECT tanev FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter WHERE statusz = 'aktív' GROUP BY tanev; ";
         if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }
         if( ($r = mysqli_query($link, $q)) !== FALSE ){
@@ -397,7 +421,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 WHERE osztalyId IN (
                 SELECT osztalyId
                 FROM naplo_".$m2n['isk_rovidnev']."_".$ev['tanev'].".osztalyNaplo
-                WHERE evfolyamJel >= ".$m2n['min_evfolyam']."
+                WHERE evfolyamJel >= ".$m2n['min_evfolyam']." OR osztalyJel IN(".$req_oszt.") 
                 ORDER BY osztalyId)
                 ORDER BY diakId) AND diak.statusz != 'jogviszonya lezárva' AND diak.statusz != 'felvételt nyert' AND diak.oId = accounts.studyId 
                 AND tankorDiak.diakId = diak.diakId AND tankorDiak.beDt <= CURRENT_DATE() AND (tankorDiak.kiDt >= CURRENT_DATE() OR tankorDiak.kiDt IS NULL) 
@@ -465,26 +489,26 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     if ($log['verbose'] > 0 ){ echo "\n***\tCsoportok egyeztetése.\n";}
     $tankorok = get_mayor_tankor($link2);
     $nxt_csop = nxt_group_list();
-    foreach($tankorok as $key => $val){							//Végignézi a tankörök szerint
-        foreach($nxt_csop as $key2 => $val2){						// 
-            if($key2 == $val['tankorNev']){						//Már van ilyen (tankör)nevű csoport
-                if ($log['verbose'] > 3 ){ echo "  -\t Csoport:\t".$val['tankorNev']." \t ok.\n";}
+    foreach($tankorok as $key => $val){								//Végignézi a tankörök szerint
+        foreach($nxt_csop as $key2 => $val2){							// 
+            if($key2 == $val['tankorNev']){							//Már van ilyen (tankör)nevű csoport
+                if ($log['verbose'] > 3 ){ echo "  -\t Csoport:".po("\t".$val['tankorNev'],$m2n['csoportnev_hossz'],1)."-\tok.\n";}
                 break;
             }
         }
-        unset($nxt_csop[$val['tankorNev']]);						//Megvizsgálva, többször már nem kell dönteni róla. 
-        if($key2 != $val['tankorNev']){ 						//Ha nincs ilyen (tankör)nevű csoport
-            group_add($val['tankorNev']);   						//Akkor létrehozza
-            if ($log['verbose'] > 2 ){ echo "* -\t Új csoport:\t".$val['tankorNev']." \thozzáadva.\n";}
+        unset($nxt_csop[$val['tankorNev']]);							//Megvizsgálva, többször már nem kell dönteni róla. 
+        if($key2 != $val['tankorNev']){ 							//Ha nincs ilyen (tankör)nevű csoport
+            group_add($val['tankorNev']);   							//Akkor létrehozza
+            if ($log['verbose'] > 2 ){ echo "* -\t Új csoport:".po("\t".$val['tankorNev'],$m2n['csoportnev_hossz'],1)."-\thozzáadva.\n";}
          }
     }
 // A megszűnt tanköröket-csoportokat kitörli 
     foreach($nxt_csop as $key => $val){           
-        if(substr($key, 0, strlen($m2n['csoport_prefix'])) === $m2n['csoport_prefix'] ){ //Csak a "prefix"-el kezdődő nevűekre.
-            group_del($key);								//elvégzi a törlést
-            if ($log['verbose'] > 1 ){ echo "** -\t Korábbi csoport:\t$key \t eltávolítva.\n";}
+        if(substr($key, 0, strlen($m2n['csoport_prefix'])) === $m2n['csoport_prefix'] ){	//Csak a "prefix"-el kezdődő nevűekre.
+            group_del($key);									//elvégzi a törlést
+            if ($log['verbose'] > 1 ){ echo "** -\t Korábbi csoport:".po("\t$key",$m2n['csoportnev_hossz'],1)."\t eltávolítva.\n";}
         } else {
-            if ($log['verbose'] > 5 ){ echo " ---\t Külső csoport:\t$key \t békén hagyva.\n";}
+            if ($log['verbose'] > 5 ){ echo " ---\t Külső csoport:".po("\t$key",$m2n['csoportnev_hossz'],1)."\t békén hagyva.\n";}
         }	// Figyelem! A csoport prefix-szel: "(tk) " kezdődő csoportokat magáénak tekinti, automatikusan töröli!
     }	// 	Akkor is, ha az külön, kézzel lett létrehozva.
 
@@ -493,83 +517,85 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 //-------------------------------------------------------------------------------------------------------------------------------
 // Felhasználónevek egyeztetése
     if ($log['verbose'] > 0 ){ echo "\n***\tFelhasználók egyeztetése.\n";}
-    $mayor_user = array_merge( get_mayor_tanar($link2), get_mayor_diak($link2) );	//tanár, diák
+    $mayor_user = array_merge( get_mayor_tanar($link2), get_mayor_diak($link2) );		//tanár, diák
     $mayor_user = array_merge($mayor_user, array(array('userAccount' => null, 'fullName' => null, 'tankorNev' => null,)) ); //strázsa a lista végére
     $nxt_user = nxt_user_list();
     $nxt_group = nxt_group_list();
     $nxt_registered = nxt_register_userlist($link);
     $m2n_forbidden = nxt_register_forbiddenlist($link);
-     if ($log['verbose'] > 3 ){ echo "\n";}
+    if ($log['verbose'] > 3 ){ echo "\n";}
 
     foreach($mayor_user as $key => $val){
-                                                                        //Lecseréli az ékezetes betűket a felhasználónévből
+                                                                                //Lecseréli az ékezetes betűket a felhasználónévből
         $mayor_user[$key]['userAccount'] = str_replace($search, $replace, $val['userAccount']);  // (pl: Á->Aa, á->aa, ...)
-        if(in_array($val['userAccount'], $m2n_forbidden) ){		//Ha a nyilvántartásban "forbidden"-ként szerepel, 
-            unset($mayor_user[$key]);                                   // akkor nem foglalkozik vele tovább.
+        if(in_array($val['userAccount'], $m2n_forbidden) ){			//Ha a nyilvántartásban "forbidden"-ként szerepel, 
+            unset($mayor_user[$key]);                                   	// akkor nem foglalkozik vele tovább.
         }
     }
 
     $curr = "";
     $tankorei = array();
-    foreach($mayor_user as $key => $val){				//Végignézi a mayorból kinyert lista alapján.
+    foreach($mayor_user as $key => $val){					//Végignézi a mayorból kinyert lista alapján.
     
-        if($curr != $val['userAccount']){   		 		//A következő felhasználó..
+        if($curr != $val['userAccount']){   		 			//A következő felhasználó..
             foreach($nxt_user as $key2 => $val2){
-                if($curr == $key2){ 					//Már létezik a felhasználó a Nextcloud-ban
-                    $log['curr'] = "-\tFelhasználó:\t$curr_n ($curr) \t -- \tok.\n";
+                if($curr == $key2){ 						//Már létezik a felhasználó a Nextcloud-ban
+                    $log['curr'] = "-\tFelhasználó:".po("\t$curr_n ($curr)",$m2n['felhasznalo_hossz'],1)."--\tok.\n";
                     if ($log['verbose'] > 3 ){ echo " -".$log['curr']; $log['curr'] = "";}
-                    if($nxt_registered['status'][array_keys($nxt_registered['account'], $curr)[0]] == 'disabled' ){
-                        nxt_register_userena($link, $curr);		//Ha netán le lenne tiltva, akkor engedélyezi,
-                        user_ena($curr);				//ha a script tiltotta le.
-                    }				
+                    if( in_array($curr, $nxt_registered['account'])){
+                        if($nxt_registered['status'][array_keys($nxt_registered['account'], $curr)[0]] == 'disabled' ){
+                            nxt_register_userena($link, $curr);			//Ha netán le lenne tiltva, akkor engedélyezi,
+                            user_ena($curr);					//ha a script tiltotta le.
+                        }
+                    } else { if ($log['verbose'] > 1 ){ echo "? -\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."\tnincs benne a nyilvántartásban.\n";} }
                     
-                    foreach($nxt_group as $key3 => $val3){		//A tankörök egyeztetése
-                        if(in_array($key3, $tankorei)){			//szerepel-e a felhasználó tankörei között a csoport?
-                            if( in_array($curr, $val3)){		//Igen, és már benne is van +++
+                    foreach($nxt_group as $key3 => $val3){			//A tankörök egyeztetése
+                        if(in_array($key3, $tankorei) or $key3 == $m2n['mindenki_csop']){ //szerepel-e a felhasználó tankörei között a csoport, vagy a "mindenki" csoport?
+                            if( in_array($curr, $val3)){			//Igen, és már benne is van +++
                             
-                                 if ($log['verbose'] > 3 ){ echo "  -\t\tBenne van a:\t$key3 \tcsoportban.\n";} 
-                            } else {					//Nincs, most kell beletenni
-                                if ($log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tHozzáadva a:\t $key3 \tcsoporthoz.\n";}
+                                 if ($log['verbose'] > 3 ){ echo "  -\t\tBenne van a:".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tcsoportban.\n";} 
+                            } else {						//Nincs, most kell beletenni
+                                if ($log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tHozzáadva a:".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n";}
                                 group_user_add($key3, $curr);
                             }
-                        } else {					//Nem szerepel a tankörei között
+                        } else {						//Nem szerepel a tankörei között
                             if(in_array($curr, $val3) and  (substr($key3, 0, strlen($m2n['csoport_prefix'])) === $m2n['csoport_prefix']) ){
                                 // korábban benne volt egy tankörben, de már nincs, vagy a hozzátartozó tankörben már nem tanít  => kiveszi
-                                if ($log['verbose'] > 1 ){if($log['curr'] !== ""){echo "*".$log['curr'];$log['curr'] = "";} echo  "* -\t\tTörölve a:\t $key3 \tcsoportból.\n";}
-                                group_user_del($key3, $curr);		//egy korábbi tankör lehetett...
+                                if ($log['verbose'] > 1 ){if($log['curr'] !== ""){echo "*".$log['curr'];$log['curr'] = "";} echo  "* -\t\tTörölve a:".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tcsoportból.\n";}
+                                group_user_del($key3, $curr);			//egy korábbi tankör lehetett...
                             }
                         }
                     } 
                     break;
                 }       
             }
-            unset($nxt_user[$curr]);  					//Megvizsgálva, többször már nem kell dönteni róla.
-            if($curr != $key2 and $curr != null){			//Nincs még ilyen felhasználó
-                if ($log['verbose'] > 2 ){ echo "**-\tFelhasználó:\t$curr_n ($curr) \t -- \tlétrehozva.\n";}
-                user_add($curr, $curr_n);				//Akkor hozzá kell adni
+            unset($nxt_user[$curr]);  						//Megvizsgálva, többször már nem kell dönteni róla.
+            if($curr != $key2 and $curr != null){				//Nincs még ilyen felhasználó
+                if ($log['verbose'] > 2 ){ echo "**-\tFelhasználó:".po("\t$curr_n ($curr)",$m2n['felhasznalo_hossz'],1)."--\tlétrehozva.\n";}
+                user_add($curr, $curr_n);					//Akkor hozzá kell adni
                 nxt_register_useradd($link, $curr);
                     
-                foreach($tankorei as $key3 => $val3){			//Hozzáadja a (tankör)csoportokhoz is.
+                foreach($tankorei as $key3 => $val3){				//Hozzáadja a (tankör)csoportokhoz is egyből.
                     group_user_add($val3,$curr);
-                    if ($log['verbose'] > 2 ){ echo "* -\t\tHozzáadva a:\t $val3 \tcsoporthoz.\n"; }
+                    if ($log['verbose'] > 2 ){ echo "* -\t\tHozzáadva a:".po("\t $val3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n"; }
                 }                
-                $params['quota'] = $m2n['default_quota'];		// Alapértelmezett kvóta
-                $params['lang'] = $m2n['default_lang'];			// Nyelv
+                $params['quota'] = $m2n['default_quota'];			// Alapértelmezett kvóta
+                $params['lang'] = $m2n['default_lang'];				// Nyelv
                 if($curr_e == ""){
-                    $params['email'] = $m2n['default_email']; 		// e-mail beállítása
+                    $params['email'] = $m2n['default_email']; 			// e-mail beállítása
                 } else {
-                    $params['email'] = $curr_e;				// ha van a mysql-ben e-mail, akkor azt használja
+                    $params['email'] = $curr_e;					// ha van a mysql-ben e-mail, akkor azt használja
                 }
-                user_set($curr,$params);				//Alapértelmezett paraméterek érvényesítése
+                user_set($curr,$params);					//Alapértelmezett paraméterek érvényesítése
                 if ($log['verbose'] > 2 ){ echo "* -\t\tBeállítva:\t"."Qvóta: ".$params['quota']."\tNyelv: ".$params['lang']."\tE-mail: ".$params['email']."\n";}
             }
             
-            $tankorei = array(); 					// új ciklus kezdődik
-            $curr = $val['userAccount'];				//
-            $curr_n = $val['fullName'];					//
-            $curr_e = @$val['email'];					//
+            $tankorei = array(); 						// új ciklus kezdődik
+            $curr = $val['userAccount'];					//
+            $curr_n = $val['fullName'];						//
+            $curr_e = @$val['email'];						//
         }
-        $tankorei[] = $val['tankorNev'];				// Egyébként a csoportok (tankörök) összegyűjtése
+        $tankorei[] = $val['tankorNev'];					// Egyébként a csoportok (tankörök) összegyűjtése
     }
 
 
@@ -579,13 +605,13 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     foreach($nxt_user as $key => $val){						//Benne van a nyilvántartásban,
             if(in_array($key, $nxt_registered['account'])){ 			//vagyis a script adta hozzá korábban
                 if( nxt_user_lastlogin($key) == "1970-01-01T00:00:00+00:00" ){	//Még soha nem lépett be = 1970.01.01 ??
-                    user_del($key);						//Akkor törli
+                    user_del($key);						//Akkor törli 
                     nxt_register_userdel($link, $key);				//A listáról is
-                    if ($log['verbose'] > 1 ){ echo "**-\tFelhasználó:\t$val ($key)\t -- \ttörölve.\n";}
+                    if ($log['verbose'] > 1 ){ echo "**-\tFelhasználó:".po("\t$val ($key)",$m2n['felhasznalo_hossz'],1)."--\ttörölve.\n";} 
                 } else {
                     user_dis($key);            					//Különben csak letiltja (fájlok ne vesszenek el)
                     nxt_register_userdis($link, $key);				//Feljegyzi a nyilvántartásba
-                    if ($log['verbose'] > 1 ){ echo "**-\tFelhasználó:\t$val ($key)\t -- \t letiltva.\n";}
+                    if ($log['verbose'] > 1 ){ echo "**-\tFelhasználó:".po("\t$val ($key)",$m2n['felhasznalo_hossz'],1)."--\tletiltva.\n";} 
                 }
             }
             // döntési logika:
@@ -607,7 +633,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     foreach($nxt_registered['account'] as $key => $val){    //Erre a nextcloud "occ" parancs hibakezelése miatt van szükség
     
         if(@$nxt_user[$val] === null ){
-            if ($log['verbose'] > 4 ){ echo "**-\tFelhasználónév:\t($val)\t -- \t kivéve a nyilvántartásból.";}
+            if ($log['verbose'] > 4 ){ echo "**-\tFelhasználónév:".po("\t($val)",$m2n['felhasznalo_hossz'],1)."--\tkivéve a nyilvántartásból.";}
             nxt_register_userdel($link, $val);
         }
     }
