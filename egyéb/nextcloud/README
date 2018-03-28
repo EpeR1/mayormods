@@ -92,6 +92,15 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
 	$m2n['default_lang']  = "hu";				//Az alapértelmezett nyelv (később minden felhasználó átállíthatja magának)
 
+	$m2n['min_osztalyok'] =  array( ); 			//Ide lehet felsorolni az osztályokat, ha konkrét osztályokat akaruni importálni,
+								// ez logikai (megengedő) VAGY kapcsolatban van a $m2n['min_evfolyam'] -mal.
+								//  Tehát ha beállítunk egy minimális évfolyamot, a felsorolt osztályok akkor is importálódnak,
+								//  ha a minimális évfolyamnál kisebb.   //pl:  array('9.a','11.a');
+
+	$m2n['csoportnev_hossz'] = 40;				// Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a csoport neve.
+
+	$m2n['felhasznalo_hossz'] = 45;				// Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a felhasználó valódi neve.
+
 	$m2n['mindenki_csop'] = "naplós_felhasználók";		//A Nextcloud "mindenki" csoportja
 								// ebbe a "mindenki" csoportba minden, a script által létrehozott felhasználó bekerül.
 
