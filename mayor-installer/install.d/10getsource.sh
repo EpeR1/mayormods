@@ -66,6 +66,9 @@ echo -n -e "\nRendszer könyvtár: "
 if [ ! -e $MAYORDIR ]; then
     mkdir -p $MAYORDIR
 fi
+if [ ! -e "/var/mayor" ]; then
+	ln -s $MAYORDIR /var/mayor
+fi
 echo $MAYORDIR
 
 echo -e -n "Források kicsomagolása... "
