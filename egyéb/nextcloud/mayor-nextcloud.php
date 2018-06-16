@@ -28,6 +28,7 @@ $m2n['csoportnev_hossz'] = 40;
 $m2n['felhasznalo_hossz'] = 45;
 $m2n['default_lang']  = "hu";
 $m2n['mindenki_csop'] = "naplós_felhasználók";
+$m2n['zaras_tartas'] =  "2018-06-14";
 $m2n['verbose'] = 3 ;  
 
 $occ_path = "/var/www/nextcloud/";
@@ -96,6 +97,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     
     function nxt_register_userlist($link){	//akiket a script hozott létre
         global $db,$log;
+        $ret['account'] = array();
+        $ret['status'] = array();
         $q = "SELECT * FROM ".$db['m2n_db'].".".$db['m2n_prefix']."register WHERE STATUS != 'forbidden'; ";    
         if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
         if(( $r = mysqli_query($link, $q)) !== FALSE ){
@@ -326,12 +329,12 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             GROUP BY tanev) AND szemeszter = (
             SELECT szemeszter
             FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter
-            WHERE statusz = 'aktív' AND kezdesDt <= CURRENT_DATE() AND CURRENT_DATE() <= zarasDt);        ";
+            WHERE statusz = 'aktív' AND kezdesDt <= CURRENT_DATE() AND (CURRENT_DATE() <= zarasDt OR zarasDt = '".$m2n['zaras_tartas']."' ));	 ";
 */             
 //csak a megadott évfeolyamokhoz kötődő tankörök:
-        $q = "SELECT tanev FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter WHERE statusz = 'aktív' GROUP BY tanev; ";
-        if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }
-        if( ($r = mysqli_query($link, $q)) !== FALSE ){
+        $qq = "SELECT tanev FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter WHERE statusz = 'aktív' GROUP BY tanev; ";
+        if ($log['verbose'] > 5 ){ echo "MAY ->\t".$qq."\n"; }
+        if( ($r = mysqli_query($link, $qq)) !== FALSE ){
             $ev = mysqli_fetch_array($r, MYSQLI_ASSOC);
             $q = "SELECT tankorId, TRIM(BOTH ' '
                 FROM CONCAT('".$m2n['csoport_prefix']."',tankorNev)) AS tankorNev
@@ -343,7 +346,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 GROUP BY tanev) AND szemeszter = (
                 SELECT szemeszter
                 FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter
-                WHERE statusz = 'aktív' AND kezdesDt <= CURRENT_DATE() AND CURRENT_DATE() <= zarasDt) AND tankorId IN(
+                WHERE statusz = 'aktív' AND kezdesDt <= CURRENT_DATE() AND (CURRENT_DATE() <= zarasDt OR zarasDt = '".$m2n['zaras_tartas']."')) AND tankorId IN(
                 SELECT tankorId
                 FROM intezmeny_".$m2n['isk_rovidnev'].".tankorOsztaly
                 WHERE osztalyId IN (
@@ -375,7 +378,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             FROM CONCAT('".$m2n['csoport_prefix']."',tankorNev)) AS tankorNev
             FROM intezmeny_".$m2n['isk_rovidnev'].".tanar, mayor_private.accounts, intezmeny_".$m2n['isk_rovidnev'].".tankorTanar, intezmeny_".$m2n['isk_rovidnev'].".tankorSzemeszter
             WHERE accounts.studyId = tanar.oId AND statusz != 'jogviszonya lezárva' AND tanar.beDt <= CURRENT_DATE() AND (CURRENT_DATE() <= tanar.kiDt 
-            OR tanar.kiDt IS NULL) AND tanar.tanarId = tankorTanar.tanarId AND tankorTanar.beDt <= CURRENT_DATE() AND CURRENT_DATE() <= tankorTanar.kiDt 
+            OR tanar.kiDt IS NULL) AND tanar.tanarId = tankorTanar.tanarId AND tankorTanar.beDt <= CURRENT_DATE() AND (CURRENT_DATE() <= tankorTanar.kiDt OR tankorTanar.kiDt = '".$m2n['zaras_tartas']."' ) 
             AND tankorTanar.tankorId = tankorSzemeszter.tankorId AND tankorSzemeszter.tanev = (
             SELECT tanev
             FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter
@@ -383,7 +386,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             GROUP BY tanev) AND szemeszter = (
             SELECT szemeszter
             FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter
-            WHERE statusz = 'aktív' AND kezdesDt <= CURRENT_DATE() AND CURRENT_DATE() <= zarasDt)
+            WHERE statusz = 'aktív' AND kezdesDt <= CURRENT_DATE() AND (CURRENT_DATE() <= zarasDt OR zarasDT = '".$m2n['zaras_tartas']."' ))
             ORDER BY userAccount ;
         ";
         if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }  
@@ -423,7 +426,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 WHERE evfolyamJel >= ".$m2n['min_evfolyam']." OR osztalyJel IN(".$req_oszt.") 
                 ORDER BY osztalyId)
                 ORDER BY diakId) AND diak.statusz != 'jogviszonya lezárva' AND diak.statusz != 'felvételt nyert' AND diak.oId = accounts.studyId 
-                AND tankorDiak.diakId = diak.diakId AND tankorDiak.beDt <= CURRENT_DATE() AND (tankorDiak.kiDt >= CURRENT_DATE() OR tankorDiak.kiDt IS NULL) 
+                AND tankorDiak.diakId = diak.diakId AND tankorDiak.beDt <= CURRENT_DATE() AND (tankorDiak.kiDt >= CURRENT_DATE() OR tankorDiak.kiDt IS NULL OR tankorDiak.kiDt = '".$m2n['zaras_tartas']."' ) 
                 AND tankorSzemeszter.tankorId = tankorDiak.tankorId AND tankorSzemeszter.tanev = (
                 SELECT tanev
                 FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter
@@ -431,7 +434,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 GROUP BY tanev) AND tankorSzemeszter.szemeszter = (
                 SELECT szemeszter
                 FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter
-                WHERE statusz = 'aktív' AND kezdesDt <= CURRENT_DATE() AND CURRENT_DATE() <= zarasDt)
+                WHERE statusz = 'aktív' AND kezdesDt <= CURRENT_DATE() AND (CURRENT_DATE() <= zarasDt OR zarasDt = '".$m2n['zaras_tartas']."' ))
                 ORDER BY userAccount ;
             ";
             if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }
