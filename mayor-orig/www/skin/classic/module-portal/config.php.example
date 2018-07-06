@@ -1,0 +1,10 @@
+<?php
+
+if ( ($policy=='private' || $policy=='parent') && $page=='portal' && $sub=='hirek' && $f=='egyhir') {
+    $SSSHH .= '
+    <script src="skin/classic/share/javascript/tiny_mce/tiny_mce.js" type="text/javascript"></script>
+    <script src="skin/classic/module-portal/javascript/hirek/egyhir.php?lang='.$lang.'" type="text/javascript"></script>
+    '; 
+}
+
+?>

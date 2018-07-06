@@ -1,0 +1,25 @@
+/* ------ PDA ----------- */
+
+    h1 { font-size: large; font-weight: bold; text-align: center; }
+    div.set { text-align: center; margin: 10px 2px; }
+
+    a { border-radius: 4px;}
+
+    a.diak { text-decoration: none; background-color: rgb(60,60,150); color: white; padding: 4px; margin: 2px; }
+    a.szulo { text-decoration: none; background-color: rgb(60,150,60); color: white; padding: 4px; margin: 2px; }
+    a.tanar { text-decoration: none; background-color: rgb(150,60,60); color: white; padding: 4px; margin: 2px; }
+    a.forum { text-decoration: none; background-color: rgb(60,60,60); color: white; padding: 4px; margin: 2px; }
+    a.diak:hover { background-color: rgb(90,90,200); }
+    a.szulo:hover { background-color: rgb(90,200,90); }
+    a.tanar:hover { background-color: rgb(200,90,90); }
+    a.forum:hover { background-color: rgb(90,90,90); }
+
+    a.orarend { text-decoration: none; background-color: rgb(60,100,100); color: white; padding: 4px; margin: 2px; }
+    a.helyettesites { text-decoration: none; background-color: rgb(100,100,60); color: white; padding: 4px; margin: 2px; }
+    a.hirek { text-decoration: none; background-color: rgb(100,60,100); color: white; padding: 4px; margin: 2px; }
+    a.osztalyozo { text-decoration: none; background-color: #77aa99; color: white; padding: 4px; margin: 2px; }
+    a.hianyzas { text-decoration: none; background-color: #778899; color: white; padding: 4px; margin: 2px; }
+    a.kilepes { text-decoration: none; background-color: magenta; color: white; padding: 4px; margin: 2px; }
+    a.orarend:hover { background-color: rgb(90,200,200); }
+    a.helyettesites:hover { background-color: rgb(200,200,90); }
+    a.hirek:hover { background-color: rgb(200,90,200); }

@@ -1,0 +1,41 @@
+<?php
+
+    function genKerdoiv($ADAT) {
+
+	$VALASZOK = $ADAT['valaszok'];
+
+	$r = formBegin(array(),array("print"=>false));
+	$r .= '<input type="hidden" name="action" value="szavaz" />';
+	$r .= '<input type="hidden" name="kerdoivId" value="'.$ADAT['kerdes']['sorszam'].'" />';
+	$r .= '<div class="kerdes">'.$ADAT['kerdes']['kerdes'].'</div>';
+
+	$r.='<table class="kerdoiv" cellpadding="1" cellspacing="0">';
+
+	if (count($VALASZOK)>15 && $ADAT['szavazott']!==true) {
+	    $r .= '<tr><td>';
+	    $r .= '<select name="vId">';
+	    for ($i = 0; $i < count($VALASZOK); $i++) {
+		$r .= '<option value="'.$VALASZOK[$i]['sorszam'].'">'.$VALASZOK[$i]['valasz'].'</option>';
+	    }
+	    $r .= '</select>';
+	    $r .= '</td></tr>'."\n";
+	} else {
+	    for ($i = 0; $i < count($VALASZOK); $i++) {
+		$r .= '<tr><td>';
+		if ($ADAT['szavazott'] != true) $r .= '<input type="radio" name="vId" id="vId'.$i.'" value="'.$VALASZOK[$i]['sorszam'].'" />';
+		$r .= '</td><td>';
+		$r .= '<label for="vId'.$i.'">'.$VALASZOK[$i]['valasz'].'</label>';
+		$r .= '</td><td class="j">';
+		$r .= $VALASZOK[$i]['pontszam'];
+		$r .= '</td></tr>';
+	    }
+	}
+	$r .= '</table>'."\n";
+	if ($ADAT['szavazott'] != true) $r .= '<input type="submit" />';
+	$r .= formEnd(array("print"=>false));
+
+	return $r;
+
+    }
+
+?>

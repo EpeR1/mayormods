@@ -1,0 +1,42 @@
+
+
+
+    div.egyhir {
+	margin-left: 50px;
+    }
+
+    div.egyhir form {
+	font-weight: bold;
+    }
+
+    div.egyhir label {
+
+    }
+
+    div.egyhir input {
+	background-color: white;
+	border: solid 1px #667766;
+    }
+
+    div.egyhir textarea {
+	width: 80%;
+	height: 300px;
+	border: solid 1px #667766;	
+	background-color: white;
+    }
+
+    table.egyhirdetail {
+	background-color: #eeeeee;
+	border-bottom: solid 2px #667766;
+    }
+    table.egyhirdetail td {
+	border: solid 1px #667766;
+    }
+    table.egyhirdetail th {
+	background-color: #667766;
+	color: white;
+	height:30px;
+	border-bottom: solid 2px #001100;
+    }
+
+    .mceEditor iframe { border: blue 1px solid; }

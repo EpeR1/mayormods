@@ -1,0 +1,8 @@
+
+    form.kerdoiv { padding: 30px; width:300px; float:left; }
+    form.kerdoiv p { background-color: #556677; padding:2px; color:white; margin-bottom:0px; border-bottom: solid 1px white;}
+    form.kerdoiv input { border: solid 1px #556677; }
+    form.kerdoiv ol { background-color: #aabbcc; margin-top:0px;}
+    form.kerdoiv ol li { padding:2px; }
+    form.kerdoiv ul { background-color: #ccbbcc; margin-top:0px;}
+    form.kerdoiv ul li { padding:2px; }

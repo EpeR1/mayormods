@@ -1,0 +1,153 @@
+<?php
+
+    function _putKategoriak($ADAT,$cid) {
+
+	echo '<select name="cid">';
+	    echo '<option value=""></option>';
+	    for ($i=0; $i<count($ADAT['kategoriak']); $i++) {
+		$_SEL = ($ADAT['kategoriak'][$i]['id'] == $cid) ? ' selected="selected" ':'';
+		echo '<option value="'.$ADAT['kategoriak'][$i]['id'].'" '.$_SEL.'>'.$ADAT['kategoriak'][$i]['leiras'].'</option>';
+	    }
+	echo '</select>';
+
+    }
+
+    function putHirForm($HIR,$ADAT) {
+	global $LANGUAGES, $AUTH;
+
+        $CLASSS = array(1 => _KULSO_HIR, 2 => _KIS_HIR, 6 => _CSAK_BELSO, 0 => _ISMERETLEN);
+        $FLAGSS = array(0 => _NEM_LATSZIK, 1 => _LATSZIK, 2 => 2, 3 => 3);
+	
+    $FLAGS                = Array(0,1);
+
+	echo '<div class="egyhir">';
+
+	echo '<h2>'.__TITLE.'</h2>';
+
+	formBegin();
+
+	    if (__HIREKADMIN===true) {
+
+		    echo '<table class="egyhirdetail" cellspacing="1">';
+		    echo '<tr><th colspan="3">'._BEALLITASOK.'</th></tr>';
+		    echo '<tr><td style="text-align:right">';
+
+		    echo _TOLDT.': <input type="text" name="kdt" id="kdt" value="'.$HIR['kdt'].'" class="datetime" /><br/>';	
+		    echo _IGDT.': <input type="text" name="vdt" id="vdt" value="'.$HIR['vdt'].'" class="datetime" />';	
+
+		echo '</td>';
+		echo '<td>';
+
+		    reset($LANGUAGES);
+		    echo '<select name="lang">';
+		    for($i=0; $i<count($LANGUAGES); $i++) {
+			//echo '<input type="checkbox" name="policies" value="'.$LANGUAGES[$i].'" />';
+			$_CHK = ($LANGUAGES[$i]==$HIR['lang']) ? ' selected="selected" ':'';
+			echo '<option value="'.$LANGUAGES[$i].'" '.$_CHK.'/>';
+			echo $LANGUAGES[$i];
+			echo '</option>';
+		    }
+		    echo '</select>';
+	
+		    _putKategoriak($ADAT,$HIR['cid']);
+
+	    	echo '</td>';
+		echo '<td>';
+		    echo $HIR['owner'];
+		echo '</td>';
+		echo '</tr>';
+
+		echo '<tr>';
+		echo '<td>'; 
+
+
+		reset($FLAGS);
+		for($i=0; $i<count($FLAGS); $i++) {
+		    $_CHK = ($FLAGS[$i]==$HIR['flag']) ? ' checked="checked" ':'';
+		    echo '<input type="radio" id="F'.$i.'" name="flag" value="'.$FLAGS[$i].'" '.$_CHK.'/>';
+		    echo '<label for="F'.$i.'">';
+		    echo '&nbsp;&nbsp;&nbsp;&nbsp;';
+		    echo $FLAGSS[$i];
+		    echo '('.$FLAGS[$i].')';
+		    echo '</label>';
+		    echo '<br/>';
+		}
+
+
+
+		echo '</td><td>';
+
+		//$POLICIES                = Array('private','parent','public');
+		$POLICIES                = Array(1,6);
+		reset($POLICIES);
+		for($i=0; $i<count($POLICIES); $i++) {
+		    //echo '<input type="checkbox" name="policies" value="'.$POLICIES[$i].'" />';
+		    $_CHK = ($POLICIES[$i]==$HIR['class']) ? ' checked="checked" ':'';
+		    echo '<input id="P'.$i.'" type="radio" name="class" value="'.$POLICIES[$i].'" '.$_CHK.'/>';
+		    echo '<label for="P'.$i.'"> ';
+		    echo $CLASSS[$POLICIES[$i]];
+		    echo ' ('.$POLICIES[$i].')';
+		    echo '</label>';
+		    echo '<br/>';
+		}
+
+		echo '</td>';
+		echo '<td>';
+		    for($i=0; $i<count($C = $AUTH['private']['categories']); $i++) {
+			$_CHK = (strstr($HIR['csoport'],$C[$i])) ? ' checked="checked"':'';
+			echo '<input type="checkbox" id="C1'.$i.'" name="csoport[]" value="'.$C[$i].'" '.$_CHK.'/>';
+			echo '<label for="C1'.$i.'">'.$C[$i].'</label>';
+		    }
+		    for($i=0; $i<count($C = $AUTH['parent']['categories']); $i++) {
+			$_CHK = (strstr($HIR['csoport'],$C[$i])) ? ' checked="checked"':'';
+			echo '<input type="checkbox" id="C2'.$i.'" name="csoport[]" value="'.$C[$i].'" '.$_CHK.'/>';
+			echo '<label for="C2'.$i.'">'.$C[$i].'</label>';
+		    }
+		echo '</td>';
+		echo '</tr>';
+
+		echo '</table>';
+
+
+	    } else {
+		echo '<input type="hidden" name="flag" value="0" />';	
+	    }
+
+	    echo '<p>';
+
+
+	    echo '<label for="cim">'._CIM.': </label>';
+	    echo '<input type="text" name="cim" id="cim" size="80" value="'.htmlspecialchars($HIR['cim']).'" />';
+
+	    echo '<br/>';	    
+	    echo "\n".'<textarea name="txt" id="txt" class="wysiwyg" rows="10" cols="80">'.htmlspecialchars($HIR['txt']).'</textarea>'."\n";
+
+	    echo '<br/>';
+	    echo _KEP;
+	    echo '<input type="text" name="pic" id="pic" size="128" value="'.$HIR['pic'].'" /><br/>';
+	    echo '<input type="submit" value="'._ROGZIT.'" />';
+	    echo '<input type="hidden" name="action" value="save" />';
+	    echo '<input type="hidden" name="hirId" value="'.($HIR['id']).'" />';
+	    echo '</p>';
+
+
+	formEnd();
+	
+	echo '</div>';
+
+
+	if (__HIREKADMIN===true) {
+	echo '<hr/>';
+            echo '<div class="hirCim">'.($HIR['cim']).'</div>';
+            echo '<div class="hir">'.($HIR['txt']).'</div>';
+            for ($j=0; $j<count($ADAT['hirek']['linkek'][$HIR['id']]); $j++) {
+                echo '<a href="'.$ADAT['hirek']['linkek'][$HIR['id']][$j]['uri'].'">';
+                //echo $ADAT['hirek']['linkek'][$HIR['id']][$j]['szoveg'];
+                echo '</a>';
+            }
+	echo '<hr/>';
+	}
+
+    }
+
+?>

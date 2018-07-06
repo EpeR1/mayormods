@@ -1,0 +1,29 @@
+
+    div.hirCim {
+	font-style: italic;
+	font-size: 14px;
+	color: #000088;
+	font-weight: bold;
+	margin-top:1em;
+	padding-bottom: 0.5em;
+    }
+
+    table.hAdmin {
+	background-color: #445560;
+	
+    }
+    table.hAdmin tr td {
+	background-color: #eeeeee;
+    }
+
+
+    table.hAdmin tr.unk td {
+	background-color: #993456;
+    }
+    table.hAdmin tr.old td {
+	background-color: #999999;
+    }
+
+    table.hAdmin a { display: block;  color: black; }
+
+    label { margin:0px; padding:0px; }

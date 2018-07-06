@@ -1,0 +1,99 @@
+
+   div.hirCim {
+        font-style: italic;
+        font-size: 14px;
+        color: #000088;
+        font-weight: bold;
+        margin-top:1em;
+        padding-bottom: 0.5em;
+    }
+
+    div.hirCim a {
+        color: #000088;
+	text-decoration: none;
+    }
+    div.hirCim a:hover { color: #1E90FF }
+
+    table.portalMain { width: 100%; }
+
+    table.portalMain td.bal {
+	width:140px;
+	vertical-align: top;
+	font-size: 10px;
+    }
+    table.portalMain td.kozep {
+	vertical-align: top;
+	padding:4px;
+    }
+
+    table.portalMain td.jobb {
+	width:160px;
+	vertical-align: top;
+	font-size: 10px;
+    }
+
+    table.portalMain div.doboz { width:100%; padding:0em; margin-bottom: 4px; margin-right: 2px; margin-left: 2px; }
+    table.portalMain div.doboz ul { padding-left:20px; margin: 0px 0px 0px 0px; }
+    table.portalMain div.doboz ul li { padding:0px 0px 0px 0px; margin: 0px 0px 0px 0px; }
+    table.portalMain div.doboz ul li a { color: black; text-decoration: none; }
+    table.portalMain div.doboz ul li a:hover { color: black; text-decoration: underline; }
+
+
+    table.portalMain td.bal div.doboz div.dobozCim { 
+	width:100%; font-size:11px;font-weight: bold; padding: 0.1em 0em;  color: white; border-bottom: solid 1px #676767;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+    }
+    table.portalMain td.jobb div.doboz div.dobozCim { 
+	width:100%; font-size:11px;font-weight: bold; padding: 0.1em 0em;  color: white; border-bottom: solid 1px #676767;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+    }
+    div.doboz div.dobozCim span { padding-left: 0.8em; }
+    div.doboz div.dobozCim a { color:white; text-decoration: none;}
+    div.doboz div.dobozCim a:hover { text-decoration: underline; }
+
+    div.doboz:hover div.dobozCim { opacity: 0.8;  }
+
+/*
+    div.doboz div.dobozCim , div.doboz div.dobozCim { border-bottom: solid 1px black; }
+    div.doboz div.dobozCim tr th {color:white; font-weight:bold; text-align: left; font-size:10px;}
+*/
+
+    table.kerdoiv { font-size:10px; }
+    div.kerdes    { text-align: center; font-weight:bold; }
+    table.kerdoiv tr td.j { text-align: right }
+
+    div.egyHir {position:relative;}
+    div.egyHir div.hir a { color:#325C99; }
+    div.egyHir div.hir a:hover { color:#1E90FF; }
+/*
+div.egyHir div.hirCim:after {position:absolute; display:block; content:""; background-color:#eeeeee; height:1px; width:100%;
+bottom:0px; right:0px; }
+*/
+
+/*Az a hr mindig a halálom volt :) */
+div.egyHir:after {
+  clear: both;
+  height: 0px;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  width: 100%;
+  background-color: #777777;
+  border-style: solid;
+  border-color: #eeeeee;
+  border-width: 0px 0px 1px 0px;
+  content: " ";
+  display: block;
+}
+hr {display: none;}
+
+    table.portalMain div.dobozTart a { color: black }
+
+
+
+@media (max-width: 850px) {
+  .bal, .jobb {
+    display: none;
+  }
+}

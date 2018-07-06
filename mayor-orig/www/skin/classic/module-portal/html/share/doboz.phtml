@@ -1,0 +1,32 @@
+<?php
+
+    function genLinkek($ADAT) {
+	
+	if (is_array($ADAT) && count($ADAT)>0) {
+	    $str = '<ul>';
+	    for ($i=0; $i<count($ADAT); $i++) {
+		$L = $ADAT[$i];
+		$str .= '<li>';
+		    $str .=  '<a href="'.$L['href'].'">';
+			$str .=  $L['szoveg'];
+		    $str .=  '</a>';
+		$str .=  '</li>'."\n";
+	    }
+	    $str .=  '</ul>';
+	}
+	return $str;
+    }
+
+    function putDoboz($cime, $bele, $SET = array('width'=>'100%','background-color'=> '#eeeeee', 'header-color'=>'#444444', 'header-link'=>'')) {
+
+	    $bgcolor =  ($SET['background-color']=='') ? '#eeeeee' : $SET['background-color'] ;
+	    $width = ($SET['width']=='') ? '100%':$SET['width'];
+	    if ($SET['header-link']!='') $cime = '<a href="'.$SET['header-link'].'">'.$cime.'</a>';
+	    echo '<div class="doboz">';
+		echo '<div class="dobozCim" style="width: '.$width.'; background-color: '.$SET['header-color'].'"><span>'.$cime.'</span></div>';
+		echo '<div class="dobozTart" style="background-color: '.$bgcolor.'">'.$bele.'</div>';
+	    echo '</div>';
+
+    }
+
+?>

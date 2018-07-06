@@ -1,0 +1,34 @@
+<?php
+
+    function putHirek($ADAT) {
+
+	if (count($ADAT['hirek']['szovegek'])==0) {
+/*	    echo '<div class="egyHir"><div class="hirCim">';
+		echo 'MaYoR elektronikus napló';
+	    echo '</div><div class="hir">';
+		echo 'Szabadszoftver a közoktatási intézmények napi adminisztrációjához.';
+		echo '<ul><li><a href="http://www.mayor.hu">www.mayor.hu</a> - a mindennapokra</li></ul>';
+	    echo '</div></div>';
+*/
+	} else {
+	for ($i=0; $i<count($ADAT['hirek']['szovegek']); $i++) {
+	    echo '<div class="egyHir">';
+	    $D = $ADAT['hirek']['szovegek'][$i];
+	    list ($a,$b) = explode('<!-- more -->',$D['txt']);
+	    echo '<div class="hirCim"><a href="'.href('index.php?page=portal&sub=portal&f=hir&hirId='.$D['id']).'">'.$D['cim'].'</a></div>';
+	    echo '<div class="hir">';
+		echo $a;
+		if ($b!="") echo ' <a href="'.href('index.php?page=portal&sub=portal&f=hir&hirId='.$D['id']).'">Tovább...</a>';
+	    echo '</div>';
+	    for ($j=0; $j<count($ADAT['hirek']['linkek'][$D['id']]); $j++) {
+		echo '<a href="'.$ADAT['hirek']['linkek'][$D['id']][$j]['uri'].'">';
+		echo $ADAT['hirek']['linkek'][$D['id']][$j]['szoveg'];
+		echo '</a>';
+	    }
+	    echo '<hr style="clear:both; height:0px; margin-top:2em; margin-bottom:2em; width:80%; background-color: #777777; border-style: solid; border-color: #eeeeee; border-width: 0px 0px 1px 0px;" />';
+	    echo '</div>';
+	}
+	}
+    }
+
+?>

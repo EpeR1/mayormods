@@ -1,0 +1,38 @@
+<?php
+
+    function putUjKerdoiv() {
+
+	formBegin(array('class'=>'kerdoiv'));
+	    echo '<input type="hidden" name="action" value="ujKerdes" />';
+	    echo '<p>';
+	    echo '<label for="kerdes">'._KERDES.'</label>'."\n";
+	    echo '<input type="text" name="kerdes" text="" />';
+	    echo '</p>';
+	    echo '<ol>';
+	    for ($i = 0; $i < 15; $i++) {
+		echo '<li><input type="text" name="valaszok[]" text="" /></li>';
+	    }
+	    echo '</ol>';
+	    echo '<input type="submit"  />';
+	formEnd();
+
+    }
+
+    function putRegiKerdesek($ADAT) {
+	formBegin(array('class'=>'kerdoiv'));
+	echo '<input type="hidden" name="action" value="delKerdes" />';
+	echo '<p>Törlendők</p>';
+	echo '<ul>';
+	for ($i=0; $i<count($ADAT); $i++) {
+	    echo '<li>';
+		echo '<input type="checkbox" name="sorszam[]" value="'.$ADAT[$i]['sorszam'].'" />';
+		echo $ADAT[$i]['kerdes'];
+	    echo '</li>';
+	}
+	echo '</ul>';
+	echo '<input type="submit"  />';
+	formEnd();
+
+    }
+
+?>

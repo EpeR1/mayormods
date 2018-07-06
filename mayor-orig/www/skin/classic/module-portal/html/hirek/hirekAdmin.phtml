@@ -1,0 +1,51 @@
+<?php
+
+    function putHirek($ADAT) {
+
+/*
+    hideShowContainer
+    onClickHideShow
+    openable
+*/
+
+	$CLASS = array(1=>'külső hír',2=>'kis hír',6=>'csak belső',0=>'ISMERETLEN');
+	$FLAGS = array(0=>'nem látszik', 1=>'látszik', 2=>2, 3=>3);
+	$now = time();
+	echo '<table class="hAdmin hideShowContainer" align="center">';
+	echo '<tr><th colspan="5"><button type="button" class="onClickHideShow">+++</button></th></tr>'."\n";
+	for ($i=0; $i<count($ADAT); $i++) {
+	    $D = $ADAT[$i];
+	    if ($D['class']==0) $_class='class="unk"'; else 
+	    if (strtotime($D['vdt'])<$now || $D['flag']==0) $_class='class="old openable" style="display: none"'; else $_class="";
+
+	    echo '<tr '.$_class.'>';
+	    echo '<td>';
+		echo $D['lang'];
+	    echo '</td>';
+
+	    echo '<td>';
+		echo '<a href="'.href('index.php?page=portal&sub=hirek&f=egyhir&hirId='.$D['id']).'">';
+		echo ($D['cim']=='')?'nincs cím':htmlspecialchars($D['cim']);
+		echo '</a>';
+	    echo '</td>';
+	    echo '<td>';
+		echo $CLASS[$D['class']];
+	    echo '</td>';
+	    echo '<td>';
+		echo $FLAGS[$D['flag']];
+		echo ' '.$D['csoport'];
+	    echo '</td>';
+	    echo '<td>';
+		echo $D['owner'];
+	    echo '</td>';
+	    echo '<td>';
+		echo $D['kdt'];
+		echo $D['vdt'];
+	    echo '</td></tr>';
+	    echo "\n\n";
+	}
+        echo '</table>';
+
+    }
+
+?>

@@ -1,0 +1,14 @@
+<?php
+
+    //define('__PORTAL_INSTALLED',true);
+
+    $MYSQL_DATA['portal']['user']= 'mayor_portal';
+    $MYSQL_DATA['portal']['pw']= '%SQLPW%';
+    $MYSQL_DATA['portal']['db']= 'mayor_portal';
+
+    define('__PORTAL_CODE','demo');
+
+    // A hír kiíráskor legyen-e RTE
+    define('__RICH_TEXT_EDITOR',true);
+
+?>

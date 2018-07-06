@@ -1,0 +1,16 @@
+<?php
+
+    function putHir($ADAT) {
+	$H = $ADAT['hirek']['szovegek'][0];
+	echo '<div class="hir">';
+	echo '<h1>'.$H['cim'].'</h1>';
+	echo '<p>'.$H['txt'].'</p>';
+	//echo '<div>'.$H['kdt'].'</div>';
+	echo '</div>';
+	if (_OG_ENABLED===true) {
+	    echo '<div class="fb-comments" style="z-index:0" data-href="'._BASE_URL.'/index.php?page=portal&amp;sub=portal&amp;f=hir&amp;hirId='.$H['id'].'"
+		   data-width="100%" data-numposts="10" data-colorscheme="light"></div>';
+	}
+    }
+
+?>
