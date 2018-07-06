@@ -1,0 +1,317 @@
+@charset "UTF-8";
+
+    #toolBarIntezmeny {
+	color: #1E90FF;
+	border: solid #eeeeee;
+	border-width: 0px 0px 0px 0px;
+	font-size: 10px;
+    }
+    #toolBarHelpButton { margin-left:5px;font-size:8px; border-radius: 50%; border: solid 1px #dddddd; padding:0px 3px; color: #aaaaaa; font-weight:normal;}
+    #toolBarHelpButton:hover { background-color:#1e90ff; color: white; border-color: navy;}
+    img#mayorBuggie { height:34px; }
+    img#mayorBuggie:hover {  animation-name: spin;
+    animation-duration: 1000ms;
+    animation-iteration-count: 1;
+    animation-timing-function: ease;
+    }
+    #diakSelectIcon {
+	vertical-align: middle;
+    	color: #aaaaaa;
+	padding: 0px 2px;
+	cursor: pointer;
+	margin-right:2px;
+	border: solid 0px #eeeeee;
+    }
+    #diakSelectIcon:hover {color:white;}
+
+
+    table.toolBar { width: 95%; max-width: 95%;	border-spacing: 0px; margin: 1em auto; overflow: auto; border-collapse: collapse;}
+    table.toolBar tr.first td.toolBarTitle { border: solid 1px #333333; }
+    table.toolBar tr.first td.toolBarTool { border-style: solid; border-width: 1px 1px 1px 1px; border-color: #333333; }
+
+    table.toolBar form { margin: 0px; padding: 0px;}
+
+/* TH */
+
+    table.toolBar th {
+	background-color: rgb(90,133,184);
+	text-align: center;
+	color: white;
+	font-size:10px;
+        padding: 0px 4px 0px 4px;
+	font-weight: 600;
+	letter-spacing: 0.2px;
+	border-color: rgb(21,71,123);
+	border-width: 1px 0px 1px 1px;
+	border-style: solid;
+    }
+    table.toolBar th button.toolBarClear { float:right; border: none; background-color: #5A85B8; height:10px;font-size:9px; color:inherit; padding:0px 2px; color: rgba(255,255,255,0.5);}
+    table.toolBar th button.toolBarClear:hover { color: rgba(255,255,255,1);}
+
+    table.toolBar th button.toolBarLeft {height: 100%;
+	line-height: 2em;background-color: rgba(100,100,100,0);
+	color: #fff;    border: solid 0px #fff;
+	border-radius: 2px;padding: 4px 10px; }
+    table.toolBar th button.toolBarLeft:hover { color: rgba(255,255,255,0.5);}
+
+    table.toolBar tr td.szemely { background-color: #5A85B8; color:white; border: solid 1px #558; padding:2px 10px; color: rgba(255,255,255,0.5);}
+    table.toolBar tr td.szemely:hover { color: rgba(255,255,255,1);}
+
+
+/* TD */
+    table.toolBar td.gap { width: 50%; border-spacing: 0px; }
+    table.toolBar td.help {
+	background-color: rgb(11,51,103);
+	color: white; 
+	border-width: 0px 1px 1px 1px;
+	border-color: black;
+	border-style: none solid solid solid;
+	font-size:smaller;
+    }
+    table.toolBar td.toolBarTitle {
+	background-color: white;
+	font-size: 18px;
+	font-weight: bold;
+	width: 100%;
+    }
+    table.toolBar td.toolBarTool {
+	border: solid 1px #666699;
+	background-color: #666699;
+	margin: 0px;
+	padding: 0px;
+    }
+    table.toolBar td.toolBarTool table { border-spacing: 0px; width: 100%; }
+    table.toolBar td.toolBarTool table th {
+	background-color: rgb(90,133,184);
+	text-align: left;
+	color: white;
+	font-size:10px;
+        padding: 0px 0px 0px 4px;
+	border-color: rgb(21,71,123);
+	border-width: 1px 0px;
+	border-style: solid;
+    }
+
+/* Submit */
+
+    table.toolBar input.toolSubmit,
+    table.toolBar button.toolSubmit { 
+	vertical-align: middle; border: 0px none;
+	padding:0px;
+	margin:0px;
+	color: #aaaaaa;
+	background-color: inherit;
+	font-size:8px;
+    }
+    table.toolBar form:hover input.toolSubmit,
+    table.toolBar form:hover button.toolSubmit {
+	outline: solid 0px;
+	color:#dddddd;
+    } 
+
+    table.toolBar form input.toolSubmit:hover {
+	outline: solid 0px;
+	color: lightgreen;
+    } 
+    table.toolBar td.toolBarTool.cella select {  max-width:180px; min-width:60px;}
+    table.toolBar td.toolBarTool.sor select { max-width:320px; min-width:60px;}
+
+    table.toolBar img { border: none; }
+
+/* spec */
+
+    table.toolBar table.hianyzasOsszegzo { width:100%; font-size:10px; }
+    table.toolBar table.hianyzasOsszegzo th {
+            text-align: center !important;
+            border-style: none none solid none;
+            border-color: #888888;
+            border-width: 0px 0px 1px 0px;
+            }
+    table.toolBar     table.hianyzasOsszegzo td { width: 18%; border-bottom: solid 1px rgb(60,80,100); background-color: #dddddd; text-align: center; }
+
+    form.lapozo input {	font-size: 10px; border: solid 1px #555555; }
+    form button.lapozo { font-size:10px; }
+    form span.lapozo   { color:white; background-color: rgb(90,133,184); padding:1px 5px; border: solid 1px rgb(21,71,123);}
+
+    table.flipper input {height: 30px; color: white; 
+	border-right: solid 1px #15477B;
+	border-bottom: solid 1px #15477B;
+	border-top: solid 1px #37699D;
+	border-left: solid 1px #37699D;
+	background-color: rgb(90,133,184);
+	padding:0px 10px;
+    }
+    table.flipper input:hover {background-color: rgba(90,133,184,0.6);border: solid 1px #15477B;}
+    table.flipper input.step { background-color: rgb(100,100,60); }
+    table.gomb button { height:30px; background-color: rgb(90,133,184);
+	border-right: solid 1px rgb(21, 71, 123);
+	border-bottom: solid 1px rgb(21, 71, 123);
+	border-top: solid 1px rgb(55, 105, 157);
+	border-left: solid 1px rgb(55, 105, 157);
+    }
+    table.gomb button:hover { background-color: rgba(21, 71, 123,0.7); }
+    div.beirasAdatok { text-align: center; }
+    div.beirasAdatok span { font-weight: bold; font-size: 20pt; vertical-align: middle; }
+    div.beirasAdatok img { vertical-align: middle; }
+
+    table.toolBar input { font-size: 10px; }
+
+    table.toolBar #toolBarHamburgerVezerlo { color:rgb(170, 170, 170);  }
+    table.toolBar #toolBarHamburgerVezerlo:hover { color:white; }
+    
+    #toolBarHamburgerLista ul { list-style-type:none;  }
+    #toolBarHamburgerLista li { text-align:right; }
+    #toolBarHamburgerLista button.hamburgerIkon { 
+	height: 30px;
+	color: rgb(255, 255, 255);
+	border-radius: 2px 0px 0px 2px;
+	border-right: solid 0px rgb(21, 71, 123);
+	border-bottom: solid 1px rgb(21, 71, 123);
+	border-top: solid 1px rgb(55, 105, 157);
+	border-left: solid 1px rgb(55, 105, 157);
+	background-color: rgb(90, 133, 184);
+	padding: 0px 10px;
+	margin-bottom:4px;
+    }
+    #toolBarHamburgerLista button.hamburgerIkon:hover {background-color: rgba(90,133,184,0.6);border: solid 1px #15477B;}
+
+    .diakNev:hover, .szuloNev:hover, .tankorAdat:hover, .tanarNev:hover, .zaroJegyAdat:hover, .jegyAdat:hover, .oraAdat:hover, .jegyzetAdat:hover, .dolgozatAdat:hover { cursor: pointer; }
+    .activeElement { outline: solid 2px orange; background-color: rgba(255,255,255,0.9); }
+
+    #mayorSearch a.diakNev:before, #mayorSearch a.diakNev:hover:before { content:'\e0ca'; font-family: 'Elusive-Icons'; padding-right:2px; color: rgba(100,149,237,0.4);}
+    #mayorSearch a.diakNev.aktiv:before, #mayorSearch a.diakNev:hover:before { content:'\e0ca'; font-family: 'Elusive-Icons'; color: rgba(100,149,237,1);}
+
+    #mayorSearch a.tanarNev{ color: rgb(219,6,161); }
+    #mayorSearch a.tanarNev:before, #mayorSearch a.tanarNev:hover:before { content:'\e0da'; font-family: 'Elusive-Icons'; padding-right:2px; color: rgba(219,6,161,0.4);}
+    #mayorSearch a.tanarNev.aktiv:before, #mayorSearch a.tanarNev:hover:before { content:'\e0da'; font-family: 'Elusive-Icons'; color: rgb(219,6,161)}
+
+    #mayorSearch a.szuloNev { color: rgb(76,175,80); }
+    #mayorSearch a.szuloNev:before, #mayorSearch a.szuloNev:hover:before { content:'\e091'; font-family: 'Elusive-Icons'; padding-right:2px; color: rgba(76,175,80,0.4);}
+    #mayorSearch a.szuloNev.aktiv:before, #mayorSearch a.szuloNev:hover:before { content:'\e091'; font-family: 'Elusive-Icons'; color: rgb(76,175,80)}
+
+    #updateWindowSide div.ora { }
+
+    #updateWindowSideContent .diakNev:after { font-family: 'Elusive-Icons'; content: "\e0f3"; color:cornflowerblue !important; }
+    #updateWindowSideContent .diakNev:hover:after { font-family: 'Elusive-Icons'; content: "\e0f4"; color:cornflowerblue !important; }
+    #updateWindowSideContent .diakNev:hover { color:#999 }
+
+    #updateWindowSide ul li,#updateWindowSideSub ul li { padding-top:2px; }
+    #updateWindowSideContent h3,	#updateWindowSideSubContent h3 { border-bottom: solid 0px #aaa; margin: 18px 16px 8px 16px;}
+    #updateWindowSideContent h3 a:hover,#updateWindowSideSubContent h3 a:hover { color:#999 }
+    #updateWindowSideContent ul li a:hover,#updateWindowSideSubContent ul li a:hover { color:#999 }
+    #updateWindowSideTitle a:hover,	#updateWindowSideSubTitle a:hover { color:#999 }
+
+/*    #updateWindowSide h3:before { font-family: 'Elusive-Icons'; font-size:10px; content: "\e0a4"; padding-right:8px;font-weight:100; }*/
+
+    .updateWindowSide button.mentes,    .updateWindowSide button.torles  { margin: 4px 18px; height:2em; border-radius:2px; border: solid 1px white; color:white;}
+    .updateWindowSide button.mentes:hover { background-color: lightgreen; }
+    .updateWindowSide button.torles:hover { background-color: red; }
+
+    .updateWindowSide i {line-height:1.5em; background-color: rgba(255,255,255,0.4); padding-left:2px; padding-right:4px; }
+
+    span.diakEletkor {font-size:; border: solid 1px white; border-radius: 4px; padding:2px;background-color:white; color:black;}
+    span.diakEletkor:hover:after { content: " éves";    }
+
+    table.toolBar button.toolBarBtn {
+    background: inherit;
+    border: none;
+    color: white;
+    padding: 2px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 0px 0px;
+    cursor: pointer;
+    color: rgba(255,255,255,0.5);
+    }
+    table.toolBar button.toolBarBtn:hover { color:white; }
+    table.toolBar button.toolBarBtn:active { color:#f06 ; background-color: cornflowerblue;}
+    table.toolBar button.toolBarBtn.loved { color: #f06; }
+    table.toolBar button.toolBarBtn.loved:active { color:red ; background-color: cornflowerblue;}
+   
+    table.toolBar button.toolBarBtn.mobileOnly { display: none;}
+
+    div.arckepContainer.tanar span {background-color: #db06a1; }
+    div.arckepContainer.szulo span {background-color: #40e0d0; }
+    div.arckepContainer.diak span {background-color: #6495ed; }
+
+@media (max-width: 764px) {
+
+    #toolBarTitle {display:;}
+    #toolBarKerelem { display:none; }
+    .toolBarClear {display:none;}
+    table.toolBar table, 
+    table.toolBar thead, 
+    table.toolBar tbody,
+    table.toolBar th,
+    table.toolBar td,
+    table.toolBar tr { 
+	display: block; 
+	text-align:left;
+    }
+
+    table.toolBar table  tbody { background-color: white; } 
+    table.toolBar thead tr { 
+	position: absolute;
+	top: -9999px;
+	left: -9999px;
+    }
+    table.toolBar tr { border: 0px solid #fff; margin-bottom:0px; }
+    table.toolBar td { 
+	border: none;
+	border-bottom: 0px solid #eee; 
+	position: relative;
+	padding-left: 0px; 
+	background-color: #eee; color:black;
+    }
+    table.toolBar td.toolBarTitle { width: inherit; }
+    table.toolBar td.sbmt { display:none }
+
+    table.toolBar button.toolBarBtn {
+	border: none;
+	color: white;
+	padding: 2px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 20px;
+	margin: 0px 0px;
+	cursor: pointer;
+	color: cornflowerblue;
+    }
+    table.toolBar button.toolBarBtn:hover { color: lightgreen ; }
+    table.toolBar button.toolBarBtn:active { color: lightgreen ; }
+    table.toolBar td.szemely { font-size: 24px; }
+
+    table.toolBar button.toolBarBtn.mobileOnly { display:inline-block;}
+    table.toolBar th button.toolBarLeft { background-color: #5a85b8;border: solid 0px white; }
+    
+    .updateWindowSide  {font-size:16px;}
+    .updateWindowSide button.mentes, .updateWindowSide button.torles {
+	font-size: 16px;
+    }
+    .updateWindowSide button.mentes { background-color: lightgreen; }
+    .updateWindowSide button.torles { background-color: red; }
+
+}
+
+@media print {
+    table.toolBar tr th { border: none;}
+    table.toolBar tr td { border: none;}
+    input[type=submit] {display:none;}
+    input[type=button] {display:none;}
+    button[type=submit] {display:none;}
+    a {text-decoration: none; color:black;}
+}
+
+@keyframes spin { 
+        from { 
+            transform: rotate(0deg); 
+        } to { 
+            transform: rotate(360deg); 
+        }
+}
+
+/* Tipso Bubble Styles */
+.tipso_bubble,.tipso_bubble > .tipso_arrow{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}.tipso_bubble{position:absolute;text-align:center;border-radius:6px;z-index:9999}.tipso_style{cursor:help;border-bottom:1px dotted}.tipso_title{border-radius:6px 6px 0 0}.tipso_content{word-wrap:break-word;padding:0.5em}.tipso_bubble.tiny{font-size:0.6rem}.tipso_bubble.small{font-size:0.8rem}.tipso_bubble.default{font-size:1rem}.tipso_bubble.large{font-size:1.2rem;width:100%}.tipso_bubble > .tipso_arrow{position:absolute;width:0;height:0;border:8px solid;pointer-events:none}.tipso_bubble.top > .tipso_arrow{border-top-color:#000;border-right-color:transparent;border-left-color:transparent;border-bottom-color:transparent;top:100%;left:50%;margin-left:-8px}.tipso_bubble.bottom > .tipso_arrow{border-bottom-color:#000;border-right-color:transparent;border-left-color:transparent;border-top-color:transparent;bottom:100%;left:50%;margin-left:-8px}.tipso_bubble.left > .tipso_arrow{border-left-color:#000;border-top-color:transparent;border-bottom-color:transparent;border-right-color:transparent;top:50%;left:100%;margin-top:-8px}.tipso_bubble.right > .tipso_arrow{border-right-color:#000;border-top-color:transparent;border-bottom-color:transparent;border-left-color:transparent;top:50%;right:100%;margin-top:-8px}.tipso_bubble .top_right_corner,.tipso_bubble.top_right_corner{border-bottom-left-radius:0}.tipso_bubble .bottom_right_corner,.tipso_bubble.bottom_right_corner{border-top-left-radius:0}.tipso_bubble .top_left_corner,.tipso_bubble.top_left_corner{border-bottom-right-radius:0}.tipso_bubble .bottom_left_corner,.tipso_bubble.bottom_left_corner{border-top-right-radius:0}

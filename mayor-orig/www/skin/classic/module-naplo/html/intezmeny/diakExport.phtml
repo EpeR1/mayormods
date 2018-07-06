@@ -1,0 +1,93 @@
+<?php
+
+    function putDiakExportForm($ADAT) {
+
+	global $skin, $exportFormatum;
+
+	if ($skin != 'ajax') formBegin(array('action'=>href('index.php?page=naplo&sub=intezmeny&f=diakExport'), 'class'=>'diak'));
+	echo '<input type="hidden" name="action" value="diakExport" />'."\n";
+
+	foreach ($exportFormatum as $formatum => $mezok) {
+	    $format = ekezettelen($formatum);
+	    echo '<input type="button" name="'.$format.'" value="'.$formatum.'" class="onClickMezoSelect" />'."\n";
+	    echo '<input type="hidden" name="'.$format.'Lista" id="'.$format.'Lista" value="'.implode(',', $mezok).'" />'."\n";
+	}
+
+	if (isset($ADAT['osztalyId'])) echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	if (isset($ADAT['dt'])) echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+
+	echo '<fieldset><legend>'._EXPORT.'</legend>'."\n";
+	echo '<table>'."\n";
+
+/*
+	echo '<tr>';
+	    echo '<th>';
+		echo '<label for="szulovel">'._SZULO_ADATOKKAL.'</label>';
+		echo '<input type="checkbox" id="szulovel" name="tabla[]" value="szulo" />';
+	    echo '</th>'."\n";
+	    echo '<th>';
+		echo '<label for="osztallyal">'._OSZTALY_ADATOKKAL.'</label>';
+		echo '<input type="checkbox" id="osztallyal" name="tabla[]" value="osztaly" />';
+	    echo '</th>'."\n";
+	echo '</tr>'."\n";
+*/
+
+	if (strstr($_SERVER["HTTP_USER_AGENT"], 'Linux')) $CHK = array('csv' => ' checked="checked" ');
+	else $CHK = array('xml' => ' checked="checked" ');
+
+	echo '<tr>'."\n";
+	    echo '<th>'._FORMATUM.'</th>'."\n";
+	    echo '<td>';
+		echo '<input type="radio" name="formatum" value="csv" id="csv"'.$CHK['csv'].' />'."\n";
+		echo '<label for="csv">'._CSV.'</label><br />'."\n";
+	    echo '</td>';
+	    echo '<td>';
+		echo '<input type="radio" name="formatum" value="xml" id="xml"'.$CHK['xml'].' />'."\n";
+		echo '<label for="xml">'._XML.'</label>'."\n";
+	    echo '</td>'."\n";
+//	    echo '<td>';
+//		echo '<input type="radio" name="formatum" value="pdf" id="pdf"'.$CHK['pdf'].' />'."\n";
+//		echo '<label for="pdf">'._PDF.'</label>'."\n";
+//	    echo '</td>'."\n";
+	echo '</tr>'."\n";
+
+    	echo '<tr>';
+	    echo '<th>';
+	    echo '<input type="submit" value="'._OK.'" />'."\n";
+	    echo '</th>';
+	echo '</tr>';
+
+
+	if (is_array($ADAT['export'])) {
+	    echo '<tr>';
+	    echo '<td colspan="20">'."\n";
+		putExportMezok($ADAT['mezok']);
+	    echo '</td>'."\n";
+	    echo '</tr>'."\n";
+	}
+
+
+	echo '</table>'."\n";
+	echo '</fieldset>';
+	if ($skin != 'ajax') formEnd();
+    }
+
+    function putExportMezok($Mezok) {
+
+	echo '<table>'."\n";
+
+	    echo '<thead>'."\n";
+	    foreach ($Mezok as $attr => $attrNev) {
+		echo '<tr>'."\n";
+		    echo '<td>';
+			echo '<input type="checkbox" name="mezok[]" id="'.$attr.'" checked="checked" value="'.$attr.'" />'."\n";
+			echo '<label for="'.$attr.'">'.$attrNev.'</label>'."\n";
+		    echo '</td>'."\n";
+		echo '</tr>'."\n";
+	    }
+	    echo '</thead>'."\n";
+	echo '</table>'."\n";
+
+    }
+
+?>

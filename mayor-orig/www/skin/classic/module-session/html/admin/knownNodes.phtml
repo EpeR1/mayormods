@@ -1,0 +1,70 @@
+<?php
+
+    function putGetNodeData() {
+	formBegin(array('id'=>'search'));
+
+	echo '<h3>'._UJ_VEGPONT.'</h3>';
+	echo '<input type="hidden" name="action" value="getPublicDataByNodeId" />';
+	echo '<label for="nodeId">'._NODEID.'</label>';
+	_inlineHelp(_SUGO_NODEID);
+	echo '<input id="nodeId" type="text" name="nodeId" value="" />';
+	echo '<input type="submit" value="'._LEKERDEZES.'" />';
+	
+	formEnd();
+    }
+
+    function putKnownNodes($ADAT) {
+
+	echo '<table id="nodes">';
+	echo '<thead>';
+	    echo '<tr>';
+		echo '<th>'._NODEID.'</th>';
+		echo '<th>'._NEV.'</th>';
+		echo '<th>'._HELYSEG.'</th>';
+		echo '<th>'._NODETIPUS.'</th>';
+		echo '<th>'.'Ping/Rev.'.'</th>';
+	    echo '</tr>';
+	echo '</thead>';
+	echo '<tfoot>';
+	    echo '<tr>';
+		echo '<th>'._NODEID.'</th>';
+		echo '<th>'._NEV.'</th>';
+		echo '<th>'._HELYSEG.'</th>';
+		echo '<th>'._NODETIPUS.'</th>';
+		echo '<th>'.'Ping/Rev.'.'</th>';
+	    echo '</tr>';
+	echo '</tfoot>';
+	echo '<tbody>';
+	foreach ($ADAT['nodes'] as $index => $nAdat) {
+	    $class = ekezettelen($nAdat['nodeTipus']);
+	    echo '<tr class="'.$class.'">';
+		echo '<td>'.$nAdat['nodeId'].'</td>';
+		echo '<td>'.$nAdat['nev'].'</td>';
+		echo '<td>'.$nAdat['cimHelyseg'].'</td>';
+		echo '<td>'.$nAdat['nodeTipus'].'</td>';
+		echo '<td>';
+		formBegin();
+		    echo '<input type="hidden" name="action" value="rpcPing" />';
+		    echo '<input type="hidden" name="nodeId" value="'.$nAdat['nodeId'].'" />';
+		    if (isset($ADAT['nodeVersion']) && $nAdat['nodeId'] == $ADAT['nodeId']) {
+			echo '<input class="pong" type="submit" value="'.$ADAT['nodeVersion'].'" />';
+		    } else {
+			echo '<input type="submit" value="ping" />';
+		    }
+		formEnd();
+		echo '</td>';
+		echo '<td>';
+		formBegin();
+		    echo '<input type="hidden" name="action" value="removeNode" />';
+		    echo '<input type="hidden" name="nodeId" value="'.$nAdat['nodeId'].'" />';
+		    echo '<input class="delete confirm" title="'._BIZTOS_TOROL_E.'" type="submit" value="X" />';
+		formEnd();
+		echo '</td>';
+	    echo '</tr>';
+	}
+	echo '</tbody>';
+	echo '</table>';
+
+    }
+
+?>

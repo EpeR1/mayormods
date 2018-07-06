@@ -1,0 +1,15 @@
+
+    h2.sni { text-align: center; border: solid black; border-width: 1px 0px; font-size: 14px; font-weight: bold; width: 800px; margin: auto;}
+    ul.sni { text-align: center; padding: 2px; list-style-type: none; width: 800px; margin: 0px auto; }
+
+    ul.sni form { text-align: center; background-color: rgb(220,200,200); width: 97%; padding: 10px; margin: 2px auto; }
+    ul.sni form:hover { background-color: rgb(250,200,200); }
+    ul.sni li.mod form { background-color: rgb(200,220,200); }
+    ul.sni li.mod form:hover { background-color: rgb(200,250,200); }
+    ul.sni input[type=submit] { vertical-align: top; padding: 34px 5px; }
+    ul.sni li p { width: 700px; height: 80px; background-color: rgb(225,210,210); margin: 5px auto; border: 1px solid rgb(200,200,200); text-align: left; }
+
+
+
+
+

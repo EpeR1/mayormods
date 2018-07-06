@@ -1,0 +1,24 @@
+
+    form.tankorSzemeszter table { background-color: rgb(20,40,60); color: white; width:90%;}
+    form.tankorSzemeszter table th { background-color: rgb(40,60,80); }
+    form.tankorSzemeszter table th.aktualis { background-color: rgb(80,60,40); }
+    form.tankorSzemeszter table th.lezart { background-color: black; font-style:italic; }
+    form.tankorSzemeszter table th.aktiv  { background-color: rgb(80,130,80); }
+
+    form.tankorSzemeszter table th.bigleft { font-size: larger; border-bottom: solid 1px #667788; }
+
+    form.tankorSzemeszter table td { background-color: rgb(60,70,80); text-align: center;}
+    form.tankorSzemeszter table td.aktualis { background-color: rgb(80,70,60); }
+    form.tankorSzemeszter table td.lezart { background-color: black;}
+    form.tankorSzemeszter table td.aktiv  { background-color: rgb(80,130,80); }
+
+    form.tankorSzemeszter table td input { 
+	background-color: rgb(20,40,60); color: white; 
+	border: solid 1px black;
+    }
+    form.tankorSzemeszter table td.lezart input { background-color: black }
+
+    form.tankorSzemeszter table th a { text-decoration: none; color: white; border: none; }
+    form.tankorSzemeszter table th a:hover { text-decoration: underline; }
+
+    form.tankorSzemeszter table th span.tan { color: #aaaaaa; font-weight:normal; font-size:smaller; }

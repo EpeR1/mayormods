@@ -1,0 +1,11 @@
+
+    form.kerdoiv { width: 80%; margin: 10px auto; background-color: rgb(20,60,40); color: white; padding: 10px; text-align: center; }
+    form.kerdoiv label { margin: 10px; padding: 2px; }
+    form.kerdoiv #megjegyzes { height: 50px; }
+    form.kerdoiv textarea { width: 80%; height: 400px; }
+
+    form.kerdoivCimzett { width: 800px; margin: 10px auto; background-color: rgb(20,60,40); color: white; padding: 10px; text-align: center; }
+    form.kerdoivCimzett div.bal { float: left; }
+    form.kerdoivCimzett div.jobb { float: right; }
+    form.kerdoivCimzett select { height: 300px; min-width: 100px;}
+    form.kerdoivCimzett input[type=submit] { width: 100%; }

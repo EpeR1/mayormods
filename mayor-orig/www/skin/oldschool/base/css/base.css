@@ -1,0 +1,86 @@
+/*
+    Module: base
+*/
+@import "head.css";
+@media screen {
+
+    html body {
+	font-family: Verdana, sans-serif;
+	font-size: 12px;
+	margin:0px;
+	padding:0px;
+	background-color: white;
+	background-image: url("/skin/classic/base/img/gradient.jpg");
+	background-repeat: repeat-x;
+    }
+
+    /* set default layout! */
+    table { font-size: 12px; }
+
+    form { margin: 0px; }
+    
+    div#mayorerror { }
+
+    div.mayorbody {
+    
+	padding: 0px; 
+    
+    }
+
+    div.mayorfoot {
+	text-align: center;
+	font-size:  10px;
+	width:100%;
+    }
+/* - Alert - */
+
+    form.mayorAlert { margin: 0px; padding: 0px; }
+    form.mayorAlert input { display: none; }
+    div.errorMsg {
+	margin: 20px 20%;
+	background-color: #eeffd0;
+	border: solid 2px #ff0000;
+	padding: 15px;
+    }
+    div.errorMsg span {
+	font-style: italic;
+    }
+
+    div.infoMsg {
+	margin: 20px 20%;
+	background-color: #eeffd0;
+	border: solid 2px #0000ff;
+	padding: 15px;
+    }
+    div.infoMsg span {
+	font-style: italic;
+    }
+
+    span.alertParam {
+	color: green;
+    }
+
+    #takaro { z-index:150;position: fixed;top:0px; left:0px; right:0px; bottom:0px; background-color: rgba(0,0,0,0.7); }
+    #updateWindow {background-color: white; position: absolute;z-index:200;margin:auto auto; width:400px; border: solid 1px black;}
+    #updateHeader {background-color: #eeeeee; border-bottom: solid 1px black; text-align: center; font-weight: large;padding:4px 2px;}
+    #keyHelp { z-index:151;position: absolute; top:200px; left: 200px; right:200px; margin: auto; padding: 20px; width: 300px;
+        border: solid 1px yellow; border-radius: 20px; border-spacing: 15px; background-color: rgba(0,0,0,0.4);
+    }
+    #keyHelp th { color: white; text-align: center; border-bottom: yellow 2px solid; font-size: 20px; font-weight: bold; }
+    #keyHelp td.key { color: yellow; text-align: right; }
+    #keyHelp td.desc { color: white; text-align: left; }
+
+}
+@media print {
+    html body {
+	font-family: Verdana, sans-serif;
+	font-size: 12px;    
+    }
+    div.mayorfoot {
+	text-align: center;
+	font-size:  10px;
+	margin: 5px;
+    }
+    div.namepolicy  { display: none; }
+    table.mayorhead { display: none; }	
+}

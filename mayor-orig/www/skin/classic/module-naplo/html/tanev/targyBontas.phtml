@@ -1,0 +1,296 @@
+<?php
+
+    function putTargyBontasInit() {
+
+	formBegin(array('id'=>'targyBontasInit'));
+	echo '<input type="hidden" name="action" value="targyBontasInit" />'."\n";
+	echo '<input type="submit" name="btn" value="'._INICIALIZALAS.'" />'."\n";
+	formEnd();
+    }
+
+    function putFilter($ADAT) {
+
+	formBegin(array('id'=>'szures'));
+	echo '<input type="hidden" name="telephelyId" value="'.$ADAT['telephelyId'].'" />'."\n";
+//	echo '<input type="hidden" name="evfolyamJel" value="'.$ADAT['evfolyamJel'].'" />'."\n";
+	echo '<input type="hidden" name="action" value="szures" />'."\n";
+
+/*
+	echo '<div id="evfolyamJel">Évfolyam: ';
+	foreach ($ADAT['evfolyamJelek'] as $ej) {
+	    $evfolyamJel = $ej['evfolyamJel'];
+	    if ($ADAT['evfolyamJel']==$evfolyamJel) {
+		$CHK = ' checked="checked" '; $extraClass = ' checked';
+		$extraStyle = '';
+	    } else {
+		$CHK = $extraClass = '';
+		if ($ADAT['evfolyamJel'] != '') $extraStyle = ' style="width: 0px; min-width: 0px;" ';
+	    }
+	    echo '<div class="evfolyamJel'.$extraClass.'"'.$extraStyle.'>';
+	    echo '<input type="radio" name="evfolyamJel" value="'.$evfolyamJel.'" id="ej-'.$evfolyamJel.'" style="display: none;"'.$CHK.'/>';
+	    //echo '<label for="ej-'.$evfolyamJel.'">'.$evfolyamJel.'</label>';
+	    echo $evfolyamJel;
+	    echo '</div>';
+	}
+	echo '</div>';
+*/	
+
+	echo '<input id="filterOk" type="submit" value="'._OK.'" />'."\n";
+	echo '<div id="osztaly">';
+	    $evfolyamJel = '';
+	    foreach ($ADAT['filter']['osztalyAdat'] as $oAdat) {
+		$oCHK = (in_array($oAdat['osztalyId'], $ADAT['osztalyIds']))?' checked="checked" ':'';
+		if ($evfolyamJel != $oAdat['evfolyamJel']) { 
+		    if ($evfolyamJel!='') echo '</div>';
+		    $evfolyamJel = $oAdat['evfolyamJel']; 
+		    // új évfolyamjel - új sor
+		    if ($ADAT['evfolyamJel']==$evfolyamJel) {
+			$eCHK = ' checked="checked" '; $extraClass = ' checked'; $extraStyle = '';
+		    } else {
+			$eCHK = $extraClass = '';
+			if ($ADAT['evfolyamJel'] != '') $extraStyle = ' style="display: none;" ';
+		    }
+		    echo '<div class="osztEvf" id="osztEvf-'.str_replace('/','-',$evfolyamJel).'"'.$extraStyle.'>';
+			echo '<div class="evfolyamJel'.$extraClass.'">';
+			echo '<input type="radio" name="evfolyamJel" value="'.$evfolyamJel.'" id="ej-'.str_replace('/','-',$evfolyamJel).'" style="display: none;"'.$eCHK.'/>';
+			echo $evfolyamJel;
+			echo '</div>';
+		}
+		if ($oCHK=='') $class='selectOsztaly';
+		else $class='selectOsztaly checked';
+		if ($oAdat['bontasOk']) $class .= ' bontasOk';
+		echo '<span class="'.$class.'">';
+		echo '<input type="checkbox" name="osztalyIds[]" value="'.$oAdat['osztalyId'].'" id="osztaly-'.$oAdat['osztalyId'].'" style="display: none;"'.$oCHK.'/>';
+		echo $oAdat['osztalyJel'].' ('.$oAdat['osztalyfonokNev'].')'."\n";
+		echo '</span>';
+	    }
+	    echo '</div>';
+	echo '</div>';
+
+	echo '<div id="kepzes">';
+	foreach ($ADAT['filter']['kepzesAdat'] as $kepzesId => $kAdat) {
+	    $oClass='kSelect';
+	    foreach ($kAdat as $oAdat) $oClass .= ' ko-'.$oAdat['osztalyId'];
+	    $CHK = (in_array($kepzesId, $ADAT['kepzesIds']))?' checked="checked" ':'';
+	    if ($CHK=='') echo '<div class="'.$oClass.'" data-db="0" style="display: none;">';
+	    else echo '<div class="'.$oClass.'" data-db="0">';
+	    echo '<input type="checkbox" name="kepzesIds[]" value="'.$kepzesId.'" id="kepzes-'.$kepzesId.'"'.$CHK.'/>'."\n";
+	    echo '<label for="kepzes-'.$kepzesId.'">'.$kAdat[0]['kepzesNev'].' '.$kAdat[0]['tanev'].' ('.$kepzesId.')</label>';
+	    echo '</div>';
+	}
+	echo '</div>';
+	formEnd();
+    }
+
+    function putTargyBontas($ADAT) {
+
+	formBegin(array('id'=>'bontasForm'));
+
+	echo '<input type="hidden" name="action" value="bontas" />'."\n";
+	echo '<input type="hidden" name="telephelyId" value="'.$ADAT['telephelyId'].'" />'."\n";
+	echo '<input type="hidden" name="evfolyamJel" value="'.$ADAT['evfolyamJel'].'" />'."\n";
+	foreach ($ADAT['osztalyIds'] as $osztalyId) echo '<input type="hidden" name="osztalyIds[]" value="'.$osztalyId.'" />'."\n";
+	foreach ($ADAT['kepzesIds'] as $kepzesId) echo '<input type="hidden" name="kepzesIds[]" value="'.$kepzesId.'" />'."\n";
+
+	echo '<div id="targyak" tabindex="1">';
+	echo '<div id="targyakUp" tabindex="1"><span class="icon-chevron-up"></span></div>';
+	echo '<div id="targyakDown"><span class="icon-chevron-down"></span></div>';
+	echo '<h1><span class="icon-remove-circle"></span>Tárgyak</h1>';
+	echo '<ul id="targyakUl">';
+	foreach ($ADAT['targyAdat'] as $targyId => $tAdat) {
+	    echo '<li class="selectTargy" id="targy-'.$targyId.'" data-targyid="'.$targyId.'" data-targynev="'.$tAdat['targyNev'].'" data-targyjelleg="'.$tAdat['targyJelleg'].'">';
+	    echo $tAdat['targyNev'].' ('.$targyId.')';
+	    echo '</li>';
+	}
+	echo '</ul>';
+	echo '</div>';
+
+	echo '<table class="bontas">';
+
+	$stat = array('ko' => 0, 'bontas' => 0, 'koKesz' => 0, 'bontasKesz' => 0);
+	foreach ($ADAT['oraterv'] as $targyTipus => $tipusAdat) {
+	    foreach ($tipusAdat as $targyId => $targyAdat) {
+		foreach ($targyAdat as $hetiOraszam => $oraszamAdat) {
+		    foreach($oraszamAdat as $btStr => $btAdat) {
+			$tbodyId = str_replace('.','p', $targyTipus[0].'-'.intval($targyId).'-'.$hetiOraszam.'-'.$btStr);
+			echo '<tbody id="'.$tbodyId.'">';
+			$elsoSor = true; $sorDb = count($btAdat);
+			foreach ($btAdat as $rAdat) {
+$stat['ko']++;
+			    $trId = 'tr-'.$rAdat['osztalyId'].'-'.$rAdat['kepzesOratervId'];
+			    $targyTipusE = ($targyTipus!='mintatantervi');
+
+			    // kész van-e minden bontás-tankör hozzárendelés ebben a sorban?
+			    $bontasArray = $ADAT['osztalyTargyBontas'][ $rAdat['osztalyId'] ][ $rAdat['kepzesOratervId'] ];
+			    if (is_array($bontasArray)) {
+				$mindenBontasOk = true;
+				foreach ($bontasArray as $bontas) {
+				    $stat['bontas']++;
+				    if ($hetiOraszam-$bontas['hetiOraszam']==0) $stat['bontasKesz']++;
+				    else $mindenBontasOk = false;
+				}
+			    } else $mindenBontasOk = false;
+
+			    echo '<tr '.($mindenBontasOk?'class="kesz" ':'').'id="'.$trId.'" 
+					data-db="0" 
+					data-hetiOraszam="'.$hetiOraszam.'" 
+					data-keys="'.$rAdat['osztalyId'].'-'.$rAdat['kepzesOratervId'].'" 
+					data-key="'.$rAdat['osztalyId'].'-'.$rAdat['kepzesOratervId'].'">';
+				echo '<td class="slide">'.(!$elsoSor?'<span class="slideUp icon-chevron-up"></span>':'<span class="slideUpAll icon-caret-up"></span>').'</td>';
+				
+				echo ($targyTipusE?'<th class="targyTipus">'.$targyTipus:'<th>'.$rAdat['targyNev'].' ('.$targyId.')').'</th>';
+				echo '<td>'.$hetiOraszam.'</td>';
+				echo '<td>'.$ADAT['osztalyAdat'][ $rAdat['osztalyId'] ]['osztalyJel'].' '
+					    .$ADAT['kepzesAdat'][ $rAdat['kepzesId'] ]['kepzesNev']
+					    .'<span class="felev'.$rAdat['szemeszter'].'">'.$rAdat['szemeszter'].'. félév</span>'
+					    .'</td>';
+				echo '<td id="bTd-'.$rAdat['osztalyId'].'-'.$rAdat['kepzesOratervId'].'">';
+				    $db = 0;
+				    if (is_array($bontasArray)) foreach ($bontasArray as $bontas) {
+
+					if ($hetiOraszam-$bontas['hetiOraszam']==0) $class=" ok";
+					elseif ($hetiOraszam-$bontas['hetiOraszam']<0) $class=" fail";
+					else $class='';
+					echo '<div class="bontas'.$class.'" id="bontas-'.$bontas['bontasId'].'" 
+						    data-tankororaszam=\''.(is_array($bontas['tankor-oraszam'])?json_encode($bontas['tankor-oraszam']):'[]').'\'
+						    data-hetioraszam="'.floatval($bontas['hetiOraszam']).'"
+						    data-targyid="'.$bontas['targyId'].'"
+						    data-keys="'.$bontas['bontasId'].'" 
+						    data-key="'.$bontas['bontasId'].'">';
+					echo '<span class="bontasDb">'.(++$db).'</span>. '.$ADAT['targyAdat'][ $bontas['targyId'] ]['targyNev'].' csoport ('.$bontas['bontasId'].')';
+					echo '<span class="delBontas icon-remove-circle"></span>';
+					echo '<ul class="tankor-oraszam">';
+					    if (is_array($bontas['tankor-oraszam'])) foreach ($bontas['tankor-oraszam'] as $toAdat) {
+						echo '<li class="tankorAdat" data-tankorid="'.$toAdat['tankorId'].'">['.floatval($toAdat['hetiOraszam']).'] '.$ADAT['tankorAdat'][ $toAdat['tankorId'] ]['tankorNevTargyNelkul'].' ('.$toAdat['tankorId'].')</li>';
+					    }
+					    echo '<li class="marad">'.($hetiOraszam-$bontas['hetiOraszam']).'</li>';
+					echo '</ul>';
+					echo '</div>';
+
+				    }
+				echo '</td>';
+				echo '<td><span class="'.($targyTipusE?'addBontasTargy':'addBontas').' icon-plus" style="paddding: 20px;"></span></td>';
+//echo '<td>';
+//dump($bontasArray);
+//echo (++$sor).'. ';
+//echo $btStr.' ('.$rAdat['kepzesOratervId'].')';
+//echo '<br/>'.$tbodyId.' - '.$trId;
+//echo '</td>';
+			    echo '</tr>';
+			    if ($mindenBontasOk) $stat['koKesz']++;
+			    $elsoSor = false;
+			}
+			echo '</tbody>';
+		    }
+		}
+	    }
+	}
+
+
+	echo '</table>';
+
+
+	echo '<div id="stat">';
+	echo '<table>';
+	    echo '<tr>';
+		echo '<td id="oratervenKivuli" title="Óratervtől eltérő tankörök száma (Nem frissül, csak az oldal újratöltésekor!)">';
+		echo count($ADAT['oratervenKivuliTankorok']).'<span class="icon-arrow-down"></span>';
+		echo '<ul>';
+		foreach ($ADAT['oratervenKivuliTankorok'] as $idx => $okAdat) {
+		    if ($idx<30) {
+			echo '<li>';
+			echo $okAdat['tankorNev'].' ('.$okAdat['tankorId'].') <span class="diff">['.(is_null($okAdat['diff'])?'-':$okAdat['diff']).']</span>';
+		        echo '</li>';
+		    }
+		}
+		if ($idx >= 30) echo '<li>...</li>';
+		echo '</ul>';
+		echo '</td>';
+
+		echo '<td title="Óratervi bejegyzés">';
+		    echo '<span id="statKoKesz">'.$stat['koKesz'].'</span>/<span id="statKo">'.$stat['ko'].'</span>';
+		echo '</td>';
+
+		echo '<td title="Felvett bontás">';
+		    echo '<span id="statBontasKesz">'.$stat['bontasKesz'].'</span>/<span id="statBontas">'.$stat['bontas'].'</span>';
+		echo '</td>';
+
+		echo '<td title="Kész rekordok elrejtése">';
+		    echo '<input type="checkbox" id="keszRejt" value="" />';
+		echo '</td>';
+
+	    echo '</tr>';
+
+
+
+
+/*
+	    echo '<tr><th id="oratervenKivuli">Óratervtől eltérő tankörök száma:';
+		echo '<ul>';
+		foreach ($ADAT['oratervenKivuliTankorok'] as $idx => $okAdat) {
+		    if ($idx<30) {
+			echo '<li>';
+			echo $okAdat['tankorNev'].' ('.$okAdat['tankorId'].') <span class="diff">['.(is_null($okAdat['diff'])?'-':$okAdat['diff']).']</span>';
+		        echo '</li>';
+		    }
+		}
+		if ($idx >= 30) echo '<li>...</li>';
+		echo '</ul>';
+		echo '</th><td>'.count($ADAT['oratervenKivuliTankorok']).'<br/>(nem frissül)</td></tr>';
+	    echo '<tr><th>Óratervi bejegyzés:</th><td><span id="statKoKesz">'.$stat['koKesz'].'</span>/<span id="statKo">'.$stat['ko'].'</span></td></tr>';
+	    echo '<tr><th>Felvett bontás:</th><td><span id="statBontasKesz">'.$stat['bontasKesz'].'</span>/<span id="statBontas">'.$stat['bontas'].'</span></td></tr>';
+	    echo '<tr><td colspan="2"><input type="checkbox" id="keszRejt" value="" />';
+	    echo '<label for="keszRejt">Kész rekordok elrejtése</label></td></tr>';
+*/
+	echo '</table>';
+	echo '</div>';
+
+
+
+
+
+
+
+
+
+/*
+	echo '<span style="color:red;" class="icon-remove-circle"></span> ';
+	echo '<span style="color:red;" class="icon-plus-sign"></span> ';
+	echo '<span style="color:red;" class="icon-minus-sign"></span> ';
+	echo '<span style="color:red;" class="icon-error"></span> ';
+	echo '<br />';
+	echo '<span style="color:red;" class="icon-plus"></span> ';
+	echo '<span style="color:red;" class="icon-minus"></span> ';
+	echo '<span style="color:red;" class="icon-remove"></span> ';
+	echo '<br />';
+	echo '<span style="color:red;" class="icon-resize-vertical"></span> ';
+	echo '<span style="color:red;" class="icon-resize-full"></span> ';
+	echo '<span style="color:red;" class="icon-resize-small"></span> ';
+	echo '<br />';
+	echo '<span style="color:red;" class="icon-arrow-up"></span> ';
+	echo '<span style="color:red;" class="icon-arrow-down"></span> ';
+	echo '<br />';
+	echo '<span style="color:red;" class="icon-chevron-up"></span> ';
+	echo '<span style="color:red;" class="icon-chevron-down"></span> ';
+	echo '<br />';
+	echo '<span style="color:red;" class="icon-circle-arrow-up"></span> ';
+	echo '<span style="color:red;" class="icon-circle-arrow-down"></span> ';
+	echo '<br />';
+	echo '<span style="color:red;" class="icon-caret-up"></span> ';
+	echo '<span style="color:red;" class="icon-caret-down"></span> ';
+	echo '<br />';
+
+	echo '<span style="color:red;" class="icon-cog"></span> ';
+	echo '<span style="color:red;" class="icon-fork"></span> ';
+	echo '<span style="color:red;" class="icon-return-key"></span> ';
+	echo '<span style="color:red;" class="icon-stop"></span> ';
+	echo '<span style="color:red;" class="icon-move"></span> ';
+	echo '<br />';
+*/
+
+	formEnd();
+
+    }
+
+
+?>

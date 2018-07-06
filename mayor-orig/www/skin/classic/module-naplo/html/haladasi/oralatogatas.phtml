@@ -1,0 +1,56 @@
+<?php
+
+    function putOralatogatasForm($ADAT) {
+	
+
+	echo '<ul class="ora">'."\n";
+	foreach ($ADAT['orak'] as $ora => $oAdat) {
+	    foreach ($oAdat as $key => $oraAdat) {
+		$_OK = is_array($ADAT['oralatogatas'][ $oraAdat['oraId'] ]['tanarIds']);
+		$_class = ($_OK) ? 'latogatva' : '';
+		echo '<li>';
+
+		formBegin(array('class'=>$_class));
+
+		echo '<input type="hidden" name="action" value="oralatogatasBeiras" />'."\n";
+		echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarId'].'" />'."\n";
+		echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+		echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+		echo '<input type="hidden" name="oraId" value="'.$oraAdat['oraId'].'" />'."\n";
+
+		echo '<p>';
+		    echo '<input type="submit" name="delete_'.$oraAdat['oraId'].'" value="'._TOROL.'" />'."\n";
+		    echo '<input type="submit" value="'._OK.'" />'."\n";
+		    echo '<span class="ora">'.$ora.'. '._ORA.'</span>';
+		    echo $oraAdat['tankorNev'];
+		echo '</p>';
+
+		echo '<div class="jobb">';
+		echo '<label for="tanar'.$oraAdat['oraId'].'">'._LATOGATO.'</label>'."<br />\n";
+		echo '<select name="tanarIds[]" multiple="multiple">'."\n";
+		for ($i = 0; $i < count($ADAT['tanarok']); $i++) {
+		    echo '<option value="'.$ADAT['tanarok'][$i]['tanarId'].'"';
+		    if (
+			is_array($ADAT['oralatogatas'][ $oraAdat['oraId'] ]['tanarIds']) &&
+			in_array($ADAT['tanarok'][$i]['tanarId'], $ADAT['oralatogatas'][ $oraAdat['oraId'] ]['tanarIds'])) echo ' selected="selected" ';
+		    echo '>'.$ADAT['tanarok'][$i]['tanarNev'].'</option>'."\n";
+		}
+		echo '</select>'."\n";
+		echo '</div>';
+
+		echo '<div>';
+		echo '<label for="megjegyzes'.$oraAdat['oraId'].'">'._MEGJEGYZES.'</label>'."<br />\n";
+		echo '<textarea name="megjegyzes">';
+		echo htmlspecialchars($ADAT['oralatogatas'][ $oraAdat['oraId'] ]['megjegyzes']);
+		echo '</textarea>'."\n";
+		echo '</div>';
+		formEnd();
+
+		echo '</li>'."\n";
+	    }
+	}
+	echo '</ul>'."\n";
+
+    }
+
+?>

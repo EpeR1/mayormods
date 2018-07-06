@@ -1,0 +1,277 @@
+<?php
+
+    function putKosziDiakLista($ADAT) {
+
+
+	if (count($ADAT['kosziDiakLista'])==0) return;
+
+	    $KET = array('iskolai rendezvény','DÖK rendezvény','tanulmányi verseny','sportverseny','foglalkozás','tevékenység','hiányzás');
+
+	    echo '<fieldset class="koszi"><legend>Ezekre az eseményekre jelentkeztél</legend>';
+
+	    echo '<table class="koszi" align="center" cellspacing="1">';
+	    echo '<tr class="head"><th>'._MIKOR.'</th><th colspan="3">'._ESEMENY.'</th><th>'._PONT.'</th>';
+//<th>'._PONT.'</th>'."\n";
+	    for ($i=0; $i<count($ADAT['kosziDiakLista']); $i++) {
+		$K = $ADAT['kosziDiakLista'][$i];
+		if ($K['jovahagyva']==1) {
+		    $pontsum += $K['pont'];
+		    $_class = ' class="jovahagyva" ';
+		} else {
+		    $_class='';
+		}
+		$l=array_keys($KET,$K['kosziEsemenyTipus']);
+
+		echo '<tr '.$_class.'>';
+		echo '<td>'.date('Y.m.d. H:i',strtotime($K['rogzitesDt'])).'</td>';
+		echo '<td><span class="tag tag'.$l[0].'">'.$K['kosziEsemenyTipus'].'</span></td>';
+		echo '<td>'.$K['kosziEsemenyNev'].'</td>';
+		echo '<td>'.$K['kosziEsemenyLeiras'].'</td>';
+		echo '<td class="r">'.($K['pont']).'</td>';
+		echo '</tr>';
+	    }
+	    echo '<tr class="foot"><th colspan="4" class="r">'._IDEN_ENNYIT.':</th><th class="r">'.$pontsum.'</th>';
+	    echo '</table>'."\n";
+
+	    echo '</fieldset>';
+	
+
+    }
+
+
+    function putKosziLista($ADAT) {
+
+/*
+mysql> desc kosziDiak;
++--------------+------------------+------+-----+---------------------+-------+
+| Field        | Type             | Null | Key | Default             | Extra |
++--------------+------------------+------+-----+---------------------+-------+
+| kosziId      | int(10) unsigned | NO   | PRI | NULL                |       |
+| diakId       | int(10) unsigned | NO   | PRI | NULL                |       |
+| rogzitesDt   | timestamp        | NO   |     | CURRENT_TIMESTAMP   |       |
+| jovahagyasDt | timestamp        | NO   |     | 0000-00-00 00:00:00 |       |
+| kosziPontId  | int(10) unsigned | NO   | MUL | NULL                |       |
+| pont         | int(10) unsigned | NO   |     | NULL                |       |
++--------------+------------------+------+-----+---------------------+-------+
+*/
+
+
+	    echo '<fieldset class="koszi"><legend>Jelentkezz!</legend>';
+	    echo '<div class="koszi">';
+
+	    formBegin();
+
+	    echo '<input type="hidden" name="action" value="ujKosziDiak" />';
+	    echo '<input type="hidden" name="kosziEsemenyId" value="'.$ADAT['kosziEsemenyId'].'" />';
+
+	    echo '<select name="kosziId" class="onChangeSubmit">';
+	    echo '<option value="" class="placeholder">Válassz!</option>';
+	    for ($i=0; $i<count($ADAT['koszi']); $i++) {
+		$K = $ADAT['koszi'][$i];
+		$_SEL = ($ADAT['kosziId'] == $K['kosziId']) ? ' selected="selected" ':'';
+		$_leiras = $K['kosziEsemenyNev'].' '.$K['kosziEsemenyLeiras'].' '.$K['dt']. ' - '.$K['kosziEsemenyTipus'];
+		echo '<option value="'.$K['kosziId'].'" '.$_SEL.'>'.$_leiras.'</option>'."\n";
+	    }
+	    echo '</select>';
+	    if ($ADAT['kosziId']!='') {
+		echo '<select name="kosziPontId">';
+		echo '<option value="" class="placeholder">Válassz!</option>';
+		for ($i=0; $i<count($ADAT['kosziPont']); $i++) {
+		    $K = $ADAT['kosziPont'][$i];
+		    $_leiras = $K['kosziPontTipus'].' ('.$K['kosziPont'].'pont)';
+		    if ($K['kosziHelyezes']>0) $_leiras .= ' '.$K['kosziHelyezes'].'. helyezés';
+		    echo '<option value="'.$K['kosziPontId'].'">'.$_leiras.'</option>'."\n";
+		}
+		echo '</select>';
+	    }
+	    
+	    echo '<input type="submit" value="köszi!" />';
+
+	    formEnd();
+
+	    echo '</div>';
+	    echo '</fieldset>';
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ------------
+
+
+
+    function putKosziPont($ADAT) {
+
+	    echo '<fieldset class="koszi"><legend>Kapható pontok</legend>';
+
+	    echo '<table class="koszi">';
+	    echo '<tr><th>'._PONTTIPUS.'</th><th>'._HELYEZES.'</th><th>'._PONT.'</th>'."\n";
+	    for ($i=0; $i<count($ADAT['kosziPont']); $i++) {
+		$K = $ADAT['kosziPont'][$i];
+
+		echo '<tr>';
+		echo '<td>'.$K['kosziPontTipus'].'</td>';
+		echo '<td>'.$K['kosziHelyezes'].'</td>';
+		echo '<td>'.$K['kosziPont'].'</td>';
+		echo '</tr>';
+	    }
+	    echo '</table>'."\n";
+
+	    echo '</fieldset>';
+
+
+
+	    echo '<fieldset class="koszi"><legend>Új ponttípus</legend>';
+
+	    formBegin();
+
+	    echo '<input type="hidden" name="action" value="ujPont" />';
+	    echo '<input type="hidden" name="kosziEsemenyId" value="'.$ADAT['kosziEsemenyId'].'" />';
+
+	    echo '<select name="kosziPontTipus">';
+	    for ($i=0; $i<count($ADAT['kosziPontTipusok']); $i++) {
+		$K = $ADAT['kosziPontTipusok'][$i];
+//		$_SEL = ($ADAT['kosziEsemenyId'] == $K['kosziId']) ? ' selected="selected" ':'';
+		echo '<option value="'.$K.'" '.$_SEL.'>'.$K.'</option>'."\n";
+	    }
+	    echo '</select>';
+	    echo '<select name="kosziHelyezes">';
+	    echo '<optgroup label="helyezés">';
+	    echo '<option></option>';
+	    for ($i=1; $i<99; $i++) {
+		echo '<option value="'.$i.'" '.'>'.$i.'</option>'."\n";
+	    }
+	    echo '</optgroup>';
+	    echo '</select>';
+	    echo '<select name="kosziPont"><optgroup label="pont">';
+	    for ($i=0; $i<99; $i++) {
+		echo '<option value="'.$i.'" '.'>'.$i.'</option>'."\n";
+	    }
+	    echo '</optgroup></select>';
+	    
+	    echo '<input type="submit" value="rögzít" />';
+
+	    formEnd();
+
+	    echo '</fieldset>';
+
+    }
+
+
+    /* TANÉV */
+
+    function putKoszi($ADAT) {
+
+	    echo '<fieldset class="koszi"><legend>Köszi események a tanévben</legend>';
+
+	    formBegin();
+
+	    echo '<input type="hidden" name="action" value="delKoszi" />';
+	    echo '<input type="hidden" name="kosziEsemenyId" value="'.$ADAT['kosziEsemenyId'].'" />';
+
+	    if (count($ADAT['koszi'])==0) {
+		echo '<div class="empty">'._NINCS.'</div>';
+	    } else {
+		echo '<table class="koszi">';
+		echo '<tr><th>'._DATUM.'</th><th>'._FELEV.'</th><th>'._IGAZOLOK.'</th>'."\n";
+		for ($i=0; $i<count($ADAT['koszi']); $i++) {
+		    $K = $ADAT['koszi'][$i];
+		    echo '<tr>';
+		    echo '<td>'.$K['dt'].'</td>';
+		    echo '<td>'.$K['felev'].'</td>';
+		    echo '<td>'.$K['igazolo'].'</td>';
+		    echo '<td><input type="checkbox" name="kosziId[]" value="'.$K['kosziId'].'" /></td>';
+		    echo '</tr>';
+		}
+		echo '</table>'."\n";
+	    }
+
+	    echo '<input type="submit" value="a kijelöltek végleges törlése" />';
+
+	    formEnd();
+
+	    echo '</fieldset>';
+	    
+
+
+    }
+
+    function putUjKoszi($ADAT) {
+
+	    echo '<fieldset class="koszi"><legend>Köszi események a tanévben</legend>';
+
+	    formBegin();
+
+	    echo '<input type="hidden" name="action" value="ujKoszi">';
+	    echo '<input type="hidden" name="kosziEsemenyId" value="'.$ADAT['kosziEsemenyId'].'" />';
+
+	    echo '<table class="koszi">';
+	    echo '<tr><th>'._DATUM.'</th><th>'._FELEV.'</th><th colspan="3">'._IGAZOLOK.'</th>'."\n";
+
+		echo '<tr>';
+		echo '<td><input type="text" value="" name="dt" class="date" /></td>';
+		echo '<td><select name="felev"><option value=""></option><option value="1">1</option><option value="2">2</option></select></td>';
+/*
+		echo '<td>';
+		    echo '<input type="checkbox" name="igazolo[]" value="diák" />diák';
+		    echo '<input type="checkbox" name="igazolo[]" value="tanár" />tanár';
+		    echo '<input type="checkbox" name="igazolo[]" value="osztályfőnök" />osztályfőnök';
+		echo '</td>';
+*/
+		echo '<td>';
+		    echo '<select name="osztalyfonokId[]" multiple="multiple">';
+		    for ($i=0; $i<count($ADAT['osztalyok']); $i++) {
+			$K = $ADAT['osztalyok'][$i];
+			echo '<option value="'.($K['osztalyfonok']['tanarId']).'">';
+			echo $K['osztalyJel'].' - ';
+			echo $K['osztalyfonok']['tanarNev'];
+			echo '</option>';
+		    }
+		    echo '</select>';
+		echo '</td>';
+		echo '<td>';
+		    echo '<select name="tanarId[]" multiple="multiple">';
+		    for ($i=0; $i<count($ADAT['tanarok']); $i++) {
+			$K = $ADAT['tanarok'][$i];
+			echo '<option value="'.($K['tanarId']).'">';
+			echo $K['tanarNev'];
+			echo '</option>';
+		    }
+		    echo '</select>';
+		echo '</td>';
+		echo '<td>';
+		    echo '<select name="diakId[]" multiple="multiple">';
+		    for ($i=0; $i<count($ADAT['diakok']); $i++) {
+			$K = $ADAT['diakok'][$i];
+			echo '<option value="'.($K['diakId']).'">';
+			echo $K['diakNev'];
+			echo '</option>';
+		    }
+		    echo '</select>';
+		echo '</td>';
+		echo '</tr>';
+
+	    echo '</table>'."\n";
+
+	    echo '<input type="submit" value="rögzít" />';
+
+
+	    formEnd();
+
+	    echo '</fieldset>';
+	    
+    }
+
+
+?>

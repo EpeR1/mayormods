@@ -1,0 +1,143 @@
+<?php
+
+    function ujKepzesForm($ADAT) {
+
+	formBegin(array('class'=>'kepzes'));
+	echo '<input type="hidden" name="action" value="ujKepzes" />'."\n";
+
+	echo '<h1>'._UJ_KEPZES.'</h1>'."\n";
+
+	echo '<label for="kepzesNev">'._KEPZES_NEVE.'</label>'."\n";
+	echo '<input id="kepzesNev" type="text" name="kepzesNev" value="" />'."\n";
+
+	echo '<label for="tolTanev">'._BEVEZETES_EVE.'</label>'."\n";
+    	echo '<select id="tolTanev" name="tolTanev">'."\n";
+	$aktTanev = date('Y'); $SEL = array($aktTanev => ' selected="selected" ');
+	for ($tanev = $aktTanev-10; $tanev < $aktTanev+11; $tanev++) {
+	    echo '<option value="'.$tanev.'"'.$SEL[$tanev].'>'.$tanev.'</option>'."\n";
+	}
+	echo '</select>'."\n";
+	echo '<br />';
+	echo '<label for="osztalyJellegId">'._OSZTALY_JELLEG.'</label>'."\n";
+	echo '<select id="osztalyJellegId" name="osztalyJellegId">'."\n";
+	    $SEL = array($ADAT['kepzesAdat']['osztalyJellegId'] => ' selected="selected" ');
+	    echo '<option>'.$ADAT['osztalyJellegId'].'</option>';
+	    foreach($ADAT['osztalyJelleg'] as $_k => $_v) {
+		if ($_v['osztalyJellegEles']==1) echo '<option value="'.$_v['osztalyJellegId'].'"'.$SEL[$_v['osztalyJellegId']].'>'.$_v['osztalyJellegNev'].' {'.$_v['osztalyJellegId'].'}</option>'."\n";
+	    }
+	echo '</select>'."\n";
+
+	echo '<p><input type="submit" value="'._OK.'" /></p>'."\n";
+
+	formEnd();
+
+    }
+
+    function kepzesElesForm($ADAT) {
+
+	if (($kepzesEles = $ADAT['kepzesAdat']['kepzesEles'])==1) {
+	    $_class="kepzes hibernalt";
+	    $_TXT = _KEPZES_HIBERNAL;
+	    $_GOMB_TXT = _HIBERNAL;
+	} else {
+	    $_class="kepzes eles";
+	    $_TXT = _KEPZES_ELESIT;
+	    $_GOMB_TXT = _ELESIT;
+	}
+
+	formBegin(array('class'=>$_class));
+	echo '<input type="hidden" name="action" value="kepzesEles" />'."\n";
+	echo '<input type="hidden" name="kepzesId" value="'.$ADAT['kepzesAdat']['kepzesId'].'" />'."\n";
+	echo '<input type="hidden" name="kepzesEles" value="'.$ADAT['kepzesAdat']['kepzesEles'].'" />'."\n";
+	echo '<h1>'.$_TXT.'</h1>'."\n";
+	echo '<p><input type="submit" value="'.$_GOMB_TXT.'" /></p>'."\n";
+	formEnd();
+
+    }
+
+    function putKepzesForm($ADAT) {
+
+	if (($kepzesEles = $ADAT['kepzesAdat']['kepzesEles'])==1) {
+	    $_class="kepzes eles";
+	} else {
+	    $_class="kepzes hibernalt";
+	}
+
+	formBegin(array('class'=>$_class));
+	echo '<input type="hidden" name="action" value="kepzesModositas" />'."\n";
+	echo '<input type="hidden" name="kepzesId" value="'.$ADAT['kepzesAdat']['kepzesId'].'" />'."\n";
+
+	echo '<h1>'._KEPZES_ADATAI.'</h1>'."\n";
+
+	echo '<label for="kepzesNev">'._KEPZES_NEVE.'</label>'."\n";
+	echo '<input id="kepzesNev" type="text" name="kepzesNev" value="'.$ADAT['kepzesAdat']['kepzesNev'].'" />'."\n";
+
+	echo '<label for="tolTanev">'._BEVEZETES_EVE.'</label>'."\n";
+	echo '<select id="tolTanev" name="tolTanev">'."\n";
+	$aktTanev = date('Y'); $SEL = array($ADAT['kepzesAdat']['tanev'] => ' selected="selected" ');
+	for ($tanev = $aktTanev-10; $tanev < $aktTanev+11; $tanev++) {
+	    echo '<option value="'.$tanev.'"'.$SEL[$tanev].'>'.$tanev.'</option>'."\n";
+	}
+	echo '</select>'."\n";
+	echo '<br />';
+
+	echo '<label for="osztalyJellegId">'._OSZTALY_JELLEG.'</label>'."\n";
+	echo '<select id="osztalyJellegId" name="osztalyJellegId">'."\n";
+	    $SEL = array($ADAT['kepzesAdat']['osztalyJellegId'] => ' selected="selected" ');
+	    echo '<option>'.$ADAT['osztalyJellegId'].'</option>';
+	    foreach($ADAT['osztalyJelleg'] as $_k => $_v) {
+		if ($_v['osztalyJellegEles']==1) echo '<option value="'.$_v['osztalyJellegId'].'"'.$SEL[$_v['osztalyJellegId']].'>'.$_v['osztalyJellegNev'].' {'.$_v['osztalyJellegId'].'}</option>'."\n";
+	    }
+	echo '</select>'."\n";
+	echo '<br />';
+
+	echo '<div>';
+	    echo '<span class="minih">'._MAR_RESZTVEVO_OSZTALYOK.'</span>';
+	    echo '<select class="osztalySel" name="delOsztalyId[]" multiple="multiple">';
+	    for ($i=0; $i<count($ADAT['kepzesAdat']['osztalyIds']); $i++) {
+		$OA = $ADAT['osztalyok'][ $ADAT['kepzesAdat']['osztalyIds'][$i]  ];
+		echo '<option value="'.$OA['osztalyId'].'">';
+		echo $OA['osztalyJel'].' ';
+		echo $OA['leiras'];
+		echo ' {'.$OA['osztalyJellegId'].'}';
+		echo '</option>';
+	    }
+	    echo '</select>'."\n";
+	echo '</div>';
+
+	echo '<div><span class="icon-retweet"></span></div>';
+
+	echo '<div>';
+	echo '<span class="minih">'._OSZTALYOK.'</span>';
+	echo '<select class="osztalySel" name="osztalyId[]" multiple="multiple">'."\n";
+	echo '<optgroup label="társítható osztályok">';
+	foreach ($ADAT['osztalyok'] as $osztalyId => $oAdat) {
+	    if (!in_array($osztalyId, $ADAT['kepzesAdat']['osztalyIds'])) {
+		if ($ADAT['kepzesAdat']['osztalyJellegId']==$oAdat['osztalyJellegId']) {
+		    echo '<option value="'.$osztalyId.'">';
+		    echo $oAdat['osztalyJel'].' '.$oAdat['leiras'].' {'.$oAdat['osztalyJellegId'].'}';
+		    echo '</option>'."\n";
+		}
+	    }
+	}
+	echo '</optgroup>';
+	echo '<optgroup label="további osztályok">';
+	foreach ($ADAT['osztalyok'] as $osztalyId => $oAdat) {
+	    if ($ADAT['kepzesAdat']['osztalyJellegId']!=$oAdat['osztalyJellegId']) {
+		    echo '<option disabled="disabled" value="'.$osztalyId.'">';
+		    echo $oAdat['osztalyJel'].' '.$oAdat['leiras'].' {'.$oAdat['osztalyJellegId'].'}';
+		    echo '</option>'."\n";
+	    }
+	}
+	echo '</optgroup>';
+	echo '</select>'."\n";
+	echo '</div>';
+
+
+	echo '<p><input type="submit" value="'._OK.'" /></p>'."\n";
+
+	formEnd();
+
+    }
+
+?>

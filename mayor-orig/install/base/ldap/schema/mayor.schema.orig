@@ -1,0 +1,307 @@
+# $OpenLDAP: pkg/ldap/servers/slapd/schema/openldap.schema,v 1.10.2.6 2000/10/11 02:36:50 kurt Exp $
+#
+# OpenLDAP Project's directory schema items
+#
+# depends upon:
+#	core.schema
+#	cosine.schema
+#	inetorgperson.schema
+#
+# These are provided for informational purposes only.
+#
+# Prefix: iso.org.dod.internet.private.enterprise (1.3.6.1.4.1) 
+# The IANA has assigned the following Private Enterprise Number  13308.
+# 13308 Városmajori Gimnázium Bence Bärnkopf barnkopf@debyl.vmg.sulinet.hu
+#
+# -------------------------------------------------------------------------
+#
+# MaYoR elektronikus napló schema definíciói
+#   1.3.6.1.4.1.13308.1 - attributumok
+#   1.3.6.1.4.1.13308.2 - objectumok
+#
+# -------------------------------------------------------------------------
+
+
+attributeType ( 1.3.6.1.4.1.13308.1.1
+    NAME 'url'
+    DESC 'A csoport oldalához tartozó URL'
+    EQUALITY caseExactMatch
+    SUBSTR caseExactSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32768} )
+
+attributeType ( 1.3.6.1.4.1.13308.1.2
+    NAME 'homePage'
+    DESC 'A user vagy csoport honlapja'
+    EQUALITY caseExactMatch
+    SUBSTR caseExactSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32768} )
+
+attributeType ( 1.3.6.1.4.1.13308.1.3
+    NAME 'class'
+    DESC 'Az osztály betûjele (A-D)'
+    EQUALITY caseIgnoreMatch
+    SUBSTR caseIgnoreSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32768} )
+
+attributeType ( 1.3.6.1.4.1.13308.1.4
+    NAME 'year'
+    DESC 'Évfolyam 7-tõl 12-ig'
+    EQUALITY integerMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.27{32768} )
+
+attributeType ( 1.3.6.1.4.1.13308.1.5
+    NAME 'leader'
+    DESC 'A csoport fõnöke - pl. osztályfõnök'
+    SUP owner )
+
+attributeType ( 1.3.6.1.4.1.13308.1.6
+    NAME 'nextUid'
+    DESC 'A következõ uidNumber'
+    SUP uidNumber )
+
+attributeType ( 1.3.6.1.4.1.13308.1.7
+    NAME 'nextGid'
+    DESC 'A következõ gidNumber'
+    SUP gidNumber )
+
+attributeType ( 1.3.6.1.4.1.13308.1.8
+    NAME 'freeUid'
+    DESC 'Szabad uidNumber'
+    SUP uidNumber )
+
+attributeType ( 1.3.6.1.4.1.13308.1.9
+    NAME 'freeGid'
+    DESC 'Szabad gidNumber'
+    SUP gidNumber )
+
+attributeType ( 1.3.6.1.4.1.13308.1.10
+    NAME 'subject'
+    DESC 'Tantárgy neve'
+    SUP name )
+
+attributeType ( 1.3.6.1.4.1.13308.1.11
+    NAME 'level'
+    DESC 'Tantárgy szintje (fakultáció,alap,tagozat)'
+    SUP name )
+
+attributetype ( 1.3.6.1.4.1.13308.1.12
+    NAME 'registerTimestamp'
+    EQUALITY generalizedTimeMatch
+    ORDERING generalizedTimeOrderingMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.24
+    DESC 'Beiratkozás dátuma' )
+
+attributetype ( 1.3.6.1.4.1.13308.1.13
+    NAME 'classTimestamp'
+    EQUALITY generalizedTimeMatch
+    ORDERING generalizedTimeOrderingMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.24
+    DESC 'Osztályba kerülés dátuma' )
+
+attributetype ( 1.3.6.1.4.1.13308.1.14
+    NAME 'studentCardTimestamp'
+    EQUALITY generalizedTimeMatch
+    ORDERING generalizedTimeOrderingMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.24
+    DESC 'Diákigazolvány kiállításának dátuma' )
+
+attributetype ( 1.3.6.1.4.1.13308.1.15
+    NAME 'birthTimestamp'
+    EQUALITY generalizedTimeMatch
+    ORDERING generalizedTimeOrderingMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.24
+    DESC 'Születési dátum' )
+		
+attributetype ( 1.3.6.1.4.1.13308.1.16
+    NAME 'localityTimestamp'
+    EQUALITY generalizedTimeMatch
+    ORDERING generalizedTimeOrderingMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.24
+    DESC 'Lakcím dátuma' )
+
+attributetype ( 1.3.6.1.4.1.13308.1.17
+    NAME 'guardianCn'
+    DESC 'Gondviselõ (apa) neve'
+    SUP cn )'
+
+attributetype ( 1.3.6.1.4.1.13308.1.18
+    NAME 'motherCn'
+    DESC 'Anya neve'
+    SUP cn )'
+
+attributetype ( 1.3.6.1.4.1.13308.1.19
+    NAME 'birthLocality'
+    DESC 'Születési hely'
+    SUP l )'
+
+##
+# OM kód (8 db (?) szám)
+##
+attributetype ( 1.3.6.1.4.1.13308.1.20
+    NAME 'primarySchoolOMCode'
+    DESC 'Általános iskola azonosítója'
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.36
+    EQUALITY numericStringMatch
+    SUBSTR numericStringSubstringsMatch )
+
+##
+# 10 jegyû szám
+##
+attributetype ( 1.3.6.1.4.1.13308.1.21
+    NAME 'studentCardNumber'
+    DESC 'Diákigazolvány száma'
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.36
+    EQUALITY numericStringMatch
+    SUBSTR numericStringSubstringsMatch )
+
+##
+# 10 jegyû szám
+##    
+attributetype ( 1.3.6.1.4.1.13308.1.22
+    NAME 'taxId'
+    DESC 'Adóazonosító jel'
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.36
+    EQUALITY numericStringMatch
+    SUBSTR numericStringSubstringsMatch )
+
+
+
+##
+# Anyakönyvbe vétel éve, osztály betûjele és anyakönyvi sorszám
+##
+attributetype ( 1.3.6.1.4.1.13308.1.23
+    NAME 'registerNumber'
+    DESC 'Törzslapszám'
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    EQUALITY caseIgnoreIA5Match
+    SUBSTR caseIgnoreIA5SubstringsMatch )
+
+##
+# Napló azonosító és naplóbeli sorszám (lehet osztály betûjel benne)
+##
+attributetype ( 1.3.6.1.4.1.13308.1.24
+    NAME 'diaryNumber'
+    DESC 'Napló sorszám'
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    EQUALITY caseIgnoreIA5Match
+    SUBSTR caseIgnoreIA5SubstringsMatch )
+
+##
+# fiú/lány
+##
+attributeType ( 1.3.6.1.4.1.13308.1.25
+    NAME 'sex'
+    DESC 'Nem (fiú/lány)'
+    EQUALITY caseIgnoreMatch
+    SUBSTR caseIgnoreSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32768} )
+
+##
+# 9 jegyû szám
+##
+attributetype ( 1.3.6.1.4.1.13308.1.26
+    NAME 'TAJNumber'
+    DESC 'Napló sorszám'
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+    EQUALITY caseIgnoreIA5Match
+    SUBSTR caseIgnoreIA5SubstringsMatch )
+
+##
+# Szülõ/meghatalmazott jelszava
+##
+attributetype ( 1.3.6.1.4.1.13308.1.27
+    NAME 'parentPassword'
+    DESC 'Szülõ/meghatalmazott jelszava'
+    SUP userPassword )
+
+attributeType ( 1.3.6.1.4.1.13308.1.28
+    NAME 'studentMember'
+    DESC 'Tanuló - órára jár és jegyet kap'
+    SUP member )
+
+attributeType ( 1.3.6.1.4.1.13308.1.29
+    NAME 'exemptMember'
+    DESC 'Felmentett tanuló - órára jár és nem kap jegyet'
+    SUP member )
+
+attributeType ( 1.3.6.1.4.1.13308.1.30
+    NAME 'examerMember'
+    DESC 'Vizsgázó tanuló - nem jár órára és jegyet kap'
+    SUP member )
+
+attributetype ( 1.3.6.1.4.1.13308.1.31
+    NAME 'studyId'
+    DESC 'Oktatási azonosító'
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.36
+    EQUALITY numericStringMatch
+    SUBSTR numericStringSubstringsMatch )
+#    SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+#    EQUALITY caseIgnoreIA5Match
+#    SUBSTR caseIgnoreIA5SubstringsMatch )
+
+# ================================================================
+#  ObjectClass-ok
+# ================================================================
+
+objectClass ( 1.3.6.1.4.1.13308.2.1 
+    NAME 'mayorOrganization'
+    DESC 'MaYoR Organizational Object'
+    SUP organization
+    MUST ( nextUid $ nextGid ) 
+    MAY ( freeUid $ freeGid ) )
+
+objectClass ( 1.3.6.1.4.1.13308.2.2
+    NAME 'mayorPerson'
+    DESC 'MaYoR Person'
+    MUST ( uid $ cn $ uidNumber $ gidNumber $ homeDirectory )
+    MAY ( sn $ givenName $ class $ year $ l $ street $ mail $ postalAddress $ postalCode $ telephoneNumber $ 
+          mobile $ roomNumber $ homePage $ registerTimestamp $ primarySchoolOMCode $
+	  classTimestamp $ studentCardNumber $ studentCardTimestamp $ taxId $ birthTimestamp $ TAJNumber $ studyId $
+	  birthLocality $ registerNumber $ diaryNumber $ sex $ guardianCn $ motherCn $ localityTimestamp $ parentPassword ) )
+#    SUP ( inetOrgPerson )
+				    
+objectClass ( 1.3.6.1.4.1.13308.2.3
+    NAME 'mayorGroup'
+    DESC 'MaYorR Group'
+    SUP ( posixGroup $ groupOfNames )
+    MAY ( leader $ mail $ homePage $ url $ roomNumber $ studentMember ) )
+
+objectClass ( 1.3.6.1.4.1.13308.2.4
+    NAME 'mayorStudyGroup'
+    DESC 'MaYoR Study Group - Tankör'
+    SUP ( mayorGroup )
+    MAY ( year $ class $ level $ subject $
+	  studentMember $ exemptMember $ examerMember ) )
+
+objectClass ( 1.3.6.1.4.1.13308.2.5
+    NAME 'mayorSubjectGroup'
+    DESC 'MaYoR Subject Group - Szakkör'
+    SUP ( mayorGroup )
+    MAY ( year $ class $ level $ subject $ exemptMember ) )
+
+objectClass ( 1.3.6.1.4.1.13308.2.6
+    NAME 'mayorPrivateStudentsGroup'
+    DESC 'MaYoR Private Students Group - Magántanulók'
+    SUP ( mayorGroup )
+    MAY ( year $ class $ level $ subject $ examerMember ) )
+
+# =======================================================================================
+#
+# Érdemes a felhasználókat/csoportokat az alábbi objectClass-okba is besorolni, hogy
+# rendes unix felhasználóként/csoportként is funkcionáljanak
+#
+# ------------------------------------------------------------------------
+#
+# objectclass ( 1.3.6.1.1.1.2.0 NAME 'posixAccount' SUP top AUXILIARY
+#         DESC 'Abstraction of an account with POSIX attributes'
+#         MUST ( cn $ uid $ uidNumber $ gidNumber $ homeDirectory )
+#         MAY ( userPassword $ loginShell $ gecos $ description ) )
+# 			
+# objectclass ( 1.3.6.1.1.1.2.1 NAME 'shadowAccount' SUP top AUXILIARY
+#         DESC 'Additional attributes for shadow passwords'
+#         MUST uid
+#         MAY ( userPassword $ shadowLastChange $ shadowMin $
+#               shadowMax $ shadowWarning $ shadowInactive $
+#  	        shadowExpire $ shadowFlag $ description ) )
+# =======================================================================================
+ 

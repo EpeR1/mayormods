@@ -1,0 +1,72 @@
+<?php
+
+    function putAddNodeForm($ADAT) {
+	formBegin(array('id'=>'addNode'));
+	echo '<h3>'._UJ_VEGPONT.'</h3>';
+	echo '<input type="hidden" name="action" value="addNode" />';
+	echo '<p>';
+	echo '<select name="nodeId">';
+	foreach ($ADAT['nodes'] as $nodeId => $nAdat) {
+	    echo '<option value="'.$nAdat[0]['nodeId'].'">'.$nAdat[0]['nev'].' - '.$nAdat[0]['cimHelyseg'].' ('.$nAdat[0]['nodeId'].')</option>';
+	}
+	echo '</select>';
+	    echo '<br/>';
+	echo '<label for="userAccount">'._ACCOUNT.'</label>';
+	echo '<input type="text" id="userAccount" name="userAccount" value="" />';
+	    echo '<br/>';
+	echo '<select name="OMKod">';
+	foreach ($ADAT['intezmenyek'] as $OMKod => $iAdat) {
+	    echo '<option value="'.$iAdat[0]['OMKod'].'">'.$iAdat[0]['nev'].' - '.$iAdat[0]['cimHelyseg'].' ('.$iAdat[0]['OMKod'].')</option>';
+	}
+	echo '</select>';
+	echo '</p>';
+	echo '<input type="submit" value="'._ADD.'" />';
+	formEnd();
+    }
+
+    function putPrivilegesForm($ADAT) {
+	echo '<table id="privNodes">';
+	echo '<thead>';
+	    echo '<tr>';
+	    echo '<th>'._NODE.'</th>';
+	    echo '<th>'._NODEID.'</th>';
+	    echo '<th>'._INTEZMENY.'</th>';
+	    echo '<th>'._OMKOD.'</th>';
+	    echo '<th>'._ACCOUNT.'</th>';
+	    echo '<th>'._PRIVS.'</th>';
+	    echo '</tr>';
+	echo '</thead>';
+	echo '<tbody>';
+	foreach ($ADAT['privs'] as $index => $pAdat) {
+	    echo '<tr>';
+	    echo '<td>'.$ADAT['nodes'][ $pAdat['nodeId'] ][0]['nev'].'</td>';
+	    echo '<td>'.$pAdat['nodeId'].'</td>';
+	    echo '<td>'.$ADAT['intezmenyek'][ $pAdat['OMKod'] ][0]['nev'].'</td>';
+	    echo '<td>'.$pAdat['OMKod'].'</td>';
+	    echo '<td>'.$pAdat['userAccount'].'</td>';
+	    echo '<td>';
+		formBegin(array('id'=>'priv'));
+		echo '<input type="hidden" name="action" value="setPriv" />';
+		echo '<input type="hidden" name="nodeId" value="'.$pAdat['nodeId'].'" />';
+		echo '<input type="hidden" name="userAccount" value="'.$pAdat['userAccount'].'" />';
+		echo '<input type="hidden" name="OMKod" value="'.$pAdat['OMKod'].'" />';
+		$nPriv = explode(',',$pAdat['priv']);
+		foreach ($ADAT['privileges'] as $index => $priv) {
+		    if (in_array($priv, $nPriv)) $CHK=' checked="checked" ';
+		    else $CHK = '';
+		    $id = 'n'.$pAdat['nodeId'].ekezettelen($pAdat['userAccount']).$pAdat['OMKod'].$index;
+		    echo '<input id="'.$id.'" type="checkbox" name="priv[]" value="'.$priv.'"'.$CHK.' />';
+		    echo '<label for="'.$id.'">'.$priv.'</label>';
+		}
+		echo '<input type="submit" value="'._OK.'" />';
+		formEnd();
+	    echo '</td>';
+	    echo '</tr>';
+	}
+	echo '</tbody>';
+	echo '</table>';
+
+
+    }
+
+?>

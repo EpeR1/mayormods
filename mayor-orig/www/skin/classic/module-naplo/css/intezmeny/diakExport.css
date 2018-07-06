@@ -1,0 +1,46 @@
+
+    form.diak { background-color: white; }
+
+    form.diak { margin: 5px 30px 20px 20px; font-size:10px; }
+    form.diak h1 { border: dotted white; border-width: 1px 0px; background-color: rgb(80,100,120); font-size: 20px; text-align: center; }
+    form.diak input, form.diak select { 
+	font-size:10px; border: solid 1px #777777; margin-left: 3px;
+	padding-left: 2px;
+    }
+    form.diak input.kiemelt { background-color: rgb(255,255,100); border-width: 1px 1px 0px 1px; }
+    form.diak label { font-size:11px; }
+    form.diak label.kotelezo { color:rgb(100,20,20); }
+    form.diak input:focus { background-color: orange; }
+
+    form.diak fieldset { border: solid 1px rgb(40,60,80); }
+    form.diak fieldset th { text-align: right; }
+    form.diak fieldset legend { 
+	background-color: rgb(140,160,180);
+	color: white;
+	font-size:90%; 
+	text-align: left;
+	margin-left:20px;
+	padding-left: 10px;
+	padding-right: 10px;
+	border: solid 1px rgb(40,60,80);
+    }
+    form.diak input.kiemelt {
+        background-color: rgb(220,220,255);
+        border-width: 1px 1px 1px 1px; border-color: #777777 #777777 rgb(220,220,255) #777777;
+        margin-bottom: 0px; padding-top: 2px;
+    }
+    form.diak fieldset table.reszletek { width: 100%; background-color: rgb(220,220,255); }
+    form.diak fieldset table.reszletek th { text-align: right; }
+    form.diak fieldset table.reszletek h1 {
+        text-align: center; background-color: rgb(100,100,120); font-size: 12pt;
+        border-color: rgb(200,200,200); color: white;
+    }
+    form.diak table.reszletek legend { background-color: rgb(100,100,120); font-weight: bold; color: white; }
+
+    form.updateTable { color: white; width: 80%; background-color: rgb(180,180,200); margin: 20px auto; }
+    form.updateTable h1 { text-align: center; border: 1px dotted white; border-width: 1px 0px; background-color: rgb(60,60,80); }
+    form.updateTable label { color: white; padding: 8px; }
+    form.updateTable table { margin: 20px auto; background-color: rgb(140,140,180); color: red;  }
+    form.updateTable table td { background-color: rgb(255,255,255); }
+    form.updateTable table th { background-color: rgb(120,120,160); }
+

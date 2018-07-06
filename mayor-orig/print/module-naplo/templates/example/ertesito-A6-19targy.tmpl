@@ -1,0 +1,74 @@
+%!pdfLaTeXA6 pdf
+%
+% Félévi értesítő
+%
+% Szerző: Vass Gergely (info@ker-misk.sulinet.hu)
+%
+\documentclass[8pt]{article}
+
+\usepackage[a6paper]{geometry} % A6-os méret
+\usepackage[utf8x]{inputenc} % UTF-8 kódolású forrás (ucs)
+\usepackage{ucs} % Jobb UTF-8 támogatás
+\usepackage{t1enc}
+\usepackage[magyar]{babel} % magyar elválasztási szabályok
+\frenchspacing % a magyar tipográfiai szabályoknak megfelelő szóközök írásjelek után
+\usepackage{booktabs} % táblázatok magasabb szintű formázása
+\usepackage{fancyhdr} % Ritkítás
+\addtolength{\textheight}{1.2 truecm}
+\pagestyle{fancy}
+\def\mayor{%
+\font\mayorfnt=cmsl4%
+\font\Mayorfnt=cmsl6
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+\renewcommand{\footnotesize}{\fontsize{6pt}{8pt}\selectfont}
+\addtolength{\skip\footins}{2mm}
+\addtolength{\textheight}{8mm}
+\setlength{\footskip}{12pt}
+\setlength{\headsep}{10pt}
+\cfoot{\tiny \copyright\mayor\ elektronikus napló - Nyomtatva: %$nyomtatasDt}\lhead{\tiny %$intezmenyNev}
+\rhead{\tiny Értesítő %$tanevKezdesEv-%$tanevZarasEv/%$szemeszter}
+\begin{document}
+
+%{diak
+\begin{center}
+\mbox{}\\[-8.5mm]
+\textbf{\small \bfseries  %$diakNev}\\ [-1.5mm]
+{\scriptsize %$osztaly osztály}
+
+\vspace{2pt}
+
+\small
+\begin{tabular}{@{\ \ }l|r@{\ \ }}
+\toprule\hline magatartás & \emph{%$magatartas}\\ 
+\hline szorgalom & \emph{%$szorgalom}\\ 
+\hline\hline
+
+%{targy
+%$targyNev & \emph{%$hivatalos %$mJel} \\
+\hline
+%}targy
+
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\begin{tabular}{@{\ \ }l|r|l|r@{\ \ }}
+\multicolumn{4}{c}{mulasztott órák száma} \\ 
+\midrule
+igazolt&{\sl %$igazolt}&igazolatlan\footnotemark[1]&{\sl %$igazolatlan}\\ 
+\bottomrule
+\end{tabular}
+\footnotetext[1]{Tartalmazhat még igazolható hiányzásokat is!}
+\vspace{4pt}\begin{flushleft}
+{\scriptsize %$intezmenyCimHelyseg, %$ev. %$hoNev %$nap.}
+\end{flushleft}
+\vspace{6pt}\slshape\scriptsize
+\begin{tabular}{ccc}
+\rule{3cm}{0.1pt}&&\rule{3cm}{0.1pt}\\ 
+osztályfőnök&&szülő\\ 
+\end{tabular}
+\end{center}
+\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+%}diak
+
+\end{document}

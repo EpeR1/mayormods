@@ -1,0 +1,55 @@
+<?php
+
+    function putLoginForm($userAccount,$toPolicy,$toPSF='',$toSkin='') {
+
+	global $POLICIES, $AUTH, $sessionID;
+	echo '<h1>'._SITE.'</h1>'."\n";
+	echo '<h2>'._GREETING.'</h2>'."\n";
+
+	formBegin(array('method'=>'post', 
+	    'action'=>'index.php?policy=public&page=auth&f=login&toPolicy='.$toPolicy.'&sessionID='.$sessionID ,
+	    'name'=>"loginablak", 'id'=>'login'));
+
+	echo '<input type="hidden" name="action" value="login" />';
+	echo '<input type="hidden" name="toPSF" value="'.$toPSF.'" />';
+
+	echo '<h3>'."\n";
+    	    echo _LOGIN;
+    	echo '</h3>'."\n";
+
+    	echo '<label for="focus">'._USERNAME.'</label>';
+    	echo '<input id="focus" type="text" accesskey="u" tabindex="1" name="userAccount" value="" maxlength="32" />'."<br />\n";
+
+        echo '<select class="pp" name="toPolicy">'."\n";
+		    $SEL = array($toPolicy => ' selected="selected" ');
+		    for ($i=0; $i<count($POLICIES); $i++) {
+			$_policy = $POLICIES[$i];
+			if ($AUTH[$_policy]['authentication'] != 'none') {
+                	    echo '<option value="'.$_policy.'" '.$SEL[$_policy].'>';
+			    echo constant('_'.strtoupper($_policy).'_PASSWORD');
+			    echo '</option>'."\n";
+			}
+		    }
+        echo '</select>'."\n";
+
+	echo '<input id="userPassword" type="password" accesskey="p" tabindex="2" name="userPassword" value="" />'."<br />\n";
+
+        echo '<input accesskey="l" type="submit" tabindex="3" name="button" value=" '. _LOGIN .' "
+			onclick="document.loginablak.button.disabled=true;
+				document.loginablak.button.value=\' Várj... \';
+				document.loginablak.submit()" class="submit" />'."\n";
+
+	formEnd();
+
+/*
+	echo '<table style="width: 100%" align="center">'."\n";
+	    echo '<tr>'."\n";
+    		echo '<td class="co">'."\n";
+    		echo _MAYOR_DESC."\n";
+    		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+	echo '</table>'."\n";
+*/
+    }
+
+?>

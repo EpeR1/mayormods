@@ -1,0 +1,152 @@
+@media screen {
+    table.osztalyozo {
+	background-color: rgb(220,220,220);
+	color: white;
+    }
+
+    table.osztalyozo a { color: white; text-decoration:none }
+    table.osztalyozo a:hover { color: white; text-decoration:underline }
+
+    table.osztalyozo thead th { background-color: rgb(100,120,120); }
+    table.osztalyozo thead th select { background-color: rgb(100,120,120); color: white; border: 1px solid rgb(120,140,140); }
+    table.osztalyozo thead th.nev { height:30px }
+    table.osztalyozo thead th.defaultSulyozas { background-color:lightgreen; }
+    table.osztalyozo thead th select.sulyozas { width:44px; }
+
+    table.osztalyozo thead td {
+	background-color: rgb(100,140,130);
+	text-align: center;
+	padding: 0px 4px 0px 4px;
+    }
+
+    table.osztalyozo tfoot th {
+	background-color: rgb(100,120,120);
+	padding: 0px;
+	vertical-align: middle;
+    }
+
+    table.osztalyozo tfoot th select {
+	width: 200px;
+    }
+    table.osztalyozo tfoot th input {
+	width: 100px;
+    }
+
+    table.osztalyozo tfoot th input.jegy1 { color: blue; }
+    table.osztalyozo tfoot th input.jegy2 { color: black; }
+    table.osztalyozo tfoot th input.jegy3 { color: green; }
+    table.osztalyozo tfoot th input.jegy4 { color: red; }
+    table.osztalyozo tfoot th input.jegy5 { color: purple; /*background-color: gold; font-weight: bold;*/ }
+
+    table.osztalyozo tbody th {
+	background-color: rgb(130,140,150);
+	font-weight: normal;
+    }
+    table.osztalyozo tbody tr.magantanulo th { background-color: purple; } 
+
+    table.osztalyozo tbody th.diakNev { text-align:left; padding-left:4px; }
+    table.osztalyozo tbody th.diakNevTxt { width:120px;}
+    table.osztalyozo tbody th.face {  }
+/*
+    table.osztalyozo tbody th.diakNev.c { text-align:center; padding-left:2px; padding-right:2px; }
+*/
+    table.osztalyozo tbody th.atlag {
+	background-color: rgb(100,100,130);
+	padding: 0px 4px 0px 4px;
+    }
+
+    table.osztalyozo tbody th.dolgozat {
+	background-color: rgb(100,120,120);
+    }
+
+    table.osztalyozo tbody td.jegyek { background-color: #eeeeee; white-space: nowraps; }
+    .ujSzemeszter { border: rgb(220,220,220) solid; border-width: 0px 0px 0px 6px; }
+    table.osztalyozo tbody tr:hover th { background-color: #44a; }
+    table.osztalyozo tbody tr:hover td,
+    table.osztalyozo tbody tr:hover td a { background-color: #aaf; }
+    table.osztalyozo tbody tr:hover td.dolgozat,
+    table.osztalyozo tbody tr:hover td.dolgozat a { background-color: #aca; }
+    table.osztalyozo tbody tr:hover td.biz { background-color: rgb(100,40,45); }
+    
+    table.osztalyozo tbody td { text-align: right; }
+    table.osztalyozo tbody td.dolgozat { background-color: rgb(160,180,160); }
+    table.osztalyozo tbody td.dolgozatMase { background-color: rgb(200,200,160); }
+    
+    table.osztalyozo tbody td a {
+	text-decoration: none;
+    }
+    
+    table.osztalyozo tbody td a.jegy1 { color: blue; }
+    table.osztalyozo tbody td a.jegy2 { color: black; }
+    table.osztalyozo tbody td a.jegy3 { color: green; }
+    table.osztalyozo tbody td a.jegy4 { color: red; }
+    table.osztalyozo tbody td a.jegy5 { color:purple; /*background-color: gold; font-weight: bold;*/ }
+
+    table.osztalyozo tbody td a.jegy1mase { color: rgb(55,55,160); background-color: rgb(200,200,160); font-size: 0.8em; padding: 0.2em; }
+    table.osztalyozo tbody td a.jegy2mase { color: rgb(80,80,80); background-color: rgb(200,200,160); font-size: 0.8em; padding: 0.2em; }
+    table.osztalyozo tbody td a.jegy3mase { color: rgb(55,160,55); background-color: rgb(200,200,160); font-size: 0.8em; padding: 0.2em; }    
+    table.osztalyozo tbody td a.jegy4mase { color: rgb(160,55,55); background-color: rgb(200,200,160); font-size: 0.8em; padding: 0.2em; }
+    table.osztalyozo tbody td a.jegy5mase { color: rgb(160,160,55); background-color: rgb(200,200,160); font-size: 0.8em; padding: 0.2em; }
+
+    table.osztalyozo #megjegyzes { width: 50%; min-width: 200px; background: #eee; border: solid 1px rgb(100,120,120);  margin: 1px 0px;}
+    table.osztalyozo #megjegyzes:focus { background:  #ffa; color: black; border: 1px outset #eee; }
+
+/*    table.osztalyozo tbody td a.masodikFelev { background-color: rgb(200, 250, 200); padding: 2px; } */
+
+    table.osztalyozo tbody td.biz {
+	background-color: rgb(180,120,140);
+	text-align: center;
+    }
+    table.osztalyozo tbody td.biz select { width:95px; }
+
+    table.osztalyozo tbody tr th.c:hover span { display: none; }
+    table.osztalyozo tbody tr th.c:hover:after { content: "\e0ca"; font-family: "Elusive-Icons";}
+
+    table.osztalyozo tbody td.biz select { background-color: rgb(180,120,140); }
+    table.osztalyozo tbody td.biz select option { color: black; }
+
+
+    /* jegyInfo */
+    table.jegyInfo a { color: black; text-decoration: none; width: 800px; }
+    table.jegyInfo thead th { font-size:large; margin-bottom:2px; padding-bottom: 2px; border-bottom: solid 1px #eeeeee; } 
+    table.jegyInfo tbody input { width: 99%; border: solid 1px #eeeeee;} 
+    table.jegyInfo tbody th { padding-right:1em; text-align: left;} 
+    table.jegyInfo tbody select { width: 99%; }
+    table.jegyInfo tfoot input { width: 50px; 
+	color: white;
+	padding: 0.4em 0.4em;
+	border: solid 1px #3496B9;
+	border-radius: 2px;
+    }
+    table.jegyInfo tfoot input.modosit {	background-color: #82C882;    }
+    table.jegyInfo tfoot input.modosit:hover {	background-color: #82fa82;    }
+    table.jegyInfo tfoot input.torol {	background-color: #f06;    }
+    table.jegyInfo tfoot input.torol:hover {	background-color: #a06;    }
+
+    #updateWindow { width: 800px; top: 200px; left: 50%; margin-left: -400px; min-height: 100px; height: 800px; mmax-height: 90%; }
+    #updateWindow form { padding: 20px; }
+    #updateWindow form h1 { text-align: center; margin-bottom: 0px; }
+    #updateWindow form h2 { text-align: center; }
+    #updateForm { max-height: 80%; overflow: auto; }
+
+    #updateWindow form input.szoveges[type=submit] { width: 100%; background-color: #82c882; color: white; padding: 0.4em; border: solid 1px #3496B9; border-radius: 2px; }
+    #updateWindow form input.szoveges[type=submit]:hover { background-color: #82fa82; }
+
+    table.osztalyozo thead td.ho span.literal {display:;}
+    table.osztalyozo thead td.ho span.roman {display: none;}
+
+}
+@media (max-width: 764px) {
+    table.osztalyozo { width:95%;}
+    table.osztalyozo thead td.ho span.literal {display: none;}
+    table.osztalyozo thead td.ho span.roman {display: inline-block;}
+}
+@media print {
+    input, select, .toolBar { display: none; }
+    .biz select { display: inline; width: 80px; }
+    a { text-decoration: none; color: black; }
+    table { background-color: rgb(200,200,200); border-spacing: 0px; border: 0px black solid; font-size: 10px; }
+    td { border: 1px #888 solid; padding: 4px 4px; }
+    th { border: 1px #888 solid; padding: 6px 4px 2px 4px; vertical-align: middle; }
+    table.osztalyozo tbody th.diakNev { text-align:left; }
+}

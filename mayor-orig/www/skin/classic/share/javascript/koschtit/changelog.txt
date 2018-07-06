@@ -1,0 +1,81 @@
+
+    MaYoR változat - released 2012-11-04
+    ki_config/ki_setup: szövegek magyar fordítása
+
+ ---------
+ KoschtIT Image Gallery v3.1b released on 10/05/2012
+ by Konstantin Tabere
+
+ Changelog
+ ---------
+
+ Fixed: Problem with manual display order of picture gets lost ( /thread-422.html )
+
+//---------------------------------------------------------------------------------------
+
+ Old Releases:
+ 
+  v3.1
+  - Added: Drag'n'drop in the admin panel for changing position of images in gallery
+  - Added: Deleting images animation
+  - Added: Tooltips in admin panel
+  - Added: Link to documentation in admin panel
+  - Added: New parameter $show_explorer for enabling/disabling gallery explorer
+  - Added: "Manage folder"-section in admin panel for easy managing of gallery folders
+  - Added: "Label Images" in admin menu with tooltips for new users
+  - Added: Email notifications if somebody comments on an image ($admin_mail)
+  - Added: Many new parameters ($show_explorer, $th_shadow, $vcomm..., $admin_mail...)
+  - Added: Language support for flipped images ($vcomm - params)
+  - Added: Viewer comments moderation ($moderate_posts - parameter)
+  - Added: New animation when a new user comment is made
+  - Added: User account (?user=user) with image uploading rights
+  - Changed: Redesigned viewer comments section
+  - Changed: Admin password is saved and transmitted only in md5-format now
+  - Changed: Preview pictures stay hidden if there is not enough browser window width (4:3 format)
+  - Changed: Admin menu slides out in "Settings" and "Manage folders" for not blocking the content behind it
+  - Fixed: Some smaller bugs
+  - Removed: AddThis Social Bookmarks
+
+  v3.0
+  - Added: "Deleting Images" in admin panel
+  - Added: Some nicer image borders and shadows
+  - Added: AddThis social bookmarking service for sharing
+  - Added: Default values for missing parameters
+  - Added: Changable maximum image size on image upload
+  - Added: Addable watermarks on image upload
+  - Changed: Navigation icons below thumbnails don't consume space if hidden
+  - Changed: Looks of admin pages
+  - Changed: New default design
+  - Changed: Navigation icons
+  - Fixed: Split()-function deprecated warnings since PHP5.3
+  - Fixed: Some smaller bugs ...
+
+ Last v2.X update:
+
+  v2.6
+  - Added: Some more CSS Shadows
+  - Added: Caching of folder scan results: much faster folder scans possible
+  - Added: Enable/Disable - settings in the admin-panel
+  - Added: Admin can delete viewer comments
+  - Added: Picture uploading through admin-panel
+  - Added: New parameter ($image_nav_always) in "ki_setup.php"
+  - Changed: No-JavaScript gallery reworked: looks and feels almost like JS-enabled gallery now
+  - Changed: Position of "Close"-button when $nav_style = 2
+  - Fixed: Navigation icons for displayed images sometimes not centered
+  - Fixed: Navigation icons sometimes in vertical order instead of horicontal
+  - Fixed: Images didn't show up cause of corrupted meta-information (fix in ki_makepic.php)
+  - Fixed: Loading animation stops
+  - Fixed: "ERROR: ... needs too much memory" on some server configurations ( /forum/thread-120.html )
+  - Fixed: Thumbs getting blurred on mouseover
+  - Fixed: Some smaller bugs ...
+  - Removed: Icon for "back to Website" (not needed anymore)
+
+ Last v1.X update:
+
+  v1.82
+  - Fixed: Comment was visible while closing slideshow
+  - Fixed: Problems with different charsets e.g. "default_charset=iso-8859-1"
+  - Fixed: Galleries don't expand page on startup anymore
+  - Fixed: Some security issues
+  - Added: HTML viewing mode when JavaScript disabled
+

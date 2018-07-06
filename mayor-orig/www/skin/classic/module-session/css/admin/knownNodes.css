@@ -1,0 +1,14 @@
+
+form#search { background-color: #eee; padding: 5px; text-align: center; margin: 10px auto; width: 400px; }
+form#search h3 { border-bottom: 1px solid #600; padding: 2px 10px; margin: 10px 40px; }
+form#search label { margin-right: 5px; }
+form#search input { margin-left: 10px; }
+
+table#nodes { background-color: white; border: solid 1px #ddd; border-spacing: 0px; margin: auto; }
+table#nodes td, table#nodes th { border: solid 1px #ddd; padding: 2px 5px; }
+table#nodes tr.fejlesztoi td { background-color: #060; color: white; }
+table#nodes tr.fenntarto td { background-color: #006; color: white; }
+table#nodes tr.controller td { background-color: #600; color: white; }
+table#nodes tr.backup td { background-color: #630; color: white; }
+table#nodes td input.pong { background-color: #282; color: white; }
+table#nodes td input.delete { background-color: #d00; color: white; }

@@ -1,0 +1,153 @@
+<?php
+
+    function putDiakTabla($ADAT) {
+
+	echo '<div id="tableDiv">';
+
+	$i = 0;
+	foreach ($ADAT['mezok'] as $attr => $attrNev) {
+	    if ($ADAT['types'][$attr] == 'int') $sortType[] = 'Number';
+	    elseif ($ADAT['types'][$attr] == 'date') $sortType[] = 'Date';
+	    else $sortType[] = 'String';
+	    if (in_array($attr, array('szuletesiHely','lakhelyHelyseg','nem','lakohelyiJellemzo'))) $selIndex[] = $i;
+	    $i++;
+	}
+echo '<script type="text/javascript">'."var cellTypes = ['".implode("','", $sortType)."']; selIndex = [".implode(',', $selIndex)."];".'</script>';
+	echo '<table class="diak" id="diakTabla" class="filterable">'."\n";
+
+	echo '<thead>'."\n";
+	    echo '<tr>';
+	    foreach ($ADAT['mezok'] as $attr => $attrNev) {
+		echo '<th>';
+		echo $attrNev;
+		echo '</th>';
+	    }
+	    echo '<th></th>';
+	    echo '</tr>'."\n";
+	echo '</thead>'."\n";
+
+	echo '<tfoot>'."\n";
+	    echo '<tr>';
+	    foreach ($ADAT['mezok'] as $attr => $attrNev) {
+		echo '<th>';
+		echo $attrNev;
+		echo '</th>';
+	    }
+	    echo '<th></th>';
+	    echo '</tr>'."\n";
+	echo '</tfoot>'."\n";
+
+	echo '<tbody>'."\n";
+	foreach ($ADAT['export'] as $i => $dAdat) {
+	    echo '<tr>';
+	    foreach ($ADAT['mezok'] as $attr => $attrNev) {
+		echo '<td>';
+		echo $dAdat[$attr];
+		echo '</td>'."\n";
+	    }
+	    echo '<td>';
+		formBegin(array('action'=>href('index.php?page=naplo&sub=intezmeny&f=diak')));
+		echo '<input type="hidden" name="diakId" value="'.$dAdat['diakId'].'" />';
+		echo '<input type="submit" value="&rarr;" />';
+		formEnd();
+	    echo '</td>';
+	    echo '</tr>'."\n";
+	}
+	echo '</tbody>'."\n";
+
+	echo '</table>'."\n";
+	echo '</div>';
+    }
+
+    function putDiakExportForm($ADAT) {
+
+	global $skin, $exportFormatum;
+
+	if ($skin != 'ajax') formBegin(array('action'=>href('index.php?page=naplo&sub=export&f=diakExport'), 'class'=>"diak hideShowContainer", 'id'=>"exportOptions"));
+
+	echo '<input type="hidden" name="action" value="diakExport" />'."\n";
+	if (isset($ADAT['osztalyId'])) echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	if (isset($ADAT['dt'])) echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+
+
+	echo '<div id="submitForm">';
+		echo '<input type="button" value="'._BEALLITASOK.'" class="onClickHideShow" />';
+
+		echo '<input type="submit" name="html" value="'._HTML.'" id="htmml" />'."\n";
+		echo '<input type="submit" name="csv" value="'._CSV.'" id="csv" />'."\n";
+		echo '<input type="submit" name="xml" value="'._XML.'" id="xml" />'."\n";
+
+	echo '</div>';
+
+
+	if (is_array($ADAT['export']) && count($ADAT['export']) > 0) {
+	    echo '<fieldset class="openable" style="display: none;"><legend>'._EXPORT.'</legend>'."\n";
+	} else {
+	    echo '<fieldset class="openable"><legend>'._EXPORT.'</legend>'."\n";
+	}
+	echo '<table>'."\n";
+
+	    echo '<tr>'."\n";
+		echo '<th colspan="3">'._MEGJELENITENDO_MEZOK.'</th>';
+	    echo '</tr>';
+	    echo '<tr>';
+	    echo '<td>';
+		echo '<select multiple="multiple" name="szabad" id="szabad">'."\n";
+		    foreach ($ADAT['fields'] as $attr => $attrNev) {
+			if (!isset($ADAT['mezok'][$attr])) {
+			    echo '<option value="'.$attr.'">'.$attrNev.'</option>';
+			}
+		    }
+		echo '</select>'."\n";
+	    echo '</td>'."\n";
+	    echo '<td>';
+		echo '<input type="button" id="valaszt" value="&rarr;" />';
+		echo '<br />';
+		echo '<input type="button" id="torol" value="&larr;" />';
+	    echo '</td>';
+	    echo '<td>';
+		echo '<select multiple="multiple" name="mezok[]" id="kivalasztott">'."\n";
+		    foreach ($ADAT['mezok'] as $attr => $attrNev) {
+			    echo '<option value="'.$attr.'">'.$attrNev.'</option>';
+		    }
+		echo '</select>'."\n";
+	    echo '</td>';
+	    echo '</tr>'."\n";
+
+	    echo '<tr>';
+	    echo '<td colspan="3" align="center">';
+    		foreach ($exportFormatum as $formatum => $mezok) {
+		    $format = ekezettelen($formatum);
+		    echo '<input type="button" name="'.$format.'" value="'.$formatum.'" class="onClickMezoSelect" />'."\n";
+		    echo '<input type="hidden" name="'.$format.'Lista" id="'.$format.'Lista" value="'.implode(',', $mezok).'" />'."\n";
+		}
+	    echo '</td>';
+	    echo '</tr>';
+
+	echo '</table>'."\n";
+	echo '</fieldset>';
+
+	if ($skin != 'ajax') formEnd();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+?>

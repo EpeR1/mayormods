@@ -1,0 +1,33 @@
+div.FM {
+    margin:10px auto;
+    width: 90%;
+    padding-bottom:2em;
+    border-bottom: solid 1px rgb(100,120,140);
+}
+
+div.FM h2 {
+    background-color: rgb(200,240,200);
+    border-bottom: solid 1px white;
+}
+
+div.FM div { padding: 1em; }
+div.FM label { padding:0px 10px 0px 20px; font-weight: bold; font-size:13px; line-height:2em;}
+
+div.FM.FM1 {background-color:rgb(200,210,220);}
+div.FM.FM2 {background-color:rgb(200,210,220);}
+div.FM.FM3 {background-color:rgb(200,210,220);}
+div.FM.FMZAR, div.FM.FMTAN {background-color:rgb(210,250,210); }
+
+div.FM div.submit { text-align: center; }
+
+div.FM div.rejtett { }
+
+div.FM table { 
+    width:100%; border: solid 1px #787878; 
+    background-color: lightgreen;
+}
+div.FM table th { background-color: #56765f; color: white; border-bottom: solid 1px white;}
+div.FM table td { }
+
+div.FM input[readonly]  { background-color: #dddddd; }
+div.FM input  { background-color: #ffffff; border: solid 1px #787878;}

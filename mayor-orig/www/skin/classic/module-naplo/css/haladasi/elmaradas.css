@@ -1,0 +1,12 @@
+
+    table.elmaradas { margin: 0px auto; background-color: rgb(32, 130, 155); color: white; margin-bottom:1em;}
+    table.elmaradas thead th { background-color: rgb(40, 40, 80); padding: 2px 4px;}
+    table.elmaradas tbody th { font-weight: normal; background-color: rgb(120, 140, 180); padding: 2px 4px;}
+    table.elmaradas tbody tr:hover th { outline: solid 1px orange; }
+    table.elmaradas tbody tr:hover td { outline: solid 1px orange; }
+    table.elmaradas tbody td { font-weight: normal; background-color: rgb(52, 150, 185); text-align: right; padding: 2px 4px;}
+    table.elmaradas tr.beirando td { background-color: rgb(40, 80, 60); }
+
+    table.elmaradas tr th.tanarNev { text-align:left; }
+
+    table.elmaradas tfoot tr th, table.elmaradas tfoot tr td { font-size: smaller; text-align: center; background-color: rgb(82,180,205); padding: 2px 4px;}

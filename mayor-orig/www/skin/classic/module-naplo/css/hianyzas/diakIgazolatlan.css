@@ -1,0 +1,12 @@
+
+    table.igazolatlan { margin: 3em auto; background-color: rgb(20,40,60); width: 50%; }
+
+    table.igazolatlan tr th { background-color: rgb(120,140,160); color: white; height: 1.5em;}
+    table.igazolatlan tr.fej th { border-bottom: solid 1px white; }
+    table.igazolatlan tr.lab th { background-color: rgb(160,180,140); text-align: right; padding-right: 1em; }
+
+    table.igazolatlan tr td { color: black; background-color: #eeeeee; }
+
+    table.igazolatlan tr:hover:nth-child(even) td { background-color: rgb(220,240,160); }
+    table.igazolatlan tr:hover:nth-child(odd)  td { background-color: rgb(200,240,240); }
+        

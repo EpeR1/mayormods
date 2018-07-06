@@ -1,0 +1,97 @@
+#
+# Jelszó változtatás
+#
+
+access to dn.subtree="ou=diak,%BASEDN%"
+    attrs=userPassword
+        by anonymous auth
+        by self write
+	by group/mayorGroup/member="cn=useradmin,ou=Groups,%BASEDN%" write
+        by group/mayorGroup/member="cn=diakadmin,ou=Groups,%BASEDN%" write
+        by * none
+
+access to attrs=userPassword
+    by anonymous auth
+    by self write
+    by group/mayorGroup/member="cn=useradmin,ou=Groups,%BASEDN%" write
+    by * none
+
+
+access to dn.subtree="ou=diak,%BASEDN%"
+    attrs=shadowLastChange,shadowExpire
+        by anonymous read
+        by self write
+	by group/mayorGroup/member="cn=useradmin,ou=Groups,%BASEDN%" write
+        by group/mayorGroup/member="cn=diakadmin,ou=Groups,%BASEDN%" write
+        by * read
+
+access to attrs=shadowLastChange,shadowExpire
+    by anonymous read
+    by self write
+    by group/mayorGroup/member="cn=useradmin,ou=Groups,%BASEDN%" write
+    by * read
+
+#
+# Személyes adatok
+#
+
+# A session nyitáshoz szükséges adatoknak publikusan olvashatónak kell lennie (shadow, studyId)
+
+access to dn.subtree="ou=diak,%BASEDN%"
+    attrs=mail
+        by self write
+        by group/mayorGroup/member="cn=useradmin,ou=Groups,%BASEDN%" write
+        by group/mayorGroup/member="cn=diakadmin,ou=Groups,%BASEDN%" write
+        by * read
+
+access to dn.subtree="ou=diak,%BASEDN%"
+    attrs=telephonenumber,mobile
+        by self write
+        by group/mayorGroup/member="cn=useradmin,ou=Groups,%BASEDN%" write
+        by group/mayorGroup/member="cn=diakadmin,ou=Groups,%BASEDN%" write
+        by users read
+        by * none
+
+access to dn.subtree="ou=diak,%BASEDN%"
+    attrs=cn,studyId
+        by group/mayorGroup/member="cn=useradmin,ou=Groups,%BASEDN%" write
+        by group/mayorGroup/member="cn=diakadmin,ou=Groups,%BASEDN%" write
+        by * read
+
+access to dn.subtree="ou=diak,%BASEDN%"
+    attrs=l,street,postaladdress,postalcode
+        by group/mayorGroup/member="cn=useradmin,ou=Groups,%BASEDN%" write
+        by group/mayorGroup/member="cn=diakadmin,ou=Groups,%BASEDN%" write
+        by users read
+        by * none
+
+# ******************************************************************* #
+
+access to attrs=mail
+        by self write
+        by group/mayorGroup/member="cn=useradmin,ou=Groups,%BASEDN%" write
+        by * read
+
+access to attrs=telephonenumber,mobile
+        by self write
+        by group/mayorGroup/member="cn=useradmin,ou=Groups,%BASEDN%" write
+        by users read
+        by * none
+
+access to attrs=cn,studyId
+        by group/mayorGroup/member="cn=useradmin,ou=Groups,%BASEDN%" write
+        by * read
+
+access to attrs=l,street,postaladdress,postalcode
+        by group/mayorGroup/member="cn=useradmin,ou=Groups,%BASEDN%" write
+        by users read
+        by * none
+
+#
+# Alapértelmezett
+#
+
+access to *
+        by group/mayorGroup/member="cn=useradmin,ou=Groups,%BASEDN%" write
+        by anonymous read
+        by * read

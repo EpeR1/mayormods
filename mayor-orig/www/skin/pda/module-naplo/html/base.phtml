@@ -1,0 +1,900 @@
+<?php
+
+
+    if (_RIGHTS_OK !== true) die();
+
+    putEszkozSor();
+
+
+    function putUjIntezmeny() {
+
+	formBegin();
+	echo '
+
+		<input type="hidden" name="action" value="ujIntezmeny" />
+
+		_OMKOD(max7): <input type="text" name="OMKod" id="OMKod" value="0000000" maxlength="7" />
+		_ROVIDNEV(sql): <input type="text" name="rovidnev" id="rovidnev" />
+		_NEV: <input type="text" name="nev" id="nev" />
+
+		<input type="submit" />';
+	formEnd();
+    }
+
+    function putEszkozSor() {
+
+	global $TOOL;
+
+	echo '<table align="center" cellspacing="0" class="toolBar"><tr class="first">';
+
+	echo '<td class="toolBarTitle">';
+	    if (defined('__PAGETITLE')) echo __PAGETITLE.' ';
+	    echo '<span id="toolBarIntezmeny">'.__INTEZMENY . '' . __TANEV.'</span>';
+	echo '</td>'."\n";
+
+	echo '</tr>';
+
+	reset($TOOL);
+/*
+	foreach ( $TOOL as $tool => $params ) {
+	    if ( function_exists( $func = "put$tool" ) && $params['tipus']=='cella') {
+		echo '<tr>';
+		echo '<td class="toolBarTool">';
+		echo '<table>'."\n";
+		    $title = '__'.nagybetus($tool).'TITLE';
+		    if (defined($title)) echo '<tr><th>'.constant($title).'</th></tr>'."\n";
+		    echo '<tr><td>'."\n";
+		    $func();
+		    echo '</td></tr>'."\n";
+		echo '</table>'."\n";
+		echo '</td>'."\n";
+		echo '</tr>'."\n";
+	    }
+	}
+*/
+	// Hibabejelentő
+//	echo '<td>';
+//	    $href = href('index.php?page=naplo&sub=hibabejelento&f=hibabejelento');
+//	    echo '<a href="'.$href.'">';
+//	    echo '<img src="skin/classic/module-naplo/img/hibabejelento/buggie.gif" alt="'._HIBABEJELENTES.'" />';
+//	    echo '</a>';
+//	echo '</td>'."\n";
+
+	reset($TOOL);
+	foreach ( $TOOL as $tool => $params ) {
+//	    if ( function_exists( $func = "put$tool" ) && $params['tipus']=='sor') {
+	    if ( function_exists( $func = "put$tool" ) ) {
+//		echo '<tr><td class="gap" />';
+		echo '<tr><td>';
+		echo '<table align="center" cellspacing="0"><tr>';
+//		$title = '__'.nagybetus($tool).'TITLE';
+//		if (defined($title)) echo '<th class="toolBarTool">'.constant($title).'</th>'."\n";
+
+		echo '<td class="toolBarTool">';
+		$func();
+		echo '</td></tr></table>';
+//		echo '</td><td class="gap" /></tr>';
+		echo '</td></tr>';
+	    }
+	}
+	echo '</table>';
+
+    }
+
+
+    /* Toolok */
+
+    function putIntezmenySelect() {
+
+	global $TOOL;
+	
+	$paramName = $TOOL['intezmenySelect']['paramName'];
+	formBegin();
+	echo '<table><tr><td>';
+echo '<input class="toolSubmit" type="submit" value="'.__INTEZMENYSELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['intezmenySelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['intezmenySelect']['action'].'" />'."\n";
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array(__INTEZMENY => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['intezmenySelect']['intezmenyek']); $i++) {
+		    $I = $TOOL['intezmenySelect']['intezmenyek'][$i];
+		    echo '<option value="'.$I['rovidNev'].'"'.$SEL[$I['rovidNev']].'>'.$I['nev'].' ('.$I['OMKod'].')'.'</option>';
+		}
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    }
+
+    function putTanevSelect() {
+
+	global $TOOL;
+	
+	$paramName = $TOOL['tanevSelect']['paramName'];
+	global $$paramName;
+	
+	formBegin();
+	echo '<table><tr><td>';    
+echo '<input class="toolSubmit" type="submit" value="'.__TANEVSELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['tanevSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['tanevSelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['tanevSelect']['post']); $i++) {
+		$postParam = $TOOL['tanevSelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();">';
+		echo '<option value=""> - </option>'."\n";
+		$_sel = (isset($$paramName)) ? $$paramName : __TANEV;
+		$SEL = array( $_sel => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['tanevSelect']['tanevek']); $i++) {
+		    $T = $TOOL['tanevSelect']['tanevek'][$i];
+		    echo '<option value="'.$T.'"'.$SEL[$T].'>'.$T.'</option>';
+		}
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    }
+    
+    function putSzemeszterSelect() {
+
+	global $TOOL;
+	
+	$paramName = $TOOL['szemeszterSelect']['paramName'];
+	global $$paramName;
+	
+	formBegin();
+	echo '<table><tr><td>';
+echo '<input class="toolSubmit" type="submit" value="'.__SZEMESZTERSELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['szemeszterSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['szemeszterSelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['szemeszterSelect']['post']); $i++) {
+		$postParam = $TOOL['szemeszterSelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();">';
+		echo '<option value=""> - </option>'."\n";
+		$_sel = (isset($$paramName)) ? $$paramName : '';
+		$SEL = array( $_sel => ' selected="selected" ');
+		for ($i = 0; $i < count($TOOL['szemeszterSelect']['szemeszterek']); $i++) {
+		    $T = $TOOL['szemeszterSelect']['szemeszterek'][$i];
+		    echo '<option value="'.$T['szemeszterId'].'"'.$SEL[$T['szemeszterId']].'>'.$T['tanev'].' / '.$T['szemeszter'].'</option>';
+		}
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    }
+    
+    function putTargySorrendSelect() {
+
+	global $TOOL;
+	
+	$paramName = $TOOL['targySorrendSelect']['paramName'];
+	global $$paramName;
+	
+	formBegin();
+	echo '<table><tr><td>';
+echo '<input class="toolSubmit" type="submit" value="'.__TARGYSORRENDSELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['targySorrendSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['targySorrendSelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['targySorrendSelect']['post']); $i++) {
+		$postParam = $TOOL['targySorrendSelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();">';
+		echo '<option value=""> - </option>'."\n";
+		$_sel = (isset($$paramName)) ? $$paramName : '';
+		$SEL = array( $_sel => ' selected="selected" ');
+		for ($i = 0; $i < count($TOOL['targySorrendSelect']['sorrendNevek']); $i++) {
+		    $T = $TOOL['targySorrendSelect']['sorrendNevek'][$i];
+		    echo '<option value="'.$T.'"'.$SEL[$T].'>'.$T.'</option>';
+		}
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    }
+    
+    function putMunkakozossegSelect() {
+
+	global $TOOL;
+	
+	$paramName = $TOOL['munkakozossegSelect']['paramName'];
+	global $$paramName;
+
+	formBegin();
+	echo '<table><tr><td>';    
+echo '<input class="toolSubmit" type="submit" value="'.__MUNKAKOZOSSEGSELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['munkakozossegSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['munkakozossegSelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['munkakozossegSelect']['post']); $i++) {
+		$postParam = $TOOL['munkakozossegSelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($$paramName => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['munkakozossegSelect']['munkakozossegek']); $i++) {
+		    $M = $TOOL['munkakozossegSelect']['munkakozossegek'][$i];
+		    echo '<option value="'.$M['mkId'].'"'.$SEL[$M['mkId']].'>'.$M['leiras'];
+		    if ($M['mkVezNev']!='') echo ' ('.$M['mkVezNev'].') ';
+		    echo '</option>';
+		}
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    }
+
+    function putTargySelect() {
+
+	global $TOOL;
+	
+	$paramName = $TOOL['targySelect']['paramName'];
+	global $$paramName;
+
+	formBegin();
+	echo '<table><tr><td>';    
+echo '<input class="toolSubmit" type="submit" value="'.__TARGYSELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['targySelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['targySelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['targySelect']['post']); $i++) {
+		$postParam = $TOOL['targySelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($$paramName => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['targySelect']['targyak']); $i++) {
+		    $M = $TOOL['targySelect']['targyak'][$i];
+		    echo '<option value="'.$M['targyId'].'"'.$SEL[$M['targyId']].'>'.$M['targyNev'].' ('.$M['targyId'].')'.'</option>';
+		}
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    }
+
+    function putTanarSelect() {
+
+	global $TOOL;
+	
+	if (isset($TOOL['tanarSelect']['paramName'])) $paramName = $TOOL['tanarSelect']['paramName'];
+	else $paramName = 'tanarId';
+
+	global $$paramName;
+	// note, action is for incopatible browser... TESZ
+	formBegin();
+	echo '<table><tr><td>';    
+echo '<input class="toolSubmit" type="submit" value="'.constant('__TANARSELECTTITLE').'" />';
+echo '</td><td>';
+	    if (isset($TOOL['tanarSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['tanarSelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['tanarSelect']['post']); $i++) {
+		$postParam = $TOOL['tanarSelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();" onchange="submit();">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($$paramName => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['tanarSelect']['tanarok']); $i++) {
+		    $M = $TOOL['tanarSelect']['tanarok'][$i];
+		    echo '<option value="'.$M['tanarId'].'"'.$SEL[$M['tanarId']].'>'.$M['tanarNev'].' ('.$M['tanarId'].')'.'</option>';
+		}
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    }
+
+    function putDiakSelect() {
+
+	global $TOOL;
+	
+	$paramName = $TOOL['diakSelect']['paramName'];
+	global $$paramName;
+
+	formBegin();
+	echo '<table><tr><td>';    
+echo '<input class="toolSubmit" type="submit" value="'.__DIAKSELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['diakSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['diakSelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['diakSelect']['post']); $i++) {
+		$postParam = $TOOL['diakSelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($$paramName => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['diakSelect']['diakok']); $i++) {
+		    $M = $TOOL['diakSelect']['diakok'][$i];
+		    echo '<option value="'.$M['diakId'].'"'.$SEL[$M['diakId']].'>'.$M['diakNev'].' ('.$M['diakId'].')'.'</option>';
+		}
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    }
+
+    function putTableSelect() {
+
+	global $TOOL;
+	
+	$paramName = $TOOL['tableSelect']['paramName'];
+	global $$paramName;
+
+	formBegin();
+	echo '<table><tr><td>';    
+echo '<input class="toolSubmit" type="submit" value="'.__TABLESELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['tableSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['tableSelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['tableSelect']['post']); $i++) {
+		$postParam = $TOOL['tableSelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($$paramName => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['tableSelect']['naplo_intezmeny']); $i++) {
+		    $t = $TOOL['tableSelect']['naplo_intezmeny'][$i];
+		    echo '<option value="'."naplo_intezmeny:$t".'"'.$SEL["naplo_intezmeny:$t"].'>'.$t.' ('.__INTEZMENY.')</option>';
+		}
+		for ($i=0; $i < count($TOOL['tableSelect']['naplo']); $i++) {
+		    $t = $TOOL['tableSelect']['naplo'][$i];
+		    echo '<option value="'."naplo:$t".'"'.$SEL["naplo:$t"].'>'.$t.' ('.__TANEV.')</option>';
+		}
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+    }
+    
+    function putOsztalySelect() {
+
+	global $TOOL;
+	
+	$paramName = $TOOL['osztalySelect']['paramName'];
+	global $$paramName;
+
+	formBegin(array('action'=>href('index.php',array('page','sub','f','lang','skin','sessionID','policy'))));
+
+	echo '<table><tr><td>';    
+echo '<input class="toolSubmit" type="submit" value="'.__OSZTALYSELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['osztalySelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['osztalySelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['osztalySelect']['post']); $i++) {
+		$postParam = $TOOL['osztalySelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($$paramName => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['osztalySelect']['osztalyok']); $i++) {
+		    $M = $TOOL['osztalySelect']['osztalyok'][$i];
+		    if (isset($M['osztalyJel'])) $osztalyJel = $M['osztalyJel'].' - '.$M['kezdoTanev'];
+		    else $osztalyJel = $M['kezdoTanev'].'/'.$M['jel'];
+		    if (is_array($M['osztalyfonok']) && $M['osztalyfonok']['tanarNev']!='') $osztalyJel .= ' ('.$M['osztalyfonok']['tanarNev'].')';
+		    echo '<option value="'.$M['osztalyId'].'"'.$SEL[$M['osztalyId']].'>'.$osztalyJel.'</option>';
+		}
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    }
+
+    function putTankorSelect() {
+
+	global $TOOL;
+	
+	$paramName = $TOOL['tankorSelect']['paramName'];
+	global $$paramName;
+
+	formBegin();
+	echo '<table><tr><td>';    
+echo '<input class="toolSubmit" type="submit" value="'.__TANKORSELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['tankorSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['tankorSelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['tankorSelect']['post']); $i++) {
+		$postParam = $TOOL['tankorSelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($$paramName => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['tankorSelect']['tankorok']); $i++) {
+		    $M = $TOOL['tankorSelect']['tankorok'][$i];
+		    echo '<option value="'.$M['tankorId'].'"'.$SEL[$M['tankorId']].'>'.$M['tankorNev'].' ('.$M['tankorId'].')'.'</option>';
+		}
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    }
+
+    function putTanevLapozo() {
+	global $TOOL;
+	$paramName = $TOOL['tanevLapozo']['paramName'];
+	global $$paramName;
+
+	formBegin(array('class'=>'lapozo'));
+	echo '<table><tr><td>';
+	echo '&larr;';
+	echo '<input type="submit" name="tanev" value="'.($TOOL['tanevLapozo']['tanev']-1).'" />';
+	echo '</td>';
+	echo '<th>'.$TOOL['tanevLapozo']['tanev'].'</th>';
+	echo '<td>';
+	echo '<input type="submit" name="tanev" value="'.($TOOL['tanevLapozo']['tanev']+1).'" />';
+	echo '&rarr;';
+	echo '</td></tr></table>';
+	
+	    for ($i = 0; $i < count($TOOL['tanevLapozo']['post']); $i++) {
+		$postParam = $TOOL['tanevLapozo']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+
+	formEnd();
+    }
+
+    function putDatumSelect() {
+
+	global $TOOL, $aHetNapjai;
+	
+	$paramName = $TOOL['datumSelect']['paramName'];
+	global $$paramName;
+
+	if ($TOOL['datumSelect']['lapozo']) {
+
+	    // Előző és következő dátum meghatározása
+	    $elozo = $kovetkezo = '';
+	    if (is_array($TOOL['datumSelect']['napok'])) {
+		for ($i = 0; $i < count($TOOL['datumSelect']['napok']); $i++) {
+		    if ($TOOL['datumSelect']['napok'][$i] == $$paramName) {
+			$kovetkezo = $TOOL['datumSelect']['napok'][$i+1];
+			$elozo = $TOOL['datumSelect']['napok'][$i-1];
+			break;
+		    }
+		}
+	    } else {
+		$tolTime = strtotime($TOOL['datumSelect']['tolDt']);
+		$igTime = strtotime($TOOL['datumSelect']['igDt']);
+		$count = $TOOL['datumSelect']['hanyNaponta'];
+		for ($t = $tolTime; $t < $igTime; $t = strtotime("$count days", $t)) {
+		    $d = date('Y-m-d', $t);
+		    if ($d == $$paramName) {
+			if (strtotime("$count days", $t) <= $igTime) $kovetkezo = date('Y-m-d', strtotime("$count days", $t));
+			break;
+		    }
+		    $elozo = $d;
+		}
+	    }
+
+	    echo '<table><tr>';
+	    if ($elozo!='') {
+		echo '<td>';
+		formBegin();
+		echo '<table><tr><td>';    
+		if (isset($TOOL['datumSelect']['action'])) 
+		    echo '<input type="hidden" name="action" value="'.$TOOL['datumSelect']['action'].'" />'."\n";
+		for ($i = 0; $i < count($TOOL['datumSelect']['post']); $i++) {
+		    $postParam = $TOOL['datumSelect']['post'][$i];
+		    echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+		}
+		echo '<input name="'.$paramName.'" style="float: left;" class="toolSubmit" type="submit" value="'.$elozo.'" />';
+		echo '</td></tr></table>';
+		formEnd();
+		echo '</td>';
+	    }
+	    echo '<td>';
+
+	}
+
+	formBegin();
+	echo '<table><tr><td>';    
+echo '<input class="toolSubmit" type="submit" value="'.__DATUMSELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['datumSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['datumSelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['datumSelect']['post']); $i++) {
+		$postParam = $TOOL['datumSelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();">';
+	    echo '<option value=""> - </option>'."\n";
+	    $SEL = array($$paramName => ' selected="selected" ');
+	    if (is_array($TOOL['datumSelect']['napok'])) {
+		for ($i = 0; $i < count($TOOL['datumSelect']['napok']); $i++) {
+		    $d = $TOOL['datumSelect']['napok'][$i];
+		    echo '<option value="'.$d.'"'.$SEL[$d].'>'.$d.' ('.$aHetNapjai[(date('w',strtotime($d))+6) % 7].')</option>';
+		}
+	    } else {
+		$tolTime = strtotime($TOOL['datumSelect']['tolDt']);
+		$igTime = strtotime($TOOL['datumSelect']['igDt']);
+		$count = $TOOL['datumSelect']['hanyNaponta'];
+		for ($t = $tolTime; $t < $igTime; $t = strtotime("$count days", $t)) {
+		    $d = date('Y-m-d', $t);
+		    echo '<option value="'.$d.'"'.$SEL[$d].'>'.$d.' ('.$aHetNapjai[(date('w',strtotime($d))+6) % 7].')</option>';
+		}
+	    }
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+	if ($TOOL['datumSelect']['lapozo']) {
+
+	    echo '</td>';
+	    if ($kovetkezo!='') {
+		echo '<td>';
+
+		formBegin();
+		echo '<table><tr><td>';    
+		if (isset($TOOL['datumSelect']['action'])) 
+		    echo '<input type="hidden" name="action" value="'.$TOOL['datumSelect']['action'].'" />'."\n";
+		for ($i = 0; $i < count($TOOL['datumSelect']['post']); $i++) {
+		    $postParam = $TOOL['datumSelect']['post'][$i];
+		    echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+		}
+		echo '<input name="'.$paramName.'" style="float: right;" class="toolSubmit" type="submit" value="'.$kovetkezo.'" />';
+		echo '</td></tr></table>';
+		formEnd();
+
+		echo '</td>';
+	    }
+	    echo '</tr></table>';
+	}
+
+
+    }
+
+    function putDatumTolIgSelect() {
+
+	global $TOOL, $aHetNapjai;
+	
+	$tolParamName = $TOOL['datumTolIgSelect']['tolParamName'];
+	global $$tolParamName;
+	$igParamName = $TOOL['datumTolIgSelect']['igParamName'];
+	global $$igParamName;
+
+
+	formBegin();
+	echo '<table><tr><td>';    
+	    if (isset($TOOL['datumTolIgSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['datumTolIgSelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['datumTolIgSelect']['post']); $i++) {
+		$postParam = $TOOL['datumTolIgSelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+
+	    echo '<select name="'.$tolParamName.'" class="onChangeSubmit" onchange="submit();">';
+	    echo '<option value=""> - </option>'."\n";
+	    $SEL = array($$tolParamName => ' selected="selected" ');
+	    if (is_array($TOOL['datumTolIgSelect']['napok'])) {
+		for ($i = 0; $i < count($TOOL['datumTolIgSelect']['napok']); $i++) {
+		    $d = $TOOL['datumTolIgSelect']['napok'][$i];
+		    echo '<option value="'.$d.'"'.$SEL[$d].'>'.$d.' ('.$aHetNapjai[(date('w',strtotime($d))+6) % 7].')</option>';
+		}
+	    } else {
+		$tolTime = strtotime($TOOL['datumTolIgSelect']['tolDt']);
+		$igTime = strtotime($TOOL['datumTolIgSelect']['igDt']);
+		$count = $TOOL['datumTolIgSelect']['hanyNaponta'];
+		for (
+		    $t = $tolTime;
+		    $t < $igTime && $t != 0;
+		    $t = ($count == 'havonta') ? strtotime("next month", $t) : strtotime("$count days", $t)
+		) {
+		    $d = date('Y-m-d', $t);
+		    echo '<option value="'.$d.'"'.$SEL[$d].'>'.$d.' ('.$aHetNapjai[(date('w',strtotime($d))+6) % 7].')</option>';
+		}
+	    }
+	    echo '</select>';
+
+	    echo ' - ';
+
+	    echo '<select name="'.$igParamName.'" class="onChangeSubmit" onchange="submit();">';
+	    echo '<option value=""> - </option>'."\n";
+	    $SEL = array($$igParamName => ' selected="selected" ');
+	    if (is_array($TOOL['datumTolIgSelect']['napok'])) {
+		for ($i = 0; $i < count($TOOL['datumTolIgSelect']['napok']); $i++) {
+		    $d = $TOOL['datumTolIgSelect']['napok'][$i];
+		    echo '<option value="'.$d.'"'.$SEL[$d].'>'.$d.' ('.$aHetNapjai[(date('w',strtotime($d))+6) % 7].')</option>';
+		}
+	    } else {
+		$tolTime = strtotime($TOOL['datumTolIgSelect']['tolDt']);
+		$igTime = strtotime($TOOL['datumTolIgSelect']['igDt']);
+		$count = $TOOL['datumTolIgSelect']['hanyNaponta'];
+		for (
+		    $t = $tolTime;
+		    $t < $igTime && $t != 0;
+		    $t = ($count == 'havonta') ? strtotime("next month", $t) : strtotime("$count days", $t)
+) {
+		    $d = date('Y-m-d', $t);
+		    echo '<option value="'.$d.'"'.$SEL[$d].'>'.$d.' ('.$aHetNapjai[(date('w',strtotime($d))+6) % 7].')</option>';
+		}
+	    }
+	    echo '</select>';
+
+	echo '</td><td>';
+	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    }
+
+
+    function putOraSelect() {
+
+	global $TOOL;
+	
+	$paramName = $TOOL['oraSelect']['paramName'];
+	global $$paramName;
+
+	formBegin();
+	echo '<table><tr><td>';    
+echo '<input class="toolSubmit" type="submit" value="'.__ORASELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['oraSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['oraSelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['oraSelect']['post']); $i++) {
+		$postParam = $TOOL['oraSelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();">';
+	    $SEL = array($$paramName => ' selected="selected" ');
+	    echo '<option value=""> - </option>'."\n";
+	    if (is_array($TOOL['oraSelect']['orak'])) {
+		for ($i = 0; $i < count($TOOL['oraSelect']['orak']); $i++) {
+		    echo '<option value="'.$TOOL['oraSelect']['orak'][$i].'"'.$SEL[$TOOL['oraSelect']['orak'][$i]].'>'.$TOOL['oraSelect']['orak'][$i].'</option>';
+		}
+	    } else {
+		$tol = $TOOL['oraSelect']['tol'];
+		$ig = $TOOL['oraSelect']['ig'];
+
+		for ($t = $tol; $t <= $ig; $t++) {
+		    echo '<option value="'.$t.'"'.$SEL[$t].'>'.$t.'</option>';
+		}
+	    }
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    }
+
+    function putTeremSelect() {
+
+	global $TOOL;
+	
+	$paramName = $TOOL['teremSelect']['paramName'];
+	global $$paramName;
+
+	formBegin();
+	echo '<table><tr><td>';    
+echo '<input class="toolSubmit" type="submit" value="'.__TEREMSELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['teremSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['teremSelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['teremSelect']['post']); $i++) {
+		$postParam = $TOOL['teremSelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();">';
+	    $SEL = array($$paramName => ' selected="selected" ');
+	    echo '<option value=""> - </option>'."\n";
+	    if (is_array($TOOL['teremSelect']['termek'])) {
+		for ($i = 0; $i < count($TOOL['teremSelect']['termek']); $i++) {
+		    echo '<option value="'.$TOOL['teremSelect']['termek'][$i]['teremId'].'"'.$SEL[$TOOL['teremSelect']['termek'][$i]['teremId']].'>'.$TOOL['teremSelect']['termek'][$i]['leiras'].'</option>';
+		}
+	    }
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    }
+
+    function putOrarendiHetSelect() {
+    
+	global $TOOL;
+
+	$paramName = $TOOL['orarendiHetSelect']['paramName'];
+	global $$paramName;
+
+	formBegin();
+	echo '<table><tr><td>';    
+echo '<input class="toolSubmit" type="submit" value="'.__ORARENDIHETSELECTTITLE.'" />';
+echo '</td><td>';
+	    if (isset($TOOL['orarendiHetSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['orarendiHetSelect']['action'].'" />'."\n";
+	    for ($i = 0; $i < count($TOOL['orarendiHetSelect']['post']); $i++) {
+		$postParam = $TOOL['orarendiHetSelect']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+	    $_DS = (isset($TOOL['orarendiHetSelect']['disabled']) && $TOOL['orarendiHetSelect']['disabled']===true) ? 'readonly="readonly" disabled="disabled"' : '';
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit" onchange="submit();" '.$_DS.'>';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($$paramName => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['orarendiHetSelect']['hetek']); $i++) {
+		    $M = $TOOL['orarendiHetSelect']['hetek'][$i];
+		    echo '<option value="'.$M.'"'.$SEL[$M].'>'.$M.'</option>';
+		}
+	    echo '</select>';
+//	echo '</td><td>';
+//	    echo '<input style="float: right;" class="toolSubmit" type="image" src="skin/classic/module-naplo/img/toolSubmit.gif" />';
+	echo '</td></tr></table>';
+	formEnd();
+
+    
+    }
+
+    function putTanarOraLapozo() {
+	global $TOOL;
+	$paramName = $TOOL['tanarOraLapozo']['paramName'];
+	global $$paramName; // most oraId
+	if ((is_array($TOOL['tanarOraLapozo']['elozo'])) || (is_array($TOOL['tanarOraLapozo']['kovetkezo']))) {
+	formBegin(array('class'=>'lapozo'));
+	echo '<table><tr><td>';
+	    if (is_array($TOOL['tanarOraLapozo']['elozo'])) {
+		$_leiras = '&larr;'.($TOOL['tanarOraLapozo']['elozo']['ora']).'. '._ORA;
+		if ($TOOL['tanarOraLapozo']['elozo']['leiras']!='') $_leiras .= ' ('.$TOOL['tanarOraLapozo']['elozo']['leiras'].')';
+		echo '<input type="submit" name="oraId" value="'.$_leiras.'" onclick="this.value='.($TOOL['tanarOraLapozo']['elozo']['oraId']).'" />';
+	    }
+	echo '</td>';
+	echo '<td>';
+	    if (is_array($TOOL['tanarOraLapozo']['kovetkezo'])) {
+		$_leiras = ($TOOL['tanarOraLapozo']['kovetkezo']['ora']).'. '._ORA;
+		if ($TOOL['tanarOraLapozo']['kovetkezo']['leiras']!='') $_leiras .= ' ('.$TOOL['tanarOraLapozo']['kovetkezo']['leiras'].')';
+		$_leiras .=' &rarr;';
+		echo '<input type="submit" name="oraId" value="'.$_leiras.'" onclick="this.value='.($TOOL['tanarOraLapozo']['kovetkezo']['oraId']).'" />';
+	    }
+	echo '</td></tr></table>';
+	
+	    for ($i = 0; $i < count($TOOL['tanarOraLapozo']['post']); $i++) {
+		$postParam = $TOOL['tanarOraLapozo']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+
+	formEnd();
+	echo "\n";
+	}
+    }
+
+    function putHonapLapozo() {
+
+	global $TOOL,$Honapok;
+
+	$paramName = $TOOL['honapLapozo']['paramName'];
+	global $$paramName;
+	formBegin(array('class'=>'lapozo'));
+	echo '<table><tr><td>';
+	echo '&larr';
+	echo '<input type="submit" name="ho" value="'.(($$paramName-1)==0?12:$$paramName-1).'" />';
+	echo '</td>';
+	echo '<th>'.$Honapok[$$paramName-1].'</th>';
+	echo '<td>';
+	echo '<input type="submit" name="ho" value="'.(($$paramName%12+1)).'" />';
+	echo '&rarr;';
+	echo '</td></tr></table>';
+	
+	    for ($i = 0; $i < count($TOOL['honapLapozo']['post']); $i++) {
+		$postParam = $TOOL['honapLapozo']['post'][$i];
+		echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+	    }
+
+	formEnd();
+
+    }
+
+    function putOldalFlipper() {
+
+	global $TOOL;
+	$paramName = $TOOL['oldalFlipper']['paramName'];
+	global $$paramName; 
+
+	$stepCount = count($TOOL['oldalFlipper']['url']);
+	if (isset($TOOL['oldalFlipper']['step'])) $step = $TOOL['oldalFlipper']['step'];
+	for ($i = 0; $i < count($TOOL['oldalFlipper']['titleConst']); $i++) {
+	    if (defined($TOOL['oldalFlipper']['titleConst'][$i]))
+		$TOOL['oldalFlipper']['title'][$i] = constant($TOOL['oldalFlipper']['titleConst'][$i]);
+	    else
+		$TOOL['oldalFlipper']['title'][$i] = '';
+	}
+
+	echo '<table class="flipper"><tr>';
+	if ($stepCount > 1 && isset($step) && $step > 0) {
+	    echo '<td>';
+		formBegin(array('action'=>href($TOOL['oldalFlipper']['url'][$step-1])));
+		if (isset($TOOL['oldapFlipper']['action'])) 
+		    echo '<input type="hidden" name="action" value="'.$TOOL['oldapFlipper']['action'].'" />'."\n";
+		for ($i = 0; $i < count($TOOL['oldalFlipper']['post']); $i++) {
+		    $postParam = $TOOL['oldalFlipper']['post'][$i];
+		    echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+		}
+		if (isset($TOOL['oldalFlipper']['paramName'])) 
+		    echo '<input type="hidden" name="'.$paramName.'" value="'.$$paramName.'" />'."\n";
+		echo '<input type="submit" value="&larr;" title="'.$TOOL['oldalFlipper']['title'][$step-1].'" />'."\n";
+		formEnd();
+
+	    echo '</td>';
+	}
+	if ($stepCount > 1)
+	for ($j = 0; $j < $stepCount; $j++) {
+	    echo '<td>';
+		formBegin(array('action'=>href($TOOL['oldalFlipper']['url'][$j])));
+		if (isset($TOOL['oldapFlipper']['action'])) 
+		    echo '<input type="hidden" name="action" value="'.$TOOL['oldapFlipper']['action'].'" />'."\n";
+		for ($i = 0; $i < count($TOOL['oldalFlipper']['post']); $i++) {
+		    $postParam = $TOOL['oldalFlipper']['post'][$i];
+		    echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+		}
+		if (isset($TOOL['oldalFlipper']['paramName'])) 
+		    echo '<input type="hidden" name="'.$paramName.'" value="'.$$paramName.'" />'."\n";
+
+		if (isset($step) && $step == $j)
+		    echo '<input class="step" type="button" value="'.($j+1).'" title="'.$TOOL['oldalFlipper']['title'][$j].'" />'."\n";
+		else
+		    echo '<input type="submit" value="'.($j+1).'" title="'.$TOOL['oldalFlipper']['title'][$j].'" />'."\n";
+		formEnd();
+	    echo '</td>';
+	}
+	if ($stepCount == 1 || (isset($step) && $step < $stepCount-1)) {
+	    if (!isset($step)) $step = 0; else $step++;
+	    echo '<td>';
+		formBegin(array('action'=>href($TOOL['oldalFlipper']['url'][$step])));
+		if (isset($TOOL['oldapFlipper']['action'])) 
+		    echo '<input type="hidden" name="action" value="'.$TOOL['oldapFlipper']['action'].'" />'."\n";
+		for ($i = 0; $i < count($TOOL['oldalFlipper']['post']); $i++) {
+		    $postParam = $TOOL['oldalFlipper']['post'][$i];
+		    echo '<input type="hidden" name="'.$postParam.'" value="'.$_POST[$postParam].'" />'."\n";
+		}
+		if (isset($TOOL['oldalFlipper']['paramName'])) 
+		    echo '<input type="hidden" name="'.$paramName.'" value="'.$$paramName.'" />'."\n";
+
+		echo '<input type="submit" value="&rarr;" title="'.$TOOL['oldalFlipper']['title'][$step].'" />'."\n";
+		formEnd();
+	    echo '</td>';
+	}
+	echo '</tr></table>'."\n";
+
+    }
+
+    function putIgazolasOsszegzo() {
+	// EZ A FÜGGVÉNY NINCS IMPLEMENTÁLVA A SKIN PDA_BAN
+    }
+
+?>

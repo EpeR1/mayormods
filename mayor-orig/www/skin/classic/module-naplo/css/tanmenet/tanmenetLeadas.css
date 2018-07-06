@@ -1,0 +1,11 @@
+
+    table.tanmenet { margin: auto; background-color: black; border-spacing: 1px; }
+    table.tanmenet th { background-color: rgb(40, 70, 100); color: white; padding: 4px 10px; }
+    table.tanmenet th.tanarNev { padding: 0px; }
+    table.tanmenet th.tanarNev a { background-color: rgb(140,170,200); color: white; display: block; text-decoration: none; padding: 4px 10px; margin: 0px; }
+    table.tanmenet th.tanarNev a:hover { background-color: rgb(100,130,170); }
+    table.tanmenet td { padding: 4px; text-align: right; background-color: rgb(200,200,200); }
+    table.tanmenet td.jovahagyott { background-color: rgb(200,250,200); }
+    table.tanmenet td.nincsJovahagyva { background-color: rgb(255,255,200); }
+    table.tanmenet td.felkesz { background-color: rgb(255, 225, 175); }
+    table.tanmenet td.hianyzik { background-color: rgb(255,200,200); }

@@ -1,0 +1,34 @@
+
+@media screen {
+
+    div.bejegyzes { margin: 1px 40px; }
+    div.bejegyzes ul { list-style-type: none; padding: 0px; margin: 0px; background-color: #ffffff; }
+    div.bejegyzes ul li { margin: 0px; color: white; padding: 1px;}
+    div.bejegyzes ul li form { text-align: right; }
+    div.bejegyzes ul li form input { background-color: white; font-size: 10px; border: none;}
+
+    div.bejegyzes ul li div.kategoria { text-align: center; padding: 2px; margin: 0px; font-weight: bold; }
+    div.bejegyzes ul li div.megjegyzes { font-style: italic; padding: 10px 20px;}
+    div.bejegyzes ul li.dicséret div.dt { padding: 0px 10px; }
+
+    span.tanar { float: right; font-weight: normal; font-style: italic; }
+    span.dt { float: left; font-weight: normal; font-style: italic; }
+    div.bejegyzes form.nev { margin: 10px 0px 0px 0px; border: dotted black; border-width: 1px 0px 0px 0px; }
+    div.bejegyzes form.nev input { margin: 0px; background-color: white; border: none; cursor: pointer; width: 100%; font-weight: bold; text-align: left; }
+
+    div.bejegyzes ul li.dicséret div.dt,    div.bejegyzes ul li.dicséret div.kategoria { background-color: lightgreen; }
+    div.bejegyzes ul li.dicséret div.megjegyzes { background-color: #eee; color:black; }
+    div.bejegyzes ul li.dicséret form { border-bottom: solid 1px #883311; }
+    div.bejegyzes ul li.dicséret form input { color: #883311; }
+
+    div.bejegyzes ul li.fegyelmi div.dt,div.bejegyzes ul li.fegyelmi div.kategoria { background-color: #e91e63; }
+    div.bejegyzes ul li.fegyelmi div.megjegyzes { background-color: #eee; font-style: italic; color: black; }
+    div.bejegyzes ul li.fegyelmi form { border-bottom: solid 1px #224466; }
+    div.bejegyzes ul li.fegyelmi form input { color: #224466; }
+
+    div.bejegyzes ul li.üzenet div.dt, div.bejegyzes ul li.üzenet div.kategoria { background-color: cornflowerblue; }
+    div.bejegyzes ul li.üzenet div.megjegyzes { background-color: ; color: black; }
+    div.bejegyzes ul li.üzenet form { border-bottom: solid 1px #226644; }
+    div.bejegyzes ul li.üzenet form input { color: #226644; }
+
+}

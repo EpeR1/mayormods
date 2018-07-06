@@ -1,0 +1,32 @@
+<?php
+
+    function putDownloadForm($ADAT) {
+
+	echo '<div class="download">'."\n";
+	    echo '<h1>'._DOWNLOAD.'</h1>'."\n";
+
+	$href = href('index.php?page=session&f=download&dir='.$ADAT['dir'].'&file='.$ADAT['file'].'&download=true');
+	echo '<table>'."\n";
+	echo '<tr>';
+	    echo '<th>'._FILE.'</th>'."\n";
+	    echo '<td>';
+		echo '<a id="loadUrl" href="'.$href.'">';
+		echo substr($ADAT['path'],strlen(_DOWNLOADDIR.'/'._POLICY.'/'));
+		echo '</a>';
+	    echo '</td>'."\n";
+	echo '</tr>';
+	echo '<tr>';
+	    echo '<th>'._SIZE.'</th>'."\n";
+	    echo '<td>'.$ADAT['size'].' byte</td>'."\n";
+	echo '</tr>';
+	echo '<tr>';
+	    echo '<th>'._MIMETYPE.'</th>'."\n";
+	    echo '<td>'.$ADAT['mime'].'</td>'."\n";
+	echo '</tr>';
+	echo '</table>';
+
+	echo '<p>'._DESCRIPTION.'</p>';
+	echo '</div>'."\n";
+    }
+
+?>

@@ -1,0 +1,47 @@
+form.mk {
+    background-color: rgb(100,100,150);
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-left: 0px;
+    padding-top: 0em;
+    padding-bottom: 1em;
+    color: white;
+    margin-bottom: 2em;
+    border-bottom: solid 1px black;
+}
+
+form.mk h2 {
+    padding-top:2px;
+    padding-left:2px;
+    background-color: rgb(60,60,80);
+    color: white;
+    border: 10px solid white; border-width: 0px 0px 1px 0px;
+    margin-bottom: 10px;
+}
+form.mk h2 span { color: yellow; font-style: italic; font-weight: normal; }
+
+form.mk div.leiras { margin: -10px 0 10px 0; padding: 10px; background: rgba(255,255,255,0.5); color: black; }
+form.mk label {padding-left:2em;}
+
+form.mk input {}
+
+form.mk input#targytorolg, form.mk input#mktorolg {
+    background-color: #880000;
+    color: white;
+    padding:0px;
+    margin:0px;
+    border: solid 1px red;
+}
+
+form.mk.uj h2 { border-left: solid 2px #00ff00; }
+form.mk.uj:hover h2 { background-color: #005500;}
+form.mk.torol h2 { border-left: solid 2px #ff0000; }
+form.mk.torol:hover h2 { background-color: #550000;}
+
+div.tagok { display: inline-block; margin-left:2em; }
+div.tagok div.header { background-color: rgba(0,0,0,0.4); margin-top:10px; padding:2px 4px; border-bottom: solid 1px white; }
+div.tagok:hover div.header {background-color: rgba(0,255,0,0.4);}
+div.tagok div.header label {padding:0px;}
+div.submit {display: inline-block; padding-left:2em; vartical-align: middle;}
+
+div.arckepContainer,div.arckep--container {display: inline-block; margin:2px;} 

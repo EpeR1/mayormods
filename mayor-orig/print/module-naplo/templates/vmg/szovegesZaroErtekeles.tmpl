@@ -1,0 +1,125 @@
+%!pdfLaTeXA5Booklet pdf
+%
+% Év végi szöveges értékelés
+%
+\documentclass[10pt]{article}
+
+\usepackage[a5paper]{geometry} % A5-os méret
+\usepackage[utf8x]{inputenc} % UTF-8 kódolású forrás (ucs)
+\usepackage{ucs} % Jobb UTF-8 támogatás
+\usepackage{t1enc}
+\usepackage[magyar]{babel} % magyar elválasztási szabályok
+\usepackage{enumitem}
+\usepackage{ifthen}
+\frenchspacing % a magyar tipográfiai szabályoknak megfelelő szóközök írásjelek után
+\usepackage{fancyhdr} % Ritkítás
+\pagestyle{empty}
+%%\pagestyle{fancy}
+\def\mayor{%
+\font\mayorfnt=cmsl4%
+\font\Mayorfnt=cmsl6
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footnotesize}{\fontsize{6pt}{8pt}\selectfont}
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{}\rfoot{}
+%%\lfoot{\rule{2cm}{0.1pt}\\ \footnotesize\copyright\mayor\ elektronikus napló\\Nyomtatva: %$nyomtatasDt}
+%%\fancyfoot[LO]{\rule{2cm}{0.1pt}\\ \footnotesize\copyright\mayor\ Elektronikus napló}
+%%\fancyfoot[RO]{\rule{2cm}{0.1pt}\\ \footnotesize Nyomtatva: %$nyomtatasDt}
+\lfoot{\rule{2cm}{0.1pt}\\ \footnotesize\copyright\mayor\ elektronikus napló (%$nyomtatasDt)}
+%%\cfoot{\rule{0cm}{0.1pt}\\ \footnotesize %$nyomtatasDt}
+\makeatletter
+%% Az osztási maradék meghatározása
+\newcounter{modulus}
+\newcommand\modulo[2]{\@tempcnta=#1
+        \divide\@tempcnta by #2
+        \multiply\@tempcnta by #2
+        \multiply\@tempcnta by -1
+        \advance\@tempcnta by #1\relax
+	\setcounter{modulus}{\@tempcnta}
+        %%%\the\@tempcnta  %% nem kell kiírni - eltároltuk a modulus nevű counterbe inkább...
+}
+\makeatother
+
+\begin{document}
+
+%{diak
+%%%\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+
+%% legrosszabb esetben három üres lapot kell beszúrni, hogy jó helyre kerüljön a kezdőlap
+\modulo{\value{page}}{4}\ifthenelse{\equal{\value{modulus}}{1}}{}{\hbox{}\newpage}
+\modulo{\value{page}}{4}\ifthenelse{\equal{\value{modulus}}{1}}{}{\hbox{}\newpage}
+\modulo{\value{page}}{4}\ifthenelse{\equal{\value{modulus}}{1}}{}{\hbox{}\newpage}
+\thispagestyle{empty}
+\begin{center}
+\vspace*{36pt}{\huge{ %?felevi|FÉLÉVI ÉRTESÍTŐ|BIZONYÍTVÁNY PÓTLAP%?}}
+
+\vspace{24pt}{\large %$diakNev}
+
+\vspace{24pt}azonosító száma: %$oktatasiAzonosito
+
+\vspace{12pt}törzslapszáma: %$torzslapSzam
+
+\vspace{60pt}(OM azonosító: %$intezmenyOMKod) %$osztaly osztályában
+
+\vspace{12pt}a %$tanevJele tanévben elért eredményeiről.
+
+\end{center}
+\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+\thispagestyle{fancy}\vspace*{8pt}
+%\rfoot{\footnotesize \rule{2cm}{0.1pt} \\ %$diakNev \\ %$osztaly osztály}
+%%\fancyfoot[LE]{\footnotesize \rule{2cm}{0.1pt} \\ %$osztaly osztály}
+%%\fancyfoot[RE]{\footnotesize \rule{2cm}{0.1pt} \\ %$diakNev}
+\rfoot{\footnotesize \rule{0cm}{0.1pt} \\ %$osztaly - %$diakNev}
+
+{\vspace*{-12pt}\small\noindent A tanuló teljesítményének, magatartásának, szorgalmának minősítése:}
+
+\vspace{6pt}\scriptsize%%%\small
+%{targy
+{\vspace{6pt}\noindent\bfseries %$targyNev}
+\nopagebreak[4]%%
+\begin{description}[font=\mdseries\itshape, labelindent=\parindent, itemsep=2pt, parsep=0pt, partopsep=0pt, topsep=0pt, leftmargin=2cm, style=nextline]
+\nopagebreak[4]%%
+%{szempont
+\item[%$szempont]
+%{minosites
+%?elsoValasztott|%$minosites|%?%?tobbedikValasztott|, %$minosites|%?%%
+%}minosites
+%?egyediMinosites|\par{%$egyediMinosites}|%?%%
+\nopagebreak[4]%%
+%}szempont
+\end{description}
+%}targy
+
+{\vspace{6pt}\noindent\bfseries Hiányzások:}
+
+Igazolt: %$igazolt
+
+Igazolatlan: %$osszesIgazolatlan (%$igazolatlan+%$kesesPercOsszeg perc késés)
+
+% \begin{itemize}
+% \item Igazolt: %$igazolt
+% \item Igazolatlan: %$osszesIgazolatlan (%$igazolatlan+%$kesesPercOsszeg perc késés)
+% % \item Késés perc összeg: %$kesesPercOsszeg
+% % \item Késésekből adódó igazolatlanok: %$kesesIgazolatlan
+% % \item Összes igazolatlan: %$osszesIgazolatlan
+% \end{itemize}
+
+\vspace{20pt}
+\noindent
+Budapest, %$ev. %$hoNev %$nap.
+
+\vspace{16pt}
+\begin{center}
+\slshape\scriptsize
+\begin{tabular}{ccc}
+\rule{4.5cm}{0.1pt}&\hspace{1cm}\ &\rule{4.5cm}{0.1pt}\\
+%?felevi|osztályfőnök&{\mdseries P.H.} &szülő\\|igazgató&{\mdseries P.H.} &osztályfőnök\\%?
+%?felevi||\\[20pt]\hspace{4.5cm} &\hspace{1cm}\ &\rule{4.5cm}{0.1pt}\\%?
+%?felevi||&&szülő/gondviselő\\%?
+\end{tabular}
+\end{center}
+\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+
+%}diak
+\end{document}

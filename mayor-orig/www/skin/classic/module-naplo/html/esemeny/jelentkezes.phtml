@@ -1,0 +1,87 @@
+<?php
+
+    function putJelentkezesForm($ADAT) {
+
+	formBegin(array('method'=>'post', 'action'=>'', 'class'=>'esemeny'));
+
+	echo '<input type="hidden" name="action" value="jelentkezes" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+
+	echo '<table>'."\n";
+	echo '<tr title="'._OSSZES_AKTUALIS.'">'."\n";
+	    echo '<th colspan="2">'._JELENTKEZES.'</th>'."\n";
+	    echo '<th colspan="2">'._ESEMENYNEV.'</th>'."\n";
+	    echo '<th>'._KATEGORIA.'</th>'."\n";
+	    echo '<th>'._LETSZAM.'</th>'."\n";
+	    echo '<th>'._MINMAX.'</th>'."\n";
+	    echo '<th>'._JOVAHAGYAS.'</th>'."\n";
+	echo '</tr>'."\n";
+
+	foreach ($ADAT['esemenyek'] as $eAdat) {
+	    $valasztott  = (is_array($ADAT['valasztottEsemenyek'])  && in_array($eAdat['esemenyId'], $ADAT['valasztottEsemenyek']));
+	    $jovahagyott = (is_array($ADAT['jovahagyottEsemenyek']) && in_array($eAdat['esemenyId'], $ADAT['jovahagyottEsemenyek']));
+	    $aktualis = (strtotime($eAdat['jelentkezesTolDt']) <= time() && time() <= strtotime($eAdat['jelentkezesIgDt']));
+	    $maxLetszam = (($eAdat['max'] != 0) && ($eAdat['letszam'] >= $eAdat['max']));
+	    $minLetszam = $eAdat['min'] >= $eAdat['letszam'];
+	    $jelentkezhet = (
+		$aktualis // határidőn belül vagyunk
+		&& (($eAdat['max'] == 0) || ($eAdat['letszam'] < $eAdat['max'])) // van még hely
+	    );
+	    $leadhat = (
+		$aktualis // határidőn belül vagyunk
+		&& $eAdat['min'] < $eAdat['letszam'] // nem túl kicsi a létszám
+		&& !$jovahagyott // jóváhagyott eseményt már ne adjon le
+	    );
+	    $minmaxClass="minmax";
+	    if ($valasztott) $trClass='valasztott';
+	    else $trClass='jelentkezes';
+	    if ($aktualis) { 
+		$trClass .= ' aktualis'; 
+		$trStyle = '';
+	    } else { 
+	        $trStyle = ' style="display: none;" '; 
+	    };
+	    if ($minLetszam) $minmaxClass .= " min";
+	    if ($maxLetszam) $minmaxClass .= " max";
+	    echo '<tr class="'.$trClass.'"'.$trStyle.'>'."\n";
+		if ($valasztott) {
+		    echo '<td></td>'."\n";
+		    echo '<td class="gombKontener lead">';
+		    if ($leadhat) {
+			echo '<input type="submit" class="lead" id="l'. $eAdat['esemenyId'].'" name="lead'.$eAdat['esemenyId'].'" value="'._LEAD.'" />';
+		    } else {
+			echo '<input type="submit" class="lead" id="l'. $eAdat['esemenyId'].'" name="lead'.$eAdat['esemenyId'].'" value="'._LEAD.'" disabled="disabled" />';
+		    }
+		    echo '</td>'."\n";
+		} else {
+		    echo '<td class="gombKontener felvesz">';
+		    if ($jelentkezhet) {
+			echo '<input type="submit" class="felvesz" id="f'. $eAdat['esemenyId'].'" name="felvesz'.$eAdat['esemenyId'].'" value="'._FELVESZ.'" />';
+		    } else {
+			echo '<input type="submit" class="felvesz" id="f'. $eAdat['esemenyId'].'" name="felvesz'.$eAdat['esemenyId'].'" value="'._FELVESZ.'" disabled="disabled" />';
+		    }
+		    echo '</td>'."\n";
+		    echo '<td></td>'."\n";
+		}
+		echo '<td>'.$eAdat['esemenyRovidnev'].'</td>'."\n";
+		echo '<td>';
+		    _inlineHelp($eAdat['esemenyNev']."\n\n".$eAdat['esemenyLeiras']);
+		echo '</td>'."\n";
+		echo '<td>'.$eAdat['esemenyKategoria'].'</td>'."\n";
+		echo '<td class="letszam">'.$eAdat['letszam'].'</td>'."\n";
+		echo '<td class="'.$minmaxClass.'">'.$eAdat['min'].'-'.$eAdat['max'].'</td>'."\n";
+
+		echo '<td>';
+		    if ($jovahagyott) echo '<span class="icon-ok-sign"></span>';
+		    else echo '<span class="icon-minus-sign"></span>';
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+	}
+
+	echo '</table>'."\n";
+
+	formEnd();
+
+    }
+
+?>

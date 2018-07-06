@@ -1,0 +1,84 @@
+<?php
+
+    function putDiakTankorForm($ADAT)  {
+
+	formBegin(array('method'=>'post', 'action'=>''));
+	echo '<input type="hidden" name="action" value="do" />';
+	echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />';
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
+	echo '<input type="hidden" name="refDt" value="'.$ADAT['refDt'].'" />';
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />';
+	for ($i=0; $i<count($ADAT['tankorok']['diake']); $i++) {
+	    $BENNE[$ADAT['tankorok']['diake'][$i]['tankorId']] = true;
+	}
+
+	echo '<table align="center">'; /* container */
+	echo '<tr><td style="vertical-align: top">';
+	    if ($ADAT['diakOsszOraszam']>0) {
+		echo '<table class="tankor">';
+		echo '<thead><tr><th colspan="2">'._TANKOR_ORASZAMOK.'</th></tr></thead>';
+		echo '<tfoot><tr><th>'._OSSZESEN.'</th><th> '.$ADAT['diakOsszOraszam']."</th></tr></tfoot>\n";
+		echo '<tbody>';
+		foreach($ADAT['diakTankorOraszam'] as $tankorTipus => $oraszam) {
+		    echo '<tr><td>'.$tankorTipus.'</td><td>'.$oraszam.'</td></tr>';
+		}
+		echo '</tbody></table>';
+	    }
+	echo '</td><td style="vertical-align: top">'."\n";
+	echo '<table class="tankor">';
+	    echo '<tfoot><tr><td colspan="7">';
+		if (__MODOSITHATO) {
+		    echo '<label for="forceDel">'._HIANYZASOK_JEGYEK_TOROLHETOK.'</label>';
+		    echo '<input type="checkbox" name="forceDel" id="forceDel" value="1" /><br />';
+		    echo '<input type="submit" value="'._OK.'" />';
+		}
+//		else echo _LEZART;
+	    echo '</tfoot></th></tr>';
+
+/* Osztályonként */
+	for ($j=0; $j<count($ADAT['osztalyok']); $j++) {
+	    $_osztalyId = $ADAT['osztalyok'][$j]['osztalyId'];
+	    $_osztalyJel = $ADAT['osztalyok'][$j]['osztalyJel'];
+	    echo '<tr><th colspan="7">'._OSZTALYTANKOROK.' '.$_osztalyJel.'</th></tr>';
+	    for ($i=0; $i<count($ADAT['tankorok']['osztalye'][$_osztalyId]); $i++) {
+		_row($ADAT['tankorok']['osztalye'][$_osztalyId][$i],$BENNE,$i.$j.'1');
+	    }
+	}
+/* Diáké */
+	    echo '<tr><th colspan="7">'._DIAKTANKOROK.'</th></tr>';
+	    for ($i=0; $i<count($ADAT['tankorok']['diake']); $i++) {
+		_row( $ADAT['tankorok']['diake'][$i] ,$BENNE,$i.$j.'2');
+	    }
+	echo '</table>';
+	formEnd();
+	echo '</td></tr></table>'; /* container */
+    }
+
+    function _row($D,$BENNE,$id) {
+
+		$_benne = ($BENNE[$D['tankorId']]) ? true: false;
+		$_class = ($_benne) ? ' class="benne" ':'';
+		$_chk = ($_benne) ? ' checked="checked" ':'';
+		$_dsb = (__MODOSITHATO) ? '': ' disabled="disabled" readonly="readonly" ';
+		echo '<tr'.$_class.'>';
+		    if (!$_benne)
+			echo '<td><input type="checkbox" id="C'.$id.'" name="UJtankorId[]" value="'.$D['tankorId'].'" '.$_chk.$_dsb.'/></td><td></td>'."\n";
+		    else 
+			echo '<td></td><td><input type="checkbox" id="C'.$id.'" name="DELtankorId[]" value="'.$D['tankorId'].'" '.$_dsb.'/></td>'."\n";
+		    echo '<td>'.$D['tankorId'].'</td>'."\n";
+		    echo '<td><label for="C'.$id.'">'.$D['tankorNev'].'</label></td>'."\n";
+		    echo '<td>'; /* tervezett heti oraszam */
+			echo $D['tankorTipus'].' ';
+			if ($D['hetiOraszam']>0) echo number_format($D['hetiOraszam'],1);
+		    echo '</td>';
+		    echo '<td>';
+			for ($k=0; $k<count($D['tanarok']); $k++) echo $D['tanarok'][$k]['tanarNev'].' ';
+		    echo '</td>'."\n";
+		    echo '<td>';
+			if ($D['felveheto']==1) echo 'o'; //else echo '&bull;';
+		    echo '</td>'."\n";
+		echo '</tr>'."\n";
+
+    }
+
+?>

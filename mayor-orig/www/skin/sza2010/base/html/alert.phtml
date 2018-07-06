@@ -1,0 +1,68 @@
+<?php
+/*
+    Module: base
+    
+    js_alert()
+    html_alert()
+*/
+
+// ------------------------------------------------------------------- //
+// Az $_SESSION['alert'] két részből áll: típus:hiba                               //
+// típus: alert   : javaScript alert                                   //
+//	  message : hibaüzenet után az oldal betöltődik                //
+//	  page    : hibaüzenet után az oldal nem töltődik be           //
+//	  info    : információs üzenet                                 //
+// ------------------------------------------------------------------- //
+
+// ---------------------------------------------------------------- //
+//  Hibaüzenet kiiratása 
+//  visszatérési érték: legyen-e utána megjelenítve a lap?
+// --------------------------------------------------------------- //
+
+    function html_alert() {
+
+	global $ALERT_MSG;
+
+	if (!isset($_SESSION['alert']) || (is_array($_SESSION['alert']) && count($_SESSION['alert'])==0)) {
+	    return true;
+	    exit;
+	}
+
+	$showPage = true;
+	for ($j = 0; $j < count($_SESSION['alert']); $j++) {
+
+	    // Nincs mindig paraméter - ezért a $param nem kap értéket! - így az explode Notice üzenetet váltana ki...
+	    $param = array();
+	    $tmp = explode(':', $_SESSION['alert'][$j]);
+	    $aType = readVariable($tmp[0], 'enum', 'message', array('message','info','page')); $aCode = $tmp[1];
+	    for ($p = 2; $p < count($tmp); $p++) $param[] = htmlspecialchars($tmp[$p]);
+	    $pstr = '';
+	    // preparing $msg
+	    if (!isset($ALERT_MSG[$aCode]) || $ALERT_MSG[$aCode] == '') 
+		$msg = $ALERT_MSG['default'].' (<span class="alertParam">'.$aType.':'.$aCode.')</span>';
+	    else $msg = $ALERT_MSG[$aCode];
+
+	    // paraméter behelyettesítés
+	    for($i = 0; $i < count($param); $i++) {
+		$_msg = $msg;
+		$msg = @str_replace("%$i%",'<span class="alertParam">'.($param[$i]).'</span>',$msg);
+		if ($param[$i] != '' and $_msg == $msg) $pstr .= '<span class="alertParam">'.($param[$i]).'</span>,';
+	    }
+	    if ($pstr != '') $msg .= ' (' . substr($pstr,0,-1) . ')';
+	    if (($aType == 'message') or ($aType == 'page')) {
+		$title = _ERROR;
+		$class = 'errorMsg';
+		if ($aType == 'page') $showPage = false;
+	    } else {
+		$title = _INFORMATION;
+		$class = 'infoMsg';
+	    }
+	    $msg = '<span>'.$title.':</span> ' . $msg;
+	    echo '<div class="'.$class.'">'.str_replace('***','<br/>',$msg).'</div>'."\n";
+	}
+
+	return $showPage;
+
+    }
+
+?>

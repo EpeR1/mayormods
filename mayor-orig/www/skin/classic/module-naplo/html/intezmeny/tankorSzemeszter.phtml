@@ -1,0 +1,101 @@
+<?php
+
+    function putTankorSzemeszterForm($ADAT) {
+
+	$tanev = $ADAT['tanev'];
+	
+	// szemeszterek száma tanévenként
+	for ($i = 0; $i < count($ADAT['szemeszterek']); $i++) $Tanevek[$ADAT['szemeszterek'][$i]['tanev']]++;
+	formBegin(array('class'=>'tankorSzemeszter'));
+	echo '<input type="hidden" name="action" value="tankorSzemeszter" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$tanev.'" />'."\n";
+//hö?
+	if (isset($_POST['tanarId'])) echo '<input type="hidden" name="tanarId" value="'.$_POST['tanarId'].'" />'."\n";
+	if (isset($_POST['osztalyId'])) echo '<input type="hidden" name="osztalyId" value="'.$_POST['osztalyId'].'" />'."\n";
+	if (isset($_POST['mkId'])) echo '<input type="hidden" name="mkId" value="'.$_POST['mkId'].'" />'."\n";
+
+	echo '<table align="center">'."\n";
+
+	    echo '<tr>'."\n";
+		echo '<th rowspan="2" class="bigleft">'._TANKOR.' ('.$tanev.')</th>'."\n";
+		for ($i = 0; $i < count($ADAT['szemeszterek']); $i++) {
+		    if ($szTanev != $ADAT['szemeszterek'][$i]['tanev']) {
+			$szTanev = $ADAT['szemeszterek'][$i]['tanev'];
+			$colspan = $Tanevek[$szTanev];
+			$_class=array();
+			$_class[] = ekezettelen($ADAT['szemeszterek'][$i]['statusz']);
+			if ($tanev == $szTanev) $_class[] = 'aktualis';
+			echo '<th class="'.implode(' ',$_class).'" colspan="'.$colspan.'">';
+			echo $szTanev;
+			echo '</th>'."\n";
+		    }
+		}
+	    echo '</tr>'."\n";
+	    echo '<tr>'."\n";
+		for ($i = 0; $i < count($ADAT['szemeszterek']); $i++) {
+		    $_class=array();
+		    $_class[] = ekezettelen($ADAT['szemeszterek'][$i]['statusz']);
+		    if ($tanev == $ADAT['szemeszterek'][$i]['tanev']) $_class[] = 'aktualis';
+		    echo '<th class="'.implode(' ',$_class).'">'.$ADAT['szemeszterek'][$i]['szemeszter'].'</th>'."\n";
+		}
+	    echo '</tr>'."\n";
+
+	    for ($i = 0; $i < count($ADAT['tankorok']); $i++) {
+
+		$tankorId = $ADAT['tankorok'][$i]['tankorId'];
+		echo '<tr>'."\n";
+
+		    echo '<th title="'.substr($title,0,-2).'">';
+		    echo '<a href="'.href('index.php?page=naplo&sub=intezmeny&f=tankorDiak&tankorId='.$ADAT['tankorok'][$i]['tankorId'].'&tanev='.$tanev).'">';
+		    echo $ADAT['tankorok'][$i]['tankorNev'].' ('.$ADAT['tankorok'][$i]['tankorId'].')';
+		    echo '</a>';
+		    echo '<span class="tan">';
+		    for ($j=0; $j<count($ADAT['tankorTanarok'][$tankorId]); $j++) {
+			echo '<br/>'.$ADAT['tankorTanarok'][$tankorId][$j]['tanarNev'].' ';
+			echo $ADAT['tankorTanarok'][$tankorId][$j]['minBeDt'].'--';
+			echo $ADAT['tankorTanarok'][$tankorId][$j]['maxKiDt'];
+		    }
+		    echo '</span>';
+		    echo '</th>'."\n";
+		    for ($j = 0; $j < count($ADAT['szemeszterek']); $j++) {
+			$szTanev = $ADAT['szemeszterek'][$j]['tanev'];
+			$szSzemeszter = $ADAT['szemeszterek'][$j]['szemeszter'];
+
+
+			$_class=array();
+			$_class[] = ekezettelen($ADAT['szemeszterek'][$j]['statusz']);
+			if ($tanev == $ADAT['szemeszterek'][$j]['tanev']) $_class[] = 'aktualis';
+			echo '<td class="'.implode(' ',$_class).'">';
+
+			    if ($ADAT['szemeszterek'][$j]['statusz'] == 'lezárt') $disabled = ' disabled="disabled" ';
+			    else $disabled = '';
+			    $value = "$tankorId/$szTanev/$szSzemeszter";
+			    $name = 'O_'.$tankorId.'_'.$szTanev.'_'.$szSzemeszter;
+			    if (is_array($ADAT['tankorSzemeszter'][$tankorId][$szTanev][$szSzemeszter])) {
+				$szAdat = $ADAT['tankorSzemeszter'][$tankorId][$szTanev][$szSzemeszter];
+				$tankorNev = $szAdat['tankorNev'];
+				$title = $tankorNev;
+				echo '<input type="checkbox" name="T[]" value="'.$value.'" title="'.$title.'" checked="checked" '.$disabled.' />'."\n";
+				echo '<input size="1" maxlength="4" type="text" name="'.$name.'" value="'.$szAdat['oraszam'].'" '.$disabled.' />'."\n";
+			    } else {
+				echo '<input type="checkbox" name="T[]" value="'.$value.'" title="" '.$disabled.' />'."\n";
+				echo '<input size="1" maxlength="4" type="text" name="'.$name.'" value="" '.$disabled.' />'."\n";
+			    }
+
+			echo '</td>'."\n";
+		    }
+		echo '</tr>'."\n";
+	    }
+
+	    echo '<tr>'."\n";
+		echo '<th colspan="'.(count($ADAT['szemeszterek'])+1).'"><input type="submit" value="'._OK.'" /></th>'."\n";
+	    echo '</tr>'."\n";
+
+	echo '</table>'."\n";
+
+	formEnd();
+
+
+    }
+
+?>

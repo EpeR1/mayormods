@@ -1,0 +1,54 @@
+<?php
+
+    function putTankorStat($ADAT) {
+
+
+	$sum = 0;
+	$sum = $ADAT['tankorStat']['éves']['órarend']['normál'][0]['db'];
+	$sum += $ADAT['tankorStat']['éves']['órarend']['normál plusz'][0]['db'];
+	$sum += $ADAT['tankorStat']['éves']['órarend']['normál máskor'][0]['db'];
+
+	$n = 0;
+	$n += $ADAT['tankorStat']['éves']['órarend']['elmarad'][0]['db'];
+	$n += $ADAT['tankorStat']['éves']['órarend']['elmarad máskor'][0]['db'];
+	$n += $ADAT['tankorStat']['éves']['órarend']['felügyelet'][0]['db'];
+	$n += $ADAT['tankorStat']['éves']['órarend']['helyettesítés'][0]['db'];
+
+	echo '<h1>Az órák '.$sum*100/($sum+$n).'%-a volt megtartva.</h1>';
+	echo '<h1>'.$n.' óra maradt el.</h1>';
+	//dump($ADAT);
+	return;
+
+	$O = $ADAT['oraAdat'];
+
+	echo '<style type="text/css">
+	    .modGomb { 
+		background-color: #eeeeee; 
+		padding:4px 1em; margin:1em; background-color: #eeeeee; border-radius: 2px; border-style: solid solid solid none; border-width: 1px 1px 1px 1px; border-color: #aaa;
+	    }
+	    .oraElmarad {background-color: red; color:white;}	
+	    .oraMegtartva {background-color: green; color:white;}	
+	</style>';
+
+	echo '<div style="padding:1em 0em;float:left; margin-right:2em;background-color: #eeeeee; width:294px; border-radius: 0px 4px 4px 0px; border-style: solid solid solid none; border-width: 1px 1px 1px 0px; border-color: #aaa;">';
+	if (is_array($O)) {
+	    foreach($ADAT['oraAdat'] as $k => $v) {
+		echo '<div style="width:90px; text-align:right; display:table-cell;">';
+		echo $k;
+		echo '</div>';
+		echo '<div style="width:200px; text-align:left; display:table-cell; padding-left:1em;">';
+		echo $v;
+		echo '</div><div style="clear:both"></div>';
+	    }
+	}
+	echo '</div>';
+echo '<h2>Ez a funkció még nem működik!</h2>';
+	echo '<input type="hidden" name="oraId" value="'.$O['oraId'].'" />';
+	echo '<input type="submit" name="oraElmarad" value="'._ELMARAD.'" id="oraElmarad" class="modGomb oraElmarad" />';
+	echo '<input type="submit" name="oraMegtartva" value="'._MEGTARTVA.'" id="oraMegtartva" class="modGomb oraMegtartva" />';
+
+	echo '<div style="clear: both"></div>';
+
+    }
+
+?>

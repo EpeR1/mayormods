@@ -1,0 +1,75 @@
+<?php
+
+    function putUjSzempontRendszerForm($ADAT) {
+
+	formBegin(array('class'=>"szr"));
+
+	echo '<input type="hidden" name="action" value="ujSzempontRendszer" />'."\n";
+	echo '<input type="hidden" name="targyId" value="'.$ADAT['targyId'].'" />'."\n";
+	echo '<input type="hidden" name="kepzesId" value="'.$ADAT['kepzesId'].'" />'."\n";
+	echo '<input type="hidden" name="evfolyamJel" value="'.$ADAT['evfolyamJel'].'" />'."\n";
+	echo '<input type="hidden" name="szemeszterId" value="'.$ADAT['szemeszterId'].'" />'."\n";
+
+        echo '<br /><textarea name="txt" id="txt"></textarea>'."\n";
+
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+
+    }
+
+    function putSzempontRendszer($ADAT) {
+
+	formBegin(array('class'=>'szr'));
+	echo '<ol>'."\n";
+	foreach ($ADAT['szempontRendszer']['szempont'] as $szempontId => $szAdat) {
+	    echo '<li>'."\n";
+	    echo $szAdat['szempont'];
+	    if (is_array($ADAT['szempontRendszer']['minosites'][$szempontId])) {
+		echo '<ul>'."\n";
+		for ($i = 0; $i < count($ADAT['szempontRendszer']['minosites'][$szempontId]); $i++) {
+		    echo '<li>';
+		    echo $ADAT['szempontRendszer']['minosites'][$szempontId][$i]['minosites'];
+		    echo '</li>'."\n";
+		}
+		echo '</ul>'."\n";
+	    }
+	    echo '</li>'."\n";
+	}
+	echo '</ol>'."\n";
+	echo '<input type="hidden" name="szemeszterId" value="'.$ADAT['szemeszterId'].'" />'."\n";
+	echo '<input type="hidden" name="szrId" value="'.$ADAT['szempontRendszer']['szrId'].'" />'."\n";
+	echo '<input type="hidden" name="targyId" value="'.$ADAT['targyId'].'" />'."\n";
+	echo '<input type="hidden" name="kepzesId" value="'.$ADAT['kepzesId'].'" />'."\n";
+	echo '<input type="hidden" name="evfolyamJel" value="'.$ADAT['evfolyamJel'].'" />'."\n";
+	echo '<input type="hidden" name="action" value="szempontRendszerTorles" />'."\n";
+	echo '<input type="submit" value="'._TOROL.'" class="confirm" title="'._BIZTOS_TOROL.'" />'."\n";
+	formEnd();
+    }
+
+    function putSzempontRendszerLista($ADAT) {
+
+	echo '<table class="lista">'."\n";
+
+	    echo '<tr><th>'._ID.'</th><th>'._SZEMESZTER.'</th><th>'._TARGY.'</th><th>'._TARGYTIPUS.'</th><th>'._KEPZES.'</th></tr>';
+
+	    for ($i = 0; $i < count($ADAT['szempontRendszerek']); $i++) {
+		$A = $ADAT['szempontRendszerek'][$i];
+		echo '<tr>';
+		echo '<td>'.$A['szrId'].'</td>';
+		echo '<td>'.$A['tanev'].'/'.$A['szemeszter'].'</td>';
+		echo '<td>';
+		    if (isset($A['targyId'])) echo $A['targyNev'].' ('.$A['targyId'].')';
+		echo '</td>';
+		echo '<td>'.$A['targyTipus'].'</td>';
+		echo '<td>';
+		    if (isset($A['kepzesId'])) echo $A['kepzesNev'].' - '.$A['kepzesTanev'].' ('.$A['kepzesId'].')';
+		echo '</td>';
+		echo '</tr>';
+	    }
+
+	echo '</table>'."\n";
+
+    }
+
+?>

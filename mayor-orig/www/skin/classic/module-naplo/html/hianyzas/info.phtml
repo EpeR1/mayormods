@@ -1,0 +1,96 @@
+<?php
+
+    function putDiakHianyzasInfo($ADAT) {
+	if (__ALLOW_3RDPARTY_APPS===true) {
+	    echo "\n\n<!-- We are using Google Chart API! Thank You! http://code.google.com/apis/chart/terms.html -->\n\n";
+	    reset($ADAT);
+	    $i=0;
+	    foreach($ADAT as $dt => $D) { 
+		$d = $D['hianyzokSulyozva'];
+		if ($d!=-1) $Goo_Data[] = $d;
+		if ($d!=-1) $Goo_Data2[] = $D['hianyzokTanulmanyin'];
+		if ($d!=-1) $Goo_Data3[] = $d - $D['hianyzokTanulmanyin'];
+		if ($mx<$d) $mx = $d;
+	    }
+	    $Goo_Data = array_reverse($Goo_Data,false);
+	    $Goo_Data2 = array_reverse($Goo_Data2,false);
+	    $Goo_Data3 = array_reverse($Goo_Data3,false);
+	    echo '<div style="text-align: center">';
+#	    echo '<img src="http://chart.apis.google.com/chart?chco=667766&cht=lc&chs=500x150&chd=t:'.implode(',',$Goo_Data).'&chds=0,'.($mx+1).'&chxt=y&chxl=0:|0|'.($mx+1).'&chtt=Hiányzók+alakulása+(becslés)" alt="Google Chart" />';
+	    echo '<img src="http://chart.apis.google.com/chart?chco=00ff00,7777ff,872879&cht=lc&chs=810x180&chm=D,872879,2,0,4&chd=e:'.
+		googEE($Goo_Data,$mx+1,0).','.
+		googEE($Goo_Data2,$mx+1,0).','.
+		googEE($Goo_Data3,$mx+1,0).
+		'&chds=0,'.($mx+1).'&chxt=y&chxl=0:|0|'.($mx+1).'&chtt=Hiányzók+alakulása+a+megadott+intervallumban+(becslés)'.
+		'&chdl=becslés|tanulmányi+versenyzők|különbség'.
+		'&chg=2.7,10,1,1,0,0'.
+		'&scg=20,50,1,5" alt="Google Chart" />';
+	    echo '</div>';
+
+echo '
+  <div id="chart_div"></div>
+';
+
+	}
+	    reset($ADAT);
+	    echo '<table align="center" class="info" cellspacing="1">';
+	    echo '<thead>';
+	    echo '<tr><th>Nap</th>
+		<th>Hány diák hiányzott? (Becslés)</th>
+		<th>Az órák hány százalékán volt hiányzó?</th>
+		<th>Tanulmányi verseny miatt igazolt<br/>(db diák) - pontos érték</th></tr>'."\n";
+	    echo '</thead>';
+	    echo '<tfoot><tr><th colspan="4">A statisztika '.date('Y-m-d H:i:s').'-kor készült'.'</th></tr></tfoot>';
+	    echo '<tbody>';
+	    foreach($ADAT as $dt => $D) { 
+		list($y,$m,$d) = explode('-',$dt);
+		$w = date('w',strtotime($dt));
+		echo '<tr class="nap'.$w.'">';
+		echo '<th>'.$y.'.'.intval($m).'.'.intval($d).'.</th>';
+		echo '<td>'.$D['hianyzokSulyozva'].'</td>'."\n";
+		echo '<td>'.$D['oranHianyzasSzazalek'].'%</td>'."\n";
+		echo '<td>'.$D['hianyzokTanulmanyin'].'</td>'."\n";
+		echo '</tr>';
+	    }
+	    echo '</tbody>';
+	    echo '</table>'."\n\n";
+
+    }
+
+
+/**
+ * Encode an array of integers according to Google's Extended Encoding
+ * Scales to largest value in array if $max is not set, truncates lower bound if $min is set
+ * Does NOT set the 'e:' prefix so it can be called when creating multiple data series
+ * @link http://code.google.com/apis/chart/formats.html#extended
+ * @param array $values
+ * @param integer $max
+ * @param integer $min
+ * @return string
+ * @author Marcus Bointon <marcus@synchromedia.co.uk>
+ */
+function googEE($values, $max = -1, $min = 0) {
+        $encoding = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
+        $rangemax = 4095;
+        $chartdata = '';
+        if ($max < 0) {
+                $max = max($values);
+        }
+        //If max is smaller than the largest value, it will go beyond range allowed by the encoding (0..4095)
+        if ($max < max($values)) {
+                $max = max($values);
+        }
+        $range = $max - $min;
+        $scale = $rangemax / $range;
+        foreach ($values as $k => $v){
+                if ($v >= $min && $v <= $max) {
+                        $scaledvalue = ($v - $min) * $scale;
+                        $chartdata .= $encoding[floor($scaledvalue / 64)].$encoding[$scaledvalue % 64];
+                } else {
+                        $chartdata .= '__'; // Value out of max range;
+                }
+        }
+        return($chartdata);
+}
+
+?>

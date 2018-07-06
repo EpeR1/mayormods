@@ -1,0 +1,156 @@
+@media screen {
+h2 { text-align: center;  color: red;}
+h2.toPrint { display: none; }
+
+table.toolBar tr td select, table.toolBar tr td option {
+    font-size:11px;
+}
+
+table.orarend {
+    width: 85%;
+    background-color: #888;
+}
+table.orarend tr th {
+    background-color: #889988;
+    color: white;
+    border-width: 0px 1px 2px 0px;
+    width:2%;
+    height:30px;
+}
+table.orarend thead tr th {
+    background-color: rgba(52, 150, 185, 1);
+    color: white;
+    border-bottom: solid 1px white;
+    width:2%;
+    height:2em;
+    font-weight: normal;
+}
+table.orarend thead tr th.spec {
+    background-color: #2196F3;
+}
+
+table.orarend tbody tr th { font-weight: normal; padding:0px 1em; }
+
+
+table.orarend tr td {
+    text-align: center;
+    background-color: #efefef;
+    border-width: 0px 1px 2px 0px;
+    width:18%;
+}
+
+table.orarend tr td:hover { outline: solid 1px orange; }
+
+table.orarend tr td select {
+    font-size: 10px;
+    background-color:#000011;
+    color: white;
+}
+
+div.unfinished {
+    background-color: yellow;
+}
+    table.orarend tbody tr td hr { width: 80% }
+    div.normál { background-color: lightgreen !important;}
+    div.plusz {  background-color: #eeccee !important;}
+    div.elmarad { background-color: black !important;}
+    div.elmarad_máskor { background-color: #555555 !important; }
+    div.normál_máskor {  background-color: #776699 !important; }
+    div.felügyelet { background-color: #FF69B4 !important; }
+    div.helyettesítés { background-color: #ccffcc !important; }
+    div.összevonás { background-color: #B0C4DE !important; }
+
+    span.helyett {
+	color: gray;
+	text-decoration: line-through;
+    }
+
+    table.orarend tr td span.t0 {
+	background-color: #880000; color:white;
+    }
+    table.orarend tr td span.t1 {
+    }
+
+    table.orarend tr td select, table.orarend tr td select option { background-color: black; color: white; }
+    table.orarend tr td select.terem ,
+    table.orarend tr td select.terem option { background-color: white; color: black; }
+    table.orarend tr td select.nincs option { background-color: orange; color: black; }
+
+    table.orarend tr td select.terem option.orig { font-style: italic; color: #aaaaaa;}
+
+    table.orarend tbody tr td { background-color: #cccccc; }
+    table.orarend tbody tr td div { background-color: rgb(130,200,130); }
+    table.orarend tbody tr td div.nincsTerem { background-color: rgb(200,130,130); }
+    table.orarend tbody tr td div.moved { background-color: rgb(200,130,230) !important; }
+
+    table.orarend tbody tr:hover th {	background-color: #aabbcd;    }
+
+    table.orarend tbody tr td input { background-color: red; }
+
+    div#hibasOrak {
+	width:100%;
+	margin: 0px auto;
+	border-top: #F3F3F3 solid 4px;
+	border-bottom: #F3F3F3 solid 4px;
+    }
+    div.hibas { overflow: hidden; margin:1px;height:100px; width:189px; border: solid 1px black; display:inline-block; background-color: orange; }
+    div.details { font-size: x-small; padding-left:1em; }
+
+    div.button {
+	width:200px;
+	margin:20px auto;
+    }
+    div.button input {
+	width:100%;
+	background-color: #82C882; color: white;
+	padding:0.4em 0.4em;
+	border: solid 1px rgb(52, 150, 185);
+	border-radius: 2px;
+    }
+    div.button input:hover {
+	background-color:#3496B9;
+	border: solid 1px rgb(52, 150, 185);
+	color: white;
+    }
+    div.haladasi { background-color: #F44336; border: solid 1px #ccc; padding:0.5em; color:white; }
+    div.haladasi.haladasiModositando { background-color: #4CAF50; }
+    table.orarend tbody tr td div.haladasiOra { color:white; cursor: pointer; }
+    div.torlesreJelolve { background-color: #888 !important; text-decoration: line-through; outline: solid 1px red; }
+}
+@media print {
+    table.toolBar {
+	display: none;
+    }
+    table.orarend {
+	width: 100%;
+    }
+    table.orarend thead tr th {
+	color: black;
+	border-color: black;
+	border-style: solid;
+	border-width: 1px 1px 2px 1px;
+	width:2%;
+	height:30px;
+    }
+    table.orarend tbody tr th {
+	color: black;
+	border-color: black;
+	border-style: solid;
+	border-width: 0px 1px 2px 1px;
+	width:2%;
+	height:30px;
+    }
+
+    table.orarend tr td {
+	text-align: center;
+	border-color: black;
+	border-style: solid;
+	border-width: 0px 1px 2px 0px;
+	width:18%;
+	font-size:10px;
+	page-break-inside: avoid;
+    }
+    hr { width: 80% }
+    h2.toPrint { color: black; text-align: center; margin-top:0px; margin-bottom: 0px; padding-top:0px; padding-bottom:0px; } 
+}
+

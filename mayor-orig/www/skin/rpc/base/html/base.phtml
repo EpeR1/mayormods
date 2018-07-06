@@ -1,0 +1,23 @@
+<?php
+
+    // http_base
+    function html_base($sessionID,$policy,$page,$sub,$f,$lang,$skin,$MENU) {
+	@header("Content-Type: text/html; charset=utf-8");
+	@header("Last-Modified: Mon, 20 Oct 2003 01:01:01 GMT");
+	@header("Cache-Control: no-store, no-cache, must-revalidate");
+	@header("Cache-Control: post-check=0, pre-check=0", false);
+	@header("Pragma: no-cache");
+	define('_UNIQUE', uniqid());
+	//	page($page,$sub,$f,$lang,$skin,$policy);
+	global $RPC;
+	if (isset($RPC))
+	    $RPC->sendResponse();
+    }
+
+    //function putResponse($DATA) {
+    //	echo json_encode($DATA);
+    //}
+    // function formBegin($SET=array('method'=>'post','action'=>''),$SET2=array('print'=>true)) { }
+    // function formEnd($SET2=array('print'=>true)) { }
+
+?>

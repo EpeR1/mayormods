@@ -1,0 +1,6 @@
+
+    form.file { background-color: rgb(200,200,240); margin: 10px auto; padding: 20px 5px 5px 5px; width: 500px; text-align: center; border: rgb(40,80,120) solid; border-width: 3px 0px; }
+    form.file img { border: none; position: relative; top: 10px; }
+    form.file a { text-decoration: none; display: block; padding-bottom: 14px; background-color: rgb(20,40,60); color: white; margin-top: 40px; }
+    form.file a:hover { color: rgb(255,200,100); }
+

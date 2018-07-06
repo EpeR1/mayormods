@@ -1,0 +1,942 @@
+<?php
+
+    require_once('skin/classic/module-naplo/html/share/file.phtml');
+
+    function putBizonyitvanyTorzslap($ADAT) {
+	echo '<div>';
+	formBegin(array('class'=>'diak'));
+	echo '<fieldset class="bizonyitvanyTorzslap"><legend>'._DIAK_ALAPADATAI.'</legend>'."\n";
+	echo '<div class="face" style="float:right">';
+	    putFace($ADAT['diakId'],'diak','100');
+	echo '</div>';
+	echo '<table>';
+	echo '<tr><td>Diák neve</td><td>'.($ADAT['diakAdat']['diakNev']).'</td></tr>';
+	echo '<tr><td>Oktatási:</td><td>'.($ADAT['diakAdat']['oId']).'</td></tr>';
+	echo '<tr><td>Születési hely:</td><td>'.($ADAT['diakAdat']['szuletesiHely']).'</td></tr>';
+	echo '<tr><td>Születési idő:</td><td>'.($ADAT['diakAdat']['szuletesiIdo']).'</td></tr>';
+	echo '<tr><td>Gondviselő neve:</td><td>'.($ADAT['diakAdat']['gondviseloNev']).'</td></tr>';
+	echo '<tr><td>Apa neve:</td><td>'.($ADAT['diakAdat']['apaNev']).'</td></tr>';
+	echo '<tr><td>Anya neve (születéskori):</td><td>'.($ADAT['diakAdat']['anyaNev']).'</td></tr>';
+	echo '</table>';
+	echo '</fieldset>';
+	formEnd();
+	echo '</div>';
+    }
+
+    function putDiakAdatForm($ADAT, $Szulok, $tanev) {
+
+
+	$diakAdat = $ADAT['diakAdat'];
+	$DIAKJOGVISZONY = $ADAT['diakJogviszony'];
+	$OSZTALYOK = $ADAT['osztalyok'];
+	foreach ($diakAdat as $key => $val) {
+	    if (is_string($diakAdat[$key])) $diakAdat[$key] = htmlspecialchars($val);
+	}
+
+	$cssClass = array(
+	    'felvételt nyert' => 'felveteltNyert',
+	    'magántanuló' => 'magantanulo',
+	    'vendégtanuló' => 'vendegtanulo',
+	    'jogviszonya lezárva' => 'jogviszonyLezarva',
+	    'jogviszonya felfüggesztve' => 'jogviszonyFelfuggesztve',
+	);
+
+	$cssClass2 = (_MODOSITHAT===true) ? "":" readonly";
+
+	echo '<div class="'.$cssClass[$diakAdat['statusz']].$cssClass2.'" >';
+	    for ($i=0; $i<=count($ADAT['diakKepzes'][$ADAT['diakId']]); $i++) {
+		    $_DK = $ADAT['diakKepzes'][$ADAT['diakId']][$i];
+		    $_title .= $_DK['kepzesNev'].' '.$_DK['tolDt'].'-'.$_DK['igDt'].' ';
+	    }
+	    echo '<div class="diakStatusz" title="'.$_title.'">';
+		echo '<a href="#osztalyai" style="color:black;">'.$diakAdat['statusz'].'</a>';
+	    echo '</div>';
+
+	    $POSTTHESE = array('tanev'=>$tanev,'osztalyId'=>$ADAT['osztalyId']);
+
+    	    putDiakAlapadatok($diakAdat, $POSTTHESE, $DIAKJOGVISZONY, $ADAT['diakKepzes'][$ADAT['diakId']]);
+	    if (_MODOSITHAT===true) putDiakKepUpload($diakAdat['diakId'],$POSTTHESE);
+	    putDiakSzuletesiAdatok($diakAdat, $POSTTHESE);
+	    putDiakElerhetoseg($diakAdat, $POSTTHESE);
+
+	    putDiakSzulo($diakAdat, $Szulok, $POSTTHESE);
+	    putDiakCim($diakAdat, 'lakhely', $POSTTHESE);
+	    putDiakCim($diakAdat, 'tart', $POSTTHESE);
+	    putDiakTanulmanyiAdatok($diakAdat, $POSTTHESE, $OSZTALYOK, $ADAT);
+	    putDiakSzocialisAdatok($diakAdat, $POSTTHESE);
+
+	echo '</div>';
+    }
+
+    function _postThese($POSTTHESE) {
+	if (is_array($POSTTHESE)) foreach($POSTTHESE as $k => $v) {
+	    echo '<input type="hidden" name="'.$k.'" value="'.$v.'" />'."\n";
+	}
+    }
+
+    function putDiakKepUpload($diakId,$POSTTHESE) {
+	formBegin(array('enctype'=>"multipart/form-data",'class'=>'diak'));
+	    echo '<fieldset><legend>'._DIAK_FENYKEPE.'</legend>'."\n";
+	    _postThese($POSTTHESE);
+	    echo '<input type="hidden" name="diakId" value="'.$diakId.'" />';
+	    echo '<input type="hidden" name="action" value="diakKepUpload" />';
+	    echo '<input type="file" name="upfile" />';
+	    echo '<input type="submit" class="diakSubmit" value="ok" />';
+	    echo '</fieldset>';
+	formEnd();
+    }
+
+    function putDiakAlapadatok($diakAdat, $POSTTHESE, $DIAKJOGVISZONY, $KEPZES = '') {
+	global $DIAKADAT_DISABLE;
+	if (!is_array($DIAKADAT_DISABLE)) $DIAKADAT_DISABLE = array();
+
+	if (_MODOSITHAT===true)
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diak'), 'class'=>'diak onChangeRequest'));
+	else
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diak'), 'class'=>'diak'));
+
+	if (_KERELMEZHET===true) echo '<input type="hidden" id="kerelmezhet" name="kerelmezhet" value="1" />';
+	else echo '<input type="hidden" id="kerelmezhet" name="kerelmezhet" value="0" />';
+
+	echo '<input type="hidden" name="action" value="diakAlapadatModositas" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$diakAdat['diakId'].'" />'."\n";
+	    _postThese($POSTTHESE);
+	echo '<fieldset><legend>'._DIAK_ALAPADATAI.'</legend>'."\n";
+
+	echo '<table class="'.ekezettelen($diakAdat['nem']).'">'."\n";
+	    echo '<tr>'."\n";
+		echo '<th>';
+		echo '<label for="viseltCsaladinev">'._NEV.'</label>';
+		echo '</th>'."\n";
+		echo '<td colspan="5">';
+		echo '<input type="text" size="4" name="viseltNevElotag" value="'.$diakAdat['viseltNevElotag'].'" title="'._VISELTNEVELOTAG.'" />';
+		echo '<input type="text" size="20" id="viseltCsaladinev" name="viseltCsaladinev" value="'.$diakAdat['viseltCsaladinev'].'" title="'._VISELTCSALADINEV.'" />';
+		echo '<input type="text" size="20" name="viseltUtonev" value="'.$diakAdat['viseltUtonev'].'" title="'._VISELTUTONEV.'" />';
+		echo '<select name="nem" id="nem">'."\n";
+		    $SEL = array($diakAdat['nem'] => ' selected="selected" ');
+		    echo '<option value=""> - </option>'."\n";
+		    echo '<option value="fiú"'.$SEL['fiú'].'>'._FIU.'</option>'."\n";
+		    echo '<option value="lány"'.$SEL['lány'].'>'._LANY.'</option>'."\n";
+		echo '</select>'."\n";
+		if ($diakAdat['nem'] == 'lány') echo '<span class="icon-female"></span>';
+		elseif ($diakAdat['nem'] == 'fiú') echo '<span class="icon-male"></span>';
+		echo '</td>'."\n";
+
+	    echo '</tr><tr>';
+
+		echo '<th>'."\n";
+		echo '<label for="oId">'._OID.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" size="15" id="oId" name="oId" value="'.$diakAdat['oId'].'" maxlength="11" />';
+		echo '</td>'."\n";
+
+	    echo '</tr><tr>';
+		echo '<th>'."\n";
+		echo '<label for="torzslapszam">'._TORZSLAPSZAM.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		$_ro = (in_array('torzslapszam',$DIAKADAT_DISABLE))?'readonly="readonly" tabindex="-1"':'';
+		echo '<input type="text" size="15" id="torzslapszam" name="torzslapszam" value="'.$diakAdat['torzslapszam'].'" maxlength="32" '.$_ro.'/>';
+		echo '</td>'."\n";
+	    echo '</tr><tr>';
+
+		echo '<th>';
+		echo '<label for="statusz"><a href="#osztalyai" tabindex="-1">'._STATUSZ.'</a></label>';
+		echo '</th>'."\n";
+		echo '<td colspan="3">';
+	//	echo $diakAdat['jogviszonyStatusz'].' ('.$diakAdat['jogviszonyDt'].')';
+		echo '<ul>';
+		for ($i=0; $i<count($DIAKJOGVISZONY); $i++) {
+		    echo '<li>'.$DIAKJOGVISZONY[$i]['dt'].': '.$DIAKJOGVISZONY[$i]['statusz'].'</li>';
+		}
+		echo '</ul>';
+
+		if (is_array($KEPZES) && count($KEPZES)>0) {
+		    echo '<ul>';
+		    for ($i=0; $i<count($KEPZES); $i++) {
+			echo '<li>'.$KEPZES[$i]['kepzesNev'].': '.$KEPZES[$i]['tolDt'].'</li>';
+		    }
+		    echo '</ul>';
+		}
+
+		echo '</td>'."\n";
+		echo '<th>'."\n";
+		if ($diakAdat['gondozasiSzam']!='')
+		    echo '<label for="gondozasiSzam">'._GONDOZASISZAM.':</label> '."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		if ($diakAdat['gondozasiSzam']!='')		
+		    echo $diakAdat['gondozasiSzam'];
+		echo '</td>'."\n";
+
+	    echo '</tr>'."\n";
+
+	    echo '<tr>'."\n";
+
+		echo '<th>'."\n";
+		echo '<label for="tajSzam">'._TAJSZAM.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" size="15" id="tajSzam" name="tajSzam" value="'.$diakAdat['tajSzam'].'" maxlength="9" />';
+		echo '</td>'."\n";
+
+	    echo '</tr>'."\n";
+
+	    echo '<tr>'."\n";
+
+		echo '<th>'."\n";
+		echo '<label for="allampolgarsag">'._ALLAMPOLGARSAG.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		$_ro = (in_array('allampolgarsag',$DIAKADAT_DISABLE))?'readonly="readonly" tabindex="-1"':'';
+		echo '<input type="text" id="allampolgarsag" name="allampolgarsag" value="'.$diakAdat['allampolgarsag'].'" '.$_ro.'/>';
+		echo '</td>'."\n";
+
+		echo '<th>'."\n";
+		echo '<label for="adoazonosito">'._ADOAZONOSITO.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		$_ro = (in_array('adoazonosito',$DIAKADAT_DISABLE))?'readonly="readonly" tabindex="-1"':'';
+		echo '<input type="text" size="15" id="adoazonosito" name="adoazonosito" value="'.$diakAdat['adoazonosito'].'" maxlength="10" '.$_ro.'/>';
+		echo '</td>'."\n";
+
+	    echo '</tr>'."\n";
+
+	    echo '<tr>'."\n";
+		echo '<th>'."\n";
+		echo '<label for="diakigazolvanySzam">'._DIAKIGAZOLVANYSZAM.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		$_ro = (in_array('diakigazolvanyszam',$DIAKADAT_DISABLE))?'readonly="readonly" tabindex="-1"':'';
+		echo '<input type="text" size="15" id="diakigazolvanySzam" name="diakigazolvanySzam" value="'.$diakAdat['diakigazolvanySzam'].'" maxlength="11" '.$_ro.'/>';
+		echo '</td>'."\n";
+
+		echo '<th>'."\n";
+		echo '<label for="szemelyiIgazolvanySzam">'._SZEMELYIIGAZOLVANYSZAM.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		$_ro = (in_array('szemelyiigazolvanyszam',$DIAKADAT_DISABLE))?'readonly="readonly" tabindex="-1"':'';
+		echo '<input type="text" size="15" id="szemelyiIgazolvanySzam" name="szemelyiIgazolvanySzam" value="'.$diakAdat['szemelyiIgazolvanySzam'].'" '.$_ro.'/>';
+		echo '</td>'."\n";
+
+		echo '<th>'."\n";
+		echo '<label for="tartozkodasiOkiratSzam">'._TARTOZKODASIOKIRATSZAM.':</label> '."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		$_ro = (in_array('tartozkodasiokiratszam',$DIAKADAT_DISABLE))?'readonly="readonly" tabindex="-1"':'';
+		echo '<input type="text" size="16" id="tartozkodasiOkiratSzam" name="tartozkodasiOkiratSzam" value="'.$diakAdat['tartozkodasiOkiratSzam'].'" '.$_ro.'/>';
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+	    echo '<tr>'."\n";
+		echo '<th><label for="NEKAzonosito">'._NEKAZONOSITO.'<label></th>'."\n";
+		echo '<td colspan="5">';
+		    $_ro = (in_array('nekazonosito',$DIAKADAT_DISABLE))?'readonly="readonly" tabindex="-1"':'';
+		    echo '<input type="text" size="20" maxlength="16" name="NEKAzonosito" id="NEKAzonosito" value="'.$diakAdat['NEKAzonosito'].'" '.$_ro.'/>';
+		echo '</td>';
+	    echo '</tr>';
+	    echo '<tr>'."\n";
+		echo '<th><label for="megjegyzes">'._MEGJEGYZES.'<label></th>'."\n";
+		echo '<td colspan="3">';
+		    echo '<input type="text" name="megjegyzes" id="megjegyzes" value="'.$diakAdat['megjegyzes'].'" />';
+		echo '</td>';
+	    echo '</tr>';
+	echo '</table>'."\n";
+
+	if (_MODOSITHAT===true)    echo '<input type="submit" class="diakSubmit" value="'._OK.'" />';
+
+	echo '</fieldset>'."\n";
+	formEnd();
+    }
+
+    function putDiakSzuletesiAdatok($diakAdat, $POSTTHESE) {
+	if (_MODOSITHAT===true)
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diak'), 'class'=>'diak onChangeRequest'));
+	else
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diak'), 'class'=>'diak'));
+	echo '<input type="hidden" name="action" value="diakSzuletesiAdatModositas" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$diakAdat['diakId'].'" />'."\n";
+	    _postThese($POSTTHESE);
+	echo '<fieldset><legend>'._DIAK_SZULETESI_ADATAI.'</legend>'."\n";
+	echo '<table>'."\n";
+	    echo '<tr>'."\n";
+		echo '<th>';
+		echo '<label for="szuleteskoriCsaladinev">'._SZULETESKORINEV.'</label>';
+		echo '</th>'."\n";
+		echo '<td>';
+		echo '<input type="text" size="4" name="szuleteskoriNevElotag" value="'.$diakAdat['szuleteskoriNevElotag'].'" title="'._SZULETESKORINEVELOTAG.'" />';
+		echo '<input type="text" id="szuleteskoriCsaladinev" name="szuleteskoriCsaladinev" value="'.$diakAdat['szuleteskoriCsaladinev'].'" title="'._SZULETESKORICSALADINEV.'" />';
+		echo '<input type="text" name="szuleteskoriUtonev" value="'.$diakAdat['szuleteskoriUtonev'].'" title="'._SZULETESKORIUTONEV.'" />';
+		echo '</td>'."\n";
+
+	    echo '</tr>'."\n";
+
+	    echo '<tr>'."\n";
+		echo '<th>'."\n";
+		echo '<label for="szuletesiHely">'._SZULETESIHELY.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="szuletesiHely" name="szuletesiHely" value="'.$diakAdat['szuletesiHely'].'" />';
+		echo '</td>'."\n";
+
+		echo '<th>'."\n";
+		echo '<label for="szuletesiIdo">'._SZULETESIIDO.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input class="date" type="text" id="szuletesiIdo" name="szuletesiIdo" value="'.$diakAdat['szuletesiIdo'].'" />';
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+	echo '</table>'."\n";
+
+	if (_MODOSITHAT===true)    	    echo '<input type="submit" class="diakSubmit" value="'._OK.'" />';
+
+	echo '</fieldset>'."\n";
+	formEnd();
+    }
+
+    function putDiakCim($diakAdat, $tipus = 'lakhely', $POSTTHESE) {
+
+	global $ADAT;
+
+	if (_MODOSITHAT===true)
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diak'), 'class'=>'diak onChangeRequest'));
+	else
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diak'), 'class'=>'diak'));
+	echo '<input type="hidden" name="action" value="diakCimModositas" />'."\n";
+	echo '<input type="hidden" name="tipus" value="'.$tipus.'" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$diakAdat['diakId'].'" />'."\n";
+	    _postThese($POSTTHESE);
+	echo '<fieldset><legend>'.constant('_DIAK_CIM_'.strtoupper($tipus)).'</legend>'."\n";
+	echo '<table>'."\n";
+	    echo '<tr>'."\n";
+		echo '<th>';
+		echo '<label for="'.$tipus.'Orszag">'._ORSZAG.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="'.$tipus.'Orszag" name="'.$tipus.'Orszag" value="'.$diakAdat[$tipus.'Orszag'].'" />';
+		echo '</td>'."\n";
+
+		echo '<th>';
+		echo '<label for="'.$tipus.'Irsz">'._IRSZ.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="'.$tipus.'Irsz" name="'.$tipus.'Irsz" value="'.$diakAdat[$tipus.'Irsz'].'" />';
+		echo '</td>'."\n";
+
+		echo '<th>';
+		echo '<label for="'.$tipus.'Helyseg">'._HELYSEG.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="'.$tipus.'Helyseg" name="'.$tipus.'Helyseg" value="'.$diakAdat[$tipus.'Helyseg'].'" />';
+		echo '</td>'."\n";
+
+	    echo '</tr>'."\n";
+
+	    echo '<tr>'."\n";
+		echo '<th>';
+		echo '<label for="'.$tipus.'KozteruletNev">'._KOZTERULETNEV.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="'.$tipus.'KozteruletNev" name="'.$tipus.'KozteruletNev" value="'.$diakAdat[$tipus.'KozteruletNev'].'" />';
+		echo '<select name="'.$tipus.'KozteruletJelleg">'."\n";
+		    echo '<option value=""> - </option>'."\n";
+		    $SEL = array($diakAdat[$tipus.'KozteruletJelleg'] => ' selected="selected" ');
+		    foreach ($ADAT['kozteruletJelleg'] as $jelleg) {
+			echo '<option value="'.$jelleg.'"'.$SEL[$jelleg].'>'.$jelleg.'</option>'."\n";
+		    }
+		echo '</select>'."\n";
+		echo '</td>'."\n";
+
+		echo '<th>';
+		echo '<label for="'.$tipus.'Hazszam">'._HAZSZAM.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="'.$tipus.'Hazszam" name="'.$tipus.'Hazszam" value="'.$diakAdat[$tipus.'Hazszam'].'" title="'._HAZSZAM.'" />';
+		echo '</td>'."\n";
+
+	    echo '</tr>'."\n";
+	    echo '<tr>'."\n";
+		echo '<th>';
+		echo '<label for="'.$tipus.'Emelet">'._EMELET.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="'.$tipus.'Emelet" name="'.$tipus.'Emelet" value="'.$diakAdat[$tipus.'Emelet'].'" title="'._EMELET.'" />';
+		echo '</td>'."\n";
+
+		echo '<th>';
+		echo '<label for="'.$tipus.'Ajto">'._AJTO.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="'.$tipus.'Ajto" name="'.$tipus.'Ajto" value="'.$diakAdat[$tipus.'Ajto'].'" title="'._AJTO.'" />';
+		echo '</td>'."\n";
+
+	    echo '</tr>'."\n";
+	echo '</table>'."\n";
+
+	if (_MODOSITHAT===true)    	    echo '<input type="submit" class="diakSubmit" value="'._OK.'" />';
+
+	echo '</fieldset>'."\n";
+	formEnd();
+    }
+
+    function putDiakElerhetoseg($diakAdat, $POSTTHESE) {
+	if (_MODOSITHAT===true)
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diak'), 'class'=>'diak onChangeRequest'));
+	else
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diak'), 'class'=>'diak'));
+	echo '<input type="hidden" name="action" value="diakElerhetosegModositas" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$diakAdat['diakId'].'" />'."\n";
+	    _postThese($POSTTHESE);
+	echo '<fieldset><legend>'._DIAK_ELERHETOSEG.'</legend>'."\n";
+	echo '<table>'."\n";
+
+	    echo '<tr>'."\n";
+		echo '<th>';
+		echo '<label for="mobil">'._MOBIL.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<span class="icon-phone-alt"></span>';
+		echo '<input type="text" id="mobil" name="mobil" value="'.$diakAdat['mobil'].'" />';
+		echo '</td>'."\n";
+	    echo '</tr><tr>';
+		echo '<th>';
+		echo '<label for="email">'._EMAIL.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<span class="icon-envelope"></span>';
+		echo '<input type="text" id="email" name="email" value="'.$diakAdat['email'].'" />';
+		echo '</td>'."\n";
+	    echo '</tr><tr>';
+		echo '<th>';
+		echo '<label for="telefon">'._TELEFON.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<span class="icon-phone"></span>';
+		echo '<input type="text" id="telefon" name="telefon" value="'.$diakAdat['telefon'].'" />';
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+
+	echo '</table>'."\n";
+
+	if (_MODOSITHAT===true)    	    echo '<input type="submit" class="diakSubmit" value="'._OK.'" />';
+
+	echo '</fieldset>'."\n";
+	formEnd();
+    }
+
+    function putDiakTanulmanyiAdatok($diakAdat, $POSTTHESE, $OSZTALYOK, $ADAT) {
+
+	$tanev = $POSTTHESE['tanev'];
+
+	if (_MODOSITHAT===true)
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diak'), 'class'=>'diak onChangeRequest'));
+	else
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diak'), 'class'=>'diak'));
+	echo '<input type="hidden" name="action" value="diakTanulmanyiAdatModositas" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$diakAdat['diakId'].'" />'."\n";
+	    _postThese($POSTTHESE);
+	echo '<fieldset><legend>'._DIAK_TANULMANYI_ADATOK.'</legend>'."\n";
+//var_dump($diakAdat['mindenOsztaly']);
+	echo '<table>'."\n";
+
+	    $voltOsztaly = $Osztaly = array();
+//	    $Be = $Ki = array();
+	    for ($i = 0; $i < count($diakAdat['osztaly']); $i++) {
+		$_osztalyId = ($diakAdat['osztaly'][$i]['osztalyId']);
+		$voltOsztalyIds[] = $_osztalyId;
+		$_O = $OSZTALYOK[$_osztalyId];
+		$Osztaly[] = '<a href="'.href('index.php?page=naplo&sub=intezmeny&f=osztaly&osztalyId='.$_osztalyId).'">'.$diakAdat['osztaly'][$i]['osztalyJel'].' ['.$_O['kezdoTanev'].'/'.$_O['vegzoTanev'].'.'.$_O['jel'].' '.$_O['leiras'].' ('.$_O['osztalyfonokNev']
+			    .')] '.$diakAdat['osztaly'][$i]['beDt'].' &rarr; '.($diakAdat['osztaly'][$i]['kiDt']=='' ?'-':$diakAdat['osztaly'][$i]['kiDt'] ).' <span class="naploSorszam">'._NAPLOSORSZAM.': '.$diakAdat['osztaly'][$i]['naploSorszam'].'</a></span>';
+//		$Be[] = $diakAdat['osztaly'][$i]['beDt'];
+//		$Ki[] = $diakAdat['osztaly'][$i]['kiDt'];
+	    }
+	    for ($i = 0; $i < count($diakAdat['mindenOsztaly']); $i++) {
+		$_osztalyId = $diakAdat['mindenOsztaly'][$i]['osztalyId'];
+		if (is_array($voltOsztalyIds) && !in_array($_osztalyId, $voltOsztalyIds)) {
+		    $_O = $OSZTALYOK[$_osztalyId];
+
+		    $VoltOsztaly[] = $diakAdat['mindenOsztaly'][$i]['osztalyJel'].' ['.$_O['kezdoTanev'].'/'.$_O['vegzoTanev'].'.'.$_O['jel'].' '.$_O['leiras'].' ('.$_O['osztalyfonokNev']
+			    .')] '.$diakAdat['mindenOsztaly'][$i]['beDt'].' &rarr; '.($diakAdat['mindenOsztaly'][$i]['kiDt']=='' ?'-':$diakAdat['mindenOsztaly'][$i]['kiDt'] ).' <span class="naploSorszam">'._NAPLOSORSZAM.': '.$diakAdat['osztaly'][$i]['naploSorszam'].'</span>';
+//		    $Be[] = $diakAdat['mindenOsztaly'][$i]['beDt'];
+//		    $Ki[] = $diakAdat['mindenOsztaly'][$i]['kiDt'];
+		}
+	    }
+	    echo '<tr>'."\n";
+		echo '<th id="osztalyai">';
+		echo _DIAK_OSZTALYA." (".$tanev.")\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<ul>';
+		for ($i=0; $i<count($Osztaly); $i++) {
+		    echo '<li>'.$Osztaly[$i].'</a></li>';
+		}
+		for ($i=0; $i<count($VoltOsztaly); $i++) {
+		    echo '<li class="volt">'.$VoltOsztaly[$i].'</li>';
+		}
+		echo '</ul>';
+		echo '</td>'."\n";
+
+//		echo '<td>';
+//		echo implode('<br />', $Be);
+//		echo '</td>'."\n";
+//		echo '<td>'."\n";
+//		echo implode('<br />', $Ki);
+//		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+
+	    echo '<tr>'."\n";
+		echo '<th>';
+		echo '<label for="jogviszonyKezdete">'._JOGVISZONY_KEZDETE.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+//		echo '<input type="text" id="jogviszonyKezdete" name="jogviszonyKezdete" value="'.$diakAdat['jogviszonyKezdete'].'" />';
+		echo $diakAdat['jogviszonyKezdete'];
+		echo '</td>'."\n";
+
+		echo '<th>';
+		echo '<label for="jogviszonyVege">'._JOGVISZONY_VEGE.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+//		echo '<input type="text" id="jogviszonyVege" name="jogviszonyVege" value="'.$diakAdat['jogviszonyVege'].'" />';
+		echo $diakAdat['jogviszonyVege'];
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+
+	    echo '<tr>'."\n";
+		echo '<th>';
+		echo '<label for="kezdoTanev">'._KEZDO_TANEV.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="kezdoTanev" name="kezdoTanev" value="'.$diakAdat['kezdoTanev'].'" />';
+		echo '</td>'."\n";
+
+		echo '<th>';
+		echo '<label for="kezdoSzemeszter">'._KEZDO_SZEMESZTER.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="kezdoSzemeszter" name="kezdoSzemeszter" value="'.$diakAdat['kezdoSzemeszter'].'" />';
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+
+	    echo '<tr>'."\n";
+		echo '<th>';
+		echo '<label for="elozoIskolaOMKod">'._ELOZOISKOLAOMKOD.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="elozoIskolaOMKod" name="elozoIskolaOMKod" value="'.$diakAdat['elozoIskolaOMKod'].'" />';
+		echo '</td>'."\n";
+
+		echo '<th>';
+		echo '<label for="lakohelyiJellemzo">'._LAKOHELYIJELLEMZO.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<select name="lakohelyiJellemzo" id="lakohelyiJellemzo">'."\n";
+		    echo '<option value=""> - </option>'."\n";
+		    $SEL = array($diakAdat['lakohelyiJellemzo'] => ' selected="selected" ');
+		    for ($i = 0; $i < count($ADAT['lakohelyiJellemzo']); $i++)
+		    echo '<option value="'.$ADAT['lakohelyiJellemzo'][$i].'"'.$SEL[$ADAT['lakohelyiJellemzo'][$i]].'>'.$ADAT['lakohelyiJellemzo'][$i].'</option>'."\n";
+		echo '</select>'."\n";
+
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+
+	echo '</table>'."\n";
+
+	if (_MODOSITHAT===true)    	    echo '<input type="submit" class="diakSubmit" value="'._OK.'" />';
+
+	echo '</fieldset>'."\n";
+	formEnd();
+
+    }
+
+    function putDiakSzocialisAdatok($diakAdat, $POSTTHESE) {
+
+	global $ADAT;
+
+	if (_MODOSITHAT===true)
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diak'), 'class'=>'diak onChangeRequest'));
+	else
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diak'), 'class'=>'diak'));
+	echo '<input type="hidden" name="action" value="diakSzocialisAdatModositas" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$diakAdat['diakId'].'" />'."\n";
+	    _postThese($POSTTHESE);
+	echo '<fieldset><legend>'._DIAK_SZOCIALIS_ADATOK.'</legend>'."\n";
+	echo '<table>'."\n";
+
+// Ez mi????
+//	    $Osztaly = $Be = $Ki = array();
+//	    for ($i = 0; $i < count($diakAdat['osztaly']); $i++) {
+//		$Osztaly[] = $diakAdat['osztaly'][$i]['osztalyJel'];
+//		$Be[] = $diakAdat['osztaly'][$i]['beDt'];
+//		$Ki[] = $diakAdat['osztaly'][$i]['kiDt'];
+//	    }
+	    echo '<tr>'."\n";
+		echo '<td class="top" colspan="2">'."\n";
+		echo '<fieldset><legend>'._DIAK_TORVENYES_KEPVISELO.'</legend>'."\n";
+		for ($i = 0; $i < count($ADAT['torvenyesKepviselo']); $i++) {
+		    $CHK = (strpos($diakAdat['torvenyesKepviselo'], $ADAT['torvenyesKepviselo'][$i]) !== false)?' checked="checked" ':'';
+		    echo '<input type="checkbox" id="torvenyesKepviselo'.$i.'" name="torvenyesKepviselo[]" value="'.$ADAT['torvenyesKepviselo'][$i].'"'.$CHK.' />'."\n";
+		    echo '<label for="torvenyesKepviselo'.$i.'">'.$ADAT['torvenyesKepviselo'][$i].'</label><br />'."\n";
+		}
+		echo '</fieldset>'."\n";
+		echo '</td>'."\n";
+		echo '<td rowspan="3" class="top">'."\n";
+		echo '<fieldset><legend>'._DIAK_SZOCIALIS_HELYZET.'</legend>'."\n";
+		for ($i = 0; $i < count($ADAT['szocialisHelyzet']); $i++) {
+		    $CHK = (strpos($diakAdat['szocialisHelyzet'], $ADAT['szocialisHelyzet'][$i]) !== false)?' checked="checked" ':'';
+		    echo '<input type="checkbox" id="szocialisHelyzet'.$i.'" name="szocialisHelyzet[]" value="'.$ADAT['szocialisHelyzet'][$i].'"'.$CHK.' />'."\n";
+		    echo '<label for="szocialisHelyzet'.$i.'">'.$ADAT['szocialisHelyzet'][$i].'</label><br />'."\n";
+		}
+		echo '</fieldset>'."\n";
+		echo '</td>'."\n";
+
+		echo '<td>';
+		echo '</td>'."\n";
+
+		echo '<td class="top" rowspan="3">'."\n";
+		echo '<fieldset><legend>'._DIAK_FOGYATEKOSSAG.'</legend>'."\n";
+		for ($i = 0; $i < count($ADAT['fogyatekossag']); $i++) {
+		    $CHK = (strpos($diakAdat['fogyatekossag'], $ADAT['fogyatekossag'][$i]) !== false)?' checked="checked" ':'';
+		    echo '<input type="checkbox" id="fogyatekossag'.$i.'" name="fogyatekossag[]" value="'.$ADAT['fogyatekossag'][$i].'"'.$CHK.' />'."\n";
+		    echo '<label for="fogyatekossag'.$i.'">'.$ADAT['fogyatekossag'][$i].'</label><br />'."\n";
+		}
+		echo '</fieldset>'."\n";
+		echo '<a href="'.href('index.php?page=naplo&sub=sni&diakId='.$ADAT['diakId']).'">SNI</a>';
+		echo '</td>'."\n";
+
+		echo '<tr>';
+		echo '<th>';
+		echo '<label for="penzugyiStatusz">'._DIAK_PENZUGYI_STATUSZ.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<select name="penzugyiStatusz" id="penzugyiStatusz">'."\n";
+		    $SEL = array($diakAdat['penzugyiStatusz'] => ' selected="selected" ');
+		    echo '<option value=""> - </option>'."\n";
+		    for ($i = 0; $i < count($ADAT['penzugyiStatusz']); $i++)
+		    echo '<option value="'.$ADAT['penzugyiStatusz'][$i].'"'.$SEL[$ADAT['penzugyiStatusz'][$i]].'>'.$ADAT['penzugyiStatusz'][$i].'</option>'."\n";
+		echo '</select>'."\n";
+		echo '</td>'."\n";
+		echo '</tr>';
+
+		echo '<tr>';
+		echo '<th>';
+		echo '<label for="gondozasiSzam">'._DIAK_GONDOZASISZAM.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="gondozasiSzam" name="gondozasiSzam" value="'.$diakAdat['gondozasiSzam'].'" />';
+		echo '</td>'."\n";
+		echo '</tr>';
+
+	    echo '</tr>'."\n";
+
+	echo '</table>'."\n";
+
+	if (_MODOSITHAT===true)    	    echo '<input type="submit" class="diakSubmit" value="'._OK.'" />';
+
+	echo '</fieldset>'."\n";
+	formEnd();
+
+    }
+
+
+    function putDiakSzulo($diakAdat, $Szulok, $POSTTHESE) {
+
+	if (_MODOSITHAT===true)
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diakSzulo'), 'class'=>'diak onChangeRequest 0onSubmitUpdate'));
+	else
+	    formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diakSzulo'), 'class'=>'diak onSubmitUpdate'));
+	echo '<fieldset><legend>'._DIAK_SZULO.'</legend>'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$diakAdat['diakId'].'" />'."\n";
+	    _postThese($POSTTHESE);
+	echo '<input type="submit" name="anya" value="'._ANYA.': '.$Szulok[$diakAdat['anyaId']]['szuloNev'];
+	    if (isset($diakAdat['anyaId'])) echo ' ('.$diakAdat['anyaId'].')';
+	    else echo ' - ';
+	echo '" class="onClickUpdate" />';
+	echo '<input type="submit" name="apa" value="'._APA.': '.$Szulok[$diakAdat['apaId']]['szuloNev'];
+	    if (isset($diakAdat['apaId'])) echo ' ('.$diakAdat['apaId'].')';
+	    else echo ' - ';
+	echo '" class="onClickUpdate" />';
+	echo '<input type="submit" name="gondviselo" value="'._GONDVISELO.': '.$Szulok[$diakAdat['gondviseloId']]['szuloNev'];
+	    if (isset($diakAdat['gondviseloId'])) echo ' ('.$diakAdat['gondviseloId'].')';
+	    else echo ' - ';
+	echo '" class="onClickUpdate" />';
+	echo '<input type="submit" name="nevelo" value="'._NEVELO.': '.$Szulok[$diakAdat['neveloId']]['szuloNev'];
+	    if (isset($diakAdat['neveloId'])) echo ' ('.$diakAdat['neveloId'].')';
+	    else echo ' - ';
+	echo '" class="onClickUpdate" />';
+
+	echo '</fieldset>'."\n";
+	formEnd();
+    }
+
+
+    function putUjDiak($ADAT) {
+	formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=intezmeny&f=diak'), 'class'=>'diak'));
+	echo '<input type="hidden" name="action" value="ujDiak" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+	echo '<fieldset><legend>'._UJ_DIAK.'</legend>'."\n";
+	echo '<table>'."\n";
+	    echo '<tr>'."\n";
+		echo '<th>';
+		    echo '<label for="felvetelTipus">'._BEKERULES_MODJA.'</label>'."\n";
+		echo '</th>';
+		echo '<td>';
+		    echo '<select name="felvetelTipus" id="felvetelTipus">'."\n";
+		    foreach ($ADAT['bekerulesModja'] as $tipus) {
+			//foreach ($ADAT['zaradek'] as $tipus => $zaradekIndex) {
+			echo '<option value="'.$tipus.'">'.$tipus.'</option>'."\n";
+		    }
+		    echo '</select>'."\n";
+		echo '</td>';
+		echo '<th>';
+		    echo _OSZTALY;
+		echo '</th>';
+		echo '<td>';
+		if (is_array($ADAT['osztaly'])) {
+		    echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztaly']['osztalyId'].'" />'."\n";
+		    echo $ADAT['osztaly']['kezdoTanev'].'-'.($ADAT['osztaly']['kezdoTanev']+1).'/'.$ADAT['osztaly']['jel'];
+		    if (isset($ADAT['osztaly']['osztalyJel'])) echo ' ('.$ADAT['osztaly']['osztalyJel'].')';
+		}
+		echo '</td>';
+	    echo '</tr>'."\n";
+	    echo '<tr>'."\n";
+		echo '<th>';
+		echo '<label for="viseltCsaladinev" class="kotelezo">'._NEV.'</label>';
+		echo '</th>'."\n";
+		echo '<td>';
+		echo '<input type="text" size="2" name="viseltNevElotag" value="'.$diakAdat['viseltNevElotag'].'" title="'._VISELTNEVELOTAG.'" />';
+		echo '<input type="text" size="12" id="viseltCsaladinev" name="viseltCsaladinev" value="'.$diakAdat['viseltCsaladinev'].'" title="'._VISELTCSALADINEV.'" />';
+		echo '<input type="text" size="20" name="viseltUtonev" value="'.$diakAdat['viseltUtonev'].'" title="'._VISELTUTONEV.'" />';
+		echo '</td>'."\n";
+
+		echo '<th>';
+		echo '<label for="nem">'._NEM.'</label>';
+		echo '</th>'."\n";
+		echo '<td>';
+		echo '<select name="nem" id="nem">'."\n";
+		    $SEL = array($diakAdat['nem'] => ' selected="selected" ');
+		    echo '<option value=""> - </option>'."\n";
+		    echo '<option value="fiú"'.$SEL['fiú'].'>'._FIU.'</option>'."\n";
+		    echo '<option value="lány"'.$SEL['lány'].'>'._LANY.'</option>'."\n";
+		echo '</select>'."\n";
+		echo '</td>'."\n";
+
+		echo '<th>'."\n";
+		echo '<label for="allampolgarsag">'._ALLAMPOLGARSAG.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="allampolgarsag" name="allampolgarsag" value="'.$diakAdat['allampolgarsag'].'" />';
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+
+	    echo '<tr>'."\n";
+		echo '<th>'."\n";
+		echo '<label for="tajSzam">'._TAJSZAM.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" size="15" id="tajSzam" name="tajSzam" value="'.$diakAdat['tajSzam'].'" />';
+		echo '</td>'."\n";
+
+		echo '<th>'."\n";
+		echo '<label for="oId">'._OID.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" size="15" id="oId" name="oId" value="'.$diakAdat['oId'].'" />';
+		echo '</td>'."\n";
+
+		echo '<th>'."\n";
+		echo '<label for="diakigazolvanySzam">'._DIAKIGAZOLVANYSZAM.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" size="15" id="diakigazolvanySzam" name="diakigazolvanySzam" value="'.$diakAdat['diakigazolvanySzam'].'" />';
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+
+	    echo '<tr>'."\n";
+		echo '<th>'."\n";
+		echo '<label for="jogviszonyKezdete" class="kotelezo">'._JOGVISZONY_KEZDETE.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input class="date" type="text" id="jogviszonyKezdete" name="jogviszonyKezdete" value="'.date('Y-m-d').'" />';
+		echo '</td>'."\n";
+
+		echo '<th>';
+		echo '<label for="kezdoTanev" class="kotelezo">'._TERVEZETT_KEZDO_TANEV.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="kezdoTanev" name="kezdoTanev" value="'.$diakAdat['kezdoTanev'].'" />';
+		echo '</td>'."\n";
+
+		echo '<th>';
+		echo '<label for="kezdoSzemeszter" class="kotelezo">'._KEZDO_SZEMESZTER.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<input type="text" id="kezdoSzemeszter" name="kezdoSzemeszter" value="'.$diakAdat['kezdoSzemeszter'].'" />';
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+
+	    echo '<tr>'."\n";
+		echo '<th><label for="NEKAzonosito">'._NEKAZONOSITO.'<label></th>'."\n";
+		echo '<td colspan="5">';
+		    echo '<input type="text" size="20" maxlength="16" name="NEKAzonosito" id="NEKAzonosito" value="'.$diakAdat['NEKAzonosito'].'" />';
+		echo '</td>';
+	    echo '</tr>';
+
+
+	echo '</table>'."\n";
+
+	    echo '<input type="submit" style="width:100%;" />';
+
+	echo '</fieldset>'."\n";
+	formEnd();
+    }
+
+    function putDiakJogviszonyValtozas($ADAT) {
+	formBegin(array('method'=>'post', 'class'=>'diak'));
+	echo '<fieldset><legend>'._JOGVISZONY_VALTAS.'</legend>'."\n";
+
+	echo '<h1>'._JOGVISZONY_VALTAS.'</h1>'."\n";
+	echo '<input type="hidden" name="action" value="jogviszonyValtas" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+
+		echo '<ul>';
+		for ($i=0; $i<count($ADAT['diakJogviszony']); $i++) {
+		    echo '<li>'.$ADAT['diakJogviszony'][$i]['dt'].': '.$ADAT['diakJogviszony'][$i]['statusz'].'</li>';
+		}
+		echo '</ul>';
+
+	echo '<label for="jogviszonyValtasSelect">'._UJ_STATUSZ.'</label>';
+	echo '<select name="statusz" id="jogviszonyValtasSelect">'."\n";
+	echo '<option value=""> -- '._UJ_JOGVISZONY_STATUSZ.' -- </option>'."\n";
+	foreach ($ADAT['valthatoStatusz'] as $key => $statusz) {
+	    $_SEL = (count($ADAT['valthatoStatusz']) == 1) ? ' selected="selected"':'';
+	    echo '<option value="'.$statusz.'" '.$_SEL.'>'.$statusz.'</option>'."\n";
+	}
+	echo '</select>'."\n";
+	echo '<br/>';
+	echo '<label for="jvd">'._JOGVISZONY_VALTAS_DT.'</label>'."\n";
+	echo '<input class="date" id="jvd" type="text" name="jogviszonyValtasDt" value="'.date('Y-m-d').'" />'."\n";
+	echo '<br/>';
+	echo '<label for="iktatoszam">'._IKTATOSZAM.'</label>'."\n";
+	echo '<input type="text" name="iktatoszam" />'."\n";	    
+	echo '<br/>';
+
+	echo '<div class="rejtett" id="felfuggesztes">';
+	    echo '<label for="felfuggesztesOk">'._FELFUGGESZTES_OK.'</label>';
+	    echo '<input type="text" name="felfuggesztesOk" id="felfuggesztesOk" value="" />';
+	    echo '<br />'."\n";
+	    echo '<label for="felfuggesztesIgDt">'._FELFUGGESZTES_IG_DT.'</label>';
+	    echo '<input type="text" name="felfuggesztesIgDt" id="felfuggesztesIgDt" value="" class="date" />';
+	echo '</div>'."\n";
+	echo '<div class="rejtett" id="lezaras">';
+	    echo '<select name="lezarasZaradekIndex" id="lezarasZaradek">'."\n";
+	    echo '<option value=""> -- '._JOGVISZONY_LEZARAS_ZARADEK.' -- </option>';
+	    foreach ($ADAT['jogviszonyLezarasZaradek'] as $zaradekIndex => $zAdat)
+		echo '<option value="'.$zaradekIndex.'">'.$zAdat['szoveg'].'</option>'."\n";
+	    echo '</select>'."\n";
+	    echo '<span id="igazolatlan" class="rejtett">';
+	    echo '<label for="lezarasIgazolatlan">'._LEZARAS_IGAZOLATLAN_ORAK_SZAMA.'</label>'."\n";
+	    echo '<input type="text" name="lezarasIgazolatlanOrakSzama" id="lezarasIgazolatlan" value="" />';
+	    echo '</span>'."\n";
+	    echo '<span id="iskola" class="rejtett">';
+	    echo '<label for="lezarasIskola">'._LEZARAS_ISKOLA.'</label>'."\n";
+	    echo '<input type="text" name="lezarasIskola" id="lezarasIskola" value="" />';
+	    echo '</span>'."\n";
+	echo '</div>'."\n";
+
+	echo '<input type="submit" value="'._MODOSITAS.'" title="'._BIZTOS_MODOSITJA.'" class="confirm" />'."\n";
+
+	echo '</fieldset>';
+	formEnd();
+
+
+    /* ----------------------- */
+
+
+	formBegin(array('method'=>'post', 'class'=>'diak hozottHianyzas'));
+	echo '<fieldset><legend>'._HOZOTT_HIANYZASOK.'</legend>'."\n";
+
+	echo '<h1>'._HOZOTT_HIANYZASOK.'</h1>';
+
+	if (is_array($ADAT['hozottHianyzas']) && count($ADAT['hozottHianyzas'])>0) {
+	    echo '<ul>';
+	    foreach ($ADAT['hozottHianyzas'] as $statusz => $db) {
+		echo '<li>'.$statusz.': '.$db['db'].'</li>';
+	    }
+	    echo '</ul>';
+	} else {
+	    echo '<input type="hidden" name="action" value="diakHozottHianyzas" />'."\n";
+	    echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+	    echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	    echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+
+	    echo _IGAZOLT.'<input type="text" name="hozottHianyzasIgazolt" />';
+		echo '<br/>';
+	    echo _IGAZOLATLAN.'<input type="text" name="hozottHianyzasIgazolatlan" />';
+	    echo '<input type="submit" />';
+
+	}
+/*
+| diakId     | int(10) unsigned              | NO   | MUL | NULL    |       |                                                                                                                              
+| statusz    | enum('igazolt','igazolatlan') | YES  |     | NULL    |       |                                                                                                                              
+| dbHianyzas | tinyint(3) unsigned           | YES  |     | NULL    |       |                                                                                                                              
+| dt         | date                          | YES  |     | NULL    |       |              
+*/	
+
+	echo '</fieldset>'."\n";
+	formEnd();
+    }
+
+    function putDiakExportForm($ADAT) {
+	echo "\n\n";
+	formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=export&f=diakExport'), 'class'=>'diak'));
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	echo '<input type="submit" value="'._EXPORT.'" class="onClickUpdate2" />'."\n";
+	formEnd();
+
+    }
+
+    function putDiakNyomtatForm($osztalyId,$diakId) {
+	echo "\n\n";
+	formBegin(array('method'=>'post', 'action'=>href('index.php?page=naplo&sub=nyomtatas&f=diakAdatlap'), 'class'=>'diak'));
+	if (isset($diakId)) echo '<input type="hidden" name="diakId" value="'.$diakId.'" />'."\n";
+	else echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
+	echo '<input type="submit" value="'._PRINT.'" class="onClickUpdate2" />'."\n";
+	formEnd();
+    }
+
+
+    function putDiaktorol($ADAT) {
+	formBegin(array('method'=>'post', 'class'=>'diak'));
+
+	echo '<fieldset><legend>'._JOGVISZONY_TOROL.'</legend>'."\n";
+	echo '<h1>'._JOGVISZONY_TOROL.'</h1>'."\n";
+	echo '<input type="hidden" name="action" value="diakTorol" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+	echo '<input type="submit" value="'._TOROL.'" title="'._BIZTOS_TORLI.'" class="confirm" />'."\n";
+	echo '</fieldset>';
+
+	formEnd();
+    }
+
+    function putSuliXRESTForm($ADAT) {
+	formBegin(array('method'=>'post', 'class'=>'diak rest'));
+	echo '<fieldset><legend>'._FELHASZNALOI_AZONOSITO.'</legend>'."\n";
+
+	echo '<h1>'._FELHASZNALOI_AZONOSITO.'</h1>';
+
+	echo '<input type="hidden" name="action" value="sulixREST" />';
+	echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />';
+
+	echo '<input title="'._BIZTOSAN_LETREHOZ_E.'" class="confirm" id="createAccount" type="submit" name="createAccount" value="'._AZONOSITO_LETREHOZASA.'" />'."\n";
+	echo '<input title="'._BIZTOSAN_TOROL_E.'" class="confirm" id="deleteAccount" type="submit" name="deleteAccount" value="'._AZONOSITO_TORLESE.'" />'."\n";
+
+	echo '</fieldset>'."\n";
+	formEnd();
+
+    }
+
+
+?>

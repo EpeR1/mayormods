@@ -1,0 +1,165 @@
+%!pdfLaTeXA4 pdf
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[a4paper]{geometry} % A4-os méret
+\usepackage[utf8]{inputenc} % UTF-8 kódolású forrás
+\usepackage{t1enc}
+\usepackage[magyar]{babel} % magyar elválasztási szabályok
+\frenchspacing % a magyar tipográfiai szabályoknak megfelelő szóközök írásjelek után
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\textheight 23cm
+\def\mayor{%
+\font\mayorfnt=cmsl8%
+\font\Mayorfnt=cmsl12
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+\cfoot{\small \copyright\mayor\ elektronikus napló - Nyomtatva: %$ev. %$hoNev %$nap.}\lhead{\small %$intezmenynev}
+\rhead{\small Tanulói adatlap}
+
+\begin{document}
+\setlength{\parindent}{0em}
+\setlength{\tabcolsep}{3pt} % cellpadding
+\renewcommand{\arraystretch}{1.2}
+
+%{diak
+\begin{tabularx}{312pt}{| >{\sffamily}r >{\slshape}X |}
+\hline
+\multicolumn{2}{|c|}{\sffamily Családinév / Utónév}\\
+\multicolumn{2}{|c|}{\large\bfseries %$viseltCsaladinev \qquad %$viseltUtonev}\\
+\hline
+\multicolumn{2}{l}{\sffamily\bfseries\slshape Tanuló adatai\vbox to 16pt{}}\\
+\hline
+Születési idő: & %$szuletesiEv. %$szuletesiHoNev %$szuletesiNap.\\
+Születési hely: & %$szuletesiHely\\
+Anyja neve: & %$anyaNev\\
+Állampolgársága / Neme: & %$allampolgarsag / %$nem\\
+Jogviszony: & %$jogviszonyKEv. %$jogviszonyKHoNev %$jogviszonyKNap%?jogviszonyVEv|--%$jogviszonyVEv.  %$jogviszonyVHoNev %$jogviszonyVNap.|.%? \\
+TAJ: & %$tajSzam\\
+Diákigazolványszám: & %$diakigazolvanySzam\\
+Személyi igazolvány szám: & %$szemelyiIgazolvanySzam\\
+Tartózkodási okirat szám: & %$tartozkodasiOkiratSzam\\
+Adóazonosító: & %$adoazonosito\\
+\hline
+\end{tabularx}\hspace*{2pt}\begin{tabularx}{104pt}{| >{\sffamily}r >{\slshape}X |}
+\hline
+\multicolumn{2}{|c|}{\sffamily Oktatási azonosító:}\\
+\multicolumn{2}{|c|}{\large\bfseries %$oId}\\
+\hline
+\multicolumn{1}{r}{\sffamily Osztály:\vbox to 16pt{}}&\multicolumn{1}{l}{\slshape %$osztalyJel}\\
+\hline
+\multicolumn{2}{|c|}{\sffamily Jogviszony:}\\
+&\\
+\multicolumn{2}{|l|}{\sffamily %$jvDt0}\\
+\multicolumn{2}{|r|}{\slshape %$jvStat0}\\
+\multicolumn{2}{|l|}{\sffamily %$jvDt1}\\
+\multicolumn{2}{|r|}{\slshape %$jvStat1}\\
+\multicolumn{2}{|l|}{\sffamily %$jvDt2}\\
+\multicolumn{2}{|r|}{\slshape %$jvStat2}\\
+\multicolumn{2}{|l|}{\sffamily %$jvDt3}\\
+\multicolumn{2}{|r|}{\slshape %$jvStat3}\\
+%%%\multicolumn{2}{|l|}{\sffamily %$jvDt4}\\
+%%%\multicolumn{2}{|r|}{\slshape %$jvStat4}\\
+\hline
+\end{tabularx}
+
+\vspace*{10pt}
+{\sffamily\bfseries\slshape Tanuló elérhetősége}
+
+\begin{tabularx}{418pt}{| >{\sffamily}r >{\slshape}l<{\hspace*{4pt}} | >{\sffamily}r >{\slshape}X |}
+\hline
+Lakhely: &\multicolumn{3}{l|}{\slshape %?lakhelyHelyseg|%$lakhelyIrsz %$lakhelyHelyseg, %$lakhelyKozteruletNev %$lakhelyKozteruletJelleg %$lakhelyHazszam %$lakhelyEmelet %$lakhelyAjto|%? }\\
+Tartózkodási hely: & \multicolumn{3}{l|}{\slshape %?tartHelyseg|%$tartIrsz %$tartHelyseg, %$tartKozteruletNev %$tartKozteruletJelleg %$tartHazszam %$tartEmelet %$tartAjto|%? }\\
+\hline
+Telefonszám: & \makebox[114pt]{%$telefon} & Mobil: & %$mobil \\
+\hline
+E-mail: &\multicolumn{3}{l|}{\slshape %$email}\\
+\hline
+\end{tabularx}
+
+\vspace*{10pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{208pt}{| >{\sffamily}r >{\slshape}X |}
+\multicolumn{2}{l}{{\sffamily\slshape\bfseries Anya adatai}\hfill %$anyaStat}\\
+\hline
+Név: & %$anyanevElotag %$anyacsaladinev %$anyautonev\\
+\hline
+\sffamily Lakcím: & %$anyacimIrsz %$anyacimHelyseg\\
+\multicolumn{2}{|r|}{\slshape %$anyacimKozteruletNev %$anyacimKozteruletJelleg %$anyacimHazszam %$anyacimEmelet %$anyacimAjto}\\
+\hline
+Telefon: & %$anyatelefon\\
+Mobil: & %$anyamobil\\
+E-mail: & %$anyaemail\\
+\hline
+Születési év: & %$anyaszuletesiEv\\
+Foglalkozás: & %$anyafoglalkozas\\
+Munkahely: & %$anyamunkahely\\
+\hline
+\multicolumn{2}{l}{\vbox to 16pt{}{\sffamily\bfseries\slshape Gondviselő adatai}\hfill %$gondviseloStat}\\
+\hline
+Név: & %$gondviselonevElotag %$gondviselocsaladinev %$gondviseloutonev\\
+\hline
+\sffamily Lakcím: & %$gondviselocimIrsz %$gondviselocimHelyseg\\
+\multicolumn{2}{|r|}{\slshape %$gondviselocimKozteruletNev %$gondviselocimKozteruletJelleg %$gondviselocimHazszam %$gondviselocimEmelet %$gondviselocimAjto}\\
+\hline
+Telefon: & %$gondviselotelefon\\
+Mobil: & %$gondviselomobil\\
+E-mail: & %$gondviseloemail\\
+\hline
+Születési év: & %$gondviseloszuletesiEv\\
+Foglalkozás: & %$gondviselofoglalkozas\\
+Munkahely: & %$gondviselomunkahely\\
+\hline
+\end{tabularx}\hspace*{2pt}\begin{tabularx}{208pt}{| >{\sffamily}r >{\slshape}X |}
+\multicolumn{2}{l}{{\sffamily\slshape\bfseries Apa adatai}\hfill %$apaStat}\\
+\hline
+Név: & %$apanevElotag %$apacsaladinev %$apautonev\\
+\hline
+\sffamily Lakcím: & %$apacimIrsz %$apacimHelyseg\\
+\multicolumn{2}{|r|}{\slshape %$apacimKozteruletNev %$apacimKozteruletJelleg %$apacimHazszam %$apacimEmelet %$apacimAjto}\\
+\hline
+Telefon: & %$apatelefon\\
+Mobil: & %$apamobil\\
+E-mail: & %$apaemail\\
+\hline
+Születési év: & %$apaszuletesiEv\\
+Foglalkozás: & %$apafoglalkozas\\
+Munkahely: & %$apamunkahely\\
+\hline
+\multicolumn{2}{l}{\vbox to 16pt{}{\sffamily\bfseries\slshape Nevelő adatai}\hfill %$neveloStat}\\
+\hline
+Név: & %$nevelonevElotag %$nevelocsaladinev %$neveloutonev\\
+\hline
+\sffamily Lakcím: & %$nevelocimIrsz %$nevelocimHelyseg\\
+\multicolumn{2}{|r|}{\slshape %$nevelocimKozteruletNev %$nevelocimKozteruletJelleg %$nevelocimHazszam %$nevelocimEmelet %$nevelocimAjto}\\
+\hline
+Telefon: & %$nevelotelefon\\
+Mobil: & %$nevelomobil\\
+E-mail: & %$neveloemail\\
+\hline
+Születési év: & %$neveloszuletesiEv\\
+Foglalkozás: & %$nevelofoglalkozas\\
+Munkahely: & %$nevelomunkahely\\
+\hline
+\end{tabularx}
+
+\vspace*{10pt}
+{\sffamily\bfseries\slshape Egyéb adatok}
+
+\begin{tabularx}{418pt}{| >{\sffamily}r >{\slshape}l<{\hspace*{4pt}} | >{\sffamily}r >{\slshape}X |}
+\hline
+Törvényes képviselő:&\multicolumn{3}{l|}{\slshape %$torvenyesKepviselo}\\
+\hline
+Szociális helyzet: &\multicolumn{3}{l|}{\slshape %$szocialisHelyzet}\\
+Fogyatékosság: &\multicolumn{3}{l|}{\slshape %$fogyatekossag}\\
+\hline
+Finanszírozás: & \makebox[114pt]{%$penzugyiStatusz\hfill} & Gondozási szám: & %$gondozasiSzam \\
+\hline
+\end{tabularx}
+
+\newpage
+
+%}diak
+
+\end{document}

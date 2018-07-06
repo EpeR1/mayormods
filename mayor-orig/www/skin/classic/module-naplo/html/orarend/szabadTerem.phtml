@@ -1,0 +1,63 @@
+<?php
+
+    function putOrarend($ADAT) {
+
+	global $aHetNapjai;
+
+	if (is_array($ADAT['szabadTermek'])) {
+		$T = $ADAT['szabadTermek'];
+		$minOra=1;$maxOra=0;
+		$NAPOK = array();
+		foreach($T as $dt => $ORA) {
+		    if(!in_array($dt,$NAPOK)) $NAPOK[] = $dt;
+		    foreach ($ORA as $ora => $TERMEK) {
+			$X[$ora][$dt] = $TERMEK;
+			if ($maxOra<$ora) $maxOra = $ora;
+			if ($minOra>$ora) $minOra = $ora;
+		    }
+		}
+		echo '<h2 class="toPrint">'.$ADAT['toPrint'].'</h2>';
+
+		echo '<table class="orarend" align="center">'."\n";
+		echo '<thead>';
+		echo '<tr><th></th>';
+			foreach ($NAPOK as $dt) { // FIXME (getMaxNap)
+			    $nap = date('w',strtotime($dt));
+			    $_th_class = ($ADAT['orarend']['napok'][$nap]['megjegyzes']=='') ? '': 'spec';
+			    echo '<th class="'.$_th_class.'">';
+				//echo '<span title="'.$ADAT['orarend']['napok'][$nap]['dt'].'/'.$ADAT['orarend']['napok'][$nap]['het'].'">';
+				echo $aHetNapjai[($nap-1)];
+				echo ' '.$dt;
+			    echo '</th>';
+			}		
+    		echo '</tr>';
+		echo '</thead>'."\n";
+		
+		echo '<tbody>'."\n";
+		for($ora=$minOra; $ora<=$maxOra; $ora++) {
+		    echo '<tr>';
+			echo '<th>'.$ora.'</th>';
+			foreach ($NAPOK as $dt) {
+			    echo '<td>';    
+				for($i=0; $i<count($X[$ora][$dt]); $i++) {
+				    $_teremId = $X[$ora][$dt][$i];
+					if ($_teremId!='') {
+					    echo '<span title="'.$_targyJel.' '.$_osztalyJel.' ('.$ADAT['tankorok'][$_T['tankorId']][0]['tankorId'].')" >';
+					    echo $ADAT['termek'][$_teremId]['leiras'];
+					    echo '</span>';
+					    if ($i<count($X[$ora][$dt])-1) echo ', ';
+					}
+				}
+			    echo '</td>'."\n";
+			}
+		    echo '</tr>'."\n";
+		}
+		echo '</tbody>';
+		echo '</table>'."\n\n<!-- EOT -->\n\n";
+	}
+
+
+    }
+
+
+?>

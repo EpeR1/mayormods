@@ -1,0 +1,65 @@
+<?php
+
+    function putTankorLista($ADAT) {
+
+	echo '<div style="display: none;" id="infodiv">
+	<div id="infodivheader"><span id="infodivclose">X</span>'._TANMENET_RESZLETEI.'</div>';
+	    formBegin(array('action'=>href('index.php?page=naplo&sub=tanmenet&f=tanmenetInfo'), 'class'=>"onSubmitUpdate", 'id'=>"inform"));
+	    echo '<input type="text" name="tanmenetId" id="informTanmenetId" value="" />'."\n";
+	    formEnd();
+	echo '</div>'."\n";
+
+	echo '<table class="tanmenet">';
+	echo '<tr>';
+	    echo '<th>'._TANKORNEV.'</th>';
+	    echo '<th>'._TANMENET.'</th>';
+	echo '</tr>'."\n";
+	foreach ($ADAT['tankorok'] as $key => $tAdat) {
+	    $sClass = kisbetus(ekezettelen($ADAT['tanmenetAdat'][ $ADAT['tankorTanmenet'][$tAdat['tankorId']] ]['statusz']));
+	    echo '<tr class="'.$sClass.'">';
+	    echo '<td class="nev tankorAdat" data-tankorid="'.$tAdat['tankorId'].'">'.$tAdat['tankorNev'].' ('.$tAdat['tankorId'].')'.'</td>'."\n";
+
+	    echo '<td class="tanmenet">';
+	    formBegin(array('class'=>'tanmenet'));
+	    echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarId'].'" />'."\n";
+	    echo '<input type="hidden" name="tankorId" value="'.$tAdat['tankorId'].'" />'."\n";
+	    echo '<input type="hidden" name="action" value="hozzarendeles" />'."\n";
+		echo '<select name="tanmenetId" class="onChangeUpdateGomb '.$sClass.'">'."\n";
+		echo '<option value=""> - </option>'."\n";
+		$gomb = 'info'; // módosítható, vagy csak megnézhető a tanmenet?
+		foreach ($ADAT['tanmenetek'][ $tAdat['targyId'] ] as $key => $tanmenetAdat) {
+		    $class = kisbetus(ekezettelen($tanmenetAdat['statusz'])); 
+		    if ($ADAT['tankorTanmenet'][$tAdat['tankorId']] == $tanmenetAdat['tanmenetId']) {
+			echo '<option value="'.$tanmenetAdat['tanmenetId'].'" selected="selected" class="'.$class.'">';
+			echo $tanmenetAdat['tanmenetNev'].' - '.$tanmenetAdat['tanarNev'].' ('.$tanmenetAdat['tanmenetId'].') - '.$tanmenetAdat['statusz'];
+			echo '</option>'."\n";
+			if ($tanmenetAdat['modosithato']) $gomb = 'modosit';
+		    } else {
+			echo '<option value="'.$tanmenetAdat['tanmenetId'].'" class="'.$class.'">'
+			    .$tanmenetAdat['tanmenetNev'].' - '.$tanmenetAdat['tanarNev'].' ('.$tanmenetAdat['tanmenetId'].') - '.$tanmenetAdat['statusz']
+			    .'</option>'."\n";
+		    }
+		}
+		echo '</select>'."\n";
+		echo '<div class="submitContainer">';
+		echo '<input type="submit" name="info" class="info" value="'._INFO.'" />'."\n";
+		echo '<input type="submit" name="modosit" class="modosit" value="'._MODOSIT.'" />'."\n";
+		if (__MODOSITHAT) {
+		    echo '<input type="submit" name="hozzarendeles" value="'._HOZZARENDELES.'" />'."\n";
+		    if (__TANAR) {
+			echo '<input type="submit" name="masolas" value="'._UJ_A_KIVALASZTOTT_ALAPJAN.'" />'."\n";
+			echo '<input type="submit" name="uj" value="'._UJ_LETREHOZASA.'" />'."\n";
+		    }
+		}
+		echo '</div>';
+	    formEnd();
+	    echo '</td>';
+
+	    echo '</tr>'."\n";
+
+	}
+	echo '</table>'."\n";
+
+    }
+
+?>

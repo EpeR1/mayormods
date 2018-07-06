@@ -1,0 +1,15 @@
+
+select
+        trim(concat_ws(' ',viseltNevElotag,viseltCsaladiNev,viseltUtonev)) as nev,
+	substring_index(substring(dn,5),',',1) as userAccount,
+	'1212' as jelszo,
+	substring_index(substring_index(dn,',ou=diak',1),'=',-1) as kategoria,
+	oId as studyId
+    from diak
+    where dn like '%ou=7b%'
+    into outfile '/tmp/7b.dat';
+
+select trim(concat_ws(' ',viseltNevElotag,viseltCsaladiNev,viseltUtonev)) as nev,
+substring_index(substring(dn,5),',',1) as userAccount, '1212' as jelszo,
+'diák' as kategoria, oId as studyId
+from diak where dn like '%ou=7b%' into outfile '/tmp/7b.dat';

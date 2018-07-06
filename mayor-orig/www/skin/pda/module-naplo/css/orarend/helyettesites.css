@@ -1,0 +1,29 @@
+@media screen {
+
+table.helyettesitesek {
+    background-color: #999999; width:100%;
+    border-collapse: collapse;
+}
+table.helyettesitesek tr {
+    background-color: #dddddd;
+}
+table.helyettesitesek tbody tr td {
+    background-color: white;
+}
+table.helyettesitesek tr.plusz td {
+    background-color: #334450; color: white;
+    font-style: italic;
+}
+table.helyettesitesek tfoot tr th {
+    display:none;
+    background-color: white;
+    text-align: right;
+    font-size:x-small;
+    font-weight:lighter;
+    color: #aaaaaa;
+}
+table.helyettesitesek thead tr th { border-bottom: solid 2px;}
+
+table.helyettesitesek td,table.helyettesitesek th {
+    border: solid 1px black;
+}

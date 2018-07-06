@@ -1,0 +1,37 @@
+%!függvény kiterjesztés
+Dt: %$nyomtatasDt
+Intézmény: %$intezmenyNev
+OM: %$intezmenyOMKod
+Irsz: %$intezmenyCimIrsz
+Helység: %$intezmenyCimHelyseg
+Közterület-név: %$intezmenyCimKozteruletNev
+Közterület-jelleg: %$intezmenyCimKozteruletJelleg
+Házszám: %$intezmenyCimHazszam
+Telefon: %$intezmenyTelefon
+Honlap: %$intezmenyHonlap
+Email: %$intezmenyEmail
+Fax: %$intezmenyFax
+Negyedév: %$negyedev
+Év: %$ev
+Hó: %$honap
+Hó név: %$hoNev
+Nap: %$nap
+
+%{diak
+    Diák neve: %$diakNev    Osztály: %$osztaly
+    Oktatási azonosító: %$oktatasiAzonosito
+    Törzslapszám: %$torzslapSzam
+%{targy
+	Tárgy neve: %$targyNev
+%{szempont
+	    %$szempont
+%{minosites
+		%?elsoValasztott|Első választott|Nem első%?
+		%?tobbedikValasztott|Többedik választott|Nem többedik%?
+		%?valasztott|X|O%? %$minosites
+%}minosites
+		%$egyediMinosites
+%}szempont
+	Tárgy minősítés: %$targyMinosites
+%}targy
+%}diak

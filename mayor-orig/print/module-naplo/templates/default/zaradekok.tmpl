@@ -1,0 +1,37 @@
+%!pdfLaTeXA4 pdf
+%
+% Záradékok, bejegyzések
+%
+\documentclass[a4paper,10pt,twoside]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{t1enc}
+\usepackage[magyar]{babel}
+\frenchspacing
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\def\mayor{%
+\font\mayorfnt=cmsl8%
+\font\Mayorfnt=cmsl12
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+
+\lhead{\small %$tanevJele - %$osztalyJele}
+\rhead{\small Bejegyzések, záradékok}
+\cfoot{\small %$intezmenyNev \\ \copyright\mayor\ elektronikus napló - Nyomtatva: %$nyomtatasDt}
+
+\begin{document}
+
+%{diak
+\begin{center}{\bfseries\large %$diakNev}\end{center}\nopagebreak
+%?zaradek|\begin{description}|%?
+%{zaradek
+ \item [záradék %$sorszam] \hfill{\slshape %$dt}\linebreak %$szoveg
+%}zaradek
+%?zaradek|\end{description}|%?
+%?bejegyzes|\begin{description}|%?
+%{bejegyzes
+ \item [%?szovFokozat|%$szovFokozat|%$tipus%?] \hfill{\slshape %$beirasDt}\linebreak %$szoveg %?tanarNev|(%$tanarNev)|%?
+%}bejegyzes
+%?bejegyzes|\end{description}|%?
+%}diak
+
+\end{document}

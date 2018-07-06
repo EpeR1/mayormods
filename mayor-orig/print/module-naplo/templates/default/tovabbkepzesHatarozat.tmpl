@@ -1,0 +1,128 @@
+%!pdfLaTeXA4 pdf
+%
+%
+\documentclass[8pt]{article}
+\usepackage[a4paper]{geometry} % A4-es méret
+\usepackage[utf8]{inputenc} % UTF-8 kódolású forrás
+\usepackage{t1enc}
+\usepackage[magyar]{babel} % magyar elválasztási szabályok
+\frenchspacing % a magyar tipográfiai szabályoknak megfelelő szóközök írásjelek után
+\usepackage{enumitem}
+\usepackage{fancyhdr} % Fejléc és lábléc kezelés
+\pagestyle{fancy}
+\def\mayor{%
+\font\mayorfnt=cmsl4%
+\font\Mayorfnt=cmsl6
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+\renewcommand{\footnotesize}{\fontsize{6pt}{8pt}\selectfont}
+%\addtolength{\skip\footins}{2mm}
+%\addtolength{\textheight}{16mm}
+%\addtolength{\textwidth}{30mm}
+\setlength{\footskip}{26pt}
+\setlength{\headsep}{24pt}
+\lhead{\small %$intezmenyNev}
+\rhead{\small %$tanev}
+\lfoot{\scriptsize\copyright\mayor\ elektronikus napló - Nyomtatva: %$nyomtatasDt}
+\rfoot{}%\scriptsize\thepage . oldal}
+\cfoot{}
+\begin{document}
+
+\vspace{16pt}\noindent
+Tisztelt Igazgató Úr!
+
+\vspace{16pt}\noindent
+A mai napon hivatalosan bejelentem, hogy következő tanévben a 277/1997.(XII.22.) Kormányrendelet alapján részt kívánok venni 
+a pedagógusok továbbképzési rendszerében. Egyben kérem felvételemet a következő tanév beiskolázási tervébe az alábbiak szerint.
+
+\vspace{16pt}\noindent
+1. A pedagógus-továbbképzés választott formája (X jelölés):
+
+\begin{itemize}
+\item[$\circ$] legalább 120 órás továbbképzésen való részvétel az előírt tanulmányi követelmények teljesítésével,
+\item[$\circ$] további egyetemi vagy főiskolai képzésben szerzett második vagy további oklevél megszerzésével (pl. szakvizsgával),
+\item[$\circ$] az első pedagógus oklevél megszerzésével (szakmai elméleti, szakmai előkészítő tárgyat oktató pedagógus esetén),
+\item[$\circ$] a nevelő és oktató munkát segítő, az Országos Képzési Jegyzékben szereplő felsőfokú szakképzettség megszerzésével.
+\end{itemize}
+
+\vspace{16pt}\noindent
+2. A tervezett továbbképzés
+
+\vspace{10pt}
+\begin{description}[font=\mdseries, labelindent=\parindent, itemsep=2pt, parsep=0pt, partopsep=0pt, topsep=0pt, leftmargin=2cm, style=nextline]
+\nopagebreak[4]%%
+\item[megnevezése:]\itshape %$tovabbkepzesNev
+\item[képző intézménye:] %$tovIntNev
+\item[várható befejezése:] %$igDt
+\item[óraszáma:] %$oraszam óra
+\end{description}
+
+\vspace{16pt}
+Tudomásul veszem, hogy a felvételről vagy elutasításról az igazgató írásban fog értesíteni. A beiskolázási tervbe való felvétellel 
+kapcsolatban munkaügyi jogvitának van helye. A továbbképzési program az éves beiskolázási tervekre való lebontás során valósul meg, 
+amelyet minden évben az igazgató készít el.
+
+\vspace{30pt}\noindent
+%$intezmenyCimHelyseg, %$nyomtatasDatumStr
+
+\vspace{45pt}
+\begin{tabular}{cc}
+\hspace{8cm}\ &\rule{4.5cm}{0.1pt}\\
+&%$tanarNev\\
+&\slshape\scriptsize tanár\\
+\end{tabular}
+
+\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+\noindent %$tanarNev
+
+\vspace{6pt}\noindent
+%$intezmenyNev
+
+\vspace{6pt}\noindent
+Született: %$szuletesiHely, %$szuletesiIdo
+
+\vspace{6pt}\noindent
+Anyja neve:
+
+\vspace{6pt}\noindent
+Lakhelye:
+
+\vspace{6pt}\noindent
+Ügyintéző:
+
+\vspace{6pt}\noindent
+Iktatószám:
+
+\vspace{16pt}
+\begin{center}
+{\large\bfseries Határozat}
+\end{center}
+\vspace{16pt}
+
+
+\noindent \rule{4.5cm}{0.1pt} dátummal Ön bejelentette, hogy a következő tanévben részt kíván venni a pedagógusok kötelező továbbképzési rendszerében, és kérte felvételét a következő tanév beiskolázási tervébe.
+
+Hivatalosan értesítem, hogy a %$tanev tanévi beiskolázási tervbe való jelentkezését elfogadom. Az Ön által választott, a következő tanév beiskolázási tervében jóváhagyott továbbképzés: 
+
+\vspace{16pt}
+\begin{description}[font=\mdseries, labelindent=\parindent, itemsep=2pt, parsep=0pt, partopsep=0pt, topsep=0pt, leftmargin=2cm, style=nextline]
+\nopagebreak[4]%%
+\item[A továbbképzés megnevezése:]\itshape %$tovabbkepzesNev
+\item[A továbbképző intézmény neve:] %$tovIntNev
+\item[A továbbképzés várható befejezése:] %$igDt
+\item[A továbbképzés óraszáma:] %$oraszam óra
+\end{description}
+
+\vspace{30pt}
+Továbbképzésének finanszírozását az intézmény nevelőtestülete által 2013-ban elfogadott továbbképzési programunkban leírtak szerint biztosítom. 
+Kérem, hogy továbbképzésével kapcsolatos lényeges eseményeket, esetleges változásokat mielőbb szíveskedjék bejelenteni!
+
+\vspace{45pt}\noindent
+%$intezmenyCimHelyseg, %$nyomtatasDatumStr
+
+\vspace{30pt}\slshape\scriptsize
+\begin{tabular}{cc}
+\hspace{8cm}\ &\rule{4.5cm}{0.1pt}\\
+&igazgató\\
+\end{tabular}
+
+\end{document}

@@ -1,0 +1,162 @@
+/*
+input[type=image]
+{
+background-image: url('/skin/classic/share/javascript/jquery-mobile/images/icons-36-white.png');
+-moz-background-size: 864px 18px;
+-o-background-size: 864px 18px;
+-webkit-background-size: 864px 18px;
+background-size: 810px 18px;
+}
+*/
+
+    span.teremId { font-style: italic; color: gray; }
+
+    table.tanarForm {
+	width:50%;
+	border-style: solid solid solid solid;
+	border-width: 1px 1px 2px 1px;
+	border-color: rgb(100,80,100);
+	margin-bottom: 20px;
+    }
+
+    table.tanarForm th {
+	background-color: rgb(140,20,100);
+	color: white;
+	height: 2em;
+    }
+
+    table.tanarForm td {
+	background-color: #ffffff;
+	text-align: center;
+    }
+
+
+    table.tanarForm select {
+	height: 160px;
+	width: 60%;
+    } 
+
+    table.hianyzoTanar {
+	border-style: solid ;
+	border-width: 1px;
+	border-color: purple;
+	background-color: #dddddd;
+	width: 95%;
+	margin-bottom:30px;
+    }
+
+    table.hianyzoTanar thead th {
+	background-color: rgb(100,100,200);
+	color: white;
+	height:2em;
+    }
+    table.hianyzoTanar tfoot th { background-color: #eeeeee; }
+    table.hianyzoTanar tfoot th input {
+	font-size:10px;
+    }
+
+    table.hianyzoTanar td {
+	background-color: white;
+	color: black;
+	padding: 0px 10px 0px 10px;
+    }
+
+    table.hianyzoTanar tr.elmarad td {
+	background-color: rgb(200,200,200);
+	color: rgb(140,140,140);
+    }
+
+    table.hianyzoTanar tbody tr:hover td {
+	background-color: rgba(128,0,128,0.2);
+    }
+    table.hianyzoTanar tbody tr td.info {
+	color:rgba(128,0,128,0.6);
+    }
+    table.hianyzoTanar tr td a.O { color: #aaaaaa; border-radius: 0px; font-size:12px; background-color: rgba(255,255,255,0.9); border: solid 1px #eeeeee; padding:0px 4px;}
+    table.hianyzoTanar tr td a.O:hover { color: white; background-color: rgb(50,60,80); border: solid 1px grey; padding:0px 4px;}
+
+
+/* ----------------------- */
+    table.mozgatas thead th {
+	background-color: purple;
+	color: white;
+	height:2em;
+    }
+    table.mozgatas tfoot th {
+	background-color: rgb(80,100,80);    
+    }
+    table.mozgatas tbody th {
+	background-color: rgb(80,20,80);
+	color: white;
+    }
+
+    table.mozgatas td {
+	background-color: rgb(200,200,180);
+	padding: 0px 10px 0px 10px;
+    }
+
+    table.mozgatas td.mozgatando {
+	background-color: rgb(220,200,180);
+    }
+    table.mozgatas td.utkozik {
+	background-color: rgb(160,160,160);
+    }
+    table.mozgatas td.nemMegtartott {
+	background-color: rgb(180,200,220);
+    }
+
+/* ---------------------- */
+
+    table.csere td {
+	background-color: rgb(200,200,190);
+	padding: 0px 10px 0px 10px;
+    }
+
+    table.csere th {
+	background-color: rgb(110,120,110);
+	color: white;
+	height: 2em;
+    }
+
+    table.csere td.mozgatando {
+	background-color: rgb(220,200,180);
+    }
+    table.csere td.orajavan {
+	background-color: rgb(160,200,140);
+    }
+    table.csere td.nemMegtartott {
+	background-color: rgb(180,200,220);
+    }
+
+/* ---------------------- */
+    table.keziBeallitas { background-color: #555550; }
+    table.keziBeallitas td { background-color: rgb(200,200,190); }
+    table.keziBeallitas th { background-color: rgb(140,150,160); color: white; height:2em;}
+/* ---------------------- */
+    
+    h2 { text-align: center; border: dotted black; border-width: 1px 0px; margin: 20px 50px;}
+    table.csereAttekintes { background-color: #555550; margin: 10px; text-align: center; margin: auto; }
+    table.csereAttekintes td { background-color: rgb(200,200,190); padding: 2px 20px; }
+    table.csereAttekintes th { background-color: rgb(140,150,160); color: white; }
+
+    #updateWindow { width: 80%; top: 10%; margin-top: auto; margin-bottom: auto; height: 80%; left: 50%; margin-left: -40%; }
+    #updateHeader { cursor: pointer; }
+
+    #updateForm { max-height: 95%; overflow: auto; }
+
+    table.haladasiNaplo {
+            background-color: rgb(50,60,80);
+            width: 98%;
+            font-size: 11px;
+    }
+    table.haladasiNaplo thead tr th{
+            background-color: rgb(50,60,80);
+            color: white;
+            border-bottom: solid 1px white;
+            height:1.5em;
+    }
+    table.haladasiNaplo tfoot tr th{
+            font-size: 10px;
+            color: white;
+    }
+    table.haladasiNaplo tr td{ padding:0.6em; background-color: #eee; }

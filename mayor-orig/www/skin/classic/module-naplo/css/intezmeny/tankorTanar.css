@@ -1,0 +1,39 @@
+form.tankor {
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-left: 0px;
+    padding-top: 0em;
+    padding-bottom: 1em;
+    margin-bottom: 2em;
+}
+form.tankor h2 {
+    padding-top:2px;
+    padding-left:2px;
+    background-color: rgb(60,60,80);
+    color: white;
+    border-bottom: solid 1px white;
+}
+form.tankor label {
+    padding-left:2em;
+}
+
+form.tankor input {
+    border: solid 1px blue;
+}
+
+form.tankor select, form.tankor option {
+    
+}
+
+form.tankor a { color: rgb(100, 149, 237); }
+form.tankor a:hover { color: rgb(110, 159, 247); }
+form.tankor a span { color: #555555; margin:1px;  padding-left:2px; padding-right: 2px; text-decoration: none;}
+form.tankor a:hover span { color:red; }
+
+form.tankor table.felosztas { width:100%; background-color: #eeeeee; border-spacing: 0px; }
+form.tankor table.felosztas th { background-color: rgb(100, 149, 237); padding: 5px 2px; border-bottom: solid 2px violet; color:white; }
+form.tankor table.felosztas td { background-color: ; padding: 2px 2px 2px 10px; }
+form.tankor table.felosztas tr:nth-child(odd) td { background-color: #fafafa; }
+form.tankor table.felosztas tr:hover td {  }
+
+select.vantanara { border: solid 1px lime;}

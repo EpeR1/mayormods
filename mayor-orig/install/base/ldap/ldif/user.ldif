@@ -1,0 +1,23 @@
+# ----------------------------------------
+# MaYoR keretrendszer - mayoradmin
+# ----------------------------------------
+
+dn: uid=mayoradmin,ou=egyeb,%BASEDN%
+uid: mayoradmin
+sn: MaYoR
+givenName: Admin
+cn: MaYoR Admin
+gecos: MaYoR Admin
+uidNumber: 3001
+gidNumber: 3001
+homeDirectory: /tmp
+userPassword: MayorJelszo
+objectClass: mayorPerson
+objectClass: person
+
+dn: cn=mayoradmin,ou=Groups,ou=egyeb,%BASEDN%
+cn: mayoradmin
+gidNumber: 3001
+memberUid: mayoradmin
+description:: QSBmZWxoYXN6bsOhbMOzIHNhasOhdCBjc29wb3J0amE=
+objectClass: posixGroup

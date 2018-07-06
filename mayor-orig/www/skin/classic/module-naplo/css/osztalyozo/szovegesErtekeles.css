@@ -1,0 +1,10 @@
+
+    form.ertekeles { background-color: rgb(255,255,255); margin: 4px 20px; padding: 10px 20px; border: solid black; border-width: 2px 0px 0px 0px; }
+    form.ertekeles h1 { font-size: 16px; text-align: center; color: white; background-color: rgb(40,60,80); margin: 0px 0px 2px 0px; padding: 2px; }
+    form.zaro h1 { background-color: rgb(120,60,40); }
+    form.ertekeles h2 { font-size: 14px; text-align: center; border: black solid; border-width: 1px 0px; margin: 0px; padding: 0px; }
+    form.ertekeles span.egyediMinosites { font-style: italic; }
+    form.ertekeles ol li { margin-top: 26px; }
+    form.ertekeles ol ul li { margin-top: 4px; }
+    form.ertekeles ol ul li input[type=text] { width: 95%; background-color: rgb(220,220,200); }
+    form.ertekeles input[type=submit] { width: 100%; background-color: #4a8; }

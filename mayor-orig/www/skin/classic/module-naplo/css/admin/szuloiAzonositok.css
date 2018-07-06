@@ -1,0 +1,12 @@
+
+    form.azonosito table {
+	margin: 0px auto; background-color: rgb(180,180,180); color: white
+    }
+    form.azonosito table th { background-color: rgb(140,140,140); }
+    form.azonosito table td { background-color: rgb(160,160,160); }
+    form.azonosito table td.azonosNev { background-color: rgb(40,120,80); }
+    form.azonosito table td.tobbszorosOid { background-color: rgb(120,40,40); }
+    form.azonosito table td.anya { background-color: #993333; }
+    form.azonosito table td.apa { background-color: #333399; }
+    form.azonosito table td.apa span.elhunyt,
+    form.azonosito table td.anya span.elhunyt { background-color: black; color: white; font-style: italic; padding: 8px 20px; }

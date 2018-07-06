@@ -1,0 +1,51 @@
+<?php
+
+    function putOraFelvetelForm($ADAT) {
+
+	formBegin(array('class'=>'pluszora'));
+	    echo '<input type="hidden" name="action" value="oraFelvetele" />';
+	    echo '<input type="hidden" name="tankorId" value="'.$ADAT['tankorId'].'" />';
+	    echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarId'].'" />';
+	    echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />';
+	    echo '<input type="hidden" name="ora" value="'.$ADAT['ora'].'" />';
+
+	    echo '<h2>'._TORLENDOK.'</h2>';
+	    echo '<ul>';
+	    for ($i=0; $i<count($ADAT['torlendoTankorok']); $i++) {
+		$T = $ADAT['torlendoTankorok'][$i];
+		echo '<li>'.$ADAT['tankorok'][$T['tankorId']][0]['tankorNev'].' ('.$T['oraId'].')</li>';
+	    }
+	    echo '</ul>';
+
+	    echo '<input type="submit" value="'._ORA_FELVETELE.'" class="confirm" title="'._ORA_FELVETELE_CONFIRM.'" />';
+	formEnd();
+    }
+
+    function putOrak($Orak, $title) {
+
+	global $napiMinOra, $napiMaxOra;
+
+	echo '<h2>'.$title.' '._ORAI.'</h2>';
+	echo '<ul class="pluszora">';
+
+	    for ($i = $napiMinOra; $i <= $napiMaxOra; $i++) {
+		echo '<li>';
+		    echo '<span class="oraszam">' . $i . '. ' . _ORA . '</span> ';
+		    if (is_array($Orak[$i])) {
+			if (is_array($Orak[$i][0])) {
+			    for ($j = 0; $j < count($Orak[$i]); $j++) {
+				echo '<span>' . $Orak[$i][$j]['tankorNev'] . '</span> ';
+			    }
+			} else {
+			    echo 'AJJAJJ';
+			}
+		    }
+		echo '</li>';
+	    }
+
+	echo '</ul>';
+
+    }
+
+
+?>

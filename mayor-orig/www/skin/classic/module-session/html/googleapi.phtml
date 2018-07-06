@@ -1,0 +1,45 @@
+<?php
+
+function putGoogleapiStatusz($ADAT) {    
+
+//    var_dump($ADAT);
+//    var_dump(_USERACCOUNT);
+//    var_dump(_POLICY);
+
+    if (__GOOGLEAPI_ENABLED==false) {
+        echo '<div id="googleapi" class="notActive"><span class="icon-remove-circle"></span>';
+        echo 'A Google azonosítás ki van kapcsolva. Kérj segítséget a rendszerüzemeltetőtől!';
+        echo '</div>';
+        return false;
+    }
+
+
+    if ($ADAT['googleapiStatusz'] == 1) {
+        echo '<div id="googleapi" class="valid"><span class="icon-ok-circle"></span>';
+	    echo '<img src="'.$ADAT['payload']['picture'].'"  style = "float:left; height:100%;" />';
+            echo 'Összekötve';
+            formBegin();
+                echo '<input type="hidden" name="action" value="googleapiRevoke" />';
+                echo '<input type="submit" value="visszavonás" />';
+            formEnd();
+        echo '</div>';
+    } else {
+	echo '<div id="googleapi" class="grant"><span class="icon-googleplus"></span>';
+	echo 'Engedélyezed?';
+	formBegin();
+	echo '<input type="hidden" name="action" value="googleGrant" >';
+	echo '<button type="button" id="googleLoginBtn" class="api"><span class="icon-googleplus"></span> Összeköt</button>';
+        formEnd();
+	echo '</div>';
+    }
+
+
+
+    formBegin(array('style'=>'text-align:center'));
+		echo '<input type="hidden" name="action" value="refresh" />';
+		echo '<input type="submit" value="frissítés" />';
+    formEnd();
+
+}
+
+?>

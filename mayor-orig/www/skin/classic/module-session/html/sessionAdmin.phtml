@@ -1,0 +1,57 @@
+<?php
+
+    function putSessionList($ADAT) {
+
+	echo '<table class="lista">'."\n";
+	
+	echo '<thead>'."\n";
+	    echo '<tr>';
+		echo '<th colspan="2">'._ACCOUNT.'</th>';
+		echo '<th>'._CN.'</th>';
+		echo '<th>'._POLICI.'</th>';
+		echo '<th>'._LOGINDT.'</th>';
+		echo '<th>'._ACTIVITY.'</th>';
+		echo '<th>'._IP.'</th>';
+		echo '<th>'._SESSION.'</th>';
+	    echo '</tr>'."\n";
+	echo '</thead>'."\n";
+	echo '<tfoot>'."\n";
+	    echo '<tr>';
+		echo '<th colspan="2">'._ACCOUNT.'</th>';
+		echo '<th>'._CN.'</th>';
+		echo '<th>'._POLICI.'</th>';
+		echo '<th>'._LOGINDT.'</th>';
+		echo '<th>'._ACTIVITY.'</th>';
+		echo '<th>'._IP.'</th>';
+		echo '<th>'._SESSION.'</th>';
+	    echo '</tr>'."\n";
+	echo '</tfoot>'."\n";
+	echo '<tbody>'."\n";
+	    foreach ($ADAT['session'] as $sAdat) {
+		echo '<tr>';
+		    echo '<th>';
+//var_dump($sAdat);
+			formBegin();
+			    echo '<input type="hidden" name="action" value="deleteSession" />'."\n";
+			    echo '<input type="hidden" name="delSessionID" value="'.$sAdat['sessionID'].'" />'."\n";
+			    echo '<input type="hidden" name="delPolicy" value="'.$sAdat['policy'].'" />'."\n";
+			    echo '<input type="submit" class="confirm" title="'._BIZTOS_TOROL.'" name="del" value="'._DELETE.'" />'."\n";
+			formEnd();
+		    echo '</th>';
+		    echo '<th>'.$sAdat['userAccount'].'</th>';
+		    echo '<td>'.$sAdat['userCn'].'</td>';
+		    echo '<td>'.$sAdat['policy'].'</td>';
+		    echo '<td>'.$sAdat['dt'].'</td>';
+		    echo '<td>'.$sAdat['activity'].'</td>';
+		    echo '<td>'.$sAdat['ip'].'</td>';
+		    echo '<td>'.$sAdat['sessionID'].'</td>';
+		echo '</tr>'."\n";
+	    }
+	echo '</tbody>'."\n";
+	
+	echo '</table>'."\n";
+    
+    }
+
+
+?>

@@ -1,0 +1,39 @@
+/*
+$color1="#CAE0F7";
+$color2="#9FBFD6";
+$color3="#2E5282";
+$color4="#434037";
+$color="#929493";
+*/
+
+h2 { margin:30pt 60pt 0pt 60pt; 
+    background-color: #2e5282;
+    color: white;
+    border-bottom: solid 1px #9FBFD6;
+}
+div.kosziline {
+    height:1pt;
+    margin: 0em 60pt; 
+    border-bottom: solid 1px #434037;
+}
+
+fieldset.koszi { margin: 1em 60pt; border: solid 1px #888;}                                                                                                                                                
+fieldset.koszi legend {                                                                                                                                                                                    
+    border: solid 1px #888;                                                                                                                                                                                
+    background-color: #eee;                                                                                                                                                                                
+    color: ;                                                                                                                                                                                               
+    padding: 0.1em 0.5em;                                                                                                                                                                                  
+    border-radius:5px;                                                                                                                                                                                     
+    text-align: right;                                                                                                                                                                                     
+    outline: 
+}                                                                                                                                                                                                          
+                                                                                                                                                                                                           
+fieldset.koszi:hover legend { background-color:  #9FBFD6;  }       
+
+fieldset.koszi input[type="submit"] { outline: 1px solid #2E5282; background-color: #2E5282; padding:1px 1em; margin: 1px; border: solid 1px white; color: white;  }
+fieldset.koszi input[type="submit"]:hover { outline: 1px solid #CAE0F7; background-color: #9FBFD6; padding:1px 1em; margin: 1px; border: solid 1px white; color: white;  }
+
+fieldset.koszi select option { outline: 1px solid #CAE0F7; }
+
+fieldset.koszi table {background-color: #dddddd;}
+fieldset.koszi table tr th {background-color: #eeeeee; padding: 1px 8px; border-bottom: solid 1px #2e5282;}

@@ -1,0 +1,108 @@
+
+    /* flex container */
+    div.hirnokDoboz {
+	width:90%; 
+	max-width: 800px;
+	background-color: #f8f8f8; 
+	padding:2px; 
+	border: solid 1px #ddd; 
+	border-radius: 2px;
+	margin-left: auto; margin-right:auto; 
+	margin-bottom:1em;
+	display:flex;
+	align-items: center;
+    }
+    /* special */
+    div.hirnokDoboz.uzeno {
+	align-items: flex-start;
+    }
+
+    /* flex item */
+    div.hirnokBadgeHolder {
+	/*height: 30px;*/
+	padding: 2px;
+	margin: 4px;
+    }
+    div.hirnokBadgeHolder span {
+	height:30px;
+	width:30px;
+	font-size:30px;
+	padding:4px;
+	margin:0px;
+	color: white;
+	background-color: cornflowerblue;
+	border-radius: 2px;
+    }
+    div.hirnokBadgeHolder a:hover span { background-color: rgba(255,0,100,0.5); }
+    div.hirnokBadgeHolder.jegy span { background-color: lightgreen; }
+    div.hirnokBadgeHolder.haladasiBeiratlan span { background-color: orange; }
+    div.hirnokBadgeHolder.zaroJegy span { background-color: gold; }
+    div.hirnokBadgeHolder.uzeno span { background-color: #3f51b5; }
+    div.hirnokBadgeHolder.bejegyzes span { background-color: #9c27b0; }
+    div.hirnokBadgeHolder.bejegyzes.bejegyzes_dicseret { background-color: red; }
+    div.hirnokBadgeHolder.haladasiOra span { background-color: #9c27b0; }
+
+    div.hirnokDoboz.uzeno div.hirnokBadgeHolder, div.hirnokDoboz.uzeno div.hirnokDt {
+	padding-top:8px;
+    }
+
+    div.hirnokDt {
+	font-size:smaller;	
+	padding-right: 2px;
+    }
+    div.hirnokDt a { color: black; }
+    div.hirnokDt a:hover { text-decoration: underline; }
+    div.hirnokDt span { color: #aaa; }
+    div.hirnokDt span a { color: #aaa; }
+    div.hirnokDt span a:hover { text-decoration: underline; }
+    div.hirnokText {
+	padding-left:6px;
+	padding-right:6px;
+	padding-top: 6px;
+	padding-bottom:6px;
+	border-left: solid 1px #aaa;
+	margin-left:2px;
+	margin:auto;
+	flex: 0 1 90%;
+    }
+
+    div.hirnokRight {
+	/*border-left: solid 1px #aaa;*/
+    }
+
+    div.hirnokFooter {flex-break: after; width:500px; background-color:#ddd; border-top:solid 1px black;}
+
+
+    div.hirnokSeparator {
+	color: #888;
+	max-width:150px;
+	margin:auto;
+	text-align:center;
+	padding:10px;
+/*	border-bottom: solid 1px #eee; */
+    }
+    div.hirnokSeparator {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+    }
+    div.hirnokSeparator:before, div.hirnokSeparator:after{
+	content: "";
+	flex: 1 1;
+	border-bottom: 1px solid #ddd;
+	margin: auto;
+    }
+    div.hirnokSeparator a { color:inherit; display:block;}
+    div.hirnokSeparator:hover { background-color: cornflowerblue; color:white; }
+
+
+/* teszt */
+    div.hirnokDoboz div.hirnokIkonKontener{ display:inline-flex; padding-left:1em; opacity: 0.2; visibility: hidden}
+    div.hirnokDoboz div.hirnokIkonKontener span { padding-left:4px; padding-right:4px;}
+    div.hirnokDoboz:hover div.hirnokIkonKontener{ display:inline-flex; padding-left:1em;  opacity: 1;
+  transition: visibility 0s, opacity 0.5s linear;
+visibility: visible;
+}
+    div.hirnokText a { color: #aaa; }
+    div.hirnokText a:hover { color:#111; cursor: hand }

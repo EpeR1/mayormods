@@ -1,0 +1,59 @@
+
+    table.toolBar { width: 100%; border-spacing: 0px; font-size:small;  }
+    table.toolBar form { margin: 0px; padding: 0px; width:100%; }
+    table.toolBar tr.first td.toolBarTitle, table.toolBar tr.first td.toolBarTool { background-color: #eeeeee; border-bottom: solid 2px rgb(152, 150, 185); padding:2px 4px; }
+    table.toolBar td.gap { border-spacing: 0px; }
+    table.toolBar td.toolBarTitle {
+	background-color: white;
+	width: 100%;
+	font-size: 10px;
+	font-weight: bold;
+	text-align: center;
+    }
+    #toolBarIntezmeny {
+	color: darkgrey;
+	font-size: 8px;
+	background-color: ;
+	border: solid 1px darkgrey;
+	border-radius:2px;
+	padding: 0px 4px;
+    }
+
+    table.toolBar td.toolBarTool { border: solid 0px #666699; margin: 0px; padding: 0px; }
+    table.toolBar td.toolBarTool table { border-spacing: 0px; background-color: ; }
+    table.toolBar td.toolBarTool table th {
+	background-color: rgb(90,133,184);
+	text-align: left;
+	color: white;
+	font-size:8px;
+        padding-left: 4px;
+
+	border-color: rgb(21,71,123);
+	border-width: 1px 0px;
+	border-style: solid;
+    }
+    table.toolBar input.toolSubmit { vertical-align: middle; border: 0px none; background-color: rgb(90,133,184); color: white; width:60px; }
+    table.toolBar td.toolBarTool select { border: 0px; }
+    table.toolBar th {
+	background-color: rgb(90,133,184);
+	text-align: center;
+	color: white;
+	font-size:8px;
+        padding-left: 4px;
+
+	border-color: rgb(21,71,123);
+	border-width: 1px 0px 1px 1px;
+	border-style: solid;
+    }
+    table.toolBar td table { margin: 0px;}
+    table.toolBar img { border: none; }
+
+    form.lapozo input {	font-size: 8px; border: solid 1px #555555; }
+
+    table.flipper input {color: white; border: none; background-color: lightblue; }
+    table.flipper input.step { background-color: rgb(100,80,60); }
+
+    div.beirasAdatok { text-align: center; }
+    div.beirasAdatok span { font-weight: bold; font-size: 10px; vertical-align: middle; }
+    div.beirasAdatok img { vertical-align: middle; }
+

@@ -1,0 +1,370 @@
+<?php
+/*
+    Module: naplo
+*/
+
+//    function putNapokForm($Napok, $napTipusok, $action, $Hetek = array()) {
+    function putNapokForm($ADAT) {
+
+	global $Honapok, $_TANEV;
+
+	$Napok = $ADAT['Napok']; $napTipusok = $ADAT['napTipusok']; $action = $ADAT['action']; $Hetek = $ADAT['Hetek'];
+	if (!is_array($Hetek)) $Hetek = array();
+
+	$ho = date('n',strtotime($Napok[0]['dt']));
+	$dow = date('w',strtotime($Napok[0]['dt']));
+
+	formBegin(array('class' => 'munkaterv'));
+
+	echo '<h2>'._EVES_MUNKATERV.' - '.$ADAT['munkaterv'][ $ADAT['munkatervId'] ]['munkatervNev'].' ('.$ADAT['munkatervId'].')</h2>'."\n";
+
+	echo '<input type="hidden" name="action" value="'.$action.'" />'."\n";
+	echo '<input type="hidden" name="munkatervId" value="'.$ADAT['munkatervId'].'" />'."\n";
+	if ($action == 'honapValasztas') echo '<input type="hidden" name="ho" value="'.$ho.'" />'."\n";
+	echo '<table class="munkaterv" align="center">'."\n";
+	echo '<thead>';
+	echo '<tr>';
+	    echo '<th colspan="7">';
+		if (
+		    (
+			($_TANEV['statusz'] == 'aktív' && __NAPLOADMIN)
+			||  (__VEZETOSEG && __FOLYO_TANEV)
+		    )
+		    && $action == 'honapValasztas'
+		) echo '<input type="submit" value="'._MODOSIT.'" />';
+		echo $Honapok[$ho-1];
+	    echo '</th>';
+	echo '</tr>'."\n";
+	echo '<tr>';
+	echo '</thead>';
+	echo '<tfoot>';
+	    echo '<tr>';
+		if ($action == 'munkatervModositas') echo '<th colspan="7"><input type="submit" value="'._OK.'" /></th>';
+		else echo '<th colspan="7" />';
+	    echo '</tr>';
+	echo '</tfoot>';
+	    for ($i = 1; $i < $dow; $i++) {
+		echo '<td>&nbsp;</td>';
+	    }
+	for ($i = 0; $i < count($Napok); $i++) {
+	    if ($ho != $_ho = date('n', strtotime($Napok[$i]['dt']))) {
+		$ho = $_ho;
+
+		$dow = date('w',strtotime($Napok[$i]['dt']));
+		if ($dow == 0) $dow = 7;
+		for ($j = $dow; $j < 8; $j++) {
+		    echo '<td>&nbsp;</td>';
+		}
+		echo '</tr>'."\n";
+		echo '</table>'."\n";
+		formEnd();
+
+		formBegin();
+		echo '<input type="hidden" name="action" value="'.$action.'" />'."\n";
+		echo '<input type="hidden" name="munkatervId" value="'.$ADAT['munkatervId'].'" />'."\n";
+		if ($action == 'honapValasztas') echo '<input type="hidden" name="ho" value="'.$ho.'" />'."\n";
+		echo '<table class="munkaterv" align="center">'."\n";
+		echo '<thead'."\n";
+		echo '<tr>';
+		    echo '<th colspan="7">';
+			if (
+			    (
+				($_TANEV['statusz'] == 'aktív' && __NAPLOADMIN)
+				||  (__VEZETOSEG && __FOLYO_TANEV)
+			    )
+			    && $action == 'honapValasztas'
+			) echo '<input type="submit" value="'._MODOSIT.'" />';
+			echo $Honapok[$ho-1];
+		    echo '</th>';
+		echo '</tr>';
+		echo '</thead>'."\n";
+		echo '<tfoot<tr><th colspan="7" /></tr></tfoot>'."\n";
+		echo '<tr>'."\n";
+		for ($j=1;$j<$dow;$j++) {
+		    echo '<td>&nbsp;</td>';
+		}
+	    } elseif (date('w',strtotime($Napok[$i]['dt']))==1) echo '<tr>';
+
+	    // A szemeszterek határának jelölése
+	    foreach ($_TANEV['szemeszter'] as $szemeszter => $szAdat) {
+		if ($szAdat['zarasDt'] == $Napok[$i]['dt']) {
+		    $fDb = 8;
+		    break;
+		}
+	    }
+//	    if ($fDb > 0) $fDb--;
+	    if ($fDb == 8) { $fDb--; $class = str_replace(' ', '', ekezettelen($Napok[$i]['tipus']));
+	    } elseif ($fDb == 7) { $fDb--; $class = 'felevZarasDt '.str_replace(' ', '', ekezettelen($Napok[$i]['tipus']));
+	    } elseif ($fDb > 0) { $fDb--; $class = 'felevZaras '.str_replace(' ', '', ekezettelen($Napok[$i]['tipus']));
+	    } else { $class = str_replace(' ', '', ekezettelen($Napok[$i]['tipus'])); }
+
+	    echo '<td class="'.$class.'">'."\n";
+
+		    echo $Napok[$i]['dt'];
+		    echo '<br />'."\n";
+		    if ($action == 'munkatervModositas') {
+			echo '<input type="hidden" name="dt[]" value="'.$Napok[$i]['dt'].'" />'."\n";
+			$SEL = array($Napok[$i]['tipus'] => ' selected="selected"');
+			echo '<select name="tipus[]">';
+			for ($n = 0; $n < count($napTipusok); $n++) {
+			    echo '<option value="'.$napTipusok[$n].'"'.$SEL[$napTipusok[$n]].'>'.$napTipusok[$n].'</option>'."\n";
+			}
+			echo '</select><br />'."\n";
+			echo '<input class="megjegyzes" type="text" name="megjegyzes[]" value="'.$Napok[$i]['megjegyzes'].'" />'."\n";
+			echo '<br />'."\n";
+			$SEL = array($Napok[$i]['orarendiHet'] => ' selected="selected" ');
+			echo '<select name="orarendiHet[]">'."\n";
+			    if ($Napok[$i]['tipus'] != 'tanítási nap') echo '<option value="0"> - </option>'."\n";
+			    for ($h = 0; $h < count($Hetek); $h++) {
+				echo '<option value="'.$Hetek[$h].'"'.$SEL[$Hetek[$h]].'>'.$Hetek[$h].'. '._ORARENDI_HET.'</option>'."\n";
+			    }
+			echo '</select>'."\n";
+			echo '<br />'."\n";
+			$SEL = array($Napok[$i]['csengetesiRendTipus'] => ' selected="selected" ');
+			echo '<select name="csengetesiRendTipus[]">'."\n";
+			    // if ($Napok[$i]['tipus'] != 'tanítási nap') echo '<option value="nincs"> - </option>'."\n";
+			    for ($h = 0; $h < count($ADAT['fields']['csengetesiRendTipus']); $h++) {
+				echo '<option value="'.$ADAT['fields']['csengetesiRendTipus'][$h].'"'.$SEL[ $ADAT['fields']['csengetesiRendTipus'][$h]  ].'>'.$ADAT['fields']['csengetesiRendTipus'][$h].' csengetés</option>'."\n";
+			    }
+			echo '</select>'."\n";
+		    } else {
+			echo $Napok[$i]['tipus'];
+			if (isset($Napok[$i]['megjegyzes']) && $Napok[$i]['megjegyzes'] != '') {
+			    echo '<br />'."\n";
+			    echo '<span>'.$Napok[$i]['megjegyzes'].'</span>';
+			}
+			if ($Napok[$i]['tipus'] == 'tanítási nap') {
+			    echo '<br />'."\n";
+			    echo '<span class="orarendiHet'.$Napok[$i]['orarendiHet'].'">'.$Napok[$i]['orarendiHet'].'. '._ORARENDI_HET.'</span>';
+			}
+			echo '<br />'."\n";
+			echo '<span>'.$Napok[$i]['csengetesiRendTipus'].' csengetés</span>';
+		    }
+	    echo '</td>'."\n";
+
+	    if (date('w',strtotime($Napok[$i]['dt']))==0) echo '</tr>';
+	}
+
+	if (0 != $dow=date('w',strtotime($Napok[$i-1]['dt']))) {
+	    for ($i=$dow+1;$i<8;$i++) {
+		echo '<td>&nbsp;</td>';
+	    }
+	    echo '</tr>'."\n";
+	}
+	echo '</table>'."\n";
+	formEnd();
+    }
+
+    function putNapokSzama($ADAT) {
+
+	$NapokSzama = $ADAT['NapokSzama']; $napTipusok = $ADAT['napTipusok'];
+
+	echo '<h2>'._NAPOK_SZAMA.' - '.$ADAT['munkaterv'][ $ADAT['munkatervId'] ]['munkatervNev'].' ('.$ADAT['munkatervId'].')</h2>';
+	echo '<table class="osszesites" align="center">';
+	echo '<tr>';
+	    echo '<th></th>';
+	    for ($i = 0; $i < count($napTipusok); $i++) {
+		echo '<th class="'.ekezettelen($napTipus[$i]).'">'.$napTipusok[$i].'</th>';
+	    }
+	    echo '<th class="osszesMunkanap">'._OSSZES_MUNKANAP.'</th>';
+    	echo '</tr><tr>';
+	    echo '<th>'._TENYLEGES.'</th>';
+	    for ($i = 0; $i < count($napTipusok); $i++) {
+		echo '<td class="'.ekezettelen($napTipusok[$i]).'">'.intval($NapokSzama[$napTipusok[$i]]).'</td>';
+	    }
+	    echo '<td class="osszesMunkanap">'.intval($NapokSzama['tanítási nap']+$NapokSzama['speciális tanítási nap']+$NapokSzama['tanítás nélküli munkanap']).'</td>';
+	echo '</tr>';
+	echo '<tr class="eloirt">';
+	    echo '<th>'._ELOIRT.'</th>';
+	    echo '<td colspan="2">'.$ADAT['munkaterv'][ $ADAT['munkatervId'] ]['tanitasiNap'].'</td>';
+	    echo '<td>'.$ADAT['munkaterv'][ $ADAT['munkatervId'] ]['tanitasNelkuliMunkanap'].'</td>';
+	    echo '<td></td>';
+	    echo '<td class="osszesMunkanap">'.($ADAT['munkaterv'][ $ADAT['munkatervId'] ]['tanitasiNap']+$ADAT['munkaterv'][ $ADAT['munkatervId'] ]['tanitasNelkuliMunkanap']).'</td>';
+	echo '</tr>';
+	echo '</table>';
+
+	echo '<p>'._VEGZOS_ZARAS_DT.': '. dateToString($ADAT['munkaterv'][ $ADAT['munkatervId'] ]['vegzosZarasDt']). '</p>';
+
+    }
+
+    function putNapokInit($ADAT, $Set = array('hide' => true)) {
+
+	$Hetek =  $ADAT['Hetek'];
+	formBegin(array('class'=>'openable init', 'id' => 'napokInit', 'style' => ($Set['hide']?'display: none;':''), 'action' => ''));
+	echo '<h2>'._NAPOKINIT.'</h2>'."\n";
+	echo '<input type="hidden" name="action" value="napokInit" />'."\n";
+
+//	if (is_array($Hetek) && count($Hetek) != 0) {
+//	    echo '<label for="hetek">'._ORARENDI_HET.'</label>'."\n";
+//	    echo '<p>';
+//	    for ($i = 0; $i < count($Hetek); $i++) {
+//		echo '<input type="checkbox" name="Hetek[]" value="'.$Hetek[$i].'" />';
+//		echo $Hetek[$i].'&nbsp;&nbsp;';
+//	    }
+//	    echo '</p>';
+//	} else {
+	    echo '<p>'._MAGYARAZAT.'</p>';
+	    echo '<label for="orarendiHetekSzama">'._ORARENDIHETEKSZAMA.'</label>'."\n";
+	    echo '<select id="orarendiHetekSzama" name="hetDb">';
+	    for ($i = 1; $i < 10; $i++) {
+		echo '<option value="'.$i.'">'.$i.'</option>';
+	    }
+	    echo '</select>';
+	    
+	    echo '<label for="tnsz">'._TANITASI_NAPOK_SZAMA.'</label>';
+	    echo '<select id="tnsz" name="tanitasiNap">';
+	    $SEL = array($ADAT['munkaterv'][1]['tanitasiNap'] => ' selected="selected" ');
+	    for ($i = 1; $i < 200; $i++) {
+		echo '<option value="'.$i.'"'.$SEL[$i].'>'.$i.'</option>';
+	    }
+	    echo '</select>';
+
+	    echo '<label for="tnmsz">'._TANITAS_NELKULI_MUNKANAPOK_SZAMA.'</label>';
+	    echo '<select id="tnmsz" name="tanitasNelkuliMunkanap">';
+	    $SEL = array($ADAT['munkaterv'][1]['tanitasNelkuliMunkanap'] => ' selected="selected" ');
+	    for ($i = 1; $i < 20; $i++) {
+		echo '<option value="'.$i.'"'.$SEL[$i].'>'.$i.'</option>';
+	    }
+	    echo '</select>';
+
+	    echo '<label for="vzdt">'._VEGZOS_ZARAS_DT.'</label>';
+		echo '<input type="text" class="date" id="vzdt" name="vegzosZarasDt" value="'.$ADAT['munkaterv'][1]['vegzosZarasDt'].'" />';
+//	}
+	echo '<br /><input type="submit" value="'._OK.'" />'."\n";
+	formEnd();
+
+    }
+
+    function putHetHozzarendelo($ADAT, $Set = array('hide' => true)) {
+
+	global $_TANEV;
+
+	formBegin(array('class'=>'openable init', 'id' => 'hetHozzarendeles', 'style' => ($Set['hide']?'display: none;':'')));
+	    echo '<h2>'._HETHOZZARENDELES.'</h2>';
+	    echo '<input type="hidden" name="action" value="hetHozzarendeles" />'."\n";
+	    echo '<input type="hidden" name="munkatervId" value="'.$ADAT['munkatervId'].'" />'."\n";
+		echo '<p>'._HH_MAGYARAZAT.'</p>';
+		echo '<label for="orarendiHetekSzama">'._ORARENDIHETEKSZAMA.'</label>'."\n";
+		echo '<select id="orarendiHetekSzama" name="hetDb">';
+		for ($i = 1; $i < 10; $i++) {
+		    echo '<option value="'.$i.'">'.$i.'</option>';
+		}
+		echo '</select>';
+    
+		echo '<label for="tolDt">'._DATUM.'</label>';
+		echo '<input type="text" class="date" id="tolDt" name="tolDt" value="'.$_TANEV['kezdesDt'].'" /> - ';
+		echo '<input type="text" class="date" name="igDt" value="'.$_TANEV['zarasDt'].'" />';
+	    echo '<input type="submit" value="'._OK.'" />'."\n";
+	formEnd();
+
+    }
+
+    function putUjMunkaterv($ADAT, $Set = array('hide' => true)) {
+
+	global $_TANEV;
+
+	formBegin(array('class'=>'openable init', 'id' => 'ujMunkaterv', 'style' => ($Set['hide']?'display: none;':'')));
+	    echo '<h2>'._UJ_MUNKATERV.'</h2>';
+	    echo '<input type="hidden" name="action" value="ujMunkaterv" />'."\n";
+		echo '<p>'._UM_MAGYARAZAT.'</p>';
+
+		echo '<label for="munkatervNev">'._MUNKATERV_NEVE.'</label>';
+		echo '<input type="text" id="munkatervNev" name="munkatervNev" value="" />';
+
+		echo '<label for="tnsz">'._TANITASI_NAPOK_SZAMA.'</label>';
+		echo '<select id="tnsz" name="tanitasiNap">';
+		$SEL = array($ADAT['munkaterv'][1]['tanitasiNap'] => ' selected="selected" ');
+		for ($i = 1; $i < 200; $i++) {
+		    echo '<option value="'.$i.'"'.$SEL[$i].'>'.$i.'</option>';
+		}
+		echo '</select>';
+
+		echo '<label for="tnmsz">'._TANITAS_NELKULI_MUNKANAPOK_SZAMA.'</label>';
+		echo '<select id="tnmsz" name="tanitasNelkuliMunkanap">';
+		$SEL = array($ADAT['munkaterv'][1]['tanitasNelkuliMunkanap'] => ' selected="selected" ');
+		for ($i = 1; $i < 20; $i++) {
+		    echo '<option value="'.$i.'"'.$SEL[$i].'>'.$i.'</option>';
+		}
+		echo '</select>';
+
+		echo '<label for="vzdt">'._VEGZOS_ZARAS_DT.'</label>';
+		echo '<input type="text" class="date" id="vzdt" name="vegzosZarasDt" value="'.$ADAT['munkaterv'][1]['vegzosZarasDt'].'" />';
+/*
+		echo '<label for="orarendiHetekSzama">'._ORARENDIHETEKSZAMA.'</label>'."\n";
+		echo '<select id="orarendiHetekSzama" name="hetDb">';
+		for ($i = 1; $i < 10; $i++) {
+		    echo '<option value="'.$i.'">'.$i.'</option>';
+		}
+		echo '</select>';
+    
+		echo '<label for="tolDt">'._DATUM.'</label>';
+		echo '<input type="text" class="date" id="tolDt" name="tolDt" value="'.$_TANEV['kezdesDt'].'" /> - ';
+		echo '<input type="text" class="date" name="igDt" value="'.$_TANEV['zarasDt'].'" />';
+*/
+	    echo '<input type="submit" value="'._OK.'" />'."\n";
+	formEnd();
+
+    }
+
+    function putMunkatervOsztaly($ADAT, $Set = array('hide' => true)) {
+
+	global $_TANEV;
+
+	formBegin(array('class'=>'openable init', 'id' => 'munkatervOsztaly', 'style' => ($Set['hide']?'display: none;':'')));
+	    echo '<h2>'._MUNKATERV_OSZTALY.'</h2>';
+	    echo '<input type="hidden" name="action" value="munkatervOsztaly" />'."\n";
+	    echo '<input type="hidden" name="munkatervId" value="'.$ADAT['munkatervId'].'" />'."\n";
+		echo '<p>'._MO_MAGYARAZAT.'</p>';
+
+		echo '<ul>';
+		for ($i = 0; $i < count($ADAT['osztaly']); $i++) {
+		    $O = $ADAT['osztaly'][$i];
+		    echo '<li>';
+		    echo '<input type="hidden" name="osztalyId[]" value="'.$O['osztalyId'].'">';
+		    echo '<strong>'.$O['osztalyJel'].'</strong> ('.$O['leiras'].')';
+		    echo '<input type="submit" value="'._OK.'" />'."\n";
+		    echo '<select name="ujMunkatervId[]">';
+			echo '<option value=""> - </option>'."\n";
+			$SEL = array($O['munkatervId'] => ' selected="selected" ');
+			foreach ($ADAT['munkaterv'] as $mId => $mAdat) {
+			    echo '<option value="'.$mId.'"'.$SEL[$mId].'>'.$mAdat['munkatervNev'].' ('.$mId.')</option>'."\n";
+			}
+		    echo '</select>';
+		    echo '</li>';
+		}
+		echo '</ul>';
+	formEnd();
+
+    }
+
+    function putAdminForm($ADAT, $Hetek = array(), $NapokSzama=null, $napTipusok=null) {
+
+	global $action, $initResult;
+
+	if ($action != '') $SEL = $action;
+	elseif (__MUNKATERV_OK || $initResult === true) $SEL = 'napokSzama';
+	else $SEL = 'napokInit';
+
+	echo '<div class="admin hideShowContainer">';
+
+	    echo '<div id="showNapokInit" class="onClickShow'.($SEL=='napokInit'?' selected':'').'">'._NAPOKINIT.'</div>';
+	    if (__MUNKATERV_OK || $initResult === true) {
+		echo '<div id="showNapokSzama" class="onClickShow'.($SEL=='napokSzama'?' selected':'').'">'._NAPOK_SZAMA.'</div>';
+		echo '<div id="showHetHozzarendeles" class="onClickShow'.($SEL=='hetHozzarendeles'?' selected':'').'">'._HETHOZZARENDELES.'</div>';
+		echo '<div id="showUjMunkaterv" class="onClickShow'.($SEL=='ujMunkaterv'?' selected':'').'">'._ELTERO_MUNKATERVEK.'</div>';
+		echo '<div id="showMunkatervOsztaly" class="onClickShow'.($SEL=='munkatervOsztaly'?' selected':'').'">'._MUNKATERV_OSZTALY.'</div>';
+	    }
+
+	    echo '<div class="openable" id="napokSzama"'.($SEL!='napokSzama'?' style="display: none;"':'').'>';
+	    putNapokSzama($ADAT);
+	    echo '</div>';
+	    putNapokInit($ADAT, array('hide' => ($SEL!='napokInit')));
+	    putHetHozzarendelo($ADAT, array('hide' => ($SEL!='hetHozzarendeles')));
+	    putUjMunkaterv($ADAT, array('hide' => ($SEL!='ujMunkaterv')));
+	    putMunkatervOsztaly($ADAT, array('hide' => ($SEL!='munkatervOsztaly')));
+	    echo '<div>&nbsp;</div>';
+	echo '</div>';
+
+    }
+
+?>

@@ -1,0 +1,270 @@
+<?php
+
+    function validRegisztracio($valid, $nodeId) {
+
+	if ($valid==1) {
+	    echo '<div class="validRegisztracio"><span class="icon-ok-circle"></span>A mayor.hu sikeresen validálta a szervert (nodeId: '.$nodeId.')!</div>';
+	} else {
+	    echo '<div class="notValidRegisztracio"><span class="icon-remove-circle"></span>A mayor.hu nem ismeri ezt a szervert (nodeId: '.$nodeId.')!</div>';
+	}
+
+    }
+
+    function putCheckOldReg($ADAT) {
+
+	formBegin(array('method'=>'post','action'=>'','id'=>'regForm','class'=>'reg'));
+	echo '<input type="hidden" name="action" value="checkOldRegByPublicKey" />';
+	echo '<input type="hidden" name="publicKey" value="'.$ADAT['my']['publicKey'].'" />';
+
+	echo '<h3>'._KORABBAN_REGISZTRALT.'</h3>';
+	echo '<div class="leiras">';
+    	    echo '<p>'.str_replace("\n\n",'</p><p>',_REG_HELYREALLITAS_LEIRAS).'</p>';
+	echo '</div>';
+	echo '<input type="submit" value="'._REGISZTRACIO_HELYREALLITAS.'" />';
+
+	formEnd();
+
+    }
+
+    function putRegisztracio($ADAT) {
+    
+	formBegin(array('method'=>'post','action'=>'','id'=>'regForm','class'=>'reg'));
+	echo '<input type="hidden" name="action" value="sendRegRequest" />';
+
+	echo '<div id="bal">';
+	echo '<div class="leiras">';
+	include('static/hu_HU/session/admin/registration/readme.html');
+	echo '</div>'; // leiras
+
+        echo '<div class="tamogatas">'."\n";
+        echo '<label for="dij">'.str_replace(' ','&nbsp;',_TAMOGATASI_OSSZEG).'</label>'."\n";
+        echo '<select name="dij" id="dij">'."\n";
+            foreach ($ADAT['OSSZEG'] as $dij) {
+                echo '<option value="'.$dij.'">'.$dij.' Ft/hó</option>'."\n";
+            }
+        echo '</select> + ÁFA'."<br/>\n";
+
+        echo '<label for="utemezes">'.str_replace(' ','&nbsp;',_UTEMEZES).'</label>';
+        echo '<select name="utemezes" id="utemezes">'."<br/>\n";
+            foreach (array('','féléves','éves') as $value) {
+                echo '<option value="'.$value.'">'.$value.'</option>'."\n";
+            }
+        echo '</select>'."<br/>\n";
+        echo '<label for="egyeb">'.str_replace(' ','&nbsp;',_EGYEB_TAMOGATAS).'</label>';
+        echo '<input id="egyeb" type="text" name="egyebTamogatas" value="" />'."<br/>\n";
+        if (_REGISZTRALT !== true) echo '<input type="submit" value="'._REGISZTRACIO.'" />'."\n";
+        echo '<p class="hibaeseten">'._HIBA_ESETEN.'</p>'."\n";
+        echo '</div>'."\n"; // tamogatar
+	echo '</div>'; // #bal
+	
+	echo '<div class="adatok">';
+
+        echo '<h3>'._INTEZMENY_ADATAI.'</h3>';
+	foreach ($ADAT['MEZOK'] as $key => $mAdat) {
+	    $value = $ADAT['my'][$key];
+            if (isset($mAdat) && $mAdat['display']!==false) {
+
+                if ($mAdat['kotelezo']===true) $class = 'kotelezo'; else $class = '';
+                if ($mAdat['readonly']===true) $_ro = ' readonly="readonly" '; else $_ro = '';
+                if (defined('_'.nagybetus($key))) $str = constant('_'.nagybetus($key)); else $str = $key;
+
+            	echo '<div>';
+            	    echo '<label for="'.$key.'">'.$str.'</label>';
+            	    if (is_array($mAdat['options'])) {
+                	echo '<select name="'.$key.'" id="'.$key.'" class="'.$class.'">';
+                    	    for($i=0; $i<count($mAdat['options']); $i++) {
+                        	$__jelleg = $mAdat['options'][$i];
+                        	$_SEL = ($__jelleg==$value) ? ' selected="selected" ' : '';
+                        	echo '<option value="'.$__jelleg.'"'.$_SEL.'>'.$__jelleg.'</option>';
+                    	    }
+                	echo '</select>';
+            	    } elseif ($mAdat['type']=='textarea') {
+                	echo '<textarea style="width:100%;height:40px;" id="'.$key.'" type="text" name="'.$key.'" value="'.$value.'" class="'.$class.'" '.$_ro.'>';
+                    	    echo $value;
+                	echo '</textarea>';
+            	    } else {
+                	echo '<input id="'.$key.'" type="text" name="'.$key.'" value="'.$value.'" class="'.$class.'" '.$_ro.'/>';
+            	    }
+            	echo '</div>'."\n";
+
+            } else {
+		if ($mAdat['type']!='none') {
+		    echo '<input type="hidden" name="'.$key.'" value="'.$value.'" />';
+		}
+	    }
+        }
+        echo '</div>'."\n";
+
+
+
+
+
+	echo '<input type="submit" value="'._REGISZTRACIO.'" />'."\n";
+	echo '</div>';	
+
+	formEnd();
+
+    }
+
+
+
+
+
+
+    function putRegisztracioMod($ADAT) {
+    
+	if (defined('_DEVEL') && _DEVEL===true) {
+	    $host = 'https://localhost';
+	} else {
+	    $host = 'http://www.mayor.hu';
+	}
+	$ADAT['intezmeny']['naploUrl'] = $naploUrl = substr($_SERVER["HTTP_REFERER"], 0, strpos($_SERVER["HTTP_REFERER"], 'index.php?'));
+	formBegin(array('id'=>"modForm", 'class'=>"reg", 'action'=>"", 'method'=>"post"));
+	echo '<input type="hidden" name="action" value="modRegAdat" />';
+
+	echo '<div id="bal">';
+	echo '<div class="leiras">';
+	include('static/hu_HU/session/admin/registration/readme.html');
+	echo '</div>'; //.leiras
+
+        echo '<div class="tamogatas">'."\n";
+        echo '<label for="dij">'.str_replace(' ','&nbsp;',_TAMOGATASI_OSSZEG).'</label>'."\n";
+        echo '<select name="dij" id="dij">'."\n";
+            if ($ADAT['regAdat']['nodeData']['dij'] != '') {
+                $SEL = array($ADAT['regAdat']['nodeData']['dij'] => ' selected="selected" ');
+                if (!in_array($ADAT['regAdat']['nodeData']['dij'], $ADAT['OSSZEG'])) $ADAT['OSSZEG'][] = $ADAT['regAdat']['nodeData']['dij'];
+            } else {
+                $SEL = array(5000 => ' selected="selected" '); // default
+            }
+            foreach ($ADAT['OSSZEG'] as $dij) {
+                echo '<option value="'.$dij.'"'.$SEL[$dij].'>'.$dij.' Ft/hó</option>'."\n";
+            }
+        echo '</select> + ÁFA'."<br/>\n";
+
+        echo '<label for="utemezes">'.str_replace(' ','&nbsp;',_UTEMEZES).'</label>';
+        echo '<select name="utemezes" id="utemezes">'."<br/>\n";
+            foreach (array('','féléves','éves') as $value) {
+                $_SEL = ($value==$ADAT['regAdat']['nodeData']['utemezes'])? ' selected="selected" ':'';
+                echo '<option value="'.$value.'"'.$_SEL.'>'.$value.'</option>'."\n";
+            }
+        echo '</select>'."<br/>\n";
+        echo '<label for="egyeb">'.str_replace(' ','&nbsp;',_EGYEB_TAMOGATAS).'</label>';
+        echo '<input id="egyeb" type="text" name="egyebTamogatas" value="'.$ADAT['regAdat']['nodeData']['egyebTamogatas'].'" />'."<br/>\n";
+        if (_REGISZTRALT !== true) echo '<input type="submit" value="'._MODOSITAS.'" />'."\n";
+        echo '<p class="hibaeseten">'._HIBA_ESETEN.'</p>'."\n";
+        echo '</div>'."\n";
+
+
+	echo '</div>'; // #bal
+	
+
+
+	echo '<div class="adatok">';
+	foreach ($ADAT['intezmeny'] as $key => $value) {
+	    echo '<input type="hidden" name="'.$key.'" value="'.$value.'" />'."\n";
+	}
+	echo '<input type="hidden" name="naploUrl" value="'.$naploUrl.'" />'."\n";
+
+
+        echo '<h3>'._INTEZMENY_ADATAI.'</h3>';
+	foreach ($ADAT['MEZOK'] as $key => $mAdat) {
+	    $value = $ADAT['regAdat']['nodeData'][$key];
+            if (isset($mAdat)) {
+		if ($mAdat['display']!==false) {
+            	    if ($mAdat['kotelezo']===true) $class = 'kotelezo'; else $class = '';
+            	    if ($mAdat['readonly']===true) $_ro = ' readonly="readonly" '; else $_ro = '';
+            	    if (defined('_'.nagybetus($key))) $str = constant('_'.nagybetus($key)); else $str = $key;
+		    if ($key == 'publicKey') {
+			echo '<input type="hidden" name="'.$key.'" value="'.$value.'" />'."\n";
+		    } else {
+            		echo '<div>';
+            		echo '<label for="'.$key.'">'.$str.'</label>';
+            		if (is_array($mAdat['options'])) {
+                	    echo '<select name="'.$key.'" id="'.$key.'" class="'.$class.'">';
+                    		for($i=0; $i<count($mAdat['options']); $i++) {
+                        	    $__jelleg = $mAdat['options'][$i];
+                        	    $_SEL = ($__jelleg==$value) ? ' selected="selected" ' : '';
+                        	    echo '<option value="'.$__jelleg.'"'.$_SEL.'>'.$__jelleg.'</option>';
+                    		}
+                	    echo '</select>';
+            		} elseif ($mAdat['type']=='textarea') {
+                	    echo '<textarea style="width:100%;height:40px;" id="'.$key.'" type="text" name="'.$key.'" value="'.$value.'" class="'.$class.'" '.$_ro.'>';
+                    		echo $value;
+                	    echo '</textarea>';
+            		} else {
+                	    echo '<input id="'.$key.'" type="text" name="'.$key.'" value="'.$value.'" class="'.$class.'" '.$_ro.'/>';
+            		}
+            		echo '</div>'."\n";
+		    }
+        	} else {
+		    if ($mAdat['type'] != 'none')
+			echo '<input type="hidden" name="'.$key.'" value="'.$value.'" />'."\n";
+		}
+	    }
+        }
+        echo '</div>'."\n";
+
+
+
+
+
+	echo '<input type="submit" value="'._MODOSITAS.'" />'."\n";
+	echo '</div>';	
+
+	formEnd();
+    }
+
+
+
+
+
+    function putPublicKey($publicKey) {
+	echo '<h2 style="margin-left: 180px;">Saját publikus kulcs</h2>';
+	echo '<div style="margin-left: 180px; text-align:center">';
+	echo '<textarea style="width:60%; height:200px;">'.$publicKey.'</textarea>';
+	echo '</div>';
+
+    }
+
+    function putSzomszedok($ADAT) {
+
+	$attr = array('OMKod','nev','mayorTipus','naploUrl');
+	$mayorTipus = array(
+	    'fejlesztői' => '<span class="icon-wrench-alt" style="color:orange"></span>',
+	    'fenntartó' => '<span class="icon-compass-alt" style="color:red"></span>',
+	    'intézmény' => '<span class="icon-paper-clip-alt" style="color:cornflowerblue"></span>',
+	    'backup' => '<span class="icon-cog-alt" style="color:#888"></span>',
+	    'boss' => '<span class="icon-star-alt" style="color:lila"></span>'
+	);
+	echo '<h2>MaYoR-partnerek</h2>';
+
+	echo '<table align="center">';
+	echo '<thead>';
+	    echo '<tr>';
+	    foreach ($attr as $v) {
+		echo '<th>'.$v.'</th>';
+	    }
+	    echo '</tr>';
+	echo '</thead>';
+	echo '<tbody>';
+	    for ($i=0;$i<count($ADAT);$i++) {
+		$_D = $ADAT[$i];
+		echo '<tr>';
+		    foreach ($_D as $k=>$v) {
+			if ($k=='publicKey') continue;
+			if ($k=='mayorTipus') echo '<th>'.$mayorTipus[$v].'</th>';
+			if (in_array($k,$attr)) {
+			    //echo '<th>'.$k.'</th>';
+			    echo '<td>';
+			    echo $v;
+			    echo '</td>';
+			}
+		    }
+		echo '</tr>';
+	    }
+	echo '</tbody>';
+	echo '</table>';
+
+    }
+
+?>

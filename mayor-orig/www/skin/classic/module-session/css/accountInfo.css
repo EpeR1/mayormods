@@ -1,0 +1,100 @@
+
+    table.personalSettings {
+	background-color: rgb(220,220,220);
+	color: white;
+	margin-top: 20px;
+    }
+
+    table.personalSettings thead th {
+	background-color: rgb(60,20,100);
+	padding: 5px 40px 5px 40px;
+    }
+
+    table.personalSettings thead th.policy {
+	background-color: rgb(225,125,25);
+    }
+
+    table.personalSettings tfoot th {
+	background-color: rgb(60,20,100);
+    }
+
+    table.personalSettings tbody td {
+	background-color: rgb(200,200,210);
+    }
+
+    table.personalSettings tbody th {
+	width: 100px;
+	background-color: rgb(120,120,140);
+    }
+
+/* ------------------------- */
+
+
+    table.changePassword {
+	margin-top: 20px;
+	background-color: rgb(220,220,220);
+	color: white;
+    }
+
+    table.changePassword thead th {
+	background-color: rgb(60,20,100);
+	padding: 5px 40px 5px 40px;
+    }
+
+    table.changePassword tfoot th {
+	background-color: rgb(60,20,100);
+    }
+
+    table.changePassword tbody td {
+	background-color: rgb(200,200,210);
+    }
+
+    table.changePassword tbody th {
+	width: 100px;
+	background-color: rgb(120,120,140);
+    }
+
+/* WALL */
+
+    div#wall {
+	text-align:center;
+    }
+
+    div#wall table {
+	margin: 20px auto;
+	background-color: rgb(220,220,220);
+	color: white;
+    }
+
+    div#wall table thead th {
+	background-color: rgb(60,20,100);
+	padding: 5px 40px 5px 40px;
+    }
+
+    div#wall table tfoot th {
+	background-color: rgb(60,20,100);
+    }
+
+    div#wall table tbody td {
+	background-color: rgb(200,200,210);
+    }
+
+    div#wall table tbody th {
+	width: 100px;
+	background-color: rgb(120,120,140);
+    }
+
+    div.wall {
+	margin:20px auto;
+	border: solid 2px #887780;
+	background-color: #eedde0;
+	color: black;
+	width:400px;
+	padding:5px;
+    }
+    div.centro { text-align: center; }
+    div.wall { text-align: left; }
+    div.wall h1 { font-size:larger; margin:0px; padding-bottom: 5px;}
+    div.wall h2 { font-size:smaller; margin:0px; padding:0px; text-align: right;}
+    div.wall img { border: none; top:5px; right:5px; float:right; }
+    

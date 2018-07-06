@@ -1,0 +1,30 @@
+
+    form.pluszora {
+//	background-color: rgb(200,200,180);
+	text-align: center;
+	margin: 20px;
+    }
+    
+    ul.pluszora {
+//	background-color: rgb(20,40,80);
+	list-style-type: none;
+	margin: 20px;
+	padding: 10px 0px;
+    }
+
+    ul.pluszora li { background-color: rgb(160,160,250); margin: 1px 100px; padding: 1px 20px;}
+    ul.pluszora li span { color: rgb(20,40,80); padding: 0px 5px; margin: 1px 5px;}
+    ul.pluszora li span.oraszam { color: rgb(128,0,128); padding: 0px 4px;}
+
+    h2 { text-align: center; border: 1px dotted rgb(20,40,80); border-width: 1px 0px; margin: 20px; }
+
+    h1 { margin:20px; }
+    form.pluszLila {margin:20px; padding-left:10px;}
+    form.pluszLila { margin:20px;}
+    form.pluszLila label { display:block; margin-top:2em; margin-bottom:1em; border-bottom: solid 1px #ddd; width:100px; }
+
+    form.pluszLila button.selectorButton { font-size:14px; padding:2px; display:inline-block; cursor: pointer}
+    form.pluszLila button.selectorButton span.icon-plus-sign { color: #009688;}
+    form.pluszLila button.selectorButton span.icon-minus-sign { color: #607D8B}
+
+    form.pluszLila button.selectorButton:active span { text-shadow: 0px 0px 1px cornflowerblue;}

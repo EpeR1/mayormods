@@ -1,0 +1,16 @@
+
+    table.modosit { margin: 20px auto; }
+    table.modosit th { padding: 4px; color: white; border: 3px solid rgb(20,80,40); background-color: rgb(30,120,60); }
+
+    form.csoport table { margin: 0px auto; color: white; background-color: rgb(20,80,40); }
+    form.csoport table th { background-color: rgb(30,120,60); }
+    form.csoport table td { text-align: center; }
+    form.csoport table td input { background-color: rgb(160,250,160); margin: 2px 0px; border: 1px solid rgb(30,120,60); }
+    form.csoport table td select { background-color: rgb(160,250,160); }
+    form.csoport input.torol { border: solid 1px red; background-color: rgb(120,50,10); color: white; float: right; margin: -3px; padding: 0px;}
+
+    form.csoportKereses table { margin: 10px auto; color: white; background-color: rgb(20,40,80); }
+    form.csoportKereses table th { background-color: rgb(30,60,120); }
+    form.csoportKereses table td { text-align: center; }
+    form.csoportKereses table td input { background-color: rgb(160,160,250); margin: 2px 0px; border: 1px solid rgb(30,60,120); }
+    form.csoportKereses table td select { background-color: rgb(160,160,250); }

@@ -1,0 +1,175 @@
+/* Új menü */
+
+    ul#pagemenu {
+	padding: 5px;
+	text-align: left;
+	background-color: #040562;
+	list-style-type: none;
+	margin:0px;
+    }
+    ul#pagemenu li {
+	display: inline;
+	border-width: 0px 1px 0px 0px;
+	border-color: #8485a2;
+	border-style: dotted;
+	padding: 0px;
+	margin:10px 0px 10px 0px;
+    }
+    ul#pagemenu li a {
+	color: rgb(255,255,255);
+	text-decoration: none;
+	padding: 3px 10px;
+	margin: 0px;
+    }
+    ul#pagemenu li a:hover {
+	background-color: yellow;
+	text-decoration: underline;
+	color: black;
+    }
+    ul#pagemenu li.active a {
+	background-color: yellow;
+	color: black;
+    }
+    ul#pagemenu li.active a:hover {
+	background-color: white;
+	color: black;
+
+    }
+
+/* SUB */
+
+    ul#submenu {
+	padding: 5px;
+	text-align: left;
+	background-color: #040582;
+	list-style-type: none;
+	border-top: solid 1px #666666;
+	margin:0px;
+    }
+    ul#submenu li {
+	display: inline;
+	border-width: 0px 0px 0px 1px;
+	border-color: #8485a2;
+	border-style: dotted;
+	padding: 0px 0px;
+    }
+    ul#submenu li a {
+	color: rgb(255,255,255);
+	text-decoration: none;
+	padding: 3px 10px;
+	margin: 0px;
+    }
+    ul#submenu li a:hover {
+	background-color: yellow;
+	color: black;
+	text-decoration: underline;
+    }
+    ul#submenu li.active a {
+	background-color: yellow;
+	color: black;
+	padding:3px;
+    }
+    ul#submenu li.active a:hover {
+	background-color: white;
+	color: black;
+
+    }
+
+/* f */
+
+    ul#fmenu {
+	padding: 5px;
+	text-align: left;
+	background-color: #0405a2;
+	list-style-type: none;
+	margin:0px;
+	border-top: solid 1px #666666;
+    }
+    ul#fmenu li {
+	display: inline;
+	border-width: 0px 0px 0px 1px;
+	border-color: #8485a2;
+	border-style: dotted;
+    }
+    ul#fmenu li a {
+	color: rgb(255,255,255);
+	text-decoration: none;
+	padding: 3px 10px;
+    }
+    ul#fmenu li a:hover {
+	background-color: rgb(100,100,140);
+	text-decoration: underline;
+    }
+    ul#fmenu li.active a {
+	background-color: yellow;
+	color: black;
+	padding:3px;
+    }
+    ul#fmenu li.active a:hover {
+	background-color: white;
+	color: black;
+    }
+
+    #changeSkin {
+	display: inline;
+    }
+    #changeSkin .onChangeSubmit {
+	background-color: #eeeeee;
+	font-size:14px;
+    }
+
+    html body {
+	font-family: Verdana, sans-serif;
+	font-size: 12px;
+	margin:0px;
+	padding:0px;
+	background-color: white;
+    }
+
+    /* set default layout! */
+    table { font-size: 12px; }
+
+    form { margin: 0px; }
+    
+    div.mayorbody {
+    
+	padding: 0px; 
+    
+    }
+
+    div.mayorfoot {
+	text-align: center;
+	font-size:  10px;
+	width:100%;
+    }
+/* - Alert - */
+
+    form.mayorAlert { margin: 0px; padding: 0px; }
+    form.mayorAlert input { display: none; }
+    div.errorMsg {
+	margin: 20px 20%;
+	background-color: #eeffd0;
+	border: solid 2px #ff0000;
+	padding: 15px;
+    }
+    div.errorMsg span {
+	font-style: italic;
+    }
+
+    div.infoMsg {
+	margin: 20px 20%;
+	background-color: #eeffd0;
+	border: solid 2px #0000ff;
+	padding: 15px;
+    }
+    div.infoMsg span {
+	font-style: italic;
+    }
+
+    span.alertParam {
+	color: green;
+    }
+
+    h1#menu { text-align: left; }
+    h1#tartalom { text-align: left; }
+    h1#lablec { text-align: left; }

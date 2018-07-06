@@ -1,0 +1,125 @@
+
+    table.csoportNevsorHianyzok { background-color: #eeeeee; color: white; }
+
+    form.delutani table.csoportNevsorHianyzok { background-color: rgb(150,150,150); }
+
+    form.delutani table.csoportNevsorHianyzok thead { background-color: rgb(200,100,100); }
+    form.delutani table.csoportNevsorHianyzok tfoot { background-color: rgb(200,100,100); }
+
+    table.csoportNevsorHianyzok thead { background-color: #440055; }
+    table.csoportNevsorHianyzok thead a { color: white; text-decoration: none }
+    table.csoportNevsorHianyzok thead a:hover { color: white; text-decoration: underline; }
+
+    table.csoportNevsorHianyzok thead.oraAdat table.oraAdat {
+	width:100%;
+	background-color: #eeeeee;
+	font-size: normal;
+    }
+    table.csoportNevsorHianyzok thead.oraAdat table.oraAdat td { font-weight: normal; }
+
+    table.csoportNevsorHianyzok thead.fejlec tr th { font-weight: normal; height:1.8em; border-bottom: solid 2px rgb(170, 0, 187) }
+
+    table.csoportNevsorHianyzok tfoot { background-color: #440055; }
+    table.csoportNevsorHianyzok tfoot input { background-color: #eeeeee; font-size:11px; }
+
+    table.csoportNevsorHianyzok tbody {	color: black ;}
+    table.csoportNevsorHianyzok tbody a { color: black; text-decoration: none }
+    table.csoportNevsorHianyzok tbody a:hover { color: black; text-decoration: underline; }
+
+    table.csoportNevsorHianyzok tbody tr.ujTag th { background-color: lightgreen; }
+    table.csoportNevsorHianyzok tbody tr.ujTag td { background-color: #ffffaa; text-align: center; }
+    table.csoportNevsorHianyzok td { text-align: left; }
+    table.csoportNevsorHianyzok td.késés { text-align: center; }
+    table.csoportNevsorHianyzok tbody tr:hover { background-color: #ffffff;}
+    table.csoportNevsorHianyzok td a { color: inherit; }
+
+    table.csoportNevsorHianyzok    select { border: solid 1px #888888; background-color: #eeeeee; } 
+    table.csoportNevsorHianyzok    select.igazolatlan { color: red }
+    table.csoportNevsorHianyzok    select.igazolt { color: green }
+    table.csoportNevsorHianyzok    td.igazolatlan { color: red }
+    table.csoportNevsorHianyzok    td.igazolt { color: green }
+    table.csoportNevsorHianyzok    th.radio { width: 28px; }
+
+    table.csoportNevsorHianyzok    td.nemkot { text-align: center; color: #888888; font-style: italic; }
+
+    table.csoportNevsorHianyzok    tr td input.perc  {
+	font-size:10px;
+	vertical-align: top;
+	border: solid 1px #aabb99;
+	text-align: right;
+	width:1.5em;
+    }
+
+    table.csoportNevsorHianyzok tbody tr.magantanulo > td { background-color: purple; color: white; }
+
+    .jelen {
+	width:12px;
+        border-color: rgb(100,200,100);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+    }
+
+    .hianyzas, .hiányzás {
+/*	width:12px;*/
+        border-color: rgb(200,100,100);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+    }
+
+    .keses, .késés {
+/*	width:12px;*/
+        border-color: rgb(200,200,100);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+    }
+    span.perc {
+        border-color: rgb(200,200,100);
+        border-width: 1px 1px 1px 1px;
+        border-style: solid;
+	background-color: rgb(230,210,130);
+	color: rgb(100,80,0);
+    }
+
+    .felszereles_hiany {
+	color: white;
+	background-color:blue;
+    }
+
+    .egyenruha_hiany {
+	color: white;
+	background-color: orange;
+    }
+
+    .felmentes {
+	background-color: #eeeeee;
+	color: purple;
+    }
+    .fbetus {
+        /* border-color: rgb(100,100,200); */
+        border-color: rgb(120,120,220) rgb(190,190,230);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+	background-color: rgb(210,210,255); 
+	min-width: 18px; 
+    }
+
+    .igazolt { background-color: #008800; }
+    .igazolatlan { background-color: #880000; }
+
+
+    .kesett {background-color: orange;}
+
+    table.hianyzasNaptar { background-color: #778877; font-size:10px;}
+    table.hianyzasNaptar th {background-color: #889988; font-weight: normal; text-align:center; }
+    table.hianyzasNaptar a { color: #eeeee0; text-decoration: none }
+    table.hianyzasNaptar a:hover { background-color: #667766; }
+    table.hianyzasNaptar td:nth-child(even) {  }
+    table.hianyzasNaptar td.felszerelesHiany { background-color: rgb(100,100,200); }
+    table.hianyzasNaptar td.egyenruhaHiany { background-color: orange; }
+
+    form.vissza { background-color: white; width: 570px; margin: 0px auto; }
+    form.vissza input { border: none; background-color: white; cursor: pointer; } 
+
+    table.csoportNevsorHianyzok tbody tr th.c { font-weight: normal }
+    table.csoportNevsorHianyzok tbody tr th.c:hover span { display: none; }
+    table.csoportNevsorHianyzok tbody tr th.c:hover:after { content: "\e0ca"; font-family: "Elusive-Icons";}

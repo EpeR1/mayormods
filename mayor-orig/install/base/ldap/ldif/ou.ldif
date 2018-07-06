@@ -1,0 +1,62 @@
+# ------------------------------------------------
+# MaYoR keretrendszer - organizational unit-ok
+# ------------------------------------------------
+
+dn: ou=Groups,%BASEDN%
+ou: Groups
+objectClass: organizationalUnit
+description: MaYoR csoportok
+
+# ------------------------------------------------
+
+dn: ou=diak,%BASEDN%
+ou: diak
+objectClass: organizationalUnit
+description:: RGnDoWtvaw==
+
+dn: ou=egyeb,%BASEDN%
+ou: egyeb
+objectClass: organizationalUnit
+description:: RWd5w6liIGZlbGhhc3puw6Fsw7Nr
+
+dn: ou=gazdasagi,%BASEDN%
+ou: gazdasagi
+objectClass: organizationalUnit
+description:: R2F6ZGFzw6FnaSBpcm9kYQ==
+
+dn: ou=tanar,%BASEDN%
+ou: tanar
+objectClass: organizationalUnit
+description:: VGFuw6Fyb2s=
+
+dn: ou=titkarsag,%BASEDN%
+ou: titkarsag
+objectClass: organizationalUnit
+description:: VGl0a8OhcnPDoWc=
+
+# ------------------------------------------------
+
+dn: ou=Groups,ou=diak,%BASEDN%
+ou: Groups
+objectClass: organizationalUnit
+description:: RGnDoWsgY3NvcG9ydG9r
+
+dn: ou=Groups,ou=egyeb,%BASEDN%
+ou: Groups
+objectClass: organizationalUnit
+description:: RWd5w6liIGNzb3BvcnRvaw==
+
+dn: ou=Groups,ou=gazdasagi,%BASEDN%
+ou: Groups
+objectClass: organizationalUnit
+description:: R2F6ZGFzw6FnaSBpcm9kYSBjc29wb3J0amFp
+
+dn: ou=Groups,ou=tanar,%BASEDN%
+ou: Groups
+objectClass: organizationalUnit
+description:: VGFuw6FyIGNzb3BvcnRvaw==
+
+dn: ou=Groups,ou=titkarsag,%BASEDN%
+ou: Groups
+objectClass: organizationalUnit
+description:: VGl0a8OhcnPDoWdpIGNzb3BvcnRvaw==

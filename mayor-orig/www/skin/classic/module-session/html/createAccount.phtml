@@ -1,0 +1,107 @@
+<?php
+/*
+    Module:	 base/session
+*/
+
+    function putCreateAccountForm($toPolicy = _POLICY, $DEFAULTS = array()) {
+
+        global $attrDef, $AUTH, $POLICIES;
+
+	formBegin(array('enctype'=>'multipart/form-data','id'=>'createAccount'));
+
+        echo '<input type="hidden" name="action" value="newUser" />';
+
+        echo '<table class="new" align="center" cellspacing="1">'."\n";
+        echo '<thead>'."\n";
+        echo '<tr>';
+            echo '<th colspan="2">'._CREATE_ACCOUNT.'</th>';
+        echo '</tr>';
+	if (_POLICY=='private') {
+    	    echo '<tr>';
+            echo '<td colspan="2">';
+		$SEL = array($toPolicy => ' selected="selected" ');
+		echo '<select name="toPolicy" class="onChangeSubmit">'."\n";
+		for ($i = 0; $i < count($POLICIES); $i++) {
+		    echo '<option value="'.$POLICIES[$i].'"'.$SEL[$POLICIES[$i]].'>'.$POLICIES[$i].'</option>'."\n";
+		}
+		echo '</select>';
+	    echo '</td>'."\n";
+    	    echo '</tr>';
+	}
+        echo '</thead>'."\n";
+        echo '<tfoot>';
+        echo '<tr>';
+            echo '<th colspan="2">';
+	    echo '<input name="new" type="submit" value="'._OK.'" />';
+	    echo '<input name="action" type="hidden" value="createAccount" />';
+	    echo '</th>';
+        echo '</tr>';
+        echo '</tfoot>'."\n";
+        echo '<tbody>'."\n";
+        echo '<tr>';
+            echo '<th>'.$attrDef['userCn']['desc'].':</th>';
+            echo '<td><input type="text" name="userCn" id="focus" value="'.$DEFAULTS['userCn'].'" /></td>';
+        echo '</tr><tr>';
+            echo '<th>'.$attrDef['userAccount']['desc'].':</th>';
+            echo '<td><input type="text" name="userAccount" value="'.$DEFAULTS['userAccount'].'" /></td>';
+        echo '</tr>';
+
+	$CONTAINERS = $AUTH[$toPolicy][$AUTH[$toPolicy]['backend'].'Containers'];
+	if (isset($CONTAINERS) and is_array($CONTAINERS) and count($CONTAINERS) > 0) {
+	echo '<tr>';
+            echo '<th>'._ACCOUNT_CONTAINER.'</th>';
+            echo '<td>';
+                echo '<select name="container">';
+		    echo '<option value=""> - </option>'."\n";
+                    for ($i=0;$i<count($CONTAINERS);$i++) {
+                        echo '<option value="'.$CONTAINERS[$i].'">'.$CONTAINERS[$i].'</option>';
+                    }
+                echo '</select>';
+            echo '</td>';
+        echo '</tr>'."\n";
+	}
+
+    	echo '<tr>'."\n";
+            echo '<th>'.$attrDef['userPassword']['desc'].':</th>';
+            echo '<td><input type="password" name="userPassword" value="'.$DEFAULTS['userPassword'].'" /></td>';
+        echo '</tr><tr>'."\n";
+            echo '<th>'._VERIFICATION.':</th>';
+            echo '<td><input type="password" name="verification" value="'.$DEFAULTS['userPassword'].'" /></td>';
+        echo '</tr>'."\n";
+
+	if (isset($AUTH[$toPolicy]['categories']) and is_array($AUTH[$toPolicy]['categories']) and count($AUTH[$toPolicy]['categories']) > 0) {
+	echo '<tr>';
+            echo '<th style="width: 130px;">'._ACCOUNT_CATEGORY.'</th>';
+            echo '<td style="width: 270px;">';
+                echo '<select name="category">';
+		echo '<option value=""> - </option>'."\n";
+                    for ($i=0;$i<count($AUTH[$toPolicy]['categories']);$i++) {
+                        echo '<option value="'.$AUTH[$toPolicy]['categories'][$i].'">'.$AUTH[$toPolicy]['categories'][$i].'</option>';
+                    }
+                echo '</select>';
+            echo '</td>';
+        echo '</tr>'."\n";
+	}
+
+	if (is_array($AUTH[$toPolicy]['accountAttrs'])) foreach ($AUTH[$toPolicy]['accountAttrs'] as $key => $attr) {
+        echo '<tr>';
+            echo '<th>'.$attrDef[$attr]['desc'].':</th>';
+            echo '<td><input type="text" name="'.$attr.'" value="'.$DEFAULTS[$attr].'" /></td>';
+	echo '</tr>'."\n";
+	}
+
+	if (_POLICY=='private') {
+    	    echo '<tr>';
+            echo '<th>'._DATAFILE.':</th>';
+            echo '<td><input type="file" name="file" /></td>';
+    	    echo '</tr>';
+	}
+
+        echo '</tbody>';
+        echo '</table>';
+	formEnd();
+
+    }
+
+
+?>

@@ -1,0 +1,67 @@
+<?php
+
+    function putTanmenetInfo($ADAT) {
+
+	global $skin;
+
+	echo '<fieldset class="alapadatok"><legend>'._ALAPADATOK.'</legend>'."\n";
+	if ($skin != 'ajax') 
+	    formBegin(array('class'=>'tanmenet'));
+
+	    echo '<input type="hidden" name="tanmenetId" id="informTanmenetId" value="'.$ADAT['tanmenetId'].'" />'."\n";
+
+	    echo '<p><span>'.$ADAT['tanmenetAdat']['evfolyamJel'].'.</span> '._EVFOLYAMJEL.' - <span>'
+		    .$ADAT['tanmenetAdat']['targyNev'].'</span> - <span>'
+		    .$ADAT['tanmenetAdat']['oraszam'].'</span> '._TANORA.'</p>'."\n";
+
+	    echo '<p>'._TANMENETNEV.': <span>'.$ADAT['tanmenetAdat']['tanmenetNev'].'</span></p>'."\n";
+
+	    echo '<p>'._KESZITETTE.': <span>'.$ADAT['tanmenetAdat']['tanarNev'].'</span> - '.'<span>'.dateToString($ADAT['tanmenetAdat']['dt']).'</span></p>'."\n";
+
+	    echo '<p>'._ALLAPOT.': <span>'.$ADAT['tanmenetAdat']['statusz'].'</span></p>';
+
+	echo '</fieldset>'."\n";
+
+	/* -------------------------------- */
+       echo '<fieldset class="alapadatokfieldset '.ekezettelen($ADAT['tanmenetAdat']['statusz']).'"><legend><a href="'.href('index.php?page=naplo&sub=tanmenet&f=tanmenetTankor&tanarId='.$ADAT['tanarId'].'&targyId='.$ADAT['targyId']).'">'._HOZZARENDELT_TANKOROK.'</a></legend>';
+            echo __TANEV.':';
+            echo '<ul>'."\n";
+            for ($i = 0; $i < count($ADAT['tanmenetAdat']['tankor']); $i++) {
+                echo '<li><span class="tankorAdat" data-tankorid="'.$ADAT['tanmenetAdat']['tankor'][$i]['tankorId'].'">'
+                .$ADAT['tanmenetAdat']['tankor'][$i]['tankorNev'].' ('.$ADAT['tanmenetAdat']['tankor'][$i]['tankorId'].')</span></li>'."\n";
+            }
+            echo '</ul>'."\n";
+	    if (count($ADAT['tanmenetAdat']['tankorNemAktualis'])>0) {
+            echo _MAS_TANEV.':';
+            echo '<ul>'."\n";
+            for ($i = 0; $i < count($ADAT['tanmenetAdat']['tankorNemAktualis']); $i++) {
+                echo '<li><span class="tankorAdat" data-tankorid="'.$ADAT['tanmenetAdat']['tankorNemAktualis'][$i]['tankorId'].'">'
+                .$ADAT['tanmenetAdat']['tankorNemAktualis'][$i]['tankorNev'].' ('.$ADAT['tanmenetAdat']['tankorNemAktualis'][$i]['tankorId'].')</span></li>'."\n";
+            }
+            echo '</ul>'."\n";
+	    }
+        echo '</fieldset>'."\n";
+	
+	/* -------------------------------- */
+
+
+	echo '<fieldset class="tema"><legend>'._TEMAKOROK.'</legend>'."\n";
+	    $oraszam = 0;
+	    echo '<ul id="temakor">'."\n";
+	    for ($i = 0; $i < count($ADAT['tanmenetAdat']['temakor']); $i++) {
+		echo '<li>';
+		echo '<span class="oraszam">'.($oraszam+1).'-'.($oraszam = $oraszam + $ADAT['tanmenetAdat']['temakor'][$i]['oraszam']);
+		echo '. '._TANORA.': ';
+		echo '</span>';
+		echo '<div class="megnevezes">'.nl2br(htmlspecialchars($ADAT['tanmenetAdat']['temakor'][$i]['temakorMegnevezes'])).'</div>'."\n";
+		echo '</li>'."\n";
+	    }
+	    echo '</ul>';
+	echo '</fieldset>'."\n";
+
+	if ($skin != 'ajax') formEnd();
+
+
+    }
+
+?>

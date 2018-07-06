@@ -1,0 +1,14 @@
+<timetable importtype="database" options="idprefix:MaYoR,daynumbering1">
+   <teachers options="canadd,canremove,canupdate,silent" columns="id,name,short">
+   </teachers>
+   <classes options="canadd,canremove,canupdate,silent" columns="id,name">
+   </classes>
+   <subjects options="canadd,canremove,canupdate,silent" columns="id,name,short,positions">
+   </subjects>
+   <classrooms options="canadd,canremove,canupdate,silent" columns="id,name,short">
+   </classrooms>
+   <lessons options="canadd,canremove,canupdate,silent" columns="id,teacherids,classids,subjectid,weeks">
+   </lessons>
+   <cards options="canadd,canremove,canupdate,silent" columns="day,period,classids,subjectids,teacherids,classroomids,lessonid,durationperiods,weeks">
+   </cards>
+</timetable>

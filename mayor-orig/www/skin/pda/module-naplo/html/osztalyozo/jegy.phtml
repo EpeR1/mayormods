@@ -1,0 +1,135 @@
+<?php
+/*
+    Module: naplo
+*/
+
+    function putJegyInfo($jegy, $Orak, $Dolgozatok) {
+    
+	global $Osztalyzatok, $jegyTipusok, $aHetNapjai, $skin;
+	if (_MODOSITHAT) $DIS=''; else $DIS=' disabled="disabled"';
+
+	if ($skin != 'ajax') formBegin(array('action'=>href('index.php?page=naplo&sub=osztalyozo&f=jegy')));
+	echo '<input type="hidden" name="action" value="jegyModositas" />'."\n";
+	echo '<input type="hidden" name="jegyId" value="'.$jegy['jegyId'].'" />'."\n";
+	
+	echo '<table align="center" cellspacing="1" cellpadding="0" class="jegyInfo">'."\n";
+	
+	    echo '<thead>'."\n";
+		echo '<tr>'."\n";
+		    echo '<th colspan="2">'._JEGY_ADATAI.'</th>'."\n";
+		echo '</tr>'."\n";
+	    echo '</thead>'."\n";
+	    
+	    echo '<tfoot>'."\n";
+		echo '<tr>'."\n";
+		    echo '<th colspan="2">'."\n";
+		    if (_MODOSITHAT) {
+			echo '<input class="onClickUpdate" type="submit" value="'._ROGZIT.'" />'."\n";
+			echo '<input type="submit" name="jegyTorles" class="confirm" value="'._TOROL.'" title="'._BIZTOSE.'" />'."\n";
+		    }
+		    echo '</th>'."\n";
+		echo '</tr>'."\n";
+	    echo '</tfoot>'."\n";
+	    
+	    echo '<tbody>'."\n";
+	    echo '<tr>'."\n";
+		echo '<td colspan="2">';
+		    echo '<a href="'.str_replace('ajax', '', href('index.php?page=naplo&sub=osztalyozo&f=diak&diakId='.$jegy['diakId'])).'">';
+		    echo $jegy['diakNev'];
+		    echo '</a>';
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+	    echo '<tr>';
+		echo '<td colspan="2">'."\n";
+		    echo '<a href="'.str_replace('ajax', '', href('index.php?page=naplo&sub=osztalyozo&f=tankor&tankorId='.$jegy['tankorId'])).'">';
+		    $tanarLista = '';
+		    for ($i = 0; $i < count($jegy['tanár']['idk']); $i++) $tanarLista .= $jegy['tanár'][$i]['tanarNev'].', ';
+		    echo $jegy['tankör'][0]['tankorNev'].' ('.substr($tanarLista, 0, -2).')';
+		    echo '</a>'."\n";
+		echo '</td>'."\n";
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<td colspan="2">'."\n";
+
+		    $SEL = array($jegy['jegy'] => ' selected="selected" ');
+		    echo '<select name="jegy"'.$DIS.'>'."\n";
+		    for ($i = 0; $i < count($Osztalyzatok['értékek']); $i++) {
+			$j = $Osztalyzatok['értékek'][$i];
+			echo '<option value="'.$j.'" '.$SEL[$j].'>'.$Osztalyzatok[$j]['num'].'</option>'."\n";
+		    }
+		    echo '</select>'."\n";
+
+		    $SEL = array($jegy['tipus'] => ' selected="selected"');
+		    echo '<select name="tipus"'.$DIS.'>'."\n";
+			echo '<option value="0">'.$jegyTipusok[0].'</option>'."\n";
+			if ($jegy['dolgozatId'] == '') {
+			    echo '<option value="1"'.$SEL[1].'>'.$jegyTipusok[1].'</option>'."\n";
+			    echo '<option value="2"'.$SEL[2].'>'.$jegyTipusok[2].'</option>'."\n";
+			} else {
+			    echo '<option value="3"'.$SEL[3].'>'.$jegyTipusok[3].'</option>'."\n";
+			    echo '<option value="4"'.$SEL[4].'>'.$jegyTipusok[4].'</option>'."\n";
+			    echo '<option value="5"'.$SEL[5].'>'.$jegyTipusok[5].'</option>'."\n";
+			}
+		    echo '</select>'."\n";
+
+		echo ' '.$jegy['dt'].'</td>'."\n";
+	    echo '</tr>';
+
+	    echo '<tr>'."\n";
+		echo '<th>'._MEGJ.'</th>'."\n";
+		echo '<td>'."\n";
+		    echo '<input type="text" name="megjegyzes" value="'.$jegy['megjegyzes'].'" '.$DIS.'/>'."\n";
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+
+	    echo '</tbody>'."\n";
+	    
+	// -------- Óra hozzárendelés -------- //
+
+	    echo '<tbody>'."\n";
+	    echo '<tr>'."\n";
+		echo '<th>'._ORA.'</th>'."\n";
+		echo '<td>'."\n";
+		    $SEL = array($jegy['oraId'] => ' selected="selected"');
+		    echo '<select name="oraId"'.$DIS.'>'."\n";
+		    echo '<option value="NULL">'._NINCS.'</option>';
+		    for ($i = 0;$i < count($Orak); $i++) {
+			echo '<option value="'.$Orak[$i]['oraId'].'" '.$SEL[$Orak[$i]['oraId']].'>';
+			echo $Orak[$i]['dt'].' ('.$aHetNapjai[(date('w',strtotime($Orak[$i]['dt']))+6) % 7 + 1].') '
+				.$Orak[$i]['ora'].'. '._ORA;
+			echo ': '.$Orak[$i]['leiras'];
+			echo '</option>'."\n";
+		    }
+		    echo '</select>'."\n";
+		echo '</td>'."\n";
+
+	    echo '</tr>'."\n";
+	    echo '</tbody>'."\n";
+	
+	// -------- Ha dolgozat jegy - a dolgozat adatai -------- //
+
+	    if ($jegy['tipus'] > 2) {
+		echo '<tbody>'."\n";
+		echo '<tr>'."\n";
+		    echo '<th><a href="'.str_replace('ajax', '', href('index.php?page=naplo&sub=osztalyozo&f=dolgozat&dolgozatId='.$jegy['dolgozatId'])).'">'._DOLGOZAT.'</a></th>'."\n";
+		    echo '<td>'."\n";
+			$SEL = array($jegy['dolgozatId'] => ' selected="selected"');
+			echo '<select name="dolgozatId"'.$DIS.'>';
+			for ($i = 0;$i < count($Dolgozatok['dolgozatIds']);$i++) {
+			    $dolgozatId = $Dolgozatok['dolgozatIds'][$i];
+			    echo '<option value="'.$dolgozatId.'" '.$SEL[$dolgozatId].'>';
+			    echo $Dolgozatok[$dolgozatId]['dolgozatNev'];
+			    echo '</option>'."\n";
+			}
+			echo '</select>'."\n";
+		    echo '</td>'."\n";
+		echo '</tr>'."\n";
+		echo '</tbody>'."\n";
+	    
+	    }
+	echo '</table>';
+	
+	if ($skin != 'ajax') formEnd();
+
+    }
+?>

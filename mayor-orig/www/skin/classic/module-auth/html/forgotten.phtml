@@ -1,0 +1,103 @@
+<?php
+
+    function putForgotPasswordForm($ADAT) {
+
+        echo '<h1>'._SITE.'</h1>'."\n";
+        echo '<h2>'._GREETING.'</h2>'."\n";
+
+	formBegin(array('class'=>'forgot'));
+
+	    echo '<h1>'._FORGOT_PASSWORD.'</h1>';
+
+	    echo '<p>'._ENTER_USERACCOUNT.'</p>';
+	    echo '<input type="hidden" name="action" value="sendResetPasswordMail" />';
+	    echo '<input type="hidden" name="toPolicy" value="'.$ADAT['toPolicy'].'" />';
+	    echo '<input type="text" name="userAccount" value="'.$ADAT['userAccount'].'" placeholder="'._USERNAME.'" />';
+	    echo '<input type="submit" value="'._RESET_PASSWORD.'" />';
+	    echo '<p>'._FORGOT_PASSWORD_HELP.'</p>';
+
+	formEnd();
+
+    }
+
+    function putForgotUserAccountForm($ADAT) {
+
+	formBegin(array('class'=>'forgot'));
+
+	    echo '<h1>'._FORGOT_USERACCOUNT.'</h1>';
+
+	    echo '<p>'._ENTER_EMAIL.'</p>';
+	    echo '<input type="hidden" name="action" value="sendResetPasswordMail" />';
+	    echo '<input type="hidden" name="toPolicy" value="'.$ADAT['toPolicy'].'" />';
+	    echo '<input type="text" name="mail" value="'.$ADAT['mail'].'" class="email" placeholder="'._EMAIL.'" />';
+	    echo '<input type="submit" value="'._RESET_PASSWORD.'" />';
+	    echo '<p>'._FORGOT_USERACCOUNT_HELP.'</p>';
+
+	formEnd();
+
+    }
+
+    function putForgotThankYou() {
+
+	echo '<h1>'._SITE.'</h1>'."\n";
+        echo '<h2>'._GREETING.'</h2>'."\n";
+
+	formBegin(array('class'=>'preforgot'));
+	    echo '<a href="'.href('index.php?page=auth&f=login').'">';
+    		_mayorLogo();
+	    echo '</a>';
+	    echo '<p class="forgotDone">'._FORGOT_INFO.'</p>';
+	formEnd();
+
+    }
+
+    function putForgotDisabled() {
+	global $POLICIES,$AUTH;
+
+	echo '<h1>'._SITE.'</h1>'."\n";
+        echo '<h2>'._GREETING.'</h2>'."\n";
+	    echo '<a href="'.href('index.php?page=auth&f=login').'">';
+    		_mayorLogo();
+	    echo '</a>';
+
+	formBegin(array('class'=>'preforgot'));
+
+                    echo '<select class="pp" name="toPolicy" class="onChangeSubmit">'."\n";
+		    echo '<option value="">'._FORGOT_DISABLED.'</option>';
+                    $SEL = array($toPolicy => ' selected="selected" ');
+                    for ($i=0; $i<count($POLICIES); $i++) {
+                        $_policy = $POLICIES[$i];
+			$DIS = ($AUTH[$_policy]['enablePasswordReset']!==true) ? ' disabled = "disabled" ' : '';
+                        if ($AUTH[$_policy]['authentication'] != 'none') {
+                            echo '<option value="'.$_policy.'" '.$SEL[$_policy].$DIS.'>';
+                            echo constant('_'.strtoupper($_policy).'_LOGIN');
+                            echo '</option>'."\n";
+                        }
+                    }
+                    echo '</select>'."\n";
+		    echo '<input type="submit" value="'._KIVALASZT.'" />';
+	formEnd();
+
+    }
+
+    function putBackToLogin($ADAT) {
+
+	//echo '<div class="">';
+	    echo '<p class="forgotDone"><a href="'.href('index.php?page=auth&f=login&userAccount='.$ADAT['userAccount'].'&toPolicy='.$ADAT['toPolicy']).'">'._BACK_TO_LOGIN.'</a></p>';
+	//echo '</div>';
+
+    }
+
+    function _mayorLogo() {
+	echo '<div class="loginlogo">';
+	//mayorLogoSvg(array('dot'=>'#bbff44','startColor'=>'cornflowerblue','stopColor'=>'lightgreen'));
+	mayorLogoSvg(array(
+	    'dot'=>'#C9CFE8',
+	    'startColor'=>'#0E396A',
+	    'stopColor'=>'#4B6B90',
+	));
+	echo '</div>';
+    }
+
+
+?>

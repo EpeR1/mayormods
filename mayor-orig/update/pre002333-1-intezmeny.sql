@@ -1,0 +1,13 @@
+CREATE TABLE `diakHianyzas` (                                                                                                                                                                              
+  `diakHianyzasId` int(10) unsigned NOT NULL auto_increment,                                                                                                                                               
+  `diakId` int(10) unsigned NOT NULL,                                                                                                                                                                      
+  `dt` date NOT NULL,                                                                                                                                                                                      
+  `igazolt` tinyint(3) unsigned null,                                                                                                                                                                      
+  `igazolatlan` tinyint(3) unsigned null,                                                                                                                                                                  
+  `beszamit` tinyint(1) unsigned null,                                                                                                                                                                  
+  `megjegyzes` tinytext null,                                                                                                                                                                              
+  PRIMARY KEY (`diakHianyzasId`),                                                                                                                                                                          
+  KEY `diakHianyzas_FKIndex1` (`diakId`),                                                                                                                                                                  
+  CONSTRAINT `diakHianyzas_ibfk_1` FOREIGN KEY (`diakId`) REFERENCES `diak` (`diakId`) ON DELETE CASCADE ON UPDATE CASCADE                                                                                 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;                                                                                                                                            
+    

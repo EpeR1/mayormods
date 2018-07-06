@@ -1,0 +1,52 @@
+<?php
+
+    function putBejegyzesTipusForm($ADAT) {
+
+	formBegin(array('action'=>'', 'method'=>'post', 'class'=>'bejegyzes'));
+
+	    echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />';
+	    echo '<input type="hidden" name="action" value="modositas" />';
+
+	    foreach ($ADAT['bejegyzesTipusok'] as $tipus => $tAdat) {
+		echo '<ul class="'.ekezettelen($tipus).'">';
+		echo '<lh>'.$tipus.'</lh>';
+		for ($i = 0; $i < count($tAdat); $i++) {
+		    $btId = $tAdat[$i]['bejegyzesTipusId'];
+		    echo '<li>';
+		    echo '<input type="hidden" name="bejegyzesTipusId[]" value="'.$btId.'" />';
+		    if ($tAdat[$i]['fokozat'] < 10) echo '&nbsp';
+		    echo $tAdat[$i]['fokozat'].'. '._FOKOZAT.'('.$btId.') - ';
+		    echo '<input type="text" name="bejegyzesTipusNev[]" value="'.$tAdat[$i]['bejegyzesTipusNev'].'" />';
+		    if ($tipus == 'fegyelmi') {
+			$SEL = array($tAdat[$i]['hianyzasDb'] => ' selected="selected" ');
+			echo '<select name="hianyzasDb[]">';
+			for ($h = 0; $h < 26; $h++) {
+			    echo '<option value="'."$btId-$h".'"'.$SEL[$h].'>'.($h==0?'-':$h).'</option>';
+			}
+			echo '</select>'._DARAB_IGAZOLATLAN_HIANYZAS_ESETEN;
+		    }
+//		    echo ' ('.$tAdat[$i]['jogosult'].')';
+		    echo '<span title="'._JOGOSULT.'">';
+		    foreach ($ADAT['jogosult'] as $jogosult) {
+			if (strpos($tAdat[$i]['jogosult'], $jogosult) !== false) 
+			    echo '<input id="'.$jogosult.$tipus.$i.'" checked="checked" type="checkbox" name="jogosult[]" value="'."$btId-$jogosult".'" />';
+			else 
+			    echo '<input id="'.$jogosult.$tipus.$i.'" type="checkbox" name="jogosult[]" value="'."$btId-$jogosult".'" />';
+			echo '<label for="'.$jogosult.$tipus.$i.'">';
+			    echo $jogosult;
+			echo '</label>';
+		    }
+		    echo '</span>';
+		    echo '</li>';
+		}
+		echo '<li class="submit">';
+		    echo '<input class="ok" type="submit" value="'._OK.'" />';
+		    echo '<input class="del confirm" type="submit" name="del-'.ekezettelen($tipus).'" value="'._UTOLSO_TORLESE.'" title="'._BIZTOS_TOROL_E.'" />';
+		    echo '<input class="new" type="submit" name="new-'.ekezettelen($tipus).'" value="'._UJ_FOKOZAT.'" title="'._UJ_FOKOZAT.'" />';
+		echo '</li>';
+		echo '</ul>';
+	    }
+	formEnd();
+    }
+
+?>

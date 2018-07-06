@@ -1,0 +1,87 @@
+%!pdfLaTeXA4 pdf
+%
+% Fasori Gimnázium - Negyedéves értékelés
+%
+\documentclass[10pt]{article}
+
+\usepackage[a4paper]{geometry} % A4-os méret
+\usepackage[utf8x]{inputenc} % UTF-8 kódolású forrás (ucs)
+\usepackage{ucs} % Jobb UTF-8 támogatás
+\usepackage{t1enc}
+\usepackage[magyar]{babel} % magyar elválasztási szabályok
+\frenchspacing % a magyar tipográfiai szabályoknak megfelelő szóközök írásjelek után
+\usepackage{booktabs} % táblázatok magasabb szintű formázása
+\usepackage{fancyhdr} % Ritkítás
+\usepackage{graphicx} % Kép beillesztés
+\pagestyle{fancy}
+\def\mayor{%
+\font\mayorfnt=cmsl4%
+\font\Mayorfnt=cmsl6
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+\renewcommand{\footnotesize}{\fontsize{6pt}{8pt}\selectfont}
+\addtolength{\skip\footins}{2mm}
+\addtolength{\textheight}{16mm}
+\setlength{\footskip}{16pt}
+\setlength{\headsep}{24pt}
+\cfoot{\tiny \copyright\mayor\ elektronikus napló - Nyomtatva: %$nyomtatasDt}
+\lhead{\tiny
+%$intezmenyNev\\
+%$intezmenyCimIrsz %$intezmenyCimHelyseg, %$intezmenyCimKozteruletNev %$intezmenyCimKozteruletJelleg %$intezmenyCimHazszam\\
+Tel: %$intezmenyTelefon\\
+\vspace{8pt}}
+\chead{
+\includegraphics[width=24pt,height=24pt,type=eps,viewport=14 14 219 217]{/var/mayor/print/logo/logo.eps}\\
+\tiny\scshape timor Domini principium scientiæ
+}
+\rhead{\tiny Web: %$intezmenyHonlap\\ E-mail: %$intezmenyEmail\\ Fax: %$intezmenyFax\\ \vspace{8pt}}
+
+\begin{document}
+\vspace*{-18pt}
+
+%{diak
+\begin{center}
+\vspace{18pt}{\Large Értesítő}\\ \vspace{10pt}Értesítjük a Tisztelt Szülőket, hogy %$negyedev negyedév tanulmányi eredményeinek felmérése szerint
+
+\vspace{12pt}
+
+\vspace{6pt}{\large %$diakNev}
+
+\vspace{6pt}%$osztaly osztályos gyermekük minősítése:
+
+
+\vspace{14pt}\small\begin{tabular}{@{\ \ }l|r@{\ \ }}
+%{targy
+\hline\vbox to 1.2em {}%$targyNev tantárgyból & \emph{%$targyMinosites}\\
+%}targy
+\hline\end{tabular}\end{center}
+
+\vspace{12pt}
+
+{\noindent\scriptsize\bfseries\slshape Megjegyzés:}
+\begin{description}
+\scriptsize
+\setlength{\parskip}{-4pt}
+\item[Dicséret:] a tanuló kiemelkedően teljesít.
+\item[Figyelmezetés:] a tanuló nem teljesít olyan szinten, ahogyan azt képességeitől elvárhatnánk.
+\item[Intés:] a tanuló elégségesre áll.
+\item[Megrovás:] a tanuló bukásra áll.
+\end{description}
+
+\vspace{12pt}\noindent
+Kérjük, hogy ezt az értesítőt mindkét szülő aláírásával ellátva az osztályfőnököknek juttassák vissza!\\ 
+
+\vspace{12pt}
+\noindent
+Budapest, %$ev. %$hoNev %$nap.\hspace{11.5em} P.H.\\ 
+
+\vspace{20pt}
+\begin{center}
+\slshape\scriptsize
+\begin{tabular}{ccc}
+\rule{3.5cm}{0.1pt}&\hspace{3cm}\ &\rule{3.5cm}{0.1pt}\\
+apa/gondviselő&&anya/gondviselő\\
+\end{tabular}
+\end{center}
+\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+%}diak
+\end{document}

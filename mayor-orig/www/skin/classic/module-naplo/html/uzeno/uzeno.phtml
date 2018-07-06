@@ -1,0 +1,434 @@
+<?php
+
+    /* WHOAMI: __SZEREP.__MEID */
+    global $IMG;
+    $IMG = array(
+	    'diak' => '<span class="icon-child"></span>',
+	    'szulo' => '<span class="icon-adult"></span>',
+	    'tanar' => '<span class="icon-adult"></span>',
+	    'munkakozosseg' => '<span class="icon-slideshare"></span>',
+	    'tankor' => '<span class="icon-myspace"></span>',
+	    'tankorSzulo' => '<span class="icon-group-alt"></span>',
+	    'osztaly' => '<span class="icon-group"></span>',
+	    'osztalySzulo' => '<span class="icon-adult"></span>',
+	    'osztalyTanar' => '<span class="icon-slideshare"></span>',
+    );
+
+    $TATA = array();
+
+    function fillTata($ADAT) {
+
+	global $TATA;
+	foreach ( array('tankor','tankorSzulo') as $_i => $_t ) {
+	    for ($i=0; $i<count($ADAT['tagsagok'][$_t]); $i++) {
+		$TATA[$_t][$ADAT['tagsagok'][$_t][$i]['tankorId']] = $ADAT['tagsagok'][$_t][$i]['tankorNev'];
+	    }
+	}
+	for ($i=0; $i<count($ADAT['tagsagok']['diak']); $i++) {
+	    $TATA['diak'][$ADAT['tagsagok']['diak'][$i]['diakId']] = $ADAT['tagsagok']['diak'][$i]['diakNev'].' ('.$ADAT['tagsagok']['diak'][$i]['diakId'].')';
+
+	}
+	for ($i=0; $i<count($ADAT['tagsagok']['tanar']); $i++) {
+	    $TATA['tanar'][$ADAT['tagsagok']['tanar'][$i]['tanarId']] = $ADAT['tagsagok']['tanar'][$i]['tanarNev'];
+	}
+	for ($i=0; $i<count($ADAT['tagsagok']['szulo']); $i++) {
+	    $_szuloId = $ADAT['tagsagok']['szulo'][$i]['szuloId'];
+	    $TATA['szulo'][$_szuloId] = $ADAT['tagsagok']['szulo'][$i]['szuloNev'];
+	    for ($j=0; $j<count($ADAT['szuloDiakjai'][$_szuloId]); $j++) {
+		$TATA['szulo'][$_szuloId].= ' ('.$ADAT['szuloDiakjai'][$_szuloId][$j]['diakNev'].')';
+	    }
+	}
+	for ($i=0; $i<count($ADAT['tagsagok']['munkakozosseg']); $i++) {
+	    $TATA['munkakozosseg'][$ADAT['tagsagok']['munkakozosseg'][$i]['munkakozossegId']] = $ADAT['tagsagok']['munkakozosseg'][$i]['munkakozossegNev'];
+	}
+	foreach ( array('osztaly','osztalySzulo','osztalyTanar') as $_i => $_t ) {
+	    for ($i=0; $i<count($ADAT['tagsagok'][$_t]); $i++) {
+		$TATA[$_t][$ADAT['tagsagok'][$_t][$i]['osztalyId']] = $ADAT['tagsagok'][$_t][$i]['osztalyJel'];
+	    }
+	}
+    }
+
+    function putUzeno($ADAT) {
+
+	if ($ADAT['uzenetek']===false) return false;
+
+	global $TATA,$skin,$IMG;
+	if (!is_array($TATA) || count($TATA)==0) fillTata($ADAT);
+
+	$kepMutat = $ADAT['kepMutat'];
+	$colspan=5;
+	$_colspan=1;
+
+	if ($ADAT['cimzettId']!='') $filterClear = '<br/><a class="more" href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&cimzettId=&cimzettTipus=&mId='.$ADAT['mId']).'">'._CLEARFILTER.'</a>';
+	if ($ADAT['feladoId']!='') $filter2Clear = '<br/><a class="more" href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&feladoId=&feladoTipus=&mId='.$ADAT['mId']).'">'._CLEARFILTER.'</a>';
+
+	if ($ADAT['szalId']!='') {
+	    putUzenetSzal($ADAT);
+	} elseif ($ADAT['mId']!='') {
+	    putEgyUzenet($ADAT);
+	} else {
+
+	echo '<table class="uzeno" border="0" align="center" cellspacing="1">';
+//	echo '<thead><tr><th class="dt" colspan="'.$_colspan.'">'._DATUM.', '._FELADO.$filter2Clear.'</th>
+//	     <th colspan="'.($_colspan+1).'" class="cimzett">'._CIMZETT.$filterClear.'</th><th>'._SZOVEG.'</th><th></th></tr></thead>';
+	echo '<thead><tr><th colspan="5"><a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno').'">'.'Üzenő'.'</a></th></tr>';
+        echo '<tfoot><tr><th colspan="'.$colspan.'">';
+            if ($skin=='ajax' && $ADAT['limits']!='') {
+                $href = href('index.php?page=naplo&sub=uzeno&f=uzeno');
+                echo _LEGFRISSEBB.' '.count($ADAT['uzenetek']).', ';
+                echo '<a href="'.$href.'" >'._MINDMUTAT.'</a>';
+            } else {
+		echo _OSSZESEN.': '.intval($ADAT['limits']['max']);
+	    }
+        echo '</th></tr></tfoot>';
+
+	echo '<tbody>';
+	for ($i=0; $i<count($ADAT['uzenetek']); $i++) {
+	    $D = $ADAT['uzenetek'][$i];
+	    $_class = array();
+	    $_class[] = ($D['flag']==1) ? 'olvasott':'uj';
+	    $_class[] = $D['cimzettTipus'];
+	    if ($D['cimzettId']==0) $_class[] = 'asterix';
+	    echo '<tr class="'.implode(' ',$_class).'">';
+
+	    echo '<td class="felado">';
+		if ($kepMutat && ($_f = putFace($D['feladoId'],$D['feladoTipus'],false,false))) {
+		    echo '<div class="face" style="margin-right:4px; display:table-cell;">'.$_f.'</div>';
+		}
+		echo '<div class="nev--container">';
+		echo '<a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&feladoId='.$D['feladoId'].'&feladoTipus='.$D['feladoTipus']).'">';
+		echo _szerepNev($D['feladoTipus'], $D['feladoId'] );
+		echo '</a><br/>';
+		echo '<span class="dt">'._dt($D['dt']).'</span>';
+		echo '</div>';
+	    echo '</td>';
+	    echo '<th style="text-align: center; color:white;">';
+		echo (($D['cimzettId']==0)?'<span class="icon-globe"></span>':$IMG[$D['cimzettTipus']]);
+	    echo '</th>';
+	    echo '<td class="cimzett">';
+/*
+		if ($kepMutat && ($_f=putFace($D['cimzettId'],$D['cimzettTipus'],false,false))) {
+		    echo '<div class="face" style="display:table-cell">';
+			echo $_f;
+		    echo '</div>';
+		}
+*/		echo '<div class="nev--container">';
+		//echo '<a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&cimzettId='.$D['cimzettId'].'&cimzettTipus='.$D['cimzettTipus'],array('sessionID','policy','lang')).'">';
+		echo _szerepNev($D['cimzettTipus'],$D['cimzettId']);
+		//echo '</a>';
+		echo '</div>';
+	    echo '</td>';
+
+	    echo '<td class="uzenet">';
+		    $href = href('index.php?page=naplo&sub=uzeno&f=uzeno&feladoId='.$D['feladoId'].'&feladoTipus='.$D['feladoTipus'].'&mId='.$D['mId'],array('sessionID','lang','policy'));
+		    $href_szal = href('index.php?page=naplo&sub=uzeno&f=uzeno&szalId='.$D['feladoId'].'_'.$D['feladoTipus'].'_'.$D['cimzettId'].'_'.$D['cimzettTipus'].'&mId='.$D['mId'],array('sessionID','lang','policy'));
+
+		    // $D['txt'] = '<a href="'.$href_szal.'">'.nl2br(htmlspecialchars($D['txt'])).'</a>';
+		    $D['txt'] = makelinksclickable(nl2br(supertext($D['txt'])));
+		    echo (mb_substr($D['txt'],0,2000,'UTF-8'));
+		    if (mb_strlen($D['txt'],'UTF-8')>2000) {
+			echo ' <a class="more" href="'.$href.'">...</a>';
+		    } else {
+			//echo ' <a class="more" href="'.$href.'"><span class="icon-return-key"></span></a>';
+		    }
+
+	    echo '</td>';
+
+	    echo '<td class="uzenoEszkozok">';
+		if (__UZENOADMIN) {
+		} elseif ($D['flag']!=1) {
+		    $href = href('index.php?page=naplo&sub=uzeno&f=uzeno&action=flagUzenet&flag='.(1).'&mId='.$D['mId'],array('sessionID','lang','policy'));
+		    echo ' <a href="'.$href.'"><span class="icon-check"></span></a><br/>';
+		}
+
+		    echo ' <a href="'.$href_szal.'"><span class="icon-share-alt"></span></a><br/>';
+		    $href = href('index.php?page=naplo&sub=uzeno&f=uzeno&action=delUzenet&mId='.$D['mId'],array('sessionID','lang','policy'));
+		    echo ' <a class="del" href="'.$href.'"><span class="icon-trash-alt"></span></a>';
+
+	    echo '</td>';
+	    echo '</tr>'."\n";
+	    }
+	    echo '</tbody>';
+	    if ($skin=='ajax') {
+		echo '<tbody><tr><th style="height: 30px;vertical-align:middle;" colspan="'.$colspan.'">';
+		    if ($ADAT['limits']['max']>$i) echo '<div class="_dotHolder"><a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno').'"><div class="_dot"></div> <div class="_dot"></div> <div class="_dot"></div></a></div>';
+		echo '</th></tr></tbody>';
+	    }
+	    echo '</table>';
+
+	    if ($skin!='ajax') {
+		_putLapozo($ADAT['limits'],'index.php?page=naplo&sub=uzeno&f=uzeno&feladoTipus='.$ADAT['feladoTipus'].'&feladoId='.$ADAT['feladoId'].'&cimzettTipus='.$ADAT['cimzettTipus'].'&cimzettId='.$ADAT['cimzettId']);
+	    } else {
+	    }
+
+	}
+
+    }
+
+    function putUzeno_DEPRECATED($ADAT) {
+
+	if ($ADAT['uzenetek']===false) return false;
+
+	global $TATA,$skin,$IMG;
+	if (!is_array($TATA) || count($TATA)==0) fillTata($ADAT);
+
+	$kepMutat = $ADAT['kepMutat'];
+//	$kepMutat=false;
+	$colspan=5;
+	$_colspan=1;
+/*	if ($kepMutat) {
+	    $colspan+=2;
+	    $_colspan++;
+	}
+*/	// Üzenetek
+	if ($ADAT['szalId']!='') putUzenetSzal($ADAT);
+	elseif ($ADAT['mId']!='') putEgyUzenet($ADAT);
+	else {
+
+	    if ($ADAT['cimzettId']!='') $filterClear = '<br/><a class="more" href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&cimzettId=&cimzettTipus=&mId='.$ADAT['mId']).'">'._CLEARFILTER.'</a>';
+	    if ($ADAT['feladoId']!='') $filter2Clear = '<br/><a class="more" href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&feladoId=&feladoTipus=&mId='.$ADAT['mId']).'">'._CLEARFILTER.'</a>';
+
+	echo '<table class="uzeno" border="0" align="center" cellspacing="1">';
+	echo '<thead><tr><th class="dt" colspan="'.$_colspan.'">'._DATUM.', '._FELADO.$filter2Clear.'</th>
+	     <th colspan="'.($_colspan+1).'" class="cimzett">'._CIMZETT.$filterClear.'</th><th>'._SZOVEG.'</th><th></th></tr></thead>';
+        echo '<tfoot><tr><th colspan="'.$colspan.'">';
+            if ($skin=='ajax' && $ADAT['limits']!='') {
+                $href = href('index.php?page=naplo&sub=uzeno&f=uzeno');
+                echo _LEGFRISSEBB.' '.count($ADAT['uzenetek']).', ';
+                echo '<a href="'.$href.'" >'._MINDMUTAT.'</a>';
+            } else {
+		echo _OSSZESEN.': '.intval($ADAT['limits']['max']);
+	    }
+        echo '</th></tr></tfoot>';
+
+	echo '<tbody>';
+	for ($i=0; $i<count($ADAT['uzenetek']); $i++) {
+	    $D = $ADAT['uzenetek'][$i];
+	    $_class = array();
+	    $_class[] = ($D['flag']==1) ? 'olvasott':'uj';
+	    $_class[] = $D['cimzettTipus'];
+	    if ($D['cimzettId']==0) $_class[] = 'asterix';
+	    echo '<tr class="'.implode(' ',$_class).'">';
+	    echo '<td class="felado">';
+		if ($kepMutat && ($_f = putFace($D['feladoId'],$D['feladoTipus'],false,false))) {
+		    echo '<div class="face" style="margin-right:4px; display:table-cell;">'.$_f.'</div>';
+		}
+		echo '<div class="nev--container">';
+		echo '<a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&feladoId='.$D['feladoId'].'&feladoTipus='.$D['feladoTipus']).'">';
+		echo _szerepNev($D['feladoTipus'], $D['feladoId'] );
+		echo '</a><br/>';
+		echo '<span class="dt">'._dt($D['dt']).'</span>';
+		echo '</div>';
+	    echo '</td>';
+	    echo '<th style="text-align: center; color:white;">';
+		echo (($D['cimzettId']==0)?'<span class="icon-globe"></span>':$IMG[$D['cimzettTipus']]);
+	    echo '</th>';
+	    echo '<td class="cimzett">';
+		if ($kepMutat && ($_f=putFace($D['cimzettId'],$D['cimzettTipus'],false,false))) {
+		    echo '<div class="face" style="display:table-cell">';
+			echo $_f;
+		    echo '</div>';
+		}
+		echo '<div class="nev--container">';
+		//echo '<a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&cimzettId='.$D['cimzettId'].'&cimzettTipus='.$D['cimzettTipus'],array('sessionID','policy','lang')).'">';
+		echo _szerepNev($D['cimzettTipus'],$D['cimzettId']);
+		//echo '</a>';
+		echo '</div>';
+	    echo '</td>';
+
+	    echo '<td class="uzenet">';
+		    $href = href('index.php?page=naplo&sub=uzeno&f=uzeno&feladoId='.$D['feladoId'].'&feladoTipus='.$D['feladoTipus'].'&mId='.$D['mId'],array('sessionID','lang','policy'));
+		    $href_szal = href('index.php?page=naplo&sub=uzeno&f=uzeno&szalId='.$D['feladoId'].'_'.$D['feladoTipus'].'_'.$D['cimzettId'].'_'.$D['cimzettTipus'].'&mId='.$D['mId'],array('sessionID','lang','policy'));
+
+		    $D['txt'] = '<a href="'.$href_szal.'">'.nl2br(htmlspecialchars($D['txt'])).'</a>';
+		    echo (mb_substr($D['txt'],0,2000,'UTF-8'));
+		    if (mb_strlen($D['txt'],'UTF-8')>2000) {
+			echo ' <a class="more" href="'.$href.'">...</a>';
+		    } else {
+			//echo ' <a class="more" href="'.$href.'"><span class="icon-return-key"></span></a>';
+		    }
+
+	    echo '</td>';
+
+	    echo '<td>';
+		if (__UZENOADMIN) {
+		    $href = href('index.php?page=naplo&sub=uzeno&f=uzeno&action=delUzenet&mId='.$D['mId'],array('sessionID','lang','policy'));
+		    echo ' <a class="del" href="'.$href.'"><span class="icon-trash-alt"></span></a>';
+		} elseif ($D['flag']!=1) {
+		    $href = href('index.php?page=naplo&sub=uzeno&f=uzeno&action=flagUzenet&flag='.(1).'&mId='.$D['mId'],array('sessionID','lang','policy'));
+		    echo ' <a href="'.$href.'"><span class="icon-check"></span></a>';
+		}
+	    echo '</td>';
+	    echo '</tr>'."\n";
+	}
+	echo '</tbody>';
+	echo '</table>';
+
+	    if ($skin!='ajax')	_putLapozo($ADAT['limits'],'index.php?page=naplo&sub=uzeno&f=uzeno&feladoTipus='.$ADAT['feladoTipus'].'&feladoId='.$ADAT['feladoId'].'&cimzettTipus='.$ADAT['cimzettTipus'].'&cimzettId='.$ADAT['cimzettId']);
+
+	}
+
+    }
+
+
+
+
+    function _szerepNev($tipus,$id) {
+	global $TATA;
+	if ($id==0 && defined('_TP'.strtoupper($tipus))) return '&laquo;'.constant('_TP'.strtoupper($tipus)).'&raquo;';
+	elseif($id==0 and $tipus=='') return '&laquo;admin&raquo;';
+	else return ($TATA[$tipus][$id]!='') ? $TATA[$tipus][$id] : '-n/a-' ;
+    }
+
+    function putUzenoUzenet($ADAT) {
+
+	if (__SZEREP=='') return;
+
+	global $TATA;
+	if (!is_array($TATA) || count($TATA)==0) fillTata($ADAT);
+        $feladoId = (__SZEREP=='admin')? 0:setUzenoFeladoId();
+        $KEYS = array_keys($ADAT['tagsagok']);
+//	if (is_null($ADAT['replyTipus'])) $ADAT['replyTipus']=$KEYS[0];
+
+	if ($ADAT['feladoId']=='' || $ADAT['mId']>0) {
+
+	    formBegin(array('method'=>'post','action'=>href('index.php?page=naplo&sub=uzeno&f=postas&mId='.$ADAT['mId']), 'id'=>'uzenoKereso', 'class'=>'onLoadUpdate'));
+	    formEnd();
+
+	} else { /* RÉGI UI */
+
+	}
+
+    }
+
+    function putUzenetSzal($ADAT) {
+	global $IMG;
+	$U=$ADAT['uzenetek'];
+
+	list($s1,$s2,$s3,$s4) = explode('_',$ADAT['szalId']);
+
+	echo '<table id="uzenetek" class="uzenetSzal '.$s4.'" align="center" cellspacing="1">';
+	echo '<thead><tr><th>'._DATUM.'</th><th colspan="2">'._FELADO.'</th><th>'._UZENET.'</th></tr></thead>';
+	echo '<tfoot><tr><th>'.'</th><th colspan="2">'.'</th><th>'.'</th></tr></tfoot>';
+	echo '<tbody>';
+	for ($i=0; $i<count($U); $i++) {
+	    $D = $U[$i];
+	    $_meclass = (__MEID==$D['feladoId'] && __SZEREP==$D['feladoTipus'])? 'uzenetSajat':'uzenetPartner';
+	    echo '<tr class="'.$_meclass.' '.$D['feladoTipus'].'" id="mId_'.$D['mId'].'">';
+	    echo '<td class="uzenetDt">';
+		//echo $U[$i]['mId'];
+		echo _dt($U[$i]['dt']);
+	    echo '</td>';
+	    echo '<th style="color:white; width:20px;">';
+		echo (($D['cimzettId']==0)?'<span class="icon-globe"></span>':$IMG[$D['feladoTipus']]);
+	    echo '</th>';
+	    echo '<td class="uzenetSzerep">';
+		echo '<a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&cimzettId='.$D['feladoId'].'&cimzettTipus='.$D['feladoTipus'].'&mId='.$D['mId'],array('sessionID','lang','policy')).'">';
+		echo _szerepNev($D['feladoTipus'], $D['feladoId'] );
+		echo '</a>';
+	    echo '</td><td class="uzenet">';
+		echo '<div>'.makelinksclickable(nl2br(supertext($U[$i]['txt']))).'</div>';
+	    echo '</td></tr>';
+	}
+	echo '</tbody></table>';
+    }
+
+    function putEgyUzenet($ADAT) {
+
+	global $IMG;
+	//--FIXME
+	for ($i=0; $i<count($ADAT['uzenetek']); $i++) {
+	  if ($ADAT['uzenetek'][$i]['mId']==$ADAT['mId']) {
+	    $D = $ADAT['uzenetek'][$i];
+	    break;
+	  }
+	}
+	echo '<table border="0" cellspacing="1" align="center" class="uzeno egyUzenet">';
+	echo '<thead><tr><th>';
+	    $href = href('index.php?page=naplo&sub=uzeno&f=uzeno&mId=',array('sessionID','lang','policy'));
+	    //echo '<a class="more" href="'.$href.'"><span class="icon-inbox-box"></span></a>';
+
+	    $_class = array('more');
+	    if ($D['flag']==1) {
+		 $_class[] = 'uj';
+		 $_flag=0;
+	    } else {
+		 $_flag=1;
+		 $_class[] = 'olvasott';
+	    }
+	    $href = href('index.php?page=naplo&sub=uzeno&f=uzeno&action=flagUzenet&flag='.($_flag).'&mId='.$D['mId'],array('sessionID','lang','policy'));
+	    echo ' <a class="'.implode(' ',$_class).'" href="'.$href.'"><span class="icon-check"></span></a>';
+	echo '</th><th>'._DATUM.'</th><th>'._FELADO.'</th><th colspan="2">'._CIMZETT.'</th></tr></thead>';
+	echo '<tbody>';
+
+	    $_class = array();
+	    $_class[] = $D['cimzettTipus'];
+	    echo '<tr class="'.implode(' ',$_class).'">';
+	    echo '<td colspan="2">'._dt($D['dt']).'</td>';
+	    echo '<td>';
+		echo '<a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&cimzettId='.$D['feladoId'].'&cimzettTipus='.$D['feladoTipus'].'&mId='.$D['mId'],array('sessionID','lang','policy')).'">';
+		echo _szerepNev($D['feladoTipus'], $D['feladoId'] );
+		echo '</a>';
+	    echo '</td>';
+	    echo '<th>'.(($D['cimzettId']==0)?'<span class="icon-globe"></span>':$IMG[$D['cimzettTipus']]).'</th>';
+	    echo '<td>';
+		echo '<a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&cimzettId='.$D['cimzettId'].'&cimzettTipus='.$D['cimzettTipus'].'&mId='.$D['mId'],array('sessionID','lang','policy')).'">';
+		echo _szerepNev($D['cimzettTipus'],$D['cimzettId']);
+		echo '</a>';
+	    echo '</td>';
+	    echo '</tr>';
+	    echo '<tr>';
+	    echo '<td colspan="5" class="content">';
+		echo makelinksclickable(nl2br(supertext($U[$i]['txt']))); // echo nl2br(htmlspecialchars($D['txt']));
+	    echo '</td>';
+	    echo '</tr>'."\n";
+
+	echo '</tbody>';
+	echo '</table>';
+
+    }
+
+    function _putLapozo($LIMITS,$base='index.php?page=naplo&sub=uzeno&f=uzeno') {
+
+        $limit = intval($LIMITS['limit']);
+        $darab = intval($LIMITS['max']);
+        $mutato = intval($LIMITS['mutato']);
+        $tol = ($mutato-5);
+        $ig = ($mutato+5);
+        if ($tol<1) $tol=1;
+	if ($limit==0) $limit=1;
+        if ($ig>ceil($darab/$limit)) $ig=ceil($darab/$limit);
+        echo '<table class="lapozo" align="center" cellspacing="0" cellpadding="0">';
+            echo '<tr><td>';
+                echo '<table align="right" cellspacing="1" cellpadding="1">';
+                    echo '<tr>';
+                        echo '<th class="title">'._LAPOZO.'</th>';
+                        if ($tol>1) {
+                            echo '<td class="nav"><a href="'.href($base.'&mutato=1').'">1</a></td>';
+                            echo '<td class="nav"><a href="'.href($base.'&mutato='.($tol-1)).'">&lt;</a></td>';
+                        }
+                        for ($i=$tol; $i<=$ig; $i++) {
+                            if ($i==$mutato) echo '<td class="aktiv">';
+                            else echo '<td>';
+                                echo '<a href="'.href($base.'&mutato='.$i).'">';
+                                    echo $i;
+                                echo '</a>';
+                            echo '</td>';
+                        }
+                        if ($ig<ceil($darab/$limit)) {
+                            echo '<td class="nav"><a href="'.href($base.'&mutato='.$i).'">&gt;</a></td>';
+                            echo '<td class="nav"><a href="'.href($base.'&mutato='.ceil($darab/$limit)).'">'.ceil($darab/$limit).'</a></td>';
+                        }
+                    echo '</tr>';
+                echo '</table>';
+            echo '</td></tr>';
+        echo '</table>'."\n";
+
+    }
+
+    function _dt($dt) {
+	return superdate($dt); // date('Y.m.d. H:i',strtotime($dt));
+    }
+
+
+?>

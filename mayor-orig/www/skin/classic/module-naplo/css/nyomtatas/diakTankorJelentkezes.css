@@ -1,0 +1,4 @@
+
+    form.nyomtat { text-align: center; border: 1px black; border-style: solid none; padding: 10px; margin: 10px 80px;}
+    form.nyomtat h3 { border: 1px black; border-style: solid none; background-color: rgb(200,200,200); }
+    form.nyomtat label { margin: 10px 10px 2px 2px; background-color: rgb(255,255,255); }

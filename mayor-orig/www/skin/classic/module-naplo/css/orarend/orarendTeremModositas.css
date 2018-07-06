@@ -1,0 +1,8 @@
+
+    form.terem { background-color: rgb(100,50,100); color: white; margin: 5px auto; text-align: center; width: 640px; }
+    form.terem h1 { text-align: center; font-size: 16px; background-color: rgb(80,40,80); padding: 2px; }
+    form.terem select { margin: 2px; }
+    form.terem select option.foglalt { color: red; }
+    form.terem select option.szabad { color: green; }
+    
+

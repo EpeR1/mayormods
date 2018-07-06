@@ -1,0 +1,36 @@
+<?php
+
+    function putLezarandoOsztalyValaszto($ADAT) {
+
+	formBegin(array('class'=>'vegzos'));
+
+	    echo '<input type="hidden" name="action" value="lezaras" />'."\n";
+
+	    echo '<h2>'.$ADAT['tanev'].'</h2>';
+    	    echo '<ul>'."\n";
+	    for ($i = 0; $i < count($ADAT['osztalyok']); $i++) {
+
+		if ($ADAT['osztalyok'][$i]['vegzoTanev'] == __TANEV && $ADAT['osztalyok'][$i]['kezdoTanev']<=__TANEV) {
+		    if (in_array($ADAT['osztalyok'][$i]['osztalyId'], $ADAT['lezarandoOsztaly'])) $CHK = ' checked="checked" ';
+		    else $CHK = '';
+		    echo '<li>';
+		    echo '<input id="chk'.$i.'" type="checkbox" name="lezarandoOsztaly[]" value="'.$ADAT['osztalyok'][$i]['osztalyId'].'" '.$CHK.'/>'."\n";
+		    echo '<label for="chk'.$i.'">';
+		    echo $ADAT['osztalyok'][$i]['osztalyJel'];
+		    echo ' - '.($ADAT['osztalyok'][$i]['leiras']);
+		    echo ' - '.($ADAT['osztalyok'][$i]['osztalyfonok']['tanarNev']);
+		    echo '</label>';
+		    echo '</li>'."\n";
+		}
+
+	    }
+	    echo '</ul>'."\n";
+	    echo '<input type="text" readonly="readonly" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+
+	    echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+
+    }
+
+?>

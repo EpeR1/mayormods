@@ -1,0 +1,112 @@
+<?php
+
+    function putOsztalyHianyzok($ADAT) {
+	echo '<table class="hianyzas" style="float:left; margin-left:40px; margin-right:0px;">'."\n";
+
+	echo '<thead>';
+	echo '<tr><th>'._DIAK.'</th><th colspan="2">'._KESES.'</th><th colspan="2">'._HIANYZAS.'</th><th>'._FELSZERELES.'</th><th>'._FELMENTES.'</th><th>'._EGYENRUHA.'</th></tr>';
+	echo '</thead>'."\n";
+
+	echo '<tfoot>';
+	    echo '<tr><th colspan="7">'.'</th></tr>'."\n";
+	echo '</tfoot>'."\n";
+	echo '<tbody>';
+	    foreach($ADAT['diakok'] as $diakId=>$X) {
+		$D = $ADAT['diakHianyzott'][$diakId];
+		if (is_array($D)) {
+		echo '<tr>';
+		echo '<th>';
+		    echo '<a href="'.href('index.php?page=naplo&sub=hianyzas&f=diak&diakId='.$diakId.'&dt='.$ADAT['dt']).'">';
+		    echo $ADAT['diakok'][$diakId]['diakNev'];
+		    echo '</a>';
+		echo '</th>';
+		echo '<td class="d igazolatlan keses">'._hWalk($D['késés']['igazolatlan']).'</td>';
+		echo '<td class="d igazolt keses">'._hWalk($D['késés']['igazolt']).'</td>';
+		echo '<td class="d igazolatlan hianyzas">'._hWalk($D['hiányzás']['igazolatlan']).'</td>';
+		echo '<td class="d igazolt hianyzas">'._hWalk($D['hiányzás']['igazolt']).'</td>';
+		echo '<td class="d igazolatlan felszereles">'._hWalk($D['felszerelés hiány']['igazolatlan']).'</td>';
+		echo '<td class="d igazolatlan felmentes">'._hWalk($D['felmentés']['igazolatlan']).'</td>';
+		echo '<td class="d igazolatlan egyenruha">'._hWalk($D['egyenruha hiány']['igazolatlan']).'</td>';
+		echo '</tr>'."\n";
+		}
+	    }
+	echo '</tbody>'."\n\n";
+	echo '</table>';
+    }
+
+    function _hWalk($X) {
+	if (is_array($X))
+	foreach ($X as $tankorTipus => $V) {
+    	    $r[] = '<span title="'.$tankorTipus.'">'.$V['db'].'</span>';
+	    if ($V['db']!='') $db += $V['db'];
+	}
+	return $db.((count($r)>0) ? ' ('.implode('+', $r).')':'');
+    }
+
+    function putOsztalyHianyzas($ADAT) {
+
+	putOsztalyHianyzok($ADAT);
+
+	echo '<table class="hianyzas">'."\n";
+
+	echo '<thead>';
+	echo '<tr><th>'._ORA.'</th><th>'._TANKOR.'</th><th>'._DIAK.'</th><th colspan="2">'._TIPUS.'</th></tr>';
+	echo '</thead>'."\n";
+
+	echo '<tfoot>';
+	    echo '<tr><th colspan="5">'.$ADAT['dt'].'</th></tr>'."\n";
+	echo '</tfoot>'."\n";
+
+	echo '<tbody>';
+
+        foreach ($ADAT['hianyzas'] as $ora => $oraAdat) {
+
+            // Az óra cella magasságának (rowspan) megállapítása
+            $row = 0; foreach ($oraAdat as $tankorId => $hAdat) $row += count($hAdat);
+	    // ezzel jelezzük, hogy most nem kell tr a tankör cellája előtt
+            $oraElso = true;
+            // Az óra sorának kezdete
+            echo '<tr>';
+            echo '<th rowspan="'.$row.'">'.$ora.'.</th>';
+
+            foreach ($oraAdat as $tankorId => $hAdat) {
+
+		if (!$oraElso) echo '<tr>';
+		$oraElso = false;
+		echo '<th class="tk" rowspan="'.count($hAdat).'">';
+		    echo '<a href="'.href('index.php?page=naplo&sub=hianyzas&f=ora&oraId='.$hAdat[0]['oraId']).'">';
+		    echo $ADAT['tankorok'][ $hAdat[0]['tankorId'] ][0]['tankorNev'].' ('.$hAdat[0]['tankorId'].')';
+		    echo '</a>';
+		echo '</th>';
+
+		$diakIndex = array(); $elso = true;
+		for ($i = 0; $i < count($hAdat); $i++) $diakIndex[ $hAdat[$i]['diakId'] ][] = $i;
+		foreach ($ADAT['diakok'] as $diakId => $dAdat) {
+//		    if (isset($diakIndex[$diakId])) {
+		    if (is_array($diakIndex[$diakId])) foreach ($diakIndex[$diakId] as $i) {
+//			$i = $diakIndex[$diakId];
+			if (!$elso) echo '<tr>'."\n";
+			$elso = false;
+			echo '<td>';
+			    echo '<a href="'.href('index.php?page=naplo&sub=hianyzas&f=nap&diakId='.$hAdat[$i]['diakId'].'&dt='.$ADAT['dt']).'">';
+			    echo $ADAT['diakok'][ $hAdat[$i]['diakId'] ]['diakNev'].' ('.$hAdat[$i]['diakId'].')'; 
+			    echo '</a>'."\n";
+			echo '</td>'."\n";
+			echo '<td class="d '.ekezettelen($hAdat[$i]['statusz']).' '.ekezettelen($hAdat[$i]['hTipus']).'">'.'</td>'."\n";
+			echo '<td >';
+			    if ($hAdat[$i]['hTipus'] != 'felmentés' && $hAdat[$i]['hTipus'] != 'felszerelés hiány' && $hAdat[$i]['hTipus'] != 'egyenruha hiány') echo $hAdat[$i]['statusz'].' ';
+			    echo $hAdat[$i]['hTipus'];
+			    if ($hAdat[$i]['statusz'] == 'igazolatlan' && $hAdat[$i]['hTipus'] == 'késés' && $hAdat[$i]['perc'] != 0) 
+				echo ' ('.$hAdat[$i]['perc'].' '._PERC.')';
+
+			echo '</td>'."\n";
+			echo '</tr>'."\n";
+		    }
+		}
+	    }
+	}
+	echo '</tbody>';
+	echo '</table>'."\n";
+    }
+
+?>

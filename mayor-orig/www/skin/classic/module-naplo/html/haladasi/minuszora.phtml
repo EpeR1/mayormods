@@ -1,0 +1,55 @@
+<?php
+
+    function putOrak($ADAT) {
+
+	formBegin(array('class'=>'minuszora'));
+
+	echo '<input type="hidden" name="action" value="oraElmaradas" />'."\n";
+	echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+	echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarId'].'" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+
+	echo '<ul>'."\n";
+	for ($i = $ADAT['napiMinOra']; $i <= $ADAT['napiMaxOra']; $i++) {
+
+	    echo '<li>';
+	    echo $i . '. ' . _ORA;
+	    if (is_array($ADAT['orak'][$i]) && count($ADAT['orak'][$i]) > 0) {
+		echo '<ul>'."\n";
+		for ($j = 0; $j < count($ADAT['orak'][$i]); $j++) {
+		    if (!in_array($ADAT['orak'][$i][$j]['tipus'], array('elmarad','elmarad máskor'))) {
+			$D = $ADAT['orak'][$i][$j];
+			echo '<li class="'.$D['tipus'].' '.$D['eredet'].'">';
+			echo '<input type="checkbox" name="oraId[]" value="'.$D['oraId'].'" />'."\n";
+			if (is_null($D['tankorId'])) echo $D['tipus'];
+			else echo $D['tankorNev'];
+			if ($D['teremId']!='')
+			    echo ' ('.$D['teremLeiras'].')';
+			echo ' ';
+			echo $D['leiras'];
+			if ($D['oralatogatasId']!='') {
+			    echo '<span class="latogatott">L</span>';
+			    echo $D['megjegyzes'];
+			}
+			echo ' {'.$D['munkaido'].'}';
+			echo '</li>'."\n";
+		    } 
+		}
+		echo '</ul>'."\n";
+//	    } else {
+//		echo ' - ';
+	    }
+
+	    echo '</li>'."\n";
+
+	}
+	echo '</ul>'."\n";
+
+	echo '<input type="submit" value="'._ELMARAD.'" />'."\n";
+
+	formEnd();
+
+    }
+
+
+?>

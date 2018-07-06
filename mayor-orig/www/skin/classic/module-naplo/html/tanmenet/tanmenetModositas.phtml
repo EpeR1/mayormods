@@ -1,0 +1,136 @@
+<?php
+
+    function putTanmenetModositasForm($ADAT) {
+
+	echo '<fieldset class="alapadatokfieldset '.ekezettelen($ADAT['tanmenetAdat']['statusz']).'"><legend>'._ALAPADATOK.'</legend>'."\n";
+	formBegin(array('class'=>'alapadatok'));
+	    echo '<input type="hidden" name="action" value="tanmenetAdatModositas" />'."\n";
+	    echo '<input type="hidden" name="tanmenetId" value="'.$ADAT['tanmenetId'].'" />'."\n";
+	    echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarId'].'" />'."\n";
+	    echo '<input type="hidden" name="targyId" value="'.$ADAT['targyId'].'" />'."\n";
+
+
+	    $SEL = array($ADAT['tanmenetAdat']['evfolyamJel'] => ' selected="selected" ');
+    	    echo '<select name="evfolyamJel" id="evfolyamJel">'."\n";
+            for ($i = 0; $i < count($ADAT['evfolyamJelek']); $i++) {
+                echo '<option value="'.$ADAT['evfolyamJelek'][$i].'"'.$SEL[$ADAT['evfolyamJelek'][$i]].'>'.$ADAT['evfolyamJelek'][$i].'</option>'."\n";
+            }
+    	    echo '</select> '."\n";
+	    echo '<label for="evfolyamJel">'._EVFOLYAMJEL.' </label>';
+
+	    echo ' - '.$ADAT['tanmenetAdat']['targyNev'].' - ';
+
+	    $SEL = array($ADAT['tanmenetAdat']['oraszam'] => ' selected="selected" ');
+    	    echo ' <select name="oraszam" id="tanmenetOraszam">'."\n";
+            for ($i = 1; $i < 1001; $i++) {
+                echo '<option value="'.$i.'"'.$SEL[$i].'>'.$i.'</option>'."\n";
+            }
+    	    echo '</select> '."\n";
+	    echo '<label for="tanmenetOraszam">'._TANORA.': </label>';
+	    echo '<br />';
+
+	    echo '<label for="tanmenetNev">'._TANMENETNEV.': </label>';
+	    echo '<input type="text" id="tanmenetNev" value="'.$ADAT['tanmenetAdat']['tanmenetNev'].'" name="tanmenetNev" />'."\n";
+	    echo '<br />';
+
+	    echo '<label>'._KESZITETTE.': </label>';
+	    echo $ADAT['tanmenetAdat']['tanarNev'].' ('.$ADAT['tanmenetAdat']['tanarId'].') - ';
+	    echo dateToString($ADAT['tanmenetAdat']['dt']);
+	    echo '<br />';
+
+
+
+	    echo '<label for="statusz">'._ALLAPOT.'</label> '."\n";
+	    if (count($ADAT['statusz']) > 0) {
+		echo '<select name="statusz" id="statusz">';
+		    $SEL = array($ADAT['tanmenetAdat']['statusz'] => ' selected="selected" ');
+		    foreach ($ADAT['statusz'] as $statusz) {
+			echo '<option value="'.$statusz.'"'.$SEL[$statusz].'>'.$statusz.'</option>';
+		    }
+		echo '</select>';
+	    } else {
+		echo $ADAT['tanmenetAdat']['statusz'];
+		echo '<input type="hidden" name="statusz" value="'.$ADAT['tanmenetAdat']['statusz'].'" /><br />';
+	    }
+	    echo '<br />';
+
+	if (__NAPLOADMIN || __KESZITO) {
+	    echo '<input type="checkbox" name="tanmenetTorol" value="1" />'._TOROL."\n";
+	}
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+	formEnd();
+	echo '</fieldset>'."\n";
+	/* -------------------------------- */
+        echo '<fieldset class="alapadatokfieldset '.ekezettelen($ADAT['tanmenetAdat']['statusz']).'"><legend><a href="'.href('index.php?page=naplo&sub=tanmenet&f=tanmenetTankor&tanarId='.$ADAT['tanarId'].'&targyId='.$ADAT['targyId']).'">'._HOZZARENDELT_TANKOROK.'</a></legend>'."\n";
+	    echo __TANEV.':';
+            echo '<ul>'."\n";
+            for ($i = 0; $i < count($ADAT['tanmenetAdat']['tankor']); $i++) {
+                echo '<li><span class="tankorAdat" data-tankorid="'.$ADAT['tanmenetAdat']['tankor'][$i]['tankorId'].'">'
+                .$ADAT['tanmenetAdat']['tankor'][$i]['tankorNev'].' ('.$ADAT['tanmenetAdat']['tankor'][$i]['tankorId'].')</span></li>'."\n";
+            }
+            echo '</ul>'."\n";
+	    if (count($ADAT['tanmenetAdat']['tankorNemAktualis'])>0) {
+	    echo _MAS_TANEV.':';
+            echo '<ul>'."\n";
+            for ($i = 0; $i < count($ADAT['tanmenetAdat']['tankorNemAktualis']); $i++) {
+                echo '<li><span class="tankorAdat" data-tankorid="'.$ADAT['tanmenetAdat']['tankorNemAktualis'][$i]['tankorId'].'">'
+                .$ADAT['tanmenetAdat']['tankorNemAktualis'][$i]['tankorNev'].' ('.$ADAT['tanmenetAdat']['tankorNemAktualis'][$i]['tankorId'].')</span></li>'."\n";
+            }
+            echo '</ul>'."\n";
+	    }
+        echo '</fieldset>'."\n";
+	/* -------------------------------- */
+
+	$_D = (__MODOSITHAT===true)?'':' disabled="disabled" ';
+	echo '<fieldset class="temakorokfieldset '.ekezettelen($ADAT['tanmenetAdat']['statusz']).'"><legend>'._TEMAKOROK.'</legend>'."\n";
+        $FORM = array('action'=>href('index.php?page=naplo&sub=tanmenet&f=tanmenetModositas'), 'name'=>'tanmenetMod', 'class'=>'tanmenet onChangeRequest');
+        formBegin($FORM);
+
+
+	    echo '<input type="hidden" name="action" value="tanmenetTemakorModositas" />'."\n";
+	    echo '<input type="hidden" name="tanmenetId" value="'.$ADAT['tanmenetId'].'" />'."\n";
+
+	    echo '<ul id="temakor">'."\n";
+	    for ($i = 0; $i < count($ADAT['tanmenetAdat']['temakor']); $i++) {
+		echo '<li class="sortable">';
+
+		echo '<span class="handle"><img src="skin/classic/module-naplo/img/tanmenet/updown.png" alt="updown" /></span>'."\n";
+		echo '<img class="close" src="skin/classic/module-naplo/img/tanmenet/close.png" alt="close" />'."\n";
+		echo '<span class="oraszam">&nbsp;&nbsp;</span>';
+
+		$SEL = array($ADAT['tanmenetAdat']['temakor'][$i]['oraszam'] => ' selected="selected" ');
+		echo '<select name="oraszam[]" class="temakorOraszam"'.$_D.'>'."\n";
+		for ($o = 0; $o <= $ADAT['tanmenetAdat']['oraszam']; $o++) echo '<option value="'. $o.'"'.$SEL[$o].'>'.$o.'</option>'."\n";
+		echo '</select>'."\n";
+//		echo '<input type="text" name="temakorMegnevezes[]" value="'.$ADAT['tanmenetAdat']['temakor'][$i]['temakorMegnevezes'].'" />'."\n";
+		echo '<textarea name="temakorMegnevezes[]"'.$_D.'>';
+		echo $ADAT['tanmenetAdat']['temakor'][$i]['temakorMegnevezes'];
+		echo '</textarea>';
+		echo '</li>'."\n";
+	    }
+	    if (__MODOSITHAT===true) {
+		echo '<li>';
+		    echo '<span class="handle">&nbsp;&nbsp;</span>';
+		    echo '<img class="close" src="skin/classic/module-naplo/img/tanmenet/close.png" alt="close" />'."\n";
+		    echo '<span class="oraszam">&nbsp;-&nbsp;</span>';
+
+		    echo '<select name="oraszam[]" class="uj">'."\n";
+		    for ($o = 0; $o <= $ADAT['tanmenetAdat']['oraszam']; $o++) {
+		        echo '<option value="'. $o.'">'.$o.'</option>'."\n";
+		    }
+		    echo '</select>'."\n";
+//		    echo '<input type="text" name="temakorMegnevezes[]" value="" class="uj" />'."\n";
+		    echo '<textarea name="temakorMegnevezes[]" class="uj"></textarea>';
+		echo '</li>';
+		echo '</ul>';
+	    
+		echo '<input type="submit" value="'._OK.'" />'."\n";
+	    }
+
+	formEnd();
+	echo '</fieldset>'."\n";
+
+
+    }
+
+?>

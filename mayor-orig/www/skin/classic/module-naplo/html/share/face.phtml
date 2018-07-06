@@ -1,0 +1,71 @@
+<?php
+    function putFace($Id,$tipus,$height='50',$return=true) {
+
+	$ICON = array(
+	    '' =>'<span class="icon-star-empty"></span>',
+            'diak' => '<span class="icon-child"></span>',
+            'szulo' => '<span class="icon-adult"></span>',
+            'tanar' => '<span class="icon-adult"></span>',
+            'munkakozosseg' => '<span class="icon-slideshare"></span>',
+            'tankor' => '<span class="icon-myspace"></span>',
+            'tankorSzulo' => '<span class="icon-group-alt"></span>',
+            'osztaly' => '<span class="icon-group"></span>',
+            'osztalySzulo' => '<span class="icon-adult"></span>',
+            'osztalyTanar' => '<span class="icon-slideshare"></span>',
+	);
+
+	if ($height<=0) {
+	    $height = '50';
+	    $c = "size_n";
+	} else {
+	    $c = "size_s";
+	}
+	$subdir='';
+	$extraHtmlAttrs = '';
+	$extraClass = '';
+	if (in_array($tipus,array('diak','diák'))) {
+	    $subdir=__TANEV;
+	    $extraClass='diakNev';
+	    $extraHtmlAttrs =  'data-diakid="'.$Id.'"';
+	} elseif (in_array($tipus,array('tanar','tanár'))) {
+	    $subdir=ekezettelen($tipus);
+	    $extraClass='tanarNev';
+	    $extraHtmlAttrs =  'data-tanarid="'.$Id.'"';
+	} elseif ($tipus=='tankor') {
+	    $extraClass = 'tankorAdat';
+	    $extraHtmlAttrs =  'data-tankorid="'.$Id.'"';
+	} elseif (in_array($tipus,array('osztaly','osztalySzulo','osztalyTanar'))) {
+	    $extraClass = 'osztalyAdat';
+	    $extraHtmlAttrs =  'data-osztalyid="'.$Id.'"';
+	} else {
+
+	}
+
+	$extraClass .= ' '.__SHOW_FACES_TYPE.' ';
+
+	if ($subdir!='') {
+    	    foreach (array('jpg') as $ext) {
+        	$img = $Id.'.'.$ext;
+        	if (@file_exists(_DOWNLOADDIR.'/'._POLICY.'/naplo/face/'.$subdir.'/'.$img)) {
+        	    $file = 'index.php?policy='._POLICY.'&sessionID='._SESSIONID.'&page=session&f=download&download='.sha1($Id).'&dir=naplo/face/'.$subdir.'&file='.$img;
+        	    $s = '<div class="arckep--container '.$tipus.' '.$extraClass.'" '.$extraHtmlAttrs.' style="width: '.$height.'px;height: '.$height.'px;"><img src="'.$file.'" alt="'.$Id.'" '.$extraHtmlAttrs.' /></div>';
+		    if ($return===true) {
+			echo $s;
+			return;
+		    } else {
+			return $s;
+		    }
+        	}
+    	    }
+	}
+	// nincs kép
+	if (__SHOW_FACES_TYPE!='classic') {
+	    $s = '<div class="arckepContainer '.$tipus.' '.$c.' '.$extraClass.'" '.$extraHtmlAttrs.'>';
+		//$s .= $Id;
+		$s .= $ICON[$tipus];
+	    $s .= '</div>';
+	}
+	if ($return===true) echo $s; else return $s;
+
+    }
+?>

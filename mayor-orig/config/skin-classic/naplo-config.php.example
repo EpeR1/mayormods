@@ -1,0 +1,15 @@
+<?php
+
+// Javascript rutinok - pl. mozgatható elemek
+if ( 
+    ($policy=='private') && $page=='naplo' 
+    && (
+	($sub=='osztalyozo' && $f=='targySorrend')
+	|| ($sub=='haladasi' && $f=='helyettesites')
+	|| ($sub=='ertekeles' && $f=='ertekeles')
+    )
+) {
+   $SSSHH .= '   <script src="skin/classic/share/javascript/scriptaculous/scriptaculous.js" type="text/javascript"></script>'."\n";
+}
+
+?>

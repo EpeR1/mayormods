@@ -1,0 +1,34 @@
+<?php
+
+    function putCheckStatus($ADAT) {
+
+	echo '<div style="margin-left:100px;">';
+
+	echo '<div>'._DT.':'.$ADAT['vizsgaltDt'].'</div>';
+	echo '<div>'._NAPOK_SZAMA.':'.$ADAT['napokSzama'].'</div>';
+	echo '<div>'._ORAK_SZAMA .':'.$ADAT['orakSzama'].'</div>';
+
+
+	echo '<div>'._HIANYZO_TANKOR;
+	echo '<ul>';
+	    for ($i=0; $i<count($ADAT['hianyzoTankor']); $i++) {
+		$_D = $ADAT['hianyzoTankor'][$i];
+		echo '<li>';
+		    var_dump($_D);
+		echo '</li>';
+	    }
+	echo '</ul>'.'</div>';
+
+	echo '<div>'._HIANYZO_ORA;
+	echo '<ul>';
+	    for ($i=0; $i<count($ADAT['hianyzoOra']); $i++) {
+		$_D = $ADAT['hianyzoOra'][$i];
+		echo '<li>';
+		    var_dump($_D);
+		echo '</li>';
+	    }
+	echo '</ul>'.'</div>';
+	echo '</div>';
+    }
+
+?>

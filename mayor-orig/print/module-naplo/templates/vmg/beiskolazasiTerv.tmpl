@@ -1,0 +1,90 @@
+%!pdfLaTeXTwice pdf
+\documentclass[8pt]{article}
+\usepackage[a4paper,landscape,left=15mm,right=15mm,bottom=25mm,top=25mm]{geometry} % A4-es méret
+%%%\geometry{left=10mm,right=10mm}
+\usepackage[utf8]{inputenc} % UTF-8 kódolású forrás
+\usepackage{t1enc}
+\usepackage{fancyhdr} % Fejléc és lábléc kezelés
+\usepackage[magyar]{babel} % magyar elválasztási szabályok
+\frenchspacing % a magyar tipográfiai szabályoknak megfelelő szóközök írásjelek után
+\usepackage{booktabs} % táblázatok magasabb szintű formázása
+\usepackage{longtable} % többoldalas táblázatok
+\usepackage{multirow} % table rowspan
+%%\setlength\LTleft{-50pt}
+%%\setlength\LTright{-50pt}
+\pagestyle{fancy}
+\def\mayor{%
+\font\mayorfnt=cmsl4%
+\font\Mayorfnt=cmsl6
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+\renewcommand{\footnotesize}{\fontsize{6pt}{8pt}\selectfont}
+%\addtolength{\skip\footins}{2mm}
+%\addtolength{\textheight}{16mm}
+%\addtolength{\textwidth}{30mm}
+\setlength{\footskip}{26pt}
+\setlength{\headsep}{24pt}
+\lhead{\small %$intezmenyNev}
+\rhead{\small Beiskolázási terv %$tanevJele}
+\lfoot{\scriptsize\copyright\mayor\ elektronikus napló - Nyomtatva: %$nyomtatasDt}
+\rfoot{\scriptsize\thepage . oldal}
+\cfoot{}
+\begin{document}
+
+\small
+\newcounter{sorsz}
+\begin{center}
+{\large\bfseries Beiskolázási terv - %$tanevJele}\\
+
+\vspace{12pt}
+
+\begin{longtable}{r|l|l|l|l|l|r}
+\toprule
+\multicolumn{1}{c|}{}       & \multicolumn{1}{c|}{Név,}     & \multicolumn{1}{c|}{Alkalmazott} & \multicolumn{1}{c|}{Továbbképzés neve,}  & \multicolumn{1}{c|}{Várható távollét} & \multicolumn{1}{c|}{Helyettesítés} & \multicolumn{1}{c}{Finanszírozás módja}    \\
+\multicolumn{1}{c|}{Sorsz.} & \multicolumn{1}{c|}{munkakör} & \multicolumn{1}{c|}{prioritás}   & \multicolumn{1}{c|}{ideje és időtartama} & \multicolumn{1}{c|}{ideje}            & \multicolumn{1}{c|}{rendje, módja} & \multicolumn{1}{c}{részösszeg / támogatás} \\
+\bottomrule
+\endfirsthead
+\multicolumn{1}{c|}{Sorsz.} & \multicolumn{1}{c|}{Név}      & \multicolumn{1}{c|}{Prioritás}   & \multicolumn{1}{c|}{Továbbképzés}        & \multicolumn{1}{c|}{Távollét}         & \multicolumn{1}{c|}{Helyettesítés} & \multicolumn{1}{c}{Finanszírozás} \\
+\toprule
+\endhead
+\multicolumn{1}{c|}{Sorsz.} & \multicolumn{1}{c|}{Név}      & \multicolumn{1}{c|}{Prioritás}   & \multicolumn{1}{c|}{Továbbképzés}        & \multicolumn{1}{c|}{Távollét}         & \multicolumn{1}{c|}{Helyettesítés} & \multicolumn{1}{c}{Finanszírozás} \\
+\bottomrule
+\endfoot
+\multicolumn{1}{c|}{Sorsz.} & \multicolumn{1}{c|}{Név}      & \multicolumn{1}{c|}{Prioritás}   & \multicolumn{1}{c|}{Továbbképzés}        & \multicolumn{1}{c|}{Távollét}         & \multicolumn{1}{c|}{Helyettesítés} & \multicolumn{1}{c}{Finanszírozás} \\
+\bottomrule
+\endlastfoot
+%%%\hline
+%{tanulmanyiEgyseg
+%%%\addtocounter{sorsz}{1}\arabic{sorsz}. & \vbox to 1.2em {}%$tanarNev & %$prioritas & %$tovabbkepzesNev               & \multirow{2}{*}{%$tavollet} & \multirow{2}[4]{2cm}{%$helyettesitesRendje} & \vbox{{%$helyettesitesRendje %$reszosszeg Ft/ %$tamogatas Ft}} \\
+%%%                                       & \vbox to 1.2em {}tanár      &             & %$tolDt--%$igDt (%$oraszam óra) &                             &                                  &                                                    \\
+\addtocounter{sorsz}{1}\arabic{sorsz}.\vbox to 1.2em {} &
+\parbox[t]{3cm}{ %$tanarNev\\ tanár} & 
+%$prioritas & 
+\parbox[t]{5cm}{%$tovabbkepzesNev\\ %$tolDt--%$igDt (%$oraszam óra)}  & 
+\parbox[t]{4cm}{%$tavollet} & 
+\parbox[t]{4cm}{%$helyettesitesRendje} & 
+%$reszosszeg Ft/ %$tamogatas Ft \\
+\midrule
+%%\hline
+%}tanulmanyiEgyseg
+
+\end{longtable}
+
+\end{center}
+
+Szakvizsgára felkészítő továbbképzés kötelező további adatait (lakcím, végzettség, szakképzettség, szakmai gyakorlat ideje és helye) külön mellékletként kell csatolni.
+
+\begin{center}
+
+\vspace{20pt}
+\begin{tabular}{lcc}%%\hspace{3.5cm}%
+{%$intezmenyCimHelyseg, %$nyomtatasDatumStr}&\hspace{5cm}\ &\\
+\vbox to 5.2em {}&\hspace{5cm}\ &\rule{4.5cm}{0.1pt}\\
+&&\slshape igazgató\\
+{A beiskolázási tervet a fenntartó ellenjegyezte.}&\hspace{5cm}\ &\\
+\vbox to 5.2em {}&\hspace{5cm}\ &\rule{4.5cm}{0.1pt}\\
+&&\slshape aláírás\\
+\end{tabular}
+
+\end{center}
+
+\end{document}

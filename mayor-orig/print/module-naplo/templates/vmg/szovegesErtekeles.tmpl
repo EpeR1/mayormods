@@ -1,0 +1,102 @@
+%!pdfLaTeXA5 pdf
+%
+% Évközi szöveges értékelés
+%
+\documentclass[10pt]{article}
+
+\usepackage[a5paper]{geometry} % A4-os méret
+\usepackage[utf8x]{inputenc} % UTF-8 kódolású forrás (ucs)
+\usepackage{ucs} % Jobb UTF-8 támogatás
+\usepackage{t1enc}
+\usepackage[magyar]{babel} % magyar elválasztási szabályok
+\usepackage{enumitem}
+\frenchspacing % a magyar tipográfiai szabályoknak megfelelő szóközök írásjelek után
+\usepackage{fancyhdr} % Ritkítás
+\pagestyle{empty}
+\def\mayor{%
+\font\mayorfnt=cmsl4%
+\font\Mayorfnt=cmsl6
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footnotesize}{\fontsize{6pt}{8pt}\selectfont}
+\lhead{}\chead{}\rhead{}
+\lfoot{\rule{2cm}{0.1pt}\\ \footnotesize\copyright\mayor\ elektronikus napló\\Nyomtatva: %$nyomtatasDt}\cfoot{}\rfoot{}
+%%%\addtolength{\skip\footins}{2mm}
+%%%\addtolength{\textheight}{16mm}
+%%%\setlength{\footskip}{16pt}
+%%%\setlength{\headsep}{24pt}
+%%%\cfoot{\small \copyright\mayor\ elektronikus napló - Nyomtatva: %$nyomtatasDt}
+%%%\lhead{\small
+%%%%$intezmenyNev\\
+%%%%$intezmenyCimIrsz %$intezmenyCimHelyseg, %$intezmenyCimKozteruletNev %$intezmenyCimKozteruletJelleg %$intezmenyCimHazszam\\
+%%%Tel: %$intezmenyTelefon
+%%%}
+%%%\chead{
+%%%\includegraphics[width=24pt,height=24pt,type=eps,viewport=14 14 219 217]{/var/mayor/print/logo/logo.eps}\\
+%%%\tiny\scshape timor Domini principium scientiæ
+%%%}
+%%%\rhead{\small Web: %$intezmenyHonlap\\ E-mail: %$intezmenyEmail\\ Fax: %$intezmenyFax}
+%%%\usepackage{booktabs} % táblázatok magasabb szintű formázása
+%%%\usepackage{graphicx} % Kép beillesztés
+%%%\usepackage{soul} % ul - aláhúzás tördeléssel
+%%%\renewcommand*{\descriptionlabel}[1]{\hspace{\labelsep}\normalfont\itshape#1}
+
+\begin{document}
+%%%\vspace*{-18pt}
+
+%{diak
+\thispagestyle{fancy}\vspace*{8pt}
+\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+\vspace*{36pt}{\huge{FÉLÉVI ÉRTESÍTŐ}}
+
+\vspace{24pt}{\large %$diakNev}
+
+\vspace{24pt}azonosító száma: %$oktatasiAzonosito
+
+\vspace{12pt}törzslapszáma: %$torzslapSzam
+
+\vspace{60pt}(OM azonosító: %$intezmenyOMKod ) %$osztaly osztályában
+
+\vspace{12pt}a %$tanevJele tanévben elért eredményeiről.
+
+\end{center}
+\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+
+{\small\noindent A tanuló teljesítményének, magatartásának, szorgalmának szöveges minősítése:}
+
+\vspace{14pt}\scriptsize%%%\small
+%{targy
+{\vspace{6pt}\noindent\bfseries %$targyNev}
+\nopagebreak[4]%%
+\begin{description}[font=\mdseries\itshape, labelindent=\parindent, itemsep=2pt, parsep=0pt, partopsep=0pt, topsep=0pt, leftmargin=2cm, style=nextline]
+\nopagebreak[4]%%
+%{szempont
+\item[%$szempont]
+%{minosites
+%?elsoValasztott|%$minosites|%?%?tobbedikValasztott|, %$minosites|%?%%
+%}minosites
+%?egyediMinosites|\par{%$egyediMinosites}|%?%%
+\nopagebreak[4]%%
+%}szempont
+\end{description}
+%}targy
+
+\vspace{24pt}
+\noindent
+Budapest, %$ev. %$hoNev %$nap.
+
+\vspace{20pt}
+\begin{center}
+\slshape\scriptsize
+\begin{tabular}{ccc}
+\rule{4.5cm}{0.1pt}&\hspace{1cm}\ &\rule{4.5cm}{0.1pt}\\
+igazgató&{\mdseries P.H.} &osztályfőnök\\
+\\[20pt]\hspace{4.5cm} &\hspace{1cm}\ &\rule{4.5cm}{0.1pt}\\
+&&szülő/gondviselő\\
+\end{tabular}
+\end{center}
+\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+%}diak
+\end{document}

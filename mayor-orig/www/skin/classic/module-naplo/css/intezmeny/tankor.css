@@ -1,0 +1,83 @@
+form.tankor {
+    background-color: rgb(100,100,150);
+    margin-left: 5%;
+    margin-right: 5%;
+    padding-left: 0px;
+    padding-top: 0em;
+    padding-bottom: 1em;
+    color: white;
+    margin-bottom: 2em;
+}
+form.tankor:hover { background-color: rgb(120,120,170); }
+form.meglevo { background-color: rgb(100,150,100); }
+form.meglevo:hover { background-color: rgb(110,160,110); }
+
+form.tankor h2 {
+    padding-top:2px;
+    padding-left:2px;
+    background-color: rgb(60,60,80);
+    color: white;
+    border-bottom: 1px solid white; 
+    border-left: 0.4em solid lightgreen;
+    margin-bottom: 0em;
+}
+form.tankor:hover h2 { border-left: solid 0.4em rgb(242,0,86); }
+
+form.meglevo h2 {
+    background-color: lightgreen;
+    color: rgb(60,60,80);
+}
+
+form.tankor label {
+    padding-left:0.4em;
+}
+
+
+form.tankor input:hover,
+form.tankor label:hover {
+    text-decoration: underline;
+}
+
+form.tankor input {
+    border: solid 1px blue;
+}
+
+form.tankor input.lezart { background-color: #aaaaaa; border: solid 1px black; }
+
+form.tankor input#torolg {
+    background-color: #880000;
+    color: white;
+    padding:0px 1em;
+    margin:0px;
+    border: solid 1px red;
+}
+
+form.tankor table tr th.sz0 { background-color: green; }
+form.tankor table tr th.sz1 { background-color: darkgreen; }
+form.tankor table tr td.sz0 { background-color: green; text-align: center;}
+form.tankor table tr td.sz1 { background-color: darkgreen; text-align:center; }
+form.tankor table tr td:hover { outline: solid 1px orange; }
+
+form.tankor table td.tankorCsoportok div.header{ background-color: #1E90FF; color:white; border-bottom: solid 1px white; width:180px; text-align: center;}
+
+form.tankor table td.tankorCsoportok {
+    border: solid 1px white;
+    background-color: rgba(0,0,0,0.2);
+    vertical-align: top;
+}
+form.tankor table td.tankorCsoportok a { color: lightblue; text-decoration:none;}
+form.tankor table td.tankorCsoportok a:hover { color: white; text-decoration:underline; }
+form.tankor table td.tankorCsoportok ul { list-style-type: circle; margin-left:14px; padding:4px;}
+
+form.meglevo table tbody tr.vanTag th, form.meglevo table tbody tr.vanTag td { background-color: rgb(60,120,80); }
+
+span.dob {
+    background-color: #2799bb !important;
+    margin-right:5px;
+}
+
+form.tankor div.sel { background-color: lightgreen; color:black; }
+form.tankor div:hover { background-color: #2799bb; }
+
+form.tankor p { padding: 0em 1em; }
+

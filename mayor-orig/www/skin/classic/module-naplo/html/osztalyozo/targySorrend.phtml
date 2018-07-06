@@ -1,0 +1,45 @@
+<?php
+
+    function putTargySorrendForm($osztalyId, $sorrendNev, $Targyak) {
+
+	formBegin(array('method'=>'post', 'action'=>'', 'id'=>'sorrend', 'class'=>'sorrend'));
+
+	echo '<h1>'._SORREND.'</h1>';
+
+	echo '<input type="hidden" name="action" id="action" value="sorrendValtas" />'."\n";
+	echo '<input type="hidden" name="sorrendNev" value="'.$sorrendNev.'" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
+
+	$SEL = array($_POST['targyId'] => ' selected="selected" ');
+	echo '<select id="targySelect" name="targyId[]" multiple="multiple">'."\n";
+	for ($i = 0; $i < count($Targyak); $i++) {
+
+	    echo '<option value="'.$Targyak[$i]['targyId'].'"'.$SEL[$Targyak[$i]['targyId']].'>'.$Targyak[$i]['targyNev'].'</option>'."\n";
+
+	}
+	echo '</select>'."\n";
+
+	echo '<ul id="targyUl" style="display: none;">'."\n";
+	for ($i = 0; $i < count($Targyak); $i++) {
+
+	    echo '<li>';
+	    echo '<span class="handle">&nbsp;^&nbsp;</span>';
+	    echo $Targyak[$i]['targyNev'];
+	    echo '<input type="hidden" name="targyIds[]" value="'.$Targyak[$i]['targyId'].'" />';
+	    echo '</li>'."\n";
+
+	}
+	echo '</ul>'."\n";
+
+	echo '<input type="submit" value="'._OK.'" id="submit" style="display: none;" />'."\n";
+
+	echo '<div id="mozgat">'."\n";
+	echo '<input type="submit" name="fel" value="'._FEL.'" />'."\n";
+	echo '<input type="submit" name="le" value="'._LE.'" />'."\n";
+	echo '</div>'."\n";
+
+	formEnd();
+
+    }
+
+?>

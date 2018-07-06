@@ -1,0 +1,90 @@
+<?php
+
+    function putKerdoivForm($ADAT) {
+
+       formBegin(array('class'=>'kerdoiv'));
+	echo '<input type="hidden" name="action" value="kerdoivBetoltes1" />'."\n";
+
+	echo '<p><label for="cim">'._CIM.'</label>';
+	echo '<input type="text" name="cim" id="cim" value="" />'."\n";
+	echo '</p>';
+
+	echo '<p><label for="tolDt">'._ERVENYESSEG.'</label>'."\n";
+	echo '<input type="text" name="tolDt" id="tolDt" class="date" value="" /> - <input type="text" name="igDt" id="igDt" class="date" value="" />';
+	echo '</p>';
+
+/*
+	echo '<p><label for="feladoTipus">'._FELADO.'</label>';
+	echo '<select name="feladoTipus" id="feladoTipus">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	for ($i = 0; $i < count($ADAT['feladoTipusok']); $i++) {
+	    $feladoTipus = $ADAT['feladoTipusok'][$i];
+	    $feladoNev = constant('_FELADO_'.nagybetus($feladoTipus));
+	    echo '<option value="'.$feladoTipus.'">'.$feladoNev.'</option>'."\n";
+	}
+	echo '</select>'."\n";
+*/
+	echo '<label for="cimzettTipus">'._CIMZETT.'</label>';
+	echo '<select name="cimzettTipus" id="cimzettTipus">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	for ($i = 0; $i < count($ADAT['cimzettTipusok']); $i++) {
+	    $cimzettTipus = $ADAT['cimzettTipusok'][$i];
+	    $cimzettNev = constant('_CIMZETT_'.nagybetus($cimzettTipus));
+	    echo '<option value="'.$cimzettTipus.'">'.$cimzettNev.'</option>'."\n";
+	}
+	echo '</select>'."\n";
+	echo '</p>';
+
+	echo '<label for="txt">'._MEGJEGYZES.'</label><br /><textarea name="megjegyzes" id="megjegyzes"></textarea>'."\n";
+	
+	echo '<p><lable for="txt">'._KERDESEK_VALASZOK.'</lable>'."\n";
+	echo '<br /><textarea name="txt" id="txt"></textarea>'."\n";
+	echo '</p>';
+	
+	echo '<input type="submit" value="OK" />'."\n";    
+
+	formEnd();
+
+    }
+
+    function putCimzettForm($ADAT) {
+
+       formBegin(array('class'=>'kerdoivCimzett'));
+
+	echo '<input type="hidden" name="action" value="kerdoivBetoltes2" />'."\n";
+	echo '<input type="hidden" name="kerdoivId" value="'.$ADAT['kerdoivId'].'" />'."\n";
+	echo '<input type="hidden" name="cimzettTipus" value="'.$ADAT['cimzettTipus'].'" />'."\n";
+
+	echo '<h2>'.$ADAT['cim'].' ('.$ADAT['kerdoivId'].')</h2>';
+
+	// Akit fel akarunk venni
+	echo '<div class="bal">';
+	echo '<label for="cimzett">'._TOVABBI_CIMZETTEK.': '.constant('_CIMZETT_'.nagybetus($ADAT['cimzettTipus'])).'</label><br />';
+	echo '<select name="cimzettId[]" id="cimzettId" multiple="multiple">'."\n";
+	// echo '<option value="0" selected="selected">'._OSSZES.'</option>'."\n";
+	for ($i = 0; $i < count($ADAT['cimzettek']); $i++) {
+	    if (!in_array($ADAT['cimzettek'][$i]['cimzettId'], $ADAT['kerdoivAdat']['cimzett'][ $ADAT['cimzettTipus'] ])) 
+		echo '<option value="'.$ADAT['cimzettek'][$i]['cimzettId'].'">'
+			.$ADAT['cimzettek'][$i]['cimzettNev'].' ('.$ADAT['cimzettek'][$i]['cimzettId'].')</option>'."\n";
+	}
+	echo '</select>'."\n";
+	echo '</div>';
+	echo '<div class="jobb">';
+	echo '<label for="torlendoCimzett">'._CIMZETT.': '.constant('_CIMZETT_'.nagybetus($ADAT['cimzettTipus'])).'</label><br />';
+	echo '<select name="torlendoCimzettId[]" id="torlendoCimzettId" multiple="multiple">'."\n";
+	//echo '<option value="0" selected="selected">'._OSSZES.'</option>'."\n";
+	for ($i = 0; $i < count($ADAT['cimzettek']); $i++) {
+	    if (in_array($ADAT['cimzettek'][$i]['cimzettId'], $ADAT['kerdoivAdat']['cimzett'][ $ADAT['cimzettTipus'] ])) 
+		echo '<option value="'.$ADAT['cimzettek'][$i]['cimzettId'].'">'
+			.$ADAT['cimzettek'][$i]['cimzettNev'].' ('.$ADAT['cimzettek'][$i]['cimzettId'].')</option>'."\n";
+	}
+	echo '</select>'."\n";
+	echo '</div>';
+
+	echo '<input type="submit" value="OK" />'."\n";    
+
+	formEnd();
+
+    }
+
+?>

@@ -1,0 +1,17 @@
+
+    form.intezmeny { background-color: rgb(40,60,120); color: white; margin: 20px; padding: 0px; }
+    form.intezmeny h2 {
+	background-color: rgb(20,40,80);
+	text-align: center;
+	border: white 1px dotted;
+	border-width: 1px 0px;
+	padding: 3px;
+    }
+    form.intezmeny div.data {
+	padding: 1em;
+    }
+    input.date { width: 100px; }
+
+    form.intezmeny fieldset p { margin-left: 50px; }
+    form.intezmeny fieldset label { background-coor: red;  padding: 0px 14px 0px 0px; } 
+    form.intezmeny fieldset h3 { color: rgb(255,255,100); }

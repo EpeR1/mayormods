@@ -1,0 +1,57 @@
+	
+    form.osztalyForm { padding: 0px; background-color: rgb(100,100,150); margin: 40px auto 10px auto; width: 90%; color: white; }
+    form.osztalyForm h1 { text-align: left; padding:4px; border-bottom: 1px solid white; border-width: 1px 0px;  background-color: rgb(60,60,80); margin-top:0px; margin-bottom:20px; }
+    form.osztalyForm:hover h1 {border-bottom: solid 1px #6464C8;}
+    form.osztalyForm li { background-color: rgb(60,60,100); margin-top: 2px; padding: 5px 2px 5px 2px; }
+    form.osztalyForm table { width: 100%; background-color: #aaaaaa;}
+    form.osztalyForm table th { background-color: rgb(20,40,60); padding: 4px 8px; }
+    form.osztalyForm table td { background-color: rgb(60,130,120); width: 33%; padding:0px 4px; height:1.8em; }
+
+    form.osztalyForm hr { background-color: #eeeeee; margin-top: 22px; margin-bottom: 22px; padding: 0px; }
+  
+    form.osztalyForm ol li:hover { background-color: rgb(100,100,200); }
+    form.osztalyForm input[type=submit] { width: 100px; margin:4px; }
+    form.osztalyForm input[type=submit]:hover { outline: solid 2px cornflowerblue;  }
+
+    form.osztalyForm ol li div.kepzes { float: right; background-color: rgb(60,100,60); position: relative; top: -5px; padding: 4px 5px 1px 1px; height: 19px;}
+    form.osztalyForm ol li:hover div.kepzes { background-color: rgb(200,100,200); }
+    form.osztalyForm ol li div.hideShowContainer { float: right; background-color: rgb(160,0,0); position: relative; top: -4px; padding: 5px 5px 2px 5px;  margin-left: 10px; }
+    form.osztalyForm ol	li div.kepzes input[type=text] { margin: 0; padding: 0; border: none; position: relative; top: -2px; }
+    form.osztalyForm ol li div.kepzes span.onClickHideShow { font-size: 14px; cursor: pointer; padding: 0; }
+    form.osztalyForm ol li div.kepzes ul.openable { 
+	background: #ddaaee; list-style-type: none; position: absolute; z-index: 20; width: 600px; right: 0px; top: 25px; padding: 0px 10px 10px 10px;
+	border: rgb(200,100,200) 2px solid; border-radius: 4px; 
+    }
+    form.osztalyForm ol li div.kepzes ul.openable li { background: rgb(100,50,100); }
+    form.osztalyForm ol li div.kepzes ul.openable li:hover { background: rgb(150,75,150); }
+    form.osztalyForm ol li div.kepzes ul.openable li.uj { background: rgb(100,75,150); padding-right: 175px; }
+    form.osztalyForm ol li div.kepzes ul.openable li.close { background: transparent; color: red; cursor: pointer; }
+    form.osztalyForm ol li div.kepzes ul.openable li.close:hover { color: white; }
+    form.osztalyForm ol li div.kepzes ul.openable span.datum { float: right; }
+
+/*    form.osztalyForm ol li div.kepzes label.chk { background-color: rgb(250,140,60);}*/
+    form.osztalyForm ol li div.kepzes span { padding: 2px 4px; position: relative; top: 0px; margin-right: 1px; margin-left:1px; }
+    form.osztalyForm ol li div.kepzes span.chk { background-color: rgb(250,140,60); }
+    form.osztalyForm ol li div.kepzes span.mas { background-color: rgb(160,100,60); }
+    form.osztalyForm div.datum { background: rgb(160,0,0); text-align: center;  border: 1px dotted white; }
+
+    form.updateTable { padding: 0px; background-color: rgb(150,100,150); margin: 120px auto 20px auto; width: 90%; color: white; }
+    form.updateTable h1 { text-align: center; padding:4px; border-bottom: 1px solid white; border-width: 1px 0px;  background-color: rgb(60,60,80); margin-top:0px; margin-bottom:20px; }
+    form.updateTable li { background-color: rgb(60,60,100); margin-top: 2px; padding: 5px 2px 5px 2px; }
+    form.updateTable table { width: 100%; background-color: #aaaaaa;}
+    form.updateTable table th { background-color: rgb(20,40,60); padding: 4px 8px; }
+    form.updateTable table td { background-color: rgb(60,130,120); width: 33%; padding:0px 4px; height:1.8em; }
+
+    form.uj div { padding: 5px 10px; display: none; }
+    form.uj div#divOsztalyJelleg { display: block; }
+    form.uj div#divKezdoTanev, form.uj div#divVegzoTanev, form.uj div#divJel { display: inline-block; width: 300px; }
+    form.uj ul#evfolyamJelek { list-style-type: none; margin: 0; padding: 0; }
+    form.uj ul#evfolyamJelek li { display: inline-block; height: 40px; vertical-align: top; border-right: 1px solid white; padding: 10px; }
+    form.uj ul#evfolyamJelek li.kivalasztott { background-color: #2aa; }
+    
+    form.uj label { margin-right: 20px; }
+    form.uj input[type="submit"] { height:2em; margin: 10px 80px; }
+
+    form.osztalyForm span.data { margin: 20px; background-color: white; color: black; padding: 5px; font-size: 12px; font-weight: bold; }
+    form.osztalyForm ol li span.diakNev { padding-left:0.5em; cursor:pointer; }
+    form.osztalyForm ol li span.datumok { color: #888; padding-left:1em; }

@@ -1,0 +1,87 @@
+<?php
+
+    function putCsoportLista($Csoportok, $osztalyId, $csoportId) {
+
+	formBegin(array('class'=>'csoport'));
+	echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
+
+	if ($csoportId != '') echo '<select name="csoportId" class="onChangeSubmit kiemelt" >'."\n";
+	else echo '<select name="csoportId" class="onChangeSubmit">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    $SEL = array($csoportId => ' selected="selected" ');
+	    for ($i = 0; $i < count($Csoportok); $i++) {
+		echo '<option value="'.$Csoportok[$i]['csoportId'].'"'.$SEL[$Csoportok[$i]['csoportId']].'>'.$Csoportok[$i]['csoportNev'].'</option>'."\n";
+	    }
+	echo '</select>'."\n";
+	echo '<input type="submit" value="'._OK.'" />'."\n"; 
+
+	formEnd();
+
+    }
+
+    function putUjCsoportForm($osztalyId, $Tankorok) {
+
+	formBegin(array('class'=>'csoport'));
+
+	echo '<h1>'._UJ_CSOPORT.'</h1>'."\n";
+
+	echo '<input type="hidden" name="action" value="ujCsoport" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
+
+	echo '<label for="csoportNev">'._CSOPORT_NEVE.': </label>';
+	echo '<input id="csoportNev" type="text" name="csoportNev" value="" />'."\n";
+
+	echo '<select name="tankorId[]" multiple="multiple">'."\n";
+	for ($i = 0; $i < count($Tankorok); $i++) {
+	    echo '<option value="'.$Tankorok[$i]['tankorId'].'">'.$Tankorok[$i]['tankorNev'].'</option>'."\n";
+	}
+	echo '</select>'."\n";
+
+	echo '<input type="submit" value="'._OK.'" />'."\n"; 
+
+	formEnd();
+
+    }
+
+    function putCsoportModositoForm($csoportAdatok, $Tankorok, $osztalyId) {
+
+	formBegin(array('class'=>'csoport'));
+
+	echo '<h1>'._CSOPORT_MODOSITAS.'</h1>'."\n";
+
+	echo '<input type="hidden" name="action" value="csoportModositas" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
+	echo '<input type="hidden" name="csoportId" value="'.$csoportAdatok['csoportId'].'" />'."\n";
+
+	echo '<label for="ujCsoportNev">'._CSOPORT_NEVE.': </label>';
+	echo '<input type="text" name="csoportNev" value="'.$csoportAdatok['csoportNev'].'" id="ujCsoportNev" />'."\n";
+	echo '<select name="tankorId[]" multiple="multiple">'."\n";
+	for ($i = 0; $i < count($Tankorok); $i++) {
+	    if (in_array($Tankorok[$i]['tankorId'],$csoportAdatok['tankorId']))
+		echo '<option value="'.$Tankorok[$i]['tankorId'].'" selected="selected">'.$Tankorok[$i]['tankorNev'].'</option>'."\n";
+	    else
+		echo '<option value="'.$Tankorok[$i]['tankorId'].'">'.$Tankorok[$i]['tankorNev'].'</option>'."\n";
+	}
+	echo '</select>'."\n";
+
+	echo '<input type="submit" value="'._OK.'" />'."\n"; 
+	formEnd();
+
+    }
+
+    function putCsoportTorlesForm($csoportId, $osztalyId) {
+
+	formBegin(array('class'=>'csoport'));
+
+	echo '<h1>'._CSOPORT_TORLESE.'</h1>'."\n";
+
+	echo '<input type="hidden" name="action" value="csoportTorlese" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
+	echo '<input type="hidden" name="csoportId" value="'.$csoportId.'" />'."\n";
+
+	echo '<input type="submit" value="'._TOROL.'" title="'._BIZTOS_E.'" class="confirm" />'."\n"; 
+
+	formEnd();
+
+    }
+?>

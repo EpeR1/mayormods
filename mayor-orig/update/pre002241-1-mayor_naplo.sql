@@ -1,0 +1,6 @@
+-- A cim* mezők törlése az inzezmeny táblából (átkerült a telephelybe)
+-- ALTER TABLE  `mayor_naplo`.`intezmeny` DROP COLUMN `cimHelyseg`;
+-- ALTER TABLE  `mayor_naplo`.`intezmeny` DROP COLUMN `cimIrsz`;
+-- ALTER TABLE  `mayor_naplo`.`intezmeny` DROP COLUMN `cimKozteruletNev`;
+-- ALTER TABLE  `mayor_naplo`.`intezmeny` DROP COLUMN `cimKozteruletJelleg`;
+-- ALTER TABLE  `mayor_naplo`.`intezmeny` DROP COLUMN `cimHazszam`;

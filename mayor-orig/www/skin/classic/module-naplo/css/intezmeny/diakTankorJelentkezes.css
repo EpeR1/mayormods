@@ -1,0 +1,126 @@
+
+table.tankor {
+    background-color: rgb(100,100,150);
+    padding-left: 0px;
+    padding-top: 0em;
+    padding-bottom: 1em;
+    color: white;
+    margin-bottom: 0px;
+    empty-cells:show;
+}
+
+table.tankor thead tr th {
+    background-color: rgb(50, 50, 110);
+    border-bottom: solid 1px white;
+    padding-top:0.8em;
+    padding-bottom:0.8em;
+}
+table.tankor thead tr.small th { padding:0.2em; }
+table.tankor tbody tr th {
+    text-align: center; background-color: rgb(150,100,150);
+    border-bottom: solid 1px white;
+    border-top: solid 1px;
+    padding:2px;
+    font-weight: normal;
+}
+table.tankor tbody tr td.k { text-align: center; background-color: rgb(160,140,180); }
+
+
+table.tankor tr.benne td {
+	background-color: rgb(100,150,100);
+}
+
+table.tankor tr.ez td { 
+    border-top: solid rgb(0,0,0); border-width: 1px 0px; 
+    color: black ; 
+    background-color: orange; 
+}
+table.tankor tr.ez td input.felvesz { background-color: green; color:white;} 
+table.tankor tr.ez td input.lead { background-color: red; color:white;} 
+
+table.tankor tr.utkozik td { 
+    border-top: solid rgb(0,0,0); border-width: 1px 0px; 
+    color: #444444; 
+    background-color: rgb(100,100,100);  text-decoration: line-through; 
+}
+table.tankor tr.utkozik td input { 
+    background-color:#555555;
+    color: #777777;
+    text-decoration: underline !important;
+}
+
+table.tankor tr td { 
+    border: solid white;
+    border-width: 1px 0px; 
+    color: #ffffff;
+    padding-left:0.5em;
+    padding-right:0.5em;
+}
+table.tankor tr td.szam { text-align: right; } 
+table.tankor tr td.lok { 	background-color: rgb(150,200,100); } 
+table.tankor tr td.lsok { 	background-color: rgb(150,100,100); } 
+table.tankor tr td.lkeves { 	background-color: rgb(150,150,100); } 
+table.tankor tr td.loktop { 	border-right:dotted 2px red; } 
+table.tankor tr td.lokbottom { 	border-left:dotted 2px yellow; } 
+
+table.tankor tfoot tr td {
+    background-color: rgb(150,100,150);
+    text-align: center;
+    border-top: solid 1px white;
+    padding-top:0.5em;
+    padding-bottom:0.5em; 
+    border-bottom: solid 1px rgb(50,50,110);   
+}
+
+
+h2.tankorTablazat {
+    width:80%;
+    padding-top:2px;
+    padding-left:1em;
+    margin-left:10%;
+    margin-right:20%;
+    background-color: rgb(60,60,80);
+    color: white;
+    border: 1px dotted white; border-width: 1px 0px;
+    padding-bottom:0px;
+    margin-bottom:0px;
+}
+
+form.tankor {
+    background-color: rgb(100,100,150);
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-left: 0px;
+    padding-top: 0em;
+    padding-bottom: 1em;
+    color: white;
+    margin-bottom: 2em;
+}
+
+form.tankor h2 {
+    padding-top:2px;
+    padding-left:2px;
+    background-color: rgb(60,60,80);
+    color: white;
+    border: 1px dotted white; border-width: 1px 0px;
+}
+form.tankor label {
+    padding-left:2em;
+}
+
+form.tankor input {
+    border: solid 1px #444444;
+}
+
+form.tankor input#targytorolg, form.tankor input#mktorolg {
+    background-color: #880000;
+    color: white;
+    padding:0px;
+    margin:0px;
+    border: solid 1px red;
+}
+
+table.tankor input { font-size:11px; }
+input.felvesz { border: solid 1px #777777;}
+input.lead { border: solid 1px #777777;}
+input[disabled] { border: none; background-color: #cccccc; color: #aaaaaa; }

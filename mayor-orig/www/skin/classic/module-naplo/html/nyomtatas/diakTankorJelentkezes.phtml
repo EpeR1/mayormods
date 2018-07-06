@@ -1,0 +1,31 @@
+<?php
+
+    function putNyomtatasiBeallitasok($ADAT) {
+
+	formBegin(array('class'=>'nyomtat'));
+
+	echo '<input type="hidden" name="action" value="pdfGeneralas" />'."\n";
+	echo '<input type="hidden" name="szemeszterId" value="'.$ADAT['szemeszterAdat']['szemeszterId'].'" />'."\n";
+
+	echo '<h3>'._OSZTALYOK.'</h3>'."\n";
+
+	foreach ($ADAT['osztalyok'] as $osztalyId => $osztalyAdat) {
+
+	    echo '<input type="checkbox" name="osztalyId[]" id="osztalyId'.$osztalyId.'" value="'.$osztalyId.'" />';
+	    echo '<label for="osztalyId'.$osztalyId.'">';
+	    echo $osztalyAdat['osztalyJel'];
+	    echo '</label>'."\n";
+
+	}
+
+	echo '<br />';
+	echo '<label for="hatarido">'._LEADASI_HATARIDO.'</label>';
+	echo '<input type="text" name="leadasiHatarido" value="" id="hatarido" class="date" />'."\n";
+
+	echo '<br />';
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+    }
+
+?>

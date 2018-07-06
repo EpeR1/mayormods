@@ -1,0 +1,93 @@
+<?php
+
+    function putTeremLista($ADAT) {
+
+	echo '<div class="terem">'."\n";
+
+	    echo '<table cellpassing="1" cellspacing="1">'."\n";
+
+	    echo '<thead><tr>';
+		echo '<th>'._TEREMID.'</th>';
+		echo '<th>'._LEIRAS.'</th>';
+		echo '<th>'._FEROHELY.'</th>';
+		echo '<th>'._TIPUS.'</th>';
+		echo '<th>'._TELEPHELY.'</th>';
+	    echo '</tr></thead>'."\n";
+	    echo '<tfoot><tr></tr></tfoot>'."\n";
+	    echo '<tbody>';
+	    foreach ($ADAT['teremAdat'] as $teremId => $tAdat) {
+		echo '<tr>';
+		    echo '<td>'.$tAdat['teremId'].'</td>';
+		    echo '<td><a href="'.href('index.php?page=naplo&sub=intezmeny&f=terem&teremId='.$tAdat['teremId'].'&telephelyId='.$ADAT['telephelyId']).'">'.$tAdat['leiras'].'</a></td>';
+		    echo '<td>'.$tAdat['ferohely'].'</td>';
+		    echo '<td>'.$tAdat['tipus'].'</td>';
+		    echo '<td>'.$ADAT['telephelyAdat'][ $tAdat['telephelyId'] ]['telephelyRovidNev'].'</td>';
+		echo '</tr>'."\n";
+	    }
+	    echo '</tbody>'."\n";
+
+	    echo '</table>'."\n";
+
+	echo '</div>'."\n";
+
+    }
+
+    function putTeremForm($ADAT) {
+
+	$tAdat = $ADAT['teremAdat'][ $ADAT['teremId'] ];
+
+	formBegin(array('class'=>'terem','action'=>href('index.php?page=naplo&sub=intezmeny&f=terem')));
+
+	if ($ADAT['teremId']=='') {
+	    echo '<input type="hidden" name="action" value="ujTerem" />'."\n";
+	    echo '<input type="hidden" name="teremId" value="" />'."\n";
+	    echo '<h1>'._UJ_TEREM.'</h1>';
+	} else {
+	    echo '<input type="hidden" name="action" value="teremAdatModositas" />'."\n";
+	    echo '<input type="hidden" name="teremId" value="'.$ADAT['teremId'].'" />'."\n";
+	    echo '<h1>'.$tAdat['leiras'].'</h1>';
+	}
+
+
+	echo '<div class="tipus">'."\n";
+	echo '<label for="tipus">'._TIPUS.'</label>'."\n";
+	echo '<select name="tipus" id="tipus" >'."\n";
+	$tipusok = explode(',', $tAdat['tipus']);
+	foreach ($tipusok as $tipus) $SEL[$tipus] = ' selected="selected" ';
+	foreach ($ADAT['teremTipusok'] as $tipus) echo '<option value="'.$tipus.'"'.$SEL[$tipus].'>'.$tipus.'</option>'."\n";
+	echo '</select>'."\n";
+	echo '</div>'."\n";
+
+	echo '<div style="background-color: #eeeeee; text-align:left;">';
+
+	echo '<label for="teremId">'._TEREMID.'</label>'."\n";
+	echo '<span id="teremId">'.$ADAT['teremId'].'</span><br />';
+
+	echo '<label for="leiras">'._LEIRAS.'</label>'."\n";
+	echo '<input type="text" size="64" name="leiras" id="leiras" value="'.$tAdat['leiras'].'" /><br />'."\n";
+
+	echo '<label for="ferohely">'._FEROHELY.'</label>'."\n";
+	echo '<select name="ferohely" id="ferohely">'."\n";
+	$SEL = array($tAdat['ferohely'] => ' selected="selected" ');
+	echo '<option value=""> - </option>'."\n";
+	for ($i = 1; $i<1001; $i++) echo '<option value="'.$i.'"'.$SEL[$i].'>'.$i.'</option>'."\n";
+	echo '</select><br />'."\n";
+
+	echo '<label for="telephely">'._TELEPHELY.'</label>'."\n";
+	echo '<select name="telephelyId" id="telephely">'."\n";
+	$SEL = array($tAdat['telephelyId'] => ' selected="selected" ');
+	echo '<option value=""> - </option>'."\n";
+	foreach ($ADAT['telephelyAdat'] as $telephelyId => $tAdat) {
+	    echo '<option style="color: black" value="'.$telephelyId.'"'.$SEL[$telephelyId].'>'.$ADAT['telephelyAdat'][$telephelyId]['telephelyRovidNev'].'</option>'."\n";
+	}
+	echo '</select><br />'."\n";
+	
+	echo '</div>';
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+
+    }
+
+
+?>

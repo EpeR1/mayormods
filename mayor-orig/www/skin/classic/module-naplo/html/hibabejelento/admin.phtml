@@ -1,0 +1,150 @@
+<?php
+
+    function putKerelmek($ADAT, $telephelyId, $TELEPHELY) {
+
+	global $KERELEM_TAG;
+
+	echo '<ol class="kerelem">';
+	for ($i = 0; $i < count($ADAT['kerelmek']); $i++) {
+	    $_K = $ADAT['kerelmek'][$i];
+	    $kerelemId = $_K['kerelemId'];
+	    $_napja = round(((strtotime(date('Y-m-d H:i:s')) - strtotime($_K['rogzitesDt']))/(24*60*60)));
+
+	    if ($ADAT['kerelmek'][$i]['jovahagyasDt'] != '') $class = ' class="jovahagyott" ';
+	    else $class = '';
+
+	    echo '<li '.$class.' id="kerelemId'.$ADAT['kerelmek'][$i]['kerelemId'].'">';
+		//echo '<div style="text-align:center; color:white; font-size:30px;">'.$i.'</div>';
+		echo '<fieldset>';
+		echo '<legend>';
+		echo superdate($ADAT['kerelmek'][$i]['rogzitesDt']);
+		echo ' – ';
+		echo $ADAT['kerelmek'][$i]['userAccount'];
+		if ($ADAT['kerelmek'][$i]['kategoria'] !='')
+		    echo '<span style="border: solid 1px white; background-color: #678670; padding: 2px 5px; margin: 0px 5px;">'.$ADAT['kerelmek'][$i]['kategoria'].'</span>';
+		// if ($_K['telephelyId'] !='')
+		//    echo '<span style="border: solid 1px white; background-color: #678670; padding: 2px 5px; margin: 0px 5px;">'.$_K['telephelyId'].'</span>';
+		if ($_napja>0) echo ' – '.$_napja.' napja';
+		echo '</legend>';
+
+		echo '<div class="szoveg">';
+		    echo nl2br(supertext($ADAT['kerelmek'][$i]['szoveg']));
+		echo '</div>';
+
+		echo '</fieldset>';
+
+		if (count($ADAT['valaszok'][$kerelemId])>0) {
+		    $_V = $ADAT['valaszok'][$kerelemId];
+		    echo '<table class="kerelemValasz" cellpadding="1" cellspacing="1">';
+			for ($j=0; $j<count($_V); $j++) {
+			    $_idx = (ord(mb_substr($_V[$j]['userAccount'],0,1))%5); // color index
+			    echo '<tr class="c'.$_idx.'">';
+				echo '<th class="dt">'.superdate($_V[$j]['valaszDt']).'</th>';
+				echo '<td class="userAccount">'.$_V[$j]['userAccount'].'</td>';
+				echo '<td>'.supertext($_V[$j]['valasz']).'</td>';
+			    echo '</tr>';
+			}
+		    echo '</table>';
+		}
+
+		formBegin();
+		echo '<input type="hidden" name="action" value="hibaAdminRogzites" />';
+		echo '<input type="hidden" name="kerelemId" value="'.$ADAT['kerelmek'][$i]['kerelemId'].'" />';
+		echo '<input type="hidden" name="telephelyId" value="'.$telephelyId.'" />';
+		
+		echo '<textarea name="valasz" '.$class.' placeholder="Válasz...">';
+			// echo ($ADAT['kerelmek'][$i]['valasz']);
+		echo '</textarea><br />';
+
+
+			echo '<span class="mg">';
+			if (count($KERELEM_TAG)>0) {
+        		    echo '<select name="kategoria" class="mg">';   
+        		    echo '<option value="">-</option>';                                                                                                                                   
+        		    for ($j=0; $j<count($KERELEM_TAG); $j++) {                                                                                                                           
+            			$_v = $KERELEM_TAG[$j];
+				$_SEL = ($_v==$ADAT['kerelmek'][$i]['kategoria']) ? 'selected="selected"':'';
+            			echo '<option value="'.$_v.'" '.$_SEL.'>'.$_v.'</option>';
+        		    }                                                                                                                                                                    
+        		    echo '</select>';                                                                                                                                                    
+    			}           
+			echo '</span>';
+
+		    if (count($TELEPHELY)>=1) {
+			echo '<span class="mg2">';
+			echo '<select class="telephely" name="telephelyId">';
+			echo '<option value=""></option>';
+			for ($ti=0; $ti<count($TELEPHELY); $ti++) {
+			    $_T = $TELEPHELY[$ti];
+			    $_SEL = ($_K['telephelyId'] == $_T['telephelyId']) ? ' selected="selected" ' : '' ;
+			    echo '<option value="'.$_T['telephelyId'].'" '.$_SEL.'>'.$_T['telephelyRovidNev'].'</option>';
+			}			
+			echo '</select>';
+			echo '</span>'."\n";
+		    }
+
+			echo '<input class="mg" type="submit" name="megjegyzes" value="'._MEGJEGYZES.'" />';
+
+		if (__VEZETOSEG || __NAPLOADMIN) {
+
+			if ($ADAT['kerelmek'][$i]['jovahagyasDt'] != '')
+			    echo '<input class="njh" type="submit" title="'.$_K['jovahagyasAccount'].'" name="nemHagyJova" value="'.$ADAT['kerelmek'][$i]['jovahagyasDt'].'" />';
+			else
+			    echo '<input class="jh" type="submit" name="jovahagy" value="'._JOVAHAGYAS.'" />';
+    			echo '<input class="done" type="submit" name="lezar" value="'._LEZARAS.'" />';
+
+		} else {
+		
+			if ($ADAT['kerelmek'][$i]['jovahagyasDt'] != '') echo '<span class="dt">'.$ADAT['kerelmek'][$i]['jovahagyasDt'].'</span>';
+			if ($ADAT['kerelmek'][$i]['lezarasDt'] != '') echo '<span class="dt">'.superdate($ADAT['kerelmek'][$i]['lezarasDt']).'</span>';
+
+
+/*		    echo '<div class="valasz">';
+			echo nl2br(supertext($ADAT['kerelmek'][$i]['valasz']));
+		    echo '</div>';
+
+		    echo '<div>';
+			echo '<span class="dt">'.$ADAT['kerelmek'][$i]['rogzitesDt'].'</span>';
+		    echo '</div>';
+*/
+		}
+
+
+		formEnd();
+
+	    echo '</li>';
+
+	}
+	echo '</ol>';
+
+    }
+
+    function putHibabejelento($telephelyId) {
+
+	global $KERELEM_TAG;
+
+	formBegin(array('class'=>'hiba'));
+	echo '<input type="hidden" name="action" value="hibabejelentes" />';
+	echo '<input type="hidden" name="telephelyId" value="'.$telephelyId.'" />';
+
+	echo '<h1>'._KERELEM.'</h1>';
+	echo '<textarea name="txt" id="" placeholder="Kérelem...">';
+
+	echo '</textarea>';
+
+	echo '<br />';
+
+	if (count($KERELEM_TAG)>0) {
+	    echo '<select name="kategoria">';
+	    echo '<option value=""></option>';
+	    for ($i=0; $i<count($KERELEM_TAG); $i++) {
+		$_v = $KERELEM_TAG[$i];
+    		echo '<option value="'.$_v.'">'.$_v.'</option>';
+	    }     
+	    echo '</select>';                                    
+	}
+	echo '<input type="submit" value="'._OK.'" />';
+
+	formEnd();
+    }
+?>

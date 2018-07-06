@@ -1,0 +1,70 @@
+<?php
+
+    function putErtekeloForm($ADAT) {
+
+	if (isset($ADAT['szemeszterId'])) $class=' zaro';
+	formBegin(array('class'=>"ertekeles$class"));
+
+	echo '<input type="hidden" name="action" value="ujErtekeles" />'."\n";
+	echo '<input type="hidden" name="kepzesId" value="'.$ADAT['kepzesId'].'" />'."\n";
+	echo '<input type="hidden" name="evfolyam" value="'.$ADAT['evfolyam'].'" />'."\n";
+	echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+	echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarId'].'" />'."\n";
+	echo '<input type="hidden" name="tankorId" value="'.$ADAT['tankorId'].'" />'."\n";
+	echo '<input type="hidden" name="targyId" value="'.$ADAT['targyId'].'" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+	echo '<input type="hidden" name="szemeszterId" value="'.$ADAT['szemeszterId'].'" />'."\n";
+	echo '<input type="hidden" name="szrId" value="'.$ADAT['szempontRendszer']['szrId'].'" />'."\n";
+
+//echo '<pre>'; var_dump($ADAT); echo '</pre>';
+
+	echo '<h1>';
+	    echo $ADAT['diakTargyak'][ $ADAT['targyId'] ]['targyNev'];
+	    if ($class == ' zaro') echo ' - '._SZEMESZTER_ERTEKELES;
+	echo '</h1>'."\n";
+	if (isset($ADAT['szovegesErtekeles']['szeId'])) echo '<h2>'._LEGUTOBBI_ERTEKELES.': '.$ADAT['szovegesErtekeles']['dt'].'</h2>';
+	else echo '<h2>'._MEG_NEM_ERTEKELT.'</h2>'."\n";
+
+	echo '<ol>'."\n";
+	foreach ($ADAT['szempontRendszer']['szempont'] as $szempontId => $szAdat) {
+	    echo '<li>'."\n";
+	    echo $szAdat['szempont']."\n";
+	        echo '<ul>'."\n";
+		for ($i = 0; $i < count($ADAT['szempontRendszer']['minosites'][$szempontId]); $i++) {
+		    $mAdat = $ADAT['szempontRendszer']['minosites'][$szempontId][$i];
+		    if (
+			is_array($ADAT['szovegesErtekeles']['minosites']) 
+			&& in_array($mAdat['minositesId'], $ADAT['szovegesErtekeles']['minosites'])
+		    ) $CHK = ' checked="checked" ';
+		    else $CHK = '';
+		    echo '<li>'."\n";
+		    echo '<input id="m'.$mAdat['minositesId'].'" type="checkbox" name="minosites[]" value="'.$mAdat['minositesId'].'"'.$CHK.' />'."\n";
+		    echo '<label for="m'.$mAdat['minositesId'].'">'.$mAdat['minosites'].'</label>'."\n";
+		    echo '</li>'."\n";
+		}
+		    if (__MODOSITHAT) {
+			echo '<li>'."\n";
+			echo '<input type="hidden" name="szempontId[]" value="'.$szempontId.'" />'."\n";
+			echo '<input type="text" name="egyediMinosites[]" value="'.$ADAT['szovegesErtekeles']['egyediMinosites'][$szempontId]['egyediMinosites'].'" />'."\n";
+			echo '</li>'."\n";
+		    } elseif ($ADAT['szovegesErtekeles']['egyediMinosites'][$szempontId]['egyediMinosites'] != '') {
+			echo '<li>'."\n";
+			echo '<span class="egyediMinosites">'.$ADAT['szovegesErtekeles']['egyediMinosites'][$szempontId]['egyediMinosites'].'</span>'."\n";
+			echo '</li>'."\n";
+		    }
+		echo '</ul>'."\n";
+	    echo '</li>'."\n";
+	}
+	echo '</ol>'."\n";
+
+	if (__MODOSITHAT) echo '<input type="submit" class="szoveges" value="'._OK.'" />'."\n";
+
+	formEnd();
+
+//echo '<pre>';
+//var_dump($ADAT['szovegesErtekeles']);
+
+    }
+
+?>

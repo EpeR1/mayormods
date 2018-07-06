@@ -1,0 +1,25 @@
+
+    form.kepzes {  background-color: rgb(70,70,120); color: white; margin: 30px; text-align: left; padding: 0px 0px 10px 0px; }
+    form.kepzes h1 { background-color: rgb(0,0,80); text-align: center; border: white solid; border-width: 1px 0px; font-size: 16px; padding: 4px 2px; }
+    
+    form.kepzes.eles { background-color: rgb(70,120,70); }
+    form.kepzes.eles h1 { background-color: rgb(0,80,0); }
+
+    form.kepzes.hibernalt { background-color: rgba(0,0,0,0.6); }
+
+    form.kepzes select.osztalySel { height: 400px; min-width: 200px; }
+
+    form.kepzes div { display:table-cell; padding:20px 0px 10px 120px;}
+    form.kepzes p { text-align: center; }
+
+    form.kepzes span.minih {
+	display:block;padding: 2px 15px; background-color: rgb(100, 200, 100); border-top:solid 1px white;
+    }
+
+    form.kepzes option.jellegUgyanaz { color: green; }
+
+    .hidden { display: none; }
+
+    form.kepzes label { display: inline-block; padding: 10px; width: 100px; text-align: right; }
+    form.kepzes input[type=text] { width: 500px; }
+    form.kepzes input[type=submit] { width: 500px; }

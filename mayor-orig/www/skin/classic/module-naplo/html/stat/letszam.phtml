@@ -1,0 +1,54 @@
+<?php
+
+    function putLetszamStat( $ADAT = array() )
+    {
+	if (count($ADAT)==0) return ;
+	if (!is_array($ADAT['osztalyok'])) return;
+
+	echo '<table class="letszamStat" align="center">';
+	echo '<thead>';
+	    echo '<tr>';
+		echo '<th rowspan="2">'._SZULEV.'</th>';
+		foreach($ADAT['osztalyok'] as $OSZT) {
+		    $osztalyId = $OSZT['osztalyId'];
+		    $osztalyJel = $OSZT['osztalyJel'];
+		    echo '<th colspan="2">'.$osztalyJel.'</th>';
+		}
+	    echo '</tr>';
+	    echo '<tr>';
+		foreach($ADAT['osztalyok'] as $OSZT) {
+		    echo '<td>Σ</td><td>♀</td>';
+		}
+	    echo '</tr>';
+	    
+	echo '</thead>';
+	echo '<tfoot>';
+	    echo '<tr>';
+	    echo '<th colspan="'.(count($ADAT['osztalyok'])*2+1).'">('.$ADAT['tanev'].') '.$ADAT['dt'].'</th>';
+	    echo '</tr>';	
+	echo '</tfoot>';
+	
+	echo '<tbody>';
+	foreach ($ADAT['eletkor'] as $szuletesiEv => $D) {
+	    echo '<tr>';
+		echo '<th>'.$szuletesiEv.'</th>';
+		
+		foreach($ADAT['osztalyok'] as $OSZT) {
+		    $osztalyId = $OSZT['osztalyId'];
+		    $osztalyJel = $OSZT['osztalyJel'];
+		    if (count($D[$osztalyId]) > 0) {
+			echo '<td>'.(($D[$osztalyId]['fiú'][0]['dbDiak'] + $D[$osztalyId]['lány'][0]['dbDiak'])).'</td>';
+			echo '<td class="l">'.(intval($D[$osztalyId]['lány'][0]['dbDiak'])).'</td>';
+		    } else {
+			echo '<td></td><td></td>';
+		    }
+		}
+	    echo '</tr>'."\n";
+	}
+
+	echo '</tbody>'."\n";
+	echo '</table>';
+    
+    }
+
+?>

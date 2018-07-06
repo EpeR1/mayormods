@@ -1,0 +1,50 @@
+<?php
+
+    function putDiakHianyzasLista($ADAT) {
+
+	global $aHetNapjai;
+	//re
+	$_N = $ADAT['napok'];
+	for ($i=0; $i<count($_N); $i++) {
+	    $NAPOK[$_N[$i]['dt']] = $_N[$i];
+	}
+	unset($_N);
+
+	if (is_array($ADAT['hianyzasok'][$ADAT['diakId']])) {
+	    echo '<table class="hianyzasLista" cellspacing="1" cellpadding="1" align="center">';
+	    echo '<caption>'.$ADAT['diak']['nev'].'</caption>';
+	    foreach ($ADAT['hianyzasok'][$ADAT['diakId']] as $dt => $T) {
+		    echo '<tr>';
+		    echo '<th colspan="8">';
+    			 echo str_replace('-','.',$dt) .'. '. $aHetNapjai[date('w',strtotime($dt))-1];
+			echo ' '.$NAPOK[$dt]['megjegyzes'].' ('.$NAPOK[$dt]['orarendiHet'].'. '.__HET.')'; // tipus, megjegyzes, orarendiHet
+			    formBegin(array('class'=>'nyil','action'=>href('index.php?page=naplo&sub=hianyzas&f=nap')));
+                            echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />';
+                            echo '<input type="hidden" name="dt" value="'.$dt.'" />';
+                            echo '<input type="hidden" name="action" value="nem csinálunk semmit" />';
+                            echo '<input type="submit" value="&rarr;" />';
+			    formEnd();
+		    echo '</th>';
+		    echo '</tr>';
+		foreach($T as $ora => $D) {
+		    for ($i=0; $i<count($D); $i++) {
+
+			$ORAADAT = getOraAdatById($D[$i]['oraId']); // ezt nem itt!
+
+			echo '<tr>';
+			echo '<td>'.$D[$i]['ora'].'.</td>';
+			echo '<td class="'.ekezettelen($D[$i]['tipus']).'">'.$D[$i]['tipus'].($D[$i]['tipus'] == 'késés'?' ('.$D[$i]['perc'].' '._PERC.')':'').'</td>';
+			echo '<td class="'.ekezettelen($D[$i]['statusz']).'">'.$D[$i]['igazolas'].'</td>';
+			echo '<td>'.$ORAADAT['kiCn'].'</td>';
+			echo '<td>'.$ORAADAT['leiras'].'</td>';
+			echo '<td>'.$ORAADAT['tipus'].'</td>';
+			echo '<td>'.$ORAADAT['tankorNev'].'</td>';
+			echo '</tr>'."\n";
+		    }	
+		}
+	    }
+	    echo '</table>';
+	}
+    }
+
+?>

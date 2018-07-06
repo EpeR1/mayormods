@@ -1,0 +1,10 @@
+
+    form.azonosito table {
+	margin: 0px auto; background-color: rgb(20,40,80); color: white
+    }
+    form.azonosito table th { background-color: rgb(60,80,100); }
+    form.azonosito table td { background-color: rgb(40,80,120); }
+    form.azonosito table td.azonosNev { background-color: rgb(40,120,80); }
+    form.azonosito table td.tobbszorosOid { background-color: rgb(120,40,40); }
+
+

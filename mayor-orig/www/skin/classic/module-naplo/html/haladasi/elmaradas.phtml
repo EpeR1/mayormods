@@ -1,0 +1,63 @@
+<?php
+
+    function putElmaradas($Elmaradas, $Tanarok) {
+
+	echo '<table class="elmaradas" cellspacing="1">';
+	    echo '<thead><tr>';
+		echo '<th colspan="2">'._TANAR.'</th>';
+		echo '<th>'._LEZART.'</th>';
+		echo '<th>'._BEIRANDO.'</th>';
+	    echo '</tr></thead><tfoot><tr><td colspan="4">'._HATARIDO.':'._HALADASI_HATARIDO.'; '._MAIDATUM.': '.date('Y-m-d').'</td></tr></tfoot>';
+	    echo '<tbody>';
+	for ($i = 0; $i < count($Elmaradas['lezart']); $i++) {
+
+	    echo '<tr>';
+		$tanarId = $Elmaradas['lezart'][$i]['ki'];
+		$tanarNev = $Tanarok[$tanarId]['tanarNev'];
+		$Tanarok[$tanarId]['volt'] = true;
+		$lezartDb = $Elmaradas['lezart'][$i]['db'];
+		$beirandoDb = $Elmaradas['beirando'][$tanarId]['db'];
+		echo '<th>';
+		    echo ($i+1).'. ';
+		echo '</th>';
+		echo '<th class="tanarNev" data-tanarid="'.$tanarId.'">';
+		    echo $tanarNev;
+		echo '</th>';
+		echo '<td>';
+		    echo $lezartDb;
+		echo '</td>';
+		echo '<td>';
+		    echo $beirandoDb;
+		echo '</td>';
+	    echo '</tr>';
+	}
+
+	foreach ($Elmaradas['beirando'] as $tanarId => $beirandoAdat) {
+		if (!$Tanarok[$tanarId]['volt']) {
+		    $tanarNev = $Tanarok[$tanarId]['tanarNev'];
+		    $lezartDb = '';
+		    $beirandoDb = $Elmaradas['beirando'][$tanarId]['db'];
+		    $Tanarok[$tanarId]['volt'] = true;
+		    echo '<tr class="beirando">';
+			echo '<th>';
+			    echo (++$i).'.';
+			echo '</th>';
+			echo '<th class="tanarNev" data-tanarid="'.$tanarId.'">';
+			    echo $tanarNev;
+			echo '</th>';
+			echo '<td>';
+			    echo $lezartDb;
+			echo '</td>';
+			echo '<td>';
+			    echo $beirandoDb;
+			echo '</td>';
+		    echo '</tr>';
+		}
+	}
+	// Ha nagyon akarjuk, akkor kirakhatjuk a többi nevet is - de nem akarjuk...
+	echo '</tbody>';
+	echo '</table>';
+
+    }
+
+?>

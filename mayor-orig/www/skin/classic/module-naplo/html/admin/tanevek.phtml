@@ -1,0 +1,165 @@
+<?php
+
+    function putUjTanevForm() {
+
+	$SZEMESZTER_STATUSZ = Array('aktív','tervezett');
+
+	formBegin(array('class'=>'intezmeny'));
+
+	echo '<h2>'._UJ_TANEV.'</h2>'."\n";
+
+	echo '<div class="data">';
+
+	echo '<input type="hidden" name="action" value="ujTanev" />'."\n";
+
+	//szemeszter: tanev, sorszám, status (aktív, lezárt, új, tervezett), kezdete, vége
+
+        echo _TANEV_JELE . ': <input type="text" name="ujTanev" id="tanev" value="" maxlength="4" size="4" />'."\n";
+	echo '<hr />'."\n";
+
+	for ( $i = 1; $i <= 2; $i++ ) {
+	    echo $i .'. ' . _SZEMESZTER . ":";
+    	    echo '<input type="hidden" name="szemeszter[]" value="'.$i.'" />'."\n";
+    	    echo '<input class="date" type="text" name="kezdesDt[]" value="" maxlength="10" size="10" /> - '."\n";
+    	    echo '<input class="date" type="text" name="zarasDt[]" value="" maxlength="10" size="10" />'."\n";
+	    echo ' ('._TERVEZETT.')';
+	    echo '<br/>';
+
+//	    echo '<select name="statusz[]">';
+//	    foreach($SZEMESZTER_STATUSZ as $key => $statusz) {
+//		    echo '<option value="'.$statusz.'">'.$statusz.'</option>';
+//	    }
+//	    echo '</select>';
+	}
+
+	echo '<hr />'."\n";
+
+//	echo 'rootUser: <input type="text" name="rootUser" id="rootUser" value="root" />'."\n";
+//	echo 'rootPassword: <input type="password" name="rootPassword" id="rootPassword" value="" />'."\n";
+
+        echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	echo '</div>';
+	formEnd();
+
+    }
+
+    function putTanevSzemeszterekForm($Szemeszterek) {
+
+    global $tanev;
+    
+	formBegin(array('class'=>'intezmeny'));
+
+	echo '<input type="hidden" name="action" value="szemeszterTorles" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$tanev.'" />'."\n";
+	
+	echo '<h2>'._TANEV_SZEMESZTEREI.'</h2>'."\n";
+	
+	echo '<div class="data">'."\n";
+	
+	for ($i = 0; $i < count($Szemeszterek); $i++) {
+	    $Sz = $Szemeszterek[$i];
+	    echo '<input type="checkbox" name="szemeszterId[]" value="'.$Sz['szemeszterId'].'">';
+	    echo $Sz['szemeszter'].'. '._SZEMESZTER.': ';
+	    echo '<input type="text" name="kezdesDt[]" value="'.$Sz['kezdesDt'].'" title="'._KEZDESDT.'" maxlength="10" class="date" />'."\n";
+	    echo ' - ';
+	    echo '<input type="text" name="zarasDt[]" value="'.$Sz['zarasDt'].'" title="'._ZARASDT.'" maxlength="10" class="date" />'."\n";
+	    echo ' ('.$Sz['statusz'].')<br />'."\n";
+	}
+        echo '<input type="submit" value="'._TOROL.'" />'."\n";
+
+	echo '</div>'."\n";
+	formEnd();
+
+    }
+
+    function putTanevAktivalForm( $tanev ) {
+
+	if ($tanev=='') return false;
+	formBegin(array('class'=>'intezmeny'));
+
+	echo '<input type="hidden" name="action" value="tanevAktival" />'."\n";
+
+	echo '<h2>'._TANEV_AKTIVALAS.'</h2>'."\n";
+	
+	echo '<div class="data">'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$tanev.'"/>';
+	echo '<label for="rootUser">rootUser:</label><input type="text" name="rootUser" id="rootUser" value="root" />'."\n";
+	echo '<label for="rootPassword">rootPassword:</label><input type="password" name="rootPassword" id="rootPassword" value="" />'."\n";
+
+        echo '<input type="submit" value="'._AKTIVAL.'" />'."\n";
+
+	echo '</div>';
+	formEnd();
+    }
+
+    function putTanevLezarasForm( $ADAT ) {
+
+	formBegin(array('class'=>'intezmeny'));
+
+	echo '<input type="hidden" name="action" value="tanevLezar" />'."\n";
+
+	echo '<h2>'._TANEV_LEZARAS.'</h2>'."\n";
+
+	echo '<div class="data">'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'"/>';
+
+	echo '<p>'._TAJEKOZTATO.'</p>';
+
+	echo '<label for="tanevZarasDt">'._TANEV_ZARASDT.'</label>'."\n";
+	echo '<input id="tanevZarasDt" type="text" name="dt" value="'.$ADAT['dt'].'" title="'._TANEV_ZARASDT.'" maxlength="10" class="date" />'."\n";
+
+	echo '<fieldset>';
+	echo '<h3>';
+	echo '<input type="checkbox" name="step[]" value="vegzosJogviszonyLezaras" id="vjl" /> ';
+	echo '<label for="vjl">'._VEGZOSOK_JOGVISZONYANAK_LEZARASA.'</label>'."\n";
+	echo '</h3>';
+	echo '<p>';
+	for ($i = 0; $i < count($ADAT['vegzoOsztalyok']); $i++) {
+	    echo '<input id="vjl'.$i.'" type="checkbox" name="vjlOsztaly[]" value="'.$ADAT['vegzoOsztalyok'][$i]['osztalyId'].'" />';
+	    echo '<label for="vjl'.$i.'">'.$ADAT['vegzoOsztalyok'][$i]['osztalyJel'].'</label>'."\n";
+	}
+	echo '</p>';
+	echo '</fieldset>';
+
+	echo '<fieldset>';
+	echo '<h3>';
+	echo '<input type="checkbox" name="step[]" value="vegzosOsztalyokLezarasa" id="vol" /> ';
+	echo '<label for="vol">'._VEGZOS_OSZTALYOK_LEZARASA.'</label>'."\n";
+	echo '</h3>';
+	echo '</fieldset>';
+
+	echo '<fieldset>';
+	echo '<h3>';
+	echo '<input type="checkbox" name="step[]" value="vegzosAzonositokTorlese" id="vat" /> ';
+	echo '<label for="vat">'._VEGZOSOK_AZONOSITOINAK_TORLESE.'</label>'."\n";
+	echo '</h3>';
+	echo '</fieldset>';
+
+	echo '<fieldset>';
+	echo '<h3>';
+	echo '<input type="checkbox" name="step[]" value="vegzosSzuloAzonositokTorlese" id="vszat" /> ';
+	echo '<label for="vszat">'._VEGZOSOK_SZULOI_AZONOSITOINAK_TORLESE.'</label>'."\n";
+	echo '</h3>';
+	echo '</fieldset>';
+
+	echo '<fieldset>';
+	echo '<h3>';
+	echo '<input type="checkbox" name="step[]" value="tanevLezaras" id="tl" /> ';
+	echo '<label for="tl">'._TANEV_LEZARAS.'</label>'."\n";
+	echo '</h3>';
+	echo '</fieldset>';
+
+	echo '<p>';
+	echo '<label for="rootUser">rootUser:</label><input type="text" name="rootUser" id="rootUser" value="root" />'."\n";
+	echo '<label for="rootPassword">rootPassword:</label><input type="password" name="rootPassword" id="rootPassword" value="" />'."\n";
+	echo '</p>'."\n";
+
+        echo '<input type="submit" value="'._LEZAR.'" />'."\n";
+	echo '</div>';
+
+	formEnd();
+
+    }
+
+?>

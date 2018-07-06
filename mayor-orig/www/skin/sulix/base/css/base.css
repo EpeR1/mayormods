@@ -1,0 +1,268 @@
+/* @override https://sy.ulx.hu:1743/sulixnaplo/skin/sulix/base/css/base.css?ver=2719 */
+
+/*
+    Module: base
+*/
+@media screen {
+
+    html body { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; margin:0px; padding:0px; }
+
+    a { text-decoration:none; }
+
+    div.errorMsg { margin: 20px 20%; background: #fee; border: solid 1px red; border-radius: 2px; padding: 15px; box-shadow: 0px 1px 10px rgba(0,0,0,0.5); }
+    div.errorMsg span { font-weight: bold; color: #f00; }
+    div.infoMsg { margin: 20px 20%; background-color: #eef; border: groove 1px #0000ff; border-radius: 2px; padding: 15px; box-shadow: 0px 1px 10px rgba(0,0,0,0.5); }
+    div.infoMsg span { font-weight: bold; color: #00a; }
+    div.errorMsg span.alertParam, div.infoMsg span.alertParam { font-weight: normal; font-style: italic; color: green; }
+
+    #logo { position: absolute; top: 0;
+	left: 5px;
+}
+
+    #head { position: absolute; width: 100%; height: 60px; background: #3496B9 url(../img/powered_by_mayor_small.png) no-repeat right center; }
+/*
+    #egyeb { float: right; padding: 23px 20px; margin-right: 100px; text-align: right; }
+    #egyeb span { color: white; cursor: pointer; background: #3facc7; padding: 23px 20px; }
+    #settings { display: none; width: 100px;
+        margin-top: 5px; position:relative; right: 0px;
+        background: #f496b9;
+    }
+    #egyeb:hover #settings { display: block;  }
+    #settings table { width: 100%; background: #3facc7; margin-top: 23px; border-spacing: 1px;}
+    #settings td { width: 100%; text-align: left; padding-left: 10px; border-bottom: solid 1px #ffacc7; background: #3496B9; }
+    #settings td:last-child { border-bottom: none; }
+    #settings td a {
+        display: inline-block; width: 100%;
+	padding: 2px 0px 2px 0px;
+        text-align: left; text-decoration: none; 
+        color: white;
+    }
+    #settings td a:hover {  }
+*/
+
+
+    #nav, #nav ul { list-style: none; }
+    #nav { margin: 0; height: 60px; padding-left: 180px; }
+    #nav li { position: relative; }
+
+    #nav > li { float: left; z-index: 20; min-width: 100px; text-align: center; padding: 20px; height: 20px; background: #47c980; }
+    #nav > li:hover { z-index: 22; }
+    #nav > li > ul { top: 50px; left: -1px; /* background: #1A4B5C; */}
+    #nav > li > ul > li > a { margin-left: 10px; }
+
+    #nav li:hover { background: #4fbcd7; }
+    #nav li.active { background: #3facc7; }
+    #nav li a { display: block; padding: 3px 8px; color: white; }
+    #nav li a:hover { color:#fdb933; }
+    #nav li:hover > ul, #nav li.over ul { display: block; }
+#nav > li.active { padding-right: 0; padding-left: 0; width: 140px; }
+#nav > li > a { padding: 23px 8px; position: relative; top: -20px; }
+    #nav li.nav1szin { background: #3496B9; }
+    #nav ul.sub { background: #3facc7; }
+
+
+    #nav ul { display: none; position: absolute; width: 160px; padding: 0px; }
+    #nav ul span { float: left; margin: 6px 5px; color: white; }
+    #nav ul > li { background: #3496B9; }
+    #nav ul li { text-align: left; margin-bottom: 1px; }
+    #nav ul li a { padding: 6px 10px; }
+    #nav ul li.active > a { color:#fdb933; }
+
+    #nav ul ul { top: 0px; left: -145px; z-index: 30; background: #3facc7; background: #3496B9}
+    #nav ul ul a { background: #3facc7; }
+    #nav ul ul a:hover { background: #4fbcd7; }
+
+    #nav li.start {
+	height: 20px; min-width: 0; padding-right: 0px; padding-left: 6px;
+	background: #D2DFE9; border-right: 4px solid #D2DFE9; border-radius: 0px 30px 30px 0px;
+    }
+
+    #poz { list-style: none; background-color: rgb(230,230,230); margin: 0; height: 20px; border-bottom: #f3f3f3 solid 5px; }
+    #poz > li { float: right; padding: 2px; width: auto; }
+
+    #nav1 { z-index: 4; position: absolute; margin-left: 330px; margin-right: 10px; background: rgba(52,150,185,0.6); }
+    #nav1 div a { padding: 22px 8px 23px 8px; display: inline-block; text-decoration: none; color: #fff; background: #3496B9; margin-top: 1px; }
+
+    #nav1 div a:hover { color: #fdb933; /*background: #5FCCE7; */}
+    #nav1 div a.aktiv { color:#fdb933; /*background: #4FBCD7; */}
+
+    #nav2 { width: 120px; position: absolute; margin: 0; height: 100%;
+	background: -webkit-linear-gradient(top, #D2DFE9 0%,#D2DFE9 50%,#ffffff 100%);
+	background: -moz-linear-gradient(top, #D2DFE9 0%,#D2DFE9 50%,#ffffff 100%);
+	background: linear-gradient(top, #D2DFE9 0%,#D2DFE9 50%,#ffffff 100%);
+    }
+    #nav2 ul { margin: 0; padding: 0; list-style: none; }
+    #nav2 ul li { border-bottom: solid 1px rgba(100,100,100,0.4); }
+    #nav2 ul li a { display: block; color: black; font-size: 11px; background: #D2DFE9; padding: 6px 6px; text-decoration: none; }
+    #nav2 ul li a.aktiv { color: #175970; color: #ee7f00; font-size: 12px; }
+    #nav2 ul li a:hover { color: white; background: #9abcd8; }
+
+
+   #takaro { z-index:150;position: fixed;top:0px; left:0px; right:0px; bottom:0px; background-color: rgba(0,0,0,0.7); }
+    #updateWindow {background-color: white; position: absolute;z-index:200;margin:auto auto; width:400px;}
+    #keyHelp { z-index:151;position: absolute; top:200px; left: 200px; right:200px; margin: auto; padding: 20px; width: 300px;
+        border: solid 1px yellow; border-radius: 20px; border-spacing: 15px; background-color: rgba(0,0,0,0.4);
+    }
+    #keyHelp th { color: white; text-align: center; border-bottom: yellow 2px solid; font-size: 20px; font-weight: bold; }
+    #keyHelp td.key { color: yellow; text-align: right; }
+    #keyHelp td.desc { color: white; text-align: left; }
+
+    div.mayorbody { margin-left: 121px; }
+/*
+    #logo, #head, #nav1, #nav2, #nav, #poz { position: fixed; }
+    #head { top: 0; left: 0; }
+    #nav { top: 0; left: 0; }
+    #nav1 { top: 0; }
+    #poz { top: 60px; width: 100%; }
+    #nav2 { top: 85px; }
+    div.mayorbody { margin-top: 85px; }
+    #nav2 { top: 60px; }
+    div.mayorbody { margin-top: 60px; }
+ */
+
+    #mayorErrorSmall.mayorErrorSmallInfo {
+border-bottom: solid 4px rgb(106,128,250);
+padding:4px; height:100%; width:100%;
+background-color:rgba(250,250,250,0.9); 
+    }
+
+    #mayorErrorSmall.mayorErrorSmallError {
+border-bottom: solid 4px red;
+padding:4px; height:100%; width:100%; 
+background-color:rgba(250,250,250,0.9); 
+    }
+
+}
+
+form {
+	background-color: #eeeeee !important;
+	color: black !important;
+}
+
+form.hiba {
+	background-color: #eeeeee !important;
+	color: black !important;
+}
+
+form.kepzes {
+	background-color: #eeeeee !important;
+	color: black !important;
+}
+
+form.tanar {
+	background-color: #eeeeee !important;
+	color: black !important;
+}
+
+form.terem {
+	background-color: #eeeeee !important;
+	color: black !important;
+}
+
+table.toolBar form {
+    background: #3496b9 !important;
+}
+
+form h2 {
+    background: #d2d2d2 !important;
+	font-weight: normal !important;
+	font-style: normal !important;
+	font-size: 16px !important;
+	color: black !important;
+}
+
+form h3 {
+	color: black !important;
+	font-size: 14px !important;
+	font-weight: normal !important;
+	font-style: normal !important;
+}
+
+#mayorbody table th
+{
+    background: #d2d2d2 !important;
+	font-weight: normal !important;
+	font-style: normal !important;
+	font-size: 16px !important;
+	color: black !important;
+}
+
+form.terem h1
+{
+    background: #d2d2d2 !important;
+	font-weight: normal !important;
+	font-style: normal !important;
+	font-size: 16px !important;
+	color: black !important;
+}
+
+form.hiba h1
+{
+    background: #d2d2d2 !important;
+	font-weight: normal !important;
+	font-style: normal !important;
+	font-size: 16px !important;
+	color: black !important;
+}
+
+form.export h1
+{
+    background: #d2d2d2 !important;
+	font-weight: normal !important;
+	font-style: normal !important;
+	font-size: 16px !important;
+	color: black !important;
+}
+
+form.osztalyForm h1
+{
+    background: #d2d2d2 !important;
+	font-weight: normal !important;
+	font-style: normal !important;
+	font-size: 16px !important;
+	color: black !important;
+}
+
+form.tanar h1
+{
+    background: #d2d2d2 !important;
+	font-weight: normal !important;
+	font-style: normal !important;
+	font-size: 16px !important;
+	color: black !important;
+}
+
+form.updateTable h1
+{
+    background: #d2d2d2 !important;
+	font-weight: normal !important;
+	font-style: normal !important;
+	font-size: 16px !important;
+	color: black !important;
+}
+
+form.kepzes h1
+{
+    background: #d2d2d2 !important;
+	font-weight: normal !important;
+	font-style: normal !important;
+	font-size: 16px !important;
+	color: black !important;
+}
+
+#mayorbody .toolBar th
+{color: white !important;
+background: #3496b9 !important;
+font-size: 10px !important;}
+
+
+
+    form.hiba input
+    form.hiba select
+    {
+	margin:2px 10px;
+	background-color: white;
+	border: solid 1px rgb(120,220,240);
+	padding:0px 10px;
+	color: black;
+}

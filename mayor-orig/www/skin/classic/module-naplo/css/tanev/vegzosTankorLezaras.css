@@ -1,0 +1,5 @@
+
+    form.vegzos { background-color: rgb(200,200,100); margin: 20px 15%; text-align: center; padding: 10px; border: solid 1px black; }
+    form.vegzos h1 { font-size: 12px; color: white; background-color: rgb(60,20,10); border: dotted white; border-width: 1px 0px; }
+    form.vegzos ul { list-style-type: none; margin: auto; padding: 10px 0%; width: 40%; text-align: left; background-color: rgb(100,40,10); }
+    form ul li { background-color: rgb(150,150,100); margin: 1px; }

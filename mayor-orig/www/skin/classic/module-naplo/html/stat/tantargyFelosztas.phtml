@@ -1,0 +1,414 @@
+<?php
+
+    function putStat($ADAT) {
+
+	echo '<h1>A '.__TANEV.'/'.(__TANEV+1).' tanév tantárgyfelosztási statisztikája</h1>';
+	echo '<table id="tfStat">';
+	// Intézményi alapadatok
+	echo '<tbody id="alap">';
+	echo '<tr><th>Intézmény neve<br/>OM<br />Címe</th>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo '<td colspan="6">'
+		    .$iAdat['intezmenyAdat']['nev'].'<br />'
+		    .$iAdat['intezmenyAdat']['OMKod'].'<br />'
+		    .$iAdat['intezmenyAdat']['cimHelyseg'].' '.$iAdat['intezmenyAdat']['cimIrsz'].', '.$iAdat['intezmenyAdat']['cimKozteruletNev'].' '.$iAdat['intezmenyAdat']['cimKozteruletJelleg'].' '.$iAdat['intezmenyAdat']['cimHazszam'];
+	    echo '</td>';
+	}
+	echo '</tr>';
+	echo '</tbody>';	
+
+	// Pedagógus létszám
+	echo '<tbody id="tanarLetszam">';
+	echo '<tr><th class="slide">Pedagógus létszám <span class="icon-chevron-down"></span></th>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo '<td colspan="2" class="number">'.intval($iAdat['tanarLetszam']['statusz']['határozatlan idejű']+$iAdat['tanarLetszam']['statusz']['határozott idejű']).'</td>';
+	    echo '<td class="gap" colspan="4"></td>';
+	}
+	echo '</tr>';
+	echo '<tr class="hide"><th></th>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo '<th colspan="2">Gyakornok<br />Pedagógus I.<br/>Pedagógus II.<br/>Mesterpedagógus</br>Kutatótanár</td>';
+	    echo '<td class="number">'.$iAdat['tanarLetszam']['besorolas']['Gyakornok'].'<br/>'
+		    .$iAdat['tanarLetszam']['besorolas']['Pedagógus I.'].'<br/>'
+		    .$iAdat['tanarLetszam']['besorolas']['Pedagógus II.'].'<br/>'
+		    .$iAdat['tanarLetszam']['besorolas']['Mesterpedagógus'].'<br/>'
+		    .$iAdat['tanarLetszam']['besorolas']['Kutatótanár']
+		.'</td>';
+	    echo '<th colspan="2">Határozatlan idejű<br/>Határozott idejű<br />Tartósan távol</th>';
+	    echo '<td class="number">'
+		    .intval($iAdat['tanarLetszam']['statusz']['határozatlan idejű']).'<br/>'
+		    .intval($iAdat['tanarLetszam']['statusz']['határozott idejű']).'<br/>'
+		    .intval($iAdat['tanarLetszam']['statusz']['tartósan távol']).'<br/>'
+		.'</td>';
+	}
+	echo '</tr>';
+	echo '</tbody>';
+
+	// Finanszírozott pedagógus létszám (a költségvetési törvény szerint)
+	echo '<tbody id="tanarLetszam">';
+	echo '<tr><th class="slide" rowspan="2"><span class="icon-chevron-down"></span>Finanszírozott <br/>pedagógus létszám</th>';
+	    foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+		echo '<th colspan="2">Összesen</th><th colspan="2" rowspan="2">Diák létszám</th><th colspan="2" rowspan="2">Mutató</th>';
+	    }
+	echo '</tr>';
+	echo '<tr>';
+	    foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+		$pLetszam = 0;
+		foreach ($ADAT['finanszírozott pedagógus létszám'] as $osztalyTipus => $mutato)
+		    $pLetszam += round(intval($iAdat['diakLetszam'][$osztalyTipus])/$mutato);
+		echo '<td class="number" colspan="2">'.$pLetszam.'</td>';
+	    }
+	echo '</tr>';
+	foreach ($ADAT['finanszírozott pedagógus létszám'] as $osztalyTipus => $mutato) {
+	    echo '<tr class="hide"><th title="'.$mutato.' tanuló / 1 pedagógus">'.$osztalyTipus.'</th>';
+	    foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+		echo '<td class="number" colspan="2">'.round(intval($iAdat['diakLetszam'][$osztalyTipus])/$mutato).'</td>';
+		echo '<td class="number" colspan="2">'.$iAdat['diakLetszam'][$osztalyTipus].'</td>';
+		echo '<td class="number" colspan="2">'.$mutato.'</td>';
+	    }
+	    echo '</tr>';
+	}
+	echo '</tbody>';
+
+	// Diák létszám adatok
+	echo '<tbody id="diakLetszam">';
+	echo '<tr><th class="slide" rowspan="2">Diák létszám <span class="icon-chevron-down"></span></th>';
+	    foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) echo '<th colspan="2">Összes</th><th colspan="2">Fiú</th><th colspan="2">Lány</th>';
+	echo '</tr>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+		if ( 
+			intval($iAdat['diakLetszam']['statusz']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['magántanuló'])
+			<>   intval($iAdat['diakLetszam']['statusz']['fiú']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['fiú']['magántanuló'])
+			    +intval($iAdat['diakLetszam']['statusz']['lány']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['lány']['magántanuló'])
+		) $class=' alert';
+		else $class='';
+		echo '<td colspan="2" class="number'.$class.'">'.intval($iAdat['diakLetszam']['statusz']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['magántanuló']).'</td>'
+		    .'<td colspan="2" class="number'.$class.'">'.intval($iAdat['diakLetszam']['statusz']['fiú']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['fiú']['magántanuló']).'</td>'
+		    .'<td colspan="2" class="number'.$class.'">'.intval($iAdat['diakLetszam']['statusz']['lány']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['lány']['magántanuló']).'</td>';
+		//echo '<td class="gap"></td>';
+	}
+	echo '<tr class="hide"><th>jogviszonyban van<br />magántanuló<br />vendégtanuló<br />jogviszonya szünetel</th>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    if (intval($iAdat['diakLetszam']['statusz']['jogviszonyban van']) <> intval($iAdat['diakLetszam']['statusz']['fiú']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['lány']['jogviszonyban van'])) 
+		$jvClass=' class="alert"';
+	    if (intval($iAdat['diakLetszam']['statusz']['magántanuló']) <> intval($iAdat['diakLetszam']['statusz']['fiú']['magántanuló']+$iAdat['diakLetszam']['statusz']['lány']['magántanuló'])) 
+		$mClass=' class="alert"';
+	    if (intval($iAdat['diakLetszam']['statusz']['vendégtanuló']) <> intval($iAdat['diakLetszam']['statusz']['fiú']['vendégtanuló']+$iAdat['diakLetszam']['statusz']['lány']['vendégtanuló']))
+		$vClass=' class="alert"';
+	    if (intval($iAdat['diakLetszam']['statusz']['jogviszonya felfüggesztve']) <> intval($iAdat['diakLetszam']['statusz']['fiú']['jogviszonya felfüggesztve']+$iAdat['diakLetszam']['statusz']['lány']['jogviszonya felfüggesztve'])) 
+		$jfClass=' class="alert"';
+	    echo '<td colspan="2" class="number">'
+		    .'<span'.$jvClass.'>'.$iAdat['diakLetszam']['statusz']['jogviszonyban van'].'</span><br />'
+		    .'<span'.$mClass.'>'.$iAdat['diakLetszam']['statusz']['magántanuló'].'</span><br />'
+		    .'<span'.$vClass.'>'.$iAdat['diakLetszam']['statusz']['vendégtanuló'].'</span><br />'
+		    .'<span'.$jfClass.'>'.$iAdat['diakLetszam']['statusz']['jogviszonya felfüggesztve'].'</span>'.
+		'</td>';
+	    echo '<td colspan="2" class="number">'
+		    .'<span'.$jvClass.'>'.$iAdat['diakLetszam']['statusz']['fiú']['jogviszonyban van'].'</span><br />'
+		    .'<span'.$mClass.'>'.$iAdat['diakLetszam']['statusz']['fiú']['magántanuló'].'</span><br />'
+		    .'<span'.$vClass.'>'.$iAdat['diakLetszam']['statusz']['fiú']['vendégtanuló'].'</span><br />'
+		    .'<span'.$jfClass.'>'.$iAdat['diakLetszam']['statusz']['fiú']['jogviszonya felfüggesztve'].'</span>'.
+		'</td>';
+	    echo '<td colspan="2" class="number">'
+		    .'<span'.$jvClass.'>'.$iAdat['diakLetszam']['statusz']['lány']['jogviszonyban van'].'</span><br />'
+		    .'<span'.$mClass.'>'.$iAdat['diakLetszam']['statusz']['lány']['magántanuló'].'</span><br />'
+		    .'<span'.$vClass.'>'.$iAdat['diakLetszam']['statusz']['lány']['vendégtanuló'].'</span><br />'
+		    .'<span'.$jfClass.'>'.$iAdat['diakLetszam']['statusz']['lány']['jogviszonya felfüggesztve'].'</span>'.
+		'</td>';
+	    //echo '<td class="gap"></td>';
+	}
+	echo '</tr>';
+	echo '<tr class="hide"><th>Évfolyam létszámok</th>';
+	echo '</tr>';
+	foreach ($ADAT['evfolyamJelek'] as $idx => $evfolyamJel) {
+	    $letezoEvfolyam = false;
+	    foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+		if (is_array($iAdat['diakLetszam']['evfolyamJel'][$evfolyamJel])) {
+		    if (!$letezoEvfolyam) {
+			echo '<tr class="hide"><th>'.$evfolyamJel.'</th>';
+			$letezoEvfolyam = true;
+		    }
+		    if ($letezoEvfolyam) {
+			echo '<td colspan="2" class="number">'.$iAdat['diakLetszam']['evfolyamJel'][$evfolyamJel]['összes'].'</td>';
+			echo '<td colspan="2" class="number">'.$iAdat['diakLetszam']['evfolyamJel'][$evfolyamJel]['fiú'].'</td>';
+			echo '<td colspan="2" class="number">'.$iAdat['diakLetszam']['evfolyamJel'][$evfolyamJel]['lány'].'</td>';
+			//echo '<td class="gap"></td>';
+		    }
+		}
+	    }
+	    if ($letezoEvfolyam) echo '</tr>';
+	}
+	echo '</tbody>';
+
+	// Óraszámok
+	echo '<tbody id="oraszamok">';
+	echo '<tr><th rowspan="2" class="slide">Óraszámok <span class="icon-chevron-down"></span></th>'; 
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo '<th>Összes</th><th rowspan="2" colspan="3"></th><th>Óratervi</th><th>Tanórán kívüli</th>';
+	}
+	echo '</tr><tr>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo ''
+		.'<td class="number">'.number_format($iAdat['oraszamok']['összes'],2,',','').'</td>'
+		.'<td class="number">'.number_format($iAdat['oraszamok']['óratervi'],2,',','').'</td>'
+		.'<td class="number">'.number_format($iAdat['oraszamok']['tanórán kívüli'],1,',','').'</td>'
+		;
+	}
+	echo '</tr>';
+	echo '<tr class="hide"><th>Tantárgyanként</th>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo '<td class="number">';
+	    foreach ($iAdat['targyAdat'] as $targyId => $tAdat) {
+		if (isset($iAdat['targyOraszamok']['összes'][$targyId])) {
+		    echo number_format($iAdat['targyOraszamok']['összes'][$targyId],1,',','').'<br />';
+		}
+	    }
+	    echo '</td>';
+	    echo '<th colspan="3">';
+	    foreach ($iAdat['targyAdat'] as $targyId => $tAdat) {
+		if (isset($iAdat['targyOraszamok']['összes'][$targyId])) {
+		    echo $tAdat['targyNev'].'<br />';
+		}
+	    }
+	    echo '</th>';
+	    foreach (array('óratervi','tanórán kívüli') as $oratervi) {
+		echo '<td class="number">';
+		foreach ($iAdat['targyAdat'] as $targyId => $tAdat) {
+		if (isset($iAdat['targyOraszamok']['összes'][$targyId])) {
+		    echo number_format($iAdat['targyOraszamok'][$oratervi][$targyId],1,',','').'<br />';
+		}}
+		echo '</td>';
+	    }
+	}
+	echo '</tr>';
+	echo '<tr class="hide"><th>Osztályonként</th>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo '<td class="number">';
+	    foreach ($iAdat['osztalyIds'] as $osztalyId) {
+		if (isset($iAdat['osztalyOraszamok']['összes'][$osztalyId])) {
+		    echo number_format($iAdat['osztalyOraszamok']['összes'][$osztalyId],1,',','').'<br />';
+		}
+	    }
+	    echo '</td>';
+
+	    echo '<th colspan="3">';
+	    foreach ($iAdat['osztalyIds'] as $osztalyId) {
+		if (isset($iAdat['osztalyOraszamok']['összes'][$osztalyId])) {
+		    echo $iAdat['osztalyAdat'][$osztalyId]['osztalyJel'].'<br />';
+		}
+	    }
+	    echo '</th>';
+	    foreach (array('óratervi','tanórán kívüli') as $oratervi) {
+		echo '<td class="number">';
+		foreach ($iAdat['osztalyIds'] as $osztalyId) {
+		if (isset($iAdat['osztalyOraszamok']['összes'][$osztalyId])) {
+		    echo number_format($iAdat['osztalyOraszamok'][$oratervi][$osztalyId],1,',','').'<br />';
+		}}
+		echo '</td>';
+	    }
+	}
+	echo '<tr class="hide"><th>Évfolyamonként</th>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo '<td class="number">';
+	    foreach ($ADAT['evfolyamJelek'] as $evfolyamJel) {
+		if (isset($iAdat['evfolyamOraszamok']['összes'][$evfolyamJel])) {
+		    echo number_format($iAdat['evfolyamOraszamok']['összes'][$evfolyamJel],1,',','').'<br />';
+		}
+	    }
+	    echo '</td>';
+
+	    echo '<th colspan="3">';
+	    foreach ($ADAT['evfolyamJelek'] as $evfolyamJel) {
+		if (isset($iAdat['evfolyamOraszamok']['összes'][$evfolyamJel])) {
+		    echo $evfolyamJel.'<br />';
+		}
+	    }
+	    echo '</th>';
+	    foreach (array('óratervi','tanórán kívüli') as $oratervi) {
+		echo '<td class="number">';
+		foreach ($ADAT['evfolyamJelek'] as $evfolyamJel) {
+		if (isset($iAdat['evfolyamOraszamok']['összes'][$evfolyamJel])) {
+		    echo number_format($iAdat['evfolyamOraszamok'][$oratervi][$evfolyamJel],1,',','').'<br />';
+		}}
+		echo '</td>';
+	    }
+	}
+	echo '</tr>';
+	echo '</tbody>';
+
+	// időkeret
+	echo '<tbody id="idokeret">';
+	echo '<tr><th class="slide" rowspan="2">Heti időkeret <span class="icon-chevron-down"></span></th>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo    '<th>összesen</th>'
+		    .'<th>enge-<br/>délye-<br/>zett</th>'
+		    .'<th>tehetség-<br/>gondozás, <br/>felzárkóztatás</th>'
+		    .'<th>hittan többlet <br/>órakerete <br/>egyházi <br/>intéz-<br/>ményben</th>'
+		    .'<th>6 és 8 <br/>évfolyamos <br/>gimnáziumok <br/> többlet <br/>óraszáma</th>'
+		    .'<th>nemzetiségi <br/>oktatás-<br/>nevelés <br/>többlet <br/>óraszáma</th>'
+		    ;
+	}
+	echo '</tr><tr>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo    '<td class="number">'.$iAdat['osztalyIdokeret']['összesen']['összes'].'</td>'
+		    .'<td class="number">'.$iAdat['osztalyIdokeret']['összesen']['engedélyezett'].'</td>'
+		    .'<td class="number">'.$iAdat['osztalyIdokeret']['összesen']['tehetséggondozás-felzárkóztatás'].'</td>'
+		    .'<td class="number">'.$iAdat['osztalyIdokeret']['összesen']['egyházi'].'</td>'
+		    .'<td class="number">'.$iAdat['osztalyIdokeret']['összesen']['gimnázium'].'</td>'
+		    .'<td class="number">'.$iAdat['osztalyIdokeret']['összesen']['nemzetiségi'].'</td>'
+		    ;
+	}
+	echo '</tr>';
+	echo '<tr class="hide"><th>'
+		.'Általános iskola alsó tagozat<br/>'
+		.'Általános&nbsp;iskola&nbsp;felső&nbsp;tagozat<br/>'
+		.'Általános iskola<br/>'
+		.'Gimnázium 1-8. évfolyam<br/>'
+		.'Gimnázium&nbsp;9-12.&nbsp;évfolyam<br/>'
+		.'Gimnázium</th>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo    '<td class="number">'
+			.$iAdat['osztalyIdokeret']['alsó']['összes'].'<br/>'
+			.$iAdat['osztalyIdokeret']['felső']['összes'].'<br/>'
+			.$iAdat['osztalyIdokeret']['általános']['összes'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium18']['összes'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium92']['összes'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium']['összes'].'<br/>'
+		    .'</td>'
+		    .'<td class="number">'
+			.$iAdat['osztalyIdokeret']['alsó']['engedélyezett'].'<br/>'
+			.$iAdat['osztalyIdokeret']['felső']['engedélyezett'].'<br/>'
+			.$iAdat['osztalyIdokeret']['általános']['engedélyezett'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium18']['engedélyezett'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium92']['engedélyezett'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium']['engedélyezett'].'<br/>'
+		    .'</td>'
+		    .'<td class="number">'
+			.$iAdat['osztalyIdokeret']['alsó']['tehetséggondozás-felzárkóztatás'].'<br/>'
+			.$iAdat['osztalyIdokeret']['felső']['tehetséggondozás-felzárkóztatás'].'<br/>'
+			.$iAdat['osztalyIdokeret']['általános']['tehetséggondozás-felzárkóztatás'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium18']['tehetséggondozás-felzárkóztatás'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium92']['tehetséggondozás-felzárkóztatás'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium']['tehetséggondozás-felzárkóztatás'].'<br/>'
+		    .'</td>'
+		    .'<td class="number">'
+			.$iAdat['osztalyIdokeret']['alsó']['egyházi'].'<br/>'
+			.$iAdat['osztalyIdokeret']['felső']['egyházi'].'<br/>'
+			.$iAdat['osztalyIdokeret']['általános']['egyházi'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium18']['egyházi'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium92']['egyházi'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium']['egyházi'].'<br/>'
+		    .'</td>'
+		    .'<td class="number">'
+			.$iAdat['osztalyIdokeret']['alsó']['gimnázium'].'<br/>'
+			.$iAdat['osztalyIdokeret']['felső']['gimnázium'].'<br/>'
+			.$iAdat['osztalyIdokeret']['általános']['gimnázium'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium18']['gimnázium'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium92']['gimnázium'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium']['gimnázium'].'<br/>'
+		    .'</td>'
+		    .'<td class="number">'
+			.$iAdat['osztalyIdokeret']['alsó']['nemzetiségi'].'<br/>'
+			.$iAdat['osztalyIdokeret']['felső']['nemzetiségi'].'<br/>'
+			.$iAdat['osztalyIdokeret']['általános']['nemzetiségi'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium18']['nemzetiségi'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium92']['nemzetiségi'].'<br/>'
+			.$iAdat['osztalyIdokeret']['gimnázium']['nemzetiségi'].'<br/>'
+		    .'</td>'
+		    ;
+	}
+	echo '</tr>';
+	echo '<tr class="hide"><th>Osztályonként</th>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo '<th>';
+	    foreach ($iAdat['osztalyAdat'] as $osztalyId => $oAdat) echo $oAdat['osztalyJel'].'<br/>';
+	    echo '</th>';
+	    echo '<td class="number">';
+	    foreach ($iAdat['osztalyAdat'] as $osztalyId => $oAdat) echo $iAdat['osztalyIdokeret'][$osztalyId]['engedélyezett'].'<br/>';
+	    echo '</td>';
+	    echo '<td class="number">';
+	    foreach ($iAdat['osztalyAdat'] as $osztalyId => $oAdat) echo $iAdat['osztalyIdokeret'][$osztalyId]['tehetséggondozás-felzárkóztatás'].'<br/>';
+	    echo '</td>';
+	    echo '<td class="number">';
+	    foreach ($iAdat['osztalyAdat'] as $osztalyId => $oAdat) echo $iAdat['osztalyIdokeret'][$osztalyId]['egyházi'].'<br/>';
+	    echo '</td>';
+	    echo '<td class="number">';
+	    foreach ($iAdat['osztalyAdat'] as $osztalyId => $oAdat) echo $iAdat['osztalyIdokeret'][$osztalyId]['gimnázium'].'<br/>';
+	    echo '</td>';
+	    echo '<td class="number">';
+	    foreach ($iAdat['osztalyAdat'] as $osztalyId => $oAdat) echo $iAdat['osztalyIdokeret'][$osztalyId]['nemzetiségi'].'<br/>';
+	    echo '</td>';
+	}
+	echo '</tr>';
+	echo '</tbody>';
+
+	echo '</tbody id="tankorLetszamStat"><tr><th rowspan="2" class="slide">Csoport statisztika <span class="icon-chevron-down"></span></th>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo '<th>Csoportok száma</th><th colspan="2" rowspan="2"></th><th>minimális csoportlétszám</th><th>maximális csoportlétszám</th><th>átlagos csoportlétszám</th>';
+	    $osszDb = 0; $osszMax = 0; $osszSum = 0; unset($osszMin);
+	    foreach ($iAdat['targyAdat'] as $targyId => $tAdat) {
+		if (isset($iAdat['tankorLetszamStat'][$targyId]['sum'])) {
+		    $osszDb += $iAdat['tankorLetszamStat'][$targyId]['db'];
+		    $osszSum += $iAdat['tankorLetszamStat'][$targyId]['sum'];
+		    if ($osszMax < $iAdat['tankorLetszamStat'][$targyId]['max']) $osszMax = $iAdat['tankorLetszamStat'][$targyId]['max'];
+		    if (!isset($osszMin) || $iAdat['tankorLetszamStat'][$targyId]['min']<$osszMin) 
+			$osszMin = $iAdat['tankorLetszamStat'][$targyId]['min'];
+		}
+	    }
+	    $ADAT['intezmeny'][$intezmeny]['tankorLetszamStat']['összes'] = 
+		array('db'=>$osszDb, 'min'=>$osszMin, 'max'=>$osszMax, 'átlag'=>number_format($osszSum/$osszDb,1,',',''));
+	}
+	echo '</tr>';
+	echo '<tr>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo '<td class="number">'.$iAdat['tankorLetszamStat']['összes']['db'].'</td>'
+		.'<td class="number">'.$iAdat['tankorLetszamStat']['összes']['min'].'</td>'
+		.'<td class="number">'.$iAdat['tankorLetszamStat']['összes']['max'].'</td>'
+		.'<td class="number">'.$iAdat['tankorLetszamStat']['összes']['átlag'].'</td>';
+	}
+	echo '</tr>';
+	echo '<tr class="hide"><th>Tantárgyanként</th>';
+	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
+	    echo '<td class="number">';
+	    foreach ($iAdat['targyAdat'] as $targyId => $tAdat) {;
+		if (isset($iAdat['tankorLetszamStat'][$targyId]['sum'])) {
+		    echo $iAdat['tankorLetszamStat'][$targyId]['db'].'<br />';
+		}
+	    }
+	    echo '</td>';
+	    echo '<th colspan="2">';
+	    foreach ($iAdat['targyAdat'] as $targyId => $tAdat) {
+		if (isset($iAdat['tankorLetszamStat'][$targyId]['sum'])) {
+		    echo str_replace(' ','&nbsp;', $tAdat['targyNev']).'<br />';
+		}
+	    }
+	    echo '</th>';
+	    echo '<td class="number">';
+	    foreach ($iAdat['targyAdat'] as $targyId => $tAdat) {
+		if (isset($iAdat['tankorLetszamStat'][$targyId]['sum'])) {
+		    echo $iAdat['tankorLetszamStat'][$targyId]['min'].'<br />';
+		}
+	    }
+	    echo '</td>';
+	    echo '<td class="number">';
+	    foreach ($iAdat['targyAdat'] as $targyId => $tAdat) {
+		if (isset($iAdat['tankorLetszamStat'][$targyId]['sum'])) {
+		    echo $iAdat['tankorLetszamStat'][$targyId]['max'].'<br />';
+		}
+	    }
+	    echo '</td>';
+	    echo '<td class="number">';
+	    foreach ($iAdat['targyAdat'] as $targyId => $tAdat) {
+		if (isset($iAdat['tankorLetszamStat'][$targyId]['sum'])) {
+		    echo number_format($iAdat['tankorLetszamStat'][$targyId]['sum']/$iAdat['tankorLetszamStat'][$targyId]['db'],1,',','').'<br />';
+		}
+	    }
+	    echo '</td>';
+	}
+	echo '</tr>';
+	echo '</tbody>';
+
+	echo '</table>';
+    }
+
+?>

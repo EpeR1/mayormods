@@ -1,0 +1,284 @@
+<?php
+
+    function putElszamolas($ADAT) {
+
+	if (!is_array($ADAT['napok']) || count($ADAT['napok'])==0) return false;
+
+	$napszam = ($ADAT['napok'][1]['tanítási nap']+$ADAT['napok'][1]['speciális tanítási nap']);
+	$napTipus = array('tanítási nap','speciális tanítási nap','tanítás nélküli munkanap','tanítási szünet');
+	$T = array(
+	    'lekötött' => array('normál','normál máskor','helyettesítés'),
+	    'fennmaradó' => array('helyettesítés','felügyelet','előírt egyéb','egyéb') // 'összevonás'
+	);
+
+	$Munkaido = array_keys($T);
+	$SumTipus = array('normál','normál máskor','helyettesítés','felügyelet','egyéb');
+
+	/* Munkaterv */
+	echo '<table class="elszamolas" cellpadding="1" cellspacing="1">'."\n";
+	echo '<thead>';
+	echo '<tr><th>'._MUNKATERV.'</th>';
+	foreach ($ADAT['napTipusok'] as $tipus) {
+	    echo '<th>'.$tipus.'</th>';
+	}
+	echo '</tr>'."\n";
+	echo '</thead><tfoot></tfoot>';
+	echo '<tbody>';
+	foreach ($ADAT['napok'] as $munkatervId => $mAdat) {
+	    echo '<tr><th>'.$ADAT['munkaterv'][$munkatervId]['munkatervNev'].' ('.$munkatervId.')</th>';
+	    foreach ($ADAT['napTipusok'] as $tipus) {
+		echo '<td>'.$mAdat[$tipus].'</td>';
+	    }
+	    echo '</tr>';
+	}
+	echo '</tbody>';
+	echo '</table>'."\n";
+
+	/* Elszámolás, órastatisztika */
+	echo '<table class="elszamolas" cellpadding="1" cellspacing="1" >'."\n";
+	echo '<thead><tr>';
+
+	    echo '<th rowspan="3">'._TANAR.'</th>';
+	    echo '<th rowspan="1" colspan="7">'._KOTOTT_MUNKAIDO.'</th>';
+	    echo '<th colspan="3">Σ</th>';
+	    echo '<th rowspan="2" colspan="4">';
+		echo _ELOIRT_HETI_MUNKAORA.' '.$napszam.' '._NAPRA_VETITVE;
+		echo '<div style="border: solid 1px #ddd; width:174px; height:8px; background-color: #aaa;"><span id="munkaoraBar" style="display:block; width:0%;height:8px;"></span></div>';
+	    echo '</th>';
+	    echo '<th colspan="2" rowspan="2">'._HETI_ORASZAM.'</th>';
+
+	echo '</tr>'."\n";
+	echo '<tr>';
+	    echo '<th colspan="3">lekötött</th>';
+	    //echo '<th colspan="1">lekötött+fennmaradó</th>';
+	    echo '<th colspan="4">fennmaradó</th>';
+//	    echo '<th colspan="1">nem számolt</th>'; // összevonás
+	    echo '<th rowspan="2">lekötött</th>';
+	    echo '<th rowspan="2">fennmaradó</th>';
+	    echo '<th rowspan="2">+</th>';
+	echo '</tr>';
+	echo '<tr>';
+	    foreach ($T as $_munkaido => $Tipus) {
+		for ($i = 0; $i < count($Tipus); $i++) {
+		    echo '<th class="'.str_replace(' ','_',ekezettelen($Tipus[$i])).'">'.$Tipus[$i].'</th>';
+		}
+	    }
+	    echo '<th class="e1">55%</th>';
+	    echo '<th class="e2">65%</th>';
+	    echo '<th class="e3">80%</th>';
+	    echo '<th class="e4">100%</th>';
+	    echo '<th>'._TANTARGYFELOSZTASBOL.'</th><th>'._ORARENDBOL.'</th>';
+
+	echo '</tr></thead>'."\n";
+
+	echo '<tbody>';
+	for ($t = 0; $t < count($ADAT['tanarok']); $t++) {
+	    $_O = $ADAT['tanarok'][$t];
+	    $tanarId = $ADAT['tanarok'][$t]['tanarId'];
+	    if (!__VEZETOSEG && !__NAPLOADMIN && $tanarId!=__USERTANARID) continue;
+	    $tanarNev = $ADAT['tanarok'][$t]['tanarNev'];
+
+	    // Elavult
+	    //$tanarHetiMunkaora = $ADAT['tanarok'][$t]['hetiMunkaora'];
+	    //$_THM = ($tanarHetiMunkaora / 5) * $napszam ; // Tanári Heti Munkaóra a vizsgált időszakra vetítve (tanítási napok
+
+    	    $_THM = $_heti = ($_O['hetiMunkaora']>0) ? ($_O['hetiMunkaora']):40;
+    	    $_kotottMax= ($_O['hetiKotottMaxOraszam']>0) ? ($_O['hetiKotottMaxOraszam']) : (($_O['hetiMunkaora']>0) ? ($_O['hetiMunkaora']*0.8):32);
+    	    $_lekotottMax = ($_O['hetiLekotottMaxOraszam']>0) ? ($_O['hetiLekotottMaxOraszam']) : (($_O['hetiMunkaora']>0) ? ($_O['hetiMunkaora']*0.65):26);
+    	    $_lekotottMin = ($_O['hetiLekotottMinOraszam']>0) ? ($_O['hetiLekotottMinOraszam']) : (($_O['hetiMunkaora']>0) ? ($_O['hetiMunkaora']*0.55):22);
+
+	    $_korrekciosSzam = $napszam/5; // HETI öt nap
+
+	    $sum = 0;
+	    for ($i=0; $i<count($SumTipus); $i++) {
+		$sum += intval($ADAT[$tanarId][$SumTipus[$i]]);
+	    }
+	    if ($sum<=($_lekotottMin*$_korrekciosSzam)) $_style = ' class="e1" ';
+	    elseif ($sum<=($_lekotottMax*$_korrekciosSzam)) $_style=' class="e2" ';
+	    elseif ($sum<=($_kotottMax*$_korrekciosSzam)) $_style=' class="e3" ';
+	    else $_style = ' class="e4" ';
+
+	    $SUM = array();
+	    echo '<tr data-percent="'.((100*$sum/($_heti*$_korrekciosSzam))).'" '.$_style.'>';
+		echo '<th class="tanarNev" data-tanarid="'.$tanarId.'">'.$tanarNev.'</th>';
+		foreach ($T as $_munkaido => $Tipus) {
+		    for ($i = 0; $i < count($Tipus); $i++) {
+			echo '<td class="'.ekezettelen($Tipus[$i]).' '.ekezettelen($_munkaido).'">';
+			if ($Tipus[$i]=='helyettesítés') {
+			    echo $_c = ($ADAT['detailed'][$tanarId][$Tipus[$i]][$_munkaido]);
+			} elseif (in_array($Tipus[$i],array('előírt egyéb','egyéb'))) {
+			    if ($Tipus[$i]=='előírt egyéb') echo $_c = ($ADAT['detailed_ki_tipus_munkaido_eredet'][$tanarId]['egyéb'][$_munkaido]['órarend']);
+			    else echo $_c = ($ADAT['detailed_ki_tipus_munkaido_eredet'][$tanarId]['egyéb'][$_munkaido]['plusz']);
+			} else {
+			    echo $_c = $ADAT[$tanarId][$Tipus[$i]];
+		    }
+		    echo '</td>';
+		    $SUM[$_munkaido] += $_c;
+		  }
+		}
+		echo '<th class="sum lekotott">'.$SUM['lekötött'].'</th>';
+		echo '<th class="sum fennmarado">'.$SUM['fennmaradó'].'</th>';
+		echo '<th class="sumsum">'.($SUM['lekötött']+$SUM['fennmaradó']).'</th>';
+    
+		echo '<td '.$_style.'>'.($_lekotottMin*$_korrekciosSzam).'</td>';
+		echo '<td '.$_style.'>'.($_lekotottMax*$_korrekciosSzam).'</td>';
+		echo '<td '.$_style.'>'.($_kotottMax*$_korrekciosSzam).'</td>';
+		echo '<td '.$_style.'>'.($_heti*$_korrekciosSzam).'</th>';
+
+		echo '<td>'.number_format($_O['hetiKotelezoOraszam'],1).'</td>';
+		echo '<td>'.number_format($ADAT[$tanarId]['oraszam'],1).'</td>';
+	    echo '</tr>'."\n";
+
+	}
+
+	echo '</tbody></table>'."\n";
+
+    }
+
+
+/*
+    function putElszamolas_old($ADAT) {
+
+	if (!is_array($ADAT['napok']) || count($ADAT['napok'])==0) return false;
+
+	$napszam = ($ADAT['napok'][1]['tanítási nap']+$ADAT['napok'][1]['speciális tanítási nap']);
+	$napTipus = array('tanítási nap','speciális tanítási nap','tanítás nélküli munkanap','tanítási szünet');
+	$T = array(
+	    'lekötött' => array('normál','normál máskor','helyettesítés'),
+	    'fennmaradó' => array('helyettesítés','felügyelet','egyéb') // 'összevonás'
+	);
+	$Munkaido = array('lekötött','fennmaradó');
+	$Tipus = array('normál','normál máskor','helyettesítés','felügyelet','egyéb'); // 'összevonás'
+	$SumTipus = array('normál','normál máskor','helyettesítés','felügyelet','egyéb');
+
+	echo '<table class="elszamolas" cellpadding="1" cellspacing="1">'."\n";
+	echo '<thead>';
+	echo '<tr><th>'._MUNKATERV.'</th>';
+	foreach ($ADAT['napTipusok'] as $tipus) {
+	    echo '<th>'.$tipus.'</th>';
+	}
+	echo '</tr>'."\n";
+	echo '</thead><tfoot></tfoot>';
+	echo '<tbody>';
+	foreach ($ADAT['napok'] as $munkatervId => $mAdat) {
+	    echo '<tr><th>'.$ADAT['munkaterv'][$munkatervId]['munkatervNev'].' ('.$munkatervId.')</th>';
+	    foreach ($ADAT['napTipusok'] as $tipus) {
+		echo '<td>'.$mAdat[$tipus].'</td>';
+	    }
+	    echo '</tr>';
+	}
+	echo '</tbody>';
+	echo '</table>'."\n";
+
+	echo '<table class="elszamolas" cellpadding="1" cellspacing="1" >'."\n";
+	echo '<thead><tr>';
+
+	    echo '<th rowspan="3">'._TANAR.'</th>';
+	    echo '<th rowspan="1" colspan="'.(count($Tipus)+1).'">'._KOTOTT_MUNKAIDO.'</th>';
+	    echo '<th colspan="3">Σ</th>';
+
+	    echo '<th rowspan="2" colspan="4">'._ELOIRT_HETI_MUNKAORA.' '.$napszam.' '._NAPRA_VETITVE.'</th>';
+	    echo '<th rowspan="3">'._HETI_ORASZAM.'</th>';
+
+	echo '</tr>'."\n";
+	echo '<tr>';
+	    echo '<th colspan="3">lekötött</th>';
+	    //echo '<th colspan="1">lekötött+fennmaradó</th>';
+	    echo '<th colspan="3">fennmaradó</th>';
+//	    echo '<th colspan="1">nem számolt</th>';
+	    echo '<th rowspan="2">lekötött</th>';
+	    echo '<th rowspan="2">fennmaradó</th>';
+	    echo '<th rowspan="2">+</th>';
+	echo '</tr>';
+	echo '<tr>';
+	    foreach ($T as $_munkaido => $Tipus) {
+		for ($i = 0; $i < count($Tipus); $i++) {
+		    echo '<th>'.$Tipus[$i].'</th>';
+		}
+	    }
+	    echo '<th>55%</th>';
+	    echo '<th>65%</th>';
+	    echo '<th>80%</th>';
+	    echo '<th>100%</th>';
+
+	echo '</tr></thead>'."\n";
+
+	echo '<tbody>';
+	for ($t = 0; $t < count($ADAT['tanarok']); $t++) {
+	    $_O = $ADAT['tanarok'][$t];
+
+	    $tanarId = $ADAT['tanarok'][$t]['tanarId'];
+	    if (!__VEZETOSEG && !__NAPLOADMIN && $tanarId!=__USERTANARID) continue;
+	    $tanarNev = $ADAT['tanarok'][$t]['tanarNev'];
+
+	    // Elavult
+	    //$tanarHetiMunkaora = $ADAT['tanarok'][$t]['hetiMunkaora'];
+	    //$_THM = ($tanarHetiMunkaora / 5) * $napszam ; // Tanári Heti Munkaóra a vizsgált időszakra vetítve (tanítási napok
+
+    	    $_THM = $_heti = ($_O['hetiMunkaora']>0) ? ($_O['hetiMunkaora']):40;
+    	    $_kotottMax= ($_O['hetiKotottMaxOraszam']>0) ? ($_O['hetiKotottMaxOraszam']) : (($_O['hetiMunkaora']>0) ? ($_O['hetiMunkaora']*0.8):32);
+    	    $_lekotottMax = ($_O['hetiLekotottMaxOraszam']>0) ? ($_O['hetiLekotottMaxOraszam']) : (($_O['hetiMunkaora']>0) ? ($_O['hetiMunkaora']*0.65):26);
+    	    $_lekotottMin = ($_O['hetiLekotottMinOraszam']>0) ? ($_O['hetiLekotottMinOraszam']) : (($_O['hetiMunkaora']>0) ? ($_O['hetiMunkaora']*0.55):22);
+
+	    $_korrekciosSzam = $napszam/5; // HETI öt nap
+
+	    $sum = 0;
+	    $SUM = array();
+	    echo '<tr>';
+		echo '<th><a href="'.href('index.php?page=naplo&sub=haladasi&f=haladasi&tanarId='.$tanarId).'">'.$tanarNev.'</a></th>';
+		foreach ($T as $_munkaido => $Tipus) {
+		    for ($i = 0; $i < count($Tipus); $i++) {
+		    echo '<td class="'.ekezettelen($Tipus[$i]).' '.ekezettelen($_munkaido).'">';
+
+
+		    echo '<span title="';
+			echo intval($ADAT['detailed'][$tanarId][$Tipus[$i]]['lekötött']).'+';
+			echo intval($ADAT['detailed'][$tanarId][$Tipus[$i]]['fennmaradó']).'=';
+		    echo '">';
+		    if ($Tipus[$i]=='helyettesítés') {
+			echo $_c = ($ADAT['detailed'][$tanarId][$Tipus[$i]][$_munkaido]);
+		    } elseif ($Tipus[$i]=='egyéb') {
+			dump($ADAT['detailed_ki_tipus_munkaido_eredet'][$tanarId]);
+		    } else {
+			echo $_c = $ADAT[$tanarId][$Tipus[$i]];
+		    }
+		    echo '</span>';//ezt mégsem így kéne
+		    echo '</td>';
+		    $SUM[$_munkaido] += $_c;
+		  }
+		}
+		for ($i=0; $i<count($SumTipus); $i++) {
+		    $sum += intval($ADAT[$tanarId][$SumTipus[$i]]);
+		}
+		echo '<th class="sum lekotott">'.$SUM['lekötött'].'</th>';
+		echo '<th class="sum fennmarado">'.$SUM['fennmaradó'].'</th>';
+		echo '<th class="sumsum">'.($SUM['lekötött']+$SUM['fennmaradó']).'</th>';
+
+
+		if ($_THM>0) $eff = @ceil(100*$sum/$_THM);
+		else $eff = 100;
+
+		if ($eff<=55) $_style = ' class="e1" ';
+		elseif ($eff<=65) $_style = ' class="e2" ';
+		elseif ($eff<=80) $_style = ' class="e3" ';
+		else $_style = ' class="e4" ';
+		//echo '<td '.$_style.'>'.$_THM*0.55.'</td>';
+		//echo '<td '.$_style.'>'.$_THM*0.65.'</td>';
+		//echo '<td '.$_style.'>'.$_THM*0.80.'</td>';
+		//echo '<td '.$_style.' title="'.$ADAT['tanarok'][$t]['hetiMunkaora'].'" >'.$_THM.'</th>';
+		echo '<td '.$_style.'>'.($_lekotottMin*$_korrekciosSzam).'</td>';
+		echo '<td '.$_style.'>'.($_lekotottMax*$_korrekciosSzam).'</td>';
+		echo '<td '.$_style.'>'.($_kotottMax*$_korrekciosSzam).'</td>';
+		echo '<td '.$_style.'>'.($_heti*$_korrekciosSzam).'</th>';
+
+		echo '<td>'.number_format($ADAT[$tanarId]['oraszam'],1).'</td>';
+
+	    echo '</tr>'."\n";
+
+	}
+
+	echo '</tbody></table>'."\n";
+
+    }
+*/
+?>

@@ -1,0 +1,36 @@
+
+    form.specialis {
+	background-color: rgb(230,230,230);
+	margin: 40px;
+	text-align: center;
+	padding: 10px;
+	border: 1px solid rgb(20, 40, 80);
+	border-style: solid dotted;
+    }
+    
+    form.specialis table {
+	color: white;
+	margin: 10px 20% 10px 20%;
+	width: 60%;
+	background-color: rgb(200,100,180);
+    }
+    
+    form.specialis table thead th, form.specialis table tfoot th {
+	background-color: rgb(140,40,120);
+    }
+
+    form.specialis table th {
+	background-color: rgb(160,60,140);
+    }
+
+    form.specialis table td {
+	background-color: rgb(180,80,160);
+    }
+
+    table.napinfo { background: #999999; margin: 0px auto; }
+    table.napinfo th { background: #6688aa; color: white; text-align: center; }
+    table.napinfo td { padding: 5px 15px; width: 300px; }
+    table.napinfo td:nth-child(odd) { background: #aaeecc; }
+    table.napinfo td:nth-child(even) { background: #aaccee; }
+    table.napinfo td h3 { font-size: 12px; }
+    table.napinfo td strong { font-weight: normal; font-style: italic; color: #aa66aa; }

@@ -1,0 +1,271 @@
+<?php
+
+    function _format($szam) {
+	return (substr($szam,strpos($szam,'.'),3)=='.00') ? intval($szam):$szam;
+    }
+
+    function putKepzesInfo($ADAT) {
+
+	dump($ADAT['kepzesAdat']);
+
+	echo $ADAT['kepzesAdat']['kepzesNev'];
+	//echo $ADAT['kepzesAdat']['tanev']; // indulo
+	if (count($ADAT['kepzesAdat']['osztalyIds'])>0) {
+
+	    echo '<ul>';
+	    for ($i=0; $i<count($ADAT['kepzesAdat']['osztalyIds']); $i++) {
+		$_osztalyId = $ADAT['kepzesAdat']['osztalyIds'][$i];
+		echo '<li>';
+		echo $ADAT['osztalyok'][$_osztalyId]['osztalyJel'];
+		echo $ADAT['osztalyok'][$_osztalyId]['leiras'];
+		echo $ADAT['osztalyok'][$_osztalyId]['kezdoTanev'].'-';
+		echo $ADAT['osztalyok'][$_osztalyId]['vegzoTanev'];
+		echo $ADAT['osztalyok'][$_osztalyId]['kezdoEvfolyamSorszam'];
+		echo '['.$_osztalyId.']';
+		echo '</li>';
+	    }
+	    echo '</ul>';
+	}
+    }
+
+    function putOratervMasolas($ADAT) {
+
+	formBegin(array('id'=>'oratervMasolas'));
+
+	echo '<h1>Képzés óratervének átvétele</h1>';
+	echo '<input type="hidden" name="action" value="oratervMasolas" />';
+	echo '<input type="hidden" name="kepzesId" value="'.$ADAT['kepzesId'].'" />';
+
+	echo '<select name="masolandoKepzesId">';
+	foreach	($ADAT['hasonloKepzesek'] as $idx => $kAdat) if ($kAdat['kepzesId'] != $ADAT['kepzesId']) {
+
+	    echo '<option value="'.$kAdat['kepzesId'].'">'.$kAdat['kepzesNev'].' ('.$kAdat['tanev'].') ['.$kAdat['kepzesId'].']</option>';
+
+	}
+	echo '</select>';
+	echo '<input title="Biztosan átveszi a kiválasztott képzés óratervét?" class="confirm" type="submit" value="óraterv átvétele..." />';
+	formEnd();
+
+    }
+
+    function putKepzesOraterv($ADAT) {
+
+	$kepzesId = $ADAT['kepzesId'];
+
+	$EVFOLYAMJELEK = $ADAT['kepzesAdat']['osztalyEvfolyamJelek'];
+	if (!is_array($EVFOLYAMJELEK)) {
+	    return true;
+	}
+
+
+	/* KÉPZÉS ÓRASZÁMOK	POST
+	   ----------------	----
+	    *kepzesId
+	    *evfolyamJel
+	    kotelezoOraszam	KO_[kepzesId]_[evfolyamJel]
+	    maximalisOraszam	MO_[kepzesId]_[evfolyamJel]
+	*/
+	formBegin(array('name'=>'kepzesOraterv','class'=>'kepzesOraterv'));
+	echo '<input type="hidden" name="kepzesId" value="'.$kepzesId.'" />';
+	echo '<input type="hidden" name="action" value="do" />';
+	echo '<table align="center" cellspacing="1">';
+
+	    echo '<thead>';
+		//FEJLÉC
+		echo '<tr class="evfolyamJel"><th>'._EVFOLYAMJEL.'</th>';
+		    foreach($EVFOLYAMJELEK as $i => $_evfolyamJel) {
+			echo '<th>'.$_evfolyamJel.'.</th>';		    
+		    }
+		    echo '<th rowspan="2">';
+			echo '<span id="felevValtas"><span class="felev1" title="váltás a 2. félévre...">1.&nbsp;félév</span><span class="felev2" title="váltás az 1. félévre...">2.&nbsp;félév</span> <span class="icon-refresh"></span></span><br /><br />';
+			echo '<span id="oraszamKovetelmeny"><span class="oraszam" title="váltás a követelményekre...">óraszám</span><span class="kovetelmeny" title="váltás az óraszámokra">követelmény</span> <span class="icon-refresh"></span></span>';
+		    echo '</th>';
+		echo '</tr>';
+		// ÉVFOLYAMONKÉNTI ÓRASZÁMOK
+		echo '<tr><th>'._KOTELEZO_ORASZAM.'-'._MAXIMALIS_ORASZAM.'</th>';
+		    foreach($EVFOLYAMJELEK as $i => $_evfolyamJel) {
+			echo '<td>';
+			    echo '<input type="text" size="3" maxlength="5" name="KO_'.$_evfolyamJel.'" title="'._KOTELEZO_ORASZAM.'" value="'.$ADAT['oraszam'][$_evfolyamJel]['kotelezoOraszam'].'" />'; // KO = kötelező óraszám
+			    echo '-<input type="text" size="3" maxlength="5" name="MO_'.$_evfolyamJel.'" title="'._MAXIMALIS_ORASZAM.'" value="'.$ADAT['oraszam'][$_evfolyamJel]['maximalisOraszam'].'" />'; // MO = maximális óraszám
+			echo '</td>';
+		    }
+		echo '</tr>';
+
+	    echo '</thead>'."\n";
+
+	    echo '<tfoot>';
+		//LÁBLEC
+		echo '<tr><th class="evfolyamJel">'._EVFOLYAMJEL.'</th>';
+		    foreach($EVFOLYAMJELEK as $i => $_evfolyamJel) {
+			echo '<th>'.$_evfolyamJel.'.</th>';
+		    }
+		    echo '<th>&nbsp;</th>';
+		echo '</tr>';
+		echo '<tr><td>Még hiányzó / Max választható</th>';
+		    foreach($EVFOLYAMJELEK as $i => $_evfolyamJel) {
+			$min = $ADAT['oraszam'][$_evfolyamJel]['kotelezoOraszam']; //--TODO $i->$evfolyamJel
+			$max = $ADAT['oraszam'][$_evfolyamJel]['maximalisOraszam'];
+			$sum=0;
+			reset($ADAT['oraterv']);
+			if (is_array($ADAT['oraterv'])) foreach($ADAT['oraterv'] as $tipus=>$DT) foreach($DT as $targyId => $D) {
+			    	$sum+=($D[$_evfolyamJel][1][0]['hetiOraszam']+$D[$_evfolyamJel][2][0]['hetiOraszam']) / 2;
+			}
+			$_class = ($min<=$sum && $sum<=$max) ? 'class="ok"':$_class = ($max-$sum<0) ? 'class="alert"' : '';;
+			echo '<td '.$_class.'>';
+			    echo ($min-$sum) . "&laquo;". ($max - $sum);
+			echo '</td>';
+		    }
+		    echo '<th>&nbsp;</th>';
+		echo '</tr>';
+	    // EGY UJ:
+	    echo '<tr class="ures">';
+	    echo '<th>';
+		    _put_targy_select($ADAT['targyak'],$ADAT['kepzesOraterv.tipus'],'UJ_targyTipusId','targyId','targyNev',null);
+		    //_put_targy_select($ADAT['targyak'],$ADAT['kepzesOraterv.tipus'],'UJ_targyId','targyId','targyNev',$targyId);
+	    echo '</th>';
+	    foreach($EVFOLYAMJELEK as $i => $_evfolyamJel) {
+		echo '<td>';
+		    //$i;
+		    echo '<div>';
+		    echo '<input type="text" size="3" maxlength="4" name="UJ_O_'.$_evfolyamJel.'_1" />';
+		    _put_simple_select($ADAT['kepzesOraterv.kovetelmeny'],'UJ_K_'.$_evfolyamJel.'_1',null);
+		    echo '<br/>';
+		    echo '<input type="text" size="3" maxlength="4" name="UJ_O_'.$_evfolyamJel.'_2" />';
+		    _put_simple_select($ADAT['kepzesOraterv.kovetelmeny'],'UJ_K_'.$_evfolyamJel.'_2',null);
+		    echo '<br/>';
+		    echo '</div>';
+		echo '</td>';
+	    }
+	    echo '<th>';
+	    echo '<input type="submit" />';
+	    echo '</th>';
+	    echo '</tr>';
+	    // -- idáig EGY UJ
+	    echo '</tfoot>'."\n";
+
+
+	// KÉPZÉS ÓRATERV
+	/* --------------
+	    *kepzesOratervId
+	    kepzesId
+	    targyId
+	    evfolyamJel
+	    szemeszter
+	    hetiOraszam
+	    kovetelmeny enum('jegy','négyszintű (szöveges minősítés)','százalékos','aláírás','háromszintű','egyedi felsorolás','szöveges szempontrendszer','nincs') DEFAULT null
+	    tipus	enum('első nyelv','második nyelv','kötelezően választható','szabadon választható','mintatantervi') 
+	*/
+	    flush();
+	    echo '<tbody>';
+
+	    $ADAT['targyak'][] = array('targyId'=>''); // a tárgy-típusok esetén nincs targyId - ezt is vegyük ide bele
+	    if (is_array($ADAT['oraterv']))
+	    foreach($ADAT['oraterv'] as $tipus => $X)
+//	    foreach($X as $targyId => $DI) {
+	    foreach($ADAT['targyak'] as $idx => $tAdat) // a névsor miatt a $ADAT['targyak']-on megyünk végig
+	    if (is_array($X[$tAdat['targyId']])) {	// megnézzük, hogy az adott targyTipusban szerepel-e
+		$targyId = $tAdat['targyId'];		// kiolvassuk a targyId-t (hogy a korábbi kódot ne kelljen átírni)
+//		$D = $DI;
+		$D = $X[$targyId];			// beállítjuk $D-t
+
+		// TOMEG:
+		$targyIdEsc = _escape($tipus).'_'.$targyId;
+		$_class = ($tipus!='mintatantervi') ? 'class="nm"' : '';
+	    echo '<tr class="rogzitett">';
+	    echo '<th '.$_class.'>';
+		echo '<span title="'.$tAdat['targyJelleg'].' '.$tAdat['evkoziKovetelmeny'].' '.$tAdat['zaroKovetelmeny'].'">';
+		echo $tAdat['targyNev'];
+		echo ' ('._unescape($targyIdEsc).')';
+		echo '</span>';
+	    echo '</th>';
+	    foreach($EVFOLYAMJELEK as $i => $_evfolyamJel) {
+		$up1 = ($D[$_evfolyamJel][1][0]['kovetelmeny']!='');
+		$up2 = ($D[$_evfolyamJel][2][0]['kovetelmeny']!='');
+		$_class = ($D[$_evfolyamJel][1][0]['hetiOraszam']+$D[$_evfolyamJel][2][0]['hetiOraszam'] > 0) ? ' class="nn" ' : '';
+		echo '<td'.$_class.'>';
+		    echo '<div class="felev1">';/* első félévi */
+			echo '<input class="oraszam" type="text" size="3" maxlength="4" name="T_'.$targyIdEsc.'_O_'.$_evfolyamJel.'_1" value="'._format($D[$_evfolyamJel][1][0]['hetiOraszam']).'" />';
+			echo '<span class="oraszam">'._format($D[$_evfolyamJel][1][0]['hetiOraszam']).'</span>';
+
+			_put_simple_select($ADAT['kepzesOraterv.kovetelmeny'],'T_'.$targyIdEsc.'_K_'.$_evfolyamJel.'_1',$D[$_evfolyamJel][1][0]['kovetelmeny']);
+			echo '<span class="kovetelmeny">'.$D[$_evfolyamJel][1][0]['kovetelmeny'].'</span>';
+		    echo '</div>';
+
+		    echo '<div class="felev2">';/* második félévi */
+			echo '<input type="text" size="3" maxlength="4" name="T_'.$targyIdEsc.'_O_'.$_evfolyamJel.'_2" value="'._format($D[$_evfolyamJel][2][0]['hetiOraszam']).'" />';
+			echo '<span class="oraszam">'._format($D[$_evfolyamJel][2][0]['hetiOraszam']).'</span>';
+
+			_put_simple_select($ADAT['kepzesOraterv.kovetelmeny'],'T_'.$targyIdEsc.'_K_'.$_evfolyamJel.'_2',$D[$_evfolyamJel][2][0]['kovetelmeny']);
+			echo '<span class="kovetelmeny">'.$D[$_evfolyamJel][2][0]['kovetelmeny'].'</span>';
+		    echo '<br/>'; // placeholder
+		    echo '</div>';
+/*
+		    echo '<span>';
+			echo _format($D[$_evfolyamJel][1][0]['hetiOraszam'])." ";
+			echo $D[$_evfolyamJel][1][0]['kovetelmeny'];
+			echo '<br/>';
+			echo _format($D[$_evfolyamJel][2][0]['hetiOraszam']).' ';
+			echo $D[$_evfolyamJel][2][0]['kovetelmeny'];
+		    echo '</span>';
+*/
+		echo '</td>';
+	    }
+	    echo '<th>';
+	    echo '<input type="submit" value="'._OK.'" class="felvesz" />';
+	    echo '<input type="submit" name="torol_'._escape($tipus).'_'.$targyId.'" value="X" class="torol" />';
+
+	    echo '</th>';
+	    echo '</tr>'."\n";
+	    // -- idáig TOMEG
+	    flush();
+	    }
+	echo '</tbody>';
+	echo '</table>'."\n";
+	formEnd();
+
+    }
+
+    function _put_simple_select($VALUES,$name,$selected) {
+
+	echo '<select name="'.$name.'">';
+	    echo '<option value=""></option>';
+	    for($i=0; $i<count($VALUES); $i++) {
+		$_SEL = ($selected==$VALUES[$i]) ? 'selected="selected"':'';
+		echo '<option value="'.$VALUES[$i].'" '.$_SEL.'>';
+		    echo $VALUES[$i];
+		echo '</option>'."\n";
+	    }
+	echo '</select>'."\n";
+    }
+
+    function _put_targy_select($VALUES1,$VALUES2,$name,$keyname,$valuename,$selected) { // immáron speciális, feleslegessé vált a key, value
+
+//	global $FOGLALT;
+//	if (in_array( $key, $FOGLALT )) echo $key;
+
+	echo '<select id="targySel" name="'.$name.'">';
+	    echo '<option value="0">'._VALASSZ.'</option>';
+	    echo '<optgroup label="'._TARGYAK.'">';
+	    for($i=0; $i<count($VALUES1); $i++) {
+		$key= $VALUES1[$i][$keyname];		
+		$value= $VALUES1[$i][$valuename];
+		$_SEL = ($selected==$key) ? 'selected="selected" ':'';
+		echo '<option value="'._escape('mintatantervi').'_'.$key.'" '.$_SEL.' data-kovetelmeny="'.$VALUES1[$i]['zaroKovetelmeny'].'" >';
+		    echo $value;
+		    if ($VALUES1[$i]['targyJelleg']!='') echo ' ('.$VALUES1[$i]['targyJelleg'].')';
+		echo '</option>';
+	    }
+	    echo '</optgroup>';
+	    echo '<optgroup label="'._EGYEB.'">';
+	    for($i=0; $i<count($VALUES2); $i++) {
+		$key=$value=$VALUES2[$i];		
+		$_SEL = ($selected==$key) ? 'selected="selected" ':'';
+		echo '<option value="'._escape($key).'_" '.$_SEL.'>';
+		    echo $value;
+		echo '</option>';
+	    }
+	    echo '</optgroup>';
+	echo '</select>';
+    }
+
+?>

@@ -1,0 +1,253 @@
+<?php
+/*
+    Module:	 base/session
+*/
+
+    function putUserSettingsForm($ADAT) {
+	global $SKINSSHOW;
+	formBegin();
+	echo '<input type="hidden" name="action" value="userSettingsModify" />';
+	echo '<table align="center">';
+        echo '<tr>';
+	    echo '<th>'._USERDEFAULTSKIN.'</th>';
+	    echo '<td>';
+		echo '<select name="changeSkinTo">';
+		echo '<option value=""></option>';
+		foreach($SKINSSHOW as $_skin) {
+		    $_SEL = ($_skin == $ADAT['skin']) ? ' selected="selected" ' : '';
+		    echo '<option value="'.$_skin.'" '.$_SEL.'>'.$_skin.'</option>';
+		}
+		echo '</select>';
+	    echo '</td>';
+	echo '</tr>';
+        echo '<tr><th colspan="2"><input type="submit" value="'._OK.'" /></th></tr>';
+	echo '</table>';	
+	formEnd();
+    }
+
+    function putAttr($name, $values, $anAttrDef, $toPolicy = _POLICY) {
+
+	global $AUTH;
+
+        if ($anAttrDef['type'] == 'text') putTextAttr($name, $values, $anAttrDef);
+        elseif ($anAttrDef['type'] == 'int') putTextAttr($name, $values, $anAttrDef);
+        elseif ($anAttrDef['type'] == 'select') putSelectAttr($name, $values, $anAttrDef);
+        elseif ($anAttrDef['type'] == 'radio') putRadioAttr($name, $values, $anAttrDef);
+        elseif ($anAttrDef['type'] == 'timestamp') putTimestampAttr($name, $values, $anAttrDef);
+        elseif ($anAttrDef['type'] == 'image') putImageAttr($name, $userAccount, $anAttrDef);
+        else echo 'Ismeretlen atribútum típus: '.$name.' ('.$anAttrDef[$name]['type'].')';
+
+    }
+
+    function putTextAttr($name, $values, $anAttrDef) {
+        echo '<table class="attr">';
+        echo '<tr>';
+            echo '<th rowspan="'.$values['count'].'">'.$anAttrDef['desc'].'</th>';
+            echo '<td>';
+    		for ($i=0;$i<max($values['count'],1);$i++) {
+			if (!isset($values[$i])) $values[$i] = '';
+			if ($anAttrDef['rights'][_ACCESS_AS]=='r') 
+			    echo $values[$i];
+			elseif ($anAttrDef['rights'][_ACCESS_AS]=='w') 
+			    echo '<input type="text" name="'.$name.'" value="'.$values[$i].'" />'."<br/>\n";
+    		}
+	echo '</td>';
+        echo '</tr>';
+
+        echo '</table>'."\n";
+
+    }
+
+    function putIntAttr($name, $values, $anAttrDef) {
+	putTextAttr($name, $values, $anAttrDef);
+    }    
+
+    function putSelectAttr($name, $values, $anAttrDef) {
+
+        echo '<table class="attr">';
+        echo '<tr>';
+            echo '<th>'.$anAttrDef['desc'].' ('.intval($values['count']).'):</th>';
+            echo '<td>';
+                if ($values['count'] > 0) {
+                    echo '<select name="del-'.$name.'[]" multiple="multiple">';
+                    for ($i=0; $i<$values['count']; $i++) {
+			if (is_array($values[$i]))
+			    echo '<option value="'.$values[$i]['value'].'">'.(($values[$i]['txt']!='')?$values[$i]['txt']:$values[$i]['value']).'</option>';
+			else
+                    	    echo '<option value="'.$values[$i].'">'.$values[$i].'</option>';
+                    }
+                    echo '</select>';
+                } elseif (!isset($values['count']) && count($values) > 0) {
+                    echo '<select name="del-'.$name.'[]" multiple="multiple">';
+                    for ($i=0; $i < count($values); $i++) {
+                        echo '<option value="'.$values[$i]['value'].'">'.(($values[$i]['txt']!='')?$values[$i]['txt']:$values[$i]['value']).'</option>';
+                    }
+                    echo '</select>';
+		}
+            echo '</td>';
+        echo '</tr>';
+	if ($anAttrDef['rights'][_ACCESS_AS]=='w') {
+	  echo '<tr>';
+            echo '<th>'._NEW.':</th>';
+	    echo '<td>';
+	    if (is_array($values['new'])) {
+		echo '<select name="new-'.$name.'[]">'."\n";
+		    echo '<option value=""> - </option>'."\n";
+		for ($i = 0; $i < count($values['new']); $i++) {
+		    $_txt = (($values['new'][$i]['txt']!='')?$values['new'][$i]['txt']:$values['new'][$i]['value']);
+		    echo '<option value="'.$values['new'][$i]['value'].'">'.$_txt.'</option>'."\n";
+		}
+		echo '</select>'."\n";
+	    } else {
+        	echo '<input type="text" name="new-'.$name.'[]" value="" />';
+	    }
+	    echo '</td>';
+          echo '</tr>';
+	}
+        echo '</table>'."\n";
+    }
+
+    function putRadioAttr($name, $values, $anAttrDef) {
+
+	if (!isset($values[0])) $values[0] = '';
+
+        echo '<table class="attr">';
+        echo '<tr>';
+            echo '<th>'.$anAttrDef['desc'].':</th>'."\n";
+                echo '<td>'."\n";
+
+                for ($i=0;$i<count($anAttrDef['options']);$i++) {
+                    if ($values[0] == $anAttrDef['options'][$i]) {
+                        echo '<input type="radio" name="'.$name.'" value="'.$anAttrDef['options'][$i].'" checked="checked" />';
+                    } else {
+                        echo '<input type="radio" name="'.$name.'" value="'.$anAttrDef['options'][$i].'" />';
+                    }
+                    echo $anAttrDef['options'][$i];
+                }
+                echo '</td>';
+
+        echo '</tr>';
+        echo '</table>';
+    }
+
+    function putTimestampAttr($name, $values, $anAttrDef) {
+
+	if (!isset($values[0])) $values[0] = '';
+        $Y = substr($values[0],0,4);
+        $m = substr($values[0],4,2);
+        $d = substr($values[0],6,2);
+
+        echo '<table class="attr">';
+        echo '<tr>';
+            echo '<th>'.$anAttrDef['desc'].':</th>';
+            echo '<td>';
+
+	    if ($anAttrDef['rights'][_ACCESS_AS]=='r') { echo "$Y-$m-$d"; } else {
+
+        	echo '<select name="'.$name.'[]">';
+        	echo '<option value="">'._YEAR.'</option>';
+        	for($i=1950; $i<2050; $i++) {
+            	    if ($i==$Y) {$_SEL = 'selected="selected"';} else {$_SEL = '';}
+            	    echo '<option value="'.$i.'" '.$_SEL.'>' .$i. '</option>'."\n";
+        	}
+        	echo '</select>'."\n";
+        	echo '<select name="'.$name.'[]">';
+        	echo '<option value="">'._MONTH.'</option>';
+        	for($i=1; $i<=12; $i++) {
+            	    if ($i<10) $i='0'.$i;
+            	    if ($i==$m) $_SEL = 'selected="selected"'; else $_SEL = '';
+            	    echo '<option value="'.$i.'" '.$_SEL.'>'.$i.'</option>';
+        	}
+        	echo '</select>'."\n";
+        	echo '<select name="'.$name.'[]">';
+        	echo '<option value="">'._DAY.'</option>';
+        	for($i=1; $i<=31; $i++) {
+            	    if ($i<10) $i='0'.$i;
+            	    if ($i==$d) $_SEL = 'selected="selected"'; else $_SEL = '';
+            	    echo '<option value="'.$i.'" '.$_SEL.'>'.$i.'</option>';
+        	}
+        	echo '</select>'."\n";
+	    }
+
+            echo '</td>';
+        echo '</tr>';
+        echo '</table>';
+    }
+
+    function putImageAttr($name, $dn, $anAttrDef) {
+
+        echo '<table class="attr"><tr>';
+            echo '<th><img src="img/'.$name.'.php?dn='.$dn.'" alt="kép" /></th>';
+            echo '<td>'._NEWPHOTO.':<br />';
+            echo '<input type="file" name="'.$name.'" />';
+            echo '</td>';
+        echo '</tr></table>';
+
+    }
+
+    function putAccountInfoForm($userInfo, $accountInfo, $attrDef, $toPolicy = _POLICY) {
+
+	formBegin(array('enctype'=>'multipart/form-data'));
+        echo '<input type="hidden" name="action" value="changeSettings" />';
+        echo '<input type="hidden" name="toPolicy" value="'.$toPolicy.'" />';
+        echo '<input type="hidden" name="userAccount" value="'.$userInfo['userAccount'][0].'" />';
+        echo '<table class="personalSettings" align="center" cellspacing="1">';
+        echo '<thead>';
+	if ($toPolicy != _POLICY) echo '<tr><th class="policy">'.$toPolicy.'</th></tr>'."\n";
+        echo '<tr><th>'.$userInfo['userCn'][0].'</th></tr>';
+        echo '<tr><th>'.$userInfo['userAccount'][0].'</th></tr>';
+        echo '</thead>';
+        echo '<tfoot>';
+        echo '<tr><th><input type="submit" name="change" value="'._OK.'" /></th></tr>';
+        echo '</tfoot>';
+        echo '<tbody>'."\n";
+        $emptyAttrs = '';
+	if (is_array($accountInfo)) {
+	    reset($accountInfo);
+	    foreach ($accountInfo as $name => $value) {
+        	if (!isset($value[0]) || $value['count'] == 0) $emptyAttrs .= "$name:";
+        	if ($name != 'userAccount') {
+		    echo '<tr><td>'; putAttr($name, $value, $attrDef[$name], $toPolicy); echo '</td></tr>'."\n";
+		}
+    	    }
+	}
+        echo '</tbody>';
+        echo '</table>';
+        if ($emptyAttrs != '') $emptyAttrs = substr($emptyAttrs,0,-1);
+        echo '<input type="hidden" name="emptyAttrs" value="'.$emptyAttrs.'" />';
+	formEnd();
+
+    }
+
+    function putGroupInfoForm($groupCn, $groupInfo, $attrDef, $toPolicy = _POLICY) {
+    	formBegin(array('enctype'=>'multipart/form-data'));
+
+        echo '<input type="hidden" name="action" value="changeSettings" />';
+        echo '<input type="hidden" name="toPolicy" value="'.$toPolicy.'" />';
+        echo '<input type="hidden" name="groupCn" value="'.$groupCn.'" />';
+        echo '<table class="personalSettings" align="center" cellspacing="1">';
+        echo '<thead>';
+        echo '<tr><th>'.$groupCn.'</th></tr>';
+//        echo '<tr><th>'.$userInfo['userAccount'][0].'</th></tr>';
+        echo '</thead>';
+        echo '<tfoot>';
+        echo '<tr><th><input type="submit" name="change" value="'._OK.'" /></th></tr>';
+        echo '</tfoot>';
+        echo '<tbody>'."\n";
+        $emptyAttrs = '';
+	if (is_array($groupInfo)) 
+	foreach ($groupInfo as $name => $value) {
+            if (!isset($value[0]) || $value['count'] == 0) $emptyAttrs .= "$name:";
+            if ($name != 'groupCn') {
+		echo '<tr><td>'; putAttr($name, $value, $attrDef[$name], $toPolicy); echo '</td></tr>'."\n";
+	    }
+        }
+        echo '</tbody>';
+        echo '</table>';
+        if ($emptyAttrs != '') $emptyAttrs = substr($emptyAttrs,0,-1);
+        echo '<input type="hidden" name="emptyAttrs" value="'.$emptyAttrs.'" />';
+	formEnd();
+
+    }
+
+?>

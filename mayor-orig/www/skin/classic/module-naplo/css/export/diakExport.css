@@ -1,0 +1,19 @@
+
+    form.diak { margin: 5px 30px 20px 30px; font-size:10px; }
+    form.diak input, form.diak select { 
+	font-size:10px; border: solid 1px #777777; margin-left: 3px;
+	padding-left: 2px;
+    }
+    form.diak fieldset legend { 
+	background-color: rgb(140,160,180); color: white;
+	border: solid 1px rgb(40,60,80); padding: 2px 10px; margin-left:20px;
+    }
+    #tableDiv { margin: 10px 50px; }
+    #diakTabla { margin: auto; }
+    #diakTable tr:hover td { background: rgb(50,50,100); }
+    #exportOptions fieldset { background: rgba(150,50,100,0.9); position: absolute; left: 20px; z-index: 10; width: 80%; margin: auto 10%; box-shadow: 5px 5px 5px #999; border: 3px solid orange; color: white; }
+    #exportOptions select { height: 200px; width: 200px; }
+    #exportOptions table { margin: auto; }
+    #submitForm { text-align: center; }
+    table.TF tr:hover td { background: rgb(100,100,200); color: white; }
+    table.TF tr:hover td span { color: black; }

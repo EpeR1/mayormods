@@ -1,0 +1,297 @@
+@media screen {
+
+	table.haladasiBejegyzesek {
+    	    background-color: rgb(50,60,80);
+	    margin-top: 10px;
+	    font-size: 11px;
+	    width: 98%;
+	}
+	table.haladasiBejegyzesek thead tr th {height:18px;}
+	table.haladasiBejegyzesek thead tr th span.aktiv {
+	    position:relative; top:-5px; padding-left:5px;
+	    color: orange;
+	}
+	
+	table.haladasiBejegyzesek tbody tr td {height:18px;}
+	table.haladasiBejegyzesek tbody tr:hover td { background-color: rgba(255,255,255,0.2); }
+	table.haladasiBejegyzesek tbody tr td input:focus {
+	    background-color: white !important;
+        }
+	table.haladasiBejegyzesek tbody tr td input.gomb:focus {
+	    background-color: red;
+        }
+	table.haladasiBejegyzesek tbody tr.torolt td {
+	    background-color: black;
+	    color:#dddddd;
+	    text-decoration:line-through;
+	}
+	table.haladasiBejegyzesek tbody tr.torolt input.ajaxRequestDone { display:none; }
+	table.haladasiBejegyzesek tbody tr.torolt span.INFO.ajaxRequestDone { display:none; }
+
+	table.haladasiBejegyzesek tbody.parosNap {
+    	    background-color: #dddddd;
+	}
+	table.haladasiBejegyzesek tbody.paratlanNap {
+    	    background-color: #eeeeee;
+	}
+	table.haladasiBejegyzesek tbody td.ora {
+	    text-align: center;
+	}
+	table.haladasiBejegyzesek tbody td.t {
+	    padding-left:4px;
+	}
+
+	/* ajax eredménye */
+	table.haladasiBejegyzesek tbody tr.elmarad td {
+	    background-color: #999999;color:#dddddd;text-decoration:line-through;
+	}
+
+	table.haladasiBejegyzesek tbody th.nincsOra {
+	    background-color: rgb(200,200,200);
+	    color: rgb(100,100,100);
+	    text-align: center;
+	    border: none;
+	    font-weight: normal;
+	}
+	table.haladasiBejegyzesek tbody th.nap {
+	    text-align: center;
+    	    background-color: #666688;
+	    color: white;
+	    border: none;
+	    height:1em;
+	    font-weight: normal;
+	    height:2em;
+	}
+	table.haladasiBejegyzesek tbody th.nap div { color: white; padding-top:4px;}
+	table.haladasiBejegyzesek tbody th.nap div:hover { color: #aaa; }
+	table.haladasiBejegyzesek tbody.szunet th.nap {
+    	    background-color: #778877;
+	}
+	table.haladasiBejegyzesek tbody.tanitasNelkul th.nap {
+    	    background-color: #aaaa44;
+	}
+	table.haladasiBejegyzesek tbody.szorgalmiIdoszakonKivul th.nap {
+    	    background-color: #e91e63;
+	}
+
+	table.haladasiBejegyzesek tbody td.dolgozat {
+    	    background-color: #ffaa44;
+	    padding-left: 20px;
+	}
+	table.haladasiBejegyzesek tbody td.dolgozat a {
+	    text-decoration: none;
+	    color: black;
+	}
+
+	table.haladasiBejegyzesek tbody td.nincsBeirva {
+	    font-style:italic;
+	}
+
+	table.haladasiBejegyzesek th {
+		border-style: none none solid none;
+		border-width: 0 0 2px 0;
+		border-color: #556677;
+	        background-color: rgb(50,60,80);
+		color: rgb(210,215,220);
+		border-style: solid;
+		border-width: 1px;
+	}
+	table.haladasiBejegyzesek th.fejlec8 {
+	    font-size: 14px;
+	    height: 30px;
+	    text-align: center
+	}
+	table.haladasiBejegyzesek th.fejlec8 a { color: white }
+
+
+	table.haladasiBejegyzesek td.osztaly { text-align: center; }
+	table.haladasiBejegyzesek select {
+	    font-size: 10px;
+	}
+
+	input { font-family: Verdana,Arial; color: inherit; }
+	input.data { border-style: none none solid none;
+			 border-width: 1px;
+			 border-color: #dddddd;
+			width:85%;
+		    padding-right: 10px;
+	}
+	input.data:hover { border-bottom: solid 1px #556677; background-color: white }
+
+	table.haladasiBejegyzesek span.INFO { display: none; width:1em; padding:2px 2px; position: relative; left:-12px; border-radius:2px;color: white;}
+	table.haladasiBejegyzesek input.ajaxRequestDone+span.INFO { display: inline; background-color: green; }
+	table.haladasiBejegyzesek input.ajaxRequest+span.INFO { display: inline; background-color: orange; }
+	table.haladasiBejegyzesek input.ajaxRequestError+span.INFO { display: inline; background-color: red; }
+
+	table.haladasiBejegyzesek input.data:focus { 
+	    border-left: solid 2px blue !important; background-color: white; color:black !important; 
+	    border-radius:2px;
+	}
+
+	table.haladasiBejegyzesek tbody.parosNap input.data { border-left: solid 2px #cccccc; }
+	table.haladasiBejegyzesek tbody.paratlanNap input.data { border-left: solid 2px #eeeeee; }
+	table.haladasiBejegyzesek tbody.parosNap input.beirva { background-color: #cccccc; }
+	table.haladasiBejegyzesek tbody.paratlanNap input.beirva { background-color: #eeeeee; }
+
+	table.haladasiBejegyzesek tbody.parosNap input.data.ajaxRequest,
+	table.haladasiBejegyzesek tbody.paratlanNap input.data.ajaxRequest { border-left: solid 2px orange; }
+	table.haladasiBejegyzesek tbody.parosNap input.gomb.ajaxRequest,
+	table.haladasiBejegyzesek tbody.paratlanNap input.gomb.ajaxRequest { background-color: orange; }
+	table.haladasiBejegyzesek tbody select option.ajaxRequestDone,
+	table.haladasiBejegyzesek tbody.parosNap input.ajaxRequestDone,
+	table.haladasiBejegyzesek tbody.paratlanNap input.ajaxRequestDone { border-left: solid 2px green; background-color: lightgreen; }
+
+	table.haladasiBejegyzesek tbody.parosNap tr.helyettesit td { background-color: #ccccaa; }
+	table.haladasiBejegyzesek tbody.paratlanNap tr.helyettesit td { background-color: #eeeecc; }
+	table.haladasiBejegyzesek tbody.parosNap tr.helyettesit input.beirva { background-color: #ccccaa; }
+	table.haladasiBejegyzesek tbody.paratlanNap tr.helyettesit input.beirva { background-color: #eeeecc; }
+
+	table.haladasiBejegyzesek tbody tr.egyeb { background-color: #ee88cc; }
+	table.haladasiBejegyzesek tbody tr.egyeb.órarend { background-color: #aaaacc; }
+
+	input.gomb {
+		font-size: xx-small; border: solid 1px #777777; 
+		padding: 0px 1px; margin: 0px;
+		background-color: #009900;
+		color: white;
+	}
+	input.gomb:hover { background-color: rgba(255,255,255,0.8); color:black;}
+/*	input.rejtettGomb { border: solid 1px rgb(50,60,80);; background-color: rgb(50,60,80); }
+	input.rejtettGomb:hover { border: solid 1px orange; background-color: rgb(80,60,50); color: white }
+*/
+	div.rejtMutat { color: rgb(100,80,70);}
+	div.rejtMutat:hover { color: white; }
+
+	table.haladasiBejegyzesek a.gomb {
+		padding: 1px;
+		background-color: #dddddd;
+		font-size: 10px;
+		border: outset 1px #556677; 
+		margin: 2px;
+		text-decoration: none;
+	}
+	table.haladasiBejegyzesek a.gomb:hover  {
+		padding: 1px;
+		background-color: #556677;
+		font-size: 10px;
+		border: outset 1px #dddddd; 
+		margin: 2px;
+		text-decoration: none;
+		color: white;
+	}
+
+	table.haladasiBejegyzesek a {
+	    display: block;
+	    color: black;
+	    text-decoration: none;
+	}
+	table.haladasiBejegyzesek a:hover  {
+	    color: green;
+	    text-decoration: underline;
+	}
+	table.haladasiBejegyzesek a.h {
+	    text-align: center;
+	}	
+	table.haladasiBejegyzesek tr.dolgozat td {
+	    padding: 0px 10px;
+	    background-color: rgb(160,100,120);
+	}
+
+	table.haladasiBejegyzesek tr.dolgozat td a {
+	    color: white;
+	    text-decoration: none;
+	}
+
+	table.haladasiBejegyzesek tr.dolgozat td a:hover {
+	    color: rgb(260,200,220);
+	}
+
+	table.haladasiBejegyzesek tbody tr td.mg {
+		text-align: center;
+	}
+	table.haladasiBejegyzesek tbody tr td.info, table.haladasiBejegyzesek tbody tr td.halad {
+		cursor: pointer;
+	}
+
+	table.haladasiBejegyzesek tr td.mg span.latogatott {
+	    background-color: rgb(100,150,100);
+	    color: white;
+	    text-decoration: none;
+	    padding-left:5px;
+	    padding-right:5px;
+	    border-bottom: solid 1px green;
+	    margin:0px;
+	}
+
+
+	table.haladasiBejegyzesek tr td select.teremvalt { background-color: white ; }
+
+	form.hetes { 
+	    border: solid 1px #008800;
+	    background-color: rgb(100,200,100); text-align: center; color: white; margin: 15px 13px; font-weight: bold; 
+	}
+	form.hetes input { color: black; border: none; margin: 4px; border: solid 1px #008800; }
+	form.hetes span { padding-right:2em; }
+	form.hetes select option {
+	    font-size:small;
+	    background-color:# white;
+	    border: solix 1px #00aa00;
+	}
+
+
+    table.haladasiNaplo {
+    	    background-color: rgb(50,60,80);
+	    width: 98%;
+	    font-size: 11px;
+    }	
+    table.haladasiNaplo thead tr th{
+    	    background-color: rgb(50,60,80);
+	    color: white;
+	    border-bottom: solid 1px white;
+	    height:1.5em;
+    }	
+    table.haladasiNaplo tfoot tr th{
+	    font-size: 10px;
+	    color: white;
+    }	
+    table.haladasiNaplo tr td{ padding:0.6em; background-color: #eee; }
+
+    #updateWindow { width: 80%; top: 10%; margin-top: auto; margin-bottom: auto; height: 80%; left: 50%; margin-left: -40%; }
+    #updateHeader { cursor: pointer; }
+
+    #updateForm { max-height: 95%; overflow: auto; }
+
+    #updateForm fieldset {  margin-top:2px; background-color: #eeeeee; border: solid 1px rgb(50,60,70);}
+    #updateForm fieldset legend { text-align: right; background-color: yellow; margin:0px 10px; padding: 2px 10px; border: solid 1px rgb(40,60,80);  }
+
+    #updateForm fieldset.alapadatok p { text-align: center; font-style: italic; }
+    #updateForm fieldset.alapadatok p span { color: rgb(100,50,25); font-weight: bold; font-style: normal; }
+
+    #updateForm #temakor { list-style-type: none; }
+    #updateForm #temakor li { margin-top: 10px; }
+    #updateForm #temakor span.oraszam { display: block; float: left; width: 100px; text-align: right; color: rgb(160,80,40); margin-right: 6px; }
+    #updateForm #temakor div.megnevezes { display: inline-block; font-style: normal; }
+    #updateForm p.kiemelt { text-align: center; margin-top: 100px; font-size: 20px; }
+
+    table.haladasiBejegyzesek label.on { color: orange; }
+    table.haladasiBejegyzesek label:hover { color: white; text-shadow: 1px 1px 1px orange; }
+
+    table tr.ujOra { background-color: rgb(100, 149, 237); }
+    table tr.ujOra th { background-color: rgba(238, 136, 204,0.5);
+	font-weight:normal;
+	border: none 0px;
+    }
+
+    table.haladasiBejegyzesek button.gomb { font-size:8px; padding:4px;}
+
+    table.haladasiBejegyzesek tbody tr td.ora a.tankorStat {display:none;}
+    table.haladasiBejegyzesek tbody tr:hover td.ora a.tankorStat { display:inline;}
+
+}
+@media print {
+    table.haladasiBejegyzesek thead tr th { border-bottom: solid 1px black;}
+    table.haladasiBejegyzesek thead tr th:not(:last-child) { border-right: solid 1px black;}
+    table.haladasiBejegyzesek tbody tr td { border-bottom: solid 1px black;}
+    table.haladasiBejegyzesek div[class*="icon"] { display:none;}
+    table.haladasiBejegyzesek [class*="icon"] { display:none;}
+}

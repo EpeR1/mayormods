@@ -1,0 +1,38 @@
+<?php
+
+    function putTanmenetLeadas($ADAT) {
+
+	echo '<table class="tanmenet">'."\n";
+
+	echo '<tr>';
+	    echo '<th rowspan="2">'._TANAR.'</th>';
+	    echo '<th>'._JOVAHAGYOTT.'</th>'."\n";
+	    echo '<th>'._NEM_JOVAHAGYOTT.'</th>'."\n";
+	    echo '<th>'._FELKESZ.'</th>'."\n";
+	    echo '<th>'._HIANYZO.'</th>'."\n";
+	echo '</tr>'."\n";
+	echo '<tr>';
+	    echo '<th colspan="4">'._TANMENET.'</th>';
+	echo '</tr>'."\n";
+
+	for ($i = 0; $i < count($ADAT['tanarok']); $i++) {
+	    echo '<tr>';
+
+		echo '<th class="tanarNev">';
+		    echo '<a href="'.href('index.php?page=naplo&sub=tanmenet&f=tanmenetTankor&tanarId='.$ADAT['tanarok'][$i]['tanarId']).'">';
+		    echo $ADAT['tanarok'][$i]['tanarNev'];
+		    echo '</a>';
+		echo '</th>'."\n";
+		echo '<td'.(($ADAT['tanarok'][$i]['db']['jóváhagyott'] == 0)?'':' class="jovahagyott"').'>'.$ADAT['tanarok'][$i]['db']['jóváhagyott'].'</td>';
+		echo '<td'.(($ADAT['tanarok'][$i]['db']['kész'] == 0)?'':' class="nincsJovahagyva"').'>'.$ADAT['tanarok'][$i]['db']['kész'].'</td>';
+		echo '<td'.(($ADAT['tanarok'][$i]['db']['új'] == 0)?'':' class="felkesz"').'>'.$ADAT['tanarok'][$i]['db']['új'].'</td>';
+		echo '<td'.(($ADAT['tanarok'][$i]['db']['hiányzik'] == 0)?'':' class="hianyzik"').'>'.$ADAT['tanarok'][$i]['db']['hiányzik'].'</td>';
+
+	    echo '</tr>'."\n";
+	}
+
+	echo '</table>'."\n";
+
+    }
+
+?>

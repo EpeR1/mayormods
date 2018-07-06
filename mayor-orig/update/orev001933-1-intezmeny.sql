@@ -1,0 +1,1 @@
+ALTER TABLE `targy` MODIFY `evkoziKovetelmeny` enum('jegy','féljegy','aláírás','százalékos','három szintű','egyedi felsorolás','szöveges','magatartás','szorgalom','nincs') COLLATE utf8_hungarian_ci DEFAULT 'féljegy';

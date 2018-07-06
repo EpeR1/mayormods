@@ -1,0 +1,65 @@
+<?php
+
+    define('__NAPLO_INSTALLED',true);
+    define('__UZENO_INSTALLED',true);
+
+    define('__UZENO_DEFAULTLIMIT',20);
+    define('__UZENO_AJAXLIMIT',5);
+    define('__ATLAG_MUTATAS',true); // Diák jegyei nézetben az átlag látszódjon-e?
+    define('__ALLOW_3RDPARTY_APPS',true); // Külső alkalmazások engedélyezése? (google charts)
+
+    /* Képek mutatása */
+    // Opciók:  always - mindig (alapértelmezett | default)
+    //		optional - a GUIn választhatóan bekapcsolható (user-interakció szükséges)
+    //		menu-driven - menüpont szerint szabályozott
+    //		never - soha ne mutassa
+    define('__SHOW_FACES', 'always');
+
+    /* Törvényesség ellenőrzéséhez állítsd: true - ra */
+    define('__CHECK_SZULO_TORVENYES',false);
+
+    /* A toolbar alatti mini-help letiltásához állítsd true-ra */
+    define('__NOPAGEHELP',false);
+
+    $MYSQL_DATA['naplo_base']['userRead']= 'mayor_naplo_read';
+    $MYSQL_DATA['naplo_base']['pwRead']= '%SQLPWREAD%';
+
+    $MYSQL_DATA['naplo_base']['userWrite']= 'mayor_naplo';
+    $MYSQL_DATA['naplo_base']['pwWrite'] = '%SQLPW%';
+
+    $MYSQL_DATA['naplo_base']['user'] = $MYSQL_DATA['naplo_base']['userWrite'];
+    $MYSQL_DATA['naplo_base']['pw'] = $MYSQL_DATA['naplo_base']['pwWrite'];
+    $MYSQL_DATA['naplo_base']['db']= 'mayor_naplo';
+
+    define('__ALAP_DB_FILE', _MAYOR_DIR.'/install/module-naplo/mysql/base.sql');
+    define('__INTEZMENY_DB_FILE', _MAYOR_DIR.'/install/module-naplo/mysql/intezmeny.sql');
+    define('__TANEV_DB_FILE', _MAYOR_DIR.'/install/module-naplo/mysql/tanev.sql');
+
+    define('__ORASZAMOT_NOVELO_TIPUSOK','normál,normál máskor,helyettesítés,összevonás');
+    define('__HIANYZASBA_NEM_SZAMITO_TIPUSOK','délutáni,egyéni foglalkozás,tanórán kívüli');
+
+    define('__SHOWSTATZARASMINDENTARGY',true);
+
+    // A "Köszönjük, hogy minden órádat beírtad!" felirat mellett megjelenő GIF képek (/var/mayor/www/skin/classic/module-naplo/img/anim/)
+    $UdvozloKep = array('kutya','pingvin','smiley','garfield','majom');
+
+    //$KERELEM_TAG = array('vmg','kós');
+
+    // !!!!!!!!!!!! FIGYELEM! Kötelező előre írni az azonos nevűekből a specifikusabbakat!
+    $TANKOR_TIPUS = array(
+	'alapóra' => 'ALAP',
+	'tagozat' => 'TAG',
+	'emeltszintű érettségi előkészítő' => 'EÉE',
+	'középszintű érettségi előkészítő' => 'KÉE',
+	'első nyelv' => 'NY1',
+	'második nyelv' => 'NY2',
+	'harmadik nyelv' => 'NY3',
+	'gyógytestnevelés' => 'GY',
+	'fiú' => '(fiú)',
+	'lány' => '(lány)',
+	'úszás' => 'U',
+//	'gyógytestnevelés' => 'II/AB',
+//       'könnyített testnevelés' => 'I.',
+    );
+
+?>

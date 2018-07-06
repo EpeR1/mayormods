@@ -1,0 +1,426 @@
+<?php
+
+    function putDiakTanulmanyiOsszesito($diakId, $ADAT) {
+
+	global $Honapok, $KOVETELMENY, $bizonyitvanyMegjegyzesek;
+
+	echo '<table class="tanuloBizonyitvany" align="center" cellpadding="0" cellspacing="0">'."\n";
+	echo '<thead>';
+	    echo '<tr>';
+		echo '<th class="nev" colspan="'.(count($ADAT['bizonyitvany']['szemeszterek'])+1).'">'.$ADAT['diakAdat']['viseltNevElotag'].' '.$ADAT['diakAdat']['viseltCsaladinev'].' '.$ADAT['diakAdat']['viseltUtonev'].'</th>';
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th class="leiras" colspan="'.(count($ADAT['bizonyitvany']['szemeszterek'])+1).'">'._HIVATALOS_DT_SZERINT_CSOPORTOSITOTT.'</th>';
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th class="cim" colspan="'.(count($ADAT['bizonyitvany']['szemeszterek'])+1).'">'._TANULMANYI_OSSZESITOJE.'</th>';
+	    echo '</tr>';
+	    if (is_array($ADAT['diakKepzes'])) {
+ 		echo '<tr>';
+		echo '<th class="nev" colspan="'.(count($ADAT['bizonyitvany']['szemeszterek'])+1).'">';
+		    foreach($ADAT['diakKepzes'] as $index => $kepzesAdat) {
+			echo '<span title="['.$kepzesAdat['kepzesId'].']v'.$kepzesAdat['tanev'].'">'.$kepzesAdat['kepzesNev'].'</span> '; 
+		    }
+		echo '</th>';
+		echo '</tr>';
+	    }
+	    echo '<tr>';
+		echo '<th rowspan="2">'._TARGY.'</th>';
+		foreach ($ADAT['bizonyitvany']['tanevSzemeszterei'] as $tanev => $tAdat) echo '<th colspan="'.count($tAdat).'">'.$tanev.'</th>';
+	    echo '</tr>';
+	    echo '<tr>';
+		foreach ($ADAT['bizonyitvany']['tanevSzemeszterei'] as $tanev => $tAdat)
+		    for ($i = 0; $i < count($tAdat); $i++) echo '<th>'.$tAdat[$i].'</th>';
+	    echo '</tr>';
+	echo '</thead>';
+	echo '<tfoot>';
+	    echo '<tr>';
+		echo '<td colspan="'.(count($ADAT['bizonyitvany']['szemeszterek'])+1).'">';
+		    echo $ADAT['intezmeny']['cimHelyseg'].', ';
+		    $ho = date('m');
+		    echo date('Y').'. '.kisbetus($Honapok[--$ho]).' '.date('d').'.';
+		echo '</td>';
+	    echo '</tr>';
+	echo '</tfoot>';
+
+	echo '<tbody class="magatartasSzorgalom">';
+	echo '<tr>';
+	    echo '<th class="magatartas">'._MAGATARTAS.'</th>';
+	    foreach ($ADAT['bizonyitvany']['szemeszterek'] as $i => $szAdat) {
+		echo '<td class="biz magatartas">';
+		    foreach ($ADAT['magatartasIdk'] as $_targyId) {
+			$_jegyAdat = $ADAT['bizonyitvany']['jegyek'][$_targyId][$szAdat['tanev']][$szAdat['szemeszter']];
+			for ($i=0; $i<count($_jegyAdat); $i++) {
+			    $__jegyAdat = $_jegyAdat[$i];
+	    		    echo $KOVETELMENY[$__jegyAdat['jegyTipus']][$__jegyAdat['jegy']]['hivatalos'].'&nbsp;';
+			}
+		    }
+		echo '</td>';
+	    }
+	echo '</tr>';
+	echo '<tr>';
+	    echo '<th class="szorgalom">'._SZORGALOM.'</th>';
+	    foreach ($ADAT['bizonyitvany']['szemeszterek'] as $i => $szAdat) {
+		echo '<td class="biz szorgalom">';
+		    foreach ($ADAT['szorgalomIdk'] as $_targyId) {
+			$_jegyAdat = $ADAT['bizonyitvany']['jegyek'][$_targyId][$szAdat['tanev']][$szAdat['szemeszter']];
+			for ($i=0; $i<count($_jegyAdat); $i++) {
+			    $__jegyAdat = $_jegyAdat[$i];
+	    		    echo $KOVETELMENY[$__jegyAdat['jegyTipus']][$__jegyAdat['jegy']]['hivatalos'].'&nbsp;';
+			}
+		    }
+		echo '</td>';
+	    }
+	echo '</tr>';
+	echo '</tbody>';
+
+	echo '<tbody>';
+
+	    echo '<tr class="fejlec">';
+		echo '<th>'._TARGY.'</th>';
+		echo '<th colspan="'.(count($ADAT['bizonyitvany']['szemeszterek'])+1).'">'._JEGY.'</th>';
+	    echo '</tr>';
+
+	    foreach ($ADAT['bizonyitvany']['jegyek'] as $targyId => $targyAdat) {
+
+		if (!in_array($targyId, array_merge($ADAT['magatartasIdk'],$ADAT['szorgalomIdk'])) ) {
+		    $TARGYORATERV = $ADAT['kepzesOraterv'][$targyId];
+		    echo '<tr>';
+		    echo '<th>';
+			echo $ADAT['targyak'][$targyId]['targyNev'];
+//			echo $ADAT['targyak'][$targyId]['targyId'];
+		    echo '</th>';
+		    /* Bizonyítvány kiírás */
+		    foreach ($ADAT['bizonyitvany']['szemeszterek'] as $i => $szAdat) {
+
+			$_jegyAdat = $ADAT['bizonyitvany']['jegyek'][$targyId][$szAdat['tanev']][$szAdat['szemeszter']];
+			echo '<td class="biz">';
+			for ($j=0; $j<count($_jegyAdat); $j++) {
+			    $jegyAdat = $_jegyAdat[$j];    
+			    if (__DIAK !== true || _OSZTALYZATOK_ELREJTESE !== true || time() > strtotime($jegyAdat['hivatalosDt'])) {
+			    $_targyOraterv = $TARGYORATERV[$jegyAdat['evfolyam']][$jegyAdat['szemeszter']][0]; // TODO: evfolyamJel
+			    $_title = $jegyAdat['evfolyam'].'. évfolyam';
+			    if ($jegyAdat['evfolyamJel']!='') $_title .= ' ('.$jegyAdat['evfolyamJel'].'. évfolyamjel)'  ;
+			    if ($_targyOraterv['kovetelmeny'] != $jegyAdat['jegyTipus']) {
+				$_title .= ' nem óraterv szerinti';
+				$_class = ' style="font-style:italic; color: #ffffff;" ';
+			    } else {
+				$_class = '';
+			    }
+			    echo '<span title="'.$_title.'" '.$_class.'>';
+	    			echo $KOVETELMENY[$jegyAdat['jegyTipus']][$jegyAdat['jegy']]['hivatalos'].'&nbsp;'.$bizonyitvanyMegjegyzesek[$jegyAdat['megjegyzes']];
+			    echo '</span>';
+
+			    /* Ha ez vizsga volt, jegyezzük meg */
+			    if (is_array($ADAT['zaroJegyVizsga'][$jegyAdat['zaroJegyId']])) {
+				$_kiir = '('.$ADAT['zaroJegyVizsga'][$jegyAdat['zaroJegyId']]['tipus']
+				    .', évfolyam:'.$ADAT['zaroJegyVizsga'][$jegyAdat['zaroJegyId']]['evfolyam']
+				    .', évfolyamJel:'.$ADAT['zaroJegyVizsga'][$jegyAdat['zaroJegyId']]['evfolyamJel'].')- '.($ADAT['zaroJegyVizsga'][$jegyAdat['zaroJegyId']]['szoveg']);
+				echo '<span title="'.$_kiir.'">&ordm;</span>';
+				$MEGJ[] = $_kiir;
+			    }
+			    $_kiir = '';
+			    if ($j+1 < count($_jegyAdat)) echo '<br/>';
+			  }
+			}
+
+			echo '</td>';
+		    }
+		    echo '</tr>';
+		}
+	    }
+	echo '</tbody>';
+	if (count($MEGJ)>0) { 
+	    echo '<tbody><tr><th colspan="'.(count($ADAT['bizonyitvany']['szemeszterek'])+1).'">';
+		foreach ($MEGJ as $megj) echo $megj."<br />\n";
+	    echo '</th></tr></tbody>';
+	}	
+	echo '</table>'."\n";
+    }
+
+
+
+
+    function putDiakBizonyitvany($diakId, $ADAT) {
+
+	global $Honapok, $KOVETELMENY, $bizonyitvanyMegjegyzesek, $bizonyitvanyJegyzetek, $osztaly, $attrs;
+
+	echo '<table class="tanuloBizonyitvany" align="center" cellpadding="0" cellspacing="0">'."\n";
+
+	echo '<thead>'."\n";
+	    echo '<tr>';
+		echo '<th class="nev" colspan="2">'.$ADAT['diakAdat']['viseltNevElotag'].' '.$ADAT['diakAdat']['viseltCsaladinev'].' '.$ADAT['diakAdat']['viseltUtonev'].'</th>';
+	    echo '</tr>'."\n";
+	    echo '<tr>';
+		echo '<th class="leiras" colspan="2">'._AZ_OSZTALYZATOK_HIVATALOS_DT_SZERINTI.'</th>';
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th class="cim" colspan="2">'._ERTESITOJE.'</th>';
+	    echo '</tr>'."\n";
+	    echo '<tr>';
+		echo '<th colspan="2">';
+		echo _AZ.' '.$ADAT['intezmeny']['nev'].' ';
+		    for ($i=0; $i<count($ADAT['diakAdat']['osztaly']); $i++) {
+			if ($i!=0) echo ' és';
+			echo $ADAT['diakAdat']['osztaly'][$i]['osztalyJel'];
+		    }
+		echo ' '._OSZTALYABAN.'<br />';
+		echo ' '.$ADAT['szemeszterAdat']['tanev'].'-'.($ADAT['szemeszterAdat']['tanev']+1).' '._TANEV.' '.$ADAT['szemeszterAdat']['szemeszter'].'. '._SZEMESZTERBEN.' '._ELERT_EREDMENYEROL;
+		echo '</th>';
+	    echo '</tr>'."\n";
+	echo '</thead>'."\n";
+
+	echo '<tfoot>'."\n";
+	    echo '<tr>';
+		echo '<td colspan="2">';
+		    echo $ADAT['intezmeny']['cimHelyseg'].', ';
+		    $ev = substr($ADAT['szemeszterAdat']['zarasDt'], 0, 4);
+		    $ho = substr($ADAT['szemeszterAdat']['zarasDt'], 5, 2);
+		    $nap = substr($ADAT['szemeszterAdat']['zarasDt'], 8, 2);
+		    echo $ev.'. '.kisbetus($Honapok[--$ho]).' '.$nap.'.';
+		echo '</td>';
+	    echo '</tr>'."\n";
+	    echo '<tr>';
+		echo '<td colspan="2">';
+		    echo '<table class="sign">';
+		    echo '<tr>';
+			echo '<td class="vonal">&nbsp</td>';
+			echo '<td>'._PH.'</td>';
+			echo '<td class="vonal">&nbsp</td>';
+		    echo '</tr><tr>';
+			echo '<td>'._OSZTALYFONOK.'</td>';
+			echo '<td>&nbsp;</td>';
+			echo '<td>'._SZULO.'</td>';
+		    echo '</tr>';
+		    echo '</table>';
+		echo '</td>';
+	    echo '</tr>'."\n";
+
+	echo '</tfoot>'."\n";
+
+	echo '<tbody class="magatartasSzorgalom">'."\n";
+	echo '<tr>';
+	    echo '<th class="magatartas">'._MAGATARTAS.'</th>';
+	    echo '<td class="biz magatartas">';
+
+		    foreach ($ADAT['magatartasIdk'] as $_targyId) {
+			$_jegyAdat = $ADAT['bizonyitvany']['jegyek'][$_targyId];
+			for ($i=0; $i<count($_jegyAdat); $i++) {
+			    $__jegyAdat = $_jegyAdat[$i];
+	    		    echo $KOVETELMENY[$__jegyAdat['jegyTipus']][$__jegyAdat['jegy']]['hivatalos'].'&nbsp;';
+			}
+		    }
+
+	    echo '</td>';
+	echo '</tr>'."\n";
+	echo '<tr>';
+	    echo '<th class="szorgalom">'._SZORGALOM.'</th>';
+	    echo '<td class="biz szorgalom">';
+
+		    foreach ($ADAT['szorgalomIdk'] as $_targyId) {
+			$_jegyAdat = $ADAT['bizonyitvany']['jegyek'][$_targyId];
+			for ($i=0; $i<count($_jegyAdat); $i++) {
+			    $__jegyAdat = $_jegyAdat[$i];
+	    		    echo $KOVETELMENY[$__jegyAdat['jegyTipus']][$__jegyAdat['jegy']]['hivatalos'].'&nbsp;';
+			}
+		    }
+
+	    echo '</td>';
+	echo '</tr>'."\n";
+	echo '</tbody>'."\n";
+
+	echo '<tbody>'."\n";
+
+	    echo '<tr class="fejlec">';
+		echo '<th>'._TARGY.'</th>';
+		echo '<th>'._JEGY.'</th>';
+		if (defined('TANITASI_HETEK_SZAMA')) echo '<th>'._ORASZAM.'</th>';
+	    echo '</tr>'."\n";
+	    if (is_array($ADAT['bizonyitvany']['targyak']))
+	    foreach ($ADAT['bizonyitvany']['targyak'] as $targyId => $targyAdat) {
+		$bizAdat = $ADAT['bizonyitvany']['jegyek'][$targyId];
+		if (!in_array($targyId, array_merge($ADAT['magatartasIdk'],$ADAT['szorgalomIdk']))) { // itt szűrendő ki a magatartás - szorgalom
+		    $targyNev = $ADAT['targyak'][$targyId]['targyNev'];
+		    // innen is lehetne // $targyNev = $targyAdat['targyNev'];
+		    echo '<tr>';
+		    echo '<th>';
+			echo $targyNev;
+		    echo '</th>';
+
+        	    echo '<td class="biz">';
+
+	    	    for ($_ji=0; $_ji<count($bizAdat); $_ji++) {
+			$jegyAdat = $bizAdat[$_ji];
+			/* Bizonyítvány kiírás */
+			if (__DIAK !== true || _OSZTALYZATOK_ELREJTESE !== true || time() > strtotime($jegyAdat['hivatalosDt'])) {
+			    if ($_ji!=0) echo ', ';
+            		    echo $KOVETELMENY[$jegyAdat['jegyTipus']][$jegyAdat['jegy']]['hivatalos'];
+            		    echo ' '.$bizonyitvanyMegjegyzesek[$jegyAdat['megjegyzes']];
+			    if (is_array($ADAT['zaroJegyVizsga'][$jegyAdat['zaroJegyId']])) {
+				echo '<span title="'.($ADAT['zaroJegyVizsga'][$jegyAdat['zaroJegyId']]['tipus']).'">&ordm;</span>';
+			    }
+			    if ($jegyAdat['megjegyzes'] != '') {
+				$jegyzetStr .= str_replace('%1%', $targyNev, $bizonyitvanyJegyzetek[$jegyAdat['megjegyzes']]).'<br />';
+			    }
+			}
+		    }
+        	    echo '</td>'."\n";
+
+		    if (defined('TANITASI_HETEK_SZAMA')) {
+			// Óraszámok
+			echo '<td class="oraszam">';
+			echo $ADAT['bizonyitvany']['targyOraszam'][$targyId]['evesOraszam'];
+			echo '</td>';
+		    }
+		    /* ------------------- */
+		    echo '</tr>'."\n";
+		}
+	    }
+	echo '</tbody>'."\n";
+
+	if (__ZARO_SZEMESZTER) {
+	    $class = 'hianyzas';
+	    $txt = '';
+	} else { 
+	    $class = 'hianyzas nemNyomtatando';
+	    $txt = '<br /><span class="megj">'._IGAZOLATLAN_SZAM_MEGJEGYZES.'</span>';
+	}
+	echo '<tbody class="'.$class.'">';
+	echo '<tr class="fejlec">';
+	    echo '<th colspan="2">'._MULASZTOTT_ORAK_SZAMA.$txt.'</th>';
+	    echo '<th>'._MULASZTOTT_ELMELET_GYAKORLAT.'</th>';
+	echo '</tr>'."\n";
+	
+	echo '<tr>';
+		echo '<th>'._IGAZOLT.'</th>';
+		echo '<td class="biz">';
+		    echo intval($ADAT['hianyzas']['igazolt']);
+		echo '</td>';
+		echo '<td class="oraszam">';
+		    echo intval($ADAT['hianyzas']['elmélet']['igazolt']);
+		    echo '-';
+		    echo intval($ADAT['hianyzas']['gyakorlat']['igazolt']);
+		echo '</td>';
+	echo '</tr>'."\n";
+
+	echo '<tr>';
+		echo '<th>'._IGAZOLATLAN.'</th>';
+		echo '<td class="biz">';
+		    echo intval($ADAT['hianyzas']['igazolatlan']);
+		echo '</td>';
+		echo '<td class="oraszam">';
+		    echo intval($ADAT['hianyzas']['elmélet']['igazolatlan']);
+		    echo '-';
+		    echo intval($ADAT['hianyzas']['gyakorlat']['igazolatlan']);
+		echo '</td>';
+
+	echo '</tr>'."\n";
+
+	echo '<tr>';
+		echo '<th>'._KESESPERC.'</th>';
+		echo '<td class="biz">';
+		    echo floor(($ADAT['hianyzas']['elmélet']['kesesPercOsszeg'] + $ADAT['hianyzas']['gyakorlat']['kesesPercOsszeg']) / 45)
+		    .' ('.intval($ADAT['hianyzas']['elmélet']['kesesPercOsszeg'] + $ADAT['hianyzas']['gyakorlat']['kesesPercOsszeg']).' '._PERC.')';
+		echo '</td>';
+		echo '<td class="oraszam">';
+		    echo floor($ADAT['hianyzas']['elmélet']['kesesPercOsszeg'] / 45).' ('.intval($ADAT['hianyzas']['elmélet']['kesesPercOsszeg']).' '._PERC.')';
+		    echo '-';
+		    echo floor($ADAT['hianyzas']['gyakorlat']['kesesPercOsszeg'] / 45).' ('.intval($ADAT['hianyzas']['gyakorlat']['kesesPercOsszeg']).' '._PERC.')';
+		echo '</td>';
+	echo '</tr>'."\n";
+
+	echo '</tbody>'."\n";
+	echo '<tbody class="jegyzet">'."\n";
+	    echo '<tr>';
+		echo '<td colspan="2">';
+		echo $jegyzetStr;
+		echo '</td>';
+	    echo '</tr>'."\n";
+	echo '</tbody>'."\n";
+
+	echo '</table>'."\n";
+
+    }
+
+////////////////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    function putZaroJegyModosito($diakId, $ADAT) {
+
+        global $KOVETELMENY;
+	global $_EVFOLYAMJEL_BETUVEL;
+	require_once('skin/classic/module-naplo/html/share/jegy.phtml');
+
+	formBegin(array('class'=>'modosit'));
+
+	echo '<h1>'._JEGYMODOSITAS.' (csak speciális esetben!)</h1>';
+	echo '<input type="hidden" name="action" value="zaroJegyModositas" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$diakId.'" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	//EZNEMJO echo '<input type="hidden" name="osztalyId" value="'.$ADAT['diakAdat']['osztaly'][0]['osztalyId'].'" />'."\n";
+	echo '<input type="hidden" name="szemeszterId" value="'.$ADAT['szemeszterAdat']['szemeszterId'].'" />'."\n";
+	echo '<input type="hidden" name="targySorrend" value="'.$ADAT['targySorrend'].'" />'."\n";
+
+
+	echo '<table class="jegy" cellspacing="1" cellpadding="1">';
+	
+	echo '<tfoot><tr><th colspan="2">';
+	    echo '<input type="submit" class="confirm" title="'._BIZTOS_E.'" value="'._OK.'" />'."\n";
+	echo '</th></tr></tfoot>';
+
+	echo '<tbody><tr>';
+	echo '<th>'._TARGY.'</th>';
+	echo '<td>';
+	    // tárgy kiválasztása
+	    echo '<select name="targyId">'."\n";
+	    echo '<option value="">-</option>'."\n";
+	    foreach ($ADAT['targyak'] as $targyId => $targyAdat) {
+		echo '<option value="'.$targyId.'">'.$targyAdat['targyNev'].' ('.$targyAdat['zaroKovetelmeny'].') ['.$targyId.']</option>'."\n";
+	    }
+	    echo '</select>'."\n";
+	echo '</td>';
+	echo '</tr>';
+
+	echo '<tr>';
+	echo '<th>'._EVFOLYAM.'</th>';
+	echo '<td>';
+
+	    // évfolyam kiválasztás:
+	    if (count($ADAT['diakEvfolyamJel'])>0) {
+		echo '<select name="evfolyam">';
+		    // foreach ($ADAT['diakEvfolyamJel'] as $_evfolyamJel) echo '<option value="'.$_evfolyamJel.'">'.$_evfolyamJel.'</option>';
+		    foreach($_EVFOLYAMJEL_BETUVEL as $_evfolyamJel => $_betuvel) {
+			$_SEL = (in_array($_evfolyamJel,$ADAT['diakEvfolyamJel'])) ? 'selected="selected"':'';
+			echo '<option value="'.$_evfolyamJel.'" '.$_SEL.'>'.$_evfolyamJel.' - '.$_betuvel.'</option>';
+		    }
+		echo '</select>';
+	    } else { // csak egy van (vagy egy se ... :(
+		echo ($evfolyamJel = $ADAT['diakEvfolyamJel'][0]).". ".((_EVFOLYAM));
+	    }
+	echo '</td>';
+	echo '</tr>';
+
+
+	echo '<tr>';
+	echo '<th>'._JEGY.'</th>';
+	echo '<td>';
+
+	// jegy kiválsztása
+	$JEGYSELECT = array(
+	    'variable' => 'zaroJegy',
+	    'zaroJegyTipusok' => $ADAT['zaroJegyTipusok'],
+	    'diakId' => $diakId,
+//	    'evfolyam' => $evfolyam, // nem biztos hogy van evfolyamunk, lehet hogy a select-ben definiált
+	    'targyId' => null, // nincs targyId-nk. Ez az előző select kimenete
+	    'tanev'=>$ADAT['szemeszterAdat']['tanev'],
+	    'szemeszter'=>$ADAT['szemeszterAdat']['szemeszter'],
+	);
+	putJegySelect($JEGYSELECT); // használjuk a shared könyvtár függvényeit
+
+	echo '</td></tr></tbody>';
+
+	echo '</table>';
+	formEnd();
+
+    }
+
+?>

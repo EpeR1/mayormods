@@ -1,0 +1,79 @@
+
+
+    table.uzeno, table.ujUzenet,    table.egyUzenet  {
+	width:90%;
+	background-color: rgb(50,50,100);
+	margin-top:1em;
+	margin-bottom:1em;
+	font-size:large;
+    }
+    table.uzeno thead tr th, table.ujUzenet tr th { color: white; border-bottom: solid 1px #ffffff; background-color: rgb(100,100,150); padding:0.5em; }
+
+    table.ujUzenet select   { border: solid 1px #888888; }
+    table.ujUzenet tr td { text-align: center }
+    table.ujUzenet textarea { width:98%; height: 100px; border: solid 1px rgb(100,100,90); background-color:#eeeeee; }
+
+    table.ujUzenet tr.admin td textarea { background-color: green; color: white; }
+
+    table.uzeno thead tr th.dt { width:180px; }
+    table.uzeno thead tr th.cimzett { width:200px; }
+
+    table.uzeno tfoot tr th, table.uzeno tfoot tr th a { color:white; }
+
+    table.uzeno tbody tr td { padding-left:4px; background-color: #dddddd; }
+    table.uzeno tbody tr th { padding-left:4px; text-align:left; font-weight: normal; }
+    
+    table.uzeno tbody tr td.content { padding:10px; background-color:#eeeeee; }
+    table.uzeno tbody tr.uj td { background-color: #eeeeee; }
+    table.uzeno tbody tr.olvasott td { background-color: #bbbbbb;}
+
+    table.uzeno tbody tr td.face { width:1%; }
+
+    tr.diak th { background-color: #998899;}
+    tr.tanar th { background-color: #88ccff;}
+    tr.szulo th { background-color: #ccaabb;}
+
+    tr.diak.asterix th { background-color: #aaaaff;}
+    tr.tanar.asterix th { background-color: #aaaaff;}
+    tr.szulo.asterix th { background-color: #aaaaff;}
+
+    tr.munkakozosseg th { background-color: #99aacc;}
+    tr.tankor th { background-color: #aaccaa; }
+    tr.tankorSzulo th { background-color: #aacccc; }
+
+    tr.osztaly th { background-color: #bbcc99; }
+    tr.osztalySzulo th { background-color: #bbcccc; }
+    tr.osztalyTanar th { background-color: rgb(140,200,100); }
+
+    table.uzeno a { color: black; text-decoration: none;}
+    table.uzeno a:hover { text-decoration: underline; }
+
+    span.dt { color: #888888; }
+    a.more { 
+	color: black !important;
+	background-color: #eeeeee; 
+	text-decoration: none; 
+	border: solid 1px #999999; margin:1px; padding:1px;
+	height:10px;
+    }
+    a.more img { vertical-align: bottom;  }
+    a.more:hover { background-color: white; } 
+
+    a.more.uj { background-color: #ffeeaa; } 
+    a.more.olvasott { background-color: #bbcc99; } 
+
+    a.del { 
+	color: red !important;
+	background-color: #880000;
+	text-decoration: none; 
+	border: solid 1px black; margin:1px; padding:1px;
+    }
+
+      table.lapozo { width: 80%; }
+        table.lapozo table { background-color: #cccccc; border: solid 1px #778890; }
+        table.lapozo table th.title { background-color: navy; color: white; padding-left: 4px; padding-right:4px;}
+        table.lapozo table td { text-align: center; background-color: #eeeeee; }
+        table.lapozo table td.aktiv { background-color: #ffffff; font-weight: bold; }
+        table.lapozo table td.nav { background-color: #aaaaaa; }
+        table.lapozo a {color:black; text-decoration: none; }
+

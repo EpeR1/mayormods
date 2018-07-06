@@ -1,0 +1,66 @@
+<?php
+
+// A kezdőlap beállítása
+// Ha a portál modult telepítjük:
+//    $DEFAULT_PSF['private']  = array('page'=>'portal', 'sub'=>'portal', 'f' => 'portal');
+// Illetve nélküle, csak napló modullal:
+    $DEFAULT_PSF['private']  = array('page'=>'naplo', 'sub'=>'', 'f' => 'naplo');
+
+/*
+    'onExpired = 'none' | 'warning' | 'force update'
+    Ha lejár a jelszó érvényessége (de még nincs letiltva), akkor
+	none         - ne történjen semmi, azaz nem vesszük figyelembe, beengedjük 
+	warning      - beengedjük figyelmeztető üzenettel
+	force update - jelszóváltoztatásra kényszerítjük => enableSelfPasswordChange
+    'onDisabled = 'none' | 'refuse'
+	none         - nem vesszük figyelembe, azaz beengedjük
+	refuse       - visszautasítjuk
+    'enableSelfPasswordChange' = true | false
+    'accountCreateMode' => 'registration' | 'create by admin' => admingroup
+
+*/
+
+
+    $AUTH['private'] = array(
+
+	'authentication' => 'required',
+	'onExpired' => 'force update',
+	'onDisabled' => 'none',
+	'enableSelfPasswordChange' => true,
+        'createAccount' => 'byAdmin',
+	'adminGroup' => 'useradmin',
+	'categories' => array('tanár','diák','titkárság','egyéb'),
+	'accountAttrs' => array('studyId','mail','telephoneNumber'),
+	'unixStyleAccounts' => false,
+
+	'shadowLastChange' => intval(time()/(60*60*24)),
+	'shadowMin' => 2,
+	'shadowMax' => 80,
+	'shadowWarning' => 10,
+	'shadowInactive' => 0,
+	
+	# LDAP-NG
+        'backend'          => 'ldap-ng',
+        'ldapHostname'      => 'ldaps://your.domain:636',                 // Jelszóváltoztatáshoz kötelező az ldaps
+        'ldapBaseDn'        => 'DC=your,DC=domain',
+        'ldapUser'          => 'CN=User,OU=Users,DC=your,DC=domain',      // Olvasási jog az AD-ben - Normál user
+        'ldapPw'            => 'jelszó',
+        #'ldapAccountOperatorUser' => 'CN=Op,OU=Users,DC=your,DC=domain',  // Account Operators (Fiókfelelősök) csoport tag pl (jelszóváltoztatás)
+        #'ldapAccountOperatorPw'   => 'jelszó',
+        'ldapUserObjectClass'     => 'person',                            // Userek objectum osztálya (volt posixAccount)
+        'ldapStudyIdAttr'   => 'serialnumber',                            // Az oktatási azonosítót tároló attribútum (studyId)
+        'ldapUserAccountAttr' => 'uid',			  		  // A felhasználói azonosítót tároló attribútum (uid)
+        'ldapCnAttr' => 'cn',			  			  // A felhasználói teljes neve (cn)
+        'ldapGroupObjectClass'    => 'group',                             // Csoportok objectum osztálya (volt nayorGroup)
+        'ldapGroupCnAttr' => 'cn',			  		  // A csoport teljes neve (cn)
+        
+	'ldapContainers'	=> array(
+	    'ou=IT,dc=vmg,dc=local',
+	    'ou=diak,dc=vmg,dc=local'
+	),
+	#'adminGroup'       => 'Fiókfelelősök',
+        #'cacheable'        => true,
+    );
+    $AUTH['private']['shadowExpire'] = $AUTH['private']['shadowLastChange'] + $AUTH['private']['shadowMax'] + $AUTH['private']['shadowInactive'];
+
+?>

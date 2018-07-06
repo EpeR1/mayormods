@@ -1,0 +1,17 @@
+<?php
+	define('_ATTR_USERACCOUNT','識別子');
+	define('_ATTR_USERCN','名前');
+	define('_ATTR_USERPASSWORD','パスワード');
+	define('_ATTR_STUDYID','教育識別子');
+	define('_ATTR_MAIL','電子メールアドレス');
+	define('_ATTR_TELEPHONENUMBER','電話番号');
+	define('_ATTR_SHADOWLASTCHANGE','最後にパスワードの修正');
+	define('_ATTR_SHADOWMIN','まずパスワードの修正');
+	define('_ATTR_SHADOWMAX','パスワードの在庫の時間');
+	define('_ATTR_SHADOWWARNING','パスワードに改変');
+	define('_ATTR_SHADOWINACTIVE','ユーザーアカウントの怖い');
+	define('_ATTR_SHADOWEXPIRE','怖いの日付');
+	define('_ATTR_GROUPCN','チームの識別子');
+	define('_ATTR_GROUPDESC','チームのなまえ');
+	define('_ATTR_MEMBER','メンバー');
+?>

@@ -1,0 +1,27 @@
+
+    div.sni { padding: 10px; }
+
+/*
+    div.mentor form.sniAdat {  }
+    div.mentor form.sni {  }
+    div.mentor form.sni:hover, div.mentor form.sniAdat:hover {  }
+*/
+    form.sni:hover, form.sniAdat:hover {  }
+
+    form.sniAdat { margin: 1px auto; padding: 10px;  }
+
+    form.sniAdat table { margin: auto; }
+    form.sniAdat td { text-align: left; padding: 20px; vertical-align: top; }
+
+    form.sni { padding: 10px; margin: 1px; }
+    form.sni fieldset { border: solid 1px #aaaaaa; margin-bottom:4em;}
+    form.sni fieldset.utolso { }
+    form.sni fieldset legend { background-color: lightgreen; border: solid 1px lime; padding:2px 4px; }
+
+    form.sni h2 { text-align: center; border: solid black; border-width: 1px 0px; padding:10px; }
+    form.sni input { font-size: 12px; }
+    form.sni ul { margin-top: 0px; list-style-type: none; }
+    form.sni li { background-color: rgb(150,200,150); margin-top: 1px; }
+    form.sni:hover li { background-color: rgb(150,250,150); }
+
+    form.sni label { font-weight:bold;}

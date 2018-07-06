@@ -1,0 +1,316 @@
+<?php
+
+/*
+*	Munkaközösség
+*/
+
+    function putUjMunkakozossegForm($TANAROK) {
+	formBegin(array('id'=>'ujMkForm','class'=>'uj mk'));
+	echo '<div>';
+	echo '<h2>Új munkaközösség felvétele</h2>';
+
+	echo '<input type="hidden" name="action" value="ujMunkakozosseg" />'."\n";
+	echo '<label for="leiras">'. _MUNKAKOZOSSEGNEV . ': </label>';
+	echo '<input type="text" id="leiras" name="leiras" value="" />'."\n";
+	
+	echo '<label for="mkVezId">'. _MUNKAKOZOSSEGVEZETO . ': </label>';
+	echo '<select id="mkVezId" name="mkVezId">';
+	    echo '<option value=""></option>';
+	    for($i=0; $i<count($TANAROK); $i++) {
+		echo '<option value="'.$TANAROK[$i]['tanarId'].'">'.$TANAROK[$i]['tanarNev'].'</option>';
+	    }
+	echo '</select>'."\n";
+	echo '<input type="submit" value="'._OK.'" />';
+	echo '</div>';
+	formEnd();
+    }
+
+    function putMunkakozossegForm($MKADAT,$TANAROK,$TANAROK_INMK) {
+    
+    	formBegin(array('id'=>'MkForm', 'class'=>'mk'));
+
+	echo '<h2>Munkaközösség</h2>';
+
+	echo '<input type="hidden" name="action" value="modMunkakozosseg" />'."\n";
+	echo '<input type="hidden" name="mkId" value="'.$MKADAT['mkId'].'" />'."\n";
+	echo '<label for="leiras">'. _MUNKAKOZOSSEGNEV . ': </label>';
+	echo '<input type="text" id="leiras" name="leiras" value="'.$MKADAT['leiras'].'" />'."\n";
+	
+	echo '<label for="mkVezId">'. _MUNKAKOZOSSEGVEZETO . ': </label>';
+	echo '<select id="mkVezId" name="mkVezId">';
+	    echo '<option value=""></option>';
+	    for($i=0; $i<count($TANAROK); $i++) {
+		$_SEL = ($MKADAT['mkVezId']==$TANAROK[$i]['tanarId']) ? ' selected="selected"' : '';
+		echo '<option value="'.$TANAROK[$i]['tanarId'].'" '.$_SEL.'>'.$TANAROK[$i]['tanarNev'].'</option>'."\n";
+	    }
+	echo '</select>'."\n";
+
+	echo '<br/>';
+
+	echo '<div class="tagok">';
+	echo '<div class="header"><label for="mkTagok">'. _MUNKAKOZOSSEGTAGOK . ': </label></div>';
+	echo '<select id="mkTagok" name="mkTagok[]" multiple="multiple" size="10">';
+	    for($i=0; $i<count($TANAROK_INMK); $i++) {
+		echo '<option value="'.$TANAROK_INMK[$i]['tanarId'].'" '.$_SEL.'>'.$TANAROK_INMK[$i]['tanarNev'].'</option>'."\n";
+	    }
+	echo '</select>'."\n";
+	echo '</div>';
+
+	echo '<div class="submit"><button type="submit"><span class="icon-arrow-left"></span></button></div>';
+
+	echo '<div class="tagok">';
+	echo '<div class="header"><label for="mkUjTagok">'. _UJTAGOK . ': </label></div>';
+	echo '<select id="mkUjTagok" name="mkUjTagok[]" multiple="multiple" size="10">';
+    	    for($i=0; $i<count($TANAROK); $i++) {
+		echo '<option value="'.$TANAROK[$i]['tanarId'].'" '.$_SEL.'>'.$TANAROK[$i]['tanarNev'].'</option>'."\n";
+	    }
+	echo '</select>'."\n";
+	echo '</div>';
+
+	echo '<input type="submit" value="'._OK.'" />';
+	echo '<div style="text-align:center; width:100%;">';
+	for($i=0; $i<count($TANAROK_INMK); $i++) {
+	    //echo '<img value="'.$TANAROK_INMK[$i]['tanarId'].'" '.$_SEL.'>'.$TANAROK_INMK[$i]['tanarNev'].'</option>'."\n";
+	    putFace($TANAROK_INMK[$i]['tanarId'],'tanar',32);
+	}
+	echo '</div>';
+
+	formEnd();
+
+    }
+
+
+
+
+
+
+
+
+
+    function putMunkakozossegTorolForm($mkId) {
+
+	formBegin(array('id'=>'mkTorolForm', 'class'=>'mk torol'));
+	echo '<h2>A munkaközösség törlése</h2>';
+
+	echo '<input type="hidden" name="action" value="munkakozossegTorol" />'."\n";
+	echo '<input type="hidden" name="mkId" value="'.$mkId.'" />'."\n";
+
+	echo '<label for "mktorolg">'._VEGLEGES_TORLES.': </label>';
+	echo '<input type="submit" id="mktorolg" class="confirm" title="Biztos töröljük a munkaközösséget és tárgyait?" value="'._DELETE.'" />';
+
+	formEnd();
+    }
+
+
+
+
+
+
+    function putUjTargyForm($mkId, $ADAT) {
+	formBegin(array('id'=>"ujTargyForm", 'class'=>"uj mk"));
+
+	echo '<h2>Új tárgy felvétele a munkaközösséghez</h2>';
+
+	echo '<input type="hidden" name="action" value="ujTargy" />'."\n";
+	echo '<input type="hidden" name="mkId" value="'.$mkId.'" />'."\n";
+	echo '<label for="targyleiras">'._TARGYNEV . ': </label>';
+	echo '<input type="text" id="targyleiras" name="targyleiras" value="" />'."\n";
+
+	_putTargyJellegSelect($ADAT); // not selected
+
+	echo '<input type="submit" value="'._OK.'" />';
+
+	formEnd();
+    }
+
+    function putTargyValtoztatForm($ADAT) {
+
+	formBegin(array('id'=>'targyValtoztatForm', 'class'=>'mk'));
+
+	echo '<h2>Tárgy változtatása: <span>'.$ADAT['targyAdat']['targyNev'].'</span></h2>';
+
+	echo '<input type="hidden" name="action" value="targyValtoztat" />'."\n";
+	echo '<input type="hidden" name="mkId" value="'.$ADAT['targyAdat']['mkId'].'" />'."\n";
+	echo '<input type="hidden" name="targyId" value="'.$ADAT['targyAdat']['targyId'].'" />'."\n";
+	//echo '<label for="targyleiras">'._TARGYNEV . ': </label>';
+	echo '<ul><li>';
+	echo _TARGY_JELLEG.': ';
+	_putTargyJellegSelect($ADAT); // not selected
+	echo '</li><li>';
+	echo _EVKOZI_KOVETELMENY.': ';
+	_putTargyKovetelmenySelect($ADAT,'evkozi');
+	echo '</li><li>';
+	echo _ZARO_KOVETELMENY.': ';
+	_putTargyKovetelmenySelect($ADAT,'zaro');
+	echo '</li><li>';
+	echo _TARGY_ROVID_NEVE.': <input type="text" maxlength="64" size="64" name="targyRovidNev" value="'.$ADAT['targyAdat']['targyRovidNev'].'" />'."\n";
+	echo '</li><li>';
+	echo _KIRTARGY.': ';
+	    putKirTargySelect($ADAT['kirTargyak'],$ADAT['targyAdat']['kirTargyId']);
+	echo '</li></ul>';
+	echo '<input type="submit" value="'._OK.'" />';
+	formEnd();
+    }
+
+    function _putTargyJellegSelect($ADAT) {
+	echo '<select name="targyJelleg">';
+	    echo '<option value=""></option>';
+	    for($i=0; $i<count($ADAT['targyJellegENUM']); $i++) {
+		$_SEL = ($ADAT['targyAdat']['targyJelleg']==$ADAT['targyJellegENUM'][$i]) ? ' selected="selected" ' : '';
+		echo '<option value="'.$ADAT['targyJellegENUM'][$i].'" '.$_SEL.'>'.$ADAT['targyJellegENUM'][$i].'</option>';
+	    }
+	echo '</select>';
+    }
+    function _putTargyKovetelmenySelect($ADAT,$melyik) {
+	$kov = $melyik.'Kovetelmeny';
+	echo '<select name="'.$kov.'">';
+	    echo '<option value=""></option>';
+	    for($i=0; $i<count($ADAT['targy.'.$kov]); $i++) {
+		$_SEL = ($ADAT['targyAdat'][$kov]==$ADAT['targy.'.$kov][$i]) ? ' selected="selected" ' : '';
+		echo '<option value="'.$ADAT['targy.'.$kov][$i].'" '.$_SEL.'>'.$ADAT['targy.'.$kov][$i].'</option>';
+	    }
+	echo '</select>';
+    }
+
+    function putTargyTorolForm($targyId,$mkId) {
+	formBegin(array('id'=>"targyTorolForm", 'class'=>"mk torol"));
+
+	echo '<h2>A kijelölt tárgy törlése</h2>';
+
+	echo '<input type="hidden" name="action" value="targyTorol" />'."\n";
+	echo '<input type="hidden" name="mkId" value="'.$mkId.'" />'."\n";
+	echo '<input type="hidden" name="targyId" value="'.$targyId.'" />'."\n";
+
+	echo '<label for="targytorolg">'._VEGLEGES_TORLES.': </label>';
+	echo '<input type="submit" id="targytorolg" value="'._DELETE.'" />';
+
+	formEnd();
+    }
+
+
+    function putKirTargySelect($ADAT,$kirTargyId) {
+
+	echo '<select name="kirTargyId" id="kirTargyId">';
+    	echo '<option value=""></option>';
+        for ($i=0; $i<count($ADAT); $i++) {
+            $_SEL = ($ADAT[$i]['kirTargyId'] == $kirTargyId)  ?  ' selected="selected" ' : '';
+            echo '<option value="'.$ADAT[$i]['kirTargyId'].'" '.$_SEL.'>'.$ADAT[$i]['kirTargyNev'].'</option>'."\n";                                                                       
+        }
+        echo '</select>'."\n";
+        echo _KIRTARGY_MEGJ;
+    }    
+
+    function putTargyAtnevezes($ADAT) {
+
+	formBegin(array('id'=>'targyAtnevezes','class'=>'mk'));
+
+	echo '<h2>'._TARGY_ATNEVEZES.'</h2>';
+
+	echo '<div class="leiras">'._ATNEVEZES_HELP.'</div>';
+
+	echo '<input type="hidden" name="action" value="targyAtnevezes" />'."\n";
+	echo '<input type="hidden" name="mkId" value="'.$ADAT['mkId'].'" />'."\n";
+	echo '<input type="hidden" name="targyId" value="'.$ADAT['targyId'].'" />'."\n";
+
+	echo '<label for="ujTargyNev">'._UJ_TARGY_NEV.'</label>';
+	echo '<input type="text" id="ujTargyNev" name="ujTargyNev" value="" />'."\n";
+
+	echo '<input type="submit" id="targyBeolvaszt" value="'._OK.'" />';
+
+	formEnd();
+    }
+
+    function putTargyMkValtas($ADAT) {
+
+	formBegin(array('id'=>'targyMkValtas','class'=>'mk'));
+
+	echo '<h2>'._TARGY_MK_VALTAS.'</h2>';
+
+	echo '<div class="leiras">'._MK_VALTAS_HELP.'</div>';
+
+	echo '<input type="hidden" name="action" value="targyMkValtas" />'."\n";
+	echo '<input type="hidden" name="mkId" value="'.$ADAT['mkId'].'" />'."\n";
+	echo '<input type="hidden" name="targyId" value="'.$ADAT['targyId'].'" />'."\n";
+
+	echo '<label for="befogadoMkId">'._BEFOGADO_MK.'</label>';
+	echo '<select id="befogadoMkId" name="befogadoMkId">';
+	echo '<option value=""> - </option>';
+	foreach ($ADAT['munkakozossegek'] as $mAdat) {
+	    if ($ADAT['mkId'] != $mAdat['mkId']) echo '<option value="'.$mAdat['mkId'].'">'.$mAdat['mkNev'].' ('.$mAdat['mkId'].')'.'</option>';
+	}
+	echo '</select>';
+	echo '<input type="submit" id="targyBeolvaszt" value="'._OK.'" />';
+
+	formEnd();
+    }
+
+    function putTargyBeolvasztasForm($ADAT) {
+
+	global $TANKOR_TIPUS;
+
+	formBegin(array('id'=>'targyBeolvasztas','class'=>'mk'));
+
+	echo '<h2>'._TARGY_BEOLVASZTASA.'</h2>';
+
+	echo '<div class="leiras">'._BEOLVASZTAS_HELP.'</div>';
+
+	echo '<input type="hidden" name="action" value="targyBeolvasztas" />'."\n";
+	echo '<input type="hidden" name="mkId" value="'.$ADAT['mkId'].'" />'."\n";
+	echo '<input type="hidden" name="targyId" value="'.$ADAT['targyId'].'" />'."\n";
+
+	echo '<label for="befogadoTargyId">'._BEFOGADO_TARGY.'</label>';
+	echo '<select id="befogadoTargyId" name="befogadoTargyId">';
+	echo '<option value=""> - </option>';
+	foreach ($ADAT['targyak'] as $tAdat) {
+	    if ($ADAT['targyId'] != $tAdat['targyId']) echo '<option value="'.$tAdat['targyId'].'">'.$tAdat['targyNev'].' ('.$tAdat['targyId'].')'.'</option>';
+	}
+	echo '</select>';
+	echo '<label for="tankorJeloles">'._TANKOR_JELOLES.'</label>';
+	echo '<select id="tankorJeloles" name="tankorJeloles">';
+	echo '<option value=""> - </option>';
+	foreach ($TANKOR_TIPUS as $nev => $jel) {
+	    echo '<option value="'.$jel.'">'.$nev.' ('.$jel.')</option>';
+	}
+	echo '</select>';
+	echo '<input type="submit" id="targyBeolvaszt" value="'._OK.'" />';
+
+	formEnd();
+    }
+
+    function putTargyTargyForm($ADAT) {
+
+	formBegin(array('id'=>'targyTargy','class'=>'mk'));
+
+	echo '<h2>'._TARGY_KAPCSOLATOK.'</h2>';
+
+	echo '<div class="leiras">'._TARGYTARGY_HELP.'</div>';
+
+	echo '<input type="hidden" name="action" value="targyTargy" />'."\n";
+	echo '<input type="hidden" name="mkId" value="'.$ADAT['mkId'].'" />'."\n";
+	echo '<input type="hidden" name="targyId" value="'.$ADAT['targyId'].'" />'."\n";
+
+	echo '<label for="alTargyId">'._ALTARGY.'</label>';
+	echo '<select id="alTargyId" name="alTargyId">';
+	echo '<option value=""> - </option>';
+/*	for ( $i=0; $i<count($ADAT['targyTargy'][$ADAT['targyId']]); $i++) {
+	    $T = $ADAT['targyTargy'][$ADAT['targyId']][$i];
+	    $tAdat  = $ADAT['targyAdat'][$T['targyId']];
+	    //if ($ADAT['targyId'] != $tAdat['targyId']) 
+		echo '<option value="'.$T['targyId'].'">'.$tAdat['targyNev'].' ('.$T['targyId'].')'.'</option>';
+	}
+*/
+	if (is_array($ADAT['targyak'])) foreach ($ADAT['targyak'] as $tAdat) {
+	    $_plusz = (in_array($tAdat['targyId'],$ADAT['targyTargy']['FOal'][$ADAT['targyId']])) ? '+':'';
+	    if ($ADAT['targyId'] != $tAdat['targyId']) echo '<option value="'.$tAdat['targyId'].'">'.$_plusz.$tAdat['targyNev'].' ('.$tAdat['targyId'].')'.'</option>';
+	}
+
+	echo '</select>';
+
+	echo '<input type="submit" id="targyTargy" value="'._OK.'" />';
+
+	formEnd();
+    }
+
+
+
+?>

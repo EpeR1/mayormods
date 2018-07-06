@@ -1,0 +1,33 @@
+<?php
+
+    function putBeirasiAdatok($ADAT) {
+
+	/* DASHBOARD */
+
+	global $UdvozloKep,$skin;
+
+	if (!is_array($UdvozloKep) || count($UdvozloKep) == 0) $UdvozloKep = array('kutya','pingvin','smiley','garfield','majom');
+	echo '<div class="beirasAdatok">';
+	if ($ADAT['beiratlan'] == 0) {
+	    if ($skin!='ajax') { // :(
+		$i = rand(0, count($UdvozloKep)-1);
+	        echo '<img src="skin/classic/module-naplo/img/anim/'.$UdvozloKep[$i].'.gif" alt="anim gif" />';
+	    }
+	    echo _MINDEN_BEIRVA;
+	    if (__JATEK_INSTALLED===true) {
+		echo '<p style="text-align:center"><a href="'.href('index.php?page=jatek&f=2048').'"><img src="/skin/classic/module-jatek/img/2048.png" alt="2048" /></a></p>';
+	    }
+	} else {
+	    echo '<span><a href="'.href('index.php?page=naplo&sub=haladasi&f=haladasi').'">'._BEIRATLAN_ORAK_SZAMA.': '.$ADAT['beiratlan'].'</a></span>';
+	}
+	echo '</div>';
+
+    }
+
+    function putBeirasiAdatokDiak() {
+	if (__JATEK_INSTALLED===true) {
+		echo '<p style="text-align:center"><a href="'.href('index.php?page=jatek&f=2048').'"><img src="/skin/classic/module-jatek/img/2048.png" alt="2048" /></a></p>';
+	}
+    }
+
+?>

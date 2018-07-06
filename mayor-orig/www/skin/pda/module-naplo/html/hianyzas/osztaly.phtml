@@ -1,0 +1,465 @@
+<?php
+
+    function putOsztalyOsszesito($ADAT, $View) {
+
+	global $_TANEV;
+
+	$_cols = 3;
+
+	$H = $ADAT['stat'];
+
+	formBegin();
+	echo '<table align="center" class="navi"><tr><td>';
+
+	echo '<input id="lezart" type="checkbox" name="View[]" value="lezárt" ';
+	    if (in_array('lezárt',$View)) echo 'checked="checked" ';
+	    echo '/><label for="lezart">'._LEZART.'</label>';
+	echo '<input id="igazolhato" type="checkbox" name="View[]" value="igazolható" ';
+	    if (in_array('igazolható',$View)) echo 'checked="checked" ';
+	    echo '/><label for="igazolhato">'._IGAZOLHATO.'</label><br />';
+	echo '<input id="osszes" type="checkbox" name="View[]" value="összes" ';
+	    if (in_array('összes',$View)) echo 'checked="checked" ';
+	    echo '/><label for="osszes">'._OSSZES.'</label>';
+	echo '<input id="fegyu" type="checkbox" name="View[]" value="fegyelmi utáni" ';
+	    if (in_array('fegyelmi utáni',$View)) echo 'checked="checked" ';
+	    echo '/><label for="fegyu">'._FEGYELMI_UTANI.'</label><br />';
+	echo '<input id="fegyfo" type="checkbox" name="View[]" value="fegyelmi fokozatok" ';
+	    if (in_array('fegyelmi fokozatok',$View)) echo 'checked="checked" ';
+	    echo '/><label for="fegyfo">'._FEGYELMI_FOKOZATOK.'</label>';
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" /> ';
+	echo '<input type="submit" value="'._OK.'" class="ok" />'.'<br />';
+
+	echo ' '._REFERENCIADT.' ';
+	echo '<select name="referenciaDt" class="onChangeSubmit">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    $SEL = array($ADAT['referenciaDt'] => ' selected="selected" ');
+	    for (
+		$dt = _LEGKORABBI_IGAZOLHATO_HIANYZAS;
+		strtotime($dt) < time();
+		$dt = date('Y-m-d',strtotime('+1 day',strtotime($dt)))
+	    ) echo '<option value="'.$dt.'"'.$SEL[$dt].'>'.$dt.'</option>'."\n";
+	echo '</select>'."\n";
+
+	echo '</td></tr></table>';
+	formEnd();
+	
+	echo '<table class="hianyzas" align="center">';
+
+    /* ----------- Fejléc ----------- */
+
+	    echo '<thead>'."\n";
+		echo '<tr>';
+		    echo '<th rowspan="3">'._NEV.'</th>';
+
+		    if (in_array('lezárt',$View)) {
+			echo '<th colspan="6">'._LEZART.'</th>';
+			$_cols+=7;
+		    }
+
+		    if (in_array('igazolható',$View)) {
+			echo '<th colspan="6">'._IGAZOLHATO.'</th>';
+			$_cols+=6;
+		    }
+
+		    if (in_array('összes',$View)) {
+			echo '<th colspan="8">'._OSSZES.'</th>';
+			$_cols+=7;
+		    }
+
+		    if (in_array('fegyelmi utáni',$View)) {
+			echo '<th colspan="3">'._FEGYELMI_UTANI.'</th>';
+			$_cols+=3;
+		    }
+
+		    if (in_array('fegyelmi fokozatok',$View)) {
+			echo '<th colspan="3">'._FEGYELMI_FOKOZATOK.'</th>';
+			$_cols+=3;
+		    }
+		    
+		echo '</tr><tr>';
+
+		    if (in_array('lezárt',$View)) {
+			echo '<th colspan="3" class="alcim">'._HIANYZAS.'</th>';
+			echo '<th colspan="3" class="alcim">'._KESES.'</th>';
+		    }
+
+		    if (in_array('igazolható',$View)) {
+			echo '<th colspan="3" class="alcim">'._HIANYZAS.'</th>';
+			echo '<th colspan="3" class="alcim">'._KESES.'</th>';
+		    }
+
+		    if (in_array('összes',$View)) {
+			echo '<th colspan="3" class="alcim">'._HIANYZAS.'</th>';
+			echo '<th colspan="3" class="alcim">'._KESES.'</th>';
+			echo '<th rowspan="2" class="alcim" title="'._FELSZERELES_HIANY.'">'._FSZ.'</th>';
+			echo '<th rowspan="2" class="alcim" title="'._FELMENTES.'">'._FM.'</th>';
+		    }
+
+		    if (in_array('fegyelmi utáni',$View)) {
+			echo '<th rowspan="2" class="alcim" title="'._HIANYZAS.'">'._H.'</th>';
+			echo '<th rowspan="2" class="alcim" title="'._KESES.'">'._K.'</th>';
+			echo '<th rowspan="2" class="alcim" title="'._FELSZERELES_HIANY.'">'._FSZ.'</th>';
+		    }
+
+		    if (in_array('fegyelmi fokozatok',$View)) {
+			echo '<th rowspan="2" class="alcim" title="'._OSSZES_IGAZOLATLAN.'">'._O.'</th>';
+			echo '<th rowspan="2" class="alcim">'._AKTUALIS_FOKOZAT.'</th>';
+			echo '<th rowspan="2" class="alcim">'._BEIRANDO_FOKOZAT.'</th>';
+		    }
+
+		echo '</tr><tr>';
+
+		    if (in_array('lezárt',$View)) {
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/h.gif" alt="'._IGAZOLATLAN.'" title="'._IGAZOLATLAN.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/i.gif" alt="'._IGAZOLT.'" title="'._IGAZOLT.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/sum.gif" alt="'._OSSZES.'" title="'._OSSZES.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/h.gif" alt="'._IGAZOLATLAN.'" title="'._IGAZOLATLAN.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/i.gif" alt="'._IGAZOLT.'" title="'._IGAZOLT.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/sum.gif" alt="'._OSSZES.'" title="'._OSSZES.'" /></th>';
+		    }
+
+		    if (in_array('igazolható',$View)) {
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/h.gif" alt="'._IGAZOLATLAN.'" title="'._IGAZOLATLAN.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/i.gif" alt="'._IGAZOLT.'" title="'._IGAZOLT.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/sum.gif" alt="'._OSSZES.'" title="'._OSSZES.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/h.gif" alt="'._IGAZOLATLAN.'" title="'._IGAZOLATLAN.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/i.gif" alt="'._IGAZOLT.'" title="'._IGAZOLT.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/sum.gif" alt="'._OSSZES.'" title="'._OSSZES.'" /></th>';
+		    }
+
+		    if (in_array('összes',$View)) {
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/h.gif" alt="'._IGAZOLATLAN.'" title="'._IGAZOLATLAN.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/i.gif" alt="'._IGAZOLT.'" title="'._IGAZOLT.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/sum.gif" alt="'._OSSZES.'" title="'._OSSZES.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/h.gif" alt="'._IGAZOLATLAN.'" title="'._IGAZOLATLAN.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/i.gif" alt="'._IGAZOLT.'" title="'._IGAZOLT.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/sum.gif" alt="'._OSSZES.'" title="'._OSSZES.'" /></th>';
+		    }
+
+		    if (in_array('fegyelmi utáni',$View)) {
+		    }
+
+		    if (in_array('fegyelmi fokozatok',$View)) {
+		    }
+
+
+		echo '</tr>';
+		
+		
+	    echo '</thead>'."\n";
+
+    /* ----------- Fejléc vége ------------- */
+    
+	    echo '<tfoot>'."\n";
+		echo '<tr><th colspan="'.$_cols.'">'._HIANYZASMENTESNAPOKSZAMA.': '.$ADAT['hianyzasmentesNapokSzama'].'</th></tr>';
+	    echo '</tfoot>'."\n";
+	    echo '<tbody>'."\n";
+		
+//		for($i = 0; $i < count($H['névsor']); $i++) {
+		foreach ($H['névsor'] as $diakId => $dAdat) {
+
+		echo '<tr>';
+		
+		    echo '<td class="nev">';
+			echo '<a href="'.href('index.php?page=naplo&sub=hianyzas&f=diak&diakId='.$diakId.'&osztalyId='.$ADAT['osztalyId']).'" >';
+			echo $dAdat['diakNev'];
+			echo '</a>';
+		    echo '</td>';
+		
+		if (in_array('lezárt',$View)) {
+		# Lezártak
+
+		    // Lezárt igazolatlan hiányzás
+		    $lhigazolatlan = $H[$diakId]['lezárt']['hiányzás']['igazolatlan'];
+		    if (intval($lhigazolatlan) == 0) $class = 'ulezart';
+		    else $class = 'lezart igazolatlan hianyzas';
+		    echo '<td class="'.$class.'">'.$lhigazolatlan.'</td>';
+
+		    // Lezárt igazolt hiányzás
+		    $lhigazolt = $H[$diakId]['lezárt']['hiányzás']['igazolt'];
+		    if (intval($lhigazolt) == 0) $class = 'ulezart';
+		    else $class = 'lezart igazolt hianyzas';
+		    echo '<td class="'.$class.'">'.$lhigazolt.'</td>';
+
+		    // Lezárt összes hiányzás
+		    $osszeg = intval($lhigazolt) + intval($lhigazolatlan);
+		    if ($osszeg == 0) {
+			$osszeg = '';
+			$class = 'ulezart';
+		    } else {
+			$class = 'lezart mind hianyzas';
+		    }
+		    echo '<td class="'.$class.'">'.$osszeg.'</td>';
+
+		    // Lezárt igazolatlan késés
+		    $lkigazolatlan = $H[$diakId]['lezárt']['késés']['igazolatlan']['db'];
+		    $lkigazolatlanIdo = $H[$diakId]['lezárt']['késés']['igazolatlan']['ido'];
+		    if ($lkigazolatlan == 0) $class = 'ulezart';
+		    else $class = 'lezart igazolatlan keses';
+		    echo '<td class="'.$class.'" title="'.$lkigazolatlanIdo.'">'.$lkigazolatlan.'</td>';
+		    
+		    // Lezárt igazolt késés
+		    $lkigazolt = $H[$diakId]['lezárt']['késés']['igazolt']['db'];
+		    if ($lkigazolt == 0) $class = 'ulezart';
+		    else $class = 'lezart igazolt keses';
+		    echo '<td class="'.$class.'">'.$lkigazolt.'</td>';
+
+		    // Lezárt igazolatlan késés
+		    $osszeg = intval($lkigazolt) + intval($lkigazolatlan);
+		    if ($osszeg == 0) {
+			$osszeg = '';
+			$class = 'ulezart';
+		    } else {
+			$class = 'lezart mind keses';
+		    }
+		    echo '<td class="'.$class.'">'.$osszeg.'</td>';
+		## ------
+		}
+
+		if (in_array('igazolható',$View)) {
+		## Lezárt utáni = Igazolható
+
+		    //	Igazolható igazolatlan hiányzás
+		    $ihigazolatlan = $H[$diakId]['összes']['hiányzás']['igazolatlan'] - $H[$diakId]['lezárt']['hiányzás']['igazolatlan'];
+		    if ($ihigazolatlan == 0) {
+			$ihigazolatlan = '';
+			$class = 'uigazolhato';
+		    } else {
+			$class = 'igazolhato igazolatlan hianyzas';
+		    }
+		    echo '<td class="'.$class.'">'.$ihigazolatlan.'</td>';
+
+		    //	Igazolható igazolt hiányzás
+		    $ihigazolt = $H[$diakId]['összes']['hiányzás']['igazolt'] - $H[$diakId]['lezárt']['hiányzás']['igazolt'];
+		    if ($ihigazolt == 0) {
+			$ihigazolt = '';
+			$class = 'uigazolhato';
+		    } else {
+			$class = 'igazolhato igazolt hianyzas';
+		    }
+		    echo '<td class="'.$class.'">'.$ihigazolt.'</td>';
+
+		    //	Igazolható összes hiányzás
+		    $osszeg = $iigazolt+$iigazolatlan;
+		    if ($osszeg == 0) {
+			$osszeg = '';
+			$class = 'uigazolhato';
+		    } else {
+			$class = 'igazolhato mind hianyzas';
+		    }
+		    echo '<td class="'.$class.'">'.$osszeg.'</td>';
+
+		    //	Igazolható igazolatlan késés
+		    $ikigazolatlan = $H[$diakId]['összes']['késés']['igazolatlan']['db'] - $H[$diakId]['lezárt']['késés']['igazolatlan']['db'];
+		    $ikigazolatlanIdo = $H[$diakId]['összes']['késés']['igazolatlan']['ido'] - $H[$diakId]['lezárt']['késés']['igazolatlan']['ido'];
+		    if ($ikigazolatlan == 0) {
+			$ikigazolatlan = '';
+			$class = 'uigazolhato';
+		    } else {
+			$class = 'igazolhato igazolatlan keses';
+		    }
+		    echo '<td class="'.$class.'" title="'.$ikigazolatlanIdo.'">'.$ikigazolatlan.'</td>';
+
+		    //	Igazolható igazolt késés
+		    $ikigazolt = $H[$diakId]['összes']['késés']['igazolt']['db'] - $H[$diakId]['lezárt']['késés']['igazolt']['db'];
+		    if ($ikigazolt == 0) {
+			$ikigazolt = '';
+			$class = 'uigazolhato';
+		    } else {
+			$class = 'igazolhato izagolt keses';
+		    }
+		    echo '<td class="'.$class.'">'.$ikigazolt.'</td>';
+
+		    //	Igazolható összes késés
+		    $osszeg = $iigazolt+$iigazolatlan;
+		    if ($osszeg == 0) {
+			$osszeg = '';
+			$class = 'uigazolhato';
+		    } else {
+			$class = 'igazolhato mind keses';
+		    }
+		    echo '<td class="'.$class.'">'.$osszeg.'</td>';
+		## ------
+		}
+
+		if (in_array('összes',$View)) {
+		## Összes
+		
+		    //	Összes igazolatlan hiányzás
+		    $ohigazolatlan = $H[$diakId]['összes']['hiányzás']['igazolatlan'];
+		    if ($ohigazolatlan == 0) $class = 'uosszes';
+		    else $class = 'osszes igazolatlan hianyzas';
+		    echo '<td class="'.$class.'">'.$ohigazolatlan.'</td>';
+
+		    //	Összes igazolt hiányzás
+		    $ohigazolt=$H[$diakId]['összes']['hiányzás']['igazolt'];
+		    if ($ohigazolt == 0) $class = 'uosszes';
+		    else $class = 'osszes igazolt hianyzas';
+		    echo '<td class="'.$class.'">'.$ohigazolt.'</td>';
+		    
+		    //	Összes hiányzás
+		    $osszeg = $ohigazolt+$ohigazolatlan;
+		    if ($osszeg == 0) {
+			$osszeg = '';
+			$class = 'uosszes';
+		    } else {
+			$class = 'osszes mind hianyzas';
+		    }
+		    echo '<td class="'.$class.'">'.$osszeg.'</td>';
+
+		    //	Összes igazolatlan késés
+		    $okigazolatlan = $H[$diakId]['összes']['késés']['igazolatlan']['db'];
+		    $okigazolatlanIdo = $H[$diakId]['összes']['késés']['igazolatlan']['ido'];
+		    if ($okigazolatlan == 0) $class = 'uosszes';
+		    else $class = 'osszes igazolatlan keses';
+		    echo '<td class="'.$class.'" title="'.$okigazolatlanIdo.'">'.$okigazolatlan.'</td>';
+
+		    //	Összes igazolt késés
+		    $okigazolt=$H[$diakId]['összes']['késés']['igazolt']['db'];
+		    if ($okigazolt == 0) $class = 'uosszes';
+		    else $class = 'osszes igazolt keses';
+		    echo '<td class="'.$class.'">'.$okigazolt.'</td>';
+
+		    //	Összes késés
+		    $osszeg = $okigazolt + $okigazolatlan;
+		    if ($osszeg == 0) {
+			$osszeg = '';
+			$class = 'uosszes';
+		    } else {
+			$class = 'osszes mind keses';
+		    }
+		    echo '<td class="'.$class.'">'.$osszeg.'</td>';
+
+		    //	Összes felszerelés hiány
+		    $ofelszereles = $H[$diakId]['összes']['felszerelés hiány']['igazolatlan'];
+		    if ($ofelszereles == 0) $class = 'uosszes';
+		    else $class = 'osszes felszereles';
+		    echo '<td class="'.$class.'">'.$ofelszereles.'</td>';
+
+		    //	Összes felmentés hiány
+		    $ofelmentes = $H[$diakId]['összes']['felmentés']['igazolatlan'];
+		    if ($ofelmentes == 0) $class = 'uosszes';
+		    else $class = 'osszes felmentes';
+		    echo '<td class="'.$class.'">'.$ofelmentes.'</td>';
+		## ------
+		}
+
+		if (in_array('fegyelmi utáni',$View)) {
+		## Fegyelmi után
+		    // Fegyelmi utáni igazolatlan hiányzás
+		    $fih = $H[$diakId]['fegyelmi']['hiányzás']['igazolatlan'];
+		    if ($fih == 0) $class = 'ufegyelmi';
+		    else $class = 'fegyelmi igazolatlan hianyzas';
+		    echo '<td class="'.$class.'">'.$fih.'</td>';
+
+		    // Fegyelmi utáni igazolatlan késés
+		    $fik = $H[$diakId]['fegyelmi']['késés']['igazolatlan']['db'];
+		    $fikIdo = $H[$diakId]['fegyelmi']['késés']['igazolatlan']['ido'];
+		    if ($fik == 0) $class = 'ufegyelmi';
+		    else $class = 'fegyelmi igazolatlan keses';
+		    echo '<td class="'.$class.'" title="'.$fikIdo.'">'.$fik.'</td>';
+		    
+		    // Fegyelmi utáni felszereléshiány
+		    $ff = $H[$diakId]['fegyelmi']['felszerelés']['igazolatlan'];
+		    if ($ff == 0) $class = 'ufegyelmi';
+		    else $class = 'fegyelmi felszereles';
+		    echo '<td class="'.$class.'">'.$ff.'</td>';
+		## ------
+		}
+
+		if (in_array('fegyelmi fokozatok',$View)) {
+		## Fokozatok
+		    
+		    $igazolatlanok_szama = $H[$diakId]['összes igazolatlan'];
+		    if ($igazolatlanok_szama == 0) {
+			$igazolatlanok_szama = '';
+			$class = 'ufokozat';
+		    } else {
+			$class = 'fokozat oi igazolatlan';
+		    }
+		    echo '<td class="'.$class.'">'.$igazolatlanok_szama.'</td>';	
+
+		    // Jelenlegi fegyelmi fokozat
+		    $aktFokozat = intval($H[$diakId]['fegyelmi']['fokozat']);
+		    $hianyzasDb = intval($H[$diakId]['fegyelmi']['hianyzasDb']);
+		    $diakReferenciaDt = $H[$diakId]['fegyelmi']['referenciaDt'];
+		    if ($aktFokozat == 0) $class = 'ufokozat';
+		    else $class = 'fokozat';
+		    echo '<td class="'.$class.'" title="'.$diakReferenciaDt.'">';
+			echo $ADAT['fokozat2bejegyzesTipus'][$aktFokozat]['bejegyzesTipusNev'];
+		    echo '</td>';		// kapott már + dt
+		    
+                   // Adandó fegyelmi fokozat szempontjából érdekes, már lezárt hiányzások és késésekből, felszereléshiányokból "átváltott" hiányzások
+                    $fegyelmiIgazolatlanDb = $lhigazolatlan;
+                    if (_KESESI_IDOK_OSSZEADODNAK === true) {
+                        $fegyelmiIgazolatlanDb += floor($lkigazolatlanIdo / 45);
+                    } else {
+                        if (intval(_HANY_KESES_IGAZOLATLAN) > 0)
+                            $fegyelmiIgazolatlanDb += floor($lkigazolatlan / intval(_HANY_KESES_IGAZOLATLAN));
+                        if (intval(_HANY_FSZ_IGAZOLATLAN) > 0)
+                            $fegyelmiIgazolatlanDb += floor($ofelszereles / intval(_HANY_FSZ_IGAZOLATLAN));
+                    }
+                    // keressük visszafele az első adandó fokozatot...
+                    $j = count($ADAT['összes fokozat'])-1;
+                    while($ADAT['összes fokozat'][$j]['hianyzasDb'] > $fegyelmiIgazolatlanDb && $j >= 0) $j--;
+                    $megerdemeltFokozat = $ADAT['összes fokozat'][$j]['fokozat'];
+                    $megerdemeltBejegyzesTipusId = $ADAT['összes fokozat'][$j]['bejegyzesTipusId'];
+		    
+                    // Fegyelmi utáni igazolatlanok összesítése
+                    $fegyelmi = $fih;
+                    if (_KESESI_IDOK_OSSZEADODNAK === true) {
+                        // a fegyelmikbe beleszámítható az igazolatlanok száma rev2222+
+                        $fegyelmi += floor($fikIdo / 45);
+                    } else {
+                        if (intval(_HANY_KESES_IGAZOLATLAN) > 0)
+                            $fegyelmi += floor($fik / intval(_HANY_KESES_IGAZOLATLAN));
+                        if (intval(_HANY_FSZ_IGAZOLATLAN) > 0)
+                            $fegyelmi += floor($ff / intval(_HANY_FSZ_IGAZOLATLAN));
+                    }
+
+                    $_talalat = ($fegyelmi > 0 || $megerdemeltFokozat>$aktFokozat);
+                    
+                    if (($_talalat)&& $_TANEV['statusz']=='aktív') $class = 'fokozat';
+                    else $class = 'ufokozat';
+                    echo '<td class="'.$class.'">';
+
+                        ## FORM
+                        if (
+                            ($_talalat) && $_TANEV['statusz']=='aktív'
+                            && in_array($dAdat['aktualisStatusz'], array('jogviszonyban van','vendégtanuló'))
+                        ) {
+                        
+                            formBegin();
+                            echo '<input type="hidden" name="action" value="fegyelmiRogzitese" />'."\n";
+                            echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+                            echo '<input type="hidden" name="diakId" value="'.$diakId.'" />'."\n";
+                            echo '<input type="hidden" name="hianyzasDb" value="'.$fegyelmiIgazolatlanDb.'" />'."\n";
+                            if ($ADAT['referenciaDt'] == '') echo '<input type="hidden" name="ujReferenciaDt" value="'.$DH['igDt'].'" />';
+                            else echo '<input type="hidden" name="ujReferenciaDt" value="'.$ADAT['referenciaDt'].'" />';
+                            echo '<select name="bejegyzesTipusId">'."\n";
+                            foreach ($ADAT['összes fokozat'] as $f => $fAdat) {
+                                if (in_array($fAdat, $ADAT['jogosult fokozatok'])) $DIS = '';
+                                else $DIS = ' disabled="disabled" ';
+                                if ($megerdemeltBejegyzesTipusId == $fAdat['bejegyzesTipusId']) echo '<option'.$DIS.' value="'.$fAdat['bejegyzesTipusId'].'" selected="selected" class="megerdemelt">';
+                                else echo '<option'.$DIS.' value="'.$fAdat['bejegyzesTipusId'].'">';
+                                echo $fAdat['bejegyzesTipusNev'].' ('.$fAdat['hianyzasDb'].')';
+                                echo '</option>'."\n";
+                            }
+                            echo '</select>';
+                            echo '<input type="submit" value="'._SAVE.'" />';
+                            formEnd();
+                        }
+		    echo '</td>'."\n";
+		## -----
+		}
+		
+		echo '</tr>';
+		}
+		#
+	    echo '</tbody>'."\n";
+	
+	echo '</table>';
+    
+    }
+
+?>

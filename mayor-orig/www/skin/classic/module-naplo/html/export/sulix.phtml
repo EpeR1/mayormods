@@ -1,0 +1,43 @@
+<?php
+
+    function putExportForm($ADAT) {
+
+	echo '<div class="txt">';
+	echo '<div>';
+	echo '<p>A MaYoR és a SuliXerver legújabb verziói képesek együttműködésre, aminek számos előnye van a felhasználók és az 
+üzemeltetők számára. Az előnyök közé tartozik például, hogy az együttműködés során megoldottuk a közös felhasználókezelést, az 
+egypontos bejelentkezést, az automatikus adatmentést, automatikus rendszerfrissítést. Ezen kívül a rendszer rendkívül kompakt módon, 
+egyetlen szerverről is működhet.</p>';
+	echo '<p>A két rendszer együttműködésének előnyeit egyaránt kihasználhatják azok, akik a MaYoR mellett már használnak 
+SuliXervert, de azok is, akik még nem, és most fogják telepíteni.</p>';
+	echo '<p>Az együttműködésnek két alapvető üzemmódja van:</p>';
+	echo '<ul>';
+	echo '<li>Teljes áttérés SuliXerverre: ebben az esetben az új SuliXerveren futó MaYoR alapú SuliX Napló fogja ezentúl az 
+összes MaYoR funkciót ellátni. Ennek a megoldásnak az az előnye, hogy egy szerveren települ és üzemeltethető a komplett megoldás, 
+valamint a közös adatbázisnak köszönhetően az adatok mindig egységesek és konzisztensek maradnak. Az adatok migrálásához csupán egy 
+pendrive-ra van szükség, amelyre egy kattintással lementhetjük a meglévő MaYoR adatokat és a SuliXerveren egy kattintással beolvashatjuk 
+azokat.</li>';
+	echo '<li>Integráció SuliXerverrel: ennél a módszernél a jelenlegi MaYoR szerver megmarad, de közös felhasználói adatbázist 
+és autentikációt fog használni a SuliXerverrel. Ennek előnye, hogy külön szerveren is futhat a Napló, azonban néhány kényelmi 
+funkció nem lesz elérhető, pl. egypontos belépés, integrált mentés, adatok változtatása esetén azok automatikus átvezetése a másik 
+rendszerbe.</li>';
+	echo '</ul>';
+	echo '<p>Mindkét esetben kattintson a "Felhasználói azonosítók exportálása" gombra a lap alján, majd a keletkezett fájlt 
+másolja egy hordozható adattárolóra. Amennyiben nincs futó SuliXervere, telepítsen egyet a <a href="http://www.sulix.hu">www.sulix.hu</a> 
+oldalon leírtak alapján. 
+A SuliXerveren a szokványos beállításokon kívül még néhány beállítást meg kell tennie ahhoz, hogy a mentett adatokat be tudja olvasni. 
+Ehhez lépjen be a SuliXerverre adminisztrátorként, majd kattintson a Segédeszközök -> SuliXerver Napló beállítások fülre, válassza ki 
+az "Integrált napló használata" illetve a "Külső napló használata" lehetőséget és kövesse az ott leírtakat.</p>';
+
+	echo '</div>';
+
+	formBegin(array('method'=>'post','action'=>'','class'=>'export'));
+	echo '<input type="hidden" name="action" value="sulixExport" />'."\n";
+	echo '<input type="submit" value="'._EXPORT.'" />'."\n";
+	formEnd();
+
+	echo '</div>';
+
+    }
+
+?>

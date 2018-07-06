@@ -1,0 +1,32 @@
+<?php
+
+    function putHibabejelento($telephelyId) {
+
+	global $KERELEM_TAG;
+
+	formBegin(array('class'=>'hiba'));
+	echo '<input type="hidden" name="action" value="hibabejelentes" />';
+	echo '<input type="hidden" name="kerelemTelephelyId" value="'.$telephelyId.'" />';
+
+	echo '<h1>'._ESZREVETEL.'</h1>';
+	echo '<textarea name="txt" id="focus" maxlength="255">';
+
+	echo '</textarea>';
+
+	echo '<br />';
+
+	if (count($KERELEM_TAG)>0) {
+	    echo '<select name="kategoria">';
+	    echo '<option value=""></option>';
+	    for ($i=0; $i<count($KERELEM_TAG); $i++) {
+		$_v = $KERELEM_TAG[$i];
+    		echo '<option value="'.$_v.'">'.$_v.'</option>';
+	    }     
+	    echo '</select>';                                    
+	}
+	echo '<input type="submit" value="'._OK.'" />';
+
+	formEnd();
+    }
+
+?>

@@ -1,0 +1,167 @@
+<?php
+
+    function putDiakTankorJelentkezesForm($ADAT)  {
+	global $TBLOKKOK,$TID2TBLOKK;
+	$TBLOKKOK = $ADAT['tankorBlokkok'];
+
+	// $ARR[tankorId]=tankorBlokk
+	    for ($i=0; $i<count($ADAT['tankorok']['valaszthato']); $i++) {
+		for ($j=0; $j<count($ADAT['tankorok']['valaszthato'][$i]['blokkIdk']); $j++) {
+		    $_tankorId = $ADAT['tankorok']['valaszthato'][$i]['tankorId'];
+		    $_blokkId = $ADAT['tankorok']['valaszthato'][$i]['blokkIdk'][$j];
+		    if (!@in_array($_blokkId, $TID2TBLOKK[$_tankorId])) $TID2TBLOKK[$_tankorId][] = $_blokkId;
+		}
+	    }
+
+
+	formBegin();
+	echo '<input type="hidden" name="action" value="do" />';
+	echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />';
+	echo '<input type="hidden" name="refDt" value="'.$ADAT['refDt'].'" />';
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />';
+	echo '<input type="hidden" name="szemeszterId" value="'.$ADAT['szemeszterId'].'" />';
+
+	for ($i=0; $i<count($ADAT['tankorok']['diake']); $i++) {
+	    $_tankorId = $ADAT['tankorok']['diake'][$i]['tankorId'];
+	    $BENNE[$_tankorId] = true;
+	    for ($j=0; $j<count($TID2TBLOKK[$_tankorId]); $j++) {
+		$TBENNE[$TID2TBLOKK[$_tankorId][$j]] = $_tankorId;
+	    }
+	}
+	echo '<table align="center"><tr><td>'; /* konténer */
+	echo '<tr><td style="vertical-align:top">';
+	    /* Összesítő, tájékoztató táblázat */
+/*
+	    echo '<table class="tankor" align="center">';
+	    echo '<thead>';
+		echo '<tr><th colspan="2">'._KEPZES_ORASZAM.'</th></tr>';
+	    echo '</thead>';
+	    echo '<tfoot><tr><td colspan="2"></td></tr></tfoot>';
+	    if (is_array($ADAT['diakKepzes'])) foreach($ADAT['diakKepzes'] as $diakId => $DO) {
+		for($i=0; $i<count($DO); $i++) {
+		    $_kepzesId = $DO[$i]['kepzesId'];
+		    $ORASZAMOK = $ADAT['kepzesOraszam'][$_kepzesId];
+		    echo '<tbody>';
+		    echo '<tr><th colspan="2">'.$DO[$i]['kepzesNev'].'/'.$DO[$i]['tanev'].'</th></tr>';
+		    echo '<tr><td class="k">'.
+		    _KOTELEZOEN_VALASZTHATO.'</td><td>'.intval($ORASZAMOK['kötelezően választható']['sum']).' '._ORA.'</td>';
+		    echo '<tr><td class="k">'.
+		    _SZABADON_VALASZTHATO.'</td><td>'.intval($ORASZAMOK['szabadon választható']['sum']).' '._ORA.
+		    '</td></tr>';
+		    echo '</tbody>';
+		}
+	    }
+
+	    echo '<tbody>';
+		echo '<tr><th colspan="2">'._VALASZTOTT.'</th></tr>';
+		echo '<tr><td>'.
+		    _VALASZTOTT.'</td><td>'.intval(0).' '._ORA.
+		'</td></tr>';
+	    echo '</tbody>';
+
+	    echo '</table>'."\n";
+*/
+	echo '</td><td style="vertical-align: top">'; /* konténer */
+	echo '<table class="tankor" align="center"  >';
+	    echo '<thead>';
+		echo '<tr><th colspan="9">'._VALASZTHATO.'</th></tr>';
+		echo '<tr class="small"><th colspan="2">'._JELENTKEZ.'</th><th>'._ID.'</th><th>'._BLOKK.'</th><th>'._ORASZAM.'</th><th>'._TANKOR.'</th><th>'._LETSZAM.'</th><th>'._KERETLETSZAM.'</th><th>'.ucfirst(_TANAR).'</th></tr>';
+	    echo '</thead>';
+	    echo '<tfoot><tr><td colspan="9">';
+		//if (__) echo '<input type="submit" value="'._OK.'" />';
+		//else echo _LEZART;
+		if (__TARGYVALASZTAS===false) echo _NINCSTV;
+		elseif (__MINCONTROL===false) echo _ELOTV;
+		else echo _TV;
+
+	    echo '</td></tr>';
+	    echo '</tfoot>'."\n";
+
+	if ( (!__DIAK && !__NAPLOADMIN && !__VEZETOSEG) ||
+	     (__TARGYVALASZTAS!==true || !isset($ADAT['diakId'])) ) { $GVal = false; $GMutat = false;}
+	else {$GVal = true; $GMutat = true;}
+
+//	for ($j=0; $j<count($ADAT['osztalyok']); $j++) {
+//	    $_osztalyId = $ADAT['osztalyok'][$j]['osztalyId'];
+	    echo '<tbody>';
+	    for ($i=0; $i<count($ADAT['tankorok']['valaszthato']); $i++) {
+		$_tankorId = $ADAT['tankorok']['valaszthato'][$i]['tankorId'];
+		$_blokkIdk = $ADAT['tankorok']['valaszthato'][$i]['blokkIdk'];
+		$_valaszthato=$GVal;
+
+		for ($k=0; $k<count($_blokkIdk); $k++) {
+		    if ($TBENNE[$_blokkIdk[$k]]!='' && $TBENNE[$_blokkIdk[$k]]!=$_tankorId) $_valaszthato=false;
+		}
+		_row($ADAT['tankorok']['valaszthato'][$i],$BENNE,$i.$j.'1', $_valaszthato, $GMutat, $_oraszam);
+	    }
+
+/* 
+//	    Ha meg akarnánk mutatni az összes felvett tankörét:
+
+	    echo '<tr><th colspan="9">'._OSSZESFELVETT.'</th></tr>';
+	    for ($i=0; $i<count($ADAT['tankorok']['diake']); $i++) {
+		_row( $ADAT['tankorok']['diake'][$i] ,$BENNE,$i.$j.'2',false,false);
+	    }
+*/
+	    echo '</tbody>';
+//	}
+	echo '</table>';
+	echo '</td></tr></table>'; /* konténer */
+	formEnd();
+
+    }
+
+    function _row($D,$BENNE,$id,$MODOSITHATO,$showbutton=true) {
+
+	global $TBLOKKOK,$TID2TBLOKK;
+
+		$_benne = ($BENNE[$D['tankorId']]) ? true: false;
+		$_class = ($_benne) ? 'benne ':'';
+		$_chk = ($_benne) ? ' checked="checked" ':'';
+		$_dsb =   ($MODOSITHATO && $D['max']>$D['letszam']) ? '': ' disabled="disabled" readonly="readonly" ';
+		$_dsbLE = ($MODOSITHATO && (__MINCONTROL===false || (__MINCONTROL===true && $D['min']<$D['letszam']))  ) ? '': ' disabled="disabled" readonly="readonly" ';
+		
+		if ($D['min']<$D['letszam'] && $D['max']>$D['letszam']) $_letszamClass = 'lok';
+		elseif ($D['min']==$D['letszam']) $_letszamClass = 'lok lokbottom';
+		elseif ($D['max']==$D['letszam']) $_letszamClass = 'lok loktop';
+		elseif ($D['min']>$D['letszam']) $_letszamClass = 'lkeves';
+		elseif ($D['min']<$D['letszam']) $_letszamClass = 'lsok';
+
+		for ($i=0; $i<count($D['blokkIdk']); $i++) {
+		    $_class .= " B".$D['blokkIdk'][$i];
+		}
+		echo "\n\n".'<tr class="'.$_class.'">';
+		    if (!$_benne) {
+			echo '<td>';
+			    if ($showbutton) echo '<input type="submit" class="felvesz" id="C'.$id.'" name="UJtankorId'.$D['tankorId'].'" value="'._FELVESZ.'" '.$_chk.$_dsb.'/>';
+			    else echo '&nbsp;'; // for IE
+			echo '</td><td>&nbsp;</td>';
+		    } else {
+			echo '<td>&nbsp;</td><td>';
+			    if ($showbutton) echo '<input type="submit" class="lead" id="C'.$id.'" name="DELtankorId'.$D['tankorId'].'" value="'._LEAD.'" '.$_dsbLE.'/>';
+			    else echo '&nbsp;'; // for IE
+			echo '</td>';
+		    }
+		    echo '<td>'.( (is_array($D['blokkIdk']))?implode('|',$D['blokkIdk']).'/':'' ).$D['tankorId'].'</td>';
+		    echo '<td>';
+			for ($i=0; $i<count($D['blokkIdk']); $i++) {
+			    echo $TBLOKKOK['blokkNevek'][$D['blokkIdk'][$i]];
+			    if ($i<count($D['blokkIdk'])-1) echo ', ';
+			}
+			if (count($D['blokkIdk'])==0)
+			    echo '&nbsp;';
+		    echo '</td>';
+		    echo '<td class="szam">'.$D['oraszam'].'</label></td>';
+		    echo '<td>'.$D['tankorNev'].'</td>';
+		    //echo '<td><input type="radio" name="B|'.$D['blokkIdk'][0].'" value="'.$D['tankorId'].'" /></td>';
+		    echo '<td class="szam">'.$D['letszam'].'</td>';
+		    echo '<td class="'.$_letszamClass.'" style="text-align: center">'.$D['min'].'-'.$D['max'].'</td>';
+		    echo '<td>';
+			for ($k=0; $k<count($D['tanarok']); $k++) { echo $D['tanarok'][$k]['tanarNev']; if ($k<count($D['tanarok'])-1) echo ', ';}
+			if (count($D['tanarok'])==0) echo '&nbsp;';
+		    echo '</td>';
+		echo '</tr>'."\n";
+
+    }
+
+?>

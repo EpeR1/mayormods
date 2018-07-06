@@ -1,0 +1,25 @@
+div#fbConnect {
+    max-width: 500px;
+    text-align: center;
+    margin: 40px auto;
+    height: 5em;
+    font-size: large;
+    line-height: 5em;
+    vertical-align: middle;
+    color: #FFF;
+}
+div#fbConnect.valid {
+    background-color: #90EE90;
+}
+div#fbConnect.notvalid {
+    background-color: orange;
+}
+div#fbConnect.notActive {
+    background-color: red;
+}
+div#fbConnect.grant {
+    background-color: #3b5998;
+}
+div#fbConnect span {
+    padding-right:4px;
+}

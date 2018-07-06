@@ -1,0 +1,1230 @@
+<?php
+
+    if (_RIGHTS_OK !== true) die();
+
+    require_once('include/share/date/names.php');
+
+    if (_RUNLEVEL!=='cron') putEszkozSor();
+
+    function putUjIntezmeny() {
+
+	formBegin();
+	echo '	<input type="hidden" name="action" value="ujIntezmeny" />
+
+		_OMKOD(max7): <input type="text" name="OMKod" id="OMKod" value="0000000" maxlength="7" />
+		_ROVIDNEV(sql): <input type="text" name="rovidnev" id="rovidnev" />
+		_NEV: <input type="text" name="nev" id="nev" />
+
+		<input type="submit" />
+	';
+	formEnd();
+
+    }
+
+    function putEszkozSor() {
+
+	global $TOOL,$policy;
+
+	if (__NOPAGEHELP!==true && (defined('__PAGEHELP') || isset($TOOL['pageHelp']) && defined('__'.$TOOL['pageHelp']))) $showHelp = true;
+	else $showHelp=false;
+
+	$colspan=3;
+
+	$_diakId = readVariable($_POST['diakId'],'id',readVariable($_GET['diakId'],'id',(defined('__USERDIAKID')?__USERDIAKID:null)));
+	$_tanarId = readVariable($_POST['tanarId'],'id',readVariable($_GET['tanarId'],'id',(defined('__USERTANARID')?__USERTANARID:null)));
+	$_tankorId = readVariable($_POST['tankorId'],'id',readVariable($_GET['tankorId'],'id',(null)));
+
+	echo '<table align="center" cellspacing="0" class="toolBar hideShowContainer"><tr class="first">';
+	if (is_array($TOOL['vissza'])) {
+	    echo '<th style="width:32px;">';
+		putToolFormStart('vissza', '');
+		echo '<button type="submit" class="toolBarLeft icon-'.$TOOL['vissza']['icon'].'"></button>';
+		putToolFormStop(false, "");
+
+	    echo '</th>';
+	    $colspan++;
+	}
+
+	echo '<td class="toolBarTitle" id="toolBarTitle" colspan="3">';
+	    if (defined('__PAGETITLE')) echo __PAGETITLE.'<br/>';
+	    echo '<a href="'.href('index.php?page=naplo&sub=intezmeny&f=valtas').'">';
+		if (defined('__TELEPHELYID')) echo '<span id="toolBarIntezmeny" title="TelephelyId:".'.__TELEPHELYID.'>'.__INTEZMENY .', ' . __TANEV.'/'.(__TANEV+1).'</span>';
+		else echo '<span id="toolBarIntezmeny">'.__INTEZMENY . '/' . __TANEV.'</span>';
+	    echo '</a>';
+	    if ($showHelp) echo '<span id="toolBarHelpButton" class="onClickHideShow">?</span>';
+	echo '</td>'."\n";
+	reset($TOOL); 
+	// TESZT	echo '<td class="toolBarTool cella" style="position:; vertical-align:top; background-color: #5A85B8">';
+	//	    echo '<div class="icon-search" style="color:white; font-size:30px;max-width:30px;"></div>';
+	//	echo '</td>';
+	foreach ( $TOOL as $tool => $params ) {
+//	    if ( function_exists( $func = "put$tool" ) && $params['tipus']=='cella') {
+	    if ( isset($params['tipus']) && $params['tipus']=='cella') {
+		if (isset($params['title'])) $title = '__'.$params['title'];
+		else $title = '__'.nagybetus($tool).'TITLE';
+
+		echo '<td class="toolBarTool cella" style="position:; vertical-align:top">';
+		echo '<table style="/*border-bottom:solid 1px #558;*/" >'."\n";
+		    if (defined($title)) {
+			echo '<tr><th>';
+			    echo constant($title);
+			echo '</th><th>';
+			    if ($GLOBALS['skin'] != 'vakbarat') echo '<button type="button" value="x" class="toolBarClear"><span class="icon-remove-circle"></span></button>';
+			echo '</th></tr>'."\n";
+		    }
+		    echo '<tr><td colspan="2">'."\n";
+		    $func = "put$tool";
+		    if (function_exists( $func )) { $func(); }
+		    else { putGeneralSelect($tool); }
+		    echo '</td></tr>'."\n";
+		echo '</table>'."\n";
+
+		echo '</td>'."\n";
+		$colspan++;
+	    } elseif (isset($params['tipus']) && $params['tipus'] == 'sor') { $sorDb++; }
+	}
+
+	if (__PAGE_PRESET===true) {
+	    echo '<th>';
+
+		putToolFormStart('preSetSave', '');
+		echo '<button type="submit" class="icon-heart-alt toolBarBtn"></button>';
+		echo '<input type="hidden" name="preSetSave" value="1" />';
+		putPostParams($TOOL['general']['post']);
+		putToolFormStop(false, "");
+
+		putToolFormStart('preSetLoad', '');
+		echo '<button type="submit" class="icon-reverse-alt toolBarBtn"></button>';
+		echo '<input type="hidden" name="preSetLoad" value="1" />';
+		// putPostParams($TOOL['general']['post']);
+		putToolFormStop(false, "");
+
+	    echo '</th>';
+	}
+	if ($_diakId>0 && _POLICY=='private') {
+	    echo '<td class="szemely diakNev" data-diakid="'.$_diakId.'">';
+		echo '<span class="icon-child" data-diakid="'.$_diakId.'"></span>'; // itt is kell a data...
+	    echo '</td>'."\n";
+	} elseif ($_tanarId>0 && _POLICY=='private') {
+	    echo '<td class="szemely tanarNev" data-tanarid="'.$_tanarId.'">';
+		echo '<span class="icon-adult" data-tanarid="'.$_tanarId.'"></span>'; // itt is kell a data...
+	    echo '</td>'."\n";
+	} 
+	if ($_tankorId>0 && _POLICY=='private') { //--TODO css class szemely->csoport
+	    echo '<td class="szemely tankorAdat" data-tankorid="'.$_tankorId.'">';
+		echo '<span class="icon-group" data-tankorid="'.$_tankorId.'"></span>';
+	    echo '</td>'."\n";
+	}
+	echo '<td id="toolBarKerelem">';
+	    //echo '<div id="toolBarHamburgerVezerlo" style="height:100%; padding:4px; font-size:20px;">';
+	    //	echo '<span  class="icon-th-list"></span>';
+	    //echo '</div>';
+	    if ($policy!='public') {
+		$href = href('index.php?page=naplo&sub=hibabejelento&f=hibabejelento');
+		echo '<a href="'.$href.'" class="noprint">';
+		//echo '<img src="skin/classic/module-naplo/img/hibabejelento/buggie.gif" alt="'._HIBABEJELENTES.'" />';
+		echo '<img src="skin/classic/module-naplo/img/hibabejelento/buggie.svg" style="height:34px;" alt="'._HIBABEJELENTES.'" id="mayorBuggie" />';
+		echo '</a>';
+	    }
+	echo '</td>'."\n";
+	echo '</tr>'."\n";
+
+	if (__NOPAGEHELP!==true) {
+	    if (isset($TOOL['pageHelp']) && defined('__'.$TOOL['pageHelp']))
+		echo '<tr><td colspan="'.$colspan.'" class="help openable" style="display:none">'.constant('__'.$TOOL['pageHelp']).'</td></tr>'."\n";
+	    elseif (defined('__PAGEHELP')) 
+		echo '<tr><td colspan="'.$colspan.'" class="help openable" style="display:none">'.__PAGEHELP.'</td></tr>'."\n";
+	}
+
+	reset($TOOL);
+	foreach ( $TOOL as $tool => $params ) {
+	    if ( function_exists( $func = "put$tool" ) && $params['tipus']=='sor') {
+		echo '<tr><td colspan="'.($colspan).'">';
+
+		echo '<table align="center" cellspacing="0"><tr>';
+		if (isset($params['title'])) $title = '__'.$params['title'];
+		else $title = '__'.nagybetus($tool).'TITLE';
+		if (defined($title)) echo '<th class="toolBarTool">'.constant($title).'</th>'."\n";
+
+		echo '<td class="toolBarTool sor">';
+		$func();
+		echo '</td></tr></table>';
+		echo '</td></tr>';
+	    }	    
+	}
+	echo '</table>';
+
+    }
+
+    function putPostParams($postParams, $postOverride=array()) {
+
+	if (is_array($postParams)) 
+	for ($i = 0; $i < count($postParams); $i++) {
+		$postParam = $postParams[$i];
+		if (is_array($_POST[$postParam])) {
+		    for ($j = 0; $j < count($_POST[$postParam]); $j++) {
+			echo '<input type="hidden" name="'.$postParam.'[]" value="'.str_replace('"', '', $_POST[$postParam][$j]).'" />'."\n";
+		    }
+		} else {
+		    echo '<input type="hidden" name="'.$postParam.'" value="'.str_replace('"', '', $_POST[$postParam]).'" />'."\n";
+		}
+	}
+	if (is_array($postOverride) && count($postOverride)>=1) {
+	    foreach($postOverride as $_k => $_v) 
+		echo '<input type="hidden" name="'.$_k.'" value="'.str_replace('"', '', $_v).'" />'."\n";
+	}
+    }
+
+    function setParam($toolName, $paramName) {
+
+	global $TOOL;
+
+	if (isset($TOOL[$toolName]['paramName'])) $paramName = $TOOL[$toolName]['paramName'];
+	else $TOOL[$toolName]['paramName'] = $paramName;
+	global $$paramName;
+
+	$TOOL[$toolName]['paramValue'] = ($$paramName != '' || $$paramName === 0) ? $$paramName : $TOOL[$toolName][$paramName];
+
+    }
+
+    function putToolFormStart($toolName, $paramName, $_action='') {
+
+	global $TOOL;
+	//if (!isset($_action)) 
+	$_action = href('index.php',array('page','sub','f','lang','skin','sessionID','policy'));
+	setParam($toolName, $paramName);
+	formBegin(array('id' => $toolName.'Tool', 'method' => 'post', 'action'=> $_action));
+	if (isset($TOOL[$toolName]['action'])) 
+	    echo '<input type="hidden" name="action" value="'.$TOOL[$toolName]['action'].'" />'."\n";
+	putPostParams($TOOL[$toolName]['post'],$TOOL[$toolName]['postOverride']);
+	echo '<table><tr><td>'."\n";
+
+    }
+
+    function putToolFormStop($putSubmitButton=true, $putTextButton="") {
+
+	echo '</td>';    
+	if ($putSubmitButton===true) {
+	    echo '<td class="sbmt">'."\n";
+//	    echo '<input style="float: right; height:17px; width:17px;" class="toolSubmit" type="image" name="kiválaszt" value="kiválaszt" src="skin/classic/module-naplo/img/toolSubmit.png" />'."\n";
+	    if ($GLOBALS['skin'] != 'vakbarat') 
+		echo '<button type="submit" class="toolSubmit" value=""><span class="icon-ok"></span></button>';
+	    else echo '<input type="submit" class="toolSubmit" name="kivalaszt" value="kiválaszt" />';
+	    echo '</td>';
+	}
+	if ($putTextButton!='') {
+	    echo '<td>'."\n";
+	    echo '<input style="float: right;" class="toolSubmit" type="button" name="" value="'.$putTextButton.'" />'."\n";
+	    echo '</td>';
+	}
+	echo '</tr></table>'."\n";
+	formEnd();
+    }
+
+    /* Toolok */
+
+    function putGeneralSelect($tool) {
+
+	global $TOOL;
+	
+	putToolFormStart($tool, $TOOL[$tool]['paramName']);
+
+	    echo '<select name="'.$TOOL[$tool]['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array($TOOL[$tool]['paramValue'] => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL[$tool]['adatok']); $i++) {
+		    $M = $TOOL[$tool]['adatok'][$i];
+		    $id = $M[ $TOOL[$tool]['paramName'] ];
+		    $nev = $M[ $TOOL[$tool]['paramDesc'] ];
+		    echo '<option value="'.$id.'"'.$SEL[$id].'>'.htmlspecialchars($nev);
+		    if ($id != $nev) echo ' ('.$id.')';
+		    echo '</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+	
+    }
+
+    function putSzamSelect() {
+
+	global $TOOL;
+	putToolFormStart('szamSelect', 'szam');
+	    echo '<select name="'.$TOOL['szamSelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array($TOOL['szamSelect']['paramValue'] => ' selected="selected" ');
+		foreach ($TOOL['szamSelect']['szamok'] as $_szam) {
+		    echo '<option value="'.$_szam.'"'.$SEL[$_szam].'>'.$_szam.'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+    function putIntezmenySelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('intezmenySelect', 'intezmeny');
+	    echo '<select name="'.$TOOL['intezmenySelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array($TOOL['intezmenySelect']['paramValue'] => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['intezmenySelect']['intezmenyek']); $i++) {
+		    $I = $TOOL['intezmenySelect']['intezmenyek'][$i];
+		    echo '<option value="'.$I['rovidNev'].'"'.$SEL[$I['rovidNev']].'>'.htmlspecialchars($I['nev']).' ('.$I['OMKod'].')'.'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+    function putTelephelySelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('telephelySelect', 'telephelyId');
+	    echo '<select name="'.$TOOL['telephelySelect']['paramName'].'" class="onChangeSubmit" style="width:50px">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array($TOOL['telephelySelect']['paramValue'] => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['telephelySelect']['telephelyek']); $i++) {
+		    $I = $TOOL['telephelySelect']['telephelyek'][$i];
+		    echo '<option value="'.$I['telephelyId'].'"'.$SEL[$I['telephelyId']].'>'.$I['telephelyRovidNev'].' ('.htmlspecialchars($I['telephelyNev']).')</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+    function putTanevSelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('tanevSelect', 'tanev');
+	    echo '<select name="'.$TOOL['tanevSelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array($TOOL['tanevSelect']['paramValue'] => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['tanevSelect']['tanevek']); $i++) {
+		    $T = $TOOL['tanevSelect']['tanevek'][$i];
+		    echo '<option value="'.$T.'"'.$SEL[$T].'>'.$T.'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+    function putSzemeszterSelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('szemeszterSelect', 'szemeszterId');
+	    echo '<select name="'.$TOOL['szemeszterSelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array( $TOOL['szemeszterSelect']['paramValue'] => ' selected="selected" ');
+		for ($i = 0; $i < count($TOOL['szemeszterSelect']['szemeszterek']); $i++) {
+		    $T = $TOOL['szemeszterSelect']['szemeszterek'][$i];
+		    echo '<option value="'.$T['szemeszterId'].'"'.$SEL[$T['szemeszterId']].'>'.$T['tanev'].' / '.$T['szemeszter'].'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+    function putFelevSelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('felevSelect', 'szemeszter');
+	    echo '<select name="'.$TOOL['felevSelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array( $TOOL['felevSelect']['paramValue'] => ' selected="selected" ');
+		for ($i = 1; $i <= 2 ; $i++) {
+		    echo '<option value="'.$i.'"'.$SEL[$i].'>'.$i.'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+    
+    function putTargySorrendSelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('targySorrendSelect', 'sorrendNev');
+	    echo '<select name="'.$TOOL['targySorrendSelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array( $TOOL['targySorrendSelect']['paramValue'] => ' selected="selected" ');
+		for ($i = 0; $i < count($TOOL['targySorrendSelect']['sorrendNevek']); $i++) {
+		    $T = $TOOL['targySorrendSelect']['sorrendNevek'][$i];
+		    echo '<option value="'.$T.'"'.$SEL[$T].'>'.$T.'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+    
+    function putMunkakozossegSelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('munkakozossegSelect', 'mkId');
+	    echo '<select name="'.$TOOL['munkakozossegSelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array($TOOL['munkakozossegSelect']['paramValue'] => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['munkakozossegSelect']['munkakozossegek']); $i++) {
+		    $M = $TOOL['munkakozossegSelect']['munkakozossegek'][$i];
+		    echo '<option value="'.$M['mkId'].'"'.$SEL[$M['mkId']].'>'.$M['leiras'];
+		    if ($M['mkVezNev']!='') echo ' ('.htmlspecialchars($M['mkVezNev']).') ';
+		    echo '</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+    function putTargySelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('targySelect', 'targyId');
+	    echo '<select name="'.$TOOL['targySelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array($TOOL['targySelect']['paramValue'] => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['targySelect']['targyak']); $i++) {
+		    $M = $TOOL['targySelect']['targyak'][$i];
+		    echo '<option value="'.$M['targyId'].'"'.$SEL[$M['targyId']].'>'.htmlspecialchars($M['targyNev']).' ('.$M['targyId'].')'.'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+    function putMunkatervSelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('munkatervSelect', 'munkatervId');
+	    echo '<select name="'.$TOOL['munkatervSelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($TOOL['munkatervSelect']['paramValue'] => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['munkatervSelect']['munkatervek']); $i++) {
+		    $M = $TOOL['munkatervSelect']['munkatervek'][$i];
+		    echo '<option value="'.$M['munkatervId'].'"'.$SEL[$M['munkatervId']].'>'.htmlspecialchars($M['munkatervNev']).' ('.$M['munkatervId'].')'.'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+    function putTanarSelect() {
+
+	global $TOOL;
+	$StatuszJel = array(
+	    'jogviszonya lezárva' => ' [-]',
+	    'tartósan távol' => ' [t]',
+	    'külső óraadó' => ' [k]'
+	);
+
+	putToolFormStart('tanarSelect', 'tanarId');
+	    echo '<select name="'.$TOOL['tanarSelect']['paramName'].'" class="onChangeSubmit" accesskey="t">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($TOOL['tanarSelect']['paramValue'] => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['tanarSelect']['tanarok']); $i++) {
+		    $M = $TOOL['tanarSelect']['tanarok'][$i];
+//		    echo '<option value="'.$M['tanarId'].'"'.$SEL[$M['tanarId']].'>'.(($M['aktualisStatusz'] == 'jogviszonyban van')?'':'[-] ').htmlspecialchars($M['tanarNev']).' ('.$M['tanarId'].')'.'</option>';
+		    echo '<option value="'.$M['tanarId'].'"'.$SEL[$M['tanarId']].'>'.htmlspecialchars($M['tanarNev']).' ('.$M['tanarId'].')'.$StatuszJel[$M['statusz']].'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+    function putDiakSelect() {
+
+	global $TOOL;
+
+	putToolFormStart('diakSelect', 'diakId');
+
+	if ($TOOL['diakSelect']['searchable']==true && $TOOL['diakSelect']['paramValue']=='' && count($TOOL['diakSelect']['diakok'])>100) {
+	    echo '<span style="display:none" id="diakSelectIcon">ዖ</span>';
+	    echo '<input type="text" name="diakSelectPattern" id="diakSelectPattern" value="" placeholder="'._NEV.'" />';
+	    echo '<select style="display:none" id="diakSelectLista" name="'.$TOOL['diakSelect']['paramName'].'" class="onChangeSubmit" accesskey="d">';
+	    echo '<option value=""></option>';
+	    echo '</select>';
+	} else {
+	    echo '<span style="display:inline" id="diakSelectIcon" class="icon-view-mode"></span>'; //ዖ
+	    echo '<input style="display:none;" type="text" name="diakSelectPattern" id="diakSelectPattern" value="" placeholder="'._NEV.'"/>';
+	    echo '<select id="diakSelectLista" name="'.$TOOL['diakSelect']['paramName'].'" class="onChangeSubmit" accesskey="d">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($TOOL['diakSelect']['paramValue'] => ' selected="selected" ');
+		foreach ($TOOL['diakSelect']['statusz'] as $statusz) {
+		    if (count($TOOL['diakSelect']['statusz']) > 1) echo '<optgroup label="'.$statusz.'">'."\n";
+		    for ($i = 0; $i < count($TOOL['diakSelect']['diakok']); $i++) {
+			$M = $TOOL['diakSelect']['diakok'][$i];
+			if ($M['aktualisStatusz'] == 'magántanuló') $statuszStr = ' - [m]';
+			elseif ($M['aktualisStatusz'] == 'jogviszonya lezárva') $statuszStr = ' - [-]';
+			elseif ($M['aktualisStatusz'] == 'jogviszonya felfüggesztve') $statuszStr = ' - [f]';
+			else $statuszStr = '';
+			if ($M['aktualisStatusz'] == $statusz) { 
+			    echo '<option value="'.$M['diakId'].'"'.$SEL[$M['diakId']].'>';
+			    if (_POLICY=='private') {
+				echo htmlspecialchars($M['diakNev']).' ('.$M['diakId'].')'.$statuszStr;
+			    } else {
+				$_tmpNev = explode(' ',str_replace('  ',' ',$M['diakNev']));
+				$_tmpStr = '';
+				// echo serialize($_tmpNev);
+				for ($n=0; $n<count($_tmpNev); $n++) $_tmpStr .= mb_substr($_tmpNev[$n],0,1).'.';
+				echo htmlspecialchars($_tmpStr);
+			    }
+			    echo '</option>';
+			}
+		    }
+		    if (count($TOOL['diakSelect']['statusz']) > 1) echo '</optgroup>'."\n";
+		}
+	    echo '</select>';
+	} // <100
+	putToolFormStop();
+
+    }
+
+    function putDiakLapozo() {
+
+	global $TOOL;
+	
+	putToolFormStart('diakLapozo', 'diakId');
+
+	for ($i = 0; $i < count($TOOL['diakLapozo']['diakok']); $i++) {
+	    if ($TOOL['diakLapozo']['diakok'][$i]['diakId'] == $TOOL['diakLapozo']['paramValue']) {
+		$M[0] = $TOOL['diakLapozo']['diakok'][$i-1];
+		$M[1] = $TOOL['diakLapozo']['diakok'][$i];
+		$M[2] = $TOOL['diakLapozo']['diakok'][$i+1];
+		break;
+	    }
+	}
+	    if (is_array($M[0])) echo '<button type="submit" class="lapozo balra" name="diakId" value="'.$M[0]['diakId'].'">'.htmlspecialchars($M[0]['diakNev']).'</button>';
+
+	    if ($TOOL['diakLapozo']['withSelect'] === true) {
+		echo '<select id="diakSelectLista" name="'.$TOOL['diakLapozo']['paramName'].'" class="onChangeSubmit" accesskey="d">';
+		    echo '<option value="">------------------------------ '.__DIAKLAPOZOTITLE.' ------------------------------------</option>'."\n";
+		    $SEL = array($TOOL['diakLapozo']['paramValue'] => ' selected="selected" ');
+		    foreach ($TOOL['diakLapozo']['statusz'] as $statusz) {
+			if (count($TOOL['diakLapozo']['statusz']) > 1) echo '<optgroup label="'.$statusz.'">'."\n";
+			for ($i = 0; $i < count($TOOL['diakLapozo']['diakok']); $i++) {
+			    $D = $TOOL['diakLapozo']['diakok'][$i];
+			    if ($D['aktualisStatusz'] == 'magántanuló') $statuszStr = ' - [m]';
+			    elseif ($D['aktualisStatusz'] == 'jogviszonya lezárva') $statuszStr = ' - [-]';
+			    elseif ($D['aktualisStatusz'] == 'jogviszonya felfüggesztve') $statuszStr = ' - [f]';
+			    else $statuszStr = '';
+			    if ($D['aktualisStatusz'] == $statusz) echo '<option value="'.$D['diakId'].'"'.$SEL[$D['diakId']].'>'.htmlspecialchars($D['diakNev']).' ('.$D['diakId'].')'.$statuszStr.'</option>';
+			}
+			if (count($TOOL['diakLapozo']['statusz']) > 1) echo '</optgroup>'."\n";
+		    }
+		echo '</select>';
+	    } else {
+		echo '<span class="lapozo">'.htmlspecialchars($M[1]['diakNev']).'</span>';
+	    }
+	    if (is_array($M[2])) echo '<button type="submit" class="lapozo jobbra" name="diakId" value="'.$M[2]['diakId'].'">'.htmlspecialchars($M[2]['diakNev']).'</button>';
+
+	putToolFormStop(false);
+
+    }
+
+    function putTableSelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('tableSelect', 'table');
+	    echo '<select name="'.$TOOL['tableSelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($TOOL['tableSelect']['paramValue'] => ' selected="selected" ');
+		for ($i = 0; $i < count($TOOL['tableSelect']['naplo_intezmeny']); $i++) {
+		    $t = $TOOL['tableSelect']['naplo_intezmeny'][$i];
+		    echo '<option value="'."naplo_intezmeny:$t".'"'.$SEL["naplo_intezmeny:$t"].'>'.$t.' ('.__INTEZMENY.')</option>';
+		}
+		for ($i = 0; $i < count($TOOL['tableSelect']['naplo']); $i++) {
+		    $t = $TOOL['tableSelect']['naplo'][$i];
+		    echo '<option value="'."naplo:$t".'"'.$SEL["naplo:$t"].'>'.$t.' ('.__TANEV.')</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+    }
+    
+    function putOsztalySelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('osztalySelect', 'osztalyId');
+	    echo '<select name="'.$TOOL['osztalySelect']['paramName'].'" class="onChangeSubmit" accesskey="o">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array($TOOL['osztalySelect']['paramValue'] => ' selected="selected" ');
+		for ($i = 0; $i < count($TOOL['osztalySelect']['osztalyok']); $i++) {
+		    $M = $TOOL['osztalySelect']['osztalyok'][$i];
+		    if (isset($M['osztalyJel'])) $osztalyJel = $M['osztalyJel'].' - '.$M['kezdoTanev'];
+		    else $osztalyJel = $M['kezdoTanev'].'/'.$M['jel'];
+		    if (is_array($M['osztalyfonok']) && $M['osztalyfonokNev']!=''){
+			$osztalyJel .= ' ('.htmlspecialchars($M['osztalyfonokNev']).')';
+		    }
+		    echo '<option value="'.$M['osztalyId'].'"'.$SEL[$M['osztalyId']].'>'.$osztalyJel.'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+    }
+
+    function putTanmenetSelect() {
+
+	global $TOOL;
+	putToolFormStart('tanmenetSelect', 'tanmenetId');
+	    echo '<select name="'.$TOOL['tanmenetSelect']['paramName'].'" class="onChangeSubmit" accesskey="t">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array($TOOL['tanmenetSelect']['paramValue'] => ' selected="selected" ');
+		for ($i = 0; $i < count($TOOL['tanmenetSelect']['tanmenetek']); $i++) {
+		    $M = $TOOL['tanmenetSelect']['tanmenetek'][$i];
+		    $tanmenetNev = $M['tanmenetNev'].' ('.$M['tanmenetId'].') - '.$M['tanarNev'].' '.$M['dt'].' ('.$M['statusz'].')';
+		    echo '<option value="'.$M['tanmenetId'].'"'.$SEL[$M['tanmenetId']].'>'.htmlspecialchars($tanmenetNev).'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+    }
+
+    function putTankorSelect() {
+
+	global $TOOL;
+	
+	if (count($TOOL['tankorSelect']['tankorok'])>0) {
+	    if ($TOOL['tankorSelect']['tankorIdsDt']!='') $_info = true; else $_info=false;
+	    putToolFormStart('tankorSelect', 'tankorId');
+	    echo '<select name="'.$TOOL['tankorSelect']['paramName'].'" class="onChangeSubmit" accesskey="k" title="'.$TOOL['tankorSelect']['tankorIdsDt'].'">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($TOOL['tankorSelect']['paramValue'] => ' selected="selected" ');
+		if (is_array($TOOL['tankorSelect']['tankorIds'])) {
+		    if ($_info) 		echo '<optgroup label="--['.$TOOL['tankorSelect']['tankorIdsDt'].']-----------------">';
+		    for ($i = 0; $i < count($TOOL['tankorSelect']['tankorok']); $i++) {
+			$M = $TOOL['tankorSelect']['tankorok'][$i];
+			if (in_array($M['tankorId'], $TOOL['tankorSelect']['tankorIds']))
+			    echo '<option value="'.$M['tankorId'].'"'.$SEL[$M['tankorId']].'>'.htmlspecialchars($M['tankorNev']).' ('.$M['tankorId'].')'.'</option>';
+		    }
+		    if ($_info) 		    echo '</optgroup>';
+		    if ($_info) 		    echo '<optgroup label="--------------------------------------">';
+		    for ($i = 0; $i < count($TOOL['tankorSelect']['tankorok']); $i++) {
+			$M = $TOOL['tankorSelect']['tankorok'][$i];
+			if (!in_array($M['tankorId'], $TOOL['tankorSelect']['tankorIds']))
+			    echo '<option value="'.$M['tankorId'].'"'.$SEL[$M['tankorId']].'>'.htmlspecialchars($M['tankorNev']).' ('.$M['tankorId'].')'.'</option>';
+		    }
+		    if ($_info) 		    echo '</optgroup>';
+		} else {
+		    for ($i = 0; $i < count($TOOL['tankorSelect']['tankorok']); $i++) {
+			$M = $TOOL['tankorSelect']['tankorok'][$i];
+			echo '<option value="'.$M['tankorId'].'"'.$SEL[$M['tankorId']].'>'.htmlspecialchars($M['tankorNev']).' ('.$M['tankorId'].')'.'</option>';
+		    }
+		}
+	    echo '</select>';
+	    putToolFormStop();
+	}
+
+    }
+
+    function putTanevLapozo() {
+	global $TOOL;
+
+	putToolFormStart('tanevLapozo', 'tanev');
+	    echo '&larr;';
+	    echo '<input type="submit" name="tanev" value="'.($TOOL['tanevLapozo']['tanev']-1).'" />';
+	echo '</td>';
+	echo '<th>'.$TOOL['tanevLapozo']['tanev'].'</th>';
+	echo '<td>';
+	    echo '<input type="submit" name="tanev" value="'.($TOOL['tanevLapozo']['tanev']+1).'" />';
+	    echo '&rarr;';
+	echo '</td></tr></table>';
+	formEnd();
+    }
+
+    function putDatumSelect() {
+	global $TOOL;
+	$paramName = $TOOL['datumSelect']['paramName'];
+	global $$paramName;
+
+	$aHetNapjai = json_decode(AHETNAPJAI);
+
+	if ($TOOL['datumSelect']['lapozo']) {
+	    // Előző és következő dátum meghatározása
+	    $elozo = $kovetkezo = '';
+	    if (is_array($TOOL['datumSelect']['napok'])) {
+		for ($i = 0; $i < count($TOOL['datumSelect']['napok']); $i++) {
+		    if ($TOOL['datumSelect']['napok'][$i] == $$paramName) {
+			$kovetkezo = $TOOL['datumSelect']['napok'][$i+1];
+			$elozo = $TOOL['datumSelect']['napok'][$i-1];
+			break;
+		    }
+		}
+	    } else {
+		$tolTime = strtotime($TOOL['datumSelect']['tolDt']);
+		$igTime = strtotime($TOOL['datumSelect']['igDt']);
+		$count = $TOOL['datumSelect']['hanyNaponta'];
+		for ($t = $tolTime; $t <= $igTime; $t = strtotime("$count days", $t)) {
+		    $d = date('Y-m-d', $t);
+		    if ($d == $$paramName) {
+			if (strtotime("$count days", $t) <= $igTime) $kovetkezo = date('Y-m-d', strtotime("$count days", $t));
+			break;
+		    }
+		    $elozo = $d;
+		}
+	    }
+	    echo '<table><tr>';
+	    if ($elozo!='') {
+		echo '<td>';
+		formBegin(array('method'=>'post', 'action'=>href('index.php',array('page','sub','f','lang','skin','sessionID','policy'))));
+		echo '<table><tr><td>';    
+		if (isset($TOOL['datumSelect']['action'])) 
+		    echo '<input type="hidden" name="action" value="'.$TOOL['datumSelect']['action'].'" />'."\n";
+		putPostParams($TOOL['datumSelect']['post']);
+		echo '<input name="'.$paramName.'" style="float: left;" class="toolSubmit" type="submit" value="'.$elozo.'" />';
+		echo '</td></tr></table>';
+		formEnd();
+		echo '</td>';
+	    }
+	    echo '<td>';
+
+	}
+
+	formBegin(array('method'=>'post', 'action'=>href('index.php',array('page','sub','f','lang','skin','sessionID','policy'))));
+	echo '<table><tr><td>';    
+	    if (isset($TOOL['datumSelect']['action'])) 
+		echo '<input type="hidden" name="action" value="'.$TOOL['datumSelect']['action'].'" />'."\n";
+	    putPostParams($TOOL['datumSelect']['post']);
+	    $SEL = array($$paramName => ' selected="selected" ');
+	    echo '<button type="button" name="selectorBtn" value="'.$elozo.'" class="btnSelectPrev toolBarBtn mobileOnly">'.'<span class="icon-chevron-left"></span></button>';
+	    echo '<select name="'.$paramName.'" class="onChangeSubmit">';
+	    echo '<option value=""> - </option>'."\n";
+	    if (is_array($TOOL['datumSelect']['napok'])) {
+		for ($i = 0; $i < count($TOOL['datumSelect']['napok']); $i++) {
+		    $d = $TOOL['datumSelect']['napok'][$i];
+		    echo '<option value="'.$d.'"'.$SEL[$d].'>'.$d.' ('.$aHetNapjai[(date('w',strtotime($d))+6) % 7].')</option>';
+		}
+	    } else {
+		$tolTime = strtotime($TOOL['datumSelect']['tolDt']);
+		$igTime = strtotime($TOOL['datumSelect']['igDt']);
+		$count = $TOOL['datumSelect']['hanyNaponta'];
+		for (
+		    $t = $tolTime;
+		    $t <= $igTime;
+		    $t = ($count == 'havonta') ? strtotime("next month", $t) : strtotime("$count days", $t)
+		) {
+		    $d = date('Y-m-d', $t);
+		    echo '<option value="'.$d.'"'.$SEL[$d].'>'.$d.' ('.$aHetNapjai[(date('w',strtotime($d))+6) % 7].')</option>';
+		}
+	    }
+	    echo '</select>';
+	    echo '<button type="button" name="selectorBtn" value="'.$kovetkezo.'" class="btnSelectNext toolBarBtn mobileOnly">'.'<span class="icon-chevron-right"></span></button>';
+	putToolFormStop();
+
+	if ($TOOL['datumSelect']['lapozo']) {
+	    echo '</td>';
+	    if ($kovetkezo!='') {
+		echo '<td>';
+
+		formBegin(array('method'=>'post', 'action'=>href('index.php',array('page','sub','f','lang','skin','sessionID','policy'))));
+		echo '<table><tr><td>';    
+		if (isset($TOOL['datumSelect']['action'])) 
+		    echo '<input type="hidden" name="action" value="'.$TOOL['datumSelect']['action'].'" />'."\n";
+		putPostParams($TOOL['datumSelect']['post']);
+		echo '<input name="'.$paramName.'" style="float: right;" class="toolSubmit" type="submit" value="'.$kovetkezo.'" />';
+		echo '</td></tr></table>';
+		formEnd();
+
+		echo '</td>';
+	    }
+	    echo '</tr></table>';
+	}
+
+
+
+    }
+
+//--
+    function putDatumTolIgSelect() {
+
+	global $TOOL, $aHetNapjai;
+
+	$tolParamName = $TOOL['datumTolIgSelect']['tolParamName'];
+	global $$tolParamName;
+	$igParamName = $TOOL['datumTolIgSelect']['igParamName'];
+	global $$igParamName;
+
+	formBegin(array('method'=>'post', 'action'=>href('index.php',array('page','sub','f','lang','skin','sessionID','policy'))));
+	putPostParams($TOOL['datumTolIgSelect']['post']);
+	if (isset($TOOL['datumTolIgSelect']['action'])) 
+	    echo '<input type="hidden" name="action" value="'.$TOOL['datumTolIgSelect']['action'].'" />'."\n";
+	echo '<table><tr><td>'."\n";
+	    echo '<select name="'.$tolParamName.'" class="onChangeSubmit">';
+	    echo '<option value=""> - </option>'."\n";
+	    $SEL = array($$tolParamName => ' selected="selected" ');
+	    if (is_array($TOOL['datumTolIgSelect']['napok'])) {
+		for ($i = 0; $i < count($TOOL['datumTolIgSelect']['napok']); $i++) {
+		    $d = $TOOL['datumTolIgSelect']['napok'][$i];
+		    echo '<option value="'.$d.'"'.$SEL[$d].'>'.$d.' ('.$aHetNapjai[(date('w',strtotime($d))+6) % 7].')</option>';
+		}
+	    } else {
+		$tolTime = strtotime($TOOL['datumTolIgSelect']['tolDt']);
+		$igTime = strtotime($TOOL['datumTolIgSelect']['igDt']);
+		$count = $TOOL['datumTolIgSelect']['hanyNaponta'];
+		for (
+		    $t = $tolTime;
+		    $t <= $igTime && $t != 0;
+		    $t = ($count == 'havonta') ? strtotime("next month", $t) : strtotime("$count days", $t)
+		) {
+		    $d = date('Y-m-d', $t);
+		    echo '<option value="'.$d.'"'.$SEL[$d].'>'.$d.' ('.$aHetNapjai[(date('w',strtotime($d))+6) % 7].')</option>';
+		}
+	    }
+	    echo '</select>';
+
+	    echo ' - ';
+
+	    echo '<select name="'.$igParamName.'" class="onChangeSubmit">';
+	    echo '<option value=""> - </option>'."\n";
+	    $SEL = array($$igParamName => ' selected="selected" ');
+	    if (is_array($TOOL['datumTolIgSelect']['napok'])) {
+		for ($i = 0; $i < count($TOOL['datumTolIgSelect']['napok']); $i++) {
+		    $d = $TOOL['datumTolIgSelect']['napok'][$i];
+		    echo '<option value="'.$d.'"'.$SEL[$d].'>'.$d.' ('.$aHetNapjai[(date('w',strtotime($d))+6) % 7].')</option>';
+		}
+	    } else {
+		$tolTime = strtotime($TOOL['datumTolIgSelect']['tolDt']);
+		$igTime = strtotime($TOOL['datumTolIgSelect']['igDt']);
+		$count = $TOOL['datumTolIgSelect']['hanyNaponta'];
+		for (
+		    $t = $tolTime;
+		    $t <= $igTime && $t != 0;
+		    $t = ($count == 'havonta') ? strtotime("next month", $t) : strtotime("$count days", $t)
+		) {
+		    $d = date('Y-m-d', $t);
+		    echo '<option value="'.$d.'"'.$SEL[$d].'>'.$d.' ('.$aHetNapjai[(date('w',strtotime($d))+6) % 7].')</option>';
+		}
+	    }
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+
+    function putOraSelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('oraSelect', 'ora');
+	    echo '<select name="'.$TOOL['oraSelect']['paramName'].'" class="onChangeSubmit">';
+	    $SEL = array($TOOL['oraSelect']['paramValue'] => ' selected="selected" ');
+	    echo '<option value=""> - </option>'."\n";
+	    if (is_array($TOOL['oraSelect']['orak'])) {
+		for ($i = 0; $i < count($TOOL['oraSelect']['orak']); $i++) {
+		    echo '<option value="'.$TOOL['oraSelect']['orak'][$i].'"'.$SEL[$TOOL['oraSelect']['orak'][$i]].'>'.$TOOL['oraSelect']['orak'][$i].'</option>';
+		}
+		if ($TOOL['oraSelect']['foglaltOrakkal']) {
+		    echo '<optgroup label="'._FOGLALT_ORAK.'">';
+		    for ($t = $TOOL['oraSelect']['tol']; $t <= $TOOL['oraSelect']['ig']; $t++) {
+			if (!in_array($t, $TOOL['oraSelect']['orak'])) echo '<option value="'.$t.'"'.$SEL[$t].'>'.$t.'</option>';
+		    }
+		    echo '</optgroup>'."\n";
+		}
+	    } else {
+		for ($t = $TOOL['oraSelect']['tol']; $t <= $TOOL['oraSelect']['ig']; $t++) {
+		    echo '<option value="'.$t.'"'.$SEL[$t].'>'.$t.'</option>';
+		}
+	    }
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+    function putTeremSelect() {
+
+	global $TOOL;
+
+	// telephely szerint szétválogatás:
+	$numt=0;
+	if (is_array($TOOL['teremSelect']['termek'])) {
+	    for ($i = 0; $i < count($TOOL['teremSelect']['termek']); $i++) {
+		$I = $TOOL['teremSelect']['termek'][$i];
+		$T[$I['telephelyId']][] = $I;
+		$numt++;
+	    }
+	}
+
+	putToolFormStart('teremSelect', 'teremId');
+	    echo '<select name="'.$TOOL['teremSelect']['paramName'].'" class="onChangeSubmit">';
+	    $SEL = array($TOOL['teremSelect']['paramValue'] => ' selected="selected" ');
+	    echo '<option value=""> - </option>'."\n";
+	    if ($numt>=2) {
+		foreach($T AS $telephelyId => $I) {
+		$disp = ($telephelyId=='')?'Nincs telephely':$telephelyId;
+		echo '<optgroup label="'.$disp.'">';
+		    if (is_array($I)) {
+		    for ($i = 0; $i < count($I); $i++) {
+			$show = $I[$i]['leiras'];
+			echo '<option value="'.$I[$i]['teremId'].'"'.$SEL[$I[$i]['teremId']].'>'.$show.'</option>';
+		    }
+		    }
+		echo '</optgroup>'."\n";
+		}
+	    } else {
+		if (is_array($TOOL['teremSelect']['termek'])) {
+		    for ($i = 0; $i < count($TOOL['teremSelect']['termek']); $i++) {
+			$show = $TOOL['teremSelect']['termek'][$i]['leiras'];
+			echo '<option value="'.$TOOL['teremSelect']['termek'][$i]['teremId'].'"'.$SEL[$TOOL['teremSelect']['termek'][$i]['teremId']].'>'.$show.'</option>';
+		    }
+		}
+	    }
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+
+    function putOrarendiHetSelect() {
+    
+	global $TOOL;
+
+	putToolFormStart('orarendiHetSelect', 'orarendiHet');
+	    echo '<select name="'.$TOOL['orarendiHetSelect']['paramName'].'" class="onChangeSubmit" '.$_DS.'>';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($TOOL['orarendiHetSelect']['paramValue'] => ' selected="selected" ');
+		foreach ($TOOL['orarendiHetSelect']['hetek'] as $M) {
+		    echo '<option value="'.$M.'"'.$SEL[$M].'>'.$M.'</option>';
+		}
+		if (is_array($TOOL['orarendiHetSelect']['megjelenitendoHetek'])) {
+		    echo '<optgroup label="'._UJ_ORARENDIHET.'">';
+		    foreach ($TOOL['orarendiHetSelect']['megjelenitendoHetek'] as $index => $het) {
+			if (!in_array($het, $TOOL['orarendiHetSelect']['hetek']))
+			    echo '<option value="'.$het.'"'.$SEL[$het].'>'.$het.'</option>';
+		    }
+		    echo '</optgroup>'."\n";
+		}
+	    echo '</select>';
+	putToolFormStop();
+    
+    }
+
+    function putKepzesSelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('kepzesSelect', 'kepzesId');
+	    echo '<select name="'.$TOOL['kepzesSelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($TOOL['kepzesSelect']['paramValue'] => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['kepzesSelect']['kepzes']); $i++) {
+		    $M = $TOOL['kepzesSelect']['kepzes'][$i];
+		    $_prefix = ($M['kepzesEles']!=1) ? '-' : '';
+		    echo '<option value="'.$M['kepzesId'].'"'.$SEL[$M['kepzesId']].'>'.$_prefix.htmlspecialchars($M['kepzesNev']).' '.$M['tanev'].' ('.$M['kepzesId'].')'.'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+    function putSzuloSelect() {
+
+	global $TOOL;
+
+	putToolFormStart('szuloSelect', 'szuloId');
+	    echo '<select name="'.$TOOL['szuloSelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($TOOL['szuloSelect']['paramValue'] => ' selected="selected" ');
+		for ($i=0; $i < count($TOOL['szuloSelect']['szulo']); $i++) {
+		    $M = $TOOL['szuloSelect']['szulo'][$i];
+		    echo '<option value="'.$M['szuloId'].'"'.$SEL[$M['szuloId']].'>'.htmlspecialchars($M['szuloNev']).' ('.$M['szuloId'].')'.'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+
+    function putKerdoivSelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('kerdoivSelect', 'kerdoivId');
+	    echo '<select name="'.$TOOL['kerdoivSelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""></option>'."\n";
+		$SEL = array($TOOL['kerdoivSelect']['paramValue'] => ' selected="selected" ');
+		for ($i = 0; $i < count($TOOL['kerdoivSelect']['kerdoiv']); $i++) {
+		    $M = $TOOL['kerdoivSelect']['kerdoiv'][$i];
+		    echo '<option value="'.$M['kerdoivId'].'"'.$SEL[$M['kerdoivId']].'>'.$M['cim'].'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+
+    function putZaradekSelect() {
+
+	global $TOOL;
+	
+	putToolFormStart('zaradekSelect', 'zaradekIndex');
+	    $mit = array('bizonyítvány','törzslap','osztálynapló','beírási napló');
+	    $mire = array('Bi.','Tl.','On.','Bn.');
+	    echo '<select name="'.$TOOL['zaradekSelect']['paramName'].'" class="onChangeSubmit">';
+	    $SEL = array($TOOL['zaradekSelect']['paramValue'] => ' selected="selected" ');
+	    echo '<option value=""> - </option>'."\n";
+	    if (is_array($TOOL['zaradekSelect']['zaradekok'])) {
+		foreach ($TOOL['zaradekSelect']['zaradekok'] as $zaradekIndex => $zaradekAdat) {
+		    $length = mb_strlen($zaradekAdat['szoveg'], 'utf-8');
+		    $rpos = mb_strrpos(mb_substr($zaradekAdat['szoveg'],0,-15), ' ', 0, 'utf-8');
+		    echo '<option value="'.$zaradekIndex.'"'.$SEL[$zaradekIndex].'>';
+		    echo $zaradekAdat['sorszam'].' '
+		    .($length>80?
+			mb_substr($zaradekAdat['szoveg'],0,mb_strpos($zaradekAdat['szoveg'],' ',40,'utf-8'),'utf-8').
+			' ... '.
+			mb_substr($zaradekAdat['szoveg'], $rpos, $length-$rpos+10, 'utf-8'):$zaradekAdat['szoveg']).
+			' ('.str_replace($mit, $mire, $zaradekAdat['dokumentum']).')</option>';
+		}
+	    }
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
+
+    function putTanarOraLapozo() {
+
+	global $TOOL;
+
+	$paramName = $TOOL['tanarOraLapozo']['paramName'];
+	global $$paramName; // most oraId
+	if ((is_array($TOOL['tanarOraLapozo']['elozo'])) || (is_array($TOOL['tanarOraLapozo']['kovetkezo']))) {
+	formBegin(array('class'=>'lapozo','method'=>'post', 'action'=>href('index.php',array('page','sub','f','lang','skin','sessionID','policy'))));
+	putPostParams($TOOL['tanarOraLapozo']['post']);
+	echo '<table><tr><td>';
+	    if (is_array($TOOL['tanarOraLapozo']['elozo'])) {
+		$_leiras = '&larr;'.($TOOL['tanarOraLapozo']['elozo']['ora']).'. '._ORA;
+		if ($TOOL['tanarOraLapozo']['elozo']['leiras']!='') $_leiras .= ' ('.$TOOL['tanarOraLapozo']['elozo']['leiras'].')';
+		echo '<input type="submit" name="oraId" value="'.$_leiras.'" onclick="this.value='.($TOOL['tanarOraLapozo']['elozo']['oraId']).'" />';
+	    }
+	echo '</td>';
+	echo '<th>';
+	    echo $TOOL['tanarOraLapozo']['oraAdat']['ora'].'. '._ORA.' ';
+	    if ($TOOL['tanarOraLapozo']['oraAdat']['leiras'] != '') echo '('.$TOOL['tanarOraLapozo']['oraAdat']['leiras'].') ';
+	echo '</th>';
+	echo '<td>';
+	    if (is_array($TOOL['tanarOraLapozo']['kovetkezo'])) {
+		$_leiras = ($TOOL['tanarOraLapozo']['kovetkezo']['ora']).'. '._ORA;
+		if ($TOOL['tanarOraLapozo']['kovetkezo']['leiras']!='') $_leiras .= ' ('.$TOOL['tanarOraLapozo']['kovetkezo']['leiras'].')';
+		$_leiras .=' &rarr;';
+		echo '<input type="submit" name="oraId" value="'.$_leiras.'" onclick="this.value='.($TOOL['tanarOraLapozo']['kovetkezo']['oraId']).'" />';
+	    }
+	echo '</td></tr></table>';
+	formEnd();
+	echo "\n";
+	}
+    }
+
+    function putHonapLapozo() {
+
+	global $TOOL,$Honapok;
+
+	$paramName = $TOOL['honapLapozo']['paramName'];
+	global $$paramName;
+	formBegin(array('class' => 'lapozo', 'method' => 'post', 'action' => href('index.php',array('page','sub','f','lang','skin','sessionID','policy'))));
+	putPostParams($TOOL['honapLapozo']['post']);
+	echo '<table><tr><td>';
+	echo '&larr;';
+	echo '<input type="submit" name="ho" value="'.(($$paramName-1)==0?12:$$paramName-1).'" />';
+	echo '</td>';
+	echo '<th>'.$Honapok[$$paramName-1].'</th>';
+	echo '<td>';
+	echo '<input type="submit" name="ho" value="'.(($$paramName%12+1)).'" />';
+	echo '&rarr;';
+	echo '</td></tr></table>';
+
+	// ideiglenes megoldás!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//	echo '<input type="hidden" name="diakId" value="'.$TOOL['honapLapozo']['diakId'].'" />'."\n";
+
+	formEnd();
+
+    }
+
+//-- INSECURE
+    function putOldalFlipper() {
+
+	global $TOOL;
+	$paramName = $TOOL['oldalFlipper']['paramName'];
+	global $$paramName; 
+
+	$stepCount = count($TOOL['oldalFlipper']['url']);
+	if (isset($TOOL['oldalFlipper']['step'])) $step = $TOOL['oldalFlipper']['step'];
+	for ($i = 0; $i < count($TOOL['oldalFlipper']['titleConst']); $i++) {
+	    if (defined($TOOL['oldalFlipper']['titleConst'][$i]))
+		$TOOL['oldalFlipper']['title'][$i] = constant($TOOL['oldalFlipper']['titleConst'][$i]);
+	    else
+		$TOOL['oldalFlipper']['title'][$i] = '';
+	}
+
+
+
+
+	echo '<table class="flipper"><tr>';
+	if ($stepCount > 1 && isset($step) && $step > 0) {
+	    echo '<td>';
+		formBegin(array('action'=>href($TOOL['oldalFlipper']['url'][$step-1])));
+		putPostParams($TOOL['oldalFlipper']['post']);
+		if (isset($TOOL['oldalFlipper']['action'])) 
+		    echo '<input type="hidden" name="action" value="'.$TOOL['oldalFlipper']['action'].'" />'."\n";
+		if (isset($TOOL['oldalFlipper']['paramName'])) 
+		    echo '<input type="hidden" name="'.$paramName.'" value="'.$$paramName.'" />'."\n";
+		echo '<input type="submit" value="&larr;" title="'.$TOOL['oldalFlipper']['title'][$step-1].'" />'."\n";
+		formEnd();
+	    echo '</td>';
+	}
+	if ($stepCount > 1)
+	for ($j = 0; $j < $stepCount; $j++) {
+	    echo '<td>';
+		formBegin(array('action'=>href($TOOL['oldalFlipper']['url'][$j])));
+		putPostParams($TOOL['oldalFlipper']['post']);
+		if (isset($TOOL['oldalFlipper']['action'])) 
+		    echo '<input type="hidden" name="action" value="'.$TOOL['oldalFlipper']['action'].'" />'."\n";
+		if (isset($TOOL['oldalFlipper']['paramName'])) 
+		    echo '<input type="hidden" name="'.$paramName.'" value="'.$$paramName.'" />'."\n";
+
+		if (isset($step) && $step == $j)
+		    echo '<input class="step" type="button" value="'.($j+1).'" title="'.$TOOL['oldalFlipper']['title'][$j].'" />'."\n";
+		else
+		    echo '<input type="submit" value="'.($j+1).'" title="'.$TOOL['oldalFlipper']['title'][$j].'" />'."\n";
+		formEnd();
+	    echo '</td>';
+	}
+	if ($stepCount == 1 || (isset($step) && $step < $stepCount-1)) {
+	    if (!isset($step)) $step = 0; else $step++;
+	    echo '<td>';
+		formBegin(array('action'=>href($TOOL['oldalFlipper']['url'][$step])));
+		putPostParams($TOOL['oldalFlipper']['post']);
+		if (isset($TOOL['oldalFlipper']['action'])) 
+		    echo '<input type="hidden" name="action" value="'.$TOOL['oldalFlipper']['action'].'" />'."\n";
+		if (isset($TOOL['oldalFlipper']['paramName'])) 
+		    echo '<input type="hidden" name="'.$paramName.'" value="'.$$paramName.'" />'."\n";
+
+		echo '<input type="submit" value="&rarr;" title="'.$TOOL['oldalFlipper']['title'][$step].'" />'."\n";
+		formEnd();
+	    echo '</td>';
+	}
+	echo '</tr></table>'."\n";
+
+    }
+
+    function putNyomtatasGomb() {
+
+	global $TOOL;
+	$paramName = $TOOL['nyomtatasGomb']['paramName'];
+	global $$paramName; 
+
+	if (defined($TOOL['nyomtatasGomb']['titleConst']))
+	    $TOOL['nyomtatasGomb']['title'] = constant($TOOL['nyomtatasGomb']['titleConst']);
+	else
+	    $TOOL['nyomtatasGomb']['title'] = '';
+
+	echo '<table class="gomb"><tr>';
+	    echo '<td>';
+		formBegin(array('method'=>'post', 'action'=>href($TOOL['nyomtatasGomb']['url'])));
+		putPostParams($TOOL['nyomtatasGomb']['post']);
+		if (isset($TOOL['nyomtatasGomb']['action'])) 
+		    echo '<input type="hidden" name="action" value="'.$TOOL['nyomtatasGomb']['action'].'" />'."\n";
+		if (isset($TOOL['nyomtatasGomb']['paramName'])) 
+		    echo '<input type="hidden" name="'.$paramName.'" value="'.$$paramName.'" />'."\n";
+//		echo '<input type="submit" value="&larr;" title="'.$TOOL['nyomtatasGomb']['title'].'" />'."\n";
+		echo '<button title="'.$TOOL['nyomtatasGomb']['title'].'"><span class="icon-print" style="font-size:15px; color:white;"></span></button>'."\n";
+		formEnd();
+	    echo '</td>';
+	echo '</tr></table>'."\n";
+
+    }
+
+
+    function putIgazolasOsszegzo() {
+
+        global $TOOL;
+
+	$H = $TOOL['igazolasOsszegzo']['igazolasok'];
+	echo '<table class="hianyzasOsszegzo" cellpadding="1" cellspacing="1" style="width:300px;">';
+	    echo '<tr>';
+		echo '<th></th>';
+		echo '<th>'._ORVOSI.'</th>';
+		echo '<th>'._SZULOI.'</th>';
+		echo '<th>'._OSZTALYFONOKI.'</th>';
+		echo '<th>'._TANULMANYI_VERSENY.'</th>';
+		echo '<th>'._NYELVVIZSGA.'</th>';
+		echo '<th>'._IGAZGATOI.'</th>';
+		echo '<th>'._HATOSAGI.'</th>';
+	    echo '</tr>'."\n";
+	    echo '<tr>';
+
+		echo '<td></td>';
+		echo '<td>'.intval($H['napok']['osszesen']['orvosi']).' nap</td>';
+		echo '<td>';
+		    if (__SZULOI_IGAZOLAS_EVRE != 0)	echo (int)$H['napok']['osszesen']['szülői'].'/'.__SZULOI_IGAZOLAS_EVRE.' '._NAP.'/'._EV.' ';
+		    if (__SZULOI_IGAZOLAS_FELEVRE != 0) foreach ($H['szemeszterek'] as $i => $szemeszter) {
+			echo decimal_to_roman($szemeszter).':&nbsp;'.(int)$H['napok'][ $szemeszter ]['szülői'].'/'.__SZULOI_IGAZOLAS_FELEVRE.'&nbsp;'._NAP.', ';
+		    }
+		echo '</td>';
+		echo '<td>'.(int)$H['napok']['osszesen']['osztályfőnöki'].'/'.__OSZTALYFONOKI_IGAZOLAS_EVRE. ' '._NAP.'</td>';
+		echo '<td>'.(int)$H['napok']['osszesen']['tanulmányi verseny'].' '._NAP.'</td>';
+		echo '<td>'.(int)$H['napok']['osszesen']['nyelvvizsga'].' '._NAP.'</td>';
+		echo '<td>'.(int)$H['napok']['osszesen']['igazgatói'].' '._NAP.'</td>';
+		echo '<td>'.(int)$H['napok']['osszesen']['hatósági'].' '._NAP.'</td>';
+	    echo '</tr>'."\n";
+	    echo '<tr>';
+		echo '<td>';
+		    echo '<span style="color: white; font-weight:bold;margin-right:3px; border: solid 1px white; padding:2px 5px;background-color: green;">'.intval($TOOL['igazolasOsszegzo']['hianyzasok']['igazolt']).'</span>';
+		    echo '<span style="color: white; font-weight:bold;margin-right:3px; border: solid 1px white; padding:2px 5px;background-color: red;">'.intval($TOOL['igazolasOsszegzo']['hianyzasok']['igazolatlan']).'</span>';
+		    echo '<span style="color: white; font-weight:bold;margin-right:3px; border: solid 1px white; padding:2px 5px;background-color: #C8C864;">'.intval($TOOL['igazolasOsszegzo']['hianyzasok']['kesesPercOsszeg']).'\'</span>';
+		echo '</td>'; // igazolatlan, kesesPercOsszeg
+		echo '<td>'.(int)$H['orak']['osszesen']['orvosi'].' '._ORA.'</td>';
+		echo '<td>';
+		    if (__SZULOI_ORA_IGAZOLAS_EVRE != 0)	echo (int)$H['orak']['osszesen']['szülői'].'/'.__SZULOI_ORA_IGAZOLAS_EVRE.' '._ORA.'/'._EV.' ';
+		    if (__SZULOI_ORA_IGAZOLAS_FELEVRE != 0) foreach ($H['szemeszterek'] as $i => $szemeszter) {
+			echo decimal_to_roman($szemeszter).':&nbsp;'.(int)$H['orak'][ $szemeszter ]['szülői'].'/'.__SZULOI_ORA_IGAZOLAS_FELEVRE.'&nbsp;'._ORA.', ';
+		    }
+		echo '</td>';
+
+		echo '<td>'.(int)$H['orak']['osszesen']['osztályfőnöki'].'/'.__OSZTALYFONOKI_ORA_IGAZOLAS_EVRE.' '._ORA.'</td>';
+		echo '<td>'.(int)$H['orak']['osszesen']['tanulmányi verseny'].' '._ORA.'</td>';
+		echo '<td>'.(int)$H['orak']['osszesen']['nyelvvizsga'].' '._ORA.'</td>';
+		echo '<td>'.(int)$H['orak']['osszesen']['igazgatói'].' '._ORA.'</td>';
+		echo '<td>'.(int)$H['orak']['osszesen']['hatósági'].' '._ORA.'</td>';
+	    echo '</tr>'."\n";
+	echo '</table>'."\n";	
+    }
+
+    function putKerelemStat() {
+
+        global $TOOL;
+	echo '<span style="padding:0px 10px; border-bottom: solid 1px white; background-color: #6969ff;" title="sum">'.$TOOL['kerelemStat']['stat']['n'].'</span>';
+	echo '<span style="padding:0px 10px; border-bottom: solid 1px white; background-color: lightgreen;" title="done">'.$TOOL['kerelemStat']['stat']['nofdone'].'</span>';
+	echo '<span style="padding:0px 10px; border-bottom: solid 1px white; background-color: magenta; " title="avgtime">'.$TOOL['kerelemStat']['stat']['avgTime'].'</span>';
+
+    }
+
+    function putToolBarHamburger() {
+	global $TOOL;
+	echo '<div id="toolBarHamburgerLista" style="position:fixed; top:150px;right:0px;">';
+	echo '<ul>';
+	    for ($j = 0; $j < count($TOOL['toolBarHamburger']['url']); $j++) {
+		echo '<li>';
+		formBegin(array('action'=>href($TOOL['toolBarHamburger']['url'][$j])));
+		putPostParams($TOOL['toolBarHamburger']['post']);
+		if (isset($TOOL['toolBarHamburger']['action'])) 
+		    echo '<input type="hidden" name="action" value="'.$TOOL['toolBarHamburger']['action'].'" />'."\n";
+		if (isset($TOOL['toolBarHamburger']['paramName'])) 
+		    echo '<input type="hidden" name="'.$paramName.'" value="'.$$paramName.'" />'."\n";
+		//echo '<input type="submit" value="'.$TOOL['toolBarHamburger']['title'][$j].'" title="'.$TOOL['toolBarHamburger']['title'][$j].'" />'."\n";
+		echo '<button type="submit" class="hamburgerIkon" value="'.$TOOL['toolBarHamburger']['title'][$j].'" title="'.$TOOL['toolBarHamburger']['title'][$j].'">'.$TOOL['toolBarHamburger']['title'][$j].'</button>'."\n";
+		formEnd();
+		echo '</li>';
+	    }
+	echo '</ul>';
+	echo '</div>';
+    }
+
+
+    // CONTRIB!
+    include('skin/classic/module-naplo/html/share/face.phtml');
+
+?>

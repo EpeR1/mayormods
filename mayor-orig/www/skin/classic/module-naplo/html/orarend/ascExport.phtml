@@ -1,0 +1,142 @@
+<?php
+
+    function putExportForm($ADAT) {
+
+
+	formBegin(array('class'=>'export ok'));
+
+	echo '<h1>'._EXPORTALAS.'</h1>'."\n";
+
+	echo '<input type="hidden" name="action" value="ascExport" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+	echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+
+	if (count($ADAT['orarendiHet']) > 0) {
+	    echo '<fieldset><legend>'._EXPORTALANDO_HET.'</legend>'."\n";
+	    for ($i = 0; $i < count($ADAT['orarendiHet']); $i++) {
+		if ($ADAT['orarendiHet'][$i] == $ADAT['exportalandoHet'])
+		    echo '<input id="het'.$i.'" type="radio" name="orarendiHet" value="'.$ADAT['orarendiHet'][$i].'" checked="checked" />'."\n";
+		else
+		    echo '<input id="het'.$i.'" type="radio" name="orarendiHet" value="'.$ADAT['orarendiHet'][$i].'" />'."\n";
+		echo '<label for="het'.$i.'">'.$ADAT['orarendiHet'][$i].'</label>';
+	    }
+	    echo '</fieldset>'."\n";
+	}
+	echo '<br />';
+	if ($ADAT['szeminariumkent']==true) {
+	    echo '<input type="checkbox" id="szeminariumkent" name="szeminariumkent" value="true" checked="checked" />';
+	} else {
+	    echo '<input type="checkbox" id="szeminariumkent" name="szeminariumkent" value="true"  />';
+	}
+	echo '<label for="szeminariumkent">'._EXPORT_SZEMINARIUMKENT_DIAKOKKAL.'</label>'."\n";
+
+	echo '<br />';
+	echo '<input type="checkbox" id="szakkorokkel" name="szakkorokkel" value="true" />';
+	echo '<label for="szakkorokkel">'._EXPORT_SZAKKOROKKEL.'</label>'."\n";
+
+	echo '<br />';
+	echo '<input id="blokkokNelkul" type="checkbox" name="blokkokNelkul" value="true" />';
+	echo '<label for="blokkokNelkul">'._BLOKKOK_NELKUL.'</label>'."\n";
+
+	echo '<br />';
+	echo '<input id="targyBontas" type="checkbox" name="targyBontas" value="true" />';
+	echo '<label for="targyBontas">'._TARGYAK_BONTASAVAL.'</label>'."\n";
+
+	echo '<br /><input type="submit" value="'._EXPORT.'" />'."\n";
+
+        echo '<br />'."\n";
+        echo '<a href="'
+                .href('index.php?page=session&f=download&download=true&dir=naplo/orarend/orarendBetolto&file=fromAsc.xml')
+                .'">'
+                .'<img src="skin/classic/module-session/img/download.gif" alt="Download" />'
+                ._EXPORT_SABLON_LETOLTESE
+                .'</a>'."\n";
+
+	if (defined('__LOADURL')) echo '<a href="'.__LOADURL.'" id="loadUrl" >'._DOWNLOAD.'</a>'."\n"; // Ha sikerült az export, akkor letöltés indítás
+	formEnd();
+    }
+
+
+    function putTobbszorosOraForm($ADAT) {
+
+	formBegin(array('class'=>'tobbszoros export'));
+
+	echo '<h1>'._TOBBSZOROS_ORAK.'</h1>'."\n";
+
+	echo '<input type="hidden" name="action" value="tobbszorosOra" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+	echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+
+//	echo '<fieldset><legend>'._TOBBSZOROS_ORAK.'</legend>';
+	echo '<select name="bontasId">'."\n";
+        if (is_array($ADAT['tankorBlokk']['exportOraszam']))
+	echo '<option value=""> '._BONTANDO_TANKOR_BLOKK.' </option>'."\n";
+	echo '<optgroup label="'._BLOKKOK.'">';
+        foreach ($ADAT['tankorBlokk']['exportOraszam'] as $bId => $oraszam) if ($oraszam > 0) {
+	    $blokkNev = $ADAT['tankorBlokk']['blokkNevek'][$bId];
+	    echo '<option value="b-'.$bId.'">'."$blokkNev ($bId) -- $oraszam "._ORA.'</option>'."\n";
+	}
+	echo '</optgroup>'."\n";
+	echo '<optgroup label="'._TANKOROK.'">';
+	for ($i = 0; $i < count($ADAT['tankorok']); $i++) {
+	    $tankorId = $ADAT['tankorok'][$i]['tankorId'];
+	    $tankorNev = $ADAT['tankorok'][$i]['tankorNev'];
+	    $hetiOraszam = $ADAT['tankorok'][$i]['hetiOraszam'];
+	    echo '<option value="t-'.$tankorId.'">'."$tankorNev ($tankorId) -- $hetiOraszam "._ORA.'</option>'."\n";
+	}
+	echo '</optgroup>'."\n";
+	echo '</select>'."\n";
+	echo '<label for="oraBontas">'._ORABONTAS.'</label>'."\n";
+	echo '<input id="oraBontas" type="text" name="oraBontas" value="" />'."\n";
+//	echo '</fieldset>'."\n";
+
+	if (count($ADAT['bontas']) > 0) {
+	    echo '<br />';
+	    echo '<label for="torlendoBontas">'._TORLENDO_BONTAS.'</label><br />';
+	    echo '<select id="torlendoBontas" name="torlendoBontas[]" multiple="multiple">'."\n";
+	    foreach ($ADAT['bontas'] as $bontasId => $bontas) {
+		list($tipus, $id) = explode('-', $bontasId);
+		if ($tipus == 't') {
+		    $tankorIndex = $ADAT['tankorIndex'][$id];
+		    $bontasNev = $ADAT['tankorok'][$tankorIndex]['tankorNev'];
+		} elseif ($tipus == 'b') {
+		    $bontasNev = $ADAT['tankorBlokk']['blokkNevek'][$id];
+		}
+		echo '<option value="'.$bontasId.'">'.$bontasNev.' ('.$bontasId.') -- '.$bontas.' '._ORA.'</option>'."\n";
+	    }
+	    echo '</select>'."\n";
+	}
+	echo '<br /><input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+    }
+
+    function putBlokkOraszamForm($ADAT) {
+
+	formBegin(array('class'=>'blokk export'));
+
+	echo '<h1>'._ORARENDI_BLOKKOK.'</h1>'."\n";
+
+	echo '<input type="hidden" name="action" value="blokkOraszam" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+	echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+
+	echo '<ul class="blokk">';
+	foreach ($ADAT['tankorBlokk']['blokkNevek'] as $bId => $bNev) {
+	    echo '<li>';
+	    echo ' <select name="blokkOraszam[]">'."\n";
+	    $SEL = array(floatval($ADAT['tankorBlokk']['exportOraszam'][$bId]) => ' selected="selected" ');
+	    for ($i = 0; $i <= ceil($ADAT['tankorBlokk']['maxOraszam'][$bId]); $i = $i + 0.5) {
+		echo '<option value="'."$bId:$i".'" '.$SEL[$i].'>'.$i.' (exportálva '.ceil($i).' kártya/hét)'.'</option>'."\n";
+	    }
+	    echo '</select>';
+	    echo $bNev.' ('.$bId.')';
+	    echo '</li>'."\n";
+	}
+	echo '</ul>'."\n";
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+    }
+
+?>

@@ -1,0 +1,56 @@
+
+    table.jegyInfo {
+	width: 85%;
+	background-color: rgb(200,200,200);
+	color: white;
+    }
+
+    
+    table.jegyInfo thead th {
+	background-color: rgb(100,120,100);
+	height:30px;
+    }
+    
+    table.jegyInfo tfoot th {
+	background-color: rgb(100,120,100);
+    }
+    
+    table.jegyInfo tbody select { background-color: #ffffff; }
+    table.jegyInfo tbody input { background-color: #ffffff; }
+
+    table.jegyInfo tbody th {
+	background-color: rgb(140,160,150);
+	padding: 0px 4px 0px 4px;
+	text-align: center;
+    }
+    
+    table.jegyInfo tbody td {
+	background-color: rgb(140,160,150);
+	padding: 0px 4px 0px 4px;
+	text-align: center;
+    }
+
+    table.jegyInfo tbody td a {
+	color: white;
+	text-decoration: none;
+    }
+
+    table.jegyInfo tbody td a:hover {
+	color: white;
+	text-decoration: underline;
+    }
+    
+    table.jegyInfo tbody th a {
+	color: white;
+	text-decoration: none;
+    }
+
+    table.jegyInfo tbody th a:hover {
+	color: white;
+	text-decoration: underline;
+    }
+
+    table.jegyInfo tbody td input {
+	width: 95%;
+    }
+

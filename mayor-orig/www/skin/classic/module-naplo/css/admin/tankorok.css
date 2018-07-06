@@ -1,0 +1,8 @@
+@CHARSET "UTF-8";
+
+    form.updateTable { width: 80%; background-color: rgb(180,180,200); margin: 20px auto; text-align: center; padding: 5px;}
+    form.updateTable label { color: white; padding: 8px; }
+    form.updateTable table { margin: 20px auto; background-color: rgb(140,140,180); }
+    form.updateTable table td { background-color: rgb(255,255,255); }
+    form.updateTable table th { background-color: rgb(120,120,160); }
+    form.updateTable p { background-color: rgb(200,200,220); padding: 15px; text-align: justify; border: dotted 1px rgb(120,120,160);}

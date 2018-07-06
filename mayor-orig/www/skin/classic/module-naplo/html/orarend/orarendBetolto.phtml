@@ -1,0 +1,60 @@
+<?php
+
+    function putFileValaszto($ADAT) {
+
+	formBegin(array('class'=>'file'));
+
+	echo '<input type="hidden" name="action" value="fileBetoltes" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+	echo '<input type="hidden" name="tolDt" value="'.$ADAT['tolDt'].'" />'."\n";
+	echo '<input type="hidden" name="igDt" value="'.$ADAT['igDt'].'" />'."\n";
+	echo '<input type="hidden" name="orarendiHet" value="'.$ADAT['orarendiHet'].'" />'."\n";
+
+	echo '<label for="fileName">'._FILENAME.'</label>'."\n";
+	echo '<input type="text" id="fileName" name="fileName" value="'.$ADAT['fileName'].'" /><br />';
+	echo '<input type="checkbox" checked="checked" name="lezaras" value="true" id="lezaras" /><label for="lezaras">'._LEZARAS.'</label><br />';
+	echo '<select name="conv">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    $SEL = array($ADAT['conv'] => ' selected="selected" ');
+	    for ($i = 0; $i < count($ADAT['convert']); $i++) {
+	    echo '<option value="'.$ADAT['convert'][$i].'"'.$SEL[ $ADAT['convert'][$i] ].'>'.$ADAT['convert'][$i].'</option>'."\n";
+	    }
+	echo '</select>'."\n";
+
+	if ($ADAT['showForceOption']) {
+	    echo '<br /><input id="force" type="checkbox" name="force" value="true" /><label for="force">'._FORCE.'</label>'."\n";
+	}
+
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	echo '<br />'."\n";
+	echo '<a href="'
+		.href('index.php?page=session&f=download&download=true&dir=naplo/orarend/orarendBetolto&file=fromAsc.xml')
+		.'">'
+		.'<img src="skin/classic/module-session/img/download.gif" alt="Download" />'
+		._EXPORT_SABLON_LETOLTESE
+		.'</a>'."\n";
+
+	formEnd();
+    }
+
+    function putAdat($ORAK) {
+
+	echo '<table border="1">';
+
+	for ($i = 0; $i < count($ORAK); $i++) {
+	    echo '<tr>';
+	    for ($j = 0; $j < count($ORAK[$i]); $j++) {
+		echo '<td>';
+		echo $ORAK[$i][$j];
+		echo '</td>';
+	    }
+
+	    echo '</tr>';
+	}
+
+	echo '</table>';
+
+    }
+
+?>

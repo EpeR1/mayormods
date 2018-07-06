@@ -1,0 +1,10 @@
+
+    form.szr { background-color: rgb(200,200,240); margin: 20px; text-align: center; padding: 20px; }
+    form.szr textarea { width: 80%; height: 300px; margin: auto; }
+    form.szr ol { text-align: left; font-weight: bold; margin: 0px 20px; }
+    form.szr ol ul { font-weight: normal; font-style: italic; margin-bottom: 10px; }
+
+    table.lista { background-color: rgb(20,40,60); margin: auto; border-spacing: 1px; }
+    table.lista th { background-color: rgb(200,200,200); }
+    table.lista td { background-color: rgb(230,230,230); }
+    table.lista th, table.lista td { padding: 4px; }

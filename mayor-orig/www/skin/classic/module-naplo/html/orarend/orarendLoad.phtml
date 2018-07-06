@@ -1,0 +1,26 @@
+<?php
+
+    function putJelIdForm($ADAT) {
+    
+	formBegin();
+	echo '<input type="hidden" name="action" value="jelid" />';
+	for ($i=0; $i<count($ADAT['missing']); $i++) {
+	    echo $ADAT['missing'][$i];
+	    
+	    echo '<select name="jelid[]">';
+		echo '<option value=""></option>';
+		for ($j=0; $j<count($ADAT['tanarok']); $j++) {
+		    echo '<option value="'.$ADAT['missing'][$i].'_'.$ADAT['tanarok'][$j]['tanarId'].'">'.$ADAT['tanarok'][$j]['tanarNev'].'</option>';
+		}
+	    echo '</select>'."\n";
+	    
+	    echo '<br/>';
+	    	
+	}
+	echo '<input type="submit" />';
+	
+	formEnd();    
+    }
+
+
+?>

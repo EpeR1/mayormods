@@ -1,0 +1,27 @@
+
+    form.pluszora {
+	background-color: rgb(200,200,180);
+	margin-left: 180px;
+	margin-right: 180px;
+	text-align: center;
+    }
+    form.pluszora h2 {
+	margin-bottom: 2em;
+	font-size:larger;
+    }
+    form.pluszora ul {
+	text-align: left;
+    }
+    
+    ul.pluszora {
+	background-color: rgb(20,40,80);
+	list-style-type: none;
+	margin: 20px;
+	padding: 10px 0px;
+    }
+
+    ul.pluszora li { background-color: rgb(160,160,250); margin: 2px 100px; padding: 2px 20px;}
+    ul.pluszora li span { color: rgb(20,40,80); padding: 0px 5px; margin: 1px 5px;}
+    ul.pluszora li span.oraszam { color: red; padding: 0px 20px;}
+
+    h2 { text-align: center; border: 1px dotted rgb(20,40,80); border-width: 1px 0px; margin: 20px; }

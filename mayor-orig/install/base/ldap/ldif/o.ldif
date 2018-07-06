@@ -1,0 +1,9 @@
+# ------------------------------------------
+# MaYoR keretrendszer - organization object
+# ------------------------------------------
+dn: %BASEDN%
+o: %ORGANIZATION%
+objectClass: organization
+objectClass: mayorOrganization
+nextuid: 3100
+nextgid: 6100

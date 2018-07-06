@@ -1,0 +1,61 @@
+<?php
+
+    function _tanarNev($x) {
+	for ($i=0; $i<count($x); $i++) {
+	    $T[] = '<span class="tanarNev" data-tanarId="'.$x[$i]['tanarId'].'">'.$x[$i]['tanarNev'].'</span>';
+	}
+	return implode(', ',$T);
+    }
+
+    function putTanmenetJovahagyas($ADAT) {
+
+	if (!is_array($ADAT['tankorok'])) return false;
+	echo '<table id="tanmenet">';
+	foreach ($ADAT['tankorok'] as $tkAdat) {
+
+	    $tankorId = $tkAdat['tankorId'];
+	    $tanmenetId = $ADAT['tankorTanmenet'][$tankorId];
+	    $tmAdat = $ADAT['tanmenetAdat'][$tanmenetId];
+	    $tmLeiras = ($tanmenetId == '')?'':($tmAdat['tanmenetNev'].' - ('.$tanmenetId.') - '.$ADAT['tanarok'][$tmAdat['tanarId']]['tanarNev']);
+	    $class = ekezettelen($tmAdat['statusz']);
+	    $href=href("index.php?page=naplo&sub=tanmenet&f=tanmenetInfo&tanmenetId=".$tanmenetId);
+
+	    echo '<tr class="'.$class.'">';
+		echo '<th class="tankorAdat" data-tankorid="'.$tankorId.'">'.$tkAdat['tankorNev'].' ('.$tkAdat['tankorId'].')</th>';
+		echo '<td>'._tanarNev($tkAdat['tanarok']).'</td>';
+		echo '<td>';
+		    if ($tanmenetId != '') echo '<a class="onClickUpdateWindow" title="tanmenet részletei..." href="'.$href.'">'.$tmLeiras.'</a>';
+		echo '</td>';
+
+		echo '<td>';
+		if ($tanmenetId != '') {
+		    if (__JOVAHAGYHAT) {
+			formBegin(array('class'=>'tanmenet'));
+			echo '<input type="hidden" name="action" value="tanmenetModositas" />';
+			echo '<input type="hidden" name="mkId" value="'.$ADAT['mkId'].'" />';
+			echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarId'].'" />';
+			echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
+			echo '<input type="hidden" name="tanmenetId" value="'.$tanmenetId.'" />';
+			foreach (array('új','kész','jóváhagyott','publikus') as $statusz) {
+			    $CHK = ($statusz == $tmAdat['statusz'])?' checked="checked" ':'';
+			    echo '<input type="radio" name="statusz" value="'. $statusz.'"'.$CHK.' id="'.$tankorId.$statusz.'" />';
+			    echo '<label for="'.$tankorId.$statusz.'">'.$statusz.'</label>';
+			}
+			echo '<input type="submit" value="'._OK.'" />';
+			formEnd();
+		    } else {
+			echo $tmAdat['statusz'];
+		    }
+		}
+		echo '</td>';
+
+
+	    echo '</tr>';
+
+	}
+	echo '</table>';
+
+
+    }
+
+?>

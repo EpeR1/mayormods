@@ -1,0 +1,11 @@
+
+    table.modosit { margin: 20px auto; }
+    table.modosit th { padding: 2px; color: white; border: 1px solid #223340; background-color: #445560; }
+
+    form.csoport table { margin: 2px auto; color: white; background-color: #aabbc0; }
+    form.csoport table th { background-color: #445560; padding: 2px 14px; }
+    form.csoport table td { text-align: center; }
+    form.csoport table td input { background-color: #ccdde0; margin: 2px 0px; border: 1px solid #667780; }
+    form.csoport table td select { background-color: #ccdde0; font-size:10px; }
+
+    form.szuro { width: 200px; background-color: white; float: right; margin-right: 20px; }

@@ -1,0 +1,56 @@
+<?php
+
+function html_base($sessionID,$policy,$page,$sub,$f,$lang,$skin,$MENU) {
+
+    global $_JSON;
+
+#    _httpHeader();
+
+    define('_UNIQUE', uniqid());
+
+    page($page,$sub,$f,$lang,$skin,$policy);
+
+    if (is_array($_SESSION['alert']) && count($_SESSION['alert'])>0) {
+	_html_base_alert($_SESSION['alert']);
+    }
+    $_SESSION['alert'] = array();
+
+}
+
+function _html_base_alert($alert) {
+    if (is_array($alert))
+	foreach($alert as $a) {
+            $param = array();
+            $tmp = explode(':', $a);
+            $aType = readVariable($tmp[0], 'enum', 'message', array('message','info','page')); $aCode = $tmp[1];
+            for ($p = 2; $p < count($tmp); $p++) $param[] = htmlspecialchars($tmp[$p]);
+            $pstr = '';
+            // preparing $msg
+            if (!isset($ALERT_MSG[$aCode]) || $ALERT_MSG[$aCode] == '')
+                $msg = $ALERT_MSG['default'].' ('.$aType.':'.$aCode.')';
+            else $msg = $ALERT_MSG[$aCode];
+
+            // paraméter behelyettesítés
+            for($i = 0; $i < count($param); $i++) {
+                $_msg = $msg;
+                $msg = @str_replace("%$i%",':'.($param[$i]).':',$msg);
+                if ($param[$i] != '' and $_msg == $msg) $pstr .= ':'.($param[$i]).':,';
+            }
+            if ($pstr != '') $msg .= ' (' . substr($pstr,0,-1) . ')';
+            if (($aType == 'message') or ($aType == 'page')) {
+                $title = _ERROR;
+                $class = 'errorMsg';
+                if ($aType == 'page') $showPage = false;
+            } else {
+                $title = _INFORMATION;
+                $class = 'infoMsg';
+            }
+            $msg = ''.$title.': ' . $msg;
+            $showPage .= ''. $msg .''."\n";
+        }
+
+        return $showPage;
+
+}
+
+?>

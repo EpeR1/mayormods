@@ -1,0 +1,97 @@
+<?php
+/*
+    module: naplo
+*/
+
+    function putBejegyzesLista($diakId, $BEJEGYZESEK, $DIAKOK = array()) {
+
+	global $osztalyId;
+
+	echo '<div class="bejegyzes">'."\n";
+
+	echo '<ul>';
+	for ($i = 0; $i < count($BEJEGYZESEK); $i++) {
+
+	    echo $DIAKOK[$BEJEGYZESEK[$i]['diakId']]['diakNev'];
+
+	    echo '<li class="'.$BEJEGYZESEK[$i]['tipus'].'">';
+	    echo '<div class="kategoria">';
+		echo $BEJEGYZESEK[$i]['bejegyzesTipusNev'];
+	    echo '</div>';
+	    echo '<div class="megjegyzes">';
+		echo $BEJEGYZESEK[$i]['szoveg'];
+	    echo '</div>';
+	    echo '<div class="dt">';
+		echo '<span class="tanar">';
+		echo $BEJEGYZESEK[$i]['tanarNev'];
+		echo '</span>';
+		echo $BEJEGYZESEK[$i]['beirasDt'];
+		if (!in_array($BEJEGYZESEK[$i]['referenciaDt'],array('',0,'0000-00-00'))) echo ' / '.$BEJEGYZESEK[$i]['referenciaDt'];
+	    echo '</div>';
+
+	    if (
+		__NAPLOADMIN ||
+		($BEJEGYZESEK[$i]['tanarId'] == __USERTANARID && $BEJEGYZESEK[$i]['beirasDt'] == date('Y-m-d'))
+	    ) {
+		formBegin();
+		    echo '<input type="hidden" name="action" value="delBejegyzes" />';
+		    echo '<input type="hidden" name="diakId" value="'.$diakId.'" />';
+		    echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />';
+		    echo '<input type="hidden" name="bejegyzesId" value="'.$BEJEGYZESEK[$i]['bejegyzesId'].'" />';
+		    echo '<input type="submit" value="'._TOROL.'" />'."\n";
+		formEnd();
+	    }
+
+	    echo '</li>'."\n";
+
+	}
+	echo '</ul>';
+
+	echo '</div>'."\n";
+
+    }
+
+    function putOsztalyBejegyzesek($Bejegyzesek, $Diakok) {
+
+	global $osztalyId;
+
+	for ($j = 0; $j < count($Diakok); $j++) {
+
+	    $diakId = $Diakok[$j]['diakId'];
+	    $diakNev = $Diakok[$j]['diakNev'];
+	    $B = $Bejegyzesek[$diakId];
+	    if (count($B) == 0) continue;
+
+	    echo '<div class="bejegyzes">'."\n";
+
+	    formBegin(array('class'=>'nev'));
+		echo '<input type="hidden" name="diakId" value="'.$diakId.'" />'."\n";
+		echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
+		echo '<input type="submit" value="'.$diakNev.'" />'."\n";
+	    formEnd();
+
+	    echo '<ul>';
+	    for ($i = 0; $i < count($B); $i++) {
+
+		echo '<li class="'.$B[$i]['tipus'].'">';
+		echo '<div class="kategoria">';
+		    echo '<span class="tanar">';
+		    echo $B[$i]['tanarNev'];
+		    echo '</span>';
+		    echo '<span class="dt">';
+		    echo $B[$i]['beirasDt'];
+		    if (!in_array($BEJEGYZESEK[$i]['referenciaDt'],array('',0,'0000-00-00'))) echo ' / '.$BEJEGYZESEK[$i]['referenciaDt'];
+		    echo '</span>';
+		    echo $B[$i]['bejegyzesTipusNev'];
+		echo '</div>';
+
+	    }
+	    echo '</ul>';
+
+	    echo '</div>'."\n";
+
+	}
+
+    }
+
+?>

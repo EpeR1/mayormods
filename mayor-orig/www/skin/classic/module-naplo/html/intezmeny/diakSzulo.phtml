@@ -1,0 +1,300 @@
+<?php
+
+
+    function putDiakSzulo($diakAdat, $Szulok, $tipus, $ADAT) {
+
+	global $skin;
+	$ktJelleg = $ADAT['kozteruletJelleg'];
+
+	// ajax esetén nem rakja ki a <form> elemet!!
+	formBegin(array('action'=>href('index.php?page=naplo&sub=intezmeny&f=diakSzulo'),'class'=>"diak"));
+	if ($skin == 'ajax') {
+	    $class = 'onClickUpdate';
+	}
+	echo '<input type="hidden" name="action" value="diakSzuloModositas" />'."\n";
+	echo '<input type="hidden" name="tipus" value="'.$tipus.'" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$diakAdat['diakId'].'" />'."\n";
+	echo '<input type="hidden" name="szuloId" value="'.$diakAdat[$tipus.'Id'].'" />'."\n";
+	echo '<fieldset><legend>'._DIAK_SZULO.'</legend>'."\n";
+
+	$SEL = array($tipus => ' kiemelt');
+        echo '<input type="submit" name="semmi" value="" class="" style="display: none;" />';
+        echo '<input type="submit" name="anya" value="'._ANYA.': '.$Szulok[$diakAdat['anyaId']]['szuloNev'].' ('.$diakAdat['anyaId'].')" class="'.$class.$SEL['anya'].'" />';
+        echo '<input type="submit" name="apa" value="'._APA.': '.$Szulok[$diakAdat['apaId']]['szuloNev'].' ('.$diakAdat['apaId'].')" class="'.$class.$SEL['apa'].'" />';
+        echo '<input type="submit" name="gondviselo" value="'._GONDVISELO.': '.$Szulok[$diakAdat['gondviseloId']]['szuloNev'].' ('.$diakAdat['gondviseloId'].')" class="'.$class.$SEL['gondviselo'].'" />';
+        echo '<input type="submit" name="nevelo" value="'._NEVELO.': '.$Szulok[$diakAdat['neveloId']]['szuloNev'].' ('.$diakAdat['neveloId'].')" class="'.$class.$SEL['nevelo'].'" />';
+
+	if ($tipus != '') {
+
+	echo '<table border="0" class="reszletek">'."\n";
+
+	    if ($diakAdat[$tipus.'Id'] != '') {
+		$szAdat = $Szulok[$diakAdat[$tipus.'Id']];
+		echo '<tr>'."\n";
+		    echo '<td colspan="6">';
+			echo '<h1>'._SZULO_ADAT_MODOSITAS.'</h1>';
+		    echo '</td>'."\n";
+		echo '</tr>'."\n";
+	    } else {
+		$szAdat = array();
+		// Új szülő hozzárendelése
+		echo '<tr>'."\n";
+		    echo '<td colspan="6">';
+			echo '<input type="hidden" name="ajaxOption" class="ajaxOption" value="onChangeRequestStop" />';
+			echo '<h1>'._SZULO_HOZZARENDELESE.'</h1>';
+		    echo '</td>'."\n";
+		echo '</tr>'."\n";
+		echo '<tr>'."\n";
+		    echo '<td colspan="6" style="text-align: center;">';
+			echo '<select name="ujSzuloId" class="onChangeUpdate">'."\n";
+			echo '<option value=""> - </option>'."\n";
+			foreach ($Szulok['szuloIds'] as $index => $szuloId) {
+			    if 	(
+				$Szulok[$szuloId]['nem']=='' ||
+				($tipus=='anya' && $Szulok[$szuloId]['nem']=='lány') || 
+				($tipus=='apa' && $Szulok[$szuloId]['nem']=='fiú') ||
+				!in_array($tipus,array('anya','apa'))
+				)
+			    echo '<option value="'.$szuloId.'">'.$Szulok[$szuloId]['szuloNev'].' ('.$szuloId.')</option>'."\n";
+			}
+    			echo '</select>'."\n";
+		    echo '</td>'."\n";
+		echo '</tr>'."\n";
+		echo '<tr>'."\n";
+		echo '<td colspan="6">';
+		    echo '<hr />';
+		echo '</td>'."\n";
+		echo '</tr>'."\n";
+
+		echo '<tr>'."\n";
+		echo '<td colspan="6">';
+		    echo '<h1>'._UJ_SZULO.'</h1>';
+		echo '</td>'."\n";
+		echo '</tr>'."\n";
+	    }
+
+	    echo '<tr>'."\n";
+		echo '<th colspan="1">';
+    		echo '<label for="Csaladinev">'._NEV.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td colspan="1">';
+		echo '<input type="text" size="4" name="nevElotag" value="'.$szAdat['nevElotag'].'" title="'._NEVELOTAG.'" />';
+		echo '<input type="text" id="Csaladinev" name="csaladinev" value="'.$szAdat['csaladinev'].'" title="'._CSALADINEV.'" />';
+		echo '<input type="text" name="utonev" value="'.$szAdat['utonev'].'" title="'._UTONEV.'" />';
+		echo '</td>'."\n";
+		echo '<th colspan="1">';
+		echo '<label for="szuloNem">'._NEM.'</label>';
+		echo '</th>'."\n";
+		echo '<td colspan="1">';
+		    if ($szAdat['nem']!='') $_SEL[$szAdat['nem']] = ' selected="selected" ';
+		    elseif ($tipus=='anya')    $_SEL['lány'] = ' selected="selected" ';
+		    elseif ($tipus=='apa') $_SEL['fiú']  = ' selected="selected" '; 
+		echo '<select name="nem" id="szuloNem">'."\n";
+		    echo '<option value=""> - </option>'."\n";
+		    echo '<option value="fiú"'.$_SEL['fiú'].'>'._FIU.'</option>'."\n";
+		    echo '<option value="lány"'.$_SEL['lány'].'>'._LANY.'</option>'."\n";
+		echo '</select>'."\n";
+		echo '</td>'."\n";
+		echo '<th>';
+    		echo '<label for="foglalkozas">'._FOGLALKOZAS.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>';
+		echo '<input type="text" name="foglalkozas" id="foglalkozas" value="'.$szAdat['foglalkozas'].'" title="'._FOGLALKOZAS.'" />';
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+	    echo '<tr>'."\n";
+		echo '<th colspan="1">';
+    		echo '<label for="szuloSzuleteskoriCsaladinev">'._SZULETESKORINEV.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td colspan="1">';
+		echo '<input type="text" size="4" name="szuleteskoriNevElotag" value="'.$szAdat['szuleteskoriNevElotag'].'" title="'._SZULETESKORINEVELOTAG.'" />';
+		echo '<input type="text" id="szuloSzuleteskoriCsaladinev" name="szuleteskoriCsaladinev" value="'.$szAdat['szuleteskoriCsaladinev'].'" title="'._SZULETESKORICSALADINEV.'" />';
+		echo '<input type="text" name="szuleteskoriUtonev" value="'.$szAdat['szuleteskoriUtonev'].'" title="'._SZULETESKORIUTONEV.'" />';
+		echo '</td>'."\n";
+		echo '<th>';
+    		echo '<label for="szuletesiEv">'._SZULETESIEV.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>';
+		echo '<input type="text" size="4" name="szuletesiEv" id="szuletesiEv" value="'.$szAdat['szuletesiEv'].'" title="'._SZULETESIEV.'" />';
+		echo '</td>'."\n";
+		echo '<th>';
+    		echo '<label for="munkahely">'._MUNKAHELY.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>';
+		echo '<input type="text" name="munkahely" id="munkahely" value="'.$szAdat['munkahely'].'" title="'._MUNKAHELY.'" />';
+		echo '</td>'."\n";
+	    echo '</tr>';
+	    echo '<tr>'."\n";
+		echo '<th colspan="1">';
+		    echo '<label for="userAccount">';
+		    echo _SZULOACCOUNT;
+		    echo '</label>'."\n";
+		echo '</th>';
+		echo '<td colspan="1">';
+		if (__NAPLOADMIN) {
+		    $inNev=(($szAdat['nevElotag']!='')?$szAdat['nevElotag'].' ':'').$szAdat['csaladinev'].' '.$szAdat['utonev'];
+		    if ($szAdat['userAccount']=='') {
+			$inUsername=$szAdat['csaladinev'].'.';
+			$inUsername .= (mb_strpos($szAdat['utonev'],' ')!=0)?mb_substr($szAdat['utonev'], 0, mb_strpos($szAdat['utonev'],' '), 'UTF-8'):$szAdat['utonev'];
+			if ($inUsername == '.') $inUsername = '';
+		    } else {
+			$inUsername=$szAdat['userAccount'];
+		    }
+		    $inJelszo = sprintf('%u', crc32($szAdat['csaladinev']));
+		    $inEmail = $szAdat['email'];
+		    $inTel = $szAdat['mobil']; 
+		    // kódold
+		    echo '<input type="text" id="userAccount" name="userAccount" value="'.$szAdat['userAccount'].'" />';
+		    if ($szAdat['userAccount']=='') echo '<a title="'.$inUsername.'" class="gotoCreateAccount" href="'.href("index.php?page=session&f=createAccount&toPolicy=parent&userCn=$inNev&userPassword=$inJelszo&email=$inEmail&tel=$inTel&userAccount=$inUsername", array('policy','lang','sessionID')).'" target="_blank">@</a> ';
+		    echo ' ('.$inJelszo.')';
+		} else
+		    echo '<input readonly="readonly" type="text" id="userAccount" name="userAccount" value="'.$szAdat['userAccount'].'" />';
+		echo '</td>';
+		echo '<th colspan="1">';
+		    echo '<label for="szStatusz">'._SZULOSTATUSZTIPUSOK.'</label>';
+		echo '</th>';
+		echo '<td colspan="3">';
+		    $_SEL[$szAdat['statusz']] = ' selected="selected" ';
+		echo '<select name="statusz" id="szStatusz">'."\n";
+		    echo '<option value=""> - </option>'."\n";
+		    for ($i = 0; $i < count($ADAT['statuszTipusok']); $i++) {
+			echo '<option value="'.$ADAT['statuszTipusok'][$i].'"'.$_SEL[$ADAT['statuszTipusok'][$i]].'>'.$ADAT['statuszTipusok'][$i].'</option>'."\n";
+		    }
+		echo '</select>'."\n";
+		echo '</td>';
+	    echo '</tr>'."\n";
+	    echo '<tr>'."\n";
+		echo '<td colspan="6">'."\n";
+		echo '<fieldset><legend>'._LAKHELY.'</legend>'."\n";
+
+		echo '<table>'."\n";
+		echo '<tr>'."\n";
+		echo '<th>';
+		    echo '<label for="orszag">'._ORSZAG.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>';
+		    echo '<input type="text" id="orszag" name="cimOrszag" value="'.$szAdat['cimOrszag'].'" />';
+		echo '</td>'."\n";
+		echo '<th>';
+		    echo '<label for="cimIrsz">'._IRSZ.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>';
+		    echo '<input type="text" id="cimIrsz" name="cimIrsz" value="'.$szAdat['cimIrsz'].'" />';
+		echo '</td>'."\n";
+		echo '<th>';
+		echo '<label for="cimHelyseg">'._HELYSEG.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>';
+		echo '<input type="text" id="cimHelyseg" name="cimHelyseg" value="'.$szAdat['cimHelyseg'].'" />';
+		echo '</td>'."\n";
+		echo '</tr>';
+
+		echo '<tr>'."\n";
+		echo '<th>';
+		    echo '<label for="cimKozteruletNev">'._KOZTERULETNEV.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>';
+		    echo '<input type="text" id="cimKozteruletNev" name="cimKozteruletNev" value="'.$szAdat['cimKozteruletNev'].'" />';
+		    echo '<select name="cimKozteruletJelleg">'."\n";
+			echo '<option value=""> - </option>'."\n";
+			$SEL = array($szAdat['cimKozteruletJelleg'] => ' selected="selected" ');
+			foreach ($ktJelleg as $jelleg) {
+			    echo '<option value="'.$jelleg.'"'.$SEL[$jelleg].'>'.$jelleg.'</option>'."\n";
+			}
+		    echo '</select>'."\n";
+		echo '</td>'."\n";
+		echo '<th>';
+		    echo '<label for="cimHazszam">'._HAZSZAM.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>';
+		    echo '<input type="text" id="cimHazszam" name="cimHazszam" value="'.$szAdat['cimHazszam'].'" title="'._HAZSZAM.'" />';
+		echo '</td>'."\n";
+		echo '</tr>';
+
+		echo '<tr>'."\n";
+		echo '<th>';
+		    echo '<label for="cimEmelet">'._EMELET.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>';
+		    echo '<input type="text" id="cimEmelet" name="cimEmelet" value="'.$szAdat['cimEmelet'].'" title="'._EMELET.'" />';
+		echo '</td>'."\n";
+		echo '<th>';
+		    echo '<label for="cimAjto">'._AJTO.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>';
+		    echo '<input type="text" id="cimAjto" name="cimAjto" value="'.$szAdat['cimAjto'].'" title="'._AJTO.'" />';
+		echo '</td>'."\n";
+		echo '</tr>';
+		echo '</table>'."\n";
+
+		echo '</filedset>'."\n";
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+	    echo '<tr>'."\n";
+
+		echo '<th>';
+		echo '<label for="szuloMobil">'._MOBIL.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<span class="icon-phone-alt"></span>';
+		echo '<input type="text" id="szuloMobil" name="mobil" value="'.$szAdat['mobil'].'" />';
+		echo '</td>'."\n";
+
+		echo '<th>';
+		echo '<label for="szuloEmail">'._EMAIL.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td colspan="1">'."\n";
+		echo '<span class="icon-envelope"></span>';
+		echo '<input type="text" id="szuloEmail" name="email" value="'.$szAdat['email'].'" />';
+		echo '</td>'."\n";
+
+		echo '<th>';
+		echo '<label for="szuloTelefon">'._TELEFON.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<span class="icon-phone"></span>';
+		echo '<input type="text" id="szuloTelefon" name="telefon" value="'.$szAdat['telefon'].'" />';
+		echo '</td>'."\n";
+
+	    echo '</tr>';
+	    echo '<tr>'."\n";
+		echo '<td colspan="6" style="text-align: center;">';
+		    if ($diakAdat[$tipus.'Id'] == '') {
+			echo '<input type="submit" name="modositas" value="'._FELVESZ.'" class="onClickUpdate" />';
+			echo '<input type="hidden" name="subaction" value="felvesz" />';
+		    } else {
+			echo '<input type="submit" name="modositas" value="'._MODOSITAS.'" class="onClickUpdate" />';
+			echo '<input type="hidden" name="subaction" value="modosit" />';
+		    }
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+
+	    if ($diakAdat[$tipus.'Id'] != '') {
+		// Hozzárendelés törlése
+		echo '<tr>'."\n";
+		    echo '<td colspan="6">';
+			echo '<h1>'._SZULO_HOZZARENDELES_TORLESE.'</h1>';
+		    echo '</td>'."\n";
+		echo '<tr>'."\n";
+		echo '</tr>'."\n";
+		    echo '<td colspan="6" style="text-align: center;">';
+			echo '<input type="submit" name="torles" value="'._SZULO_HOZZARENDELES_TORLESE.'" class="onClickUpdate" />';
+		    echo '</td>'."\n";
+		echo '</tr>'."\n";
+	    }
+	echo '</table>'."\n";
+	} // isset($tipus)
+
+	echo '</fieldset>'."\n";
+
+	if ($skin != 'ajax') {
+	    echo '<input type="hidden" name="szuloId" value="'.$szAdat['szuloId'].'" />'."\n";
+	    for ($i = 0; $i < count($ADAT['szuloDiakjai']); $i++) {
+		echo '<button type="submit" name="diakId" value="'.$ADAT['szuloDiakjai'][$i]['diakId'].'" >'.$ADAT['szuloDiakjai'][$i]['diakNev'].'</button>';
+	    }
+    	}
+	formEnd();
+    }
+
+
+?>

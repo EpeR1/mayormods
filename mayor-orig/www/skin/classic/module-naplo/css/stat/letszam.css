@@ -1,0 +1,11 @@
+
+
+    table.letszamStat {
+	background-color: #eeeeee;
+    }
+    table.letszamStat thead tr th { background-color: #555555; color: white; }
+    table.letszamStat tfoot tr th { background-color: #555555; color: white; font-size:smaller;}
+    
+    table.letszamStat tbody tr th { background-color: #888888; color: white; }
+    table.letszamStat tbody tr td { background-color: #dddddd; color: black; text-align: center; width:2em; }
+    table.letszamStat tbody tr td.l { color: #555555; }

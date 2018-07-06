@@ -1,0 +1,38 @@
+<?php
+
+    function putTanarOrarend($Tanarok, $Orak, $napiMinOra, $napiMaxOra, $orarendiHet, $felev, $tolDt) {
+
+	formBegin(array('class'=>'orarend'));
+	    echo '<input type="hidden" name="orarendiHet" value="'.$orarendiHet.'" />'."\n";
+	    echo '<input type="hidden" name="felev" value="'.$felev.'" />'."\n";
+	    echo '<input type="hidden" name="tolDt" value="'.$tolDt.'" />'."\n";
+	    echo '<input type="submit" name="csv" value="CSV" />'."\n";
+	    echo '<input type="submit" name="xls" value="XLS" />'."\n";
+	    echo '<input type="submit" name="txt" value="TXT" />'."\n";
+	    echo '<input type="submit" name="html" value="HTML" />'."\n";
+	formEnd();
+
+/*
+	echo '<table>'."\n";
+	for ($i = 0; $i < count($Tanarok); $i++) {
+
+	    echo '<tr>'-"\n";
+	    $tanarId = $Tanarok[$i]['tanarId'];
+	    $tanarNev = $Tanarok[$i]['tanarNev'];
+
+	    echo '<th>'.$tanarNev.'</th>'."\n";
+	    for ($nap = 1; $nap < 6; $nap++) {
+		for ($ora = $napiMinOra; $ora <= $napiMaxOra; $ora++) {
+		    $Ora = $Orak[$tanarId][$nap][$ora];
+		    echo '<td>'.$Ora['osztalyJel'].'<br />'.$Ora['targyJel'].'</td>'."\n";
+		}
+	    }
+	    echo '</tr>'."\n";
+	}
+	echo '</table>'."\n";
+*/
+
+    }
+
+
+?>

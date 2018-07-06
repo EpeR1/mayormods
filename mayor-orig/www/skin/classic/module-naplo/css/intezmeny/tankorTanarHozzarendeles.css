@@ -1,0 +1,94 @@
+
+
+    div#statusz { border-radius: 0 0 10px 10px; width:850px; background: rgba(170,170,170); color: white; margin: 0 auto; position:relative; top: -12px; left:-34px; z-index: auto; padding: 0 5px;}
+    div#statusz #filter { cursor: pointer; background-color: rgba(100,100,100,0.7); padding: 5px; display: inline-block; margin: 0 0 0 10px; height:16px;}
+    div#statusz #filter:hover { background-color: #4285F4; }
+    div#statusz #filter:hover span.icon-chevron-right { color: white; }
+    div#statusz #limit { display: inline-block; background-color: rgba(100,100,100,0.7); padding: 3px 5px; margin: 0 1px; }
+    div#statusz #limit:hover { background-color: rgba(100,100,100,1); }
+    div#statusz #limit span#minusz { background-color: rgba(130,160,255,0.7); padding: 4px 5px; margin: 0; cursor: pointer; display: inline-block; position: relative; }
+    div#statusz #limit span#plusz  { background-color: rgba(255,160,130,0.7); padding: 4px 5px; margin: 0; cursor: pointer; display: inline-block; position: relative; }
+    div#statusz #limit i { background-color: rgba(200,200,200,0.9); color: rgb(100,100,100); padding: 2px 5px; }
+    div#statusz #limit ul.limit { display: none; position: absolute; top: 22px; left: 0; right: 0; list-style-type: none; margin: 0; padding: 5px 0; text-align: center; background-color: rgba(100,100,100,1); }
+    div#statusz #limit ul.limit li { margin: 0; padding: 4px;  }
+    div#statusz #limit ul.limit li:hover { background-color: rgb(200,200,200); color: rgb(80,80,80); }
+    div#statusz #limit ul.limit li.selected { background-color: rgba(250,100,100,0.5); }
+    div#statusz #stat { background-color: rgba(100,100,100,0.7); display: inline-block; margin: 0 0 0 10px; height: 16px; padding: 5px; }
+
+    #updateWindowSideContent div.slideContainer { border-bottom: 1px dotted #aaa; cursor: pointer; padding: 3px 10px; }
+    #updateWindowSideContent div.slideContainer span.icon-chevron-up,
+    #updateWindowSideContent div.slideContainer span.icon-chevron-down { float: right; }
+    #updateWindowSideContent div.slideContainer ul { display: none; list-style-type: none; margin: 10px 0; cursor: default; padding: 0 10px;  }
+    #updateWindowSideContent div.slideContainer ul li { display: inline-block; }
+    #updateWindowSideContent div.slideContainer ul li.tanarNelkuli { margin-bottom: 10px; }
+    #updateWindowSideContent input[type=submit] { width: 100%; }
+
+    #updateWindowSideContent div.slideContainer ul li { width: 98%; }
+    #updateWindowSideContent div#szOsztaly.slideContainer ul li { width: 100px; }
+    
+    #updateWindowSide p.tankorNev { text-align: center; border-bottom: solid 1px #ddd; padding: 8px 0; margin: 0; }
+    #updateWindowSide div.slideToggleContainer ul { list-style-type: none; margin: 10px 0px; display: none; cursor: default; padding: 0 10px; }
+    #updateWindowSide div.slideToggleContainer ul li { display: inline-block; width: 100px; }
+    #updateWindowSide div.slideToggleContainer { cursor: pointer; margin: 0; padding: 3px 10px; border-bottom: 1px dotted #aaa; }
+    #updateWindowSide div.slideToggleContainer span.icon-chevron-down { float: right; z-index: 0; }
+    #updateWindowSide div.slideToggleContainer span.changed { color: yellow; }
+    #updateWindowSide ul#tankorSzemeszter li { width: 120px; }
+    #updateWindowSide ul#tankorSzemeszter input { width: 40px; text-align: right;}
+
+    #updateWindowSide p.tankorModosit { cursor: pointer; color: yellow; text-align: right; margin: 0; padding: 0 10px 0 0; display: none; background-color: rgba(240,240,220,0.5); border-bottom: 2px solid yellow; color: rgb(70,70,70); color: white; }
+    #updateWindowSide span.tankorNevExtra { cursor: pointer;}
+    #updateWindowSide span.tankorNevExtra.changed { color: yellow; }
+    #updateWindowSide input#tankorNevExtra { width: 50px; display: none; }
+
+
+
+    /* table-layout:fixed; */
+    div.tanarTankor { margin: 40px auto auto 2px;}
+    div.tanarTankor table { font-size:x-small; background-color: #ababab; }
+    div.tanarTankor table thead tr th { background-color: white; cursor: pointer; }
+    div.tanarTankor table thead tr td { border-bottom: solid 1px white; cursor:pointer;}
+    div.tanarTankor table thead tr td.slctd { border-bottom: solid 1px cornflowerblue; }
+    div.tanarTankor table thead tr th.targy { height: 30px; }
+    div.tanarTankor table thead tr td.tankor { text-align: center; height: 30px; border-bottom: red 4px solid; }
+    div.tanarTankor table thead tr td.tankor.kesz { border-bottom: green 4px solid; }
+    div.tanarTankor table thead tr td.tankor.tobb { border-bottom: yellow 4px solid; }
+    div.tanarTankor table thead tr td.tankor.bontasHiba { border-top: red 4px solid; }
+    div.tanarTankor table thead tr th span#keszTanarDb,
+    div.tanarTankor table thead tr th span#osszTanarDb,
+    div.tanarTankor table thead tr th span#keszTankorDb,
+    div.tanarTankor table thead tr th span#osszTankorDb { color: red; }
+
+    div.tanarTankor table tbody tr.szurt { display: none; }
+    div.tanarTankor table tbody tr.csukott { display: none; }
+    div.tanarTankor table tbody tr th { height:20px; background-color: white; }
+    div.tanarTankor table tbody tr td.lekotott { padding: 0 4px; }
+    div.tanarTankor table tbody tr.ok td.lekotott { border-right: 4px solid green; border-left: 4px solid green; background-color: #88ffaa;  }
+    div.tanarTankor table tbody tr.plusz td.lekotott { border-right: 4px solid red; border-left: 4px solid #cdcdcd; }
+    div.tanarTankor table tbody tr.minusz td.lekotott { border-right: 4px solid #cdcdcd; border-left: 4px solid blue; }
+    div.tanarTankor table tbody tr:hover th { background-color:orange }
+
+    div.tanarTankor table tbody tr td { min-width:20px; text-align:center; background-color: #efefef;}
+
+    div.tanarTankor input[type="checkbox"] { display:none; }
+    div.tanarTankor input[type="checkbox"]:checked { display:table-cell; }
+    div.tanarTankor table tbody tr th.slctd { background-color: rgba(0,200,0,0.7); }
+    div.tanarTankor table tbody tr td:hover input[type="checkbox"] { display:table-cell; }
+
+pre { text-align: left; }
+    div.tankorTanar table#tt thead tr th.szurt { display: none; }
+    div.tankorTanar table#tt thead tr td.szurt { display: none; }
+    div.tankorTanar table#tt tbody tr td.szurt { display: none; }
+
+    div.tanarTankor table tbody td.disable { background-color: #888; }
+
+    div.rot {
+        background-color: #eeeeee;
+        -webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    }
+
+
+

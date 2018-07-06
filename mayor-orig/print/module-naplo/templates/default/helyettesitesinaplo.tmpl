@@ -1,0 +1,78 @@
+%!pdfLaTeXTwice pdf
+\documentclass[8pt]{article}
+\usepackage[a4paper]{geometry} % A4-es méret
+\usepackage[utf8]{inputenc} % UTF-8 kódolású forrás
+\usepackage{t1enc}
+\usepackage[magyar]{babel} % magyar elválasztási szabályok
+\frenchspacing % a magyar tipográfiai szabályoknak megfelelő szóközök írásjelek után
+\usepackage{booktabs} % táblázatok magasabb szintű formázása
+\usepackage{longtable} % többoldalas táblázatok
+\setlength\LTleft{-65pt}
+\setlength\LTright{-65pt}
+\usepackage{fancyhdr} % Fejléc és lábléc kezelés
+\pagestyle{fancy}
+\def\mayor{%
+\font\mayorfnt=cmsl4%
+\font\Mayorfnt=cmsl6
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+\renewcommand{\footnotesize}{\fontsize{6pt}{8pt}\selectfont}
+%\addtolength{\skip\footins}{2mm}
+%\addtolength{\textheight}{16mm}
+%\addtolength{\textwidth}{30mm}
+\setlength{\footskip}{26pt}
+\setlength{\headsep}{24pt}
+\lhead{\small %$intezmenyNev}
+\rhead{\small Helyettesítési-napló %$tanev}
+\lfoot{\scriptsize\copyright\mayor\ elektronikus napló - Nyomtatva: %$nyDt}
+\rfoot{\scriptsize\thepage . oldal}
+\cfoot{}
+\begin{document}
+
+\begin{center}
+{\large\bfseries H E L Y E T T E S Í T É S E K}\\
+
+\vspace{12pt}
+
+{\bfseries\normalsize %$tolDt – %$igDt}\\
+
+\vspace{12pt}
+
+\scriptsize
+\begin{longtable}{@{\extracolsep{\fill}}c|c|l|l|l|c}
+Dátum & Óra & Ki & Kit & Tankör & Típus \\
+\toprule
+\endfirsthead
+Dátum & Óra & Ki & Kit & Tankör & Típus \\
+\toprule
+\endhead
+\bottomrule
+\endfoot
+\bottomrule
+\endlastfoot
+\hline
+%{hDt
+%{helyettesites
+\vbox to 1.2em {}%$dt&%$ora&%$kiCn&%$kitCn&%$tankorNev&%$tipus\\
+%}helyettesites
+\midrule
+%}hDt
+
+\end{longtable}
+
+\vspace{16pt}
+
+\begin{flushleft}
+{\scriptsize %$intezmenyHelyseg, %$nyDatumStr}
+\end{flushleft}
+\vspace{20pt}\slshape\scriptsize
+\begin{tabular}{ccc}
+%\rule{3.5cm}{0.1pt}
+\hspace{3.5cm}%
+&\hspace{3cm}\ &\rule{3.5cm}{0.1pt}\\
+%tanuló
+&&igazgató\\
+\end{tabular}
+
+\end{center}
+
+\end{document}

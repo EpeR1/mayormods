@@ -1,0 +1,16 @@
+<?php
+
+    function putVizsgaJelentkezes($ADAT) {
+
+	formBegin(array('class'=>'jelentkezes'));
+	    echo '<label for="idoszak">'._VIZSGAIDOSZAK.'</label>'."\n";
+	    echo '<select id="idoszak" name="idoszakId">'."\n";
+	    $SEL = array($ADAT['kovetkezoIdoszakIndex'] => ' selected="selected" ');
+	    foreach ($ADAT['vizsgaIdoszak'] as $index => $vAdat) {
+		echo '<option value="'.$vAdat['idoszakId'].'"'.$SEL[$index].'>'.substr($vAdat['tolDt'],0,10).' - '.substr($vAdat['igDt'],0,10).'</option>'."\n";	    
+	    }
+	    echo '</select>'."\n";
+	formEnd();
+    }
+
+?>

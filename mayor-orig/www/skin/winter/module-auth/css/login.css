@@ -1,0 +1,39 @@
+@media screen {
+	img 	{ border-width: 0px; }
+	h1	{ text-align: center; margin: 10px; font-size:20px; }
+	h2	{ text-align: center; margin: 10px; font-size: 15px; }
+	table	{ font-size: 12px }
+	table.main {width: 100%; border-width: 0px;}
+	table.loginablak {background-color: #ffffff; border-width: 1px; border-style: solid; border-color: #555550; width:400px}
+	td	{ padding: 2px }
+	form	{ margin: 30px; padding: 0px; }
+	input	{ font-size: 10px; font-family: Verdana,Arial; background-color: #fffff0; }
+	select.pp { 
+	    padding: 0px; margin: 0px;
+	    border: none 0px #778890;
+	    font-size: 12px; 
+	    background-color: #eeeee0;
+	    font-family: Verdana,Arial; 
+	    }
+	select.pp>option { border: none 0px black; }
+	input.submit 	{ border: solid 1px #776650; }
+	thead td {
+	    background-color: #a00000;
+	    text-align: center;
+	    font-family: Verdana,arial;
+	    font-size: 10pt;
+	    font-weight: bold;
+	    color: white;
+	}
+	tfoot td {
+	    background-color: #888880;
+	    text-align: center;
+	}
+	form.loginablak tbody img { border: solid 1px #bbddbb; }
+	td.co {
+	    text-align: center;
+	    vertical-align: bottom;
+	    font-family: Verdana,arial;
+	    font-size: 8pt;
+	}
+}

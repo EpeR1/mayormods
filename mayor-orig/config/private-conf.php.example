@@ -1,0 +1,76 @@
+<?php
+
+// A kezdőlap beállítása
+// Ha a portál modult telepítjük:
+//    $DEFAULT_PSF['private']  = array('page'=>'portal', 'sub'=>'portal', 'f' => 'portal');
+// Illetve nélküle, csak napló modullal:
+    $DEFAULT_PSF['private']  = array('page'=>'naplo', 'sub'=>'', 'f' => 'naplo');
+
+/*
+    'onExpired = 'none' | 'warning' | 'force update'
+    Ha lejár a jelszó érvényessége (de még nincs letiltva), akkor
+	none         - ne történjen semmi, azaz nem vesszük figyelembe, beengedjük 
+	warning      - beengedjük figyelmeztető üzenettel
+	force update - jelszóváltoztatásra kényszerítjük => enableSelfPasswordChange
+    'onDisabled = 'none' | 'refuse'
+	none         - nem vesszük figyelembe, azaz beengedjük
+	refuse       - visszautasítjuk
+    'enableSelfPasswordChange' = true | false
+    'accountCreateMode' => 'registration' | 'create by admin' => admingroup
+
+*/
+
+
+    $AUTH['private'] = array(
+//	'backend' => 'ldap',
+//	'backend' => 'ads',
+	'backend' => 'mysql',
+
+	'authentication' => 'required',
+	'onExpired' => 'force update',
+	'onDisabled' => 'none',
+	'enableSelfPasswordChange' => true,
+        'createAccount' => 'byAdmin',
+	'adminGroup' => 'useradmin',
+	'categories' => array('tanár','diák','titkárság','egyéb'),
+	'accountAttrs' => array('studyId','mail','telephoneNumber'),
+	'unixStyleAccounts' => false,
+
+	'shadowLastChange' => intval(time()/(60*60*24)),
+	'shadowMin' => 2,
+	'shadowMax' => 80,
+	'shadowWarning' => 10,
+	'shadowInactive' => 0,
+	
+        'mysql host' => 'localhost',
+        'mysql db' => 'mayor_private',
+        'mysql user' => 'mayor_private',
+	'mysql pw' => '%SQLPW%',
+
+	//OpenLdap + MaYoR schema
+	//'ldap hostname' => 'localhost',
+	//'ldap protocol version' => 3,
+	//'ldap base dn' => 'o=mayor,c=hu',
+	//'createAccountScript' => 'accounts.sh'
+
+	#Active Directory Test
+        #'backend'          => 'ads',
+        #'adsHostname'      => 'ldaps://your.domain:636',                 // Jelszóváltoztatáshoz kötelező az ldaps
+        #'adsBaseDn'        => 'DC=your,DC=domain',
+        #'adsUser'          => 'CN=User,OU=Users,DC=your,DC=domain',      // Olvasási jog az AD-ben - Normál user
+        #'adsPw'            => 'jelszó',
+        #'adsAccountOperatorUser' => 'CN=Op,OU=Users,DC=your,DC=domain',  // Account Operators (Fiókfelelősök) csoport tag pl (jelszóváltoztatás)
+        #'adsAccountOperatorPw'   => 'jelszó',
+        #'adsUserObjectClass'     => 'person',                            // Userek objectum osztálya (volt posixAccount)
+        #'adsGroupObjectClass'    => 'group',                             // Csoportok objectum osztálya (volt nayorGroup)
+        #'adsStudyIdAttr'   => 'serialnumber',                            // Az oktatási azonosítót tároló attribútum (studyId)
+	#'adsContainers'	=> array(
+	#    'ou=IT,dc=vmg,dc=local',
+	#    'ou=diak,dc=vmg,dc=local'
+	#),
+	#'adminGroup'       => 'Fiókfelelősök',
+        #'cacheable'        => true,
+    );
+    $AUTH['private']['shadowExpire'] = $AUTH['private']['shadowLastChange'] + $AUTH['private']['shadowMax'] + $AUTH['private']['shadowInactive'];
+
+?>

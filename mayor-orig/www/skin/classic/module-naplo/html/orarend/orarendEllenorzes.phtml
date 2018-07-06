@@ -1,0 +1,88 @@
+<?php
+
+    function putEredmeny($ADAT) {
+
+	global $aHetNapjai;
+
+	formBegin(array('class'=>'orarend'));
+
+	echo '<ol>';
+
+	echo '<li>';
+	echo '<h1>'._ORARENDIORA_TANKOR_ELLENORZES.'</h1>';
+	if (count($ADAT['check']['orarendiOraTankor']) > 0) {
+	    echo '<ol class="kritikus">';
+	    for ($i = 0; $i < count($ADAT['check']['orarendiOraTankor']); $i++) {
+		$A = $ADAT['check']['orarendiOraTankor'][$i];
+		echo '<li>';
+		echo $ADAT['tanarok'][ $A['tanarId'] ]['tanarNev'].' '.$A['het'],'. '._HET.' '.$aHetNapjai[ $A['nap']-1 ].' '.$A['ora'].'. '._ORA.': ';
+		echo '<strong>'.$A['osztalyJel'].' '.$A['targyJel'].'</strong>';
+		echo ' ('._ERVENYES.': '.$A['tolDt'].' - '.$A['igDt'].')';
+		echo '</li>';
+	    }
+	    echo '</ol>';
+	} else {
+	    echo _OK;
+	}
+	echo '</li>'."\n";
+
+	echo '<li>';
+	echo '<h1>'._TANKOR_ORASZAM_ELLENORZES.'</h1>'."\n";
+	if (count($ADAT['check']['tankorOraszam']) > 0) {
+	    echo '<ol>';
+	    for ($i = 0; $i < count($ADAT['check']['tankorOraszam']); $i++) {
+		$A = $ADAT['check']['tankorOraszam'][$i];
+		echo '<li>';
+		echo $A['tankorNev'].' ('.$A['tankorId'].'): <strong>'.$A['tankorHetiOraszam'].' != '.$A['orarendHetiOraszam'].'</strong>';
+		echo '</li>';
+	    }
+	    echo '</ol>';
+	} else {
+	    echo _OK;
+	}
+	echo '</li>'."\n";
+
+	echo '<li>';
+	echo '<h1>'._HIANYZO_TERMEK.'</h1>'."\n";
+	if (count($ADAT['check']['hianyzoTermek']) > 0) {
+	    echo '<ol>';
+	    for ($i = 0; $i < count($ADAT['check']['hianyzoTermek']); $i++) {
+		$A = $ADAT['check']['hianyzoTermek'][$i];
+		echo '<li>';
+		echo $A['tanarNev'].' '.$A['het'],'. '._HET.' '.$aHetNapjai[ $A['nap']-1 ].' '.$A['ora'].'. '._ORA.': ';
+		echo '<strong>'.$A['osztalyJel'].' '.$A['targyJel'].'</strong>';
+		echo '</li>';
+	    }
+	    echo '</ol>';
+	} else {
+	    echo _OK;
+	}
+	echo '</li>'."\n";
+
+	echo '<li>';
+	echo '<h1>'._TEREMUTKOZES.'</h1>'."\n";
+	if (count($ADAT['check']['teremUtkozes']) > 0) {
+	    echo '<ol>';
+	    for ($i = 0; $i < count($ADAT['check']['teremUtkozes']); $i++) {
+		$A = $ADAT['check']['teremUtkozes'][$i];
+		echo '<li>';
+		echo $A['het'],'. '._HET.' '.$aHetNapjai[ $A['nap']-1 ].' '.$A['ora'].'. '._ORA.': ';
+		echo '<strong>'.$A['teremId'].'</strong>';
+		echo '</li>';
+	    }
+	    echo '</ol>';
+	} else {
+	    echo _OK;
+	}
+	echo '</li>'."\n";
+
+	echo '</ol>';
+
+//echo '<hr><pre>';
+//var_dump($ADAT['check']['teremUtkozes']);
+//echo '</pre>';
+	formEnd();
+
+    }
+
+?>

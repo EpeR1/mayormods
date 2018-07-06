@@ -1,0 +1,19 @@
+
+
+    div#ujTanmenet {
+	width:90%;
+	margin:auto;
+    }
+    
+    div.tanmenetHeader {
+padding:5px;                                                                                                                  
+margin-bottom:0px;                                                                                                            
+background-color: #5a85b8;                                                                                                    
+border-bottom: solid 1px #15477B ;                                                                                            
+color: white;                                                                                                                 
+font-weight: bold;                                                                                                            
+    }                     
+    
+    form.tanmenet { background: #ddd; padding: 10px;margin:0px; border-width: 0px 1px 1px 1px; border-style: solid ; border-color:#366; }
+    form.tanmenet input[type=text] { width: 100%; }
+    form.tanmenet input[type=submit] { width: 80%; margin: 5px 10%; }

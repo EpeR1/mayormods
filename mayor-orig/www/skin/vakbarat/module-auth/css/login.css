@@ -1,0 +1,9 @@
+img 	{ border-width: 0px; } 	
+h1	{text-align: center; margin: 10px; font-size:20px; } 	
+h2	{text-align: center; margin: 10px; font-size: 15px; }
+h3	{text-align: center; margin: 10px; font-size: 12px; }
+form#login	{ margin: 30px;padding: 0px; text-align: center; } 	
+input	{ font-size: 12px; font-family:Verdana,Arial; background-color: #fffff0; border: solid 1px #666690;} 
+select.pp {  	    padding: 0px; margin: 0px; 	    border: none 0px #778890; 	    font-size: 12px;  	    background-color: #eeeee0; 	   font-family: Verdana,Arial;  	    } 	
+select.pp>option { border: none 0px black; } 	
+input.submit 	{ border: solid 1px #776650; } 	

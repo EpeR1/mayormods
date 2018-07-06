@@ -1,0 +1,68 @@
+
+table.orarend {
+    font-size:10px;
+}
+table.orarend tr th {
+    background-color: #eeeeee;
+    color: #999999;
+    border-width: 0px 0px 0px 0px;
+    width:1%;
+    height:30px;
+    font-weight: normal;
+    border-color: #ddd;
+    border-width: 0px 0px 1px 0px;
+    border-style: solid;
+
+}
+table.orarend thead tr th {
+    background-color: #889999;
+    color: white;
+    height:1em;
+
+}
+table.orarend thead tr th.spec {
+    background-color: red;
+}
+
+table.orarend tr td {
+    text-align: center;
+    border-color: #ddd;
+    border-width: 0px 0px 1px 0px;
+    border-style: solid;
+    width:18%;
+}
+
+div.unfinished {
+    background-color: yellow;
+}
+
+    table.orarend tbody tr td hr { width: 80% }
+    div.normál {}
+    div.plusz {
+	background-color: #eeccee;
+    }
+    div.elmarad {
+	color: white;
+	background-color: black;
+    }
+    div.elmarad_máskor {
+	color: white;
+	background-color: #555555;
+    }
+    div.normál_máskor {
+	color: white;
+	background-color: #776699;
+    }
+    div.felügyelet {
+	background-color: #bbaac0;
+    }
+    div.helyettesítés {
+	background-color: #ccffcc;
+    }
+    div.összevonás {
+	background-color: #aabbc0;
+    }
+    span.helyett {
+	color: gray;
+	text-decoration: line-through;
+    }

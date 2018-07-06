@@ -1,0 +1,88 @@
+<?php
+
+    function putOrarend($ADAT,$TANKOROK,$tanarId) {
+
+	if (is_array($ADAT['orarendiOra'])) {
+
+	foreach($ADAT['orarendiOra'] as $het => $T) {
+	    foreach($T as $nap => $REST) {
+		$NAP_SZAM2HET[$nap]=$het;
+	    }
+	}
+
+	formBegin();
+	echo '<input type="hidden" name="action" value="orarendiOraTankorAssoc" />';
+	echo '<input type="hidden" name="tanarId" value="'.$tanarId.'" />';
+	echo '<input type="hidden" name="tolDt" value="'.$_POST['tolDt'].'" />';
+	echo '<input type="hidden" name="igDt" value="'.$_POST['igDt'].'" />';
+//	echo '<input type="hidden" name="het" value="'.$het.'" />';
+		echo '<table class="orarend" align="center">'."\n";
+		for($ora=$ADAT['napiMinOra']; $ora<=$ADAT['napiMaxOra']; $ora++) {
+		    echo '<tr>';
+			echo '<th>'.$ora.'</th>';
+			for ($nap=1; $nap<=$ADAT['hetiMaxNap']; $nap++) {
+            		    $het = $NAP_SZAM2HET[$nap];
+			    $T = $ADAT['orarendiOra'][$het];
+			    echo '<td style="width:18%">';		
+				if (count($T[$nap][$ora])>=2) {
+				    echo 'HIBA! -'.$T[$nap][$ora].' - adott napon több órája is van!';
+				} else {
+				  for($i=0; $i<count($T[$nap][$ora]); $i++) { 
+				    if ($ADAT['napok'][$nap]['tipus']=='tanítási nap'
+//					&& (
+//					    is_array($ADAT['assoc'][$nap][$ora]['orak'][$i])
+//					    || is_array($ADAT['orarendiOra'][$het][$nap][$ora])
+//					)
+				    ) {
+				    // Az órarendből a jelek:
+				    $_targyJel = $T[$nap][$ora][$i]['targyJel'];
+				    $_osztalyJel = $T[$nap][$ora][$i]['osztalyJel'];
+				    $_teremId = ($T[$nap][$ora][$i]['teremId']=='')?'-':$T[$nap][$ora][$i]['teremId'];
+				    echo '<pre style="text-align: left">';
+				    echo "targyJel:    $_targyJel\n";
+				    echo "osztalyJel:  $_osztalyJel\n";
+				    echo "teremId:     $_teremId\n";
+				    echo "het/nap/ora: $het/$nap/$ora\n</pre>";
+
+				    // és a hozzárendelt tankör:
+				    echo '<select name="ORARENDKEY[]">';
+				    echo '<option value="">'.'</option>';
+				    foreach($TANKOROK as $_tankorId => $_TANKOR) {
+					// figyelem, nem ugyanazon tömb $i. elemét hasonlítjuk össze! , vizsgáljuk!!!!!!!
+					// de a feltételben szerepelnie kell, így nem probléma. --FIXME
+					$_SEL = ($_tankorId==$ADAT['assoc'][$nap][$ora]['orak'][$i]['tankorId']) ? ' selected="selected" ': '';
+					if ($_tankorId==$ADAT['assoc'][$nap][$ora]['orak'][$i]['tankorId']) {
+					    $X[] = $_tankorId;
+					}
+					echo '<option value="'.$tanarId.'%'.$_osztalyJel.'%'.$_targyJel.'%'.$_tankorId.'"'.$_SEL.'>';
+					echo $_TANKOR[0]['tankorNev'];
+					echo "($_tankorId)";
+					$_blokkStr = array();
+					if (is_array($_TANKOR[0]['blokkAdat'])) {
+					    for ($j=0; $j<count($_TANKOR[0]['blokkAdat']); $j++) {
+						$_blokkStr[] = $_TANKOR[0]['blokkAdat'][$j]['blokkNev'];
+					    }
+					    echo ' ['.implode(', ',$_blokkStr).'] ';
+    					}
+					if (is_array($X) && in_array($_tankorId,$X)) echo '+';
+					echo '</option>'."\n";
+				    }
+				    echo '</select>';
+				    echo '<input type="hidden" name="ORARENDKULCSOK[]" value="'.$tanarId.'%'.$_osztalyJel.'%'.$_targyJel.'" />'; 
+				    } // if
+				  } // for
+				} // else
+			    echo '</td>'."\n";
+			}
+		    echo '</tr>'."\n";
+		}
+		echo '</table>'."\n\n<!-- EOT -->\n\n";
+	echo '<div align="center"><input type="submit" class="sub" /></div>';
+	formEnd();
+	} else {
+	    echo '<h2>Adj meg keresési feltételt!</h2>';
+	}
+
+    }
+
+?>

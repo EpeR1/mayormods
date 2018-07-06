@@ -1,0 +1,310 @@
+<?php
+/*
+    Module: base
+    
+    html_base($sessionID,$page,$sub,$f,$lang,$skin,$MENU)
+    html_head($page,$f,$lang,$skin)
+    html_mayor_head($sessionID,$page,$sub,$f,$lang,$MENU,$skin = 'default')
+    html_mayor_foot()
+    //page($page,$sub,$f,$lang,$skin) --> base.php
+    putValidXHTML()
+*/
+
+
+// -------------------------------------------------------------------
+// html_base() : a html oldal szerkezete
+// -------------------------------------------------------------------
+
+function html_base($sessionID,$policy,$page,$sub,$f,$lang,$skin,$MENU) {
+
+    _httpHeader();
+
+    if ($MENU['set'][$policy][$page][$sub][$f]['refresh'] > 0) {
+	@header("Refresh:".intval($MENU['set'][$policy][$page][$sub][$f]['refresh']));
+    }
+
+    html_head($page,$sub,$f,$lang,$skin);
+    html_mayor_head($sessionID,$page,$sub,$f,$lang,$MENU,$skin);
+    echo '<div id="mayorerror"></div>';
+
+    echo '<div class="mayorbody" id="mayorbody">';
+    page($page,$sub,$f,$lang,$skin,$policy);
+    echo '</div>';
+    html_mayor_foot();
+}
+
+// -------------------------------------------------------------------
+// html_head() : html fejlec kiirasa            
+// -------------------------------------------------------------------
+
+function html_head($page,$sub,$f,$lang,$skin) {
+
+    global $INCLUDES, $SSSHH;
+
+    if ($f == '') $f = $page;
+    ## ----------------------------------------------
+    ## Note http://hixie.ch/advocacy/xhtml
+    ## But this is crazy! Using Doctype sniffing instead...
+    ## Also read: http://www.mozilla.org/docs/web-developer/faq.html
+    ## header('Content-type: application/xhtml+xml');
+    ## -----------------------------------------------
+    echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
+    echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">'."\n";
+    echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="hu">'."\n";
+    echo '<head>'."\n";
+    echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'."\n";
+    echo '<title>';
+	if (defined('_SITE')) echo ' - '._SITE.' - ';
+	echo _MAIN_TITLE;
+	echo '.';
+	echo _MAYORREV;
+    echo '</title>'."\n";
+    includeCSS($page,$sub,$f,$skin);
+    includeCSS($page,$sub,$f,$skin,'handheld'); // install css for handheld devices
+    includeJS($page,$sub,$f,$skin);
+    if ($SSSHH!=null && $SSSHH!='') echo $SSSHH;
+
+    if (is_array(@$INCLUDES['html_head']['global'])) foreach ($INCLUDES['html_head']['global'] as $key => $include) {
+	if (file_exists("skin/$skin/$include")) {
+	    include("skin/$skin/$include");
+	} elseif (file_exists('skin/'._DEFAULT_SKIN.'/'.$include)) {
+	    include('skin/'._DEFAULT_SKIN.'/'.$include);
+	}
+    }
+    if (is_array(@$INCLUDES['html_head'][$page])) foreach ($INCLUDES['html_head'][$page] as $key => $include) {
+	if (file_exists("skin/$skin/$include")) {
+	    include("skin/$skin/$include");
+	} elseif (file_exists('skin/'._DEFAULT_SKIN.'/'.$include)) {
+	    include('skin/'._DEFAULT_SKIN.'/'.$include);
+	}
+    }
+    echo '<link rel="shortcut icon" href="/skin/classic/base/img/favicon.ico" />'."\n";
+    echo "</head>\n<body>\n";
+		    
+}
+
+// -------------------------------------------------------------------
+// mayor_menu(): a menü kiiratása
+// -------------------------------------------------------------------
+
+function mayor_menu($MENU,$sessionID,$lang = _DEFAULT_LANG,$skin = _DEFAULT_SKIN) {
+
+    global $page, $sub, $f;
+
+    echo '<ul id="pagemenu">';
+	// --------------------------------------------------------
+    if (is_array($MENU)) {
+	foreach ($MENU as $aModule => $items) {
+	    if ($aModule != 'modules') {
+		for ($i = 0; $i < count($items); $i++) {
+
+		    if ($page == $aModule and
+			(!isset($items[$i]['url']) or strpos($_SERVER["REQUEST_URI"],$items[$i]['url']) !== false)
+		    ) echo '<li class="active">';
+		    else echo '<li>';
+
+		    if (isset($items[$i]['url']) && $items[$i]['url'] != '') {
+			if ($items[$i]['url'][0] == '&') $href = href("index.php?page=$aModule".$items[$i]['url']);
+			elseif (substr($items[$i]['url'],0,4) == 'http') $href = href($items[$i]['url'], array());
+			elseif (isset($items[$i]['get']) && is_array($items[$i]['get'])) $href = href($items[$i]['url'], $items[$i]['get']);
+			else $href = href($items[$i]['url']);
+		    } else {
+			$href = href("index.php?page=$aModule");
+		    }
+		    echo '<a href="'.$href.'"'.((isset($items[$i]['target']))?' target="'.$items[$i]['target'].'" ':'').'>'.$items[$i]['txt'].'</a>';
+
+		    echo '</li>';
+		}
+	    }
+	}
+    }
+	// ---------------------------------------------------
+    echo '</ul>';
+
+    // II: SZINT
+    @$pageArray = $MENU['modules'][$page];
+    $aPage = $page;
+
+    	if (is_array($pageArray)) {
+	    echo '<ul id="submenu">';
+	    foreach ($pageArray as $anF => $items) {
+		if ($anF != 'sub') {
+		    for ($i=0;$i<count($items);$i++) {
+			if (
+			    $page == $aPage and 
+			    (
+				(
+				    !isset($items[$i]['url']) 
+    				    and $f == $anF
+				)
+				or
+				(
+				    isset($items[$i]['url']) and
+				    strpos($_SERVER["REQUEST_URI"],$items[$i]['url']) !== false
+				)
+			    )
+			) echo '<li class="active">';
+			else echo '<li>';
+
+			    if (isset($items[$i]['url']) && $items[$i]['url'] != '') {
+				if ($items[$i]['url'][0] == '&') $href = href("index.php?page=$aPage&f=$anF".$items[$i]['url']);
+				elseif (substr($items[$i]['url'],0,4) == 'http') $href = href($items[$i]['url'], array());
+				elseif (isset($items[$i]['get']) && is_array($items[$i]['get'])) $href = href($items[$i]['url'], $items[$i]['get']);
+				else $href = href($items[$i]['url']);
+			    } else {
+				$href = href("index.php?page=$aPage&f=$anF",array('policy','sessionID','lang','skin'));
+			    }
+			    echo '<a href="'.$href.'"'.((isset($items[$i]['target']))?' target="'.$items[$i]['target'].'" ':'').'>'.$items[$i]['txt'].'</a>';
+			echo '</li>';
+		    }
+		}
+	    }
+	    echo '</ul>'."\n";
+	}
+
+    // III: SZINT
+    @$subArray = $MENU['modules'][$page]['sub'][$sub];
+    $aSub = $sub;
+    
+	if (is_array($subArray)) {
+	    echo '<ul id="fmenu">';
+
+	    foreach ($subArray as $anF => $items) {
+		for ($i=0;$i<count($items);$i++) {
+		    if ($aPage == $page and
+			$aSub == $sub and
+			$anF == $f and
+			(!isset($items[$i]['url']) or strpos($_SERVER["REQUEST_URI"],$items[$i]['url']) !== false)
+		    ) echo '<li class="active">';
+		    else echo '<li>';
+
+		    if (isset($items[$i]['url']) && $items[$i]['url'] != '') {
+			if ($items[$i]['url'][0] == '&') $href = href("index.php?page=$aPage&sub=$aSub&f=$anF".$items[$i]['url']);
+			elseif (substr($items[$i]['url'],0,4) == 'http') $href = href($items[$i]['url'], array());
+			elseif (isset($items[$i]['get']) && is_array($items[$i]['get'])) $href = href($items[$i]['url'], $items[$i]['get']);
+			else $href = href($items[$i]['url']);
+		    } else {
+			$href = href("index.php?page=$aPage&sub=$aSub&f=$anF");
+		    }
+		    echo '<a href="'.$href.'"'.((isset($items[$i]['target']))?' target="'.$items[$i]['target'].'" ':'').'> '.$items[$i]['txt'].' </a>';
+
+		    echo '</li>';
+		}
+	    }
+
+	    echo '</ul>'."\n";
+	}
+
+}
+
+// -------------------------------------------------------------------
+// html_mayor_head() : fejlec kiirasa (logo+menu+lastupdated)            
+// -------------------------------------------------------------------
+    
+function html_mayor_head($sessionID,$page,$sub,$f,$lang,$MENU,$skin = _DEFAULT_SKIN) {
+
+    global $INCLUDES, $INSTALLED_MODULES, $LANGUAGES, $SKINS, $SKINSSHOW, $policy;
+
+    _updateWindow();
+    
+    //$imgextra = '-marc15';
+
+    if (!file_exists($HOME_LOGO = 'skin/'.$skin.'/base/img/mayor_small_ssl'.$imgextra.'.png'))
+		     $HOME_LOGO = 'skin/'._DEFAULT_SKIN.'/base/img/mayor_small_ssl'.$imgextra.'.png';
+    //if (!file_exists($HOME_LOGO = 'skin/'.$skin.'/base/img/mayor_small_ssl.gif'))
+    //		     $HOME_LOGO = 'skin/'._DEFAULT_SKIN.'/base/img/mayor_small_ssl.gif';
+    if (!file_exists($HELP_LOGO = 'skin/'.$skin.'/module-help/img/help_small.jpg'))
+		     $HELP_LOGO = 'skin/'._DEFAULT_SKIN.'/module-help/img/help_small.jpg';
+    ## Név, Oldal info, Policy
+    echo '<div class="namepolicy" id="namepolicy">'."\n";
+	echo '<table cellspacing="0" cellpadding="0"><tr>'."\n";
+	    echo '<td class="language left hideShowContainer">'."\n";
+
+	    echo '<span class="onClickHideShow"><img class="onClickHideShow" id="openLangSelect" src="skin/classic/base/img/flags/'.$lang.'.gif" alt="'.$lang.'" /></span>'."\n";
+
+	    echo '<span id="langSelect" class="openable" style="display: none;">';
+	    for ($i = 0;$i < count($LANGUAGES); $i++) {
+		if ($LANGUAGES[$i]!=$lang) echo '<a href="'.href('index.php?lang='.$LANGUAGES[$i],array('skin','policy','page','sub','f','sessionID')).'"><img src="skin/classic/base/img/flags/'.$LANGUAGES[$i].'.gif" alt="'.$LANGUAGES[$i].'" /></a>';
+	    }
+	    echo '</span>';
+
+	    formBegin(array('id'=>'changeSkin','action'=>href('index.php', array('sessionID','lang'))));
+		echo '<input type="hidden" name="noModify" value="1" />';
+		    echo '<select class="onChangeSubmit" name="skin">';
+			for ($i=0; $i<count($SKINSSHOW); $i++) {
+			    $_SEL = ($SKINSSHOW[$i]==$skin)? 'selected="selected"':'';
+			    echo '<option value="'.$SKINSSHOW[$i].'" '.$_SEL.'>'.$SKINSSHOW[$i].'</option>';
+			}
+		    echo '</select>';
+		    global $POLICIES;
+		    echo '<select class="onChangeSubmit" name="policy" onchange="submit();">';
+			for ($i=0; $i<count($POLICIES); $i++) {
+			    $_SEL = ($POLICIES[$i]==$policy)? 'selected="selected"':'';
+			    echo '<option value="'.$POLICIES[$i].'" '.$_SEL.'>'.$POLICIES[$i].'</option>';
+			}
+		    echo '</select>';
+		/* Némi javascipt támogatás a session kezelésre ebben a formban */
+		    $sessionMaxIdleTime=$sessionAlertTime=0;
+		    if ((_SESSIONID!='' && _POLICY!='public') && defined('_SESSION_MAX_IDLE_TIME') && _SESSION_MAX_IDLE_TIME>0) {
+			$sessionMaxIdleTime=((_SESSION_MAX_IDLE_TIME*1000*60*60)+1000);
+			if (defined('_SESSION_ALERT_TIME')) $sessionAlertTime = ((_SESSION_MAX_IDLE_TIME*1000*60*60)-(_SESSION_ALERT_TIME*1000*60));
+		    }
+		    echo '<input type="hidden" id="SESSION_MAX_IDLE_TIME" value="'.$sessionMaxIdleTime.'" />';
+		    echo '<input type="hidden" id="SESSION_ALERT_TIME" value="'.$sessionAlertTime.'" />';
+		/* --- */
+	    formEnd();
+	    echo '</td>'."\n";
+	    echo '<th>';
+	    //echo $page;
+	    //if ($sub!='') echo '&nbsp;&raquo;&nbsp;'.$sub;
+	    if (is_array(@$INCLUDES['html_mayor_head']['global']['center'])) foreach ($INCLUDES['html_mayor_head']['global']['center'] as $key => $include) {
+		if (file_exists("skin/$skin/$include")) {
+		    include("skin/$skin/$include");
+		} elseif (file_exists('skin/'._DEFAULT_SKIN.'/'.$include)) {
+		    include('skin/'._DEFAULT_SKIN.'/'.$include);
+		}
+	    }
+	    echo _SITE;
+    	    echo '</th>';
+	    echo '<td class="right">';
+		echo '<span class="nev">'._USERCN.'</span>';
+	    echo '</td>';
+	    echo '<td class="right">';
+	    echo '</td>';
+	    echo '<td class="help">';
+		if (isset($sub) && $sub != '') $psf = "$page:$sub:$f"; else $psf = "$page:$f";
+		echo '<a title="'._HELP.'" target="_blank" href="wiki/dok.php?id='.$psf.'">?</a>';
+    	    echo '</td></tr>';
+	echo '</table>';
+    echo '</div>'."\n";
+    ## ------------------------    
+    echo '<table class="mayorhead" cellspacing="0" cellpadding="0">'."\n";
+    echo '<tr><td style="width: 40px">';
+	echo '<a href="'.href('index.php').'"><img src="'.$HOME_LOGO.'" alt="MaYoR" style="border-width: 0;" /></a>';
+    echo '</td>'."\n";
+    echo '<td style="vertical-align: middle; text-align: left; width: 99%">';
+	mayor_menu($MENU,$sessionID,$lang,$skin);
+    echo '</td>';
+    if (in_array('help',$INSTALLED_MODULES)) {
+	$link = "index.php?page=help&hpage=$page&hsub=$sub&hf=$f";
+	echo '<td>';
+	    echo '<a href="'.href($link).'" target="_blank">';
+	    echo '<img src="'.$HELP_LOGO.'" alt="'._HELP.'" style="border-width: 0;" />';
+	    echo '</a>';
+
+	echo '</td>';
+    }
+    echo "</tr>\n</table>\n";
+
+}
+
+// -------------------------------------------------------------------
+// html_mayor_foot() : lablec kiirasa (                     )            
+// -------------------------------------------------------------------
+
+function html_mayor_foot() {
+    echo '<div class="mayorfoot" id="mayorfoot">'._MAIN_FOOTER.'</div>'."\n\n";
+    echo "</body>\n</html>";
+}
+
+?>

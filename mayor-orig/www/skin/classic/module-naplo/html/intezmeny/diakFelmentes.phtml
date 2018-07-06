@@ -1,0 +1,225 @@
+<?php
+
+    global $ADAT;
+
+
+    function putDiakFelmentesForm($ADAT) {
+
+	echo '<div class="FM FM1">';
+	echo '<h2>1. '._FELMENTES_TARGY_ERTEKELES_ALOL.'</h2>';
+	formBegin();
+
+	    echo '<label for="T1targy">'._TARGY.'</label>';  _putDiakTargy($ADAT['diakTargy'],'T1targy');
+
+	    echo '<select name="t1altipus" id="t1altipus">';
+	    echo '<option value="1">'._EGESZ_EVRE.'</option>';
+	    echo '<option value="2">'._RESZBEN.'</option>';
+	    echo '</select>'."\n";
+	    echo '<label for="T1tol">'._TOL_DT.'</label>'; _putTolIgDt($ADAT['dt'],null,array('tolDt'=>true),'T1tol');
+
+	    echo '<div class="rejtett" id="T1b">';
+	    echo '<label>'._ZARADEK.'</label>';
+	    echo '<input type="text" name="zaradekTxt1" value="" />'._ZARADEK1;
+	    echo '<input type="text" name="zaradekTxt2" value="" />'._ZARADEK2;
+
+	    echo '</div>'."\n";
+
+	    echo '<label>'._IKTATOSZAM.':</label>';
+	    echo '<input type="text" name="iktatoszam" value="" />';
+
+	    echo '<input type="hidden" name="action" value="tipus1" />';
+	    echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />';
+	    echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
+	    echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />';
+
+	    _putSubmit();
+	formEnd();
+	echo '</div>'."\n";
+
+
+	echo '<div class="FM FM2">';
+	echo '<h2>2. '._FELMENTES_TANKOR_ORALATOGATASA_ALOL.'</h2>';
+	formBegin();
+	    echo '<input type="hidden" name="action" value="tipus2" />';
+	    echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />';
+	    echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
+	    echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />';
+	    
+	    echo '<label for="T2ovi">'._OVIKOTELES.'</label>'; 
+	    echo '<input type="checkbox" id="T2ovi" name="ovi" value="1" /><br/>';
+	    
+	    echo '<label for="T2tankor">'._TANKOR.'</label>'; 
+	    _putDiakTankor($ADAT['diakTankor'], 'T2tankor');	
+
+	    echo '<label for="T2tol">'._TOL_DT.'</label>';
+	    _putTolIgDt($ADAT['dt'],null,array('tolDt'=>true, 'igDt'=>true),'T2tol');
+	    echo '<br/><label>'._NAPORAOPT.'</label>';
+	    _putHetNapjai();
+	    _putOrak();
+
+	    echo '<br/><label for="T2forceDel">'._TORLESKENYSZERITES.'</label>'; 
+	    echo '<input type="checkbox" id="T2forceDel" name="forceDel" value="1" />';
+
+	    echo '<br/><label for="T2skipZaradek">'._ZARADEKNELKUL.'</label>'; 
+	    echo '<input type="checkbox" id="T2skipZaradek" name="skipZaradek" value="1" />';
+
+	    echo '<br/><label>'._IKTATOSZAM.':</label>';
+	    echo '<input type="text" name="iktatoszam" value="" />';
+
+	    _putSubmit();
+	formEnd();
+	echo '</div>'."\n";
+
+	echo '<div class="FM FM3">';
+	echo '<h2>3. '._FELMENTES_TARGY_TANULASA_ALOL.'</h2>';
+	echo '<div>'._TIPUS3.'</div>'."\n";
+	formBegin();
+	    echo '<input type="hidden" name="action" value="tipus3" />';
+	    echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />';
+	    echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
+	    echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />';
+	    echo '<label for="T3targy">'._TARGY.'</label>';  _putDiakTargy($ADAT['diakTargy'],'T3targy'); echo '<br/>';
+	    echo '<label for="T3tol">'._TOL_DT.'</label>'; _putTolIgDt($ADAT['dt'],null,array('tolDt'=>true),'T3tol');
+
+	    echo '<br/><label>'._IKTATOSZAM.':</label>';
+	    echo '<input type="text" name="iktatoszam" value="" />';
+
+	    _putSubmit();
+	formEnd();
+	echo '</div>';
+
+	if (count($ADAT['diakZaradek'])>0) _putZaradek($ADAT['diakZaradek']);
+	if (count($ADAT['tankorDiakFelmentes'])>0) {
+	
+	    echo '<div class="FM FMTAN">';
+	    formBegin();
+	    echo '<h2>'._ROGZITETT_FELMENTESEK.'</h2>';
+
+	    _putTankorDiakFelmentes($ADAT['tankorDiakFelmentes'],$ADAT['diakTankor']);
+
+	    echo '<input type="hidden" name="action" value="tankorDiakFelmentesTorol" />';
+	    echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />';
+	    echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
+	    echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />';
+
+	    _putSubmit('A kijelölt felmentéseket '.$ADAT['dt'].'-i hatállyal (-1nap) lezárjuk (végdátumot erre módosítjuk), ezzel a felmentés megszűnik. A tranzakcióhoz módosító záradék is készül.' );
+
+	    formEnd();
+	    echo '</div>';
+	}
+
+
+    }
+
+    function putDiakFelmentesAdatok($ADAT) {
+	    echo '<div class="FM FMTAN">';
+	    echo '<h2>'._ROGZITETT_FELMENTESEK.'</h2>';
+	    _putTankorDiakFelmentes($ADAT['tankorDiakFelmentes'],$ADAT['diakTankor'],true);
+	    echo '</div>';
+    }
+
+    function _putDiakTargy($DIAKTARGY,$varId) {
+	if (count($DIAKTARGY)>0) {
+	    echo '<select id="'.$varId.'" name="targyId">';
+            for($i=0; $i<count($DIAKTARGY); $i++) {
+		echo '<option value="'.$DIAKTARGY[$i]['targyId'].'">'.$DIAKTARGY[$i]['targyNev'].'</option>';
+	    }
+	    echo '</select>';
+	}
+    }
+    function _putDiakTankor($DATA,$varId) {
+	if (count($DATA)>0) {
+	    echo '<select id="'.$varId.'" name="tankorId">';
+            for($i=0; $i<count($DATA); $i++) {
+		echo '<option value="'.$DATA[$i]['tankorId'].'">'.$DATA[$i]['tankorNev'].' ('.$DATA[$i]['tankorId'].')</option>';
+	    }
+	    echo '</select>';
+	}
+    }
+
+    function _putTolIgDt($tolDt,$igDt=null,$ALLOW=array('tolDt','igDt'),$tolId) {
+
+	if ($ALLOW['tolDt']) echo '<input type="text" id="'.$tolId.'" name="tolDt" value="'.$tolDt.'" readonly="readonly" title="a dátum a referenciadátummal együtt mozog" />';
+	if ($ALLOW['igDt'])  echo '<input type="text" name="igDt" />';
+
+    }
+
+
+    function _putSubmit($DESC = '') {
+	echo '<div class="submit">';
+	echo '<span>'.$DESC.'</span><br/>';
+	echo '<input type="submit" />';
+	echo '<input type="reset" />';
+	echo '</div>';
+    }
+
+
+    function _putHetNapjai() {
+	global $aHetNapjai;
+	if (count($aHetNapjai)>0) {
+	    echo '<select name="nap">';
+	    echo '<option value=""></option>';
+            for($i=0; $i<count($aHetNapjai); $i++) {
+		echo '<option value="'.($i+1).'">'.$aHetNapjai[$i].'</option>';
+	    }
+	    echo '</select>';
+	}
+    }
+    function _putOrak() {
+	    echo '<select name="ora">';
+	    echo '<option value=""></option>';
+            for($i=0; $i<20; $i++) {
+		echo '<option value="'.($i).'">'.$i.'</option>';
+	    }
+	    echo '</select>';
+    }
+
+    function _putZaradek($Z) {
+
+	echo '<div class="FM FMZAR">';
+	echo '<h2>'._ROGZITETT_ZARADEKOK.'</h2>';
+
+	echo '<table cellspacing="1">';
+	echo '<tr><th>Dátum</th><th>Sorszám</th><th>Záradék szövege</th><th>Dokumentumok</th><th>Id</th><th>'._IKTATOSZAM.'</th>'."\n";
+	for ($i=0; $i<count($Z); $i++) {
+	    echo '<tr>';
+		echo '<td>'.$Z[$i]['dt'].'</td>';
+		echo '<td>'.$Z[$i]['sorszam'].'</td>';
+		echo '<td>'.$Z[$i]['szoveg'].'</td>';
+		echo '<td>'.$Z[$i]['dokumentum'].'</td>';
+		echo '<td>'.$Z[$i]['zaradekId'].'</td>';
+		echo '<td>'.$Z[$i]['iktatoszam'].'</td>';
+	    echo '</tr>';
+	}
+	echo '</table>'."\n";    
+	echo '</div>';
+    }
+
+    function _putTankorDiakFelmentes($F,$TANKOR, $readonly=false) {
+    
+	global $aHetNapjai;
+
+	echo '<table cellspacing="1">';
+	echo '<tr><th></th><th>Tankör</th><th>Felmentés típus</th><th>'._IKTATOSZAM.'</th><th>Tól</th><th>Ig</th><th colspan="2"></th><th>Id</th>'."\n";
+	for ($i=0; $i<count($F); $i++) {
+	    echo '<tr>';
+		echo '<td>';
+		    if ($readonly===false) echo '<input type="checkbox" name="DELFM[]" value="'.$F[$i]['tankorDiakFelmentesId'].'" />';
+		echo '</td>';
+		for ($j=0; $j<count($TANKOR); $j++) if ($TANKOR[$j]['tankorId']==$F[$i]['tankorId']) break;
+		echo '<td>'.$TANKOR[$j]['tankorNev'].'</td>';		
+		echo '<td>'.$F[$i]['felmentesTipus'].'</td>';
+		echo '<td>'.$F[$i]['iktatoszam'].'</td>';
+		echo '<td>'.$F[$i]['beDt'].'</td>';
+		echo '<td>'.$F[$i]['kiDt'].'</td>';
+		echo '<td>'.(is_numeric($F[$i]['nap']) ? $aHetNapjai[$F[$i]['nap']-1]:'').'</td>';
+		echo '<td>'.$F[$i]['ora'].'</td>';
+		echo '<td>'.$F[$i]['tankorDiakFelmentesId'].'</td>';
+
+	    echo '</tr>';
+	}
+	echo '</table>'."\n";    
+	    
+    }
+
+?>

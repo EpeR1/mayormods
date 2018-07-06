@@ -1,0 +1,13 @@
+@media screen,print {
+
+    table.new { background-color: #aaaaaa; margin-bottom:20px;}
+    table.new thead th { background-color: #ccccee; height:2em;	border-bottom: solid 2px purple; }
+    table.new thead td { text-align: center; background-color: #ccccee; height:2em; border-bottom: solid 2px purple; }
+    table.new th { background-color: #ffffff; }
+    table.new td { background-color: #ffffff; }
+    table.new td input { width:95%; }
+
+    .paros { background-color: #eeeeee; }
+    .paratlan {	background-color: #dddddd; }
+
+}

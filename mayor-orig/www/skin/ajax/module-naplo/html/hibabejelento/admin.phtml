@@ -1,0 +1,120 @@
+<?php
+    function putKerelmek($ADAT) {
+
+	echo '<ol style="list-style-type:none; margin:0px; padding:0px;">';
+	for ($i = 0; $i < count($ADAT['kerelmek']); $i++) {
+
+	    if ($ADAT['kerelmek'][$i]['lezarasDt']!="") $_class = ' style="color: #777777;"' ;
+	    elseif ($ADAT['kerelmek'][$i]['jovahagyasDt']!="") $_class = ' style="background-color: rgb(200,255,200);"' ;
+	    else $_class = ' style="color: black;"' ;
+
+	    if (__VEZETOSEG || __NAPLOADMIN) {      
+		echo '<li><div style="font-style:italic; background-color:#dddddd; border-style: none none solid none; border-width:1px; border-color: #777777;">'.$ADAT['kerelmek'][$i]['userAccount'].' '.superdate($ADAT['kerelmek'][$i]['rogzitesDt']).': '.$ADAT['kerelmek'][$i]['kategoria'].'</div></li>';
+	    } else {
+		echo '<li '.$_class.'>';
+		echo '<div style="font-style:italic; background-color:#dddddd; border-style: none none solid none; border-width:1px; border-color: #777777;">'.$ADAT['kerelmek'][$i]['userAccount'].' '.superdate($ADAT['kerelmek'][$i]['rogzitesDt']).': '.$ADAT['kerelmek'][$i]['kategoria'].'</div>';
+		echo '- '.htmlspecialchars($ADAT['kerelmek'][$i]['szoveg']);
+		if ($ADAT['kerelmek'][$i]['valasz']!='')
+		    echo '<div style="font-weight:bold">- '.htmlspecialchars($ADAT['kerelmek'][$i]['valasz']).'</div>';
+		echo '</li>';
+	    }
+	}
+	echo '</ol>';
+
+    }
+
+    function putKerelmekValasszal($ADAT) {
+
+	$K = array('jh'=>0,'njh'=>0);
+	$MAX = 1;
+	$dbKerelem = count($ADAT['kerelmek']);
+	$show = false;
+	for ($i = 0; $i < count($ADAT['kerelmek']); $i++) {
+	    if ($ADAT['kerelmek'][$i]['jovahagyasDt']!='') {
+		$K['jh']++; 
+		// A kérelmek a rögzítés dátuma szerint rendezettek, nem a jóváhagyás dátuma szerint!
+		if (!isset($jdt) || strtotime($jdt) < strtotime($ADAT['kerelmek'][$i]['jovahagyasDt'])) $jdt = $ADAT['kerelmek'][$i]['jovahagyasDt']; 
+	    } else $K['njh']++;
+	    $show = true;
+	}
+        if ($show) {
+/*	echo '<div style="width:90%; margin:auto; border: solid 1px rgb(50,0,50);">';
+	echo '<div style="background-color:rgb(150,100,150); color: white; padding: 5px 10px; border-bottom: solid 1px white; font-weight:bold;">Kérelmek</div>';
+	echo '<div class="onClickHideShow" style="padding: 10px 10px; background-color: #eeeeee; border-bottom: solid 1px white; border-top: solid 1px rgb(50,0,50);">';
+	    echo "Várakozó kérelmek száma: ";
+	    echo $K['jh'] . ' + '. $K['njh'];
+	    if ($jdt !='') echo "<br/>Utolsó jóváhagyás: ".$jdt;
+	echo '</div>';
+	if (__NAPLOADMIN===true || __VEZETOSEG===true)
+	    echo '<div style="background-color:rgb(150,150,200); color: white; padding: 0px; font-weight:bold; text-align: right"><a style="text-decoration: none; display: block; color: white" href="'.href('index.php?page=naplo&sub=hibabejelento&f=admin',array('policy','lang','sessionID')).'">'.'tovább...'.'</a></div>';
+	echo '</div>';
+*/
+	}
+
+	echo '<div style="display:;">';
+	for ($i = 0; $i < $dbKerelem && $i<$MAX; $i++) {
+	    $_link = href('index.php?page=naplo&sub=hibabejelento&f=admin&kerelemId='.$ADAT['kerelmek'][$i]['kerelemId']);
+	    $_K = $ADAT['kerelmek'][$i];
+	    $kerelemId = $_K['kerelemId'];
+	    $_napja = round(((strtotime(date('Y-m-d H:i:s')) - strtotime($_K['rogzitesDt']))/(24*60*60)));
+	    if ($_napja>60) $_napjaBg = '#f00; outline: solid 2px orange;'; else if ($_napja>7) $_napjaBg = '#f44336; outline: solid 2px red; '; else $_napjaBg = '#aaa';
+	    if ($_K['lezarasDt']!='') {
+		$_color = "#888"; 
+		$_class="icon-paper-clip-alt";
+	    } elseif ($_K['jovahagyasDt']!='') {
+		$_color = "#64ce64"; 
+		$_class="icon-ok-sign";
+	    } else {
+		$_color="#ce6464";
+		$_class="icon-question-sign";
+	    }
+		echo '<div style="height:2px;"></div>';
+        	echo '<div style="width:90%; margin: 0px auto; border: solid 1px rgb(50,0,50);">';
+		    echo '<div style="font-size:10px; background-color: #3c3c64; color: white; font-weight: bold; border-bottom: solid 1px #dddddd; padding:3px 10px;">'.superdate($ADAT['kerelmek'][$i]['rogzitesDt']).'</div>';
+		    echo '<div style="background-color: #cccccc; padding:10px;border-bottom: solid 1px #dddddd; padding:3px 3px; min-height:30px;">';
+			echo '<a style="color: black;" href="'.$_link.'">';
+
+			echo '<span class="'.$_class.'" style="color:'.$_color.'; float:left; font-size:30px; height:30px; line-height:30px; padding:0px 4px;"></span>';
+			echo '<span style="float:right; height:30px; background-color: '.$_napjaBg.'; color:white; padding: 0px 5px 0px 5px; font-size:25px;">';
+			echo $_napja;
+			echo '</span>';
+			echo htmlspecialchars($ADAT['kerelmek'][$i]['szoveg']);
+			echo '</a>';
+		    echo '</div>';	
+		    echo '<div style="background-color: '.$_color.'; color: white; padding:10px; border-bottom: solid 1px #3c3c64; padding:3px 10px;">'.htmlspecialchars($ADAT['kerelmek'][$i]['valasz']).' '.$_K['jovahagyasAccount'].'</div>';
+		    echo '<style type="text/css">
+			table.kerelemValasz {background-color:#ddd;}
+			table.kerelemValasz td {font-size:10px; background-color:white; padding:2px 4px; vertical-align:top;}
+			table.kerelemValasz td.dt {background-color: #eee;text-align: right;}
+		    </style>';
+		    if (count($ADAT['valaszok'][$kerelemId])>0) {
+                    $_V = $ADAT['valaszok'][$kerelemId];
+                    echo '<table class="kerelemValasz" cellpadding="1" cellspacing="1">';
+                        for ($j=0; $j<count($_V); $j++) {
+                            echo '<tr >';
+                                echo '<td class="dt">'.superdate($_V[$j]['valaszDt']).'</td>';
+                                echo '<td class="userAccount">'.$_V[$j]['userAccount'].'</td>';
+                                echo '<td>'.supertext($_V[$j]['valasz']).'</td>';
+                            echo '</tr>';
+                        }
+                    echo '</table>';
+		    }
+		echo '</div>';
+	}	
+	echo '</div>';
+
+	//if ($i!=$dbKerelem) 
+	{echo '
+	    <style type="text/css">
+		div._dotHolder {text-align:center; width:90%; margin:auto; padding:10px 0px;vertical-align:middle;}
+		div._dot {background-color:#eee;display: inline-block;border-radius: 50%;height:10px; width:10px;}
+		div._dot:hover {background-color:cornflowerblue !important;}
+		div._dotHolder:hover div._dot {background-color:#ccc;}
+	    </style>
+	    <div class="_dotHolder"><a href="'.href('index.php?page=naplo&sub=hibabejelento&f=admin').'" style="color:black;display:block;">';
+	    for ($j=0; $j<($dbKerelem-$i); $j++) { echo '<div class="_dot"></div> '; }
+	    echo '</a></div>';
+	}
+    }
+
+?>

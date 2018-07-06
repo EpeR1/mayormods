@@ -1,0 +1,60 @@
+<?php
+
+    function putLoginForm($userAccount,$toPolicy,$toPSF='',$toSkin='') {
+
+	global $POLICIES, $AUTH, $sessionID;
+	global $SKINSSHOW;
+//	echo '<h1>'._GREETING.'</h1>'."\n";
+
+       formBegin(array('method'=>'post',
+	    'class'=>'login',
+            'action'=>'index.php?policy=public&page=auth&f=login&toPolicy='.$toPolicy.'&toSkin='.$toSkin.'&sessionID='.$sessionID ,
+            'name'=>"loginablak"));
+
+	echo '<input type="hidden" name="action" value="login" />';
+	echo '<input type="hidden" name="toPSF" value="'.$toPSF.'" />';
+
+	echo '<div class="inputLabel">'._USERNAME.'</div>';
+	echo '<input class="txtbox" id="focus" type="text" accesskey="l" tabindex="1" id="userAccount" name="userAccount" value="'.$userAccount.'" maxlength="36" size="10" />'."\n";
+
+	echo '<div class="inputLabel">'._PASSWORD.'</div>';
+/*
+                    echo '<select style="width:40%" class="pp" name="toPolicy">'."\n";
+		    $SEL = array($toPolicy => ' selected="selected" ');
+		    for ($i=0; $i<count($POLICIES); $i++) {
+			$_policy = $POLICIES[$i];
+			if ($AUTH[$_policy]['authentication'] != 'none') {
+                	    echo '<option value="'.$_policy.'" '.$SEL[$_policy].'>';
+			    echo constant('_'.strtoupper($_policy).'_PASSWORD');
+			    echo '</option>'."\n";
+			}
+		    }
+                    echo '</select>'."\n";
+*/
+	echo '<input class="txtbox" type="password" accesskey="p" tabindex="2" name="userPassword" value="" />'."\n";
+
+	echo '<input type="hidden" name="toPolicy" value="'.$toPolicy.'" />';
+	echo '<input type="hidden" name="toSkin" value="pda" />';
+/*
+	echo '<div class="inputLabel">'._SKIN.'</div>';
+        echo '<select  id="toSkin" name="toSkin">'."\n";
+		    $SEL = array($toSkin => ' selected="selected" ');
+		    for ($i=0; $i<count($SKINSSHOW); $i++) {
+			$_skin = $SKINSSHOW[$i];
+                	    echo '<option value="'.$_skin.'" '.$SEL[$_skin].'>';
+			    echo $_skin;
+			    echo '</option>'."\n";
+		    }
+        echo '</select>'."\n";
+	echo '</div>'."\n";
+*/
+	echo '<div style="text-align:right; height:1.5em;">';
+        echo '<input type="submit" tabindex="3" name="button" value=" '. _LOGIN .' " class="submit" />'."\n";
+	echo '</div>';
+
+
+	formEnd();
+
+    }
+
+?>

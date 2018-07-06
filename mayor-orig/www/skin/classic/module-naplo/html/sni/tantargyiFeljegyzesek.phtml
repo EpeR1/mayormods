@@ -1,0 +1,110 @@
+<?php
+
+    function putTankorFeljegyzesek($ADAT) {
+	
+	global $_TANEV;
+
+	echo '<ul class="sni">'."\n";
+
+        for ($t = strtotime($ADAT['igDt']); $t >= $ADAT['tolTime']; $t = strtotime("-7 days", $t)) {
+
+	    $dt = date('Y-m-d', $t);
+	    $dtStr = dateToString($dt);
+	    $igDtStr = dateToString(date('Y-m-d', strtotime("+6 days", $t)));
+
+	    $mod = (
+		$_TANEV['statusz'] == 'aktív'
+		&& (
+		    __NAPLOADMIN 
+		    || (__TANARA && $t >= strtotime(_HALADASI_HATARIDO))
+		)
+	    );
+	    if ($mod) echo '<li class="mod">'."\n";
+	    else echo '<li>'."\n";
+
+	    formBegin(array('method'=>'post','action'=>''));
+
+	    echo '<input type="hidden" name="action" value="tantargyiFeljegyzesRogzites" />'."\n";
+    	    echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	    echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+	    echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+	    echo '<input type="hidden" name="tankorId" value="'.$ADAT['tankorId'].'" />'."\n";
+
+	    echo '<input type="hidden" name="feljegyzesTankorId" value="'.$ADAT['tankorId'].'" />'."\n";
+	    echo '<input type="hidden" name="feljegyzesDt" value="'.$dt.'" />'."\n";
+
+	    echo '<label for="mj'.$dt.'">'.$dtStr.' - '.$igDtStr.'</label><br />'."\n";
+	    if ($mod) {
+		echo '<textarea id="mj'.$dt.'" name="megjegyzes" cols="90" rows="5" title="'.$dt.'">'."\n";
+		echo $ADAT['sniTantargyiFeljegyzes'][$dt];
+		echo '</textarea>'."\n";
+	    } else {
+		echo '<p>'.nl2br($ADAT['sniTantargyiFeljegyzes'][$dt]).'</p>';
+	    }
+
+	    if ($mod) echo '<input type="submit" value="'._OK.'" />';
+	    formEnd();
+	
+	    echo '</li>'."\n";
+	}
+	echo '</ul>'."\n";
+
+
+    }
+
+    function putDiakHetiFeljegyzesek($ADAT) {
+
+	global $_TANEV;
+
+	$dtStr = dateToString($ADAT['dt']);
+	$time = strtotime($ADAT['dt']);
+	$igDtStr = dateToString(date('Y-m-d', strtotime("+6 days", $time)));
+
+	echo '<h2 class="sni">'.$dtStr.' - '.$igDtStr.'</h2>'."\n";
+	echo '<ul class="sni">'."\n";
+
+	foreach ($ADAT['tankorIds'] as $tankorId) {
+
+	    $mod = (
+		$_TANEV['statusz'] == 'aktív'
+		&& (
+		    __NAPLOADMIN 
+		    || ($ADAT['tankorTanaraE'][$tankorId] && $time >= strtotime(_HALADASI_HATARIDO))
+		)
+	    );
+
+	    if ($mod) echo '<li class="mod">'."\n";
+	    else echo '<li>'."\n";
+
+	    formBegin(array('method'=>'post','action'=>''));
+
+	    echo '<input type="hidden" name="action" value="tantargyiFeljegyzesRogzites" />'."\n";
+    	    echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	    echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+	    echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+	    echo '<input type="hidden" name="tankorId" value="'.$ADAT['tankorId'].'" />'."\n";
+
+	    echo '<input type="hidden" name="feljegyzesTankorId" value="'.$tankorId.'" />'."\n";
+	    echo '<input type="hidden" name="feljegyzesDt" value="'.$ADAT['dt'].'" />'."\n";
+
+	    echo '<label for="tk'.$tankorId.'">'.$ADAT['tankorAdat'][$tankorId]['tankorNev'].'</label><br />'."\n";
+	    if ($mod) {
+		echo '<textarea id="tk'.$tankorId.'" name="megjegyzes" cols="90" rows="5" title="'.$dt.'">'."\n";
+		echo $ADAT['sniTantargyiFeljegyzes'][$tankorId];
+		echo '</textarea>'."\n";
+	    } else {
+		echo '<p>'.nl2br($ADAT['sniTantargyiFeljegyzes'][$tankorId]).'</p>';
+	    }
+
+	    if ($mod) echo '<input type="submit" value="'._OK.'" />';
+	    formEnd();
+
+	    echo '</li>'."\n";
+
+	}
+
+	echo '</ul>'."\n";
+
+    }
+
+?>

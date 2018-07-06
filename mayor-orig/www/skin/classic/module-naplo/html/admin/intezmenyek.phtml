@@ -1,0 +1,142 @@
+<?php
+
+    function putIntezmenyModositasForm($ADAT) {
+
+	$Intezmeny = $ADAT['intezmenyAdat'];
+
+	formBegin(array('class'=>'intezmeny'));
+
+	echo '<h2>'._INTEZMENY_MODOSITAS.'</h2>'."\n";
+
+	echo '<input type="hidden" name="action" value="intezmenyModositas" />'."\n";
+
+        echo _OMKOD . ': <input type="text" name="OMKod" id="OMKod" value="'.$Intezmeny['OMKod'].'" maxlength="8" />'."\n";
+        echo _ROVIDNEV .': <input type="text" name="rovidNev" id="rovidNev" value="'.$Intezmeny['rovidNev'].'" readonly="readonly" />'."\n";
+        echo _NEV.': <input type="text" name="nev" id="nev" value="'.$Intezmeny['nev'].'" />'."\n";
+	echo _FENNTARTO.': ';
+	echo '<select name="fenntarto">';
+	echo '<option value=""> - </option>';
+	foreach ($ADAT['fenntartok'] as $fenntarto) {
+	    $SEL = ($Intezmeny['fenntarto']==$fenntarto?' selected="selected" ':'');
+	    echo '<option value="'.$fenntarto.'"'.$SEL.'>'.$fenntarto.'</option>';
+	}
+	echo '</select>';
+	if ($Intezmeny['alapertelmezett'])
+	    echo '<input type="checkbox" name="alapertelmezett" value="1" checked="checked" />' . _ALAPERTELMEZETT;
+	else
+	    echo '<input type="checkbox" name="alapertelmezett" value="1" />' . _ALAPERTELMEZETT;
+        echo '<input type="submit" value="'._OK.'" />'."\n";
+	formEnd();
+
+	if (is_array($Intezmeny['telephely']) && count($Intezmeny['telephely']) > 0) {
+	    for ($i = 0; $i < count($Intezmeny['telephely']); $i++) {
+
+		formBegin(array('class'=>'telephely'));
+
+		echo '<h2>'.($i+1).'. '._TELEPHELY_MODOSITAS.'</h2>'."\n";
+		echo '<input type="hidden" name="action" value="telephelyModositas" />'."\n";
+		echo '<input type="hidden" name="telephelyId" value="'.$Intezmeny['telephely'][$i]['telephelyId'].'" />'."\n";
+
+    		echo _TELEPHELYROVIDNEV .': <input type="text" name="telephelyRovidNev" id="telephelyRovidNev'.$i.'" value="'.$Intezmeny['telephely'][$i]['telephelyRovidNev'].'" />'."\n";
+    		echo _TELEPHELYNEV.': <input type="text" name="telephelyNev" id="telephelyNev'.$i.'" value="'.$Intezmeny['telephely'][$i]['telephelyNev'].'" />'."\n";
+		if ($Intezmeny['telephely'][$i]['alapertelmezett'])
+		    echo '<input type="checkbox" name="alapertelmezett" value="1" checked="checked" />' . _ALAPERTELMEZETT;
+		else
+		    echo '<input type="checkbox" name="alapertelmezett" value="1" />' . _ALAPERTELMEZETT;
+		echo '<hr />';
+		echo _IRSZ . ': <input type="text" name="cimIrsz" value="'.$Intezmeny['telephely'][$i]['cimIrsz'].'" />'."\n";
+		echo _HELYSEG . ': <input type="text" name="cimHelyseg" value="'.$Intezmeny['telephely'][$i]['cimHelyseg'].'" />'."\n";
+		echo '<hr />'."\n";
+		echo _KOZTERULETNEV . ': <input type="text" name="cimKozteruletNev" value="'.$Intezmeny['telephely'][$i]['cimKozteruletNev'].'" />'."\n";
+		echo _KOZTERULETJELLEG . ': <input type="text" name="cimKozteruletJelleg" value="'.$Intezmeny['telephely'][$i]['cimKozteruletJelleg'].'" />'."\n";
+		echo _HAZSZAM . ': <input type="text" name="cimHazszam" value="'.$Intezmeny['telephely'][$i]['cimHazszam'].'" />'."\n";
+		echo '<hr />';
+		echo _TELEFON . ': <input type="text" name="telefon" value="'.$Intezmeny['telephely'][$i]['telefon'].'" />'."\n";
+		echo _FAX . ': <input type="text" name="fax" value="'.$Intezmeny['telephely'][$i]['fax'].'" />'."\n";
+		echo _EMAIL . ': <input type="text" name="email" value="'.$Intezmeny['telephely'][$i]['email'].'" />'."\n";
+		echo _HONLAP . ': <input type="text" name="honlap" value="'.$Intezmeny['telephely'][$i]['honlap'].'" />'."\n";
+
+
+    		echo '<input type="submit" value="'._OK.'" />'."\n";
+
+		formEnd();
+	    }
+	}
+
+	formBegin(array('class'=>'ujTelephely'));
+
+	    echo '<h2 class="ujTelephely">'._UJ_TELEPHELY.'</h2>'."\n";
+
+		echo '<input type="hidden" name="action" value="ujTelephely" />'."\n";
+
+    		echo _TELEPHELYROVIDNEV .': <input type="text" name="telephelyRovidNev" id="telephelyRovidNevUj" value="" />'."\n";
+    		echo _TELEPHELYNEV.': <input type="text" name="telephelyNev" id="telephelyNevUj" value="" />'."\n";
+		echo '<input type="checkbox" name="alapertelmezett" value="1" />' . _ALAPERTELMEZETT;
+		echo '<hr />';
+		echo _IRSZ . ': <input type="text" name="cimIrsz" value="" />'."\n";
+		echo _HELYSEG . ': <input type="text" name="cimHelyseg" value="" />'."\n";
+		echo '<hr />'."\n";
+		echo _KOZTERULETNEV . ': <input type="text" name="cimKozteruletNev" value="" />'."\n";
+		echo _KOZTERULETJELLEG . ': <input type="text" name="cimKozteruletJelleg" value="" />'."\n";
+		echo _HAZSZAM . ': <input type="text" name="cimHazszam" value="" />'."\n";
+		echo '<hr />';
+		echo _TELEFON . ': <input type="text" name="telefon" value="" />'."\n";
+		echo _FAX . ': <input type="text" name="fax" value="" />'."\n";
+		echo _EMAIL . ': <input type="text" name="email" value="" />'."\n";
+		echo _HONLAP . ': <input type="text" name="honlap" value="" />'."\n";
+
+    	    echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+
+    }
+
+    function putIntezmenyTorlesForm($ADAT) {
+
+	$Intezmeny = $ADAT['intezmenyAdat'];
+
+	formBegin(array('class'=>'intezmeny'));
+
+	echo '<h2>'._INTEZMENY_TORLES.'</h2>'."\n";
+
+	echo '<input type="hidden" name="action" value="intezmenyTorles" />'."\n";
+
+	echo '<p>Az adatbázisok törlése csak egy esetleges későbbi fejlesztés lesz. Egyelőre csak az
+		intézmények listájából törlünk. Az adatbázisokat kézzel kell törölni.</p>';
+	echo '<input type="checkbox" name="dbTorles" value="1" readonly />' . _ADATBAZISOK_TORLESE;
+
+	echo '<hr />'."\n";
+
+	echo 'rootUser: <input type="text" name="rootUser" id="rootUser" value="root" />'."\n";
+	echo 'rootPassword: <input type="password" name="rootPassword" id="rootPassword" value="" />'."\n";
+
+        echo '<input type="submit" value="'._TORLES.'" />'."\n";
+
+	formEnd();
+    }
+
+    function putUjIntezmenyForm() {
+
+	formBegin(array('class'=>'intezmeny'));
+
+	echo '<h2>'._UJ_INTEZMENY.'</h2>'."\n";
+
+	echo '<input type="hidden" name="action" value="ujIntezmeny" />'."\n";
+
+
+        echo _OMKOD . ': <input type="text" name="OMKod" id="OMKod" value="0000000" maxlength="7" />'."\n";
+        echo _ROVIDNEV .': <input type="text" name="rovidnev" id="rovidnev" />'."\n";
+        echo _NEV.': <input type="text" name="nev" id="nev" />'."\n";
+
+	echo '<hr />'."\n";
+
+	echo 'rootUser: <input type="text" name="rootUser" id="rootUser" value="root" />'."\n";
+	echo 'rootPassword: <input type="password" name="rootPassword" id="rootPassword" value="" />'."\n";
+
+        echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+
+    }
+
+?>

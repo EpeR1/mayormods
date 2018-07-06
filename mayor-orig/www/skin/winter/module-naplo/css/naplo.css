@@ -1,0 +1,76 @@
+
+    table.toolBar { width: 90%;	border-spacing: 0px; margin: 1em auto; }
+    table.toolBar form { margin: 0px; padding: 0px; }
+    table.toolBar tr.first td.toolBarTitle, table.toolBar tr.first td.toolBarTool { border: solid 1px #333333; }
+    table.toolBar td.gap { width: 50%; border-spacing: 0px; }
+   table.toolBar td.help {                                                                                                 
+        background-color: #005566 ; 
+	color: white;                                                                                                       
+    	border-width: 0px 1px 1px 1px;                                                                                      
+        border-color: black;                                                                                                
+        border-style: none solid solid solid;                                                                               
+        font-size:smaller;                                                                                                  
+    }       
+    table.toolBar td.toolBarTitle {
+	background-color: white;
+	width: 100%;
+	font-size: 20px;
+	font-weight: bold;
+    }
+    #toolBarIntezmeny {
+	color: red;
+	border: solid red;
+	border-width: 1px 0px;
+	font-size: 10px;
+    }
+
+    table.toolBar td.toolBarTool {
+	border: solid 1px #009999;
+	background-color: #007788;
+	margin: 0px;
+	padding: 0px;
+    }
+    table.toolBar td.toolBarTool table { border-spacing: 0px; width: 100%; }
+    table.toolBar td.toolBarTool table th {
+	background-color: #00aabb;
+	text-align: left;
+	color: white;
+	font-size:10px;
+        padding-left: 4px;
+	border-color: #006677;
+	border-width: 1px 0px;
+	border-style: solid;
+    }
+    table.toolBar input.toolSubmit { vertical-align: middle; border: 0px none; }
+    table.toolBar td.toolBarTool select { border: 0px; }
+    table.toolBar th {
+	background-color: #00aabb;
+	text-align: center;
+	color: white;
+	font-size:10px;
+        padding-left: 4px;
+
+	border-color: rgb(21,123,71);
+	border-width: 1px 0px 1px 1px;
+	border-style: solid;
+    }
+    table.toolBar img { border: none; }
+
+    table.toolBar table.hianyzasOsszegzo { width:100%; font-size:10px; }
+    table.toolBar table.hianyzasOsszegzo th {
+            text-align: center !important;
+            border-style: none none solid none;
+            border-color: #888888;
+            border-width: 0px 0px 1px 0px;
+            }
+    table.toolBar     table.hianyzasOsszegzo td { width: 18%; border-bottom: solid 1px rgb(60,80,100); background-color: #dddddd; text-align: center; }
+
+    form.lapozo input {	font-size: 10px; border: solid 1px #005555; }
+
+    table.flipper input {height: 36px; width: 18px; color: white; border: solid 1px #006677; background-color: #00aabb; }
+    table.flipper input.step { background-color: #00aabb; }
+
+    div.beirasAdatok { text-align: center; }
+    div.beirasAdatok span { font-weight: bold; font-size: 20pt; vertical-align: middle; }
+    div.beirasAdatok img { vertical-align: middle; }
+

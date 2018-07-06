@@ -1,0 +1,310 @@
+<?php
+
+    function putTankorDiakTablazat($ADAT) {
+
+	    $tankorId = $ADAT['tankorId'];
+	    $TT = array();
+	    for ($i = 0; $i < count($ADAT['tankor']['tanarai']); $i++) {
+		$TT[] = $ADAT['tankor']['tanarai'][$i]['tanarNev'];
+	    }
+				       
+	    formBegin(array('method'=>'post', 'action'=>'', 'class'=>'tankor'));
+	    echo '<h2>'.ucfirst(_TANAR).': '.implode(', ',$TT).'</h2>';
+	   
+	    echo '<h2>'._DIAKOK.'</h2>';
+
+	if ($ADAT['tankor']['diakjai']['nevek']!==false) {
+		   
+	    echo '<table cellpadding="1" cellspacing="1">';
+	    __tableHeadFoot();
+	    echo '<tbody>';
+	    $i=1;
+	    if (is_array($ADAT['tankor']['diakjai']['nevek']))
+	    foreach ($ADAT['tankor']['diakjai']['nevek'] as $diakId=>$DIAK) {
+		$_D = $ADAT['tankor']['diakjai']['adatok'][$diakId];
+		$_db = count($_D);
+		$_CHK = (is_array($ADAT['diakSelected']) && in_array($diakId,$ADAT['diakSelected'])) ? 'checked="checked"':'';
+		echo '<tr>';
+		echo '<td rowspan="'.$_db.'">';
+		echo '</td>';
+		echo '<td rowspan="'.$_db.'">';
+		    echo $i++;
+		    echo '. '.$DIAK['diakNev'];
+		    echo ' ';
+		    $_osztalyId=$ADAT['diakOsztaly'][$diakId][0];
+		    if (isset($ADAT['osztaly'][$_osztalyId]['osztalyJel'])) echo '('.$ADAT['osztaly'][$_osztalyId]['osztalyJel'].')';
+		echo '</td>';
+    		echo '<td>';
+			echo $_D[0]['beDt'];
+		echo '</td>';	
+		echo '<td>';
+			echo $_D[0]['kiDt'];
+		echo '</td>';	
+		echo '<td rowspan="'.$_db.'">';
+		    for ($k=0; $k<count($ADAT['diakKepzes'][$diakId]); $k++) {
+			echo '<span class="kepzes'.($ADAT['diakKepzes'][$diakId][$k]['kepzesId']%2).'">';			
+			echo $ADAT['diakKepzes'][$diakId][$k]['kepzesNev'];
+			echo '</span>';
+		    }
+		echo '</td>';
+		echo '</tr>';
+		for ($k=1; $k<count($_D); $k++){	
+		    echo '<tr>';		
+    		    echo '<td>';
+			echo $_D[$k]['beDt'];
+		    echo '</td>';	
+		    echo '<td>';
+			echo $_D[$k]['kiDt'];
+		    echo '</td>';	
+		    echo '</tr>';
+		}
+	    }
+	    echo '</tbody>';
+	    echo '</table>';
+	    
+	}
+
+
+	formEnd();
+
+    }
+
+    function __tableHeadFoot() {
+	    echo '<thead>';
+		echo '<tr><th></th><th>'._NEV.'</th><th>'._METTOL.'</th><th>'._MEDDIG.'</th><th>'._NEME.'</th><th>'._KEPZES.'</th></tr>'."\n";
+	    echo '</thead>';
+	    echo '<tfoot>';
+		echo '<tr><th></th><th>'._NEV.'</th><th>'._METTOL.'</th><th>'._MEDDIG.'</th><th>'._NEME.'</th><th>'._KEPZES.'</th></tr>'."\n";
+	    echo '</tfoot>';
+    }
+
+    function putTankorDiakForm($ADAT) {
+
+	    $tankorId = $ADAT['tankorId'];
+	    $TT = array();
+	    for ($i = 0; $i < count($ADAT['tankor']['tanarai']); $i++) {
+		$TT[] = $ADAT['tankor']['tanarai'][$i]['tanarNev'];
+	    }
+				       
+	    formBegin(array('method'=>'post', 'id'=>'tankorDiak', 'class'=>'tankor', 'action'=>''));
+
+	    if (count($TT)>0) echo '<h2>'.ucfirst(_TANAR).': '.implode(', ',$TT).'</h2>';
+
+	    echo '<h2>'._DIAKOK.'</h2>';
+
+	if ($ADAT['tankor']['diakjai']['nevek']!==false) {
+		   
+	    echo '<input type="hidden" name="action" value="tankorDiakMod" />'."\n";
+	    echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";	   
+	    echo '<input type="hidden" name="tankorId" value="'.$tankorId.'" />'."\n";	   
+#	    echo '<input type="hidden" name="mkId" value="'.$ADAT['mkId'].'" />'."\n";	   
+#	    echo '<input type="hidden" name="beDt" value="'.$ADAT['beDt'].'" />'."\n";	   
+#	    echo '<input type="hidden" name="kiDt" value="'.$ADAT['kiDt'].'" />'."\n";	   
+	    echo '<table cellpadding="1" cellspacing="1" class="bentlevo">';
+	    __tableHeadFoot();
+	    echo '<tbody>';
+	    $i=1;
+
+	    if (is_array($ADAT['tankor']['diakjai']['nevek']))
+	    foreach ($ADAT['tankor']['diakjai']['nevek'] as $diakId=>$DIAK) {
+		$_D = $ADAT['tankor']['diakjai']['adatok'][$diakId];
+		$_db = count($_D);
+		$_CHK = (is_array($ADAT['diakSelected']) && in_array($diakId,$ADAT['diakSelected'])) ? 'checked="checked"':'';
+		echo '<tr>';
+		echo '<td rowspan="'.$_db.'">';
+		    echo '<input type="hidden" name="diakok[]" value="'.$diakId.'" />';
+		    echo '<input type="checkbox" name="diaktorol[]" value="'.$diakId.'" '.$_CHK.'/>';
+		echo '</td>';
+		echo '<td rowspan="'.$_db.'" class="diakNev" data-diakid="'.$diakId.'">';
+		    echo $i++;
+		    echo '. '.$DIAK['diakNev'];
+		    echo ' ';
+		    $_osztalyId=$ADAT['diakOsztaly'][$diakId][0];
+		    if (isset($ADAT['osztaly'][$_osztalyId]['osztalyJel'])) echo '('.$ADAT['osztaly'][$_osztalyId]['osztalyJel'].')';
+		echo '</td>';
+    		echo '<td>';
+			echo $_D[0]['beDt'];
+		echo '</td>';	
+		echo '<td>';
+			echo $_D[0]['kiDt'];
+		echo '</td>';	
+		echo '<td  class="'.ekezettelen($ADAT['diakAdat'][$diakId]['nem']).'">';
+		    echo ($ADAT['diakAdat'][$diakId]['nem']);
+		echo '</td>';
+
+		echo '<td>';
+		    for ($k=0; $k<count($ADAT['diakKepzes'][$diakId]); $k++) {
+			echo '<span class="kepzes'.($ADAT['diakKepzes'][$diakId][$k]['kepzesId']%2).'">';			
+			echo $ADAT['diakKepzes'][$diakId][$k]['kepzesNev'];
+			echo '</span>';
+		    }
+		echo '</td>';
+		echo '</tr>';
+	    }
+	    echo '</tbody>';
+	    echo '</table>';
+	    
+	    echo '<input type="hidden" name="refDt" value="'.$ADAT['refDt'].'" /> '.$ADAT['refDt'].' - ';
+	    echo '<input class="date" type="text" name="kiDt" value="'.$ADAT['kiDt'].'" />';
+	    if ($ADAT['voltUtkozes'] === true && __NAPLOADMIN) echo '<input id="utkozes" type="checkbox" name="utkozes" value="true" /><label for="utkozes">'._FORCE.'</label>';
+	    echo '<input type="submit" id="tankorDiakMod" value="'._BUTTON_OK.'" class="confirm" title="'._BIZTOS_TANKORNEVSOR.'" />';
+	    formEnd();
+	}
+    }
+
+    function putUjDiakForm($ADAT) {
+    
+	    $tankorId = $ADAT['tankorId'];
+    
+	    formBegin(array('method'=>'post', 'id'=>'ujDiak', 'class'=>'tankor', 'action'=>''));
+	   
+	    echo '<h2>'._UJDIAK.'</h2>';
+		   
+	    echo '<input type="hidden" name="action" value="tankorUjDiak" />'."\n";
+	    echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";	   
+	    echo '<input type="hidden" name="tankorId" value="'.$tankorId.'" />'."\n";	   
+	    //echo '<input type="hidden" name="jelenlet" value="kötelező" />'."\n";	   
+	    //echo '<input type="hidden" name="kovetelmeny" value="jegy" />'."\n";	   
+
+	    echo '<select name="diakId">';
+		foreach($ADAT['diakok'] as $_osztalyId => $DADAT) {
+		    echo '<optgroup label="'.$ADAT['osztaly'][$_osztalyId]['osztalyJel'].'">';
+		    for($i=0; $i<count($DADAT); $i++) {
+			echo '<option value="'.$DADAT[$i]['diakId'].'">'.$DADAT[$i]['diakNev'].' ('.$DADAT[$i]['diakId'].')</option>';
+		    }
+		    echo '</optgroup>';
+		}
+	    echo '</select>';
+	    echo '<label for="tolDt">'._BEDT.': </label>';
+	    echo '<input class="date" type="text" id="refDt" name="refDt" value="'. $ADAT['refDt'] .'" />';
+	    echo '<label for="igDt">'._KIDT.': </label>';
+	    echo '<input class="date" type="text" id="igDt" name="igDt" value="" />';
+
+	    echo '<input type="submit" id="ujDiak" value="'._OK.'" />';
+
+	    formEnd();
+	    
+    }
+
+    function putUjDiakForm2($ADAT) {
+	    $tankorId = $ADAT['tankorId'];
+
+	    formBegin(array('method'=>'post', 'id'=>'ujDiak', 'class'=>'tankor', 'action'=>''));
+	   
+	    echo '<h2>'._UJDIAK.'</h2>';
+		   
+	    echo '<input type="hidden" name="action" value="tankorUjDiakMulti" />'."\n";
+	    echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";	   
+	    echo '<input type="hidden" name="tankorId" value="'.$tankorId.'" />'."\n";	   
+	    //echo '<input type="hidden" name="jelenlet" value="kötelező" />'."\n";	   
+	    //echo '<input type="hidden" name="kovetelmeny" value="jegy" />'."\n";	   
+	    $j=0;
+	    $SORT = array();
+	    foreach($ADAT['diakok'] as $_osztalyId => $___D) {
+		if (isset($ADAT['osztaly'][$_osztalyId]['osztalyJel'])) 
+		    $SORT[$ADAT['osztaly'][$_osztalyId]['osztalyJel']]=$_osztalyId;
+		else // Vendégtanulók miatt...
+		    $SORT[constant('_'.strtoupper($_osztalyId))] = $_osztalyId;
+	    }
+
+
+	    ksort($SORT);
+	    foreach($SORT as $_oJel => $_osztalyId) {
+		$DADAT = $ADAT['diakok'][$_osztalyId];
+
+	        echo '<table style="float:left;" cellpadding="0" cellspacing="1">';
+		echo '<tr><th colspan="2">'.$_oJel.'</th></tr>';
+		echo '<tr>';
+		echo '<th class="setAll">'.$_oJel.'</th>'."\n";
+		echo '<td style="vertical-align: top">';
+		//**
+		echo '<table cellpadding="1" cellspacing="1" class="egyosztaly">';
+		for($i=0; $i<count($DADAT); $i++) {
+		    $_diakId= $DADAT[$i]['diakId'];
+		    $_neme = ($ADAT['diakAdat'][$_diakId]['nem']);
+		    echo '<tr class="'.ekezettelen(str_replace(' ','',$DADAT[$i]['statusz'])).'">';
+		    echo '<td><input type="checkbox" id="diakId__'.$j.'" name="diakId[]" value="'.$DADAT[$i]['diakId'].'" class="'.ekezettelen($_neme).'" /></td>';
+		    echo '<td>'.($i+1).'.</td>';
+		    echo '<td>';
+		    echo '<label for="diakId__'.$j.'" title="'.$DADAT[$i]['statusz'].'">'.$DADAT[$i]['diakNev'].' ('.$DADAT[$i]['diakId'].')</label>';
+		    // képzései:
+		    echo '</td>';
+		    echo '<td class="'.ekezettelen($_neme).' setAll'.ucfirst(ekezettelen($_neme)).'" >';
+		    //echo '<label for="diakId__'.$j.'">'.$_neme.'</label>';
+		    echo $_neme;
+		    echo '</td>';
+		    echo '<td>';
+		    for ($k=0; $k<count($ADAT['diakKepzes'][$_diakId]); $k++) {
+			echo '<span class="kepzes'.($ADAT['diakKepzes'][$_diakId][$k]['kepzesId']%2).'" title="['.$ADAT['diakKepzes'][$_diakId][$k]['tanev'].']">';
+			echo $ADAT['diakKepzes'][$_diakId][$k]['kepzesNev'];
+			
+			echo '</span>';
+		    }
+		    echo '</td>';
+		    // --
+		    echo '</tr>'."\n";
+		    $j++;
+		}
+		echo '</table>';
+		//**
+
+		echo '</td>';
+	    echo '</tr>';
+	    echo '</table>';
+
+	    }
+	    echo '<div style="clear:both"></div>';
+	    echo '<label for="refDt">'._BEDT.': </label>';
+	    echo '<input class="date" type="text" id="refDt" name="refDt" value="'.$ADAT['refDt'].'" />';
+	    echo '<label for="igDt">'._KIDT.': </label>';
+	    echo '<input class="date" type="text" id="igDt" name="igDt" value="" />';
+
+	    echo '<input type="submit" id="ujDiakOk" value="'._OK.'" />';
+
+	    formEnd();
+	    
+    }
+
+    function __n($D1,$D2) {
+		$kip = date('z',strtotime($D1));
+		$kop = date('z',strtotime($D2));
+		list($bY,$bM,$bD) = explode('-',$D1);
+		list($kY,$kM,$kD) = explode('-',$D2);
+		$px = $kop-$kip+($kY-$bY)*365-1;
+	return $px;
+    }
+
+    /* EZT TESSÉK SZÉPEN MEGÍRNI :) */
+    function _put_grafikon($ADAT,$TANEV) {
+
+	// el kellene még tolni a kezdes és zárás ismeretében!
+	$tanevN = __n($TANEV['kezdesDt'], $TANEV['zarasDt']);
+	// legyen 1 pixel, 1 nap
+	$pxx=0;
+	echo '<div style="width:370px; height:5px; background-color: lightgrey; border: solid 1px blue" alt="jelenlet grafikon">';
+	
+	if (($px=__n($TANEV['kezdesDt'],$ADAT[0]['beDt']))>0) {
+		echo '<img src="/skin/classic/module-naplo/img/tankorok/gray-pixel.gif" style="width:'.$px.'px; height:5px; background-color: navy; border-right: solid 1px red;" alt="">';
+		$pxx+=$px;	
+	} elseif ($px<0) { // hackit
+	    $ADAT[0]['beDt']=$TANEV['kezdesDt'];
+	}
+	for($i=0; $i<count($ADAT); $i++) {
+	    if (!is_null($ADAT[$i]['kiDt'])) {
+		$px = __n($ADAT[$i]['beDt'],$ADAT[$i]['kiDt']);
+	    } else {
+		$px = 365-$pxx-1;
+	    }
+	    $pxx+=$px;
+	    echo '<img src="/skin/classic/module-naplo/img/tankorok/gold_box.gif" style="width:'.$px.'px; height:5px; background-color: navy; border-right: solid 1px blue;" alt="">';
+	    if (is_array($ADAT[$i+1])) {
+		$px = __n($ADAT[$i]['kiDt'],$ADAT[$i+1]['beDt']);
+		echo '<img src="/skin/classic/module-naplo/img/tankorok/gray-pixel.gif" style="width:'.$px.'px; height:5px; background-color: navy; border-right: solid 1px red;" alt="">';
+		$pxx+=$px;
+	    }
+	}
+	echo '</div>';
+    
+    }
+
+?>

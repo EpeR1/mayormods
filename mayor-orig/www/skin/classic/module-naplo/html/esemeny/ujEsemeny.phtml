@@ -1,0 +1,171 @@
+<?php
+
+    function esemenyForm($ADAT) {
+
+	$DIS = (__MODOSITHAT)?'':' disabled="disabled" ';
+	formBegin(array('action'=>'','method'=>'post','class'=>'esemeny'));
+
+	    if ($ADAT['esemenyId'] == '') {
+		echo '<input type="hidden" name="action" value="ujEsemeny" />'."\n";
+	    } else {
+		echo '<input type="hidden" name="action" value="esemenyModositas" />'."\n";
+		echo '<input type="hidden" name="esemenyId" value="'.$ADAT['esemenyId'].'" />'."\n";
+	    }
+
+	    echo '<table>'."\n";
+	    echo '<tr>'."\n";
+		echo '<th><label for="rovidnev">'._ROVIDNEV.'</label></th>';
+		echo '<td>'."\n";
+		    echo '<input id="rovidnev" type="text" name="esemenyRovidnev" value="'.$ADAT['esemenyAdat']['esemenyRovidnev'].'" '.$DIS.'/>'."\n";
+		    _inlineHelp(_SUGO_ROVIDNEV);
+		echo '</td>'."\n";
+	    echo '</tr><tr>'."\n";
+		echo '<th><label for="nev">'._ESEMENYNEV.'</label></th>';
+		echo '<td>'."\n";
+		    echo '<input id="nev" type="text" name="esemenyNev" value="'.$ADAT['esemenyAdat']['esemenyNev'].'" '.$DIS.'/>'."\n";
+		    _inlineHelp(_SUGO_ESEMENYNEV);
+		echo '</td>'."\n";
+	    echo '</tr><tr>'."\n";
+		echo '<td colspan="2"><hr/>'."\n";
+		echo '</td>'."\n";
+	    echo '</tr><tr>'."\n";
+		echo '<td colspan="2">'."\n";
+		echo '<select id="kategoria" name="esemenyKategoria"'.$DIS.'>'."\n";
+		    echo '<option value="">&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;'._KATEGORIA.'&nbsp;&nbsp;&nbsp;&nbsp;- </option>'."\n";
+		    $SEL = array($ADAT['esemenyAdat']['esemenyKategoria'] => ' selected="selected" ');
+		    foreach ($ADAT['esemenyKategoriak'] as $eKategoria) {
+			echo '<option value="'.$eKategoria.'"'.$SEL[$eKategoria].'>'.$eKategoria.'</option>'."\n";
+		    }
+		echo '</select>'."\n";
+		echo '<label for="leiras"><strong>'._LEIRAS.'</strong></label>&nbsp;&nbsp;'."\n";
+		_inlineHelp(_SUGO_LEIRAS);
+		echo '<br/>';
+		echo '<textarea name="esemenyLeiras" id="leiras"'.$DIS.'>'.$ADAT['esemenyAdat']['esemenyLeiras'].'</textarea>'."\n";
+		echo '</td>'."\n";
+	    echo '</tr><tr>'."\n";
+		echo '<th><label for="tolDt">'._JELENTKEZES.'</label></th>'."\n";
+		echo '<td>'."\n";	
+		    echo '<input type="text" id="tolDt" name="jelentkezesTolDt" class="datetime" value="'.$ADAT['esemenyAdat']['jelentkezesTolDt'].'"'.$DIS.'/>
+			 - <input type="text" id="igDt" name="jelentkezesIgDt" class="datetime" value="'.$ADAT['esemenyAdat']['jelentkezesIgDt'].'"'.$DIS.' />'."\n";
+		    _inlineHelp(_SUGO_JELENTKEZES);
+		echo '</td>'."\n";
+	    echo '</tr><tr>'."\n";
+		echo '<th><label for="min">'._LETSZAM_KORLAT.'</label></th>';
+		echo '<td>'."\n";
+		    echo '<select name="min"'.$DIS.'>'."\n";
+			echo '<option value="0"> - </option>'."\n";
+			$SEL = array($ADAT['esemenyAdat']['min'] => ' selected="selected" ');
+			for ($i=1; $i<501; $i++) {
+			    echo '<option value="'.$i.'"'.$SEL[$i].'>'.$i.'</option>'."\n";
+			}
+		    echo '</select> - '."\n";
+		    $count = count($ADAT['esemenyAdat']['diakIds']);
+		    echo '<select name="max"'.$DIS.'>'."\n";
+			echo '<option value="0"> - </option>'."\n";
+			$SEL = array($ADAT['esemenyAdat']['max'] => ' selected="selected" ');
+			for ($i=1; $i<501; $i++) {
+			    if ($count > $i) echo '<option value="'.$i.'"'.$SEL[$i].' disabled="disabled">'.$i.'</option>'."\n";
+			    else echo '<option value="'.$i.'"'.$SEL[$i].'>'.$i.'</option>'."\n";
+			}
+		    echo '</select>'."\n";
+		    _inlineHelp(_SUGO_LETSZAM_KORLAT);
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+
+	    if ($ADAT['esemenyId'] != '') {
+
+		echo '<tr>';
+		    echo '<td colspan="2"><hr/>'."\n";
+
+		    echo '<div id="osztalyLista">'."\n";
+		    echo '<strong>'._OSZTALYOK.'</strong>&nbsp;&nbsp'."\n";
+		    _inlineHelp(_SUGO_OSZTALYOK);
+		    
+		    echo '<ul>'."\n";    
+		    foreach ($ADAT['osztalyok'] as $oAdat) {
+			if (__MODOSITHAT) {
+			    echo '<li>';
+			    echo '<label class="oJel" for="osztaly'.$oAdat['osztalyId'].'">'.$oAdat['osztalyJel'].'</label>'."\n";
+			    $CHK = (in_array($oAdat['osztalyId'], $ADAT['esemenyAdat']['osztalyIds']))?' checked="checked" ':'';
+			    echo '<input type="checkbox" value="'.$oAdat['osztalyId'].'" name="esemenyOsztaly[]" id="osztaly'.$oAdat['osztalyId'].'" '.$CHK.'/>'."\n";
+			    echo '<label for="osztaly'.$oAdat['osztalyId'].'">'.$oAdat['kezdoTanev'].'/'.$oAdat['vegzoTanev'].'.'.$oAdat['jel'].' ('.$oAdat['leiras'].')</label>'."\n";
+			    echo '</li>';
+			} elseif (in_array($oAdat['osztalyId'], $ADAT['esemenyAdat']['osztalyIds'])) {
+			    echo '<li>';
+			    echo '<label class="oJel" for="osztaly'.$oAdat['osztalyId'].'">'.$oAdat['osztalyJel'].'</label>'."\n";
+			    echo '<label for="osztaly'.$oAdat['osztalyId'].'">'.$oAdat['kezdoTanev'].'/'.$oAdat['vegzoTanev'].'.'.$oAdat['jel'].' ('.$oAdat['leiras'].')</label>'."\n";
+			    echo '</li>';
+			}
+		    }
+		    echo '</ul>'."\n";
+		    echo '<a href="'.href('index.php?page=naplo&sub=esemeny&f=esemenyDiak&esemenyId='.$ADAT['esemenyId']).'">'._ESEMENYJELENTKEZOK.'...</a>'."\n";
+    		    echo '</div>'."\n";
+
+		    echo '</td>'."\n";
+		echo '</tr><tr>'."\n";
+		    echo '<th><label for="tanarok">'._TANAROK.'</label></th>'."\n";
+		    echo '<td class="tanarok">'."\n";
+			echo '<div class="select"><select id="esemenyTanar" name="esemenyTanar[]" multiple="multiple"'.$DIS.'>'."\n";
+			foreach ($ADAT['tanarok'] as $tAdat) {
+			    if (in_array($tAdat['tanarId'], $ADAT['esemenyAdat']['tanarIds'])) 
+				echo '<option value="'.$tAdat['tanarId'].'">'.$tAdat['tanarNev'].' ('.$tAdat['tanarId'].')</option>'."\n";
+			}
+			echo '</select></div>'."\n";
+
+			if (__MODOSITHAT) {
+			    echo '<br />'."\n";
+			    echo '<input type="button" id="plusz" value="+" />'."\n";
+			    echo '<input type="button" id="minusz" value="&#8722;" />'."\n";
+			    _inlineHelp(_SUGO_TANAROK);
+			    echo '<div id="tanarLista" style="display: none" >'."\n";
+			    echo '<span id="closeTanarLista">&times;</span>'."\n";
+			    echo '<select id="tanarok" name="tanarok" multiple="multiple">'."\n";
+			    foreach ($ADAT['tanarok'] as $tAdat) {
+				echo '<option value="'.$tAdat['tanarId'].'">'.$tAdat['tanarNev'].' ('.$tAdat['tanarId'].')</option>'."\n";
+			    }
+			    echo '</select>'."\n";
+			    echo '<input type="button" id="add" value="&#8678;" />'."\n";
+			    echo '</div>'."\n";
+			}
+		    echo '</td>'."\n";
+		echo '</tr>';
+	    }
+
+	    if (__MODOSITHAT) {
+	    echo '<tr class="submit">'."\n";
+		echo '<td colspan="2" id="submitTd">'."\n";
+		    echo '<input id="submitButton" type="submit" value="'._OK.'" />'."\n";
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+	    }
+
+	    echo '</table>'."\n";
+	formEnd();
+
+	if ($ADAT['esemenyId'] != '' && __MODOSITHAT) {
+	    formBegin(array('method'=>'post','action'=>'','class'=>'esemenyTorles'));
+	    echo '<input type="hidden" name="action" value="esemenyTorles" />'."\n";
+	    echo '<input type="hidden" name="esemenyId" value="'.$ADAT['esemenyId'].'" />'."\n";
+	    echo '<input type="submit" value="'._TOROL.'" class="confirm" title="'._ESEMENY_TOROL_E.'" />'."\n";
+	    formEnd();
+	}
+    }
+/*
+    function esemenyLista($ADAT) {
+	echo '<p>Ez még csúny, tudom... :)</p>';
+	if (is_array($ADAT['esemenyek'])) {
+	echo '<ul id="esemenyLista">';
+	    foreach ($ADAT['esemenyek'] as $eAdat) {
+		echo '<li>';
+		formBegin(array('method'=>'post','action'=>''));
+		    echo '<input type="hidden" name="esemenyId" value="'.$eAdat['esemenyId'].'" />'."\n";
+		    echo '<input type="submit" value="'.$eAdat['esemenyRovidnev'].' ('.$eAdat['esemenyId'].')" />'."\n";
+		formEnd();
+		echo '</li>';
+	    }
+	echo '</ul>';
+	}
+
+    }
+*/
+?>

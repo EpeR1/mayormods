@@ -1,0 +1,128 @@
+@media screen,handheld {
+table.tankor {
+    background-color: rgb(100,100,150);
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-left: 0px;
+    padding-top: 0em;
+    color: white;
+}
+
+table.bentlevo thead tr th { background-color: lightgreen; border-bottom: solid 2px green; color: black;}
+
+
+h2.tankorTablazat {
+    width:90%;
+    padding-top:2px;
+    padding-left:1em;
+    margin-left:10%;
+    margin-right:20%;
+    background-color: rgb(60,60,80);
+    color: white;
+    border: 1px dotted white; border-width: 1px 0px;
+    padding-bottom:0px;
+    margin-bottom:0px;
+}
+
+form.tankor {
+    background-color: #eeeeee;
+    margin-left: 3%;
+    margin-right: 3%;
+    padding-left: 0px;
+    padding-top: 0em;
+    margin-bottom:4em;
+}
+form.tankor table th {
+    height:1.8em;
+    font-weight:normal;
+    padding:0px 4px;
+    background-color: rgb(100,120,100);
+    border-bottom: solid 1px rgb(200,220,200);
+    color:white;
+}
+form.tankor table td {
+/*    background-color: rgb(100,100,110);*/
+    padding:1px 4px;
+}
+form.tankor table tr:nth-child(even) td  { background-color: #dddddd; }
+
+form.tankor table tr.magantanulo td {
+    background-color: rgb(150,100,150);
+}
+
+form.tankor h2 {
+    padding-top:2px;
+    padding-left:2px;
+    background-color: rgb(60,60,80);
+    color: white;
+    border-color: white; 
+    border-width: 1px 0px;
+    border-style: none none solid none;
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+form.tankor:hover h2 { border-right: solid 3px lightgreen; }
+
+form.tankor label {
+    padding-left:1em;
+}
+
+
+form.tankor input[type=checkbox]:checked:after { display:block; content: ""; display:block;height:14px; width:4px; background-color: lightgreen; border-radius:2px; top:-2px; left:-6px; position:relative; border: solid 1px green; }
+form.tankor input[type=checkbox].lany:checked:after { background-color: magenta; border: solid 1px #ff3366;}
+form.tankor input[type=checkbox].fiu:checked:after { background-color: #1e90ff; border: solid 1px lightblue;}
+
+form.tankor input#targytorolg, form.tankor input#mktorolg {
+    background-color: #880000;
+    color: white;
+    padding:0px;
+    margin:0px;
+    border: solid 1px red;
+}
+
+form#tankorDiak table tbody tr td input {
+    background-color: green;
+}
+
+table.egyosztaly {
+    background-color: #eeeeee;
+}
+
+/* neme */
+td.fiu  { color:blue; cursor: pointer}
+td.lany { color:magenta; cursor:pointer }
+/* ---- */
+
+
+form.tankor span {
+    font-size: 10px;
+}
+
+form.tankor span.kepzes0 {
+    color:white;
+    background-color: #778877;
+    padding-left: 3px; padding-right:3px;
+    margin-left:2px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+    white-space: nowrap;
+}
+
+form.tankor span.kepzes1 {
+    color: white;
+    background-color: #777788;
+    padding-left: 3px; padding-right:3px;
+    margin-left:2px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+    white-space: nowrap;
+
+}
+
+}
+
+@media print {
+
+    form.tankor { width: 100%; }
+    form.tankor table { width:100%; }
+}

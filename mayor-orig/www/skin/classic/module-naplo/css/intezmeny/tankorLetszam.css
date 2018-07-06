@@ -1,0 +1,7 @@
+
+    table.tankorLetszam { background-color: #aaaaff; }
+    table.tankorLetszam tr th { background-color: #aa7788; color: white; border-bottom: solid 1px white; height:2em;}
+    table.tankorLetszam tr td { background-color: #eeeeee;  }
+    table.tankorLetszam tr td.letszam { text-align:right; padding-right:4px; }
+    table.tankorLetszam tr:hover td { background-color: #ffffff;  }
+    table.tankorLetszam tr td a { display: block; color:black; text-decoration: none;}

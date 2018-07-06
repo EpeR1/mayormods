@@ -1,0 +1,70 @@
+
+table.tankor {
+    background-color: rgb(100,100,150);
+    padding-left: 0px;
+    padding-top: 0em;
+    padding-bottom: 1em;
+    color: white;
+    margin-bottom: 0px;
+}
+
+table.tankor tr th {
+    background-color: rgb(50, 50, 110);
+    border-bottom: solid 1px white;
+}
+table.tankor tr.benne td {
+	background-color: rgb(100,150,100);
+}
+
+table.tankor tfoot tr td {
+    background-color: rgb(150,100,150);
+    text-align: center;
+}
+
+
+h2.tankorTablazat {
+    width:80%;
+    padding-top:2px;
+    padding-left:1em;
+    margin-left:10%;
+    margin-right:20%;
+    background-color: rgb(60,60,80);
+    color: white;
+    border: 1px dotted white; border-width: 1px 0px;
+    padding-bottom:0px;
+    margin-bottom:0px;
+}
+
+form.tankor {
+    background-color: rgb(100,100,150);
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-left: 0px;
+    padding-top: 0em;
+    padding-bottom: 1em;
+    color: white;
+    margin-bottom: 2em;
+}
+
+form.tankor h2 {
+    padding-top:2px;
+    padding-left:2px;
+    background-color: rgb(60,60,80);
+    color: white;
+    border: 1px dotted white; border-width: 1px 0px;
+}
+form.tankor label {
+    padding-left:2em;
+}
+
+form.tankor input {
+    border: solid 1px blue;
+}
+
+form.tankor input#targytorolg, form.tankor input#mktorolg {
+    background-color: #880000;
+    color: white;
+    padding:0px;
+    margin:0px;
+    border: solid 1px red;
+}

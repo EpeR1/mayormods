@@ -1,0 +1,50 @@
+<?php
+    function putZaroJegyCheck($ADAT) {
+
+	echo 'Osztály évfolyama:';
+	echo $ADAT['evfolyam'];
+	echo '<br/>Osztály évfolyamjele:';
+	echo $ADAT['evfolyamJel'];
+	echo '<br/>Osztály adatai:';
+	echo '<pre>';
+	    var_dump($ADAT['osztalyok']);
+	echo '</pre>';
+
+	$ZJ = $ADAT['zaroJegyek'];
+	formBegin();
+	echo '<input type="hidden" name="action" value="modosit" />';
+	echo '<input type="hidden" name="szemeszterId" value="'.$ADAT['szemeszterId'].'" />';
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
+	echo '<table border="1" align="center">';
+	echo '<tr><th>zaroJegyId</th><th>diakId</th><th>targyId</th><th>jegy+tipus</th><th>evfolyam</th><th>evfolyamJel</th><th>felev</th><th>modositasDt</th><th>hivatalosDt</th></tr>';
+	for ($i=0; $i<count($ZJ); $i++) {
+	    echo '<tr>';
+	    echo '<td>';
+		echo $ZJ[$i]['zaroJegyId'];
+	    echo '</td>';
+	    echo '<td>'.$ZJ[$i]['diakId'].'</td>';
+	    echo '<td>'.$ZJ[$i]['targyId'].'</td>';
+	    echo '<td>'.$ZJ[$i]['jegy'].$ZJ['jegyTipus'].'</td>';
+	    echo '<td>'.$ZJ[$i]['evfolyam'].'</td>';
+	    echo '<td>';
+		if ($ADAT['evfolyamJel']!=$ZJ[$i]['evfolyamJel']) {
+		    echo '"'.$ZJ[$i]['evfolyamJel'].'"';
+		    echo '<span class="icon-adjust" style="color:red"></span>';
+		    echo $ADAT['evfolyamJel'];
+		    echo '<input type="checkbox" name="zaroJegyId[]" value="'.$ZJ[$i]['zaroJegyId'].'" checked="checked" />';
+		} else {
+		    echo $ZJ[$i]['evfolyamJel'];
+		    echo '<span class="icon-ok-sign" style="color:green"></span>';
+		}
+	    echo '</td>';
+	    echo '<td>'.$ZJ[$i]['felev'].'</td>';
+	    echo '<td>'.$ZJ[$i]['modositasDt'].'</td>';
+	    echo '<td>'.$ZJ[$i]['hivatalosDt'].'</td>';
+	    echo '</tr>';
+	}
+	echo '</table>';
+	echo '<h3>A gombnyomás a fenti táblázat zárójegyeinél megváltoztatja az évfolyamJelet!';
+	echo '<input type="submit" value="MEHET?" title="Biztos?" ></h3>';
+	formEnd();
+    }
+?>

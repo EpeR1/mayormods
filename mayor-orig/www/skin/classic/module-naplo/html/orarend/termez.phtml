@@ -1,0 +1,86 @@
+<?php
+
+    function putTermezo($ADAT) {
+
+	formBegin();
+	    echo '<input type="submit" value="▁ ▂ ▃ ▄ ▅ ▆ ▇  do the magic thing! ♠ ♣ ♥ ♦" class="magic" />';
+	    echo '<input type="hidden" name="action" value="magic" />';
+	formEnd();
+
+
+	formBegin();
+	    echo '<input type="hidden" name="action" value="beallitasokModositasa" />';
+
+	    $P = $ADAT['teremPreferencia'];
+	    echo '<table class="teremPreferencia" align="center" cellspacing="1">';
+	    echo '<thead><tr><th>'._SORREND.'</th><th>'._TANAR.'</th><th>'._TARGY.'</th><th>'._TEREM_SORREND.'</th><th></th></tr>';
+	    for ($i=0; $i<count($P); $i++) {
+    		$_t = $P[$i];
+		$_order = $P[$i]['teremPreferenciaId'];
+    		$_tanarId=$P[$i]['tanarId'];
+    		$_targyId=$P[$i]['targyId'];
+    		$_termek=explode(',',$P[$i]['teremStr']);
+
+		echo '<tr>';
+		echo '<td>';
+		    $href = href('index.php?page=naplo&sub=orarend&f=termez&action=run&tolDt='.$ADAT['tolDt'].'&runTeremPreferenciaId='.$_order,array('sessionID','lang','policy'));
+		    echo ' <a class="run" href="'.$href.'"><span class="icon-play-alt"></span></a>';
+		    echo '<input type="text" name="teremPreferenciaId_'.$_order.'" value="'.$_order.'" />';
+		echo '</td>';
+		echo '<td>'.$ADAT['tanar'][$_tanarId]['tanarNev'] .' ('.$_tanarId.')</td>';
+		echo '<td>';
+		    if ($_targyId>0) echo $ADAT['targy'][$_targyId][0]['targyNev']. ' ('.$_targyId.')';
+		echo '</td>';
+		echo '<td class="terem">';
+		    echo str_replace(',',', ',$P[$i]['teremStr']);
+		    /*
+		    echo '<select multiple="multiple">';
+        	    for ($t=0; $t<count($_termek); $t++) {
+			echo '<option>';
+			    echo $_termek[$t];
+			echo '</option>';
+		    }
+		    echo '</select>';
+		    */
+		echo '</td>';
+		echo '<td>';
+		    $href = href('index.php?page=naplo&sub=orarend&f=termez&action=del&delTeremPreferenciaId='.$_order,array('sessionID','lang','policy'));
+		    echo ' <a class="del" href="'.$href.'"><span class="icon-trash-alt"></span></a>';
+		echo '</td>';
+		echo '</tr>';
+	    }
+	    echo '<tr>';
+		echo '<td>';
+		    echo '<input type="text" name="ujTeremPreferenciaId" />';
+		echo '</td>';
+		echo '<td>';
+		    echo '<select name="ujTanarId">';
+		    foreach($ADAT['tanar'] as $__tanarId => $__tanarAdat) {
+			echo '<option value="'.$__tanarId.'">';
+			    echo $__tanarAdat['tanarNev']. ' ('.$__tanarAdat['tanarId'].')';
+			echo '</option>';
+		    }
+		    echo '</select>';
+		echo '</td>';
+		echo '<td>';
+		    echo '<select name="ujTargyId">';
+		    echo '<option value="NULL">-</option>';
+		    foreach($ADAT['targy'] as $__targyId => $__targyAdat) {
+			echo '<option value="'.$__targyId.'">';
+			    echo $__targyAdat[0]['targyNev']. ' ('.$__targyId.')';
+			echo '</option>';
+		    }
+		    echo '</select>';
+		echo '</td>';
+		echo '<td>';
+		    echo '<input type="text" name="ujTeremStr" value="" /> (termek vesszővel)';
+		echo '</td>';
+	    echo '</tr>';
+	    echo '</table>';
+	    echo '<input type="submit" value="szabályrendszer módosítása" />';
+
+	formEnd();
+
+    }
+
+?>

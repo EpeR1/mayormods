@@ -1,0 +1,50 @@
+%!függvény kiterjesztés
+Dt: %$nyomtatasDt
+Intézmény: %$intezmenyNev
+Irsz: %$intezmenyCimIrsz
+Helység: %$intezmenyCimHelyseg
+Közterület-név: %$intezmenyCimKozteruletNev
+Közterület-jelleg: %$intezmenyCimKozteruletJelleg
+Házszám: %$intezmenyCimHazszam
+Telefon: %$intezmenyTelefon
+Honlap: %$intezmenyHonlap
+Email: %$intezmenyEmail
+Fax: %$intezmenyFax
+Negyedév: %$negyedev
+Év: %$ev
+Hó: %$honap
+Hó név: %$hoNev
+Nap: %$nap
+Félévi-e: %?felevi|félévi|nem félévi%?
+
+%{diak
+    Diák neve: %$diakNev    Osztály: %$osztaly
+%{targy
+	Tárgy neve: %$targyNev
+%{szempont
+	    %$szempont
+%{minosites
+		%?valasztott|X|O%? %$minosites %?%?elsoValasztott|(első)|(nem első)%? %?tobbedikValasztott|(többedik)|(nem többedik)%?
+%}minosites
+		%$egyediMinosites
+%}szempont
+	Tárgy minősítés: %$targyMinosites
+%}targy
+
+    Igazolt: %$igazolt
+    Igazolatlan: %$igazolatlan
+    Késés perc összeg: %$kesesPercOsszeg
+    Késésekből adódó igazolatlanok: %$kesesIgazolatlan
+    Összes igazolatlan: %$osszesIgazolatlan
+
+    Gyakorlati igazolt: %$gyakIgazolt
+    Gyakorlati igazolatlan: %$hyakIgazolatlan
+    Gyakorlati késés perc összeg: %$gyakKesesPercOsszeg
+    Gyakorlati késésekből adódó igazolatlanok: %$gyakKesesIgazolatlan
+
+    Elmélet igazolt: %$elmIgazolt
+    Elmélet igazolatlan: %$elmIgazolatlan
+    Elmélet késés perc összeg: %$elmKesesPercOsszeg
+    Elmélet késésekből adódó igazolatlanok: %$elmKesesIgazolatlan
+
+%}diak

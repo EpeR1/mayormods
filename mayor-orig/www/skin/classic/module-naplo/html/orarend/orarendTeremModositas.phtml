@@ -1,0 +1,107 @@
+<?php
+
+    function putOrarendiOraValaszto($ADAT) {
+
+	global $aHetNapjai;
+
+	formBegin(array('class'=>'terem'));
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+	echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+	echo '<input type="hidden" name="action" value="orarendTeremModositas" />'."\n";
+
+	echo '<h1>'._ORARENDI_ORA_KIVALASZTASA.'</h1>'."\n";
+
+	$SEL = array($ADAT['tanarId'] => ' selected="selected" ');
+	echo '<label for="tanarId">'._TANAR.'</label>'."\n";
+	echo '<select name="tanarId" id="tanarId">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	foreach ($ADAT['tanarok'] as $tanarId => $tAdat) {
+	    echo '<option value="'.$tanarId.'"'.$SEL[$tanarId].'>'.$tAdat['tanarNev'].'</option>'."\n";
+	}
+	echo '</select>'."\n";
+
+	echo '<br />';
+	$SEL = array($ADAT['het'] => ' selected="selected" ');
+	echo '<label for="het">'._HET.'</label>'."\n";
+	echo '<select id="het" name="het">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	for ($i = 0; $i < count($ADAT['orarendiHetek']); $i++) {
+	    $het = $ADAT['orarendiHetek'][$i];
+	    echo '<option value="'.$het.'"'.$SEL[$het].'>'.$het.'</option>'."\n";
+	}
+	echo '</select>'."\n";
+
+	$SEL = array($ADAT['nap'] => ' selected="selected" ');
+	echo '<label for="nap">'._NAP.'</label>'."\n";
+	echo '<select id="nap" name="nap">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	foreach ($aHetNapjai as $i => $napNev) {
+	    $nap = $i+1;
+	    echo '<option value="'.$nap.'"'.$SEL[$nap].'>'.$napNev.'</option>'."\n";
+	}
+	echo '</select>'."\n";
+
+	$SEL = array($ADAT['ora'] => ' selected="selected" ');
+	echo '<label for="ora">'._ORA.'</label>'."\n";
+	echo '<select id="ora" name="ora">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	for ($i = 0; $i < count($ADAT['orak']); $i++) {
+	    $ora = $ADAT['orak'][$i];
+	    echo '<option value="'.$ora.'"'.$SEL[$ora].'>'.$ora.'</option>'."\n";
+	}
+	echo '</select>'."\n";
+
+	echo '<br /><input type="submit" value="'._OK.'" />'."\n";
+	formEnd();
+    }
+
+    function putTeremModosito($ADAT) {
+
+	formBegin(array('class'=>'terem'));
+
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+	echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+
+	echo '<input type="hidden" name="het" value="'.$ADAT['het'].'" />'."\n";
+	echo '<input type="hidden" name="nap" value="'.$ADAT['nap'].'" />'."\n";
+	echo '<input type="hidden" name="ora" value="'.$ADAT['ora'].'" />'."\n";
+	echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarId'].'" />'."\n";
+
+	echo '<input type="hidden" name="action" value="orarendTeremModositas" />'."\n";
+
+
+	echo '<h1>'._TEREM_MODOSITAS.'</h1>'."\n";
+
+	if (is_array($ADAT['orarendiOra']) && count($ADAT['orarendiOra'])>=1) {
+
+	    echo '<strong>'.$ADAT['tankorok'][ $ADAT['tankorIndex'][ $ADAT['orarendiOra']['tankorId'] ] ]['tankorNev']
+		.' ('.$ADAT['orarendiOra']['tankorId'].') </strong>';
+	    echo ' ['.$ADAT['orarendiOra']['osztalyJel'].', '.$ADAT['orarendiOra']['targyJel'].'] ';
+
+	    $SEL = array($ADAT['orarendiOra']['teremId'] => ' selected="selected" ');
+	    echo '<br /><select name="teremId" id="teremId">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    foreach ($ADAT['termek'] as $teremId => $teremAdat) {
+		if ($teremId == $ADAT['orarendiOra']['teremId']) {
+		    echo '<option value="'.$teremId.'" selected="selected" class="aktualis"> *** '.$teremAdat['leiras'].' ('.$teremId.') *** </option>'."\n";
+		} elseif (is_array($ADAT['foglaltTermek'][$teremId])) {
+		    $foglaltAdat = $ADAT['foglaltTermek'][$teremId];
+		    echo '<option value="'.$teremId.'"'.$SEL[$teremId].' class="foglalt">';
+		    echo $teremAdat['leiras'].' ('.$teremId.')';
+		    echo ' - '.$ADAT['tanarok'][ $foglaltAdat['tanarId'] ]['tanarNev'];
+		    echo ', '.$ADAT['tankorok'][ $ADAT['tankorIndex'][$foglaltAdat['tankorId']] ]['tankorNev'].' ('.$foglaltAdat['tankorId'].')';
+		    echo '</option>'."\n";
+		} else {
+		    echo '<option value="'.$teremId.'"'.$SEL[$teremId].' class="szabad">'.$teremAdat['leiras'].' ('.$teremId.')</option>'."\n";
+		}
+	    }
+	    echo '</select>'."\n";
+	    echo '<br /><input type="submit" value="'._OK.'" />'."\n";
+	} else {
+	    echo _NINCS_ORAJA;
+	}
+	formEnd();
+
+    }
+
+?>

@@ -1,0 +1,92 @@
+<?php
+
+	function putFileSelectForm($dbtable, $post = array()) {
+
+		formBegin(array('class'=>'updateTable'));
+		// A form címe
+		if (defined('_FILESELECTTITLE')) echo '<h1>'._FILESELECTTITLE.'</h1>';
+		// A továbbadandó POST adatok
+		for ($i = 0; $i < count($post); $i++) {
+			/* Ez itt nem ellenőrzött! --TODO */
+			echo '<input type="hidden" name="'.$post[$i].'" value="'.$_POST[$post[$i]].'" />'."\n";
+		}
+		echo '<input type="hidden" name="dbtable" value="'.$dbtable.'">'."\n";
+		echo '<input type="checkbox" name="skipOnDup" value="true" /> Meglevő rekord találatkor kihagyjuk a rekord frissítést';
+		echo '<label for="file">'._FILENEV.':</label>'."\n";
+		echo '<input type="text" id="file" name="fileName" />'."\n";
+		echo '<input type="submit" value="'._OK.'" />'."\n";
+		formEnd();
+
+	}
+
+	function putFieldSelectForm($fileName, $T, $attrs, $dbtable, $post = array()) {
+
+		formBegin(array('class'=>'updateTable'));
+		$_CHK = (_SKIP_ON_DUP === true) ? ' checked="checked" ': '';
+		echo '<input type="checkbox" id="skipOnDup" name="skipOnDup" value="true" '.$_CHK.' /><label for="skipOnDup">Meglevő rekord találatkor kihagyjuk a rekord frissítést</label>';
+
+		// A formhoz definiált magyarázó szöveg
+		if (defined('_FIELDSELECTMESSAGE')) {
+			echo '<p>'._FIELDSELECTMESSAGE.'</p>';
+		}
+		// A továbbadandó POST adatok
+		for ($i = 0; $i < count($post); $i++) {
+			echo '<input type="hidden" name="'.$post[$i].'" value="'.$_POST[$post[$i]].'" />'."\n";
+		}
+	  
+		// A rovatfej vizsgálata
+		$rovatfej = ''; $RovatfejAttrs = array();
+		for($j=0; $j<count($T[0]); $j++) {
+			if (isset($attrs[$T[0][$j]])) {
+				$RovatfejAttrs[$j] =  $T[0][$j];
+				$rovatfej = ' checked="checked"';
+			} elseif (($a = array_search($T[0][$j],$attrs)) !== false) {
+				$RovatfejAttrs[$j] =  $a;
+				$rovatfej = ' checked="checked"';
+			} else {
+				$RovatfejAttrs[$j] =  '';
+			}
+		}
+		echo '<input type="hidden" name="fileName" value="'.$fileName.'" />';
+		echo '<input type="hidden" name="dbtable" value="'.$dbtable.'" />';
+
+		echo '<input type="checkbox" name="rovatfej" value="true" id="rovatfej"'.$rovatfej.' />';
+		echo '<label for="rovatfej">'._VAN_ROVATFEJ.'</label>'."\n";
+		echo '<input type="submit" value="'._OK.'" />';
+
+		echo '<table class="importData">';
+		echo '<tr>';
+		for($j=0; $j<count($T[0]); $j++) {
+			echo '<th>';
+
+			echo 'kulcs mező? <input type="checkbox" name="KULCS_MEZOK[]" value="'.$j.'" /><br />'."\n";
+
+			echo '<select name="MEZO_LISTA[]">'."\n";
+			reset ($attrs);
+			$SEL = array($RovatfejAttrs[$j] => ' selected="selected" ');
+			echo '<option value="">-</option>'."\n";
+			while(list($a,$txt) = each($attrs)) {
+				echo '<option value="'.$a.'"'.$SEL[$a].'>'.$txt.'</option>'."\n";
+			}
+			echo '</select>'."\n";
+
+			echo '</th>';
+		}
+		echo '</tr>';
+		// Az első x sor kiírása:
+		for($i=0; $i<count($T); $i++) {
+			echo '<tr>';
+			for($j=0; $j<count($T[$i]); $j++) {
+				echo '<td>';
+				echo $T[$i][$j];
+				echo '</td>';
+			}
+			echo '</tr>';
+		}
+		echo '</table>'."\n";
+
+		echo '<input type="submit" value="'._OK.'" />';
+		formEnd();
+	}
+
+?>

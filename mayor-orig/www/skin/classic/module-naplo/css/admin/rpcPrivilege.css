@@ -1,0 +1,12 @@
+
+    form#addNode { background-color: #ceddec; margin: 10px auto; width: 600px; padding: 10px; text-align: center; border: outset 2px; color: #234; }
+    form#addNode p { text-align: left; padding: 1px 4px; }
+    form#addNode p select { width: 100%;  color: #234; }
+    form#addNode h3 { border-bottom: 1px solid #a00; }
+    form#addNode label { margin-right: 5px; }
+
+
+    table#privNodes { background-color: white; border: 1px solid #ceddec; border-spacing: 0px; margin: auto; }
+    table#privNodes th, table#requNodes td { border: 1px solid #ddd; padding: 2px 5px; }
+    table#privNodes td label { padding: 2px 5px; border: 1px solid #ddd; border-radius: 4px; margin: 1px 2px; }
+

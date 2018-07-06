@@ -1,0 +1,28 @@
+
+    form.minuszora { margin: 20px auto; width: 500px; text-align: center; }
+    form.minuszora ul { text-align: left; list-style-type: none; padding: 1px;  background-color: rgb(20,40,60);}
+    form.minuszora ul li { margin: 1px; padding: 2px; background-color: rgb(20,80,40); color: white; font-weight: bold; }
+    form.minuszora ul ul { list-style-type: none; background-color: rgb(200,200,200); }
+    form.minuszora ul ul li { padding: 4px 4px; margin: 1px 20px; background-color: rgb(255,240,220); color: black; font-weight: normal; }
+    form.minuszora input { color: rgb(200,0,0); font-weight: bold; }
+
+    span.latogatott {
+    background-color: #649664;
+    color: #FFF;
+    text-decoration: none;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-bottom: solid 1px #008000;
+    margin: 0px 2px 0px 2px;
+    }
+
+    form.minuszora ul li.egyéb { background-color: #ee88cc; }
+    form.minuszora ul li.egyéb.órarend { background-color: #aaaacc; }
+
+    form.minuszora ul li.egyéb:after { content: "\25B5"; color: cornflowerblue; }
+    form.minuszora ul li.egyéb.órarend:after { content: "\25B2";  }
+
+    form.minuszora ul li { border-left: solid 2px darkgreen; } 
+    form.minuszora ul li ul li { border-left: solid 0px darkgreen; } 
+    form.minuszora ul li:hover { border-left: solid 2px cornflowerblue; } 
+    form.minuszora ul li:hover ul li { border-left: solid 0px cornflowerblue; } 

@@ -1,0 +1,104 @@
+%!pdfLaTeXA4 pdf
+%
+% SNI - Havi jegyzőkönyv
+%
+\documentclass[10pt]{article}
+
+\usepackage[a4paper]{geometry} % A4-os méret
+\usepackage[utf8x]{inputenc} % UTF-8 kódolású forrás (ucs)
+\usepackage{ucs} % Jobb UTF-8 támogatás
+\usepackage{t1enc}
+\usepackage[magyar]{babel} % magyar elválasztási szabályok
+\frenchspacing % a magyar tipográfiai szabályoknak megfelelő szóközök írásjelek után
+\usepackage{booktabs} % táblázatok magasabb szintű formázása
+\usepackage{fancyhdr} % Ritkítás
+\usepackage{graphicx} % Kép beillesztés
+\usepackage{soul} % ul - aláhúzás tördeléssel
+\pagestyle{fancy}
+\def\mayor{%
+\font\mayorfnt=cmsl4%
+\font\Mayorfnt=cmsl6
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+\renewcommand{\footnotesize}{\fontsize{6pt}{8pt}\selectfont}
+\addtolength{\skip\footins}{2mm}
+\addtolength{\textheight}{16mm}
+\setlength{\footskip}{16pt}
+\setlength{\headsep}{24pt}
+\cfoot{\small \copyright\mayor\ elektronikus napló - Nyomtatva: %$nyomtatasDt}
+\lhead{\small
+%$intezmenyNev\\
+%$intezmenyCimIrsz %$intezmenyCimHelyseg, %$intezmenyCimKozteruletNev %$intezmenyCimKozteruletJelleg %$intezmenyCimHazszam\\
+Tel: %$intezmenyTelefon
+}
+\rhead{\small Web: %$intezmenyHonlap\\ E-mail: %$intezmenyEmail\\ Fax: %$intezmenyFax}
+
+\begin{document}
+
+
+\title{Havi jegyzőkönyv}
+\date{%$ev. %$hoNev}
+\author{%$intezmenyNev}
+\maketitle
+
+\begin{center}
+
+A(z) %$osztaly osztályban tanítók megbeszélése
+\end{center}
+\vspace{20pt}
+
+%{diak
+
+\begin{center}
+
+\vspace{6pt}
+\section*{%$diakNev}
+(gondozási szám: %$gondozasiSzam)
+
+\end{center}
+
+%?gyengesegek|\vspace{6pt}{\noindent\bfseries Gyengeségek:}\par{}%$gyengesegek|%?
+
+%?erossegek|\vspace{6pt}{\noindent\bfseries Erősségek:}\par{}%$erossegek|%?
+
+%?erossegek|\vspace{6pt}{\noindent\bfseries Célok:}\par{}%$celok|%?
+
+%?fejlesztesiFeladatok|\vspace{6pt}{\noindent\bfseries Fejlesztési feladatok:}\par{}%$fejlesztesiFeladatok|%?
+
+%?eszkozokModszerek|\vspace{6pt}{\noindent\bfseries Eszközök/módszerek:}\par{}%$eszkozokModszerek|%?
+
+%?utemezes|\vspace{6pt}{\noindent\bfseries Ütemezés:}\par{}%$utemezes|%?
+
+%?ertekeles|\vspace{6pt}{\noindent\bfseries Értekelés:}\par{}%$ertekeles|%?
+
+%?eredmeny|\vspace{6pt}{\noindent\bfseries Eredmény:}\par{}%$eredmeny|%?
+
+%?valtozas|\vspace{6pt}{\noindent\bfseries Változás:}\par{}%$valtozas|%?
+
+\vspace{6pt}{\noindent\bfseries Felelős:}
+
+%{felelos
+	%$tanarNev
+%}felelos
+
+
+%}diak
+
+\begin{center}
+\section*{A megbeszélésen résztvevő tanárok}
+\slshape
+\begin{tabular}{ccc}
+
+%{osztalyTanar
+
+%?paros|%$tanarNev\\ | &&\\ &&\\ \rule{4.5cm}{0.1pt}& \hspace{3cm}\ &\rule{4.5cm}{0.1pt}\\%$tanarNev&&%?
+
+
+%}osztalyTanar
+
+\end{tabular}
+\end{center}
+
+
+
+
+\end{document}

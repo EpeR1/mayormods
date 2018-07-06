@@ -1,0 +1,97 @@
+
+h2 { text-align: center;  color: red;}
+h2.toPrint { display: none; }
+
+table.toolBar tr td select, table.toolBar tr td option {
+}
+
+table.orarend {
+    width: 99%;
+    background-color: #333333;
+}
+table.orarend tr th {
+    background-color: #889988;
+    color: white;
+/*    border-width: 0px 1px 2px 0px !important; */
+    height:30px;
+    
+}
+table.orarend thead tr th {
+    background-color: #889999;
+    color: white;
+    border-bottom: solid 1px white;
+}
+table.orarend tfoot.publikus tr th {
+    background-color: lightgreen;
+    color: white;
+}
+table.orarend tfoot.nempublikus tr th {
+    background-color: #f06;
+    color: white;
+}
+table.orarend tfoot:hover tr th {
+    background-color: #8f8;
+}
+
+
+table.orarend thead tr th.spec {
+    background-color: red;
+}
+
+table.orarend tr td {
+    text-align: center;
+    background-color: #efefef;
+/*    border-width: 0px 1px 2px 0px;*/
+/*    width:18%; */
+}
+
+table.orarend tr td select {
+    background-color:#000011;
+    color: white
+}
+
+div.unfinished {
+    background-color: yellow;
+}
+    table.orarend tbody tr td hr { width: 80% } 
+    div.normál {}
+    div.plusz {
+	background-color: #eeccee;
+    }
+    div.elmarad {
+	color: white;
+	background-color: black;
+    }
+    div.elmarad_máskor {
+	color: white;
+	background-color: #555555;
+    }
+    div.normál_máskor {
+	color: white;
+	background-color: #776699;
+    }
+    div.felügyelet {
+	background-color: #bbaac0;
+    }
+    div.helyettesítés {
+	background-color: #ccffcc;
+    }
+    div.összevonás {
+	background-color: #aabbc0;
+    }
+    div.osztályfüggetlen { color: #eeeeee; background-color: rgba(52, 150, 185, 1); }
+    table.osztalyOrarend div.osztályfüggetlen { display:none; }
+    table.diakOrarend div.osztályfüggetlen { display:none; }
+
+    span.helyett {
+	color: gray;
+	text-decoration: line-through;
+    }
+
+    table.orarend tr td span.t0 {
+	background-color: #880000; color:white;
+    }
+    table.orarend tr td span.t1 {
+    }
+
+

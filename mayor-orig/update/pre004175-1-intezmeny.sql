@@ -1,0 +1,20 @@
+DELIMITER $$
+DROP PROCEDURE IF EXISTS upgrade_database_4175 $$
+
+CREATE PROCEDURE upgrade_database_4175()
+BEGIN
+SET NAMES utf8 COLLATE utf8_hungarian_ci;
+
+IF NOT EXISTS (SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() and TABLE_NAME='tanar' AND COLUMN_NAME='titulus') THEN
+    ALTER TABLE tanar ADD COLUMN `titulus` varchar(32) DEFAULT '';
+END IF;
+IF NOT EXISTS (SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() and TABLE_NAME='tanar' AND COLUMN_NAME='titulusRovid') THEN
+    ALTER TABLE tanar ADD COLUMN `titulusRovid` varchar(10) DEFAULT '';
+END IF;
+IF NOT EXISTS (SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() and TABLE_NAME='tanar' AND COLUMN_NAME='email') THEN
+    ALTER TABLE tanar ADD COLUMN `email` varchar(64) DEFAULT '';
+END IF;
+
+END $$
+DELIMITER ;
+CALL upgrade_database_4175();

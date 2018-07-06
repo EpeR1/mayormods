@@ -1,0 +1,44 @@
+@media screen,print {
+    /*
+	Module: useradmin
+    */
+
+    table.search { background-color: #aaaaaa; margin-bottom:20px; }
+    table.search thead th { 
+	background-color: #ccccee; height:2em;
+	border-bottom: solid 2px purple;
+    }
+    table.search th { background-color: white; }
+    table.search td { background-color: white; }
+    table.search tfoot td { background-color: purple; }
+
+    input { border: solid 1px black; }
+
+    table.searchresult { background-color: #aaaaaa; 
+	margin-bottom:20px;
+    }
+    table.searchresult thead th { background-color: #d6bddb; height:2em;
+	border-bottom: solid 2px purple;
+     }
+    table.searchresult tfoot th { background-color: purple; }
+    table.searchresult th { background-color: #ffffff; }
+    table.searchresult a { color: black; text-decoration: none; }
+    table.searchresult a:hover { text-decoration: underline; }
+
+    table.newgroup, table.newuser { background-color: #aaaaaa; margin-bottom:20px;}
+    table.newgroup thead th, table.newuser thead th {
+	background-color: #ccccee; height:2em;
+	border-bottom: solid 2px purple;
+    }
+    table.newgroup th,   	table.newuser  th { background-color: #ffffff; }
+    table.newgroup td,   	table.newuser  td { background-color: #ffffff; }
+    table.newgroup td input, 	table.newuser  td input { width:95%; }
+
+    .paros {
+	background-color: #eeeeee;
+    }
+    .paratlan {
+	background-color: #dddddd;
+    }
+
+}

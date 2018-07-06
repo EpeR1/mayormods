@@ -1,0 +1,79 @@
+<?php
+
+    function putLoginForm($userAccount,$toPolicy,$toPSF='',$toSkin='') {
+
+	global $POLICIES, $AUTH, $sessionID;
+
+	formBegin(array('method'=>'post', 
+	    'action'=>'index.php?policy=public&page=auth&f=login&toPolicy='.$toPolicy.'&sessionID='.$sessionID ,
+	    'name'=>"loginablak",
+	    'id'=>'loginablak'
+	));
+
+	echo '<div id="header"><img src="skin/sulix/base/img/mayor_small_ssl.png" alt="MaYoR" /></div>';
+	echo '<div id="body">';
+
+	echo '<input type="hidden" name="action" value="login" />';
+	echo '<input type="hidden" name="toPSF" value="'.$toPSF.'" />';
+	echo '<input type="hidden" name="toPolicy" value="'.$toPolicy.'" />';
+
+	echo '<table cellspacing="0" cellpadding="1" align="center" class="loginablak">'."\n";
+	echo '<thead>'."\n";
+	    echo '<tr>'."\n";
+		echo '<td>'."\n";
+    		echo 'SuliX Napló';
+    		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+	echo '</thead>'."\n";
+	echo '<tfoot>'."\n";
+	    echo '<tr>'."\n";
+    		echo '<td>'."\n";
+
+		if ($toPolicy == 'parent') {
+		    echo '<input type="hidden" name="toPolicy" value="parent" />'."\n";
+		} else {
+                    echo '<select class="policy" name="toPolicy">'."\n";
+                            echo '<option value="private" '.($toPolicy=='private'?' selected="selected" ':'').'>';
+                            echo 'tanár/diák';
+                            echo '</option>'."\n";
+
+                            echo '<option value="parent" '.($toPolicy=='parent'?' selected="selected" ':'').'>';
+                            echo 'szülő';
+                            echo '</option>'."\n";
+                    echo '</select>'."\n";
+		}
+
+
+            	echo '<input type="submit" tabindex="3" name="button" value="Belépés"
+			onclick="document.loginablak.button.disabled=true;
+				document.loginablak.button.value=\' Várj... \';
+				document.loginablak.submit()" class="submit" />'."\n";
+    		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+	echo '</tfoot>'."\n";
+	echo '<tbody>'."\n";
+    	    echo '<tr class="top">'."\n";
+        	echo '<td>'."\n";
+		    echo '<div class="input">';
+            		echo '<input type="text" accesskey="l" tabindex="1" name="userAccount" value="Felhasználónév" maxlength="32" 
+			onFocus="this.value=\'\'" onBlur="if (this.value == \'Felhasználónév\' || this.value == \'\') this.value=\'Felhasználónév\'"
+			/>'."\n";
+		    echo '</div>';
+        	echo '</td>'."\n";
+    	    echo '</tr>'."\n";
+    	    echo '<tr>'."\n";
+        	echo '<td>'."\n";
+		    echo '<div class="input">';
+            	    echo '<input id="userPassword" type="password" accesskey="p" tabindex="2" name="userPassword" value="" />'."\n";
+		    echo '</div>';
+        	echo '</td>'."\n";
+    	    echo '</tr>'."\n";
+	echo '</tbody>'."\n";
+	echo '</table>'."\n";
+
+	echo '</div>'."\n";
+	formEnd();
+
+    }
+
+?>

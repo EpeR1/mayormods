@@ -1,0 +1,92 @@
+<?php
+
+    function putJegySelect($ADAT,$responseFormat='echo') { // responseFormat = echo|return
+	/* 
+	    _jegySelectTipus = zaroJegy || ...
+	    _jegySelectTipus = jegy (nincs tesztelve)		
+	*/
+	global $KOVETELMENY;
+	extract($ADAT,EXTR_PREFIX_ALL,''); 
+	if ($_tabindex != '') $tabindex_str = 'tabindex="'.$_tabindex.'" '; else $tabindex_str = '';
+	// mire vonatkozik a select
+	if ($_jegySelectTipus == 'zaroJegy')  {
+	    $idTipus = 'zaroJegyId'; // intezmeny
+	    $megjelenes = 'hivatalos';
+	}else{
+	    $idTipus = 'jegyId'; // tanev
+	    $megjelenes = 'rovid';
+	}
+	// prepare variables
+	$PRE = array($idTipus,'diakId','targyId','evfolyam','evfolyamJel','tanev','szemeszter');
+	for ($i=0; $i<count($PRE); $i++) {
+	    $_x = '_'.$PRE[$i];
+	    $VARS[] = $PRE[$i].'='.$$_x;
+	}
+	// HTML
+	$_title = ($ADAT['evfolyamJel']!='') ? $ADAT['evfolyamJel'].'. évfolyamon' : '';
+	$_title .= ($ADAT['hivatalosDt']!='') ? ' hivatalosan:'.$ADAT['hivatalosDt'] : '';
+	$_title .= ($ADAT['modositasDt']!='') ? ' módosítva:'.$ADAT['modositasDt'] : '';
+	$_title .= ($ADAT['info']!='') ? ' '.$ADAT['info'] : '';
+	//$readonly = ' readonly="readonly" disabled="disabled" ';
+	$readonly='';
+	if ($_jegyTipus != '' && count($_zaroJegyTipusok)==0) {
+    	    $content .= '<select name="'.$_variable.'[]" '.$tabindex_str.' title="'.$_title.'" '.$readonly.'  class="'.$_class.'" style="'.$_style.'">';
+	    $content .= '<option value="'.implode('|',$VARS).'|delete=true">-</option>';
+	    for ($o = 0; $o < count($KOVETELMENY[$_jegyTipus]['értékek']); $o++) {
+		$_osztalyzat = $KOVETELMENY[$_jegyTipus]['értékek'][$o];
+		$_SEL = ($_megjegyzes=='' && $_osztalyzat == $_jegy) ? 'selected="selected"':'';
+		$_megj = null;
+		$content .= '<option value="'.implode('|',$VARS)."|jegy=$_osztalyzat|jegyTipus=$_jegyTipus|megjegyzes=$_megj".'" '.$_SEL.'>';
+		    $content .= $KOVETELMENY[$_jegyTipus][$_osztalyzat][$megjelenes];
+		$content .= '</option>';
+		// + megjegyzés szerinti jegyek
+		if ($KOVETELMENY[$_jegyTipus][$_osztalyzat]['megjegyzes']!='') {
+		    $_megj = $KOVETELMENY[$_jegyTipus][$_osztalyzat]['megjegyzes'];
+		    $_SEL = (($_megjegyzes==$_megj) && ($_osztalyzat == $_jegy)) ? 'selected="selected"':'';
+		    $content .= '<option value="'.implode('|',$VARS)."|jegy=$_osztalyzat|jegyTipus=$_jegyTipus|megjegyzes=$_megj".' data-jegy="'.$_osztalyzat.'"  '.$_SEL.' >';
+		    $content .= $KOVETELMENY[$_jegyTipus][$_osztalyzat][$megjelenes];
+		    $content .= ' '.$_megj;
+		    $content .= '</option>';
+		}
+	    }
+	    $content .= '</select>';
+	} elseif (count($_zaroJegyTipusok)>=1) { // ha engedélyezett (van megadott érvényes jegyTipus)
+        	$content .= '<select name="'.$_variable.'[]" '.$tabindex_str.' class="jegyAdat" title="'.$_title.'" '.$readonly.' class="'.$_class.'" style="'.$_style.'">';
+		$content .= '<option value="'.implode('|',$VARS).'|delete=true">-</option>';
+                foreach ($_zaroJegyTipusok as $_junk => $__jegyTipus) {
+            	    $content .= '<optgroup label="'.$__jegyTipus.'">';
+		    if (is_array($KOVETELMENY[$__jegyTipus]['értékek']))
+                    foreach ($KOVETELMENY[$__jegyTipus]['értékek'] as $idx => $_osztalyzat) {
+			$_SEL = (($_megjegyzes=='') && ($_osztalyzat == $_jegy) && ($_jegyTipus == $__jegyTipus)) ? 'selected="selected"':'';
+                	$content .= '<option '.$_SEL.' value="zaroJegyId='.$_zaroJegyId.'|diakId='.$_diakId.'|targyId='.$_targyId.'|evfolyam='.$_evfolyam.'|evfolyamJel='.$_evfolyamJel.'|tanev='.$_tanev.'|szemeszter='.$_szemeszter.'|jegy='.$_osztalyzat.'|jegyTipus='.$__jegyTipus.'|megjegyzes="   data-jegy="'.$_osztalyzat.'" >'.$KOVETELMENY[$__jegyTipus][$_osztalyzat]['hivatalos'].'</option>';
+			// + megjegyzés szerinti jegyek
+			if ($KOVETELMENY[$__jegyTipus][$_osztalyzat]['megjegyzes']!='') {
+			    $_megj = $KOVETELMENY[$__jegyTipus][$_osztalyzat]['megjegyzes'];
+			    $_SEL = (($_megjegyzes==$_megj) && ($_osztalyzat == $_jegy) && ($_jegyTipus == $__jegyTipus)) ? 'selected="selected"':'';
+			    $content .= '<option '.$_SEL.' value="zaroJegyId='.$_zaroJegyId.'|diakId='.$_diakId.'|targyId='.$_targyId.'|evfolyam='.$_evfolyam.'|evfolyamJel='.$_evfolyamJel.'|tanev='.$_tanev.'|szemeszter='.$_szemeszter.'|jegy='.$_osztalyzat.'|jegyTipus='.$__jegyTipus.'|megjegyzes='.$_megj.'">';
+			    $content .= $KOVETELMENY[$__jegyTipus][$_osztalyzat]['hivatalos'];
+			    $content .= ' '.$_megj;
+			    $content .= '</option>';
+			}
+
+                    }
+            	    $content .= '</optgroup>';
+        	}
+		//hack, nem szép: $content .= '<optgroup label="info"><option disabled="disabled">'.$_title.'</option></optgroup>';
+                $content .= '</select>';
+		if ($ADAT['jegyTipus']=='szöveges szempontrendszer') {
+		    $content .= '<a href="'.
+			href(
+			    'index.php?page=naplo&sub=osztalyozo&f=szovegesErtekeles&diakId='.$_diakId
+			    .'&tanev='.$_tanev.'&szemeszter='.$_szemeszter.'&evfolyam='.$_evfolyam.'&evfolyamJel='.$_evfolyamJel.'&tankorId='.$_tankorId
+			)
+			.'" class="onClickUpdateWindow szoveges" title="'._SZOVEGES_MINOSITES.'">☰</a>';
+		}
+	} else { // ha nincs megadva jegyTipus, sajnos nem írható be jegy
+		$content .= 'A tárgyhoz nincs rögzítve a jegyTipus!';
+	}
+	if ($responseFormat=='return') return $content;
+	else echo $content;
+    }
+
+?>

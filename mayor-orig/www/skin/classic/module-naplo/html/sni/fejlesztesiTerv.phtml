@@ -1,0 +1,94 @@
+<?php
+
+    function putHaviOsszesites($ADAT) {
+
+	global $Honapok;
+
+
+	if (__NAPLOADMIN || __VEZETOSEG || __MENTOR) echo '<div class="sni mentor">'."\n";
+	else echo '<div class="sni">'."\n";
+
+	echo '<h1>';
+	    echo $Honapok[(date('m',strtotime($ADAT['dt']))-1)];
+	echo '</h1>';
+
+	formBegin(array('method'=>'post','action'=>''));
+
+	echo '<input type="hidden" name="action" value="haviOsszegzesRogzitese" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+	echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+
+	echo '<table><tr><td>'."\n";
+
+    	    echo '<label for="gyengesegek">'._GYENGESEGEK.'</label><br />'."\n";
+	    echo '<textarea tabindex="10" title="'._GYENGESEGEK.'" cols="40" rows="3" id="gyengesegek" name="gyengesegek">'."\n";
+                echo $ADAT['sniHaviOsszegzes']['gyengesegek'];
+    	    echo '</textarea><br />'."\n";
+
+	    echo '<label for="celok">'._CELOK.'</label><br />'."\n";
+	    echo '<textarea tabindex="12" title="'._CELOK.'" cols="40" rows="2" id="celok" name="celok">'."\n";
+                echo $ADAT['sniHaviOsszegzes']['celok'];
+    	    echo '</textarea><br />'."\n";
+
+	    echo '<label for="eszkozok">'._ESZKOZOK.'</label><br />'."\n";
+	    echo '<textarea tabindex="14" title="'._ESZKOZOK.'" cols="40" rows="2" id="eszkozok" name="eszkozokModszerek">'."\n";
+                echo $ADAT['sniHaviOsszegzes']['eszkozokModszerek'];
+    	    echo '</textarea><br />'."\n";
+
+	    echo '<label for="ertekeles">'._ERTEKELES.'</label><br />'."\n";
+	    echo '<textarea tabindex="16" title="'._ERTEKELES.'" cols="40" rows="2" id="ertekeles" name="ertekeles">'."\n";
+                echo $ADAT['sniHaviOsszegzes']['ertekeles'];
+    	    echo '</textarea><br />'."\n";
+
+	echo '</td><td>'."\n";
+
+	    echo '<label for="erossegek">'._EROSSEGEK.'</label><br />'."\n";
+	    echo '<textarea tabindex="11" title="'._EROSSEGEK.'" cols="40" rows="3" id="erossegek" name="erossegek">'."\n";
+                echo $ADAT['sniHaviOsszegzes']['erossegek'];
+    	    echo '</textarea><br />'."\n";
+
+	    echo '<label for="feladatok">'._FELADATOK.'</label><br />'."\n";
+	    echo '<textarea tabindex="13" title="'._FELADATOK.'" cols="40" rows="2" id="feladatok" name="fejlesztesiFeladatok">'."\n";
+                echo $ADAT['sniHaviOsszegzes']['fejlesztesiFeladatok'];
+    	    echo '</textarea><br />'."\n";
+
+	    echo '<label for="utemezes">'._UTEMEZES.'</label><br />'."\n";
+	    echo '<textarea tabindex="15" title="'._UTEMEZES.'" cols="40" rows="2" id="utemezes" name="utemezes">'."\n";
+                echo $ADAT['sniHaviOsszegzes']['utemezes'];
+    	    echo '</textarea><br />'."\n";
+
+	    echo '<label for="eredmeny">'._EREDMENY.'</label><br />'."\n";
+	    echo '<textarea tabindex="17" title="'._EREDMENY.'" cols="40" rows="2" id="eredmeny" name="eredmeny">'."\n";
+                echo $ADAT['sniHaviOsszegzes']['eredmeny'];
+    	    echo '</textarea><br />'."\n";
+
+	echo '</td></tr></table>'."\n";
+
+	echo '<label for="felelos">'._FELELOS.'</label><br />'."\n";
+        echo '<select tabindex="18" id="felelos" name="felelos[]" multiple="multiple" class="multi" size="10">'."\n";
+            for ($i = 0; $i < count($ADAT['tanarok']); $i++) 
+	    if (in_array($ADAT['tanarok'][$i]['tanarId'], $ADAT['tanarIds'])) {
+		if (in_array($ADAT['tanarok'][$i]['tanarId'], $ADAT['sniHaviOsszegzes']['felelos']))
+            	    echo '<option value="'.$ADAT['tanarok'][$i]['tanarId'].'" selected="selected">'.$ADAT['tanarok'][$i]['tanarNev'].' ('.$ADAT['tanarok'][$i]['tanarId'].')</option>'."\n";
+		else
+            	    echo '<option value="'.$ADAT['tanarok'][$i]['tanarId'].'">'.$ADAT['tanarok'][$i]['tanarNev'].' ('.$ADAT['tanarok'][$i]['tanarId'].')</option>'."\n";
+            }
+        echo '</select><br />'."\n";
+
+	echo '<label for="valtozas">'._VALTOZAS.'</label><br />'."\n";
+        $SEL = array($ADAT['sniHaviOsszegzes']['valtozas'] => ' selected="selected" ');
+        echo '<select tabindex="19" id="valtozas" name="valtozas">'."\n";
+            echo '<option value=""> - </option>'."\n";
+            for ($i = 1; $i <= 100; $i++) echo '<option value="'.$i.'"'.$SEL[$i].'>'.$i.'%</option>'."\n";
+        echo '</select>'."\n";
+
+	if (__NAPLOADMIN || __VEZETOSEG || __MENTOR)
+	    echo '<p style="text-align: center"><input tabindex="25" type="submit" value="'._OK.'" /></p>'."\n";
+
+	formEnd();
+	echo '</div>'."\n";
+
+    }
+
+?>

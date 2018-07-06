@@ -1,0 +1,43 @@
+
+    form.esemeny table { margin: 20px 35px 0px 35px;  border-spacing: 0; border: 1px solid #aabbcc; background-color: #f0f0f0; padding: 10px; position: relative; width: 550px; }
+    form.esemeny table td, form.esemeny table th { background-color: #ececec; padding: 4px; }
+    form.esemeny table th { text-align: right; }
+    form.esemeny table td input.datetime { width: 140px; }
+    form.esemeny table textarea { width: 98%; margin-top: 5px; }
+    form.esemeny table td#submitTd { background-color: #99dd99; text-align: center; padding: 20px 0px; }
+/*
+    form.esemeny table input[type=submit] { width: 500px; color: #080; }
+    form.esemeny table input:focus, form.esemeny table textarea:focus { background-color: #fd2; }
+    form.esemeny table input:disabled, form.esemeny table textarea:disabled, form.esemeny table select:disabled { background-color: #eee; color: #68a; border:solid #ccc 1px;}
+    form.esemeny table input[type=submit]:hover { }
+*/
+    form.esemeny table td hr { background-color: #f8f8f8; border: none; }
+    form.esemeny table select#kategoria { float: right; margin-top: -5px; }
+
+    form.esemeny table td.tanarok { position: relative; }
+    form.esemeny table td.tanarok div.select { margin-left: 3px; display:inline-block; vertical-align:top; overflow:hidden; border:solid #ccc 1px; }
+    form.esemeny table select#esemenyTanar { overflow: hide; min-width: 150px; width: 300px; height: 250px; padding:10px; margin:-5px -20px -5px -5px; background-color: #f8f8f8; }
+    form.esemeny table select#esemenyTanar option.uj { background-color: #99dd99; }
+    form.esemeny table input#plusz { color: red; width: 140px; }
+    form.esemeny table input#minusz { color: green; width: 140px; }
+    form.esemeny table input#add { color: #68a; width: 100%; font-size: 22px; font-weight: bold; }
+
+    form.esemeny table div#tanarLista { padding: 15px 5px 5px 5px; width: 300px; position: absolute; top:0px; right: -330px; background-color: #ace; border: 1px #abc solid; }
+    form.esemeny table span#closeTanarLista { position: absolute; font-weight: bold; color: white; padding: 0px 5px; right: 0px; top: 0px; }
+    form.esemeny table span#closeTanarLista:hover { cursor: pointer; }
+    form.esemeny table select#tanarok { width: 300px; height: 250px; }
+    form.esemeny table div#osztalyLista { background: #f0f0f0; position: absolute; top: 0px; right: -463px; width: 440px; border: 1px solid #aabbcc; padding: 10px; }
+    form.esemeny table div#osztalyLista ul { 
+	list-style-type: none; padding: 0px 0px; 
+/*	-moz-column-count: 2; -moz-column-gap: 0px; 
+	-webkit-column-count: 2; -webkit-column-gap: 0px; 
+	column-count: 2; column-gap: 0px; 
+	width: 740px;
+*/
+    }
+    form.esemeny table div#osztalyLista ul label.oJel { display: inline-block; width: 40px; font-weight: bold; text-align: center; }
+    form.esemeny table div#osztalyLista ul li.uj { background-color: #99dd99; }
+
+    form.esemenyTorles {margin: 0px 35px;  border-spacing: 0; border: 1px solid #aabbcc; background-color: #f0f0f0; padding: 2px 0px; position: relative; width: 548px; text-align: center; background-color: #f00; }
+    form.esemenyTorles input { color: red; width: 500px; }
+    form.esemenyTorles input:hover { background-color: #eca; border-color: #fdd #dcc #dcc #fdd; } 

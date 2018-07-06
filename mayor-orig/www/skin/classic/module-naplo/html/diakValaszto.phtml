@@ -1,0 +1,22 @@
+<?php
+
+    function putDiakValasztoForm($ADAT) {
+
+	formBegin(array('class'=>'valaszto'));
+	    echo '<input type="hidden" name="action" value="valaszt" />'."\n";
+
+	    $SEL = array(__PARENTDIAKID => ' selected="selected" ');
+	    echo '<select name="diakId">'."\n";
+	    for ($i=0; $i<count($ADAT); $i++) {
+		echo '<option value="'.$ADAT[$i]['diakId'].'" '.$SEL[ $ADAT[$i]['diakId'] ].'>';
+		echo $ADAT[$i]['diakNev'];
+		echo '</option>'."\n";
+	    }
+	    echo '</select>'."\n";
+
+	    echo '<input type="submit" value="'._OK.'" />'."\n";
+	formEnd();
+
+    }
+
+?>

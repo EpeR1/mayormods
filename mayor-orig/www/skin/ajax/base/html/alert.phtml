@@ -1,0 +1,25 @@
+<?php
+/*
+    Module: base
+    
+    js_alert($alert)
+    html_alert($alert)
+
+    AJAX változat: csak akkor írja ki az alert-et, ha van $_GET['showAlert'] be van állítva...
+*/
+
+// ------------------------------------------------------------------- //
+// Az $alert két részből áll: típus:hiba                               //
+// típus: alert   : javaScript alert                                   //
+//	  message : hibaüzenet után az oldal betöltődik                //
+//	  page    : hibaüzenet után az oldal nem töltődik be           //
+//	  info    : információs üzenet                                 //
+// ------------------------------------------------------------------- //
+    function html_alert($alert='') {
+
+	$_SESSION['alert'] = array();
+	return true;
+
+    }
+
+?>

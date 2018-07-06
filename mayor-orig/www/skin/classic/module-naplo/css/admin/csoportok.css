@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+
+    form.csoport { width: 80%; background-color: rgb(180,180,200); margin: 20px auto; text-align: center; padding: 5px;}
+    form.csoport label { color: white; padding: 8px; }
+    form.csoport table { margin: 20px auto; background-color: rgb(140,140,180); }
+    form.csoport table td { background-color: rgb(255,255,255); }
+    form.csoport h1 { background-color: rgb(120,120,160); color: white; }
+    form.csoport p { background-color: rgb(200,200,220); padding: 15px; text-align: justify; border: dotted 1px rgb(120,120,160);}
+    form.csoport select.kiemelt { color: red; font-weight: bold; }

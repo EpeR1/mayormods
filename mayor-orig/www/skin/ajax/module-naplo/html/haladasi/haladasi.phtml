@@ -1,0 +1,162 @@
+<?php
+/*
+    function putHaladasiBejegyzesek($data, $tankorId, $osztalyId, $tanarId, $title, $diakId, $order, $ADAT)
+	|- function putTankorNap($dt, $dNap, $doga, $order)
+	    |-function putHaladasiDolgozat($dt,$doga)
+	    |-function putTankorOra($dOra)
+    function putHetesForm($ADAT)
+*/
+##
+# Haladási naplo megjelenítése
+##
+
+    function putHaladasiBejegyzesek($ADAT) {
+
+	global $_TANEV;
+
+	$title = $ADAT['title'];
+	$data  = $ADAT['haladasi'];
+	$order = $ADAT['order'];
+	$tankorId = $ADAT['tankorId'];
+	$osztalyId = $ADAT['osztalyId'];
+	$tanarId = $ADAT['tanarId'];
+	$diakId = $ADAT['diakId'];
+
+        echo '<input type="hidden" name="tankorId" id="haladformTankorId" value="" />'."\n";
+
+	echo '<table class="haladasiNaplo" align="center" cellpadding="1" cellspacing="1">'."\n";
+
+	echo '<thead>'."\n";
+	echo '<tr>';
+		echo '<th colspan="3">';
+		echo '</th>';
+		echo '<th>'._TANAR.'</th><th>'._ORASZAM.'</th><th>'._TANANYAG.'</th>';
+	echo '</tr>'."\n";
+	echo '</thead>'."\n";
+	echo '<tfoot>'."\n";
+                echo '<tr><th colspan="6">';
+//                    if (_SHOW_DAYS_FROM > $_TANEV['kezdesDt']) echo '<input class="gomb" type="submit" name="lapoz" value="<<" tabindex="5" />'."\n";
+                    echo ' '._IDOSZAK.': '.str_replace('-','.',_SHOW_DAYS_FROM) . '. - '. str_replace('-','.', _SHOW_DAYS_TO) .'. '."\n";
+//                    if (_SHOW_DAYS_TO < date('Y-m-d'))  echo '<input class="gomb" type="submit" name="lapoz" value=">>" tabindex="6" />'."\n";
+                echo '</th></tr>'."\n";
+	echo '</tfoot>'."\n";
+	
+	$toTime = strtotime(_SHOW_DAYS_TO);
+	$fromTime = strtotime(_SHOW_DAYS_FROM);
+
+	    for ($time = $toTime; $time >= $fromTime; $time = strtotime('-1 day',$time)) {
+		$dt = date('Y-m-d',$time);
+		$count = count($data[$dt]);
+		if ($count > 0) {
+//		    echo '<tbody class="parosNap">';
+		    putTankorNap($dt, $data[$dt], $data['dolgozatok'], $order);
+//		    echo '</tbody>'."\n";
+		}
+	    }
+
+	echo '</table>'."\n";
+
+    }
+
+
+
+
+    function putTankorNap($dt, $dNap, $doga, $order) {
+
+	$time = strtotime($dt);
+	$count = count($dNap);
+	
+//	if (date('w',$time) % 2 == 0) echo '<tbody class="parosNap">'."\n";
+//	else echo '<tbody class="paratlanNap">'."\n";
+
+	putHaladasiDolgozat($dt,$doga);
+
+	for ($i=0; $i<$count; $i++) {
+	    putTankorOra($dNap[$count-$i-1]);
+	} // órák kiírása
+
+//	echo '</tbody>'."\n";
+
+    }
+
+
+    function putHaladasiDolgozat($dt,$doga) {
+
+	for ($i=0;$i<count($doga['tervezett'][$dt]);$i++) {
+	    $did = $doga['tervezett'][$dt][$i];
+	    echo '<tr>';
+	    echo '<td colspan="8" class="dolgozat">';
+		$href = href('index.php?page=naplo&sub=osztalyozo&f=dolgozat&dolgozatId='.$did);
+//		echo '<a href="'.$href.'">';
+	    	echo _BEJELENTETT_DOLGOZAT . ': '. $doga[$did]['dolgozatNev'];
+		echo ' (' ;
+		for ($j=0;$j<count($doga[$did]['tankor']);$j++) {
+		    if ($j != 0) echo ', ';
+		    echo $doga[$did]['tankor'][$j]['tankorNev'];
+		}
+		echo ')';
+//		echo '</a>';
+	    echo '</td>';
+	    echo '</tr>'."\n";
+	}
+
+    }
+
+
+    function putTankorOra($dOra) {
+
+        global $aHetNapjai;
+
+	$modosithatoOra = false;
+		
+	if (!in_array($dOra['tipus'],array('normál','normál máskor'))) {
+	    $tipus = nagybetus(substr($dOra['tipus'],0,1));
+	    $tr_class = ' class="helyettesit"';
+	} else {
+	    $tipus = '';
+	    $tr_class = '';
+	}
+
+	echo '<tr'.$tr_class.'>';
+
+	    echo '<td>'; 
+		echo str_replace('-','.',$dOra['dt']) .'. '. $aHetNapjai[date('w',strtotime($dOra['dt']))-1].' ';
+	    echo '</td>';
+	    echo '<td class="ora">';
+		echo $dOra['ora'].'.';
+	    echo '</td>'."\n";
+	    echo '<td>';
+		echo $tipus;
+//		echo $ADAT['terem'][$dOra['teremId']]['leiras'];
+	    echo '</td>'."\n";
+
+
+	    // ----- Tanör(ok) -------------------------------
+	    echo '<td>';
+		// Ha egy normál órának több tanára is van, és módosítható az óra, akkor lehet választani a tanárok közül
+		if (count($dOra['tanár']['id']) > 1 and $modosithatoOra) {
+		    $_SEL = array($dOra['kiId'] => 'selected="selected" ');
+		    echo '<select name="K_'.$dOra['oraId'].'">'."\n";
+		    for ($t=0;$t<count($dOra['tanár']['id']);$t++) {
+			echo '<option value="'.$dOra['tanár']['id'][$t].'" '.$_SEL[$dOra['tanár']['id'][$t]].'>';
+			echo $dOra['tanár'][$dOra['tanár']['id'][$t]]['cn'];
+			echo '</option>'."\n";
+		    }
+		    echo '</select>';
+		} else {
+		    echo $dOra['kiCn'];
+		}
+	    echo '</td>'."\n";
+
+	    echo '<td>';
+		echo $dOra['oraszam'];
+	    echo '</td>'."\n";
+
+	    echo '<td>'.$dOra['leiras'].'</td>'."\n";
+
+	echo '</tr>'."\n";
+    }
+
+    function putHetesForm($ADAT) { }
+
+?>

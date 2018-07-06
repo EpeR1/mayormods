@@ -1,0 +1,19 @@
+
+
+    table.info { background-color: #eeeeee; }
+    table.info thead tr th {
+	background-color: purple; color: white;
+	height: 2em;
+	border-bottom: solid 1px #777777;
+	padding-left:1em;
+	padding-right:1em;
+    }
+    table.info tfoot tr th {
+	background-color: #667760; color: white;
+    }
+    table.info tbody tr th { background-color: #aaaabb; padding-left: 2em; padding-right: 2em; }
+    table.info tbody tr td { background-color: white; text-align: center; padding-left: 2em; padding-right: 2em; }
+    table.info tbody tr th.up { background-color: red; }    
+    table.info tbody tr th.down { background-color: green; }
+
+    table.info tbody tr.nap0 th,table.info tbody tr.nap0 td { border-top: solid 2px #ffaab0; }

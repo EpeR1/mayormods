@@ -1,0 +1,9 @@
+
+    div.download { text-align: center; }
+    div.download h1 { border: black dotted; border-width: 1px 0px; font-size: 14px; width: 60%; margin: 0px auto; }
+    div.download table { margin: 10px auto; background-color: rgb(80,40,40); text-align: left; }
+    div.download table th { padding: 10px; background-color: rgb(200,100,10); color: white; text-align: right; }
+    div.download table td { background-color: rgb(220,220,200); padding: 10px 40px; }
+    div.download table td a { text-decoration: none; color: red; }
+    div.download table td a:hover { text-decoration: underline; }
+    div.download p { background-color: rgb(200,200,160); padding: 20px; width: 60%; margin: 0px auto; }

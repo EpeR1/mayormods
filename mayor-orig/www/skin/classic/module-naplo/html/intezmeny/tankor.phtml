@@ -1,0 +1,370 @@
+<?php
+
+    function putTankornevForm($ADAT) {
+
+	formBegin(array('class'=>'tankor'));
+	echo '<h2>'._TANKORNEV_MODOSITAS.'</h2>';
+
+	    echo '<div style="padding:15px 15px 0px 15px; float:left; font-size: 60px; line-height:60px;"><span class="icon-pencil-alt"></span></div>';
+	    echo '<p>'._TANKORNEV_MODOSITAS_HELP.'</p>';
+
+	    echo '<input type="hidden" name="action" value="setTankorNev" />'."\n";
+	    echo '<input type="hidden" name="tankorId" value="'.$ADAT['tankorId'].'" />'."\n";	   
+	    echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";	   
+
+	    echo '<p>';
+	    echo '<label for="ujTargy">'._TAGOK_ALAPJAN.': </label>';
+
+	    echo '<input type="checkbox" id="setTankorNevTagokAlapjan" name="setTankorNevTagokAlapjan" value="true" checked="checked" />';
+	    echo '<input type="submit" name="nevValtoztatas" value="Tankörnév frissítés" />';
+
+	    echo '</p>';
+	formEnd();
+
+    }
+
+
+    function putUjTankorForm($MK,$TARGY,$TANAR,$OSZTALY,$SZEMESZTER,$TOPOST,$ADAT) {
+
+	global $TANKOR_TIPUS;
+	/* $TOPOST['tankoradat'] */
+
+	$TT=array();
+	for ($i=0; $i<count($TOPOST['tankortanar']); $i++) {
+	    $TT[] = $TOPOST['tankortanar'][$i]['tanarNev'];
+	}
+    
+	if (!is_array($TARGY)) return false;
+	    $SZEMCHECK = array();
+	    for ($i=0; $i<count($TOPOST['szemeszterek']); $i++) {
+		$SZEMCHECK[] = $TOPOST['szemeszterek'][$i]['tanev'].'/'.$TOPOST['szemeszterek'][$i]['szemeszter'];
+		$SZEMORASZAM[$TOPOST['szemeszterek'][$i]['tanev'].'/'.$TOPOST['szemeszterek'][$i]['szemeszter']]=
+		    $TOPOST['szemeszterek'][$i]['oraszam'];
+	    }
+	    $OSZTCHECK=array();
+
+	    for ($i=0; $i<count($TOPOST['osztalyok']); $i++) {
+		$OSZTCHECK[] = $TOPOST['osztalyok'][$i]['osztalyId'];
+	    }
+
+	if ( isset($TOPOST['tankorId']) && $TOPOST['tankorId']!='')
+	    $_formClass = 'meglevo ';
+	else
+	    $_formClass = '';
+
+
+	formBegin(array('class'=>$_formClass.'tankor', 'method'=>'post', 'action'=>''));
+	echo '<input type="hidden" name="action" value="ujTankor" />'."\n";
+	echo '<input type="hidden" name="tankorId" value="'.$TOPOST['tankorId'].'" />'."\n";
+	    foreach($TOPOST as $_t => $_v) 
+		echo '<input type="hidden" name="'.$_t.'" value="'.$_v.'" />'."\n";
+	    echo '<h2>'._TANKOR.' ';
+		echo $MK['leiras'].'/'.$TARGY['targyNev'];
+		if ($TARGY['targyJelleg']!='') echo ' ('.$TARGY['targyJelleg'].')';
+		echo ' '.implode(', ',$TT);
+	    echo '</h2>'."\n";	
+
+
+	echo '<table>';
+	echo '<tr>'."\n";
+	echo '<th>'._ELNEVEZES.'</th>';
+	    echo '<td>';
+	    echo $ADAT['tanev'];
+	    echo '</td>';
+	    echo '<td>';
+		/*
+		    12.abcd angol nyelv II-ALAP óra
+		    évfolyam(ok), osztály, tárgy, (extra tankorJel), elnevezés (tankorNevCimke)
+		*/
+	    // találjuk ki az elnevezést!
+	    if ($TOPOST['tankorId']!='') {
+		$tankorNev = $TOPOST['tankoradat']['tankorNev'];
+		foreach ($TANKOR_TIPUS as $_k=>$_v) {
+		    // ha a név utolsó egyésége megegyezik a jelöléssel...
+		    if (substr($tankorNev, -strlen($_v)) == $_v) { $_tipus = $_v; break; }
+		}
+	    } elseif ($TOPOST['tankoradat']['tipus']!='') {
+		    $_tipus=$TOPOST['tankoradat']['tipus'];
+	    }
+	    echo '<select name="tipus">';
+	    foreach ($TANKOR_TIPUS as $_k=>$_v) {
+		$_SEL = ($_v==$_tipus) ? ' selected="selected"':'';
+		echo '<option value="'.$_v.'"'.$_SEL.'>'.$_k.' - '.$_v.'</option>';
+	    }
+	    echo '</select>';
+	    if (defined('__AKG_TANKORNEV') && __AKG_TANKORNEV === true) {
+		echo '<input type="checkbox" name="tankorNevMegorzes" value="true" />';
+	    }
+	    echo '</td>';
+	echo '</tr>';
+	echo '<tr>'."\n";
+	echo '</table>';
+
+	echo '<h2>'._ALTALANOS.'</h2>'."\n";	
+
+	echo '<table>';
+	echo '<tr>'."\n";
+	echo '<th>'._TIPUS.'</th>';
+	    echo '<td>';
+	    echo '<label for="tipus">'.'</label>';
+
+		echo '<select name="tankorTipusId">';
+		foreach ($ADAT['tankorTipusok'] as $_k=>$_v) {
+		    $_SEL = ($_k==$TOPOST['tankoradat']['tankorTipusId']) ? ' selected="selected"':'';
+		    echo '<option value="'.$_k.'"'.$_SEL.'>';
+        	    echo $_k.": ";
+        	    echo $_v['rovidNev'].": ";
+        	    echo $_v['leiras'];
+		    echo '</option>';
+		}
+		echo '</select>';
+		echo '<br/>';
+		echo 'Megváltoztassam a tankörhöz tartozó összes - már rögzített - hiányzás típusát
+		      <br/>ebben a tanévben('.$ADAT['tanev'].')?';
+		echo '<input type="checkbox" name="forceTankorTipusValtas" value="1" />';
+		echo '<input type="submit" />';
+
+	    echo '</td>';
+if (count($TOPOST['tankorcsoport']['idk'])>1) {
+	    echo '<td rowspan="5" class="tankorCsoportok">';
+	    echo '<div class="header">'._TANKORCSOPORTOK.'</div>';
+	    echo '<ul>';
+	    for ($i=0; $i<count($TOPOST['tankorcsoport']['idk']); $i++){
+		$_TA = $TOPOST['tankorcsoport']['adat'][$TOPOST['tankorcsoport']['idk'][$i]][0];
+		if ($_TA['tankorId']!=$ADAT['tankorId'])
+		    echo '<li><a href="'.href('index.php?page=naplo&sub=intezmeny&f=tankor&tankorId='.$_TA['tankorId']).'">'.($_TA['tankorNev']).'</a></li>';
+		else 
+		    echo '<li>'.$_TA['tankorNev'].'</li>';
+	    }
+	    echo '</ul>';
+	    echo '</td>'."\n";
+}
+	echo '</tr><tr>';
+
+	    echo '<th>'._VALASZTHATO.'</th>'."\n";
+	    
+	    echo '<td>';
+	    if (isset($TOPOST['tankoradat']['felveheto'])) $_CHK[$TOPOST['tankoradat']['felveheto']] = ' checked="checked"';
+	    else $_CHK[0] = ' checked="checked"';
+
+	    echo '<span class="dob">';
+		echo '<input type="radio" id="szabValI" name="felveheto" value="1" '.$_CHK[1].' />';
+		echo '<label for="szabValI">'._IGEN.'</label>';
+	    echo '</span>';
+
+	    echo '<span class="dob">';
+		echo '<input type="radio" id="szabValN" name="felveheto" value="0" '.$_CHK[0].' />';
+		echo '<label for="szabValN">'._NEM.'</label>';
+	    echo '</span>'."\n";
+
+	    echo '<label for="min">'._MIN_LSZ.'</label>';
+	    echo '<select id="min" name="min">';
+	    for ($i=0; $i<100; $i++) {
+		$_SEL = ($TOPOST['tankoradat']['min'] ==$i) ? ' selected="selected" ': '';
+		echo '<option value="'.$i.'"'.$_SEL.'>'.$i.'</option>';
+	    }
+	    echo '</select>'."\n";
+	    echo '<label for="min">'._MAX_LSZ.'</label>';
+	    echo '<select id="max" name="max">';
+	    for ($i=0; $i<100; $i++) {
+		$_SEL = ($TOPOST['tankoradat']['max'] ==$i) ? ' selected="selected" ': '';
+		echo '<option value="'.$i.'"'.$_SEL.'>'.$i.'</option>';
+	    }
+	    echo '</select>'."\n";
+	    echo '</td>';
+	echo '</tr><tr>';
+	    echo '<th>'._EVKOZI_KOVETELMENY.'</th>';
+	    
+	    echo '<td>';
+
+	    if (isset($TOPOST['tankoradat']['kovetelmeny'])) {
+		$_CHK[$TOPOST['tankoradat']['kovetelmeny']] = ' checked="checked"';
+		$_CLASS[$TOPOST['tankoradat']['kovetelmeny']]=' class="sel"';
+	    } else {
+		$_CHK['jegy'] = ' checked="checked"';
+	    }
+
+	    foreach ( $ADAT['tankor.kovetelmeny'] AS $i => $kovetelmeny) {
+		echo '<div '.$_CLASS[$kovetelmeny].'>';
+		echo '<input type="radio" id="kov'.$kovetelmeny.'" name="kovetelmeny" value="'.$kovetelmeny.'" '.$_CHK[$kovetelmeny].' />';
+		echo '<label for="kov'.$kovetelmeny.'">'.$kovetelmeny.'</label>';
+		echo '</div>';
+	    }
+
+/*	    echo '<label for="kovJegy">'._JEGY.'</label>';
+	    echo '<input type="radio" id="kovJegy" name="kovetelmeny" value="jegy" '.$_CHK['jegy'].' />';
+	    echo '<label for="kovAi">'._ALAIRAS.'</label>';
+	    echo '<input type="radio" id="kovAi" name="kovetelmeny" value="aláírás" '.$_CHK['aláírás'].' />';
+*/	    echo '</td>';
+
+	echo '</tr>';
+/* REV 2185++ - tól nem kell, nem lehet. A típus determinál 
+	echo '<tr>';
+
+	    echo '<th>'._JELENLET.'</th>';
+	    
+	    echo '<td>';
+	    if (isset($TOPOST['tankoradat']['jelenlet'])) $_CHK[$TOPOST['tankoradat']['jelenlet']] = ' checked="checked"';
+	    else $_CHK['kötelező'] = ' checked="checked"';
+	    echo '<label for="jelKot">'._KOTELEZO.'</label>';
+	    echo '<input type="radio" id="jelKot" name="jelenlet" value="kötelező" '.$_CHK['kötelező'].' />';
+	    echo '<label for="jelNemKot">'._NEMKOTELEZO.'</label>';
+	    echo '<input type="radio" id="jelNemKot" name="jelenlet" value="nem kötelező" '.$_CHK['nem kötelező'].' />';
+	    echo '</td>';
+	    
+	echo '</tr>';
+*/
+	echo '</table>';
+	echo '<input type="hidden" id="jelKot" name="jelenlet" value="kötelező" />';
+	
+	    $_CHK = array();
+	
+	    echo '<h2>'._SZEMESZTEREK.'</h2>';
+	    echo '<table class="szemeszter" cellspacing="1" cellpadding="1">';
+	    echo '<tr><th>'._SZEMESZTER.'</th>';
+	    for ($i=0; $i<count($SZEMESZTER); $i++) {
+		echo '<th class="sz'.($i%2).'">';
+		echo $SZEMESZTER[$i]['tanev'].' '.$SZEMESZTER[$i]['szemeszter'];
+		echo '</th>'."\n";
+	    }
+	    echo '</tr>'."\n";
+
+	    echo '<tr><th></th>';
+	    for ($i=0; $i<count($SZEMESZTER); $i++) {
+		echo '<td class="sz'.($i%2).'">';
+		    $_RO = ($SZEMESZTER[$i]['statusz']=='lezárt') ? ' readonly="readonly"  onclick="return false;" class="lezart" ':'';
+		    $_CHK = (is_array($SZEMCHECK) && in_array($SZEMESZTER[$i]['tanev'].'/'.$SZEMESZTER[$i]['szemeszter'],$SZEMCHECK))? ' checked="checked"':'';
+		    $_ID = 'c'.$SZEMESZTER[$i]['tanev'].'/'.$SZEMESZTER[$i]['szemeszter'];
+		    echo '<input id="'.$_ID.'" type="checkbox" name="szemeszterek[]" value="'.$SZEMESZTER[$i]['szemeszterId'].'"'.$_CHK.$_RO.' />';
+		echo '</td>'."\n";
+	    }
+	    echo '</tr>';
+
+	    echo '</tr><tr><th>'._HETI_ORASZAM.'</th>';	    
+	    for ($i=0; $i<count($SZEMESZTER); $i++) {
+		echo '<td class="sz'.($i%2).'">';
+		    $_RO = ($SZEMESZTER[$i]['statusz']=='lezárt') ? ' readonly="readonly" class="lezart" ':'';
+		    $_val = $SZEMORASZAM[$SZEMESZTER[$i]['tanev'].'/'.$SZEMESZTER[$i]['szemeszter']];
+		    $_ID = 't'.$SZEMESZTER[$i]['tanev'].'/'.$SZEMESZTER[$i]['szemeszter'];
+		    echo '<input id="'.$_ID.'" type="text" size="2" maxlength="4" name="SZ'.$SZEMESZTER[$i]['szemeszterId'].'" value="'.$_val.'" '.$_RO.'/>';
+		echo '</td>'."\n";
+	    }
+	    echo '</tr>';
+	    echo '</table>'."\n\n";
+
+	    echo '<h2>'._RESZTVEVO_OSZTALYOK.'</h2>';
+	    echo '<table>';
+	    echo '<tr><th>'._OSZTALYJELE.'</th><th></th><th>'._LEIRAS.'</th></tr>'."\n";
+	    for ($i=0; $i<count($OSZTALY); $i++) {
+		if (is_array($ADAT['tankorOsztalyok']) && in_array($OSZTALY[$i]['osztalyId'],$ADAT['tankorOsztalyok'])) $_class="vanTag"; else $_class="";
+
+		echo '<tr class="'.$_class.'">';
+		echo '<th><label for="o'.$i.'">'.$OSZTALY[$i]['osztalyJel'].'</label></th>';
+		echo '<td>';
+		    $_CHK = (is_array($TOPOST['osztalyok']) && in_array($OSZTALY[$i]['osztalyId'],$OSZTCHECK))? ' checked="checked"':'';
+		    echo '<input type="checkbox" id="o'.$i.'" name="osztalyok[]" value="'.$OSZTALY[$i]['osztalyId'].'"'.$_CHK.' />';
+		echo '</td>'."\n";
+		echo '<td>';
+		echo '<label for="o'.$i.'">';
+		echo $OSZTALY[$i]['kezdoTanev'].'/'.$OSZTALY[$i]['vegzoTanev'];
+		echo '.'.$OSZTALY[$i]['jel'];
+		echo ' ('.$OSZTALY[$i]['leiras'].')';
+		echo '</label>';
+
+
+		echo '</td>'."\n";
+
+		echo '</tr>';
+	    }
+	    echo '</table>';
+	
+	    if ($TOPOST['tankorId']=='') { // engedélyezzüz a tanár felvételét
+		
+		echo '<h2>'._MEGJELOLTIDOSZAKBANTANAR.'</h2>';
+		echo '<select name="tanarId">';
+		echo '<option value=""></option>';
+		for($i=0; $i<count($TANAR); $i++) {
+		    echo '<option value="'.$TANAR[$i]['tanarId'].'">'.$TANAR[$i]['tanarNev'].'</option>';
+		}
+		echo '</select>';
+	    }
+	
+	    	    
+	    echo '<input type="submit" />';
+	
+	formEnd();
+    
+    }
+
+    function putTankorLezarForm($tankorId, $mkId, $targyId, $tanev = __TANEV) {
+    
+	    formBegin(array('class'=>'tankor'));
+	    echo '<h2>'._TANKOR_LEZARAS.'</h2>';
+	    		   
+	    echo '<p>'._TANKOR_LEZARAS_HELP.'</p>';
+	    echo '<p><label for="biztosLezar">Biztos benne?</label>';
+	    echo '<input type="checkbox" id="biztosLezar" name="biztosLezar" value="1" />'."</p>\n";
+	    echo '<input type="hidden" name="action" value="tankorLezar" />'."\n";
+	    echo '<input type="hidden" name="tankorId" value="'.$tankorId.'" />'."\n";	   
+	    echo '<input type="hidden" name="mkId" value="'.$mkId.'" />'."\n";	   
+	    echo '<input type="hidden" name="targyId" value="'.$targyId.'" />'."\n";	   
+	    echo '<input type="hidden" name="tanev" value="'.$tanev.'" />'."\n";	   
+
+	    echo '<p>';
+	    echo '<label for="lezardt">'._LEZARAS_DT.': </label>';
+	    echo '<input type="text" id="lezarDt" name="lezarDt" class="date" value="'.date('Y-m-d').'" />';						   
+	    echo '<input type="submit" id="lezarg" value="'._LEZAR.'" />';						   
+	    echo '</p>';
+	    formEnd();
+    }
+
+
+    function putTankorTorolForm($tankorId, $mkId, $targyId, $tanev = __TANEV) {
+    
+	    formBegin(array('class'=>'tankor'));
+	    echo '<h2>'._TANKOR_TORLES.'</h2>';
+	    		   
+	    echo '<p>'._TANKOR_TORLES_HELP;
+
+	    echo '<input type="checkbox" name="biztosTorol" value="1" />'."</p>\n";
+	    echo '<input type="hidden" name="action" value="tankorTorol" />'."\n";
+	    echo '<input type="hidden" name="tankorId" value="'.$tankorId.'" />'."\n";	   
+	    echo '<input type="hidden" name="mkId" value="'.$mkId.'" />'."\n";	   
+	    echo '<input type="hidden" name="targyId" value="'.$targyId.'" />'."\n";	   
+	    echo '<input type="hidden" name="tanev" value="'.$tanev.'" />'."\n";	   
+	    echo '<p>';
+	    echo '<label for="targytorolg">'._VEGLEGES_TORLES.': </label>';
+	    echo '<input type="submit" id="torolg" value="'._DELETE.'" />';						   
+	    echo '</p>';
+	    formEnd();
+    }
+
+    function putTankorTargyForm($ADAT) {
+
+	formBegin(array('class'=>'tankor'));
+	echo '<h2>'._TANKOR_TARGY_MODOSITAS.'</h2>';
+	    
+	    echo '<p>'._TANKOR_TARGY_HELP.'</p>';
+
+	    echo '<input type="hidden" name="action" value="tankorTargyModositas" />'."\n";
+	    echo '<input type="hidden" name="tankorId" value="'.$ADAT['tankorId'].'" />'."\n";	   
+	    echo '<input type="hidden" name="mkId" value="'.$ADAT['mkId'].'" />'."\n";	   
+	    echo '<input type="hidden" name="targyId" value="'.$ADAT['targyId'].'" />'."\n";	   
+	    echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";	   
+
+	    echo '<p>';
+	    echo '<label for="ujTargy">'._UJ_TARGY.': </label>';
+	    echo '<select id="ujTargy" name="ujTargyId" class="">';
+	    echo '<option value=""> - </option>';
+	    foreach ($ADAT['targyak'] as $tAdat) {
+		if ($tAdat['targyId'] != $ADAT['targyId'])
+		echo '<option value="'.$tAdat['targyId'].'">'.$tAdat['targyNev'].' ('.$tAdat['targyId'].')</option>';
+	    }
+	    echo '</select>';
+	    echo '<input type="submit" id="targyMod" value="'._OK.'" />';
+	    echo '</p>';
+	formEnd();
+
+    }
+
+?>

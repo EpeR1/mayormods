@@ -1,0 +1,1 @@
+ALTER TABLE diak MODIFY szuletesiHely varchar(32) NOT NULL;

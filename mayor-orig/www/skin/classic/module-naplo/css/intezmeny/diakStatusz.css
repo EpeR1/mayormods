@@ -1,0 +1,14 @@
+
+    div.dj { margin: 2px 10px; background-color: rgb(200,220,240); padding: 20px; }
+    div.dj form { background-color: rgb(240,245,250);  padding: 10px; }
+    div.dj ul { list-style-type: none; margin: 0px; padding: 5px 0px; background-color: rgb(20,40,60); }
+    div.dj ul li { margin: 5px; padding: 2px 0px; background-color: rgb(140,160,180); }
+    div.dj ul li form { margin: 4px; }
+    div.dj ul li span.dt { font-weight: bold; color: red; }	
+    div.dj ul li form.statusz p { padding: 3px; margin: 0px; }
+    div.dj ul li form.zaradek p { font-style: italic; }
+    div.dj ul li form.zaradek p span { color: red; }
+    div.dj ul li h2 { font-size: 12px; border: solid rgb(140,160,180); border-width: 1px 0px; padding: 3px; }
+    div.dj ul li form input[type=submit] { font-size: 12px; margin: 3px 20px; float:right;}
+    div.dj ul li form select { font-size: 12px; padding: 5px; }
+    div.dj ul li table th { text-align: right; }

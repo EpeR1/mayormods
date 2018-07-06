@@ -1,0 +1,75 @@
+#======================#
+#         Main         #
+#======================#
+
+BASEDIR="/var/mayor"
+WEB_SERVER_USER="www-data"
+MYSQL_HOST="localhost"
+MYSQL_USER="root"
+MYSQL_PW="%SQLPW%"
+
+MYSQL=/usr/bin/mysql
+SHELL=/bin/sh
+
+#======================#
+#        Update        #
+#======================#
+
+UPDATELOG="$BASEDIR/log/update.log"
+SQLLOG="$BASEDIR/log/sql-update.log"
+REVISION_FILE="$BASEDIR/log/revision"
+UPDATEDIR="$BASEDIR/update"
+TMPDIR=/tmp/update
+LOCKFILE=/var/run/mayor.lock
+
+MODULES="mayor-base mayor-naplo"
+# A wget megléte szükséges a http/tgz alapú frissítés használatához!
+HTTP_SERVER=http://mirror.mayor.hu/download
+
+# Ha a verzió egyedi nevét írjuk be (bubbly, radyx, rypple...),
+# akkor saját hatáskörben dől el, hogy mikor váltunk verziót.
+# Ha a "current" értéket adjuk meg, akkor a verzióváltás automatikus
+VERSION=current
+
+# Egyes oldalak letiltása
+# publicDeny="naplo/tanev/orarend naplo/tanev/masikoldal"
+
+# Saját update scritp teljes elérési útja
+# A szkript a rendes update folyamat végén fut le. A szkriptnek léteznie kell és futtatási joggal kell rendelkeznie.
+# LOCAL_UPDATE_SCRIPT=/usr/local/sbin/mayor-localupdate.sh
+
+
+#======================#
+#        Backup        #
+#======================#
+
+BACKUPDIR=/home/backup
+
+EXCLUDED_DBS=''
+
+SAVELDAP=0
+BASEDN='o=mayor,c=hu'
+LDAPCONFDIR=/etc/ldap
+LDAPDBDIR=/var/lib/ldap
+
+# Hány napig tartsuk meg a mentéseket? 0 esetén mindet megtartjuk (ajánlott)
+BACKUPDAYS=0
+
+# Ha a backup file-névben YYYYMMDDHHMM órát és percet is tárolnánk, kommentezzük ki a DATE= változót!
+#DATE=`date "+%Y%m%d%H%M"`
+
+
+# Losonci János kiegészítése (losy@agymk.sulinet.hu)
+# PREFIX a mentés tgz előtagja
+
+PREFIX=''
+
+# RSYNC  ha értéke nem 1, nincs rsync
+# RHOST  rsync távoli gép
+# RUSER  rsync távoli gép felhasználó
+# RPATH  rsync távoli gépen levő útvonal a mentéshez
+
+RSYNC=0
+RUSER=''
+RHOST=''
+RPATH=''

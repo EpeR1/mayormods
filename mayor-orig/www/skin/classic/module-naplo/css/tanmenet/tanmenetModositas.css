@@ -1,0 +1,54 @@
+
+    
+    fieldset.alapadatokfieldset {
+	margin:auto;
+	border: solid 1px darkblue;
+	border-bottom: solid 5px;
+	width:500px;
+    }
+    fieldset.alapadatokfieldset.uj { background: orange; border-color: #afa; }
+    fieldset.alapadatokfieldset.kesz { background: yellow; border-color: #aaf; }
+    fieldset.alapadatokfieldset.jovahagyott { background: lightgreen; border-color: #faa; }
+    fieldset.alapadatokfieldset.publikus { background: cornflowerblue; border-color: #ffa; }
+    fieldset.alapadatokfieldset.elavult { background: gray; border-color: #ccc; }
+
+    fieldset.alapadatokfieldset legend { background-color: yellow; margin:0px 10px; padding: 2px 10px; border: solid 1px rgb(40,60,80);}
+
+    fieldset.temakorokfieldset legend {
+	background-color: yellow; margin:0px 10px; padding: 2px 10px; border: solid 1px rgb(40,60,80);
+    }
+
+    form.alapadatok { padding: 20px 20px; text-align: center; }
+    form.alapadatok label {  }
+    form.alapadatok input[type=text] { width: 400px; }
+
+
+    #temakor { list-style-type: none; 
+	    padding: 5px; 
+	    margin: 20px; }
+    #temakor li { background-color: #ddddaa; margin: 15px 0px; padding: 4px 10px;  border: 1px solid;}
+    #temakor li textarea { width: 80%; }
+    #temakor li select { width: 50px; text-align: right; vertical-align: top; margin-top: 6px; }
+    #temakor li:nth-child(even) select.temakorOraszam { background-color: #eee;}
+    #temakor li:nth-child(odd) select.temakorOraszam { background-color: #aaa;}
+    #temakor li.sortable:nth-child(even) { background-color: #aaaaaa; border-color: #222277; }
+    #temakor li.sortable:nth-child(odd) { background-color: #eeeeee; border-color: #227722; }
+    #temakor li img.close { float: right; width: 25px; cursor: pointer; display: none; }
+    #temakor li.sortable img.close { display: inline; }
+    #temakor li span.handle { border: 1px solid; height: 32px; cursor: move;  
+	width: 40px; display: block; float: left; text-align: center; padding: 4px 8px; 
+	position: relative; top: 5px; margin-right: 2px; background-color: #ddddaa; 
+    }
+    #temakor li span.oraszam { border: solid 1px; 
+	height: 28px;  width: 50px; display: block; float: left; text-align: center; padding: 12px 6px 0px 6px; 
+	position: relative; top: 5px; background-color: red; margin-right: 2px; 
+    }
+    #temakor li.sortable:nth-child(even) span.handle { background-color: #eee; border-color: #222277; }
+    #temakor li.sortable:nth-child(odd) span.handle { background-color: #aaa; border-color: #227722; }
+    #temakor li.sortable:nth-child(even) span.oraszam { background-color: #eee; border-color: #222277; }
+    #temakor li.sortable:nth-child(odd) span.oraszam { background-color: #aaa; border-color: #227722; }
+    #temakor li.sortable:nth-child(even) span.nagy { background-color: red; }
+    #temakor li.sortable:nth-child(odd) span.nagy { background-color: red; }
+
+    form.tanmenet input[type=submit] { width: 80%; margin: 10px 10%; text-align: center; }
+    form.tanmenet input[type=submit]:hover { background-color: rgb(20,40,60); color: white; }

@@ -1,0 +1,95 @@
+<?php
+
+    function putCreateAzonositoForm($osztalyId, $osztalyTagok, $tanev=__TANEV, $Tagok) {
+
+	global $AUTH;
+
+	formBegin(array('class'=>'azonosito'));
+
+	echo '<input type="hidden" name="action" value="createAzonosito" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$tanev.'" />'."\n";
+	echo '<input type="hidden" name="createOu" value="'.intval(!is_array($ldapTagok)).'" />'."\n";
+
+	echo '<table>';
+	echo '<tr><th colspan="4">';
+	    echo _JELSZO;
+	    echo ' <input type="text" name="userPassword" value="" />'."\n";
+	echo '</th></tr>'."\n";
+
+        $CONTAINERS = $AUTH['private'][ $AUTH['private']['backend'].'Containers'];                                                                                          
+        if (isset($CONTAINERS) and is_array($CONTAINERS) and count($CONTAINERS) > 0) {                                                                                      
+        echo '<tr><th colspan="4">';                                                                                                                                        
+            echo _CONTAINER;                                                                                                                                                
+            echo '<select name="container">';                                                                                                                               
+            echo '<option value=""> - </option>'."\n";                                                                                                                      
+            for ($i=0;$i<count($CONTAINERS);$i++) {                                                                                                                         
+                echo '<option value="'.$CONTAINERS[$i].'">'.$CONTAINERS[$i].'</option>';                                                                                    
+            }                                                                                                                                                               
+            echo '</select>';                                                                                                                                               
+        echo '</th></tr>'."\n";                                                                                                                                             
+        }                                                                                                                                                                   
+
+	echo '<tr>';
+	    echo '<th>'._NEV.'</th>'."\n";
+	    echo '<th>'._OID.'</th>'."\n";
+	    echo '<th>'._AZONOSITO.'</th>'."\n";
+	    echo '<th>'._HASONLO_FELHASZNALOK.'</th>'."\n";
+	echo '</tr>';
+//	for ($i = 0; $i < count($ldapTagok['oIdNelkuli']); $i++) {
+//	    echo '<tr>';
+//		echo '<th></th>';
+//		echo '<td>';
+//		echo $ldapTagok['oIdNelkuli'][$i]['oId'];
+//		echo '</td>';
+//		echo '<td>';
+//		echo $ldapTagok['oIdNelkuli'][$i]['dn'];
+//		echo '</td>';
+//	    echo '</tr>'."\n";
+//	}
+	for ($i = 0; $i < count($osztalyTagok); $i++) {
+	    echo '<tr>';
+		echo '<th>';
+		echo $osztalyTagok[$i]['diakNev'];
+		echo '</th>';
+		echo '<td>';
+		echo $osztalyTagok[$i]['oId'];
+		echo '</td>';		
+
+		echo '<td>';
+		if (!isset($osztalyTagok[$i]['userAccount'])) {
+		    if ($osztalyTagok[$i]['oId'] != '') {
+			echo '<input type="hidden" name="oId[]" value="'.$osztalyTagok[$i]['oId'].'" />'."\n";
+			echo '<input type="text" name="userAccount[]" value="'.$osztalyTagok[$i]['generatedAccount'].'" />'."\n";
+		    } else {
+			echo _NINCS_OID;
+		    }
+		} else {
+		    echo $osztalyTagok[$i]['userAccount'];
+		    if (__JELSZOGENERALAS === true && isset($Tagok[ $osztalyTagok[$i]['oId'] ]['userPassword']))
+			echo ' ('.$Tagok[ $osztalyTagok[$i]['oId'] ]['userPassword'].')'; 
+		}
+		echo '</td>';
+
+		if (is_array($osztalyTagok[$i]['studyIds'])) {
+		    for ($j = 0; $j < count($osztalyTagok[$i]['userAccounts']); $j++) 
+			$L[] = $osztalyTagok[$i]['userAccounts'][$j].' ('.$osztalyTagok[$i]['studyIds'][$j].')';
+		    echo '<td class="azonosNev">'.implode(',', $L).'</td>'."\n";
+		} elseif (count($osztalyTagok[$i]['userAccounts']) > 0) {
+		    echo '<td class="tobbszorosOid">'.implode(',', $osztalyTagok[$i]['userAccounts']).'</td>'."\n";
+		} else {
+		    echo '<td></td>'."\n";
+		}
+
+	    echo '</tr>'."\n";
+	}
+	echo '<tr>';
+	    echo '<th colspan="4"><input type="submit" value="'._OK.'" /></th>';
+	echo '</tr>';
+	echo '</table>';
+
+	formEnd();
+
+    }
+
+?>

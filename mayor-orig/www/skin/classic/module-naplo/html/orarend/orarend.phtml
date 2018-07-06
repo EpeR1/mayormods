@@ -1,0 +1,411 @@
+<?php
+
+    function csengetesiRend($csengetesiRendTipus, $telephelyId, $nap, $ora, $ADAT) {
+	$most = false;
+	if ($ADAT[$csengetesiRendTipus][$telephelyId][$nap][$ora]!='') $n = $nap;
+	elseif ($ADAT[$csengetesiRendTipus][$telephelyId][''][$ora]!='') $n = ''; 
+	else return array('kiir'=>'','most'=>false);
+	$b1 = explode(':',$ADAT[$csengetesiRendTipus][$telephelyId][$n][$ora][0]['tolTime']);
+	$r = intval($b1[0]).':'.$b1[1];
+	$b2 = explode(':',$ADAT[$csengetesiRendTipus][$telephelyId][$n][$ora][0]['igTime']);
+	$r .= '-'.intval($b2[0]).':'.$b2[1];
+	if ( ((date('H')*60+date('i')) >= ($b1[0]*60+$b1[1])) && ((date('H')*60+date('i')) <= ($b2[0]*60+$b2[1])) ) $most = true;
+	$R['kiir'] = $r;
+	$R['most'] = $most;
+	$R['dataTol'] = str_replace(':','',$ADAT[$csengetesiRendTipus][$telephelyId][$n][$ora][0]['tolTime']);
+	$R['dataIg'] = str_replace(':','',$ADAT[$csengetesiRendTipus][$telephelyId][$n][$ora][0]['igTime']);
+	return $R;
+    }
+
+    function putOrarend($ADAT) {
+	global $aHetNapjai,$skin;
+
+	/* Képzés-Mátrix */
+	//dump($ADAT['kepzesOraterv']);
+	if (is_array($ADAT['kepzesOraterv']) && count($ADAT['kepzesOraterv'])>0) {
+	    $kepzes_figyel = true;
+	    $KEPZES_MATRIX[2]=$ADAT['kepzesOraterv']['első nyelv']['sum'];
+	    $KEPZES_MATRIX[3]=$ADAT['kepzesOraterv']['második nyelv']['sum'];
+	    $KEPZES_MATRIX[1]=$ADAT['kepzesOraterv']['mintatantervi']['sum']
+		+$ADAT['kepzesOraterv']['kötelezően választható']['sum']
+		+$ADAT['kepzesOraterv']['szabadon választható']['sum']
+	    ;
+	    //dump($KEPZES_MATRIX);
+	} else $kepzes_figyel = false;
+	// ----------------
+	$multiTelephely = (count($ADAT['orarend']['telephelyIdk'])>1);
+	if ($multiTelephely) { echo '<!-- telephely debug info --'; var_dump($ADAT['orarend']['telephelyIdk']); echo '// -->'; }
+	for ($i=0; $i<count($ADAT['diakFelmentes']); $i++) {
+	    $_D = $ADAT['diakFelmentes'][$i];
+	    $FM[$_D['tankorId']][] = $_D;
+	}
+
+	// a lekérdezett órák között az órarendben szereplő órarendihetek 
+	for ($nap=1; $nap<=$ADAT['hetiMaxNap']; $nap++) {
+	    if (in_array($ADAT['orarend']['napok'][$nap]['tipus'], 
+		array('tanítási nap','speciális tanítási nap'))) {$ERINTETTHETEK[$ADAT['orarend']['napok'][$nap]['het']] = true;
+	    }
+	}
+	// -- 
+	// a haladási naplóban szereplő órarendi hetek
+	    // ???
+	// --
+	// ==============================================================
+
+//	if (is_array($ADAT['orarend']['assoc'])) {
+	if (TRUE) {
+		$T = $ADAT['orarend']['assoc'];
+		echo '<h2 class="toPrint">'.$ADAT['toPrint'].'</h2>';
+		echo '<table cellspacing="1" class="orarend '.$ADAT['orarendTipus'].'" align="center">'."\n";
+		echo '<thead>';
+		echo '<tr>';
+		    if (is_array($ERINTETTHETEK)) {
+			echo '<th class="het">'.implode(',',array_keys($ERINTETTHETEK)).'.'._HET.'<br/><span style="font-size:xx-small">'.$ADAT['orarend']['db'].' '._ORA.'</span>'.'</th>';
+		    } else {
+			echo '<th></th>';
+		    }
+			for ($nap=1; $nap<=$ADAT['hetiMaxNap']; $nap++) {
+			    // if ($skin=='pda'
+			    //	&& in_array($ADAT['orarend']['napok'][$nap]['tipus'], array('tanítási nap','speciális tanítási nap'))
+                    	    //	&& $ADAT['orarend']['napok'][$nap]['dt'] != date('Y-m-d')) continue;;
+			    //
+
+			    $_ma_class = ($nap==date('w') && $ADAT['orarend']['napok'][$nap]['dt']==date('Y-m-d')) ? 'ma': '';
+
+			    $_th_class = ($ADAT['orarend']['napok'][$nap]['megjegyzes']=='') ? '': ' spec ';
+			    $_th_class .= $_ma_class;
+			    $_th_class .= (in_array($ADAT['orarend']['napok'][$nap]['csengetesiRendTipus'],array('','normál'))) ? '': ' spec '.ekezettelen($ADAT['orarend']['napok'][$nap]['csengetesiRendTipus']);
+
+			    echo '<th class="'.$_th_class.'" data-napindex="'.$nap.'">';
+			    $aznapErintettNap = array();
+			    for ($b=0; $b<count($ADAT['napok'][$nap]); $b++) {
+				if ($ADAT['napok'][$nap][$b]['megjegyzes']!='') $aznapErintettNap['megjegyzes'][] = $ADAT['napok'][$nap][$b]['megjegyzes'];
+			    }
+			    if (!in_array($ADAT['orarend']['napok'][$nap]['csengetesiRendTipus'],array('normál',''))) $aznapErintettNap['megjegyzes'][] = $ADAT['orarend']['napok'][$nap]['csengetesiRendTipus'].' csengetés';
+
+			    echo '<span class="napLeiras" title="'.$ADAT['orarend']['napok'][$nap]['dt'].'/'.$ADAT['orarend']['napok'][$nap]['het'].'">';
+			    echo (count($aznapErintettNap['megjegyzes'])==0) ? $aHetNapjai[($nap-1)] : implode('; ',array_unique($aznapErintettNap['megjegyzes']));
+			    echo '</span>';
+
+			    if ($ADAT['orarend']['napok'][$nap]['dt']!='') {
+				echo '<div class="orarendTools">';
+				if (_POLICY=='public') {
+				    echo ''.$ADAT['orarend']['napok'][$nap]['dt'].'/'.$ADAT['orarend']['napok'][$nap]['het'].'';
+				} else {
+				    echo '<span class="icon-info-sign napAdat" data-napdt="'.$ADAT['orarend']['napok'][$nap]['dt'].'" title="'.$ADAT['orarend']['napok'][$nap]['dt'].'/'.$ADAT['orarend']['napok'][$nap]['het'].'"></span>';
+				}
+				if (_POLICY=='private' && in_array(__JEGYZETSZEREPTIPUS,array('diak','tanar'))) echo '<span class="icon-file-edit-alt jegyzet jegyzetAdat" data-jegyzetdt="'.$ADAT['orarend']['napok'][$nap]['dt'].'" data-jegyzetid="-1" title="új jegyzet"></span>';
+				if (_POLICY=='private' && __TANAR===true) {
+				    if ($ADAT['kivalasztott'][0] == 'tankor') {
+					$_href = 'index.php?page=naplo&sub=osztalyozo&f=dolgozat&tankorId='.$ADAT['kivalasztott'][1];
+				    } else {
+					$_href = 'index.php?page=naplo&sub=osztalyozo&f=dolgozat';
+				    }
+				    echo '<a href="'.href($_href).'"><span class="icon-idea-alt dolgozat" title="új dolgozat"></span></a>'; // dolgozat
+				}
+				echo '<span class="icon-remove-sign bezar" title="elrejt"></span>';
+				echo '</div>';
+			    } else {
+				echo '<div class="orarendTools">'.$aHetNapjai[($nap-1)].'</div>'; // default
+			    }
+
+			    echo '</th>';
+			}		
+    		echo '</tr>';
+		echo '</thead>'."\n";
+
+		if (__ALLOWSET===true) {
+		    $_footclass = ($ADAT['publikusOrarend']) ? 'publikus' : 'nempublikus';
+		    echo '<tfoot class="'.$_footclass.'">';
+		    echo '<tr><th colspan="'.($ADAT['hetiMaxNap']+1).'">';
+			if ($ADAT['publikusOrarend']) {
+			    echo 'Ez az órarend publikus.';
+			} else {
+			    formBegin();
+				echo '<input type="submit" name="gomb" value="legyen publikus" />';
+				echo '<input type="hidden" name="action" value="setPublic" />';
+			    formEnd();
+			}
+		    echo '</th>';
+    		    echo '</tr>';
+		    echo '</tfoot>'."\n";
+		}
+		echo '<tbody>'."\n";
+//		echo '<caption>'.$het.'. heti órarend</caption>';
+		if (count($ADAT['dolgozat']['tervezett'])>0 || count($ADAT['jegyzet'])>0) { $_jegyzetSorCss = ''; } else { $_jegyzetSorStyle = 'display:none;'; }
+		echo '<tr id="orarendJegyzetSor" class="orarendJegyzetSor" style="'.$_jegyzetSorStyle.'">';
+			echo '<th>';
+			    echo 'dolgozatok, jegyzetek';
+			    // echo '<span class="icon-info-sign"></span>';
+			echo '</th>';
+			for ($nap=1;$nap<=$ADAT['hetiMaxNap'];$nap++) {
+			    $dt = $ADAT['NAPOK'][$nap-1];
+			    $_ma_class = ($nap==date('w') && $ADAT['orarend']['napok'][$nap]['dt']==date('Y-m-d')) ? 'ma': '';
+			    echo '<td class="jegyzetContainer" data-dt="'.$dt.'" data-napindex="'.$nap.'" class="'.$_ma_class.'">';
+				//dump($ADAT['dolgozat']['tervezett'][$dt]);
+				for ($d=0; $d<count($ADAT['dolgozat']['tervezett'][$dt]); $d++) {
+				    $_dolgozatId = $ADAT['dolgozat']['tervezett'][$dt][$d];
+				    echo '<div class="dolgozat dolgozatAdat" data-dolgozatid="'.$_dolgozatId.'">';
+				    for ($t=0; $t<count($ADAT['dolgozat'][$_dolgozatId]['tankor']); $t++) {
+					echo $ADAT['dolgozat'][$_dolgozatId]['tankor'][$t]['tankorNev'].' ';
+					$TANKOR_DOLGOZAT[$ADAT['dolgozat'][$_dolgozatId]['tankor'][$t]['tankorId']][$dt] = $_dolgozatId;
+				    }
+				    echo '<br/>'.$ADAT['dolgozat'][$_dolgozatId]['dolgozatNev'];
+				    echo '</div>';
+				    // if (count($ADAT['dolgozat']['tervezett'][$dt])>$d+1) echo '<hr/>';
+				}
+				for ($d=0; $d<count($ADAT['jegyzet']); $d++) {
+				    if ($ADAT['jegyzet'][$d]['dt']==$dt) {
+					$_JEGYZET = $ADAT['jegyzet'][$d];
+					$_jegyzetId = $_JEGYZET['jegyzetId'];
+					$_sajatJegyzet = ($_JEGYZET['userId'] === __JEGYZETSZEREPID && $_JEGYZET['userTipus']===__JEGYZETSZEREPTIPUS);
+					$_sajatJegyzetClass = $_sajatJegyzet ? '':'mase';
+					echo '<div class="jegyzet jegyzetAdat publikus'.$_JEGYZET['publikus'].' '.$_sajatJegyzetClass.'" data-jegyzetid="'.$_jegyzetId.'">';
+					    // echo 'Jegyzet:';
+					    echo makelinksclickable(supertext($_JEGYZET['jegyzetLeiras']));
+					    if($_JEGYZET['userId']!=__JEGYZETSZEREPID || $_JEGYZET['userTipus']!=__JEGYZETSZEREPTIPUS) {
+						echo '<br/><i>@'.supertext($_JEGYZET['nev']).'</i>';
+					    }
+					    for ($_t=0; $_t<count($_JEGYZET['tankorok']); $_t++) {
+						$TANKOR_JEGYZET[$_JEGYZET['tankorok'][$_t]][$dt] = $_jegyzetId;
+					    } // erre még nincs felkészítve a jegyzet.get
+					echo '</div>';
+				    }
+				}
+			    echo '</td>';
+			}
+		echo '</tr>';
+
+		for($ora=$ADAT['napiMinOra']; $ora<=$ADAT['napiMaxOra']; $ora++) { 
+		    echo '<tr>';
+			echo '<th data-oraindex="'.$ora.'">';
+			    echo $ora;
+			    /* az órarendben szereplő órákat vesszük csak figyelembe, a haladásit - egyelőre - nem */
+			    //if (!$multiTelephely)  // mindig az "elsőt" vesszük figyelembe!!!
+			    $_telephelyId = $ADAT['orarend']['telephelyIdk'][0];
+			    for ($nap=1;$nap<=7;$nap++) {
+				$_csengetesiRendTipus = $ADAT['orarend']['napok'][$nap]['csengetesiRendTipus'];
+				$_display = ($nap!= date('w') ? 'style="display:none;"':'');
+				$_CSR = csengetesiRend($_csengetesiRendTipus,$_telephelyId,$nap,$ora,$ADAT['csengetesiRend']);
+				$_csrclass = ($_CSR['most']===true) ? 'most':'';
+				echo '<div class="csr_'.$nap.' '.$_csrclass.'" '.$_display.' data-tol="'.$_CSR['dataTol'].'" data-ig="'.$_CSR['dataIg'].'">';
+				    echo $_CSR['kiir'];
+				echo '</div>';
+			    }
+			echo '</th>';
+			for ($nap=1; $nap<=$ADAT['hetiMaxNap']; $nap++) {
+			    //$dt = $ADAT['orarend']['napok'][$nap]['dt'];
+			    $dt = $ADAT['NAPOK'][$nap-1];
+			    if ($skin=='pda'
+				&& in_array($ADAT['orarend']['napok'][$nap]['tipus'], array('tanítási nap','speciális tanítási nap'))
+                                && $dt != date('Y-m-d')) continue;;
+
+			    $_eppTartClass = ($_CSR['most']===true && $nap==date('w')) ? 'eppTart':'';
+			    $_ma_class = ($nap==date('w')) ? 'ma': '';
+
+			    echo '<td class="csr '.$_eppTartClass.' '.$_ma_class.'" id="tdid_'.$het.'_'.$nap.'_'.$ora.'" data-napindex="'.$nap.'" data-oraindex="'.$ora.'">';
+				$het = 0;
+				$ORARENDI = array();
+				for($i=0; $i<count($T[$nap][$ora]['orak']); $i++) {
+				    $_T = $T[$nap][$ora]['orak'][$i];
+				    // itt a MAI naphoz viszonyítjuk, holott lehet hogy inkább a refDt-hez kéne. Megfontolandó.
+				    $_frissClass = (_datediff(date('Y-m-d'),$_T['tolDt'],date('Y-m-d'))<5) ? ' friss animated shake ':'';
+				    $ORARENDI[] = $_T['tankorId'];
+				    //
+				    $het = $_T['het'];
+				    $_ORA = $ADAT['haladasi']['orak'][$dt][$ora][$_T['tankorId']]; 
+				    $_valosTeremId = (is_null($_ORA['teremId']))? $_T['teremId']:$_ORA['teremId'];
+				    $_tankorTipus = $ADAT['tankorok'][$_T['tankorId']][0]['tankorTipus'];
+				    $_tankorTipusId = $ADAT['tankorok'][$_T['tankorId']][0]['tankorTipusId'];
+				    $_oraMostVan = (in_array($_ORA['oraId'],$ADAT['orakMost']));
+				    //
+				    if ($kepzes_figyel 
+					&&$ADAT['tankorTipus'][$_tankorTipusId]['oratervi'] == 'óratervi'
+					&& $ADAT['tankorTipus'][$_tankorTipusId]['jelenlet'] == 'kötelező') {
+					if ($_tankorTipusId>3) $_tankorTipusId=1;
+					$KEPZES_MATRIX[$_tankorTipusId]--;
+				    }
+				    // Az órarendből a jelek:
+				    $_targyJel = $_T['targyJel'];
+				    $_osztalyJel = $_T['osztalyJel'];
+				    // figyelem, itt jön a kiírás, a _putOra fv helyett:
+				    $_tipusClass = str_replace(' ','_',$_ORA['tipus']);
+				    $_oraMostVanClass = ($_oraMostVan) ? ' oraMostVan':'';
+				    if ($_T['jelleg']=='osztályfüggetlen') { 
+					$_tipusClass .= ' osztályfüggetlen';
+				    } 
+				    $_oraAdat = (isset($_ORA['oo']) && _POLICY!='public') ? 'oraAdat' : ''; // haladási
+				    $_hianyzasAdat =  $ADAT['hianyzas'][$_ORA['oraId']][0];
+				    $_hianyzasClass = (is_array($_hianyzasAdat) && $_hianyzasAdat['hTipus']=='hiányzás') ? ' nemVoltBent ':''; 
+				    echo '<div class="'.$_tipusClass.$_frissClass.$_oraMostVanClass.$_hianyzasClass.' '.$_oraAdat.'" data-oraid="'.$_ORA['oraId'].'" title="'.$_ORA['tipus'].'" >';
+
+				    if (is_array($_hianyzasAdat)) {
+					echo '<span class="hianyzasTicker '.ekezettelen($_hianyzasAdat['hTipus']).' '.ekezettelen($_hianyzasAdat['statusz']).' '.ekezettelen($_hianyzasAdat['igazolas']).'">';
+					if ($_hianyzasAdat['hTipus']=='hiányzás') 
+						echo '<span class="icon-hearing-impaired"></span>';
+						// echo '<span class="icon-bookmark"></span>';
+					if ($_hianyzasAdat['hTipus']=='késés') echo $_hianyzasAdat['perc'];
+					if ($_hianyzasAdat['hTipus']=='felszerelés hiány') echo 'fsz';
+					if ($_hianyzasAdat['hTipus']=='egyenruha hiány') echo 'eh';
+					if ($_hianyzasAdat['hTipus']=='felmentés') echo 'fm';
+					echo '</span>';
+				    }
+
+					if (is_array($FM[$_T['tankorId']]) && count($FM[$_T['tankorId']])>0) {
+					    $_FM = $FM[$_T['tankorId']];
+					    for ($fm_i=0; $fm_i<count($_FM); $fm_i++) {
+						$__FM = $_FM[$fm_i];
+						if ($__FM['nap'] == $nap && ($__FM['ora']==$ora || is_null($__FM['ora'])) ) echo '<span style="float:left; background-color: lightgreen; border-radius:50%; padding:2px; font-size:smaller; color:white; border: solid 1px lime;">FM</span>';
+					    }
+					}
+					if ($TANKOR_DOLGOZAT[$_T['tankorId']][$dt]>0) echo '<span style="color:orange;" class="icon-idea-alt" title="bejelentett dolgozat dolgozatAdat" data-dolgozatid="'.$TANKOR_DOLGOZAT[$_T['tankorId']][$dt].'"></span>';
+					if ($TANKOR_JEGYZET[$_T['tankorId']][$dt]>0) echo '<span style="color:lightgreen;" class="icon-file-edit-alt" title="jegyzet"></span>';
+					$_teremKiir = ($_T['teremId'] != $_valosTeremId) ? '<del>'.$ADAT['termek'][$_T['teremId']]['leiras'].'</del><ins>'.$ADAT['termek'][$_valosTeremId]['leiras'].'</ins>' : $ADAT['termek'][$_T['teremId']]['leiras'];
+					$_ferohely = $ADAT['termek'][$_valosTeremId]['ferohely'];
+					$_letszam  = $ADAT['tankorLetszamok'][$_T['tankorId']];
+					if ($_T['tankorId']!='') {
+					    echo '<span title="'.$_targyJel.' '.$_osztalyJel.' ('.$ADAT['tankorok'][$_T['tankorId']][0]['tankorId'].') '.$_tankorTipus.'" >';
+					    echo $ADAT['tankorok'][$_T['tankorId']][0]['tankorNev'];
+					    echo '</span>';
+					} else {
+					    echo "$_targyjel : $_osztalyJel : ";
+					}
+					echo ', ';
+					echo '<span title="'.$_ferohely.'/'.$_letszam.'" class="t'.( ($_ferohely!=0 && $_ferohely<$_letszam) ? 0 : 1).'">'.$_teremKiir.'</span>';
+					echo '<br/>';
+					if ($_ORA['kit']!='') {
+					    echo '<span class="helyett">';
+					    echo $ADAT['tanarok'][$_T['tanarId']]['tanarNev'];
+					    echo '</span>';
+					    if ($_ORA['ki']!='') echo ' '.$ADAT['tanarok'][$_ORA['ki']]['tanarNev'];
+					} else {
+					    echo $ADAT['tanarok'][$_T['tanarId']]['tanarNev'];
+					}
+
+				    if (isset($_ORA['oo'])) {
+					if ($_ORA['leiras']!='') echo '<sup title="adminisztrálva">&#9679;</sup>';
+					else echo '<sup title="betöltve">&#9675;</sup>'; // &deg;
+				    }
+				    if (in_array($_tankorTipus,array('délutáni','tanórán kívüli'))) {
+					echo ' &sup1';
+				    }
+
+				    echo '</div>';
+				    if (count($T[$nap][$ora]['orak'])>$i+1) 
+					//echo '<hr />';
+					echo '<div style="height:1px; width:80%; margin:auto; background-color: #ccc;"></div>';
+				}
+				/* !!! Az orarendTankor összerendezőhöz állnak csak rendelkezésre ezek a fals adatok, és csak tanárnál...
+					--> lásd még: share/orarend.php
+				if (count($T[$nap][$ora]['orak'])==0) {
+				    $het = $ADAT['orarend']['napok'][$nap]['het'];
+				    if (count($ADAT['orarend']['orarendiOra'][$het][$nap][$ora])>0) {
+					$X = $ADAT['orarend']['orarendiOra'][$het][$nap][$ora];
+					for ($i=0; $i<count($X); $i++) {
+					    echo '<div class="unfinished">';
+					    echo $X[$i]['targyJel'].' : ';
+					    echo $X[$i]['osztalyJel'].' : ';
+					    echo $X[$i]['teremId'];
+					    echo '</div>';
+					}
+				    }
+				}
+				*/
+				/* és ide jönnek a pluszok */
+				$j=0;
+				if (is_array($ADAT['haladasi']['orak'][$dt][$ora])) {
+				    foreach ($ADAT['haladasi']['orak'][$dt][$ora] as $_tankorId => $__T) {
+					if (!is_array($ORARENDI) || !in_array($_tankorId,$ORARENDI)) {
+					    if ($j!=0) echo '<hr/>'; $j++;
+					    $_ORA = $ADAT['haladasi']['orak'][$dt][$ora];
+					    _putOra($_ORA,$_tankorId,$TANKOR_DOLGOZAT);
+					}
+				    }
+				}
+			    echo '</td>'."\n";
+			}
+		    echo '</tr>'."\n";
+		}
+		echo '</tbody>';
+		echo '<tbody>';
+		if ($kepzes_figyel) {
+		    echo '<tr><td colspan="6" style="font-weight:normal;height:14px; background-color:#6495ED; color:white;">';
+		    //echo '<div style="margin:auto; border-top:0px; border-bottom: solid 1px #555555; border-left: solid 1px #555555; border-right: solid 1px #555555; background-color:#C71585; color:white;">';	    
+		    if ($KEPZES_MATRIX[1]!=0) echo 'Képzéshez viszonyított óraszám hiány: '.$KEPZES_MATRIX[1].' ';
+		    if ($KEPZES_MATRIX[2]!=0) echo 'Első nyelv: '.$KEPZES_MATRIX[2].' ';
+		    if ($KEPZES_MATRIX[3]!=0) echo 'Második nyelv: '.$KEPZES_MATRIX[3].' ';
+		    //echo '</div>';
+		    echo '</td></tr>';
+		}
+		echo '</tbody>';
+		echo '</table>'."\n\n<!-- EOT -->\n\n";
+
+//	    } // foreach
+
+	} else {
+	    putOrarendPlain($ADAT);
+	}
+
+
+    }
+
+    function putOrarendPlain($ADAT) {
+	if (is_array($ADAT['orarend']['orarendiOra'])) {
+	    foreach($ADAT['orarend']['orarendiOra'] as $het => $T) {
+		echo '<table class="orarend" align="center">'."\n";
+		echo '<caption>'.$het.'. heti órarend</caption>';
+		for($ora=$ADAT['napiMinOra']; $ora<=$ADAT['napiMaxOra']; $ora++) { // FIXME (getMinOra, getMaxOra konstansok!???)
+		    echo '<tr>';
+			echo '<th>'.$ora.'</th>';
+			for ($nap=1; $nap<=$ADAT['hetiMaxNap']; $nap++) { // FIXME (getMaxNap)
+			    echo '<td>';			    
+				    $X = $ADAT['orarend']['orarendiOra'][$het][$nap][$ora];
+				    
+				    for ($i=0; $i<count($X); $i++) {
+					echo '<div class="unfinished">';
+					echo $X[$i]['targyJel'].' : ';
+					echo $X[$i]['osztalyJel'].' : ';
+					echo $X[$i]['teremId'];
+					echo '</div>';
+				    }
+			    echo '</td>'."\n";
+			}
+		    echo '</tr>'."\n";
+		}
+		echo '</table>'."\n\n<!-- EOT -->\n\n";
+	    }
+	}
+    }
+
+    function _putOra($ORA,$_tankorId,$TANKOR_DOLGOZAT) {
+	    global $ADAT;
+	    if ($_tankorId=='') return false;
+	    $_ORA = $ORA[$_tankorId];
+	    $_tipusClass = str_replace(' ','_',$_ORA['tipus']);
+	    $_eredetClass = $_ORA['eredet'];
+	    echo '<div class="'.$_tipusClass.' '.$_eredetClass.'" title="'.$_ORA['tipus'].'" >';
+		if ($TANKOR_DOLGOZAT[$_tankorId][$_ORA['dt']]>0) echo '<span style="color:orange;" class="icon-idea-alt"></span>';
+			echo '<span title="'.$_targyJel.' '.$_osztalyJel.' ('.$ADAT['tankorok'][$_T['tankorId']][0]['tankorId'].')" >';
+			echo $ADAT['tankorok'][$_ORA['tankorId']][0]['tankorNev'];
+			echo '</span>';
+
+			echo ', '.$ADAT['termek'][$_ORA['teremId']]['leiras'];
+
+			echo '<br/>';
+	
+			echo '<span class="helyett">';
+			echo $ADAT['tanarok'][$_T['tanarId']]['tanarNev'];
+			echo '</span>';
+			if ($_ORA['ki']!='') echo ' '.$ADAT['tanarok'][$_ORA['ki']]['tanarNev'];
+
+			if (isset($_ORA['oo'])) echo ' &deg;'; // else tervezett
+
+	    echo '</div>';
+
+    }
+
+    function _datediff($dt1,$dt2) {
+	return round(abs(strtotime($dt1)-strtotime($dt2))/86400);
+    }
+
+?>

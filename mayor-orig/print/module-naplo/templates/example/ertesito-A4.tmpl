@@ -1,0 +1,74 @@
+%!pdfLaTeXA4 pdf
+%
+% Félévi értesítő
+% A4-es méretű, megnövelt betűméretű (kivéve a lábjegyzet) sablon
+%
+% Szerző: Hóbor Miklós (Toldy Gimnázium)
+%
+%
+\documentclass[8pt]{article}
+
+\usepackage[a4paper]{geometry} % A4-es méret
+\usepackage[utf8x]{inputenc} % UTF-8 kódolású forrás (ucs)
+\usepackage{ucs} % Jobb UTF-8 támogatás
+\usepackage{t1enc}
+\usepackage[magyar]{babel} % magyar elválasztási szabályok
+\frenchspacing % a magyar tipográfiai szabályoknak megfelelő szóközök írásjelek után
+\usepackage{booktabs} % táblázatok magasabb szintű formázása
+\usepackage{fancyhdr} % Ritkítás
+\pagestyle{fancy}
+\def\mayor{%
+\font\mayorfnt=cmsl4%
+\font\Mayorfnt=cmsl6
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+\renewcommand{\footnotesize}{\fontsize{6pt}{8pt}\selectfont}
+\addtolength{\skip\footins}{2mm}
+\addtolength{\textheight}{10mm}
+\setlength{\footskip}{16pt}
+\setlength{\headsep}{14pt}
+\cfoot{\normalsize \copyright\mayor\ elektronikus napló - Nyomtatva: %$nyomtatasDt}\lhead{\large %$intezmenyNev}
+\rhead{\large Értesítő %$tanevKezdesEv-%$tanevZarasEv/%$szemeszter}
+\begin{document}
+
+%{diak
+\begin{center}
+{\Huge %$diakNev}\\ 
+{\Large %$osztaly osztály}
+
+\vspace{4pt}
+
+\LARGE
+\begin{tabular}{@{\ \ }l|r@{\ \ }}
+\toprule\hline magatartás & \emph{%$magatartas}\\ 
+\hline szorgalom & \emph{%$szorgalom}\\ 
+\hline\hline
+
+%{targy
+%$targyNev & \emph{%$hivatalos %$mJel} \\
+\hline
+%}targy
+
+\bottomrule
+\end{tabular}
+
+\vspace{8pt}
+\begin{tabular}{@{\ \ }l|r|l|r@{\ \ }}
+\multicolumn{4}{c}{mulasztott órák száma} \\ 
+\midrule
+igazolt&{\sl %$igazolt}&igazolatlan\footnotemark[1]&{\sl %$igazolatlan}\\ 
+\bottomrule
+\end{tabular}
+\footnotetext[1]{Tartalmazhat még igazolható hiányzásokat is!}
+\vspace{8pt}\begin{flushleft}
+{\Large %$intezmenyCimHelyseg, %$ev. %$hoNev 20.}
+\end{flushleft}
+\vspace{12pt}\slshape\Large
+\begin{tabular}{ccc}
+\rule{5cm}{0.1pt}&&\rule{5cm}{0.1pt}\\ 
+osztályfőnök&&szülő\\ 
+\end{tabular}
+\end{center}
+\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+%}diak
+
+\end{document}

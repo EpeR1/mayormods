@@ -1,0 +1,226 @@
+<?php
+
+    function putDiakHianyzasNaptar($ADAT) {
+
+	global $aHetNapjai,$Honapok;
+
+        $HTIPUSOK1 = array('','késés','hiányzás');
+        $HTIPUSOK2 = array('felszerelés hiány','felmentés','egyenruha hiány');
+	// nincs használatban??? // $ITIPUSOK = getEnumField('naplo', 'hianyzas', 'igazolas'); // ez inkább a pre be lenne való?
+
+	$NAPOK = $ADAT['napok'];
+
+	echo '<table class="naptar" cellspacing="0" align="center">'."\n";
+	
+	    echo '<thead>'."\n";
+		echo '<tr>';
+		    echo '<th colspan="7">';
+			//echo '<a href="'.href('index.php?page=naplo&sub=hianyzas&f=tanuloLista&diakId='.$diakId).'">';
+			    echo $ADAT['diak']['nev'];    
+			    if (is_array($ADAT['diak']['kepzes'])) {
+				echo ' ';
+				for ($j=0; $j<count($ADAT['diak']['kepzes'][$ADAT['diakId']]); $j++) {
+				    echo '<span class="kepzes">';
+				    echo $ADAT['diak']['kepzes'][$ADAT['diakId']][$j]['kepzesNev'];
+				    echo '</span>';
+				}
+			    }
+			//echo '</a>';
+			echo ' ';
+			echo '<a href="'.href('index.php?page=naplo&sub=hianyzas&f=osztaly&osztalyId='.$ADAT['osztalyId']).'">';
+			    echo $ADAT['osztaly']['osztalyJel'];
+			    echo ' '.$ADAT['osztaly']['leiras'];
+			echo '</a>';
+		    echo '</th>';
+		echo '</tr>';
+	    echo '</thead>'."\n";
+
+	    echo '<tfoot>'."\n";
+		//echo '<tr>';
+		//    echo '<th colspan="7">';
+		//	echo $NAPOK[0]['dt'].' '.$NAPOK[count($NAPOK)-1]['dt'];
+		//    echo '</th>';
+		//echo '</tr>';
+		if (defined('__STATUS_HATARIDO')) {
+		echo '<tr>';
+		    echo '<th colspan="7">';
+			echo _MARNEMIGAZOLHATO.': '.__STATUS_HATARIDO.', ';
+			echo _BEIRHATO.': '. __BEIRAS_HATARIDO;
+		    echo '</th>';
+		echo '</tr>';
+		}
+		// igazolás típusának váltása
+		if ( defined('__STATUS_HATARIDO') && (__NAPLOADMIN || __OFO || __VEZETOSEG) ) {
+		    echo '<tr>';
+		    echo '<td colspan="7">';
+		    formBegin();
+			echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />';
+			echo '<input type="hidden" name="ho" value="'.$ADAT['ho'].'" />';
+//			#echo '<input type="hidden" name="igDt" value="'.$igDt.'" />';
+			echo '<input type="hidden" name="action" value="igazolasTipusValtas" />';
+			echo '<select name="igazolas" class="onChangeSubmit">';
+			for ($i=0; $i<count($ADAT['igazolasTipusok']['engedelyezett']); $i++) {
+			    $_SEL = ($ADAT['igazolas'] == $ADAT['igazolasTipusok']['engedelyezett'][$i]) ? ' selected="selected" ':'';
+			    echo '<option value="'.$ADAT['igazolasTipusok']['engedelyezett'][$i].'" '.$_SEL.'>';
+				if ($ADAT['igazolasTipusok'][$ADAT['igazolasTipusok']['engedelyezett'][$i]]!='') {
+				    echo $ADAT['igazolasTipusok'][$ADAT['igazolasTipusok']['engedelyezett'][$i]];
+				} else {
+				    $ADAT['igazolasTipusok']['engedelyezett'][$i].' (-)';
+				}
+			    echo '</option>';
+			}
+			echo '</select>';
+		    formEnd();
+		    echo '</td>';
+		    echo '</tr>';
+		}
+	    echo '</tfoot>'."\n";
+
+	    
+	    ## első hó fejléce
+	    $dow = date('w',strtotime($NAPOK[0]['dt']));
+	    $ho = date('m',strtotime($NAPOK[0]['dt']));
+	    if ($dow==0) $dow=7;
+	    echo '<tbody>'."\n";
+		echo '<tr><th colspan="7" class="fejlec">'.$Honapok[($ho-1)].'</th></tr>'."\n";
+		echo '<tr>';
+		for($nap=0; $nap<7; $nap++) {
+		    echo '<th class="fej2">'.$aHetNapjai[$nap].'</th>';
+		}
+		echo '</tr>'."\n";
+		echo '<tr>';
+		for($nap=1; $nap<$dow; $nap++) {
+		    echo '<td class="uresnap"></td>';
+		}
+		    
+		for($i=0; $i<count($NAPOK); $i++) {
+		    $dt = $NAPOK[$i]['dt'];
+		    $dow = date('w',strtotime($dt));
+		    $_ho = date('n',strtotime($dt));
+		    if ($dow==0) $dow=7;
+
+		    if (strtotime($dt)>time()) $future = true;
+		    
+		    // Hónapváltás
+		    if ($_ho!=$ho) {
+			$ho=$_ho;
+			if ($dow!=7) {
+			    for($nap=$dow; $nap<=7; $nap++) {
+				echo '<td class="uresnap"></td>';
+			    }
+			    echo '</tr>';
+			}
+			echo '</tbody>'."\n";
+			echo '<tbody>'."\n";
+			    echo '<tr><th colspan="7" class="fejlec">'.$Honapok[($ho-1)].'</th></tr>'."\n";
+			    echo '<tr>';
+			    for($nap=0; $nap<7; $nap++) {
+				echo '<th class="fejlec">'.$aHetNapjai[$nap].'</th>';
+			    }
+			    echo '</tr>'."\n";
+			    echo '<tr>';
+			    for($nap=1; $nap<$dow; $nap++) {
+				echo '<td class="uresnap"></td>';
+			}
+		    } // hónapváltás vége
+		    
+		    if ($dow==1) echo '<tr>';
+		    
+		    // Egy nap 
+		    echo '<td class="egynap">';			
+			{
+			    if (in_array($NAPOK[$i]['tipus'], array('tanítási nap','speciális tanítási nap'))) {
+				_putHianyzasNap($ADAT,array('dt'=>$NAPOK[$i]['dt']),$ADAT['igazolas'],$future); 
+			    } else { 
+			        //if ($NAPOK[$i]['megjegyzes']!='') 
+				    echo '<div class="spec '.str_replace(' ','_',$NAPOK[$i]['tipus']).'">'.$NAPOK[$i]['megjegyzes'].'</div>';
+			    }
+			}
+		    echo '</td>'."\n";
+		    // -------------------------------------------------
+		    
+		    if ($dow==7) echo '</tr>';
+
+		} // kirakandó dátumok vége
+
+		if ($dow!=7) {
+		    for($nap=$dow+1; $nap<=7; $nap++) {
+			echo '<td class="uresnap"></td>';
+		    }
+		    echo '</tr>'."\n";
+		}
+	    echo '</tbody>'."\n";
+
+
+	echo '</table>';
+
+    }
+
+
+    function _putHianyzasNap($ADAT,$NAPADAT,$igazolas,$future) {
+
+	    global $napiMinOra, $napiMaxOra;
+
+	    $diakId = $ADAT['diakId'];
+	    $dt = $NAPADAT['dt'];
+	    echo '<table class="tanuloEgyNapja hianyzasNaptar" cellspacing="1" cellpadding="1" border="0">';
+		echo '<tr>';
+		    if (defined('__STATUS_HATARIDO') && (__OFO || __VEZETOSEG || __NAPLOADMIN)	&& strtotime(__STATUS_HATARIDO) < strtotime($dt) && !$future) {
+			echo '<th class="balgomb">';
+			    formBegin();
+			    echo '<input type="hidden" name="diakId" value="'.$diakId.'" />';
+			    echo '<input type="hidden" name="dt" value="'.$dt.'" />';
+			    echo '<input type="hidden" name="status" value="igazolatlan" />';
+			    echo '<input type="hidden" name="igazolas" value="" />';
+			    echo '<input type="hidden" name="action" value="napiHianyzasBeiras" />';
+			    echo '<input type="submit" value="H" class="H" />';
+			    formEnd();
+			echo '</th>'."\n";
+			echo '<th class="balgomb">';
+			    formBegin();
+			    echo '<input type="hidden" name="diakId" value="'.$diakId.'" />';
+			    echo '<input type="hidden" name="dt" value="'.$dt.'" />';
+			    echo '<input type="hidden" name="status" value="igazolt" />';
+			    echo '<input type="hidden" name="igazolas" value="'.$igazolas.'" />';
+			    echo '<input type="hidden" name="action" value="napiHianyzasBeiras" />';
+			    echo '<input type="submit" value="I" class="I" />';
+			    formEnd();
+			echo '</th>';
+		    } else { // nincs joga igazolni
+			echo '<th colspan="2" class="balgombokhelye"></th>'."\n";
+		    }
+		    echo '<th class="datum">';
+			    echo '&nbsp;'.date('j',strtotime($NAPADAT['dt'])).'&nbsp;';
+		    echo '</th>'."\n";
+		    echo '<th class="jobbgomb">';
+			if (!$future) {
+			    formBegin(array('action'=>href('index.php?page=naplo&sub=hianyzas&f=nap')));
+			    echo '<input type="hidden" name="diakId" value="'.$diakId.'" />';
+			    echo '<input type="hidden" name="dt" value="'.$NAPADAT['dt'].'" />';
+			    echo '<input type="hidden" name="action" value="" />';
+			    echo '<input type="submit" value="&rarr;" />';
+			    formEnd();
+			}
+		    echo '</th>';
+		echo '</tr>';
+		echo '<tr>';
+		    echo '<td colspan="4">';
+
+			    if ((__OFO || __NAPLOADMIN || __VEZETOSEG)) {
+				$allowed=true;
+			    } else $allowed = false;
+			    $href= 'index.php?diakId='.$diakId.'&igazolas='.$igazolas.'&page=naplo&sub=hianyzas&f=diak&action=statusModositas';
+
+			    if (!$future) _putHianyzasKistabla(
+				$ADAT['hianyzasok'][$ADAT['diakId']],
+				array('dt' => $dt),
+				array('href' => $href, 'allowed' => $allowed, 'napiMinOra' => $napiMinOra, 'napiMaxOra' => $napiMaxOra)
+			    );
+
+		    echo '</td>';
+		echo '</tr>';
+	    echo '</table>'."\n";
+	
+    }
+
+?>

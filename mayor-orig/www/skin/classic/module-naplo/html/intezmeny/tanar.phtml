@@ -1,0 +1,411 @@
+<?php
+
+    require_once('skin/classic/module-naplo/html/share/file.phtml');
+
+    function putTanarAdatForm($ADAT) {
+
+//        if (
+//            $tanarAdat['jogviszonyVege'] != ''
+//            && strtotime($tanarAdat['jogviszonyVege']) < time()
+//        ) $disabled = ' disabled="disabled" ';
+//        else $disabled = '';
+
+        putTanarAlapadatok($ADAT);
+        putTanarSzuletesiAdatok($ADAT);
+	putKepUpload($ADAT['tanarId']);
+//        putTanarCim($tanarAdat, 'lakhely');
+//        putTanarCim($tanarAdat, 'tart');
+//        putTanarElerhetoseg($tanarAdat);
+//        putTanarSzulo($tanarAdat, $Szulok);
+       putTanarJogviszonyAdatok($ADAT);
+       putTanarKepesites($ADAT);
+    }
+
+    function putTanarAlapadatok($ADAT) {
+
+	formBegin(array('action'=>href('index.php?page=naplo&sub=intezmeny&f=tanar'), 'class'=>"tanar onChangeRequest"));
+
+        echo '<input type="hidden" name="action" value="tanarAlapadatModositas" />'."\n";
+        echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarAdat']['tanarId'].'" />'."\n";
+        echo '<fieldset><legend>'._TANAR_ALAPADATAI.'</legend>'."\n";
+        echo '<table>'."\n";
+            echo '<tr>'."\n";
+                echo '<th>';
+                echo '<label for="viseltCsaladinev">'._NEV.'</label>';
+                echo '</th>'."\n";
+                echo '<td>';
+                echo '<input type="text" size="4" name="viseltNevElotag" value="'.$ADAT['tanarAdat']['viseltNevElotag'].'" title="'._VISELTNEVELOTAG.'" />';
+                echo '<input type="text" size="12" id="viseltCsaladinev" name="viseltCsaladinev" value="'.$ADAT['tanarAdat']['viseltCsaladinev'].'" title="'._VISELTCSALADINEV.'" />';
+                echo '<input type="text" size="12" name="viseltUtonev" value="'.$ADAT['tanarAdat']['viseltUtonev'].'" title="'._VISELTUTONEV.'" />';
+                echo '</td>'."\n";
+/*
+                echo '<th>';
+                echo '<label for="nem">'._NEM.'</label>';
+                echo '</th>'."\n";
+                echo '<td>';
+                echo '<select name="nem" id="nem">'."\n";
+                    $SEL = array($ADAT['tanarAdat']['nem'] => ' selected="selected" ');
+                    echo '<option value=""> - </option>'."\n";
+                    echo '<option value="fiú"'.$SEL['fiú'].'>'._FIU.'</option>'."\n";
+                    echo '<option value="lány"'.$SEL['lány'].'>'._LANY.'</option>'."\n";
+                echo '</select>'."\n";
+                echo '</td>'."\n";
+
+                echo '<th>'."\n";
+                echo '<label for="allampolgarsag">'._ALLAMPOLGARSAG.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input type="text" id="allampolgarsag" name="allampolgarsag" value="'.$ADAT['tanarAdat']['allampolgarsag'].'" />';
+                echo '</td>'."\n";
+            echo '</tr>'."\n";
+
+            echo '<tr>'."\n";
+                echo '<th>'."\n";
+                echo '<label for="tajSzam">'._TAJSZAM.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input type="text" size="15" id="tajSzam" name="tajSzam" value="'.$ADAT['tanarAdat']['tajSzam'].'" />';
+                echo '</td>'."\n";
+*/
+                echo '<th>'."\n";
+                echo '<label for="oId">'._OID.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input type="text" size="15" id="oId" name="oId" value="'.$ADAT['tanarAdat']['oId'].'" />';
+                echo '</td>'."\n";
+
+                echo '<th>'."\n";
+                echo '<label for="NEKAzonosito">'._NEKAZONOSITO.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input type="text" size="20" id="NEKAzonosito" name="NEKAzonosito" value="'.$ADAT['tanarAdat']['NEKAzonosito'].'" />';
+                echo '</td>'."\n";
+
+/*
+                echo '<th>'."\n";
+                echo '<label for="diakigazolvanySzam">'._DIAKIGAZOLVANYSZAM.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input type="text" size="15" id="diakigazolvanySzam" name="diakigazolvanySzam" value="'.$ADAT['tanarAdat']['diakigazolvanySzam'].'" />';
+                echo '</td>'."\n";
+*/
+            echo '</tr>'."\n";
+	    echo '<tr>';
+                echo '<th>'."\n";
+                echo '<label for="email">'._TITULUS.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input type="text" size="32" id="titulus" name="titulus" value="'.$ADAT['tanarAdat']['titulus'].'" />';
+                echo '</td>'."\n";
+
+                echo '<th>'."\n";
+                echo '<label for="email">'._TITULUSROVID.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input type="text" size="10" id="titulusRovid" name="titulusRovid" value="'.$ADAT['tanarAdat']['titulusRovid'].'" />';
+                echo '</td>'."\n";
+	    echo '</tr>';
+	    echo '<tr>';
+                echo '<th>'."\n";
+                echo '<label for="email">'._EMAIL.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td colspan="4">'."\n";
+                echo '<input type="text" size="64" id="email" name="email" value="'.$ADAT['tanarAdat']['email'].'" />';
+                echo '</td>'."\n";
+	    echo '</tr>';
+        echo '</table>'."\n";
+
+            echo '<input type="submit" />';
+
+        echo '</fieldset>'."\n";
+	formEnd();
+    }
+
+    function putTanarSzuletesiAdatok($ADAT) {
+	formBegin(array('action'=>href('index.php?page=naplo&sub=intezmeny&f=tanar'), 'class'=>"tanar onChangeRequest"));
+
+        echo '<input type="hidden" name="action" value="tanarSzuletesiAdatModositas" />'."\n";
+        echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarAdat']['tanarId'].'" />'."\n";
+        echo '<fieldset><legend>'._TANAR_SZULETESI_ADATAI.'</legend>'."\n";
+        echo '<table>'."\n";
+            echo '<tr>'."\n";
+                echo '<th>';
+                echo '<label for="szuleteskoriCsaladinev">'._SZULETESKORINEV.'</label>';
+                echo '</th>'."\n";
+                echo '<td>';
+                echo '<input type="text" size="4" name="szuleteskoriNevElotag" value="'.$ADAT['tanarAdat']['szuleteskoriNevElotag'].'" title="'._SZULETESKORINEVELOTAG.'" />';
+                echo '<input type="text" id="szuleteskoriCsaladinev" name="szuleteskoriCsaladinev" value="'.$ADAT['tanarAdat']['szuleteskoriCsaladinev'].'" title="'._SZULETESKORICSALADINEV.'" />';
+                echo '<input type="text" name="szuleteskoriUtonev" value="'.$ADAT['tanarAdat']['szuleteskoriUtonev'].'" title="'._SZULETESKORIUTONEV.'" />';
+                echo '</td>'."\n";
+
+            echo '</tr>'."\n";
+
+            echo '<tr>'."\n";
+                echo '<th>'."\n";
+                echo '<label for="szuletesiHely">'._SZULETESIHELY.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input type="text" id="szuletesiHely" name="szuletesiHely" value="'.$ADAT['tanarAdat']['szuletesiHely'].'" />';
+                echo '</td>'."\n";
+
+                echo '<th>'."\n";
+                echo '<label for="szuletesiIdo">'._SZULETESIIDO.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input class="date" type="text" id="szuletesiIdo" name="szuletesiIdo" value="'.$ADAT['tanarAdat']['szuletesiIdo'].'" />';
+                echo '</td>'."\n";
+            echo '</tr>'."\n";
+        echo '</table>'."\n";
+        echo '</fieldset>'."\n";
+	formEnd();
+
+    }
+
+    function putTanarJogviszonyAdatok($ADAT) {
+	formBegin(array('action'=>href('index.php?page=naplo&sub=intezmeny&f=tanar'), 'class'=>"tanar onChangeRequest"));
+
+        echo '<input type="hidden" name="action" value="tanarJogviszonyModositas" />'."\n";
+        echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarAdat']['tanarId'].'" />'."\n";
+        echo '<fieldset><legend>'._TANAR_JOGVISZONYA.'</legend>'."\n";
+        echo '<table>'."\n";
+            echo '<tr>'."\n";
+                echo '<th>';
+                echo '<label for="beDt">'._BEDT.'</label>';
+                echo '</th>'."\n";
+                echo '<td>';
+                echo '<input class="date" type="text" size="10" id="beDt" name="beDt" value="'.$ADAT['tanarAdat']['beDt'].'" title="'._BEDT.'" />';
+                echo '</td>'."\n";
+                echo '<th>';
+                echo '<label for="kiDt">'._KIDT.'</label>';
+                echo '</th>'."\n";
+                echo '<td>';
+                echo '<input class="date" type="text" size="10" id="kiDt" name="kiDt" value="'.$ADAT['tanarAdat']['kiDt'].'" title="'._KIDT.'" />';
+		echo ' '; _inlineHelp(_KIDT_HELP);
+                echo '</td>'."\n";
+	    echo '</tr><tr>';
+		echo '<th>';
+		    echo '<label for="hetiMunkaora">'._HETI_MUNKAORA.'</label>'; 
+		echo '</th>';
+		echo '<td style="white-space: nowrap;">';
+		    echo '<table style="background-color:#eee; display: inline-table;">';
+		    echo '<tr><th>55%</th><th>65%</th><th>80%</th><th>100%</th></tr>'."\n";
+		    echo '<tr>';
+		    echo '<td><input type="text" size="4" id="hetiLekotottMinOraszam" name="hetiLekotottMinOraszam" value="'.$ADAT['tanarAdat']['hetiLekotottMinOraszam'].'" title="'._HETILEKOTOTTMINORASZAM.'" /></td>';
+		    echo '<td><input type="text" size="4" id="hetiLekotottMaxOraszam" name="hetiLekotottMaxOraszam" value="'.$ADAT['tanarAdat']['hetiLekotottMaxOraszam'].'" title="'._HETILEKOTOTTMAXORASZAM.'" /></td>';
+		    echo '<td><input type="text" size="4" id="hetiKotottMaxOraszam" name="hetiKotottMaxOraszam" value="'.$ADAT['tanarAdat']['hetiKotottMaxOraszam'].'" title="'._HETIKOTOTTMAXORASZAM.'" /></td>';
+		    echo '<td><input type="text" size="4" id="hetiMunkaora" name="hetiMunkaora" value="'.$ADAT['tanarAdat']['hetiMunkaora'].'" title="'._HETIMUNKAORA.'" /></td>';
+		    echo '</tr>';
+		    echo '</table> ';
+		    _inlineHelp(_HETI_MUNKAORA_HELP); 
+		echo '</td>';
+		echo '<th><label for="hetiMunkaora">'._HETI_KOTELEZOORASZAM.'</label>';
+		echo '</th>';
+		echo '<td>';
+		    echo '<input type="text" size="4" id="hetiKotelezoOraszam" name="hetiKotelezoOraszam" value="'.$ADAT['tanarAdat']['hetiKotelezoOraszam'].'" title="'._HETIKOTELEZOORASZAM.'" /> ';
+		    echo _ORA.' ';
+		    _inlineHelp(_HETI_KOTELEZOORASZAM_HELP);
+		echo '</td>';
+	    echo '</tr><tr>';
+		echo '<th><label for="statusz">'._STATUSZ.'</label>';
+		echo '</th>';
+		echo '<td>';
+		    echo '<select name="statusz" id="statusz">';
+		    echo '<option value=""> - </option>';
+		    foreach ($ADAT['statuszok'] as $idx => $statusz) {
+			$SEL = ($ADAT['tanarAdat']['statusz'] == $statusz?' selected="selected" ':'');
+			if ($statusz == 'jogviszonya lezárva' && $SEL=='') echo '<option value="'.$statusz.'" id="jogviszonyaLezarva" disabled="disabled">'.$statusz.'</option>';
+			else echo '<option value="'.$statusz.'"'.$SEL.'>'.$statusz.'</option>';
+		    }
+		    echo '</select>';
+		    echo ' '; _inlineHelp(_STATUSZ_HELP);
+		echo '</td>';
+		echo '<th><label for="besorolas">Besorolás</label></th>';
+		echo '<td>'; 
+		    echo '<select name="besorolas" id="besorolas">';
+		    echo '<option value=""> - </option>';
+		    foreach ($ADAT['besorolasok'] as $idx => $besorolas) {
+			$SEL = ($besorolas==$ADAT['tanarAdat']['besorolas']?' selected="selected" ':'');
+			echo '<option value="'.$besorolas.'"'.$SEL.'>'.$besorolas.'</option>';
+		    }
+		    echo '</select>';
+		echo '</td>';
+            echo '</tr>'."\n";
+	    echo '<tr><th><a href="'.href('index.php?page=naplo&sub=intezmeny&f=tovabbkepzes').'">'._TOVABBKEPZES_FORDULO_DT.'</a></th>';
+	    echo '<td>';
+		echo '<input type="text" class="date datum" name="tovabbkepzesForduloDt" value="'.$ADAT['tanarAdat']['tovabbkepzesForduloDt'].'" />';
+		echo ' ';
+		_inlineHelp(_TOVABBKEPZES_FORDULO_DT_HELP);
+		echo '</td>';
+	    echo '</tr>';
+        echo '</table>'."\n";
+
+	
+        echo '</fieldset>'."\n";
+	formEnd();
+
+    }
+
+    function putTanarKepesites($ADAT) {
+
+	formBegin(array('action'=>href('index.php?page=naplo&sub=intezmeny&f=tanar'), 'class'=>"tanar"));
+
+        echo '<input type="hidden" name="action" value="tanarKepesitesModositas" />'."\n";
+        echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarAdat']['tanarId'].'" />'."\n";
+        echo '<fieldset><legend>'._TANAR_KEPESITESE.'</legend>'."\n";
+        echo '<table id="kepesites">'."\n";
+	    echo '<tr><th>végzettség</th><th>fokozat</th><th>specializáció</th><th>képesítés megnevezése</th></tr>';
+	    echo '<tbody>';
+	    if (is_array($ADAT['tanarAdat']['kepesites']) && count($ADAT['tanarAdat']['kepesites'])>0)
+	    foreach ($ADAT['tanarAdat']['kepesites'] as $idx => $kAdat) {
+		echo '<tr>';
+		echo '<td>'.$kAdat['vegzettseg'].'</td>';
+		echo '<td>'.$kAdat['fokozat'].'</td>';
+		echo '<td>'.$kAdat['specializacio'].'</td>';
+		echo '<td>'.$kAdat['kepesitesNev'].' ('.$kAdat['kepesitesId'].')</td>';
+		echo '</tr>';
+	    }
+	    echo '</tbody>';
+
+	    echo '<tr id="hozzarendel"><th colspan="4">';
+		echo '<label for="addKepesites">Képesítés hozzárendelése</label>';
+		echo '<select name="addKepesitesId" id="addKepesites">';
+		echo '<option value=""> - </option>';
+		foreach ($ADAT['kepesitesek'] as $idx => $kAdat) {
+		    echo '<option value="'.$kAdat['kepesitesId'].'">'.$kAdat['kepesitesNev'].' ('.$kAdat['kepesitesId'].') - '.$kAdat['vegzettseg'].' '.$kAdat['fokozat'].'</option>';
+		}
+		echo '</select>';
+		echo '<input type="submit" value="'._OK.'" />';
+	    echo '</th></tr>';
+
+	    echo '<tr id="uj"><td colspan="4" class="slideUj"><span class="icon-plus-sign"></span> Új képesítés <span class="icon-chevron-down"></span></td></tr>';
+
+	    echo '<tr id="ujKepesites">';
+		echo '<td>';
+		    echo '<select name="vegzettseg">';
+		    foreach ($ADAT['vegzettsegek'] as $idx => $vegzettseg)
+			echo '<option value="'.$vegzettseg.'">'.$vegzettseg.'</option>';
+		    echo '</select>';
+		    echo ' '; _inlineHelp(_VEGZETTSEG_HELP);
+		echo '</td>';
+		echo '<td>';
+		    echo '<select name="fokozat">';
+		    foreach ($ADAT['fokozatok'] as $idx => $fokozat)
+			echo '<option value="'.$fokozat.'">'.$fokozat.'</option>';
+		    echo '</select>';
+		    echo ' '; _inlineHelp(_FOKOZAT_HELP);
+		echo '</td>';
+		echo '<td>';
+		    echo '<select name="specializacio">';
+		    foreach ($ADAT['specializaciok'] as $idx => $specializacio)
+			echo '<option value="'.$specializacio.'">'.$specializacio.'</option>';
+		    echo '</select>';
+		    echo ' '; _inlineHelp(_SPECIALIZACIO_HELP);
+		echo '</td>';
+		echo '<td id="kepesitesNev">';
+		    echo '<input type="text" name="kepesitesNev" value="" />';
+		    echo ' '; _inlineHelp(_KEPESITESNEV_HELP);
+		    echo '<input type="submit" value="'._OK.'" style="margin-right: -50px;" />';
+		echo '</td>';
+	    echo '</tr>';
+
+
+
+        echo '</table>'."\n";
+	
+        echo '</fieldset>'."\n";
+	formEnd();
+
+    }
+
+    function putUjTanar() {
+	formBegin(array('action'=>href('index.php?page=naplo&sub=intezmeny&f=tanar'), 'class'=>"tanar"));
+
+        echo '<input type="hidden" name="action" value="ujTanar" />'."\n";
+        echo '<fieldset><legend>'._UJ_TANAR.'</legend>'."\n";
+        echo '<table>'."\n";
+            echo '<tr>'."\n";
+                echo '<th>';
+                echo '<label for="viseltCsaladinev" class="kotelezo">'._NEV.'</label>';
+                echo '</th>'."\n";
+                echo '<td>';
+                echo '<input type="text" size="4" name="viseltNevElotag" value="'.$ADAT['tanarAdat']['viseltNevElotag'].'" title="'._VISELTNEVELOTAG.'" />';
+                echo '<input type="text" size="12" id="viseltCsaladinev" name="viseltCsaladinev" value="'.$ADAT['tanarAdat']['viseltCsaladinev'].'" title="'._VISELTCSALADINEV.'" />';
+                echo '<input type="text" size="12" name="viseltUtonev" value="'.$ADAT['tanarAdat']['viseltUtonev'].'" title="'._VISELTUTONEV.'" />';
+                echo '</td>'."\n";
+
+/*
+                echo '<th>';
+                echo '<label for="nem">'._NEM.'</label>';
+                echo '</th>'."\n";
+                echo '<td>';
+                echo '<select name="nem" id="nem">'."\n";
+                    $SEL = array($ADAT['tanarAdat']['nem'] => ' selected="selected" ');
+                    echo '<option value=""> - </option>'."\n";
+                    echo '<option value="fiú"'.$SEL['fiú'].'>'._FIU.'</option>'."\n";
+                    echo '<option value="lány"'.$SEL['lány'].'>'._LANY.'</option>'."\n";
+                echo '</select>'."\n";
+                echo '</td>'."\n";
+
+                echo '<th>'."\n";
+                echo '<label for="allampolgarsag">'._ALLAMPOLGARSAG.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input type="text" id="allampolgarsag" name="allampolgarsag" value="'.$ADAT['tanarAdat']['allampolgarsag'].'" />';
+                echo '</td>'."\n";
+            echo '</tr>'."\n";
+
+            echo '<tr>'."\n";
+                echo '<th>'."\n";
+                echo '<label for="tajSzam">'._TAJSZAM.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input type="text" size="15" id="tajSzam" name="tajSzam" value="'.$ADAT['tanarAdat']['tajSzam'].'" />';
+                echo '</td>'."\n";
+*/
+                echo '<th>'."\n";
+                echo '<label for="oId">'._OID.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input type="text" size="15" id="oId" name="oId" value="'.$ADAT['tanarAdat']['oId'].'" />';
+                echo '</td>'."\n";
+
+                echo '<th>'."\n";
+                echo '<label for="NEKAzonosito">'._NEKAZONOSITO.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input type="text" size="20" id="NEKAzonosito" name="NEKAzonosito" value="'.$ADAT['tanarAdat']['NEKAzonosito'].'" />';
+                echo '</td>'."\n";
+
+                echo '<th>'."\n";
+                echo '<label for="beDt">'._BEDT.'</lable>'."\n";
+                echo '</th>'."\n";
+                echo '<td>'."\n";
+                echo '<input type="text" size="15" id="beDt" name="beDt" value="'.date('Y-m-d').'" />';
+                echo '</td>'."\n";
+            echo '</tr>'."\n";
+
+        echo '</table>'."\n";
+
+        echo '<input type="submit" />';
+
+        echo '</fieldset>'."\n";
+	formEnd();
+
+    }
+
+   function putKepUpload($tanarId) {
+        formBegin(array('enctype'=>"multipart/form-data",'class'=>'tanar'));
+            echo '<fieldset><legend>'._FENYKEPE.'</legend>'."\n";
+	    echo '<div style="float:right; background-color: #eee;">'.
+		putFace($tanarId,'tanar',"100",false);
+	    echo '</div>';
+            echo '<input type="hidden" name="tanarId" value="'.$tanarId.'" />';
+            echo '<input type="hidden" name="action" value="kepUpload" />';
+            echo '<input type="file" name="upfile" />';
+            echo '<input type="submit" class="tanarSubmit" value="ok" />';
+            echo '</fieldset>';
+        formEnd();
+    }
+
+
+?>

@@ -1,0 +1,31 @@
+<?php
+
+    function putUjTanevForm($ADAT) {
+
+	echo '<div id="ujTanmenet"><div class="tanmenetHeader">'._UJ_TANMENET.'</div>';
+
+	formBegin(array('class'=>'tanmenet'));
+
+	echo '<input type="hidden" name="action" value="ujTanmenet">'."\n";
+	echo '<input type="hidden" name="tankorId" value="'.$ADAT['tankorId'].'">'."\n";
+	echo '<input type="hidden" name="targyId" value="'.$ADAT['targyId'].'">'."\n";
+	echo '<input type="hidden" name="evfolyamJel" value="'.$ADAT['evfolyamJel'].'">'."\n";
+
+	echo '<label for="tanmenetNev">'._TANMENETNEV.'</label><br />'."\n";
+	echo '<input type="text" name="tanmenetNev" id="tanmenetNev" value="" /><br />'."\n";
+
+	echo '<label for="oraszam">'._EVES_ORASZAM.'</label>'."\n";
+	echo '<select name="oraszam" id="oraszam">'."\n";
+	    for ($i=1; $i < 1001; $i++) {
+		echo '<option value="'.$i.'">'.$i.'</option>'."\n";
+	    }
+	echo '</select><br />'."\n";
+
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+	echo '</div>';
+
+    }
+
+?>

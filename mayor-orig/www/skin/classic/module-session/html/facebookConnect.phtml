@@ -1,0 +1,53 @@
+<?php
+
+function putFacebookConnectStatusz($ADAT) {    
+
+    if (__FBCONNECT_ENABLED==false) {
+	echo '<div id="fbConnect" class="notActive"><span class="icon-remove-circle"></span>';
+	echo 'A Facebook azonosítás ki van kapcsolva. Kérj segítséget a rendszerüzemeltetőtől!';
+	echo '</div>';
+	return false;
+    }
+
+//    var_dump($ADAT);
+//    var_dump(_USERACCOUNT);
+//    var_dump(_POLICY);
+
+    // fbUserIdStatusz = ready, associated, already_associated
+    if ($ADAT['fbUserIdStatusz'] == 1) {
+	echo '<div id="fbConnect" class="valid"><span class="icon-ok-circle"></span>';
+	    echo '<img src="//graph.facebook.com/'.$ADAT['fbUserId'].'/picture?type=large" style="float:left; height:100%">';
+
+    	    echo 'Már kész, minden rendben!';
+	    formBegin();
+		echo '<input type="hidden" name="action" value="revokeFbAuth" />';
+		echo '<input type="submit" value="visszavonás" />';
+	    formEnd();
+	echo '</div>';
+    } elseif ($ADAT['fbUserIdStatusz'] == 2) {
+	echo '<div id="fbConnect" class="notvalid"><span class="icon-iphone-home"></span>';
+    	    echo 'Már más facebook userhez van hozzárendelve az azonosítód!';
+	    echo '<input type="hidden" name="action" value="" />';
+	echo '</div>';
+    } elseif ($ADAT['fbUserIdStatusz'] == 3) {
+	echo '<div id="fbConnect" class="notvalid"><span class="icon-iphone-home"></span>';
+        echo 'Ehhez a facebook azonosítóhoz már hozzá van rendelve egy másik MaYoR account!';
+	echo '</div>';
+    } else {
+	echo '<div id="fbConnect" class="grant"><span class="icon-facebook"></span>';
+    	    echo 'Engedélyezed?';
+	    echo '<span id="mglFBconnect"></span>';
+	    formBegin(array('id'=>'grantFbAuth'));
+		echo '<input type="hidden" name="action" value="grantFbAuth" />';
+		echo '<input type="submit" value="facebook connect engedélyezés"  />';
+	    formEnd();
+	echo '</div>';
+    }
+    formBegin(array('style'=>'text-align:center'));
+		echo '<input type="hidden" name="action" value="refresh" />';
+		echo '<input type="submit" value="frissítés" />';
+    formEnd();
+
+}
+
+?>

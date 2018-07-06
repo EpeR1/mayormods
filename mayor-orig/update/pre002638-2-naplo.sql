@@ -1,0 +1,5 @@
+drop table IF EXISTS kosziIgazoloTanar;                                                                                                                                                                    
+drop table IF EXISTS kosziIgazoloOf;                                                                                                                                                                       
+drop table IF EXISTS kosziIgazoloDiak;                                                                                                                                                                     
+drop table IF EXISTS kosziDiak;                                                                                                                                                                            
+drop table IF EXISTS koszi;    

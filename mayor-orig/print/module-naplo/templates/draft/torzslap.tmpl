@@ -1,0 +1,48 @@
+%!függvény kiterjesztés
+Dt: %$nyomtatasDt
+Intézmény: %$intezmenyNev
+OM: %$intezmenyOMKod
+Irsz: %$intezmenyCimIrsz
+Helység: %$intezmenyCimHelyseg
+Közterület-név: %$intezmenyCimKozteruletNev
+Közterület-jelleg: %$intezmenyCimKozteruletJelleg
+Házszám: %$intezmenyCimHazszam
+Telefon: %$intezmenyTelefon
+Honlap: %$intezmenyHonlap
+Email: %$intezmenyEmail
+Fax: %$intezmenyFax
+Negyedév: %$negyedev
+Év: %$ev
+Hó: %$honap
+Hó név: %$hoNev
+Nap: %$nap
+
+%{diak
+Személyes adatai
+    Diák neve: %$diakNev    Osztály: %$osztaly
+    Oktatási azonosító: %$oktatasiAzonosito
+    Törzslapszám: %$torzslapSzam
+    Generált törzslapszám: %$torzslapszam
+    Napló sorszáma: %$naploSorszam
+    Évfolyama: %$evfolyam
+    Állampolgársága: %$allampolgarsag
+    Anyja: %$anyanevElotag %$anyacsaladinev %$anyautonev
+    Születési helye: %$szuletesiHely, %$szuletesiOrszag
+    Születési idő: %$szuletesiIdo
+    Feljegyzések: %$feljegyzesek
+
+Szöveges Minősítése:
+%{targy
+	Tárgy neve: %$targyNev
+%{szempont
+	    %$szempont
+%{minosites
+		%?elsoValasztott|Első választott|Nem első%?
+		%?tobbedikValasztott|Többedik választott|Nem többedik%?
+		%?valasztott|X|O%? %$minosites
+%}minosites
+		%$egyediMinosites
+%}szempont
+	Tárgy minősítés: %$targyMinosites
+%}targy
+%}diak

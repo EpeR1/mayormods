@@ -1,0 +1,1 @@
+alter table blokk modify exportOraszam decimal(2,1) unsigned;

@@ -1,0 +1,13 @@
+
+    table.teremPreferencia { background-color: #eeeeee; margin: 4px 8px; width:95%; max-width:95%;}
+    table.teremPreferencia tr th { ; border-bottom: solid 1px white;}
+    table.teremPreferencia tr td { background-color: white;}
+
+
+    table.teremPreferencia tr td.terem { font-size:smaller; }
+    table.teremPreferencia tr td a { color: #dddddd;}
+    table.teremPreferencia tr td a.del:hover { color: #880000;}
+
+    table.teremPreferencia tr td a.run:hover { color: green;}
+
+    table.teremPreferencia tr:hover td { outline: solid 1px orange;}

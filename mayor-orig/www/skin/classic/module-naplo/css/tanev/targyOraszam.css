@@ -1,0 +1,7 @@
+
+    table.targyOraszam {
+	background-color:#eeeeee;
+    }
+
+    table.targyOraszam tr th { background-color: rgb(100,100,150); color: white; border-bottom: solid 2px white; padding:3px; }
+    table.targyOraszam tr td.oraszam { text-align: right }

@@ -1,0 +1,58 @@
+@media screen {
+    table.osztalyozo { background-color: rgb(220,220,220); color: white; }
+    table.osztalyozo a { color: white; text-decoration:none }
+    table.osztalyozo a:hover { color: white; text-decoration:underline }	
+    table.osztalyozo thead th {	background-color: #660077; padding: 2px 4px 2px 4px; }
+    table.osztalyozo thead th.nev { background-color: #660077; height:30px; font-size: 16px; }
+    table.osztalyozo thead td {	background-color: #440055; text-align: center; padding: 0px 4px 0px 4px; }
+    table.osztalyozo thead th.biz { background-color: #224433; }
+    table.osztalyozo thead th.defaultSulyozas { background-color: lightgreen; }
+
+    table.osztalyozo tfoot th {	background-color: rgb(100,120,120); padding: 2px; vertical-align: center; }
+    table.osztalyozo tfoot th span { padding: 1px 10px; font-weight: normal; background-color: rgb(220,220,220); }
+
+    table.osztalyozo tbody th {	background-color: rgb(130,140,150); font-weight: normal; padding: 4px 4px 4px 4px; }
+    table.osztalyozo tbody th a { color: white; text-decoration: none; }
+    table.osztalyozo tbody th.atlag { background-color: rgb(100,100,130); padding: 0px 4px 0px 4px; }
+    table.osztalyozo tbody th.t { text-align: left; padding-left: 0.5em; padding-right:0.5em; }
+    table.osztalyozo tbody td {	background-color: #eeeeee; }
+    table.osztalyozo tbody td.biz { background-color: #446655; text-align: center; padding-right:3px; padding-left:3px; }
+    table.osztalyozo tbody td a { text-decoration: none; }
+    
+    table.osztalyozo tbody td a.jegy0, table.osztalyozo tfoot th span.jegy0 { color: grey; }
+    table.osztalyozo tbody td a.jegy1, table.osztalyozo tfoot th span.jegy1 { color: blue; }
+    table.osztalyozo tbody td a.jegy2, table.osztalyozo tfoot th span.jegy2 { color: black; }
+    table.osztalyozo tbody td a.jegy3, table.osztalyozo tfoot th span.jegy3 { color: green; }
+    table.osztalyozo tbody td a.jegy4, table.osztalyozo tfoot th span.jegy4 { color: red; }
+    table.osztalyozo tbody td a.jegy5, table.osztalyozo tfoot th span.jegy5 { color: purple; background-color: gold; }
+
+    table.osztalyozo tbody td.biz span.sikertelen {background-color:black; padding:0px 4px;}
+
+    table.osztalyozo tfoot th span {cursor: pointer}
+
+    .jegyKiemel { outline: solid 1px orange; }
+
+    table.osztalyozo thead td.ho span.literal {display: table-cell}
+    table.osztalyozo thead td.ho span.roman {display: none;}
+
+    table.osztalyozo tbody tr:hover th { background-color: rgba(100,100,100,0.5);}
+    span.addVirtualJegy {cursor: pointer; padding-left:4px;}
+    a.virtual { border: dotted 1px lightgreen; }
+}
+@media (max-width: 764px) {
+    table.osztalyozo { width:95%;}
+    table.osztalyozo thead td.ho span.literal {display: none;}
+    table.osztalyozo thead td.ho span.roman {display: table-cell;}
+}
+
+@media print {
+    input, select, .toolBar { display: none; }
+    .biz select { display: inline; }
+    a { text-decoration: none; color: black; }
+    table { background-color: rgb(200,200,200); border-spacing: 0px; border: 1px black solid; font-size: 10px; border-collapse:collapse; }
+    td { border: solid 1px black; padding: 4px 4px; }
+    th { border: solid 1px black; padding: 6px 4px 2px 4px; vertical-align: middle; }
+    table.osztalyozo tbody td { text-align: right; }
+    table.osztalyozo tfoot {display:none;}
+    table.osztalyozo tbody th.t { text-align: left; padding-left: 0.5em; padding-right:0.5em; }
+}

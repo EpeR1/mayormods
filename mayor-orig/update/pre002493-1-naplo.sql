@@ -1,0 +1,2 @@
+alter table munkatervOsztaly modify munkatervId tinyint(3) unsigned not null;
+alter table munkatervOsztaly add foreign key IBFK_munkatervId (munkatervId) REFERENCES munkaterv (munkatervId) ON DELETE CASCADE ON UPDATE CASCADE ;

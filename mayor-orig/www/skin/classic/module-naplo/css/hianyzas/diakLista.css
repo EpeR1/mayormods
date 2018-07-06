@@ -1,0 +1,50 @@
+
+    table.hianyzasLista  { background-color: #eeeeee; empty-cells:show; }
+    table.hianyzasLista tr th  { border-bottom: solid 1px #878787; background-color:#cccccc; }
+    table.hianyzasLista tr td  { background-color: #ffffff; }
+
+    table.hianyzasLista form { margin:0px; display: inline;}
+    table.hianyzasLista input { border: solid 1px #666660; font-size:8px; width:14px; }
+
+    table.hianyzasLista caption { background-color: rgb(100,0,100); color: white; padding: 5px; font-size: 12px; font-weight: bold; }
+
+    .jelen {
+        border-color: rgb(100,200,100);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+    }
+
+    .hianyzas {
+        border-color: rgb(200,100,100);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+    }
+
+    .keses {
+        border-color: rgb(200,200,100);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+    }
+
+    .felszereles_hiany {
+        color: white;
+        background-color:blue;
+    }
+
+    .egyenruha_hiany {
+        color: white;
+        background-color: orange;
+    }
+
+    .felmentes {
+        background-color: #eeeeee;
+        color: purple;
+    }
+
+    table.hianyzasNaptar {
+        background-color: #778890;
+    }
+
+    table.hianyzasLista tr td.igazolt { background-color: lightgreen; }
+    table.hianyzasLista tr td.igazolatlan { background-color: #cc0000; }
+

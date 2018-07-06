@@ -1,0 +1,89 @@
+@charset "utf-8"; 
+
+    h1 { margin-left:30px;}
+    h2 { margin-left:30px;}
+
+    table.tovabbkepzes {background-color: white; width:90%;}
+
+    table.tovabbkepzes thead tr th {background-color: #eeeeee; border-bottom: solid 1px #555555; padding: 5px; }
+
+    table.tovabbkepzes tbody tr th { border-left: solid 2px white; }
+    table.tovabbkepzes tbody tr:nth-child(even) td { background-color: #F8F8F9;}
+    table.tovabbkepzes tbody tr:hover th:nth-child(1) { border-left: solid 2px cornflowerblue; }
+    table.tovabbkepzes tbody tr:hover td { background-color: rgba(230,230,230,0.8); }
+
+    table.tovabbkepzes tbody tr td { padding: 0px 3px; background-color: white; border-bottom: solid 1px #eeeeee;}
+    table.tovabbkepzes tbody tr th span { color: cornflowerblue;}
+
+    table.tovabbkepzes tbody tr.megszűnt td input.currency, 
+    table.tovabbkepzes tbody tr.elutasított td input.currency { background-color: #aaa; color:white;}
+    table.tovabbkepzes tbody tr.elutasított td { background-color: red; color:white;}
+    table.tovabbkepzes tbody tr.jóváhagyott td { background-color: #49A74C; color:white;}
+    table.tovabbkepzes tbody tr.teljesített td { background-color: #2F6A31; color:white;}
+    table.tovabbkepzes tbody tr.megszűnt td { text-decoration: line-through;}
+    table.tovabbkepzes tbody tr.terv td { }
+
+    table.tovabbkepzes tbody tr td select.tovabbkepzesNev { width:220px; }
+
+    table.tovabbkepzes tbody tr td.osszeg, table.tovabbkepzes tbody tr th.osszeg { white-space: nowrap; }
+
+    table.tovabbkepzes input.currency { text-align:right; width:60px;}
+    table.tovabbkepzes input.sumCurrency { text-align:right; width:60px;}
+    table.tovabbkepzes input.hiba { outline: solid 1px red; }
+    table.tovabbkepzes td.oraszam { text-align:right; white-space: nowrap; }
+    table.tovabbkepzes td.oraszam input { width:50px; text-align:right;}
+
+    table.tovabbkepzes input.date { width:70px; text-align:center;}
+
+    table.tovabbkepzes tfoot tr td,table.tovabbkepzes tfoot tr th
+    { padding: 3px 3px; background-color: #eeeeee;
+	  border-top: solid 1px #888888;
+    }
+
+    #ujTovabbkepzes form { margin:30px 50px; padding:30px; border: solid 1px #ddd; 
+background: rgb(255,255,255);
+background: -moz-linear-gradient(-45deg, rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
+background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(47%,rgba(246,246,246,1)), color-stop(100%,rgba(237,237,237,1)));
+background: -webkit-linear-gradient(-45deg, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
+background: -o-linear-gradient(-45deg, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
+background: -ms-linear-gradient(-45deg, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
+background: linear-gradient(135deg, rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
+
+    }
+    form#ujTovabbkepzes span.ujIntezmeny { color: #eeeeee; }
+    form#ujTovabbkepzes span.ujIntezmeny:hover { color: cornflowerblue; }
+
+    form#ujTovabbkepzes table tbody tr th { text-align: right;  }
+    form#ujTovabbkepzes table tbody tr th:after { content: ":" }
+
+    div.separator {
+	height:1px; width: 80%;
+	margin:40px auto;
+	background-color: #eeeeee;
+    }
+
+    #tanarAdatok input.ajaxDone { background-color:lightgreen; }
+    #tanarAdatok input.ajaxError { background-color:red; }
+
+    th.tovabbkepzesCiklus div { margin:0px auto; border: solid 1px #888; height:10px; display:block; width:120px; background-color:#ddd; color:white; font-weight:normal; font-size:7px;}
+    th.tovabbkepzesCiklus div     span { display:table-cell;height:8px; color: white !important;}
+    th.tovabbkepzesCiklus div     span.terv { background-color: #03A9F4;}
+    th.tovabbkepzesCiklus div     span.teljesitett { background-color: green; }
+    th.tovabbkepzesCiklus div     span.jovahagyott {background-color: #49A74C;}
+
+    th.tovabbkepzesCiklus span.forduloEv { font-size:6px; color: cornflowerblue; }
+    th.tovabbkepzesCiklus span.forduloEv.left { float:left; margin-left:8px; }
+    th.tovabbkepzesCiklus span.forduloEv.right { float:right; margin-right:8px; }
+
+    th.tovabbkepzesCiklus.alert span.forduloEv { color:#E91E63; }
+    
+    #tanarTovabbkepzesForduloDt span[class*='icon'].alert2 { color: #FFEB3B;}
+    #tanarTovabbkepzesForduloDt span[class*='icon'].alert1 { color: orange;}
+    #tanarTovabbkepzesForduloDt span[class*='icon'].alert0 { color: red;}
+    #tanarTovabbkepzesForduloDt span[class*='icon'].alert { color: #e91E63;}
+    #tanarTovabbkepzesForduloDt span[class*='icon'].kesz { color: green;}
+    #tanarTovabbkepzesForduloDt span[class*='icon'].folyamatban { color: lightgreen;}
+    #tanarTovabbkepzesForduloDt span[class*='icon'].varakozik { color: #888;}
+
+    #tovabbkepzesNavi { text-align:center; width:;}
+    input.datum {width:70px;}

@@ -1,0 +1,175 @@
+<?php
+/*
+    Module: useradmin
+*/
+
+    if (file_exists('lang/'._LANG.'/backend/ldap/attrs.php')) {
+        require('lang/'._LANG.'/backend/ldap/attrs.php');
+    } elseif (file_exists('lang/'._DEFAULT_LANG.'/backend/ldap/attrs.php')) {
+        require('lang/'._DEFAULT_LANG.'/backend/ldap/attrs.php');
+    }
+
+######################################################
+# Alapértelmezett jogosultságok
+#
+#  w - Írható/olvasható
+#  r - olvasható
+#  - - egyik sem
+#
+#  Három karakter: admin, self, other jogai
+######################################################
+
+    define('_DEFAULT_LDAP_RIGHTS','wr-');
+
+######################################################
+# Az LDAP account attribútumok
+######################################################
+
+    global $ldapAccountAttrs;
+    $ldapAccountAttrs = array(
+        'uid',
+        'uidnumber',
+        'gidnumber',
+        'gecos',
+        'cn',
+        'sn',
+        'givenname',
+        'mail',
+        'homepage',
+        'url',
+        'telephonenumber',
+        'mobile',
+        'year',
+        'class',
+        'l',
+        'street',
+        'postaladdress',
+        'postalcode',
+        'homedirectory',
+        'owner',
+        'leader',
+        'description',
+        'roomnumber',
+        'registertimestamp',
+        'primaryschoolomcode',
+        'classtimestamp',
+        'studentcardnumber',
+        'studentcardtimestamp',
+        'taxid',
+        'birthtimestamp',
+        'birthlocality',
+        'registernumber',
+        'diarynumber',
+        'sex',
+        'guardiancn',
+        'mothercn',
+        'localitytimestamp',
+        'tajnumber',
+        'member',
+        'studentmember',
+        'exemptmember',
+        'examermember',
+        'memberuid',
+	'shadowlastchange',
+	'shadowexpire',
+	'shadowwarning',
+	'shadowmin',
+	'shadowmax',
+	'shadowinactive',
+	'parentpassword'
+    );
+
+    global $ldapGroupAttrs;
+    $ldapGroupAttrs = array(
+	'gidnumber',
+	'cn',
+	'description',
+	'owner',
+	'member',
+	'memberuid'
+    );
+
+    global $accountAttrToLDAP;
+    $accountAttrToLDAP = array(
+	'userAccount' => 'uid',
+	'userCn' => 'cn',
+	'mail' => 'mail',
+	'studyId' => 'studyId',
+	'shadowLastChange' => 'shadowLastChange',
+	'shadowWarning' => 'shadowWarning',
+	'shadowMin' => 'shadowMin',
+	'shadowMax' => 'shadowMax',
+	'shadowExpire' => 'shadowExpire',
+	'shadowInactive' => 'shadowInactive',
+    );
+
+    global $groupAttrToLDAP;
+    $groupAttrToLDAP = array(
+	'groupId' => 'cn',
+	'groupName' => 'description',
+//	'leader' => 'leader',
+	'owner' => 'owner',
+	'member' => 'member'
+    );
+
+    global $ldapAccountAttrDef;
+    $ldapAccountAttrDef = array(
+        'dn' => array('desc' => _LDAPDN, 'type' => 'text','rights' => 'rrr'),
+        'uid' => array('desc' => _LDAPUID, 'type' => 'text','rights' => 'rrr'),
+        'uidnumber' => array('desc' => _LDAPUIDNUMBER, 'type' => 'int','rights' => 'w--'),
+        'gidnumber' => array('desc' => _LDAPGIDNUMBER, 'type' => 'int','rights' => 'w--'),
+        'gecos' => array('desc' => _LDAPGECOS, 'type' => 'text','rights' => 'w--'),
+        'cn'  => array('desc' => _LDAPCN, 'type' => 'text','rights' => 'wrr'),
+        'sn' => array('desc' => _LDAPSN, 'type' => 'text'),
+        'givenname' => array('desc' => _LDAPGIVENNAME, 'type' => 'text'),
+        'mail' => array('desc' => _LDAPMAIL, 'type' => 'text','rights' => 'wwr'),
+        'homepage' => array('desc' => _LDAPHOMEPAGE, 'type' => 'text','rights' => 'wwr'),
+        'url' => array('desc' => _LDAPURL, 'type' => 'text'),
+        'telephonenumber' => array('desc' => _LDAPTELEPHONENUMBER, 'type' => 'text','rights' => 'ww-'),
+        'mobile' => array('desc' => _LDAPMOBILE, 'type' => 'text','rights' => 'ww-'),
+        'year' => array('desc' => _LDAPYEAR, 'type' => 'int'),
+        'class' => array('desc' => _LDAPCLASS, 'type' => 'text'),
+        'l' => array('desc' => _LDAPL, 'type' => 'text'),
+        'street' => array('desc' => _LDAPSTREET, 'type' => 'text'),
+        'postaladdress' => array('desc' => _LDAPPOSTALADDRESS, 'type' => 'text'),
+        'postalcode' => array('desc' => _LDAPPOSTALCODE, 'type' => 'text'),
+        'homedirectory' => array('desc' => _LDAPHOMEDIRECTORY, 'type' => 'text'),
+        'roomnumber' => array('desc' => _LDAPROOMNUMBER, 'type' => 'int'),
+        'registertimestamp' => array('desc' => _LDAPREGISTERTIMESTAMP, 'type' => 'timestamp'),
+        'primaryschoolomcode' => array('desc' => _LDAPPRIMARYSCHOOLOMCODE, 'type' => 'text'),
+        'classtimestamp' => array('desc' => _LDAPCLASSTIMESTAMP, 'type' => 'timestamp'),
+        'studentcardnumber' => array('desc' => _LDAPSTUDENTCARDNUMBER, 'type' => 'text'),
+        'studentcardtimestamp' => array('desc' => _LDAPSTUDENTCARDTIMESTAMP, 'type' => 'timestamp'),
+        'taxid' => array('desc' => _LDAPTAXID, 'type' => 'text'),
+        'birthtimestamp' => array('desc' => _LDAPBIRTHTIMESTAMP, 'type' => 'timestamp'),
+        'birthlocality' => array('desc' => _LDAPBIRTHLOCALITY, 'type' => 'text'),
+        'registernumber' => array('desc' => _LDAPREGISTERNUMBER, 'type' => 'text'),
+        'diarynumber' => array('desc' => _LDAPDIARYNUMBER, 'type' => 'text'),
+        'sex' => array('desc' => _LDAPSEX, 'type' => 'radio', 'options' => array(_FIU, _LANY)),
+        'guardiancn' => array('desc' => _LDAPGUARDIANCN, 'type' => 'text'),
+        'mothercn' => array('desc' => _LDAPMOTHERCN, 'type' => 'text'),
+        'localitytimestamp' => array('desc' => _LDAPLOCALITYTIMESTAMP, 'type' => 'timestamp'),
+        'tajnumber' => array('desc' => _LDAPTAJNUMBER, 'type' => 'text'),
+	'shadowlastchange' => array('desc' => _LDAPSHADOWLASTCHANGE, 'type' => 'text'),
+	'shadowexpire' => array('desc' => _LDAPSHADOWEXPIRE, 'type' => 'text'),
+	'shadowwarning' => array('desc' => _LDAPSHADOWWARNING, 'type' => 'text'),
+	'shadowmin' => array('desc' => _LDAPSHADOWMIN, 'type' => 'text'),
+	'shadowmax' => array('desc' => _LDAPSHADOWMAX, 'type' => 'text'),
+	'shadowinactive' => array('desc' => _LDAPSHADOWINACTICE, 'type' => 'text'),
+    );
+
+    global $ldapGroupAttrDef;
+    $ldapGroupAttrDef = array(
+        'cn'  => array('desc' => _LDAPCN, 'type' => 'text','rights' => 'wrr'),
+        'description' => array('desc' => _LDAPDESCRIPTION, 'type' => 'text'),
+        'gidnumber' => array('desc' => _LDAPGIDNUMBER, 'type' => 'int','rights' => 'w--'),
+        'memberuid' => array('desc' => _LDAPMEMBERUID, 'type' => 'select'),
+        'member' => array('desc' => _LDAPMEMBER, 'type' => 'select'),
+        'owner' => array('desc' => _LDAPOWNER, 'type' => 'select'),
+//        'studentmember' => array('desc' => _LDAPSTUDENTMEMBER, 'type' => 'text'),
+//        'exemptmember' => array('desc' => _LDAPEXEMPTMEMBER, 'type' => 'text'),
+//        'examermember' => array('desc' => _LDAPEXAMERMEMBER, 'type' => 'text'),
+//        'leader' => array('desc' => _LDAPLEADER, 'type' => 'text'),
+    );
+
+?>

@@ -1,0 +1,115 @@
+@media screen {
+
+/*
+    table.osztalyozo { background-color: rgb(220,220,220); color: white; }
+    table.osztalyozo a { color: white; text-decoration:none }
+    table.osztalyozo a:hover { color: white; text-decoration:underline }
+    table.osztalyozo thead th {	background-color: rgb(100,120,120); }
+    table.osztalyozo thead th.nev { height:30px }
+    table.osztalyozo thead td {	background-color: rgb(100,140,130); text-align: center;	padding: 0px 4px 0px 4px; }
+    table.osztalyozo tfoot th {	background-color: rgb(100,120,120); padding: 0px; vertical-align: center; }
+    table.osztalyozo tfoot th select { width: 200px; }
+    table.osztalyozo tfoot th input { width: 100px; }
+    table.osztalyozo tfoot th input.jegy1 { color: blue; }
+    table.osztalyozo tfoot th input.jegy2 { color: black; }
+    table.osztalyozo tfoot th input.jegy3 { color: green; }
+    table.osztalyozo tfoot th input.jegy4 { color: red; }
+    table.osztalyozo tfoot td {	font-size:10px;	background-color: rgb(100,140,130); text-align: center; }
+    table.osztalyozo tbody th {	background-color: rgb(130,140,150); font-weight: normal; }
+    table.osztalyozo tbody th.atlag { background-color: rgb(100,100,130); padding: 0px 4px 0px 4px; }
+    table.osztalyozo tbody th.kituno { background-color: #ff0000; }
+    table.osztalyozo tbody th.jeles { background-color: #883333; }
+    table.osztalyozo tbody th.bukott { background-color: black; }
+    table.osztalyozo tbody th.i { background-color: #f1f1f1; color: green; }
+    table.osztalyozo tbody th.ni {background-color: #f1f1f1;  color: red; }
+    table.osztalyozo tbody td.jegyek { background-color: #eeeeee; color: black; text-align: center; }
+    table.osztalyozo tbody td.biz { background-color: rgb(180,100,140);	text-align: center; }
+    table.osztalyozo tbody td.biz select { background-color: rgb(180,100,140); }
+    table.osztalyozo tbody td.biz select:hover { background-color: rgb(250,250,250); }
+
+    table.bizstat { margin-left:60px; border: solid 1px orange; }
+    table.bizstat th { background-color: #eeeeee; font-weight: normal; }
+    table.bizstat td { background-color: #f7f7f7; text-align: right; padding-right:5px; padding-left: 5px;}
+    table.bizstat tr.ossz th { background-color: #dddddd; }
+    table.bizstat tr.ossz td { background-color: #dddddd; }
+    table.bizstat caption {
+	margin-left: 60px;
+	caption-side: top;
+	font-size:11px;
+	background-color: #778877;
+	color: white;
+	padding:2px;
+    }
+
+    table.floatleft { float:left }
+*/
+
+
+    /* TanuloBizonyitvany */
+    table.tanuloBizonyitvany { background-color: #ffffff; }
+    table.tanuloBizonyitvany thead th { background-color: rgb(100,140,130);
+	color: white; text-align: center; padding: 5px 8px 5px 8px; font-weight: normal;
+    }
+    table.tanuloBizonyitvany thead th.cim { font-size: 20px; font-weight: bold; }
+    table.tanuloBizonyitvany thead th.nev { font-size: 16px; font-weight: bold;}
+    table.tanuloBizonyitvany thead a { color: white; text-decoration: none; }
+    table.tanuloBizonyitvany thead a:hover { text-decoration: underline; }
+    table.tanuloBizonyitvany textarea {	width: 100%; }
+    table.tanuloBizonyitvany tbody.jegyzet td {	padding: 16px; font-size: 10px;	background-color: rgb(200,200,200); }
+    table.tanuloBizonyitvany tbody th { height:25px; padding-right:10px; padding-left: 10px;
+	background-color: rgb(130,140,150); color: white; font-weight: normal;
+    }
+    table.tanuloBizonyitvany tbody th,table.tanuloBizonyitvany tbody td { 
+	border-color: rgb(220,220,220);	border-style: solid; border-width: 1px 1px 0px 0px;
+    }
+    table.tanuloBizonyitvany tbody tr.fejlec th { background-color: rgb(100,110,120); font-weight: bold; }
+    table.tanuloBizonyitvany tbody td.biz {background-color:  rgb(180,100,140); text-align: center; color: white; padding-left:5px; padding-right:5px; }
+    table.tanuloBizonyitvany tbody td.avg {background-color:  #f1f1f1; text-align: center; padding-left:5px; padding-right:5px; }
+    table.tanuloBizonyitvany tbody td.oraszam { text-align: center; }
+    table.tanuloBizonyitvany tfoot td {	border-style: none; }
+    table.tanuloBizonyitvany span.megj { font-size: 8px; font-style: italic; }
+
+    table.sign { width: 100%; margin-top: 25px;}
+    table.sign td { text-align: center; border-style: none}
+    table.sign td.vonal { 
+	width: 40%;
+	border-color: black;
+	border-width: 0px 0px 1px 0px;
+	border-style: dotted;
+    }
+    
+    form.modosit { margin: 50px auto 0px auto; padding: 0px; width: 500px; background-color: rgb(180,100,140); }
+    form.modosit h1 { text-align: center; color: white; font-size: 14px; background-color: rgb(100,110,120); 
+	padding: 3px; margin:1px;
+	border-bottom: solid 1px white;
+    }
+    form.modosit table.jegy { width:100%; background-color: #eeeeee; }
+    form.modosit table.jegy tbody tr th { background-color: #888888; color: white; font-weight: normal; }
+    form.modosit table.jegy tbody tr td { background-color: rgb(180,100,140); color: white; font-weight: normal; }
+    form.modosit table.jegy tfoot tr th { background-color: #554455; color: white; font-weight: normal; }
+}
+@media print {
+
+    .mayorhead, .toolBar, form.modosit, .nemNyomtatando { display: none; }
+
+    table.tanuloBizonyitvany { border-width: 2px 2px 3px 3px; border-style: solid; border-color: black; }
+    table.tanuloBizonyitvany a { color: black; text-decoration: none; }
+    table.tanuloBizonyitvany td, table.tanuloBizonyitvany th { padding: 0px 10px 0px 10px; }
+    table.tanuloBizonyitvany thead th {	border-width: 0px 1px 1px 0px; border-style: solid; border-color: black;
+	padding: 4px 10px 3px 10px; font-weight: normal; 
+    }
+    table.tanuloBizonyitvany thead th.nev { border-width: 1px 1px 0px 0px; border-style: solid;	border-color: black; font-size: 16px; }
+    table.tanuloBizonyitvany thead th.cim { border-width: 0px 1px 0px 0px; font-size: 20px; }
+    table.tanuloBizonyitvany tfoot > tr > td { border-width: 0px 1px 0px 0px; border-style: solid; border-color: black; }
+    table.tanuloBizonyitvany > tbody th, table.tanuloBizonyitvany > tbody td { border-width: 1px 1px 0px 0px; border-style: solid; border-color: black; }
+    table.tanuloBizonyitvany > tbody th { text-align: left; font-weight: normal; }
+    table.tanuloBizonyitvany > tbody tr.fejlec th { border-width: 2px 1px 1px 0px; text-align: center; font-weight: bold; padding: 3px 10px 3px 10px; }
+    table.tanuloBizonyitvany tbody.jegyzet td {	padding: 10px; }
+    table.tanuloBizonyitvany .info { display: none }
+    table.tanuloBizonyitvany td.biz { font-style: italic; }
+    
+    table.sign { width: 100%; margin-top: 40px; margin-bottom: 25px;}
+    table.sign td { text-align: center; border-style: none}
+    table.sign td.vonal { width: 40%; border-color: black; border-width: 0px 0px 1px 0px; border-style: dotted; }
+
+}

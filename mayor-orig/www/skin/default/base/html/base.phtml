@@ -1,0 +1,463 @@
+<?php
+
+function includeSocial($page,$sub,$f) {
+    global $OG;
+
+    if (__FBCONNECT_ENABLED===true && defined('__FB_APP_ID')) {
+	echo '<script type="text/javascript">';
+	echo 'var FB_APP_ID = "'.__FB_APP_ID.'";';
+	echo '</script>';
+    }
+
+    if (__GOOGLEAPI_ENABLED===true && defined('__GOOGLEAPI_CLIENT_ID')) {
+	echo '<script src="https://apis.google.com/js/platform.js" async defer></script>';
+	echo '<meta name="google-signin-client_id" content="'.__GOOGLEAPI_CLIENT_ID.'">';
+	echo '<script type="text/javascript">';
+	echo 'var GOOGLEAPI_CLIENT_ID = "'.__GOOGLEAPI_CLIENT_ID.'";';
+	echo '</script>';
+    }
+
+    if (_OG_ENABLED!==true) return;
+    if ($page=='portal') {
+	$_url .= _BASE_URL."/index.php?page=$page&sub=$sub&f=$f&".$OG['getparameter'];
+	$_img = ($OG['image']!='') ? $OG['image']:_OG_IMAGE;
+	echo '<meta property="og:title" content="'.$OG['title'].'" />'."\n";
+//	echo '<meta property="og:type" content="website" />'."\n";
+	echo '<meta property="og:type" content="article" />'."\n";
+	echo '<meta property="og:site_name" content="MaYoR | '._SCHOOL_NAME.'" />'."\n";
+	echo '<meta property="og:image" content="'.$_img.'" />'."\n";
+	echo '<meta property="og:description" content="'.$OG['title'].' - MaYoR - '._SCHOOL_NAME.'" />'."\n";
+	echo '<meta property="og:url" content="'.str_replace('&','&#38;',$_url).'" />'."\n";
+    }
+}
+
+function includeCSS($page,$sub,$f,$skin,$media='') {
+
+    echo '<link rel="stylesheet" href="skin/default/base/css/elusive-webfont.css" type="text/css" />'; // minden mediara, colorscheme-re
+    echo '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />';
+//    echo '<link href="//fonts.googleapis.com/css?family=Source+Sans Pro:200italic,200,300italic,300,400italic,400,600italic,600,700italic,700,900italic,900" rel="stylesheet" type="text/css">';
+
+    if ($media!='') {
+	$MEDIA='-'.$media;
+	$MEDIA_STR = 'media="'.$media.'" ';
+    } else {
+	$MEDIA='';
+	$MEDIA_STR = 'media="screen,print" ';
+    }
+    if (file_exists(($_f="skin/$skin/base/css$MEDIA/base.php")) ) {
+        echo '<link rel="stylesheet" href="'.$_f.'?scheme='.__COLOR_SCHEME.'&ver='._MAYORREV.'" type="text/css" '.$MEDIA_STR.'/>';
+	echo "\n";
+    } elseif (file_exists(($_f="skin/$skin/base/css$MEDIA/base.css")) ) {
+        echo '<link rel="stylesheet" href="'.$_f.'?ver='._MAYORREV.'" type="text/css" '.$MEDIA_STR.'/>';
+	echo "\n";
+    } elseif ($media=='') {
+        echo '<link rel="stylesheet" href="skin/'._DEFAULT_SKIN.'/base/css/base.css?ver='._MAYORREV.'" type="text/css" '.$MEDIA_STR.'/>';
+	echo "\n";
+    }
+    if (file_exists(($_f="skin/$skin/module-$page/css$MEDIA/$page.css")) ) {
+	echo '<link rel="stylesheet" href="'.$_f.'?ver='._MAYORREV.'" type="text/css" '.$MEDIA_STR.' />';
+	echo "\n";
+    } elseif (file_exists(($_f="skin/"._DEFAULT_SKIN."/module-$page/css/$page.css")) && $media=='') {
+	echo '<link rel="stylesheet" href="'.$_f.'?ver='._MAYORREV.'" type="text/css"  '.$MEDIA_STR.'/>';
+	echo "\n";
+    }
+    if ($sub!='') {
+	if (file_exists(($_f="skin/$skin/module-$page/css$MEDIA/$sub/base.css")) ) {
+	    echo '<link rel="stylesheet" href="'.$_f.'?ver='._MAYORREV.'" type="text/css" '.$MEDIA_STR.'/>';
+	    echo "\n";
+	} elseif ( file_exists(($_f="skin/"._DEFAULT_SKIN."/module-$page/css/$sub/base.css")) && $media=='') {
+	    echo '<link rel="stylesheet" href="'.$_f.'?ver='._MAYORREV.'" type="text/css"  '.$MEDIA_STR.'/>';
+	    echo "\n";
+	}
+	if (file_exists(($_f="skin/$skin/module-$page/css$MEDIA/$sub/$f.css")) ) {
+	    echo '<link rel="stylesheet" href="'.$_f.'?ver='._MAYORREV.'" type="text/css" '.$MEDIA_STR.'/>';
+	    echo "\n";
+	} elseif ( file_exists(($_f="skin/"._DEFAULT_SKIN."/module-$page/css/$sub/$f.css")) && $media=='') {
+	    echo '<link rel="stylesheet" href="'.$_f.'?ver='._MAYORREV.'" type="text/css"  '.$MEDIA_STR.'/>';
+	    echo "\n";
+	}
+    } else {
+	if (file_exists(($_f="skin/$skin/module-$page/css$MEDIA/$f.css")) ) {
+	    echo '<link rel="stylesheet" href="'.$_f.'?ver='._MAYORREV.'" type="text/css"  '.$MEDIA_STR.'/>';
+	    echo "\n";
+	} elseif ( file_exists(($_f="skin/"._DEFAULT_SKIN."/module-$page/css/$f.css")) && $media=='') {
+	    echo '<link rel="stylesheet" href="'.$_f.'?ver='._MAYORREV.'" type="text/css"  '.$MEDIA_STR.'/>';
+	    echo "\n";
+	}
+    }
+
+
+    global $VALID_MODULES;
+    for($i=0; $i<count($VALID_MODULES); $i++) {
+	$mod = $VALID_MODULES[$i];
+	if ($mod != $page) {
+	    if (file_exists(($_f="skin/$skin/module-mod/css$MEDIA/$mod.css")) ) {
+		echo '<link rel="stylesheet" href="'.$_f.'?ver='._MAYORREV.'" type="text/css" '.$MEDIA_STR.' />'."\n";
+	    } elseif (file_exists(($_f="skin/"._DEFAULT_SKIN."/module-$mod/css$MEDIA/$mod.css")) ) {
+		echo '<link rel="stylesheet" href="'.$_f.'?ver='._MAYORREV.'" type="text/css" '.$MEDIA_STR.' />'."\n";
+	    }
+	}
+    }
+
+
+
+}
+
+function includeJS($page,$sub,$f,$skin) {
+	$js = '.'._JSLIB.'.js';
+//	echo '<script language="JavaScript" type="text/javascript" charset="utf-8" src="skin/'._DEFAULT_SKIN.'/base/javascript/underscore-min.js?ver='._MAYORREV.'"></script>'."\n";
+	echo '<script language="JavaScript" type="text/javascript" charset="utf-8" src="skin/'._DEFAULT_SKIN.'/base/javascript/'._JSLIB.'.js?ver='._MAYORREV.'"></script>'."\n";
+//	echo '<script language="JavaScript" type="text/javascript" charset="utf-8" src="skin/'._DEFAULT_SKIN.'/base/javascript/scrolltofix.'._JSLIB.'.js?ver='._MAYORREV.'"></script>'."\n";
+//	echo '<script language="JavaScript" type="text/javascript" charset="utf-8" src="skin/'._DEFAULT_SKIN.'/base/javascript/backbone-min.js?ver='._MAYORREV.'"></script>'."\n";
+
+	if (_ENABLE_IFRAME_EMBEDDING !== true)  
+	    echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="skin/'._DEFAULT_SKIN.'/base/javascript/noiframe.js?ver='._MAYORREV.'"></script>';
+
+	if (file_exists(($_f="skin/$skin/base/javascript/base".$js)) ) {
+	    echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
+	} elseif (file_exists(($_f='skin/'._DEFAULT_SKIN.'/base/javascript/base'.$js)) ) {
+	    echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
+	}
+
+	    if ( file_exists(($_f="skin/$skin/module-$page/javascript/$page".$js)) ) {
+		echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
+	    } elseif (file_exists(($_f="skin/"._DEFAULT_SKIN."/module-$page/javascript/$page".$js)) ) {
+		echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
+	    }
+	    if ($sub!='') {
+		if ( file_exists(($_f="skin/$skin/module-$page/javascript/$sub/$f".$js)) ) {
+		    echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
+		} elseif ( file_exists(($_f="skin/"._DEFAULT_SKIN."/module-$page/javascript/$sub/$f".$js)) ) {
+		    echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
+		}
+	    } elseif ($f != $page) {
+		if ( file_exists(($_f="skin/$skin/module-$page/javascript/$f".$js)) ) {
+		    echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
+		} elseif ( file_exists(($_f="skin/"._DEFAULT_SKIN."/module-$page/javascript/$f".$js)) ) {
+		    echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
+		}
+	    }
+	    if (__RICH_TEXT_EDITOR===true && $f == 'egyhir') {
+		// Koschtit Image Gallery
+		if ($page == 'portal') {
+		    //require_once('skin/classic/share/javascript/koschtit/ki_include.php');
+		    echo '<script type="text/javascript" src="skin/classic/share/javascript/koschtit/ki_base/ki_js_framework.php?reldir=skin/classic/share/javascript/koschtit/"></script>';
+		}
+		echo '
+		    <script src="skin/classic/share/javascript/tiny_mce/tiny_mce.js" type="text/javascript"></script>
+		    <script src="skin/classic/module-portal/javascript/hirek/egyhir.php?lang='.$lang.'" type="text/javascript"></script>';
+	    }
+
+	//	if (file_exists(($_f="skin/$skin/base/javascript/jstorage.min.js")) ) {
+	//	echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
+	//    }	    
+	//    if (file_exists(($_f="skin/$skin/base/javascript/json2.min.js")) ) {
+	//	echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
+	//    }	    
+
+    // becsatoljuk a többi modul main .js filejait is
+    global $VALID_MODULES;
+    for($i=0; $i<count($VALID_MODULES); $i++) {
+	$mod = $VALID_MODULES[$i];
+	if ($mod != $page) {
+	    if ( file_exists(($_f="skin/$skin/module-$mod/javascript/$mod".$js)) ) {
+		echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
+	    } elseif (file_exists(($_f="skin/"._DEFAULT_SKIN."/module-$mod/javascript/$mod".$js)) ) {
+		echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
+	    }
+	}
+    }
+
+}
+
+// -------------------------------------------------------------------
+// ajaxUpdaterForm
+// -------------------------------------------------------------------
+
+
+function ajaxUpdaterForm($id, $url, $params, $method, $forEcho=false) {
+    global $skin;
+
+    $t = '<form method="'.$method.'" action="'.href($url.'&toSkin='.$skin).'" class="onLoadUpdate" id="'.$id.'">'."\n";
+    if ($_SESSION['mayorToken']!='') $t .= '<input class="mayorToken" type="hidden" name="mayorToken" value="'.$_SESSION['mayorToken'].'" />';
+    foreach ($params as $name => $value) $t .= '<input type="hidden" name="'.$name.'" value="'.$value.'" />'."\n";
+    $t .= '</form>';
+    if ($forEcho) return $t;
+    else echo $t;
+
+}
+
+/*
+
+<!ATTLIST FORM
+  %attrs;                              -- %coreattrs, %i18n, %events --
+  action      %URI;          #REQUIRED -- server-side form handler --
+  method      (GET|POST)     GET       -- HTTP method used to submit the form--
+  enctype     %ContentType;  "application/x-www-form-urlencoded"
+  accept      %ContentTypes; #IMPLIED  -- list of MIME types for file upload --
+  name        CDATA          #IMPLIED  -- name of form for scripting --
+  onsubmit    %Script;       #IMPLIED  -- the form was submitted --
+  onreset     %Script;       #IMPLIED  -- the form was reset --
+  accept-charset %Charsets;  #IMPLIED  -- list of supported charsets --
+  >
+
+  %attrs : id, class
+
+*/
+
+    /* For XSRF hardening */                                                                                                                                                                              
+    function formBegin($SET=array('method'=>'post','action'=>''),$SET2=array('print'=>true, 'skipFormTag'=>false)) {
+
+	global $skin;
+        if ($skin != 'ajax') {                                                                                                                                                                            
+            /* Default */                                                                                                                                                                                 
+            if ($SET['method']=='') $SET['method'] = 'post';                                                                                                                                              
+                                                                                                                                                                                                          
+            foreach (array('method','action') as $key) { /* Kötelező paraméterek */                                                                                                                       
+                $formParams .= $key.'="'.$SET[$key].'" ';                                                                                                                                                 
+            }                                                                                                                                                                                             
+            foreach (array('id','class','name','onsubmit', 'enctype','target','style') as $key) { /* Lehetséges megengedett argumentumok */                                                                       
+                if ($SET[$key]!='') $formParams .= $key.'="'.$SET[$key].'" ';                                                                                                                             
+            }
+            $str = '<!-- SOForm -->'."\n";
+            if ('skipFormTag' !== true) $str .= '<form '.$formParams.'>';
+        }
+        $str .= '<input class="salt" type="hidden" name="'.__SALTNAME.'" value="'.__SALTVALUE.'" />';
+        if ($_SESSION['mayorToken']!='') $str .= '<input class="mayorToken" type="hidden" name="mayorToken" value="'.$_SESSION['mayorToken'].'" />';
+
+        if ($SET2['print']===true) echo $str; else return $str;
+                                                                                                                                                                                                          
+    }                                                                                                                                                                                                     
+                                                                                                                                                                                                          
+    function formEnd($SET2=array('print'=>true)) {
+        global $skin;                                                                                                                                                                                     
+        if ($skin != 'ajax') {
+            $str = '</form>';
+            $str .= '<!-- EOForm -->';
+        }
+        if ($SET2['print']===true) echo $str; else return $str;
+    }
+
+
+
+// ---------------
+
+
+
+
+
+
+
+// -------------------------------------------------------------------
+// debug_layer() : debug üzenetek kiiratása
+// -------------------------------------------------------------------
+
+    function _debugLayer() {
+	global $_DEBUG;
+	echo '<!--// debug start //-->'."\n".'<div id="debug" style="display: none;">'.$_DEBUG.'</div>'."\n".'<!--// debug end //-->';
+	echo '<div id="help" style="display: none;"><div id="hideHelp" class="onClickHide">X</div><div id="helpHeader">'._HELP.'</div><iframe src=""></iframe></div>';
+    }
+
+    function _keyHelp() {
+	$keys = array(
+	array('Shift-L','Login/Logout - Belépés/Kilépés'),
+	array('Shift-F','Find - Keresés a menüben'),
+	array('Shift-S','Settings - Beállítások'),
+	array('Shift-D','Debug - Nyomkövetési üzenetek megjelnítése/elrejtése'),
+	array('Ctrl-Shift-V','Vakbarát nézet'),
+	array('F1','Help - Súgó'),
+	);
+	echo '<table id="keyHelp" style="display: none;">';
+	echo '<tr><th colspan="2">Gyorsbillentyűk</th></tr>';
+	foreach ($keys as $keyAdat) {
+	    echo '<tr><td class="key">'.$keyAdat[0].':</td><td class="desc">'.$keyAdat[1].'</td></tr>';
+	}
+	echo '</table>';
+    }
+
+    function _searchLayer() {
+	echo '<form id="mayorSearch" action="" method="post" style="display: none">';
+//		echo '<label for="searchPattern"><span class="icon-search"></span> </label>';
+		echo '<input type="text" name="pattern" value="" autocomplete="off" placeholder="Kezdj gépelni, nyomj entert" />';
+	echo '</form>';
+    }
+
+
+    function _httpheader() {
+	@header("Last-Modified: Mon, 20 Oct 2003 01:01:01 GMT");
+	@header("Cache-Control: no-store, no-cache, must-revalidate");
+	@header("Cache-Control: post-check=0, pre-check=0", false);
+	@header("Pragma: no-cache");
+    }
+    function _updateWindow() {
+	echo '<div id="takaro" style="display: none;"></div>';
+	echo '<div id="updateWindow" style="display: none;">';
+    	echo _svgClose(array('size'=>30, 'id'=>'updateCloseButton', 'title'=>_CLOSE, 'print'=>false));
+	echo '<div id="updateHeader">';
+	echo '</div>';
+	echo formBegin(array('class'=>'onSubmitUpdate','id'=>'updateForm'));formEnd();
+	echo '</div>';
+    }
+
+    function _svgClose($SET=array('size'=>24,'print'=>true)) {
+	$size = isset($SET['size'])?$SET['size']:24; //128 volt eredetileg
+	$print = isset($SET['print'])?$SET['print']:true;
+
+    $str .= '<div style="width: '.$size.'px; height: '.$size.'px;" '
+.(isset($SET['id'])?'id="'.$SET['id'].'" ':'')
+.(isset($SET['class'])?'class="'.$SET['class'].'" ':'')
+.(isset($SET['alt'])?'alt="'.$SET['alt'].'" ':'')
+.(isset($SET['title'])?'title="'.$SET['title'].'" ':'')
+.'>';
+
+	$str .= '<svg style="position: absolute; z-index: -1;" '
+.'version="1.0" xmlns="http://www.w3.org/2000/svg"
+width="'.$size.'.000000px" height="'.$size.'.000000px" viewBox="0 0 128.000000 100.000000"
+preserveAspectRatio="xMidYMid meet">
+<metadata>x</metadata>
+<g transform="translate(0.000000,128.000000) scale(0.100000,-0.100000)" fill="#880000" stroke="none">
+<path d="M536 1190 c-115 -29 -224 -122 -279 -238 -30 -62 -32 -75 -32 -172 0
+-97 2 -110 32 -172 44 -94 109 -160 202 -206 72 -36 79 -37 181 -37 102 0 109
+1 181 37 93 46 158 112 202 206 30 62 32 75 32 172 0 97 -2 110 -32 172 -44
+93 -110 160 -199 204 -64 32 -84 37 -161 40 -48 2 -105 -1 -127 -6z m51 -272
+l53 -52 55 54 55 55 42 -43 43 -42 -55 -55 -54 -55 54 -55 55 -55 -43 -42 -42
+-43 -55 55 -55 54 -55 -54 -55 -55 -42 43 -43 42 55 55 54 55 -54 55 -54 55
+39 40 c21 22 41 40 44 40 3 0 29 -23 58 -52z"/>
+</g>
+</svg>';
+
+    $str .= '<div style="background-color: transparent; width: '.$size.'px; height: '.$size.'px;" '
+.(isset($SET['id'])?'id="'.$SET['id'].'Click" ':'').'></div>';
+    $str .= '</div>';
+
+        if ($print===true) echo $str; else return $str;
+    }
+
+    function _svgLoginout($SET=array('print'=>true, 'color'=>'#00c0ff')) {
+	return false;
+	global $page;
+	if (//_POLICY=='public'
+	    defined('_USERACCOUNT') && (!is_string(_USERACCOUNT) || _USERACCOUNT=='')) {
+	    if($page=='auth') $_bg = 'rgb(247, 197, 14)';
+	    elseif (isset($SET['color'])) $_bg = $SET['color'];
+	    else $_bg = '#00c0ff'; 
+	    $img .= '<span id="mayorLoginoutSmall" style="color: '.$_bg.'" class="icon-unlock"></span></a>';
+	} else {
+	    //$_bg = '#Ff0066'; // (piros) #3496b9
+	    //$_bg = 'rgb(52, 150, 185)';
+	    $img .= '<span id="mayorLoginoutSmall" class="icon-lock"></span></a>';
+	}
+        if ($print===true) echo $img; else return $img;
+
+    }
+
+    function _svgDown($SET=array('print'=>true, 'color' => '#3496b9')) {
+
+	return '';
+
+    }
+
+    function _inlineHelp($txt) {
+        echo '<div class="hideShowContainer inlinehelp">';
+            //echo '<span class="onClickHideShow iicon-question">?</span>';
+	    echo '<span class="onClickHideShow icon-question-sign"></span>';
+            echo '<p class="openable" style="display: none;">'.$txt.'</p>';
+        echo '</div>';
+    }
+
+    function mayorGlobalLogin($loggedIn=false) {
+	global $AUTH;
+	if (is_array($AUTH['private']['allowOnly'])) $_class='class="restricted"'; else $_class = '';
+
+	echo '<div id="mayorGlobalLogin" '.$_class.'>';
+
+	    if ($loggedIn) {
+		if (defined('_MAYORAUTHRESULT') && defined('_AUTH_FAILURE') && intval(_MAYORAUTHRESULT)>=intval(_AUTH_FAILURE)) {
+		    $_class=' failed';
+		    //$_focus = ' id="focus" '; // ha azt akarjuk, hogy focus-t is kapjon...
+		}
+		$secure_url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		echo '<table><tr><td style="padding-right:10px;">';
+		formBegin(array('class'=>'check passwordAuth','action'=>$secure_url));
+		echo '<span class="icon-adult '.$_class.'"></span>';
+		echo '<input '.$_focus.' type="text" name="userAccount" autocomplete="off" />';
+		echo '<br/>';
+		echo '<span class="icon-key '.$_class.'"></span>';
+		echo '<input type="password" name="userPassword" />';
+		echo '<input type="hidden" name="toPolicy" value="private" />';
+		echo '<input type="hidden" name="action" value="mayorGlobalLogin" />';
+		echo '<button type="submit" style="background-color:inherit;border: solid 0px white;padding:0px;"><span class="icon-play-alt"></span></button>';
+		formEnd();
+		echo '</td><td style="">';
+		if (__GOOGLEAPI_ENABLED===true) {
+		    formBegin(array('class'=>'googleapi','action'=>$secure_url));
+		    echo '<input type="hidden" name="action" value="googleapilogin" />';
+		    echo '<button type="button" id="googleLoginBtn" class="api"><span class="icon-googleplus"></span></button>';
+		    formEnd();
+		}
+		echo '</td><td style="">';
+		if (__FBCONNECT_ENABLED===true) {
+		    formBegin(array('class'=>'fb','action'=>$secure_url));
+		    echo '<input type="hidden" name="action" value="facebooklogin" />';
+		    echo '<button type="submit" class="api"><span class="icon-facebook FBstatusunknown" id="mglFBconnect"></span></button>';
+		    //echo '<button type="submit" style="background-color:inherit;border: solid 0px white;padding:0px;"><span class="icon-googleplus"></span></button>';
+		    formEnd();
+		}
+		echo '</td></tr></table>';
+	    } else {
+		echo '<a href="'.href('index.php?page=session&f=logout&toPolicy=public',array('skin','lang','sessionID')).'"><div class="large icon-lock"></div></a>';
+	    }
+	echo '</div>';
+
+    }
+
+    function _updateWindowSide() {
+	echo '<div id="updateWindowSide" class="updateWindowSide">';
+	    echo '<h1><span id="btn_updateWindowSideClose" class="icon-remove-circle"></span><div id="updateWindowSideTitle"></div></h1>';
+	    echo '<div id="updateWindowSideContent">';
+	    echo '</div>';
+	echo '</div>'."\n";
+
+	echo '<div id="updateWindowSideSub" class="updateWindowSide updateWindowSideSub">';
+	    echo '<h1><span id="btn_updateWindowSideSubClose" class="icon-circle-arrow-left"></span><div id="updateWindowSideSubTitle"></div></h1>';
+	    echo '<div id="updateWindowSideSubContent">';
+	    echo '</div>';
+	echo '</div>'."\n";
+    }
+
+function mayorLogoSvg($colors=array()) {
+
+    if ($colors['dot'] =='')  $colors['dot'] = '#ff0066';
+    if ($colors['startColor'] =='')  $colors['startColor'] = '#00c0ff';
+    if ($colors['stopColor'] =='')  $colors['stopColor'] = '#8800aa';
+
+echo '
+<svg width="150" height="70" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <linearGradient id="linearGradient3031-2">
+   <stop stop-color="'.$colors['startColor'].'" id="stop3033-8" offset="0"/>
+   <stop stop-color="'.$colors['stopColor'].'" id="stop3035-8" offset="1"/>
+  </linearGradient>
+  <linearGradient xlink:href="#linearGradient3031-2" id="linearGradient3410" x1="0.111436" y1="0.907162" x2="1.150126" y2="1.037583"/>
+ </defs>
+ <metadata id="metadata7">image/svg+xml</metadata>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="72" width="152" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g stroke="null" id="svg_1">
+   <path stroke="#000000" stroke-width="0" fill="url(#linearGradient3410)" stroke-miterlimit="10.4" stroke-opacity="0.625641" d="m18.871286,49.146203c1.362856,-0.705671 2.623651,-1.683619 3.856106,-2.71448c-11.435929,10.35345 -4.531692,3.933533 -1.992395,1.315906c1.492685,-1.562102 2.914177,-3.241685 4.370244,-4.864169c1.289976,-1.473983 2.537038,-3.018588 3.682489,-4.696425c1.084587,-1.608239 2.075183,-3.3158 2.99299,-5.104252c0.953855,-1.849017 1.768241,-3.826746 2.582088,-5.795892c0.844414,-1.842027 1.540328,-3.797802 2.263888,-5.731472c0.686096,-1.784296 1.383456,-3.561303 1.956708,-5.422002c1.098952,-3.897154 3.57097,-12.249716 7.869627,-8.111667c0.736389,1.173007 1.182463,2.635396 1.674253,4.004546c0.850588,2.359506 1.833776,4.624629 2.874033,6.845c1.208574,2.653586 2.669999,5.089615 4.084263,7.551665c1.279466,2.237266 2.491804,4.542684 3.743744,6.808473c1.027307,1.79324 2.058529,3.582083 3.108363,5.352285c1.083714,1.801793 2.246692,3.506402 3.268277,5.373125c1.367163,2.196821 2.747667,4.38286 4.175031,6.509963c0.670376,0.857123 1.123165,2.05359 1.887081,2.782571c0.290255,0.276974 0.232704,0.220748 0.299922,-0.096702c-2.276386,1.880244 -4.552773,3.760489 -6.829189,5.640733c0.065411,-0.091973 0.152867,-0.162143 0.196204,-0.27589c0.107483,-0.282244 0.171117,-0.592918 0.249147,-0.893383c0.389396,-1.49913 0.764186,-2.970825 1.217488,-4.437098c0.702208,-1.891989 1.473983,-3.768168 2.443047,-5.432633c1.229835,-2.112406 2.690447,-3.972473 4.105675,-5.849706c2.308309,-2.938239 4.739791,-5.691568 7.146729,-8.480343c1.870908,-2.183121 3.67508,-4.470379 5.462629,-6.776339c1.675969,-2.205976 3.385608,-3.611837 5.078774,-5.79342c1.417215,-1.802365 3.244877,-3.853877 4.598549,-5.741741c1.718222,-1.986101 5.411161,-6.210281 6.550679,-7.424215c2.451118,-2.334359 1.075041,-2.088585 5.756287,-5.989653c0.092696,-0.077247 0.222495,-0.024996 0.331815,0.003012c0.445321,0.11453 0.651523,0.614963 0.875946,1.088442c0.481038,1.807997 0.711574,3.721007 1.032788,5.585772c0.56482,3.83885 1.856754,7.389612 3.187507,10.863791c1.113799,2.584681 2.169807,5.220649 3.439124,7.680229c0.88498,1.714819 1.493167,2.733151 2.443047,4.391292c2.42302,4.027919 4.881998,8.036983 7.556393,11.769554c2.197784,2.96182 4.724342,5.408541 7.310769,7.691974c1.922828,1.805798 3.925312,3.441262 5.849013,5.245043c1.404265,1.324218 2.731435,2.802417 4.092996,4.210869c0.458482,0.51269 0.957589,0.945724 1.435074,1.423148l-6.559202,6.149688l0,0c-0.426288,-0.525519 -0.865857,-1.029265 -1.295186,-1.550266c-1.278322,-1.49666 -2.609135,-2.903697 -3.976569,-4.246586c-1.830282,-1.887081 -3.662793,-3.773529 -5.61128,-5.431338c-2.53767,-2.441541 -4.978187,-5.060524 -7.130437,-8.125671c-0.886757,-1.264137 -1.707169,-2.402722 -2.547337,-3.725434c-1.70202,-2.679606 -3.256231,-5.526986 -4.936537,-8.230654c-2.248861,-3.833067 -4.586924,-7.62256 -6.252985,-11.981328c-1.32473,-3.526098 -3.089631,-6.837712 -4.160455,-10.509781c-3.153446,-8.888351 3.625299,-6.393053 3.849962,-3.001121c2.523636,3.041265 -5.528883,9.530388 -6.953778,11.354978c-11.818399,13.777579 -11.92293,13.836696 -18.692701,21.176799c-3.065358,3.360522 -6.263014,6.658704 -6.419495,8.084442c-0.028008,0.255953 -2.309514,1.516748 -2.314422,1.776496c-0.003614,0.18744 0.144706,0.457247 0.032736,0.562742c-2.273013,2.137161 -4.681578,4.006233 -7.022381,6.009349c-0.862002,-1.070553 -1.323435,-2.589861 -2.113159,-3.75052c-1.330151,-2.240579 -2.750558,-4.381987 -4.15127,-6.542608c-1.188336,-1.695906 -2.292227,-3.492278 -3.374465,-5.311538c-1.049743,-1.790831 -2.164446,-3.516401 -3.066291,-5.453443c-1.191618,-2.311501 -2.392994,-4.608065 -3.662131,-6.845903c-1.396737,-2.52123 -2.754624,-5.080072 -4.169309,-7.583802c-1.066759,-2.225671 -2.011699,-4.542262 -3.011601,-6.820666c-0.178345,-0.397256 -1.204388,-2.675751 -1.503105,-2.899029c-0.0259,-0.019274 -0.053606,0.028911 -0.080409,0.043337c0.40599,3.84942 -0.023189,0.309861 6.599738,-5.694008c0.081583,-0.073964 -0.183947,0.113627 -0.249509,0.212256c-0.371266,0.558737 -0.448423,1.404717 -0.77822,1.999593c-0.587467,1.874793 -1.194178,3.738745 -1.936982,5.507712c-0.762771,1.910932 -1.441458,3.885619 -2.253649,5.760051c-0.825833,1.978753 -1.716897,3.905676 -2.551915,5.876238c-0.910398,1.844557 -1.895242,3.612262 -3.007174,5.242486c-1.084045,1.845431 -2.411546,3.366726 -3.71477,4.922684c-1.46519,1.578364 -2.845302,3.2899 -4.311094,4.866789c-3.493814,3.534771 -6.918365,7.128148 -10.802177,9.955591c-1.358038,1.07218 -2.778957,1.982397 -4.172712,2.968626l6.073345,-7.272101l-0.000271,0.00003z" id="path3029-4"/>
+   <path stroke="#000000" stroke-width="0" fill="'.$colors['dot'].'" stroke-miterlimit="10.4" stroke-opacity="0.625641" d="m51.542359,11.830431a8.023452,8.023452 0 1 1 -16.046904,0a8.023452,8.023452 0 1 1 16.046904,0z" id="path3039-48-4-9"/>
+   <path stroke="#000000" stroke-width="0" fill="'.$colors['dot'].'" stroke-miterlimit="10.4" stroke-opacity="0.625641" d="m76.175022,52.413521a8.023452,8.023452 0 1 1 -16.046904,0a8.023452,8.023452 0 1 1 16.046904,0z" id="path3039-7-8-8"/>
+   <path stroke="#000000" stroke-width="0" fill="'.$colors['dot'].'" stroke-miterlimit="10.4" stroke-opacity="0.625641" d="m113.473391,9.57383a8.023452,8.023452 0 1 1 -16.046904,0a8.023452,8.023452 0 1 1 16.046904,0z" id="path3039-4-5-3"/>
+   <path stroke="#000000" stroke-width="0" fill="'.$colors['dot'].'" stroke-miterlimit="10.4" stroke-opacity="0.625641" d="m146.927757,60.422215a8.023452,8.023452 0 1 1 -16.046904,0a8.023452,8.023452 0 1 1 16.046904,0z" id="path3039-6-8-4"/>
+   <path stroke="#000000" stroke-width="0" fill="'.$colors['dot'].'" stroke-miterlimit="10.4" stroke-opacity="0.625641" d="m19.119154,53.659801a8.023452,8.023452 0 1 1 -16.046904,0a8.023452,8.023452 0 1 1 16.046904,0z" id="path3039-8-4"/>
+  </g>
+ </g>
+</svg>
+';
+}
+
+?>

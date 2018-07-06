@@ -1,0 +1,9 @@
+
+    table.lista { background-color: rgb(160,0,0); margin: 0px auto; padding: 4px; width: 500px; }
+    table.lista td.nev { text-align: left; background-color: rgb(240,240,100); margin: 1px 0px; padding: 4px; }
+    table.lista td.osztaly { text-align: left; background-color: rgb(240,240,100); margin: 1px 0px; text-align: center; padding: 4px; }
+    table.lista td.tanar { text-align: right; background-color: rgb(240,240,100); margin: 1px 0px; font-style: italic; padding: 4px; }
+    table.lista th { background-color: rgb(170,170,60); font-weight: bold; font-style: normal; padding: 4px; }
+
+    form.osztaly { text-align: center; border: 1px dotted rgb(20,60,100); margin: 10px; }
+    form.osztaly label { background-color: rgb(200,220,240); padding: 4px; margin: 0px 4px 0px 0px; }

@@ -1,0 +1,32 @@
+
+    table.elszamolas { background-color: rgb(220,220,220); margin: 10px auto; }
+
+    table.elszamolas thead tr th { background-color: #F23668; color: white; text-align: center; padding:2px; font-weight:normal;}
+    table.elszamolas thead tr th.eloirt_egyeb { background-color: rgb(170, 170, 204);}
+    table.elszamolas thead tr th.egyeb { background-color: #E8C }
+
+    table.elszamolas tbody tr th { background-color: #f9f9f9; text-align: left; padding-left:1em; padding-right:0.5em;}
+    table.elszamolas tbody tr th a { color: black; display:block; }
+
+    table.elszamolas tbody tr th.sum { text-align:right; font-weight:normal;}
+    table.elszamolas tbody tr th.sum.highlight { background-color: cornflowerblue;color:white; }
+    table.elszamolas tbody tr th.sumsum { text-align:right;}
+
+    table.elszamolas tbody tr td {background-color:#eee; text-align: right ; padding-right:1em;}
+    table.elszamolas tbody tr td.highlight {background-color: cornflowerblue !important; color: white !important;}
+
+    table.elszamolas tr .e1 { background-color: #493E89; color: white; }
+    table.elszamolas tr .e2 { background-color: green; color: white; }
+    table.elszamolas tr .e3 { background-color: orange; color: white; }
+    table.elszamolas tr .e4 { background-color: red; color: white; }
+
+    table.elszamolas tbody tr td.osszevonas { background-color: rgba(0,0,0,0.1); color: #333333; }
+
+    table.elszamolas tbody tr:hover th { background-color: #eeeeee; }
+    table.elszamolas tbody tr:hover td { background-color: #E7FCFE; }
+    table.elszamolas tbody tr:hover td.e1 { background-color: #382d78; }
+    table.elszamolas tbody tr:hover td.e2 { background-color: #007000; }
+    table.elszamolas tbody tr:hover td.e3 { background-color: #ee9400; }
+    table.elszamolas tbody tr:hover td.e4 { background-color: #e00; }
+
+    

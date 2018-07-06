@@ -1,0 +1,77 @@
+<?php
+
+    function _sgn($a) {
+	if ($a < 0) return -1;
+	elseif ($a == 0) return 0;
+	else return 1;
+    }
+
+    function putKerdoiv($ADAT) {
+
+	$class = array(-1 => 'negativ', 0 => 'semleges', 1 => 'pozitiv');
+
+	formBegin(array('class'=>'kerdoiv'));
+	echo '<input type="hidden" name="action" value="ertekeles" />'."\n";
+	echo '<input type="hidden" name="kerdoivId" value="'.$ADAT['kerdoivId'].'" />'."\n";
+	echo '<input type="hidden" name="cimzettId" value="'.$ADAT['cimzettId'].'" />'."\n";
+	echo '<input type="hidden" name="cimzettTipus" value="'.$ADAT['cimzettTipus'].'" />'."\n";
+	echo '<h1>'.$ADAT['kerdoivAdat']['cim'].'<br />'.$ADAT['cimzettLeiras'].'</h1>'."\n";
+	if ($ADAT['kerdoivAdat']['megjegyzes'] != '') echo '<p>'.$ADAT['kerdoivAdat']['megjegyzes'].'</p>'."\n";
+	echo '<ol>';
+	for ($i = 0; $i  < count($ADAT['kerdoivAdat']['kerdes']); $i++) {
+	    $kerdesId = $ADAT['kerdoivAdat']['kerdes'][$i]['kerdesId'];
+	    $valaszok = $ADAT['kerdoivAdat']['kerdes'][$i]['valasz'];
+	    echo '<li>';
+	    echo $ADAT['kerdoivAdat']['kerdes'][$i]['kerdes'];
+		if (
+		    ($valaszok[0]['pont'] == 0 && $valaszok[ count($valaszok)-1 ]['pont'] == 0)
+		    || in_array($kerdesId, $ADAT['megvalaszoltKerdes'])
+		) {
+		    echo '<ol>'; $sgn = 0;
+		} else {
+		    echo '<span class="gomb negativ">-</span><span class="gomb semleges">0</span><span class="gomb pozitiv">+</span>';
+		    echo '<ol style="display: none;" class="'.$class[_sgn($valaszok[0]['pont'])].'">'; $sgn = _sgn($valaszok[0]['pont']);
+		}
+		if (!in_array($kerdesId, $ADAT['megvalaszoltKerdes'])) {
+		    if (count($valaszok) == 0) {
+			echo '<input class="szabadValasz" type="text" name="szabadValasz'.$kerdesId.'" value="" />'."\n";
+		    } else {
+			for ($j = 0; $j < count($valaszok); $j++) {
+			    $valaszId = $valaszok[$j]['valaszId'];
+			    if ($sgn != _sgn($valaszok[$j]['pont'])) {
+				echo '</ol>';
+				echo '<ol style="display: none;" class="'.$class[_sgn($valaszok[$j]['pont'])].'">'; $sgn = _sgn($valaszok[$j]['pont']);
+			    }
+			    echo '<li>';
+			    if (
+				$valaszok[$j]['pont'] == 0 
+				&& ($j == 0 || $valaszok[$j-1]['pont'] < 0)
+				&& ($j+1 == count($valaszok) || $valaszok[$j+1]['pont'] > 0)
+			    ) $CHK = ' checked="checked" '; else $CHK = '';
+			    echo '<input type="radio" name="valasz'.$kerdesId.'" id="valasz'.$kerdesId.$j.'" value="'.$valaszId.'"'.$CHK.' />'."\n";
+			    echo '<label for="valasz'.$kerdesId.$j.'">'.$valaszok[$j]['valasz'].'</label>';
+			    echo '</li>';
+			}
+		    }
+		} else {
+		    echo '<li>'._MAR_MEGVALASZOLT_KERDES.'</li>';
+/*		    for ($j = 0; $j < count($ADAT['kerdoivAdat']['kerdes'][$i]['valasz']); $j++) {
+			echo '<li>';
+			echo $ADAT['kerdoivAdat']['kerdes'][$i]['valasz'][$j]['valasz'];
+			echo '</li>';
+		    }
+*/
+		}
+		echo '</ol>'."\n";
+
+	    echo '</li>'."\n";
+	}
+	echo '</ol>'."\n";
+
+	echo '<input id="ok" type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+    }
+
+
+?>

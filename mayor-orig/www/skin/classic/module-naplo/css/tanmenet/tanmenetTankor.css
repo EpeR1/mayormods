@@ -1,0 +1,76 @@
+
+
+
+    table.tanmenet { margin: 10px auto; background-color: rgb(25,50,100); border-spacing: 1px; }
+    table.tanmenet td, table.tanmenet th { padding: 4px; }
+    table.tanmenet th { background-color: #336; color: white; }
+    table.tanmenet tr td { background-color: rgb(210,220,230); }
+    table.tanmenet tr:nth-child(even) td { background: #eee; }
+    table.tanmenet tr:nth-child(odd) td { background: white; }
+    table.tanmenet td.nev { font-weight: bold; }
+    table.tanmenet td.tanmenet { text-align: left; }
+    table.tanmenet td.tanmenet div { text-align: right; padding:4px; }
+
+    table.tanmenet td.tanmenet select { max-width:800px; }
+
+    table.tanmenet tr.uj td { background-color: orange; }
+    table.tanmenet tr.kesz td.tanmenet { background-color: yellow; }
+    table.tanmenet tr.jovahagyott td { background-color: lightgreen; }
+    table.tanmenet tr.publikus td.tanmenet { background-color: cornflowerblue; }
+    table.tanmenet tr.elavult td.tanmenet { background-color: lightgray; }
+
+/*
+    table.tanmenet td.tanmenet select.uj { background-color: #8f8; }
+    table.tanmenet td.tanmenet select.kesz { background-color: #88f; }
+    table.tanmenet td.tanmenet select.jovahagyott { background-color: #f88; }
+    table.tanmenet td.tanmenet select.publikus { background-color: #ff8; }
+    table.tanmenet td.tanmenet select.elavult { background-color: lightgray; }
+
+    table.tanmenet td.tanmenet select option { background-color: white; }
+    table.tanmenet td.tanmenet select option.uj { color: green; }
+    table.tanmenet td.tanmenet select option.kesz { color: blue; }
+    table.tanmenet td.tanmenet select option.jovahagyott { color: red; }
+    table.tanmenet td.tanmenet select option.publikus { color: yellow; }
+    table.tanmenet td.tanmenet select option.elavult { color: gray; }
+*/
+    table.tanmenet td.tanmenet input.info {  }
+    table.tanmenet td.tanmenet input { }
+    table.tanmenet td.tanmenet input:hover { }
+
+    #infodiv { 
+	padding: 0px; margin: 0px 10%; width: 80%; height: 500px; position: absolute; top: 80px;
+	opacity: 1; background-color: #eeeeee; 
+	z-index: 200;
+	border: solid 1px #999999;
+	background-color: #eeeeee;
+    }
+
+    #infodivheader {
+
+	padding:5px;
+	margin-bottom:4px;
+	background-color: #5a85b8;
+	border-bottom: solid 1px #15477B ;
+	color: white;
+	font-weight: bold;
+	cursor: pointer;
+    }
+    #infodivclose { 
+	margin-right: 10px;
+	cursor: pointer; border: #822 solid 1px; padding: 2px 5px; background: #822; color: white; font-weight: bold; 
+	box-shadow: inset 0px -3px 1px rgba(0, 0, 0, 0.45), 0px 2px 2px rgba(0, 0, 0, 0.25); border-radius: 3px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
+    }
+    #infodiv fieldset {  margin-top:2px; background-color: #eeeeee; border: solid 1px rgb(50,60,70);}
+    #infodiv fieldset legend { text-align: right; background-color: yellow; margin:0px 10px; padding: 2px 10px; border: solid 1px rgb(40,60,80);  }
+
+    #inform {  overflow: scroll;  height: 460px;}
+/* border-color: rgb(130,30,20) rgb(110,20,15) rgb(90,10,10) rgb(150,40,25); outset*/
+    #inform fieldset.alapadatok p { text-align: center; font-style: italic; }
+    #inform fieldset.alapadatok p span { color: rgb(100,50,25); font-weight: bold; font-style: normal; }
+
+    #inform  #temakor { list-style-type: none; }
+    #inform #temakor li { margin-top: 10px; }
+    #inform #temakor span.oraszam { display: block; float: left; width: 120px; text-align: right; color: rgb(160,80,40); margin-right: 6px; }
+    #inform #temakor div.megnevezes { display: inline-block; font-style: normal; }
+
+    #inform p.kiemelt { text-align: center; margin-top: 100px; font-size: 20px; }

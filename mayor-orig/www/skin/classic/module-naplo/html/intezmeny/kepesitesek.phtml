@@ -1,0 +1,121 @@
+<?php
+
+    function putUjKepesites($ADAT) {
+
+	formBegin(array('class'=>'kepesites'));
+
+	    echo '<input type="hidden" name="action" value="ujKepesites" />';
+
+	    echo '<h2>Alapadatok</h2>';
+	    echo '<label for="kepesitesNev">Képesítés megnevezése:</label>';
+	    echo '<input type="text" name="kepesitesNev" id="kepesitesNev" value="" />';
+	    echo '<br />';
+
+	    echo '<label for="vegzettseg">Végzettség:</label>';
+    	    echo '<select name="vegzettseg" id="vegzettseg">';
+            foreach ($ADAT['vegzettsegek'] as $idx => $vegzettseg) {
+                echo '<option value="'.$vegzettseg.'">'.$vegzettseg.'</option>';
+	    }
+            echo '</select>';
+
+	    echo '<label for="fokozat">Fokozat:</label>';
+            echo '<select name="fokozat">';
+            foreach ($ADAT['fokozatok'] as $idx => $fokozat) {
+                echo '<option value="'.$fokozat.'">'.$fokozat.'</option>';
+	    }
+            echo '</select>';
+
+	    echo '<label for="specializacio">Specializáció</label>';
+            echo '<select name="specializacio">';
+            foreach ($ADAT['specializaciok'] as $idx => $specializacio) {
+                echo '<option value="'.$specializacio.'">'.$specializacio.'</option>';
+	    }
+            echo '</select>';
+	    echo '<input type="submit" value="Módosít" />';
+	    echo '<br />';
+
+	formEnd();
+
+    }
+
+    function putKepesitesAdat($ADAT) {
+
+	formBegin(array('class'=>'kepesites','id'=>'kepesitesForm'));
+
+	    echo '<input type="hidden" name="action" value="kepesitesModositas" />';
+	    echo '<input type="hidden" name="kepesitesId" value="'.$ADAT['kepesitesId'].'" />';
+
+	    echo '<h2>Alapadatok</h2>';
+	    echo '<label for="kepesitesNev">Képesítés megnevezése:</label>';
+	    echo '<input type="text" name="kepesitesNev" id="kepesitesNev" value="'.$ADAT['kepesitesAdat']['kepesitesNev'].'" />';
+	    echo '<br />';
+
+	    echo '<label>Képesités azonosítója:</label>'.$ADAT['kepesitesAdat']['kepesitesId'];
+	    echo '<label for="vegzettseg">Végzettség:</label>';
+    	    echo '<select name="vegzettseg" id="vegzettseg">';
+            foreach ($ADAT['vegzettsegek'] as $idx => $vegzettseg) {
+		$SEL = ($vegzettseg==$ADAT['kepesitesAdat']['vegzettseg']?' selected="selected" ':'');
+                echo '<option value="'.$vegzettseg.'"'.$SEL.'>'.$vegzettseg.'</option>';
+	    }
+            echo '</select>';
+
+	    echo '<label for="fokozat">Fokozat:</label>';
+            echo '<select name="fokozat">';
+            foreach ($ADAT['fokozatok'] as $idx => $fokozat) {
+		$SEL = ($fokozat==$ADAT['kepesitesAdat']['fokozat']?' selected="selected" ':'');
+                echo '<option value="'.$fokozat.'"'.$SEL.'>'.$fokozat.'</option>';
+	    }
+            echo '</select>';
+
+	    echo '<label for="specializacio">Specializáció</label>';
+            echo '<select name="specializacio">';
+            foreach ($ADAT['specializaciok'] as $idx => $specializacio) {
+		$SEL = ($specializacio==$ADAT['kepesitesAdat']['specializacio']?' selected="selected" ':'');
+                echo '<option value="'.$specializacio.'"'.$SEL.'>'.$specializacio.'</option>';
+	    }
+            echo '</select>';
+	    echo '<input type="submit" value="Módosít" />';
+	    echo '<br />';
+
+	    echo '<h2>Hozzárendelt tárgyak:</h2>';
+	    echo '<ul>';
+//	    foreach ($ADAT['kepesitesAdat']['targyak'] as $idx => $tAdat) {
+	    foreach ($ADAT['kepesitesAdat']['targyak'] as $idx => $tAdat) {
+		echo '<li>';
+		    echo $tAdat['targyNev'].' ('.$tAdat['targyId'].')';
+		    echo ' '.$tAdat['targyJelleg'];
+		    echo '<span id="delTargy-'.$tAdat['targyId'].'" data-kepesitesid="'.$ADAT['kepesitesId'].'" data-targyid="'.$tAdat['targyId'].'" class="icon-remove-circle delTargy"></span>';
+		echo '</li>';
+	    }
+	    echo '</ul>';
+	    echo '<select name="targyId">';
+	    echo '<option value=""> - </option>';
+	    foreach ($ADAT['targyak'] as $idx => $tAdat) {
+		echo '<option value="'.$tAdat['targyId'].'">'.$tAdat['targyNev'].' ('.$tAdat['targyId'].')</option>';
+	    }
+	    echo '</select>';
+	    echo '<input type="submit" value="Tárgy hozzárendelése" />';
+	    echo '<br />';
+
+	    echo '<h2>Hozzárendelt tanárok:</h2>';
+	    echo '<ul>';
+	    foreach ($ADAT['kepesitesAdat']['tanarok'] as $idx => $tAdat) {
+		echo '<li>'.$tAdat['tanarNev'].' ('.$tAdat['tanarId'].')<span id="delTanar-'.$tAdat['tanarId'].'" data-kepesitesid="'.$ADAT['kepesitesId'].'" data-tanarid="'.$tAdat['tanarId'].'" class="icon-remove-circle delTanar"></span></li>';
+	    }
+	    echo '</ul>';
+	    echo '<select name="tanarId">';
+	    echo '<option value=""> - </option>';
+	    foreach ($ADAT['tanarok'] as $idx => $tAdat) {
+		echo '<option value="'.$tAdat['tanarId'].'">'.$tAdat['tanarNev'].' ('.$tAdat['tanarId'].')</option>';
+	    }
+	    echo '</select>';
+	    echo '<input type="submit" value="Tanár hozzárendelése" />';
+	    echo '<br />';
+
+
+//dump($ADAT['kepesitesAdat']);
+	formEnd();
+
+    }
+
+?>

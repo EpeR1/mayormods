@@ -1,0 +1,198 @@
+<?php
+/*
+    function _egyOraMod() {
+	echo '<input type="text" value="test" />';
+    }
+    function _putOrarendHead($D) {
+	for ($i=0; $i<count($D); $i++) {
+            echo $D[$i]['str'].'<br/>';
+	}
+    }
+    function _putOrarendFoot($D) {
+	for ($i=0; $i<count($D); $i++) {
+            echo $D[$i]['str'].'<br/>';
+	}
+    }
+
+*/
+
+    function putOrarend($ADAT) {
+	global $aHetNapjai;
+
+
+//echo '<pre>';
+//var_dump($ADAT['orarend']['assoc']);
+//echo '</pre>';
+
+
+	if (is_array($ADAT['orarend']['assoc'])) {
+
+		$T = $ADAT['orarend']['assoc'];
+/*		echo '<h2 class="toPrint">'.$ADAT['toPrint'].'</h2>';
+		echo '<table class="orarend" align="center">'."\n";
+		echo '<thead>';
+		echo '<tr><th></th>';
+			for ($nap=1; $nap<=$ADAT['hetiMaxNap']; $nap++) {
+			$_th_class = ($ADAT['orarend']['napok'][$nap]['megjegyzes']=='') ? '': 'spec';
+			    echo '<th class="'.$_th_class.'">';
+				echo '<span title="'.$ADAT['orarend']['napok'][$nap]['dt'].'/'.$ADAT['orarend']['napok'][$nap]['het'].'">';
+				echo ($ADAT['orarend']['napok'][$nap]['megjegyzes']=='') ? $aHetNapjai[($nap-1)] : $ADAT['orarend']['napok'][$nap]['megjegyzes'];
+			    echo '</th>';
+			}		
+    		echo '</tr>';
+		echo '</thead>'."\n";
+
+		echo '<tbody>'."\n";
+//*/
+//		echo '<caption>'.$het.'. heti órarend</caption>';
+
+
+		// napok
+		for ($nap=1; $nap<=$ADAT['hetiMaxNap']; $nap++) {
+
+			$dt = $ADAT['orarend']['napok'][$nap]['dt'];
+			echo '<h1>'.$aHetNapjai[($nap-1)].' ('.$dt.') '.$ADAT['orarend']['napok'][$nap]['megjegyzes'].'</h1>';
+
+			echo '<ul title="órak">';
+			for($ora=$ADAT['napiMinOra']; $ora<=$ADAT['napiMaxOra']; $ora++) { 
+
+			    /* ha kell kiírni */
+			    if ( count($T[$nap][$ora]['orak'])>0 || is_array($ADAT['haladasi']['orak'][$dt][$ora])) {
+				echo '<li>'.$ora.'. óra'.'</li>';
+			    }
+
+				$het = 0;			    
+				$ORARENDI = array();
+				for($i=0; $i<count($T[$nap][$ora]['orak']); $i++) {
+				    $_T = $T[$nap][$ora]['orak'][$i];
+				    $ORARENDI[] = $_T['tankorId'];
+				    //
+				    $het = $_T['het'];
+				    $_ORA = $ADAT['haladasi']['orak'][$dt][$ora][$_T['tankorId']]; 
+				    $_valosTeremId = (is_null($_ORA['teremId']))? $_T['teremId']:$_ORA['teremId'];
+				    $_tankorTipus = $ADAT['tankorok'][$_T['tankorId']][0]['tankorTipus'];
+				    // Az órarendből a jelek:
+				    $_targyJel = $_T['targyJel'];
+				    $_osztalyJel = $_T['osztalyJel'];
+				    // figyelem, itt jön a kiírás, a _putOra fv helyett:
+				    $_tipusClass = str_replace(' ','_',$_ORA['tipus']);
+				    
+				    echo '<div class="'.$_tipusClass.'" title="'.$_ORA['tipus'].'" >';
+					$_teremKiir = ($_T['teremId'] != $_valosTeremId) ? '<del>'.$ADAT['termek'][$_T['teremId']]['leiras'].'</del><ins>'.$ADAT['termek'][$_valosTeremId]['leiras'].'</ins>' : $ADAT['termek'][$_T['teremId']]['leiras'];
+					$_ferohely = $ADAT['termek'][$_valosTeremId]['ferohely'];
+					$_letszam  = $ADAT['tankorLetszamok'][$_T['tankorId']];
+					if ($_T['tankorId']!='') {
+					    echo '<span title="'.$_targyJel.' '.$_osztalyJel.' ('.$ADAT['tankorok'][$_T['tankorId']][0]['tankorId'].') '.$_tankorTipus.'" >';
+					    echo $ADAT['tankorok'][$_T['tankorId']][0]['tankorNev'];
+					    echo '</span>';
+					} else {
+					    echo "$_targyjel : $_osztalyJel : ";
+					}
+					echo ', ';
+					echo '<span title="'.$_ferohely.'/'.$_letszam.'" class="t'.( ($_ferohely!=0 && $_ferohely<$_letszam) ? 0 : 1).'">'.$_teremKiir.'</span>';
+					echo '<br/>';
+					if ($_ORA['kit']!='') {
+					    echo '<span class="helyett">';
+					    echo $ADAT['tanarok'][$_T['tanarId']]['tanarNev'];
+					    echo '</span>';
+					    if ($_ORA['ki']!='') echo ' '.$ADAT['tanarok'][$_ORA['ki']]['tanarNev'];
+					} else {
+					    echo $ADAT['tanarok'][$_T['tanarId']]['tanarNev'];
+					}
+				    if ($_ORA['tipus']!='normál') echo ' '.$_ORA['tipus'];
+				    if (isset($_ORA['oo'])) echo ' &deg;'; // else tervezett
+				    if (in_array($_tankorTipus,array('délutáni','tanórán kívüli'))) echo ' &sup1';
+
+				    echo '</div>';
+				    if (count($T[$nap][$ora]['orak'])>$i+1) echo '<hr/>';
+				}
+				/* és ide jönnek a pluszok */
+				$j=0;
+				if (is_array($ADAT['haladasi']['orak'][$dt][$ora])) foreach ($ADAT['haladasi']['orak'][$dt][$ora] as $_tankorId => $__T) {
+				    if (!is_array($ORARENDI) || !in_array($_tankorId,$ORARENDI)) {
+					if ($j!=0) echo '<hr/>'; $j++;
+					$_ORA = $ADAT['haladasi']['orak'][$dt][$ora];
+					_putOra($_ORA,$_tankorId);
+				    }
+				}
+
+
+
+
+
+
+
+
+
+
+			} // $ora++
+			echo '</ul>';
+		} // $nap++
+
+
+
+
+	} else {
+	    putOrarendPlain($ADAT);
+	}
+
+
+    }
+
+    function putOrarendPlain($ADAT) {
+	if (is_array($ADAT['orarend']['orarendiOra'])) {
+	    foreach($ADAT['orarend']['orarendiOra'] as $het => $T) {
+		echo '<table class="orarend" align="center">'."\n";
+		echo '<caption>'.$het.'. heti órarend</caption>';
+		for($ora=$ADAT['napiMinOra']; $ora<=$ADAT['napiMaxOra']; $ora++) { // FIXME (getMinOra, getMaxOra konstansok!???)
+		    echo '<tr>';
+			echo '<th>'.$ora.'</th>';
+			for ($nap=1; $nap<=$ADAT['hetiMaxNap']; $nap++) { // FIXME (getMaxNap)
+			    echo '<td>';			    
+				    $X = $ADAT['orarend']['orarendiOra'][$het][$nap][$ora];
+				    
+				    for ($i=0; $i<count($X); $i++) {
+					echo '<div class="unfinished">';
+					echo $X[$i]['targyJel'].' : ';
+					echo $X[$i]['osztalyJel'].' : ';
+					echo $X[$i]['teremId'];
+					echo '</div>';
+				    }
+			    echo '</td>'."\n";
+			}
+		    echo '</tr>'."\n";
+		}
+		echo '</table>'."\n\n<!-- EOT -->\n\n";
+	    }
+	}
+    }
+
+    function _putOra($ORA,$_tankorId) {
+	    global $ADAT;
+	    if ($_tankorId=='') return false;
+	    $_ORA = $ORA[$_tankorId];
+	    $_tipusClass = str_replace(' ','_',$_ORA['tipus']);
+	    $_eredetClass = $_ORA['eredet'];
+	    echo '<div class="'.$_tipusClass.' '.$_eredetClass.'" title="'.$_ORA['tipus'].'" >';
+
+			echo '<span title="'.$_targyJel.' '.$_osztalyJel.' ('.$ADAT['tankorok'][$_T['tankorId']][0]['tankorId'].')" >';
+			echo $ADAT['tankorok'][$_ORA['tankorId']][0]['tankorNev'];
+			echo '</span>';
+
+			echo ', '.$ADAT['termek'][$_ORA['teremId']]['leiras'];
+
+			echo '<br/>';
+	
+			echo '<span class="helyett">';
+			echo $ADAT['tanarok'][$_T['tanarId']]['tanarNev'];
+			echo '</span>';
+			if ($_ORA['ki']!='') echo ' '.$ADAT['tanarok'][$_ORA['ki']]['tanarNev'];
+
+			if (isset($_ORA['oo'])) echo ' &deg;'; // else tervezett
+
+	    echo '</div>';
+
+    }
+
+
+?>

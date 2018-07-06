@@ -1,0 +1,6 @@
+?php
+    // site skin specific html head
+    $SSSHH = '';
+    //$SSSHH .= '<meta name="robots" content="index,follow" />'."\n";
+    //$SSSHH .= '<link rel="shortcut icon" href="/favicon.ico" />'."\n";
+?>

@@ -1,0 +1,1 @@
+ALTER TABLE osztalyNaplo MODIFY osztalyJel varchar(23) COLLATE utf8_hungarian_ci NOT NULL;

@@ -1,0 +1,71 @@
+
+    table.toolBar { width: 95%;	border-spacing: 0px; margin: 1em auto; }
+    table.toolBar form { margin: 0px; padding: 0px; }
+    table.toolBar tr.first td.toolBarTitle, table.toolBar tr.first td.toolBarTool { border: solid 1px #333333; }
+    table.toolBar td.gap { width: 50%; border-spacing: 0px; }
+    table.toolBar td.toolBarTitle {
+	background-color: white;
+	width: 100%;
+	font-size: 18px;
+	font-weight: bold;
+    }
+    #toolBarIntezmeny, #toolBarHelpButton {
+	display:none;
+    }
+
+    table.toolBar td.toolBarTool {
+	border: solid 1px #666699;
+	background-color: #666699;
+	margin: 0px;
+	padding: 0px;
+    }
+    table.toolBar td.toolBarTool table { border-spacing: 0px; width: 100%; }
+    table.toolBar td.toolBarTool table th {
+	background-color: rgb(90,133,184);
+	text-align: left;
+	color: white;
+
+        padding: 0px 0px 0px 4px;
+	border-color: rgb(21,71,123);
+	border-width: 1px 0px;
+	border-style: solid;
+    }
+    table.toolBar input.toolSubmit { vertical-align: middle; border: 0px none; }
+    table.toolBar td.toolBarTool select { border: 0px; }
+    table.toolBar th {
+	background-color: rgb(90,133,184);
+	text-align: center;
+	color: white;
+        padding: 0px 0px 0px 4px;
+
+	border-color: rgb(21,71,123);
+	border-width: 1px 0px 1px 1px;
+	border-style: solid;
+    }
+    table.toolBar img { border: none; }
+
+    table.toolBar table.hianyzasOsszegzo { width:100%;  }
+    table.toolBar table.hianyzasOsszegzo th {
+            text-align: center !important;
+            border-style: none none solid none;
+            border-color: #888888;
+            border-width: 0px 0px 1px 0px;
+            }
+    table.toolBar     table.hianyzasOsszegzo td { width: 18%; border-bottom: solid 1px rgb(60,80,100); background-color: #dddddd; text-align: center; }
+
+    form.lapozo input {	border: solid 1px #555555; }
+
+    table.flipper input {height: 38px; width: 16px; color: white; 
+	border-top: solid 1px black;
+	border-bottom: solid 1px black;
+	border-left: none;
+	border-right: none;
+	background-color: rgb(90,133,184); 
+    }
+    table.flipper input.step { background-color: rgb(100,100,60); }
+
+    div.beirasAdatok { text-align: center; }
+    div.beirasAdatok span { font-weight: bold; font-size: 20pt; vertical-align: middle; }
+    div.beirasAdatok img { vertical-align: middle; }
+
+    table.toolBar input {  }

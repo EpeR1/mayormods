@@ -1,0 +1,479 @@
+<?php
+
+    putTovabbkepzesNavi();
+    function putTovabbkepzesNavi() {
+
+	echo '<div id="tovabbkepzesNavi">';
+
+	    echo '<button type="button" data-nav="" class="icon-repeat-alt">'.'</button>';
+	    echo '<button type="button" data-nav="tovabbkepzesTerv">'._TOVABBKEPZES_TERV.'</button>';
+	    echo '<button type="button" data-nav="tanarTovabbkepzesek">'._TANAROK_TOVABBKEPZESEI.'</button>';
+	    echo '<button type="button" data-nav="tanarTovabbkepzesForduloDt">'._TANAR.'</button>';
+	    echo '<button type="button" data-nav="ujTovabbkepzes">'._TOVABBKEPZESEK.'</button>';
+
+	echo '</div>';
+
+    }
+
+    function putTovabbkepzesTerv($ADAT) {
+
+	if (count($ADAT['lehetsegesTovabbkepzesek'])==0) return false;
+
+	$TOVABBKEPZESEK = reindex($ADAT['tovabbkepzesek'],array('tovabbkepzesId'));
+	$TANAROK = reindex($ADAT['tanarok'],array('tanarId'));
+	$TE_STATUSZ = array('','terv','jóváhagyott','elutasított','megszűnt','megszakadt','teljesített');
+	$TE_STATUSZ_INDIKATOR = array(
+	    '' =>'<span class="icon-pause-alt" style="color:#777;"></span>',
+	    'terv' => '<span class="icon-ok-circle" style="color:cornflowerblue"></span>',
+	    'jóváhagyott' => '<span class="icon-ok-sign" style="color:green"></span>',
+	    'elutasított' => '<span class="icon-minus-sign" style="color:red"></span>',
+	    'megszakadt' => '<span class="icon-remove-sign" style="color:black"></span>',
+	    'megszűnt' => '<span class="icon-remove-sign" style="color:black"></span>',
+	    'teljesített' => '<span class="icon-star-alt" style="color:orange"></span>');
+
+	$TE = reindex($ADAT['tovabbkepzesTerv'],array('tovabbkepzesId','tanarId','tanev'));
+	formBegin(array('id'=>'tovabbkepzesTerv'));
+	    echo '<h1>';
+		echo _TOVABBKEPZES_TERV.' – '.$ADAT['tanev'];
+		if (__TANAR) echo ' – '._USERCN; 
+		if (__NAPLOADMIN || __VEZETOSEG || __TITKARSAG) echo ' – <a href="'.href('index.php?page=naplo&sub=nyomtatas&f=beiskolazasiTerv&tanev='.$ADAT['tanev']).'" class="icon-print" style="color:black"></a>';
+	    echo '</h1>';
+	    echo '<input type="hidden" name="action" value="ujTovabbkepzesTE" />';
+	    echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />';
+	    // Így is lehet, de inkább listázzuk ki az összes lehetséges továbbképzést
+	    /*
+	    echo '<select name="ujTovabbkepzesTanar">';
+	    for ($i=0;$i<count($ADAT['lehetsegesTovabbkepzesek']); $i++) {
+		$_D = $ADAT['lehetsegesTovabbkepzesek'][$i];
+		echo '<option value="'.$_D['tovabbkepzesId'].'_'.$_D['tanarId'].'">'.$TOVABBKEPZESEK[$_D['tovabbkepzesId']][0]['tovabbkepzesNev'].' '.$TANAROK[$_D['tanarId']][0]['tanarNev'].'</option>';
+	    }
+	    echo '</select>';
+	    */
+	    echo '<table align="center"	id="tovabbkepzesTerv" class="tovabbkepzes" cellspacing="1">';
+	    echo '<thead>';
+		echo '<tr>';
+		echo '<th colspan="3">'._TOVABBKEPZES.'</th>';
+		echo '<th>'._TOVABBKEPZES_FORDULO_DT.'</th>';
+		echo '<th>'._RESZOSSZEG.'</th>';
+		echo '<th>'._TAMOGATAS.'</th>';
+		echo '<th>'._MEGJEGYZES.'</th>';
+		echo '<th colspan="2">'._STATUSZ.'</th>';
+		echo '</tr>';
+	    echo '</thead>';
+	    if (__MODOSITHAT) {
+	      echo '<tfoot>';
+	      echo '<tr><th colspan="4">'._TAMOGATASI_KERET.': <input type="text" class="currency" id="keretOsszeg" name="keretOsszeg" value="'.intval($ADAT['keretOsszeg']).'" /> Ft.-</th>';
+		echo '<td class="osszeg"><input type="text" class="sumCurrency" id="sumOsszeg_ok" disabled="disabled" value="0" /> Ft.-</td>';
+		echo '<td class="osszeg"><input type="text" class="sumCurrency" id="sumTamogatas_ok" disabled="disabled" value="0" /> Ft.-</td>';
+		echo '<th colspan="1" id="tamogatasInfo"></th>';
+		echo '<th colspan="2"><input type="submit" value="OK" /></th>';
+	      echo '</th></tr></tfoot>';
+	    }
+	    echo '<tbody>';
+	    for ($i=0;$i<count($ADAT['lehetsegesTovabbkepzesek']); $i++) {
+		$_D = $ADAT['lehetsegesTovabbkepzesek'][$i];
+		$_D_TE = $TE[$_D['tovabbkepzesId']][$_D['tanarId']][$ADAT['tanev']][0];
+		$_kulcs = $_D['tovabbkepzesId'].'_'.$_D['tanarId'].'_'.$ADAT['tanev'];
+		$_readOnly = (isset($_D_TE) && !in_array($_D_TE['tovabbkepzesStatusz'],array('terv'))) ? 'readonly="readonly"' : '';
+		if (!__MODOSITHAT && (!(__TANAR && $_D['tanarId']==__USERTANARID))) continue;;
+		echo '<tr class="tovabbkepzesTESor '.$_D_TE['tovabbkepzesStatusz'].'" 
+		    data-reszosszeg="'.$_D_TE['reszosszeg'].'"
+		    data-tamogatas="'.$_D_TE['tamogatas'].'"
+		    data-tanarnev="'.$TANAROK[$_D['tanarId']][0]['tanarNev'].'"
+		>';
+		echo '<th>';
+		    echo '<input type="hidden" name="TE[]" value="'.$_kulcs.'" />';
+		    echo $TE_STATUSZ_INDIKATOR[$_D_TE["tovabbkepzesStatusz"]];
+		echo '</th>';
+		echo '<td>';
+		    echo $TOVABBKEPZESEK[$_D['tovabbkepzesId']][0]['tovabbkepzesNev'].' ';
+		echo '</td>';
+		echo '<td data-tanarid='.$_D['tanarId'].' class="tanarNev">'.$TANAROK[$_D['tanarId']][0]['tanarNev'].'</td>';
+
+		echo '<td>';
+		    echo $TANAROK[$_D['tanarId']][0]['tovabbkepzesForduloDt'];
+		echo '</td>';
+
+		echo '<td class="osszeg">';
+		    echo '<input type="text" '.$_readOnly.' class="currency" id="reszosszeg_'.$_kulcs.'" name="reszosszeg_'.$_kulcs.'" value="'.intval($_D_TE['reszosszeg']).'" data-inputtype="reszosszeg" data-kulcs="'.$_kulcs.'" data-tovabbkepzesstatusz="'.$_D_TE['tovabbkepzesStatusz'].'"  /> Ft.-';
+		echo '</td>';
+		echo '<td class="osszeg">';
+		    echo '<input type="text" '.$_readOnly.'  class="currency" id="tamogatas_'.$_kulcs.'" name="tamogatas_'.$_kulcs.'" value="'.intval($_D_TE['tamogatas']).'" data-inputtype="tamogatas" data-kulcs="'.$_kulcs.'" data-tovabbkepzesstatusz="'.$_D_TE['tovabbkepzesStatusz'].'" /> Ft.-';
+		echo '</td>';
+		/* más kontrollok is elképzelhetők, pl input gombok
+		echo '<td>';
+		    echo '<input type="submit" name="terv_'.$_kulcs.'" value="tervbe vesz" />';
+		    echo '<input type="submit" name="jovahagy_'.$_kulcs.'" value="jóváhagy" />';
+		    echo '<input type="submit" name="elutasit_'.$_kulcs.'" value="elutasít" />';
+		    echo '<input type="submit" name="megszuntet_'.$_kulcs.'" value="megszűntet" />';
+		echo '</td>';
+		*/
+		echo '<td style="text-align:center;">';
+		    echo '<span style="cursor:zoom-in; padding:0px 30px;" class="tovabbkepzesMegjegyzes icon-list-alt" data-kulcs="'.$_kulcs.'" data-tovabbkepzesid="'.$_D['tovabbkepzesId'].'" data-tanarid="'.$_D['tanarId'].'" data-tanev="'.$ADAT['tanev'].'" ></span>';
+		    echo '<div id="tovabbkepzesMegjegyzes_'.$_kulcs.'" style="display:none">';
+			echo '<table>';
+			echo '<tr><th>'._TAVOLLET.'</th><td><textarea style="display:none;" maxlength="254" cols="80" name="tavollet_'.$_kulcs.'">'.$_D_TE['tavollet'].'</textarea></td></tr>';
+			echo '<tr><th>'._HELYETTESITES_RENDJE.'</th><td><textarea style="display:none;" maxlength="254" cols="80" name="helyettesitesRendje_'.$_kulcs.'" />'.$_D_TE['helyettesitesRendje'].'</textarea></td></tr>';
+			echo '<tr><th>'._PRIORITAS.'</th><td><textarea style="display:none;" maxlength="254" cols="80" name="prioritas_'.$_kulcs.'">'.$_D_TE['prioritas'].'</textarea></td></tr>';
+			echo '</table>';
+		    echo '</div>';
+		echo '</td>';
+		echo '<td>';
+		    if (__MODOSITHAT===true) {
+			echo '<select name="TE_statusz_'.$_kulcs.'">';
+			for ($j=0; $j<count($TE_STATUSZ); $j++) {
+			    $_SEL = ($TE_STATUSZ[$j]==$_D_TE['tovabbkepzesStatusz']) ? 'selected="selected"':'';
+			    echo '<option name="'.$TE_STATUSZ[$j].'" '.$_SEL.'>'.$TE_STATUSZ[$j].'</option>';
+			}
+			echo '</select>';
+		    } else {
+			echo $_D_TE['tovabbkepzesStatusz'];
+		    }
+		echo '</td>';
+		echo '<th style="background-color:#888;">';
+		    //$_kulcs = $_D['tovabbkepzesId'].'_'.$_D['tanarId'].'_'.$ADAT['tanev'];
+		    echo '<a href="'.href('index.php?page=naplo&sub=nyomtatas&f=tovabbkepzesHatarozat&tanarId='.$_D['tanarId'].'&tanev='.$ADAT['tanev'].'&tovabbkepzesId='.$_D['tovabbkepzesId']).'" class="icon-print"  style="color:white;"></a>';
+		echo '</th>';
+
+		echo '</tr>'."\n";
+	    }
+	    echo '</tbody>';
+	    echo '</table>';
+	    // extra: jovahagyasDt, teljesitesDt
+
+	    if (count($ADAT['lehetsegesTovabbkepzesek'])>0) {
+		echo '<div id="grafikonTamogatas" style="width: 300px; height: 300px; display:table-cell"></div>';
+		echo '<div id="grafikonOsszegEloszlas" style="width: 550px; height: 300px; display:table-cell"></div>';
+		echo '<div style="clear:both"></div>';
+	    }
+
+	formEnd();
+
+    }
+
+    function putTanarokTovabbkepzesAdatai($ADAT) {
+
+//	$tovabbkepzesStatusz = array('terv','jóváhagyott','elutasított','megszűnt','megszakadt','teljesített');
+	$tovabbkepzesStatusz = array('teljesített','jóváhagyott','terv');
+
+	formBegin(array('id'=>'tanarTovabbkepzesForduloDt'));
+	    echo '<input type="hidden" name="action" value="modTanarTovabbkepzesForduloDt" />';
+	    echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />';
+	    echo '<table align="center"	id="tanarAdatok" class="tovabbkepzes" cellspacing="1">';
+	    echo '<thead>';
+		echo '<tr>';
+		echo '<th colspan="1">';
+		    _inlineHelp('A teljesített, jóváhagyott és tervezett továbbképzések összegét a státuszaiknak megfelelő színnel jelezzük az aktuális hét éves ciklusban. A nem akkreditált képzésnél maximum 30 órát számítunk!');
+		echo '</th>';
+		echo '<th colspan="3">'._TANAR.' ';
+		    _inlineHelp('A táblázatban a tanárokra vonatkozó státuszok olvashatók. Ha egy tanár továbbképzés forduló dátuma a következő két évben várható és nem éri el a 120 órányi továbbképzést, figyelmeztető felkiáltó jellel jelezzük.');
+		echo '</th>';
+		echo '<th>'._HETI_KOTELEZO_ORASZAM.'</th>';
+		echo '<th>'._HETI_MUNKAORA.'</th>';
+		echo '<th>'._STATUSZ.'</th>';
+		echo '<th>';
+		    _inlineHelp('A hétéves ciklus végének számít.');
+		    echo ' '._TOVABBKEPZES_FORDULO_DT.' ';
+		echo '</th>';
+		echo '</tr>';
+	    echo '</thead>';
+	    echo '<tfoot>';
+	    echo '<tr>';
+		echo '<th colspan="8"><input type="submit" value="OK" /></th>';
+	    echo '</th></tr></tfoot>';
+	    echo '<tbody>';
+	    for ($i=0;$i<count($ADAT['tanarok']); $i++) {
+		$_D = $ADAT['tanarok'][$i];
+		$_TTC = $ADAT['tanarTovabbkepzesCiklus'][$_D['tanarId']];
+		$_forduloEv = date('Y',strtotime($_D['tovabbkepzesForduloDt']));
+		$_timeframeAlert = ($_forduloEv<=date('Y')+2);
+		$_evdiff = ($_forduloEv-date('Y'));
+		$_sum = 0;
+		$_class = ($_timeframeAlert) ? 'alert':'';
+		echo '<tr>';
+		    echo '<th class="tovabbkepzesCiklus '.$_class.'" ';
+			foreach($tovabbkepzesStatusz as $_status) {
+			    echo 'data-'.$_status.'="'.$_TTC[$_status][0]['sumOraszam'].'" ';
+			}
+		    echo '>';
+			echo '<div>';
+			    foreach($tovabbkepzesStatusz as $_status) {
+				if (($_c = intval($_TTC[$_status][0]['sumOraszam']))>0)
+				    echo '<span title="'.$_status.'" class="'.ekezettelen($_status).'" style="width:'.$_c.'px">'.$_c.'</span>';
+				$_sum += $_c;
+			    }
+			echo '</div>';
+			echo '<span class="forduloEv left">'.($_forduloEv-8).'/'.($_forduloEv-7).'</span>';
+			echo '<span class="forduloEv right">'.($_forduloEv-1).'/'.($_forduloEv).'</span>';
+		    echo '</th>';
+		    echo '<th>';
+			if ($_timeframeAlert) {
+			    if ($_sum<120) {
+				if ($_evdiff>=0) $_class='alert'.$_evdiff;
+				else $_class='alert';
+				echo '<span class="icon-warning-sign '.$_class.'"></span>';
+			    } else {
+				echo '<span class="icon-ok kesz"></span>';
+			    }
+			} else {
+			    if (is_array($ADAT['tovabbkepzesFolyamat'][$_D['tanarId']]))
+				echo '<span class="icon-play folyamatban"></span>';
+			    else 
+				echo '<span class="icon-pause varakozik"></span>';
+			}
+		    echo '</th>';
+		    echo '<td class="oraszam">';
+			echo $_sum;
+		    echo '</td>';
+		    echo '<td class="tanarNev" data-tanarid="'.$_D['tanarId'].'">'.$_D['tanarNev'].'</td>';
+		    echo '<td class="oraszam">'.$_D['hetiKotelezoOraszam'].'</td>';
+		    echo '<td class="oraszam">'.$_D['hetiMunkaora'].'</td>';
+		    echo '<td>'.$_D['statusz'].'</td>';
+		    echo '<td>';
+			echo '<select "tovabbkepzesForduloDt_'.$_D['tanarId'].'" data-tanarid="'.$_D['tanarId'].'" >';
+			    echo '<option value=""></option>';
+			    for ($y=1990;$y<=2030;$y++) {
+				$_SEL = ($y==date('Y',strtotime($_D['tovabbkepzesForduloDt']))) ? ' selected="selected" ':'';
+				echo '<option value="'.$y.'-08-31" '.$_SEL.'>'.$y.'</option>';
+			    }
+			echo '</select>';
+			echo '<input type="text" class="datum" name="tovabbkepzesForduloDtTXT_'.$_D['tanarId'].'" value="'.$_D['tovabbkepzesForduloDt'].'" data-tanarid="'.$_D['tanarId'].'" readonly="readonly" />';
+		    echo '</td>';
+		echo '</tr>';
+	    }
+	    echo '</tbody>';
+	    echo '</table>';
+	formEnd();
+
+    }
+
+
+    function putTovabbkepzesek($ADAT) {
+	/* tovabbkepzesTanar:
+	`tovabbkepzesId` smallint(5) unsigned NOT NULL,
+	`tanarId` int(10) unsigned NOT NULL,
+	`tolDt` date NOT NULL,
+	`igDt` date DEFAULT NULL,
+	`tanusitvanyDt` date DEFAULT NULL,
+	`tanusitvanySzam` varchar(255) COLLATE utf8_hungarian_ci DEFAULT NULL,
+	*/
+	if (count($ADAT['tovabbkepzesek'])==0) return false;
+
+	$TOVABBKEPZESEK = reindex($ADAT['tovabbkepzesek'],array('tovabbkepzesId'));
+	$TANAROK = reindex($ADAT['tanarok'],array('tanarId'));
+
+
+	/* Listázzuk a továbbképzések hozzárendelését egy tanárhoz, illetve új hozzárendelést is tehessünk */
+
+	formBegin(array('id'=>'tanarTovabbkepzesek'));
+	    echo '<h1>'._TANAROK_TOVABBKEPZESEI.'</h1>';
+	    echo '<input type="hidden" name="action" value="ujTovabbkepzesTanar" />';
+	    echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />';
+	    // legyen itt egy táblázat
+	    echo '<table class="tovabbkepzes" align="center" cellspacing="1">';
+	    echo '<thead>';
+		echo '<tr>';
+		echo '<th>'.'</th>';
+		echo '<th>'._TANAR.'</th>';
+		echo '<th colspan="2">'._TOVABBKEPZES.'</th>';
+		echo '<th>'._TOLDT.'</th>';
+		echo '<th>'._IGDT.'</th>';
+		echo '<th>'._TANUSITVANYDT.'</th>';
+		echo '<th>'._TANUSITVANYSZAM.'</th>';
+		echo '<th>'.'</th>';
+		echo '</tr>';
+	    echo '</thead>';
+	    if (__MODOSITHAT) { // a táblázat első sora egy inputokból álló sor
+	      echo '<tfoot>';
+		echo '<tr><th colspan="10">';
+		    echo '<input type="submit" value="OK" />';
+		echo '</tr>';
+	      echo '</tfoot>';
+	      echo '<tbody>';
+	      echo '<tr>';
+		echo '<th><span class="icon-pencil-alt"></span></th>';
+		echo '<td>';
+		    echo '<select style="width:120px" name="tanarId">';
+			echo '<option value=""></option>';
+			for ($i=0;$i<count($ADAT['tanarok']); $i++) {
+			    $_D = $ADAT['tanarok'][$i];
+			    echo '<option value="'.$_D['tanarId'].'">'.$_D['tanarNev'].'</option>';
+			}
+		    echo '</select>';
+		echo '</td>';
+		echo '<td colspan="2">';
+		    echo '<select name="tovabbkepzesId" class="tovabbkepzesNev">';
+			echo '<option value=""></option>';
+			for ($i=0;$i<count($ADAT['tovabbkepzesek']); $i++) {
+			    $_D = $ADAT['tovabbkepzesek'][$i];
+			    echo '<option value="'.$_D['tovabbkepzesId'].'">'.$_D['tovabbkepzesNev'].' '.$_D['oraszam'].'ó</option>';
+			}
+		    echo '</select>';
+		echo '</td>';
+
+		echo '<td><input type="text" class="datum date" name="tolDt" /></td>';
+		echo '<td><input type="text" class="datum date" name="igDt" /></td>';
+		echo '<td><!--<input type="text" class="datum date" name="tanusitvanyDt" />--></td>';
+		echo '<td><!--<input type="text" class="" name="tanusitvanySzam" />--></td>';
+		echo '<th><input type="submit" value="+" /></th>';
+	      echo '</tr>';
+	      echo '</tbody>';
+	    } // módosíthat
+	    echo '<tbody>';
+	    for ($i=0;$i<count($ADAT['tovabbkepzesTanar']);$i++) {
+		$_D = $ADAT['tovabbkepzesTanar'][$i];
+		$_kulcs = $_D['tovabbkepzesId'].'_'.$_D['tanarId'];
+		$_readonly = ($_D['tanusitvanyDt']!='0000-00-00' && $_D['tanusitvanyDt']!='') ? ' readonly="readonly" ':'';
+		echo '<tr class="tovabbkepzesTanarSor" 
+		    data-oraszam="'.intval($TOVABBKEPZESEK[$_D['tovabbkepzesId']][0]['oraszam']).'" 
+		    data-tanarnev="'.$TANAROK[$_D['tanarId']][0]['tanarNev'].'" 
+		    data-toldt="'.$_D['tolDt'].'" 
+		    data-igdt="'.$_D['igDt'].'">';
+		echo '<td>';
+		    echo $_D['tovabbkepzesId'];
+		    echo '<input type="hidden" name="tovabbkepzesTanar[]" value="'.$_kulcs.'" />';
+		echo '</td>';
+		echo '<td class="tanarNev" data-tanarid="'.$_D['tanarId'].'"  >'.$TANAROK[$_D['tanarId']][0]['tanarNev'].'</td>';
+		echo '<td>'.$TOVABBKEPZESEK[$_D['tovabbkepzesId']][0]['tovabbkepzesNev'].'</td>';
+		echo '<td style="text-align:right;">'.$TOVABBKEPZESEK[$_D['tovabbkepzesId']][0]['oraszam'].'</td>';
+		echo '<td><input type="text" class="date" '.$_readonly.' name="tolDt_'.$_kulcs.'" value="'.$_D['tolDt'].'" /></td>';
+		echo '<td><input type="text" class="date" '.$_readonly.' name="igDt_'.$_kulcs.'" value="'.$_D['igDt'].'" /></td>';
+		echo '<td><input type="text" class="date" name="tanusitvanyDt_'.$_kulcs.'" value="'.$_D['tanusitvanyDt'].'" /></td>';
+		echo '<td><input type="text" class="" name="tanusitvanySzam_'.$_kulcs.'" value="'.$_D['tanusitvanySzam'].'" /></td>';
+		echo '<th>';
+		    if (__MODOSITHAT) echo '<input type="submit" class="" name="tovabbkepzesTorles_'.$_kulcs.'" value="-" />';
+		echo '</th>';
+		echo '</tr>';
+		if ($_D['tolDt']!='0000-00-00' && $_D['tolDt']!='') $dbSor++;	
+	    }
+	    echo '</tbody>';
+	    echo '</table>';
+
+	    if (($dbSor)>0) { // esettleg darabszám alapjn növelhetjük a méretet
+		if ($dbSor<20) $_height=40*$dbSor + 70;
+		else $_height = 600;
+    		echo "<div id=\"timeline\" style=\"height: ".$_height."px; width:95%; margin:40px;\"></div>";
+	    } 
+	    //echo '<div class="separator"></div>';
+	formEnd();
+
+    }
+
+    function putUjTovabbkepzes($ADAT) {
+
+	$KAT = array('diploma','szakvizsga','akkreditált','egyéb');
+
+	echo '<div id="ujTovabbkepzes">';
+	echo '<h1>'._TOVABBKEPZESEK.'</h1>';
+
+	formBegin();
+	    echo '<h2>'._UJ_TOVABBKEPZES.'</h2>';
+	    echo '<input type="hidden" name="action" value="ujTovabbkepzes" />';
+	    echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />';
+
+	    echo '<table>';
+
+		echo '<tfoot><tr>';
+		echo '<th colspan="2">'.'<input type="submit" value="OK" /></th>';
+		echo '</tr></tfoot>';
+
+	    echo '<tbody>';
+	    echo '<tr>';
+	    echo '<th>';
+		echo _INTEZMENY;
+	    echo '</th>';
+	    echo '<td>';
+	    echo '<select name="tovabbkepzoIntezmenyId">';
+		echo '<option value=""></option>';
+		for ($i=0; $i<count($ADAT['tovabbkepzoIntezmenyek']); $i++) { 
+		    $_D = $ADAT['tovabbkepzoIntezmenyek'][$i];
+		    echo '<option value="'.$_D['tovabbkepzoIntezmenyId'].'">'.$_D['intezmenyRovidNev'].'-'.$_D['intezmenyNev'].'</option>';
+		}
+	    echo '</select> ';
+	    //_inlineHelp(_TOVABBPEZOINTEZMENY_HELP);
+	    echo ' <span class="icon-plus-sign ujIntezmeny"></span>';
+//		_inlineHelp(_TOVABBPEZOINTEZMENY_HELP);
+
+	    echo '</td></tr>';
+	    echo '<tr>';
+	    echo '<th>'._TOVABBKEPZES_NEV.'</th>';
+	    echo '<td><input type="text" name="tovabbkepzesNev" style="width:350px;"/></td>';
+
+	    echo '</tr>';
+	    echo '<tr>';
+	    echo '<th>'._ORASZAM.'</th>';
+	    echo '<td>'.'<input type="text" name="oraszam" /></td>';
+
+	    echo '</tr>';
+	    echo '<tr>';
+	    echo '<th>'._AKKREDITALT.'</th>';
+	    echo '<td>';
+		    // '<input type="checkbox" name="akkreditalt" value="1" />';
+		    echo '<select name="kategoria_'.$_kulcs.'">';
+		    for ($j=0;$j<count($KAT); $j++) {
+			echo '<option value="'.$KAT[$j].'">'.$KAT[$j].'</option>';
+		    }
+		    echo '</select>';
+	    echo '</td>';
+	    echo '</tr>';
+	    echo '</tbody>';
+	    echo '</table>';
+
+	formEnd();
+
+
+	if (count($ADAT['tovabbkepzesek'])>0) {
+
+	formBegin(array('id'=>'tovabbkepzesek'));
+	    echo '<h2>'._FELVETT_TOVABBKEPZESEK.'</h2>';
+	    echo '<input type="hidden" name="action" value="modTovabbkepzes" />';
+	    echo '<table align="center" class="tovabbkepzes" cellspacing="1">';
+	    echo '<thead><tr>';
+		echo '<th>'._TOVABBKEPZES_NEV.'</th>';
+		echo '<th>'._ORASZAM.'</th>';
+		echo '<th>'._AKKREDITALT.'</th>';
+		echo '<th>'._INTEZMENY.'</th>';
+		echo '<th></th>';
+	    echo '</tr></thead>';
+	    echo '<tbody>';
+	    for ($i=0; $i<count($ADAT['tovabbkepzesek']); $i++) {
+		$_D = $ADAT['tovabbkepzesek'][$i];
+		$_kulcs = $_D['tovabbkepzesId'];
+		echo '<tr>';
+		echo '<td>';
+		    echo '<input type="hidden" name="tovabbkepzesId[]"  value="'.$_D['tovabbkepzesId'].'" />';
+		    echo '<input style="width:100%" type="text" name="tovabbkepzesNev_'.$_kulcs.'" value="'.$_D['tovabbkepzesNev'].'"/>';
+		echo '</td>';
+		echo '<td class="oraszam">';
+		    echo '<input type="text" name="oraszam_'.$_kulcs.'" value="'.$_D['oraszam'].'" / > óra';
+		echo '</td>';
+		echo '<td>';
+		    //echo '<input type="checkbox" name="akkreditalt_'.$_kulcs'" value="" /> '; 
+		    echo '<select name="kategoria_'.$_kulcs.'">';
+		    for ($j=0;$j<count($KAT); $j++) {
+			$_SEL = ($KAT[$j]==$_D['kategoria']) ? ' selected="selected" ':'';
+			echo '<option name="'.$KAT[$j].'" '.$_SEL.'>'.$KAT[$j].'</option>';
+		    }
+		    echo '</select>';
+		    if ($_D['akkreditalt']==1) echo ' '._AKKREDITALT;
+		echo '</td>';
+		echo '<td>';
+		    echo $_D['intezmenyRovidNev'];
+		    echo ' ('.$_D['tovabbkepzoIntezmenyId'].')';
+		echo '</td>';
+
+		echo '<td>';
+		    echo '<input type="submit" value="OK" />';
+		echo '</td>';
+		echo '</tr>';
+	    }
+	    echo '</tbody>';
+	    echo '</table>';
+	    formEnd();
+	}
+
+	echo '</div>';
+
+    }
+
+?>

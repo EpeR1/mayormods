@@ -1,0 +1,6 @@
+
+    form.szemeszter { color: white; background-color: rgb(80,100,70); padding: 10px; margin: 10px; text-align: center; }
+    form.szemeszter h2 { background-color: rgb(40,50,35); }
+    form.szemeszter table {  }
+    form.szemeszter tr td { background-color: rgb(100,50,50); margin: 1px; padding: 4px; text-align: left; }
+    form.szemeszter tr td input { border: solid rgb(100,50,50); }

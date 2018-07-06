@@ -1,0 +1,139 @@
+<?php
+/*
+    Module: naplo
+    Last-rev: 2011.01.
+    Description:
+	minden jegye jelenjen meg az adott képzés évfolyamain.
+	eldöntendő: egy tárgy jegyét melyik képzésen kapta?
+*/
+
+die('HIBA');
+
+    function putDiakTanulmanyiElomenetel($diakId, $ADAT) {
+
+	global $Honapok, $KOVETELMENY, $bizonyitvanyMegjegyzesek;
+
+	$kepzesId = $ADAT['kepzesId'];
+	for ($i=0; $i<count($ADAT['diakKepzes']); $i++) {
+	    if ($kepzesId == $ADAT['diakKepzes'][$i]['kepzesId'] || $kepzesId=='') {
+		$KEPZ = $ADAT['diakKepzes'][$i];
+		$kepzesId = $ADAT['diakKepzes'][$i]['kepzesId']; // felülírjuk, ha nincs megadva
+	    }
+	}
+
+	if (!is_array($KEPZ)) return false;
+
+	$colspan=1;
+	for ($e=$KEPZ['kezdoEvfolyam']; $e<=($KEPZ['zaroEvfolyam']); $e++) $colspan++; 
+
+	echo '<table class="tanuloBizonyitvany" align="center" cellpadding="0" cellspacing="0" >'."\n";
+	echo '<thead>';
+	    echo '<tr>';
+		echo '<th class="nev" colspan="'.$colspan.'">'.$ADAT['diakAdat']['viseltNevElotag'].' '.$ADAT['diakAdat']['viseltCsaladinev'].' '.$ADAT['diakAdat']['viseltUtonev'].'</th>';
+	    echo '</tr>';
+	    if (is_array($ADAT['diakKepzes'])) {
+ 		echo '<tr>';
+		echo '<th class="nev" colspan="'.$colspan.'">';
+		    foreach($ADAT['diakKepzes'] as $index => $kepzesAdat) {
+			echo '<span title="['.$kepzesAdat['kepzesId'].']v'.$kepzesAdat['tanev'].' '.$kepzesAdat['kezdoEvfolyam'].'-'.$kepzesAdat['zaroEvfolyam'].'">'.$kepzesAdat['kepzesNev'].'</span>';
+			if ($i++>0) echo ' ';
+		    }
+		echo '</th>';
+		echo '</tr>';
+	    }
+	    echo '<tr class="evf">';
+		echo '<th rowspan="1">'._EVFOLYAM.'</th>';
+//	    echo '</tr>';
+//	    echo '<tr class="evf">';
+		    for ($evfolyam=$KEPZ['kezdoEvfolyam']; $evfolyam<=($KEPZ['zaroEvfolyam']); $evfolyam++) 
+			echo '<th>'.$evfolyam.'</th>';
+	    echo '</tr>';
+	echo '</thead>';
+
+	echo '<tfoot>';
+	    echo '<tr>';
+		echo '<th colspan="'.$colspan.'">';
+		    echo $ADAT['intezmeny']['cimHelyseg'].', ';
+		    $ho = date('m');
+		    echo date('Y').'. '.kisbetus($Honapok[--$ho]).' '.date('d').'.';
+		echo '</th>';
+	    echo '</tr>';
+	echo '</tfoot>';
+
+	echo '<tbody class="hideShowContainer">';
+
+	    foreach ($ADAT['targyak'] as $targyId => $targyAdat) {
+		$TARGYORATERV = $ADAT['kepzesOraterv'][$kepzesId][$targyId];
+		if (is_array($TARGYORATERV)) $mutat = 'óratervi';
+		elseif (is_array($ADAT['zaroJegy'][$diakId][$targyId])) $mutat = 'nem óratervi'; /* mégis van-e ilyen zárójegye? ekkor ez nem óratervi */
+		else $mutat = false;
+		if ($mutat!==false) {
+		    echo '<tr>';
+		    echo '<th>';
+			$_title = $targyAdat['targyJelleg'].' ['.$targyId.']';
+			$_targyJelleg = ($targyAdat['targyJelleg']!='' && $targyAdat['targyJelleg']!=$ADAT['targyak'][$targyId]['targyNev'])?'<br/>('.$targyAdat['targyJelleg'].')':'';
+			echo '<span title="'.$_title.'">'.$ADAT['targyak'][$targyId]['targyNev'].$_targyJelleg.'</span>';
+		    echo '</th>';
+		    /* Bizonyítvány kiírás */
+		    for ($evfolyam=$KEPZ['kezdoEvfolyam']; $evfolyam<=($KEPZ['zaroEvfolyam']); $evfolyam++) {
+			$_teljesitendo = ($TARGYORATERV[$evfolyam][1]['kovetelmeny']!='' || $TARGYORATERV[$evfolyam][2]['hetiOraszam']!='');
+			$_class = ($_teljesitendo===true) ? 'biz' : '';
+			$_class .= ($mutat == 'nem óratervi' && is_array($ADAT['zaroJegy'][$diakId][$targyId][$evfolyam])) ? ' nbiz' : '';
+			$_class .= (is_array($ADAT['zaroJegy'][$diakId][$targyId][$evfolyam])) ? ' vanjegy':'';
+
+			echo '<td class="'.$_class.'">';
+		    	    if (is_array($ADAT['zaroJegy'][$diakId][$targyId][$evfolyam])) {
+			    foreach( $ADAT['zaroJegy'][$diakId][$targyId][$evfolyam] as $szemeszter => $zaroJegyek ) {
+				$_jegyAdat = $zaroJegyek;
+				for ($j=0; $j<count($_jegyAdat); $j++) {
+				    if ( count($ADAT['zaroJegy'][$diakId][$targyId][$evfolyam][1])>=1 &&  count($ADAT['zaroJegy'][$diakId][$targyId][$evfolyam][2])==0) 
+					$csakFelevi=true;
+				    else
+					$csakFelevi=false;
+				    $jegyAdat = $_jegyAdat[$j];    
+				    $_targyOraterv = $TARGYORATERV[$jegyAdat['evfolyam']][$jegyAdat['szemeszter']];
+				    $_title = $jegyAdat['evfolyam'].'. évfolyam';
+				    $_elsofelev = ($szemeszter==1 && !$csakFelevi) ? ' class="openable szem1" style="display:none;" ' : '' ;
+				    if ($_targyOraterv['kovetelmeny'] != $jegyAdat['jegyTipus']) $_title .= ' nem óraterv szerinti';				    
+				    echo '<span title="'.$_title.'" '.$_elsofelev.' >';
+					//echo $jegyAdat['szemeszter'].'.';
+					if ($csakFelevi) echo '<span title="félévi osztályzat!">[';
+	    				echo $KOVETELMENY[$jegyAdat['jegyTipus']][$jegyAdat['jegy']]['hivatalos'].'&nbsp;'.$bizonyitvanyMegjegyzesek[$jegyAdat['megjegyzes']];
+					if ($csakFelevi) echo ']</span>';
+				    echo '</span>';
+
+				    /* Ha ez vizsga volt???
+				    if (is_array($ADAT['zaroJegyVizsga'][$jegyAdat['zaroJegyId']])) {
+					$_kiir = '('.$ADAT['zaroJegyVizsga'][$jegyAdat['zaroJegyId']]['tipus'].', évfolyam:'.$ADAT['zaroJegyVizsga'][$jegyAdat['zaroJegyId']]['evfolyam'].')- '.($ADAT['zaroJegyVizsga'][$jegyAdat['zaroJegyId']]['szoveg']);
+					echo '<span title="'.$_kiir.'">&ordm;</span>';
+					$MEGJ[] = $_kiir;
+				    }*/
+				}
+				$_kiir = '';
+				if ($j+1 < count($_jegyAdat)) echo '<br/>';
+			    }
+			  } else {
+			    if ($TARGYORATERV[$evfolyam][2]['hetiOraszam']!='') echo '-';
+			  }
+			echo '</td>';
+		    }
+		    /* ------------------ */
+		    echo '</tr>';
+		}
+	    }
+	    echo '<tr><th colspan="'.$colspan.'">';
+		echo '<input type="button" class="onClickHideShow" value="Minden félévet mutass!" />';
+	    echo '</th></tr>';
+
+	echo '</tbody>';
+//	if (count($MEGJ)>0) { 
+//	    echo '<tbody><tr><th colspan="'.$colspan.'">';
+		//foreach ($MEGJ as $megj) echo $megj;
+//		echo '<input type="button" class="onClickHideShow" value="mindet mutat" />';
+//	    echo '</th></tr></tbody>';
+//	}	
+	echo '</table>'."\n";
+
+    }
+
+?>

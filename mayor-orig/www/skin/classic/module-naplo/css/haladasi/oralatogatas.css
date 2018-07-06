@@ -1,0 +1,12 @@
+
+    ul.ora { list-style-type: none; color: white; margin: 20px; padding: 0px; }
+    ul.ora li { background-color: rgb(130,100,130); margin: 1px 0px; padding: 0px; }
+    ul.ora li p { background-color: rgb(60,0,60); border: 1px solid white; border-width: 0px 0px 1px 0px; padding: 10px; text-align: center; }
+    ul.ora li p span.ora { float: left; color: yellow; }
+    ul.ora li p input { margin: 0px; float: right; }
+    ul.ora li select { height: 100px; }
+    ul.ora li textarea { width: 80%; height: 100px; }
+    ul.ora li div { padding: 4px; }
+    ul.ora li div.jobb { float: right; }
+    
+    ul.ora li form.latogatva { background-color: rgb(100,130,100); }

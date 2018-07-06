@@ -1,0 +1,102 @@
+<?php
+
+    function esemenyNevsor($ADAT) {
+
+	$DIS = (__MODOSITHAT)?'':' disabled="disabled" ';
+        formBegin(array('method'=>'post','action'=>'','class'=>'nevsor','id'=>'nevsorForm'));
+
+	echo '<input type="hidden" name="action" value="nevsorModositas" />'."\n";
+	echo '<input type="hidden" name="esemenyId" value="'.$ADAT['esemenyId'].'" />'."\n";
+	echo '<input type="hidden" name="postDiakId" value="semmi" id="postDiakId" />'."\n";
+
+        echo '<h2>Jelentkezők</h2>';
+
+	echo '<table id="kontener">'."\n";
+	echo '<tr>'."\n";
+	    echo '<th>'._NEVSOR.' '; if (__MODOSITHAT) _inlineHelp(_SUGO_NEVSOR); echo '</th>';
+	    if (__MODOSITHAT) {
+		echo '<th>'._OSZTALYOK.' '; _inlineHelp(_SUGO_OSZTALYOK); echo '</th>'."\n";
+		echo '<th>'._DIAKOK.' '; _inlineHelp(_SUGO_DIAKOK); echo '</th>'."\n";
+	    }
+	echo '</tr>';
+	echo '<tr><td>';
+
+    	    echo '<table class="nevsor" id="nevsor">'."\n";
+	    echo '<thead>'."\n";
+	    echo '<tr>'."\n";
+		echo '<th colspan="2"></th>'."\n";
+		echo '<th colspan="2">'._NEV.'</th>'."\n";
+		echo '<th>'._JELENTKEZES.'</th>'."\n";
+		echo '<th colspan="2">'._JOVAHAGYAS.'</th>'."\n";
+	    echo '</tr>'."\n";
+	    echo '</thead>';
+
+	    echo '<tbody>'."\n";
+    	    foreach ($ADAT['esemenyAdat']['diakok'] as $dAdat) {
+		$_osztalyJel = $ADAT['osztalyId2osztalyJel'][ $ADAT['diak2osztaly'][ $dAdat['diakId'] ]];
+
+        	echo '<tr class="'.str_replace('.','',$_osztalyJel).'">'."\n";
+        	echo '<td class="sorsz">'.(++$i).'.</td>'."\n";
+		echo '<td><span class="icon-remove-sign" title="'._DIAK_TOROL_E.' ('.$dAdat['diakNev'].')"><input type="hidden" name="diakId" value="'.$dAdat['diakId'].'" /></span></td>'."\n";
+        	echo '<td class="nev">'.$dAdat['diakNev'].' ('.$dAdat['diakId'].')</td>'."\n";
+		echo '<td class="osztaly">'.$_osztalyJel.'</td>'."\n";
+        	echo '<td class="jelDt">'.$dAdat['jelentkezesDt'].'</td>'."\n";
+        	if ($dAdat['jovahagyasDt'] != '0000-00-00 00:00:00') {
+		    echo '<td class="jovahagy" title="'._ELUTASIT.'"><span class="icon-ok-sign"></span></td>'."\n";
+		    echo '<td class="jovDt">'.$dAdat['jovahagyasDt'].'</td>'."\n";
+		} else {
+		    echo '<td class="jovahagy" title="'._JOVAHAGY.'"><span class="icon-minus-sign"></span></td>'."\n";
+		    echo '<td class="jovDt"></td>'."\n";
+        	}
+		echo '</tr>'."\n";
+    	    }
+	    echo '</tbody>'."\n";
+
+	    if (__MODOSITHAT === true) {
+	    echo '<tfoot>'."\n";
+	    echo '<tr id="submitRow">';
+		echo '<td colspan="6">'."\n";
+		echo '<input type="submit" value="'._OK.'" />'."\n";
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+	    echo '</tfoor>'."\n";
+	    }
+
+    	    echo '</table>'."\n";
+
+	echo '</td>'."\n";
+
+	if (__MODOSITHAT) {
+	echo '<td id="osztalyok">';
+        foreach ($ADAT['osztalyok'] as $oAdat) {
+            if (in_array($oAdat['osztalyId'], $ADAT['esemenyAdat']['osztalyIds'])) {
+                echo '<input type="button" class="plusz" id="showO'.$oAdat['osztalyId'].'" value="'.$oAdat['osztalyJel'].' ('.$oAdat['osztalyId'].') &#10140;" /><br />';
+            }
+        }
+	echo '</td>';
+	}
+
+	if (__MODOSITHAT) {
+            echo '<td class="openable" id="oEmpty">';
+	    echo '<select name="odiak" class="diakok" multiple="multiple">';
+	    echo '</select>';
+            echo '</td>';
+	}
+        foreach ($ADAT['esemenyAdat']['osztalyIds'] as $osztalyId) {
+            echo '<td style="display: none;" class="openable" id="o'.$osztalyId.'">';
+	    echo '<select name="odiak" class="diakok" id="od'.$osztalyId.'" multiple="multiple">';
+            foreach ($ADAT['diakok'][$osztalyId] as $dAdat) {
+                echo '<option value="'.$dAdat['diakId'].'">'.$dAdat['diakNev'].' ('.$dAdat['diakId'].')</option>';
+            }
+	    echo '</select>';
+	    echo '<input type="button" class="add" value="&#8678;" />'."\n";
+            echo '</td>';
+        }
+	echo '</tr></table>';
+
+        formEnd();
+
+    }
+
+
+?>

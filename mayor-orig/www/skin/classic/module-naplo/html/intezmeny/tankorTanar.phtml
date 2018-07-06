@@ -1,0 +1,103 @@
+<?php
+
+    function putTankorTanarForm($ADAT) {
+    
+	    if (!isset($ADAT['tankorok'])) return false;
+    
+	    formBegin(array('method'=>'post', 'id'=>'tankorTanarAssoc', 'class'=>'tankor', 'action'=>''));
+	   
+	    //echo '<h2>'._TANTARGYFELOSZTAS.'</h2>';
+		   
+	    echo '<input type="hidden" name="action" value="tankorTanarAssoc" />'."\n";
+	    echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";	   
+	    echo '<input type="hidden" name="mkId" value="'.$ADAT['mkId'].'" />'."\n";	   
+	    echo '<input type="hidden" name="refDt" value="'.$ADAT['refDt'].'" />'."\n";	   
+	    echo '<input type="hidden" name="tankorId" value="'.$ADAT['tankorId'].'" />'."\n";	   
+#	    echo '<input type="hidden" name="kiDt" value="'.$ADAT['kiDt'].'" />'."\n";	   
+	    
+	    echo '<table class="felosztas">';
+	    echo '<tr><th>'._TANKOR.'</th><th>'._ORASZAM.'</th><th>'._AKTUALIS_TANAR.'<th colspan="1">'._VALASZTOTT_TANAR.'</th><th>'._IDOSZAK.'</th></tr>'."\n";
+	    echo '<tr>';
+	    for($i = 0; $i < count($ADAT['tankorok']); $i++) {
+		$_D = $ADAT['tankorok'][$i];
+		echo '<tr>';
+		echo '<td>';
+		    echo '<a href="'.href('index.php?page=naplo&sub=intezmeny&f=tankorTanar&tankorId='.$_D['tankorId'].'&mkId='.$ADAT['mkId'].'&refDt='.$ADAT['refDt'].'&tanev='.$ADAT['tanev']).'">';
+		    echo $_D['tankorNev']. ' ('.$_D['tankorId'].')';
+		    echo '</a>'."\n";
+		echo '</td>';	
+		echo '<td>';
+		    echo '<a href="'.href('index.php?page=naplo&sub=intezmeny&f=tankor&tankorId='.$_D['tankorId']).'">';
+		    echo sprintf('%01.1f',$_D['oraszam']);
+		    echo '</a>';
+		echo '</td>';
+		echo '<td>';
+		    echo '<ul>';
+		    for($j = 0; $j < count($_D['tanarok']); $j++) {
+			echo '<li>';
+			echo $_D['tanarok'][$j]['tanarNev'];
+			echo '</li>'."\n";
+		    }
+//		    for ($j=0; $j<count($ADAT['tankorTanarok'][$_D['tankorId']]); $j++) {
+//			echo '<li>';
+//			    echo $ADAT['tankorTanarok'][$_D['tankorId']][$j]['tanarNev'];
+//			    echo ' ('.$ADAT['tankorTanarok'][$_D['tankorId']][$j]['minBeDt'].'--';
+//			    echo $ADAT['tankorTanarok'][$_D['tankorId']][$j]['maxKiDt'].')';
+//			echo '</li>';
+//		    }
+		    echo '</ul>';
+		echo '</td>';	
+		// -- ELEJE nem jó, ha sok tankör adatait együtt módosítjuk! --
+		if (count($ADAT['tankorok']) == 1) {
+		echo '<td>';
+		    echo '<input type="hidden" name="tankorok[]" value="'.$_D['tankorId'].'" />';
+		    _putTanarSelect('TA'.$_D['tankorId'], $ADAT['tanarok'], $_D['tanarok']);
+		echo '</td>';
+		echo '<td>';
+		    echo '<ul>';
+		    for ($j=0; $j<count($ADAT['tankorTanarBejegyzesek'][$_D['tankorId']]); $j++) {
+			$_kulcs = $_D['tankorId'].'|'.$ADAT['tankorTanarBejegyzesek'][$_D['tankorId']][$j]['tanarId'].'|'.$ADAT['tankorTanarBejegyzesek'][$_D['tankorId']][$j]['beDt'].'|'.$ADAT['tankorTanarBejegyzesek'][$_D['tankorId']][$j]['kiDt']; // tankorId|tanarId|beDt|kiDt
+			echo '<li>';
+			    echo $ADAT['tankorTanarBejegyzesek'][$_D['tankorId']][$j]['tanarNev'];
+			    echo ': '.str_replace('-','.',$ADAT['tankorTanarBejegyzesek'][$_D['tankorId']][$j]['beDt']).'. &ndash; ';
+			    if ($ADAT['tankorTanarBejegyzesek'][$_D['tankorId']][$j]['kiDt']=='') {
+				echo '<a href="'.href('index.php?page=naplo&sub=intezmeny&f=tankorTanar&action=tankorTanarJavit&kuuk='.$ADAT['kuuk'].'&tankorId='.$_D['tankorId'].'&tt='.$_kulcs).'"><span class="icon-wrench-alt"></span></a>';
+			    } else {
+				echo str_replace('-','.',$ADAT['tankorTanarBejegyzesek'][$_D['tankorId']][$j]['kiDt']).'.';
+			    }
+			    echo '<a href="'.href('index.php?page=naplo&sub=intezmeny&f=tankorTanar&action=tankorTanarTorol&kuuk='.$ADAT['kuuk'].'&tankorId='.$_D['tankorId'].'&tt='.$_kulcs).'"><span class="icon-remove-circle"></span></a>';
+			echo '</li>';
+		    }
+		    echo '</ul>';
+		echo '</td>';
+		}
+		// -- VÉGE nem jó, ha sok tankör adatait együtt módosítjuk! --
+		echo '</tr>';
+	    }
+	    echo '</table>';
+	    // -- ELEJE nem jó, ha sok tankör adatait együtt módosítjuk! --
+	    if (count($ADAT['tankorok']) == 1) {
+		echo '<label for="igDt">'.$ADAT['refDt'].' - </label><input class="date" type="text" id="igDt" name="igDt" value="" /> ';
+		echo '<input type="submit" id="tankortanarassoc" value="   '._OK.'   " />';
+	    }
+	    // -- VÉGE nem jó, ha sok tankör adatait együtt módosítjuk! --
+	    formEnd();
+
+    }
+
+    function _putTanarSelect($name, $TANAROK, $TANITOK) {
+	for ($i = 0; $i < count($TANITOK); $i++) {
+	    $TAN[] = $TANITOK[$i]['tanarId'];
+	    $_class = "vantanara";
+	}
+	echo '<select name="'.$name.'[]" multiple="multiple" size="10" class="'.$_class.'">';
+	    echo '<option value=""> - </option>';
+	    for ($i = 0; $i < count($TANAROK); $i++) {
+		$_SEL = (is_array($TAN) && in_array($TANAROK[$i]['tanarId'], $TAN)) ? ' selected="selected" ' : '';
+		echo '<option value="'.$TANAROK[$i]['tanarId'].'"'.$_SEL.'>'.$TANAROK[$i]['tanarNev'].'</option>';
+	    }
+	echo '</select>';
+
+    }
+
+?>

@@ -1,0 +1,218 @@
+%!pdfLaTeXA4 pdf
+%
+% Törzslap - Év végi szöveges értékelés
+%
+\documentclass[10pt]{article}
+
+%%%\usepackage[a4paper, top=10mm, bottom=20mm, left=25mm, right=25mm]{geometry} % A4-os méret
+\usepackage[paperwidth=210mm, paperheight=297mm, top=10mm, bottom=20mm, left=10mm, right=10mm]{geometry} % A4-os méret
+\usepackage[utf8x]{inputenc} % UTF-8 kódolású forrás (ucs)
+\usepackage{ucs} % Jobb UTF-8 támogatás
+\usepackage{t1enc}
+\usepackage[magyar]{babel} % magyar elválasztási szabályok
+\usepackage{tabularx}
+\usepackage{booktabs} % táblázatok magasabb szintű formázása
+\usepackage{enumitem} % formázható felsorolások, pl bal margó....
+\usepackage{multirow}
+\usepackage{ifthen}
+\newcolumntype{N}{@{}m{0pt}@{}} % Lezáró oszlop típus
+\frenchspacing % a magyar tipográfiai szabályoknak megfelelő szóközök írásjelek után
+\usepackage{fancyhdr} % Ritkítás
+\pagestyle{empty}
+\def\mayor{%
+\font\mayorfnt=cmsl4%
+\font\Mayorfnt=cmsl6
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footnotesize}{\fontsize{6pt}{8pt}\selectfont}
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{}\rfoot{}
+\lfoot{\rule{2cm}{0.1pt}\\ \footnotesize\copyright\mayor\ elektronikus napló (2014.10.26)}
+%% Az osztási maradék meghatározása
+\newcounter{modulus}
+\makeatletter
+\newcommand\modulo[2]{\@tempcnta=#1
+        \divide\@tempcnta by #2
+        \multiply\@tempcnta by #2
+        \multiply\@tempcnta by -1
+        \advance\@tempcnta by #1\relax
+        \setcounter{modulus}{\@tempcnta}
+        %%%\the\@tempcnta  %% nem kell kiírni - eltároltuk a modulus nevű counterbe inkább...
+}
+\makeatother
+
+\begin{document}
+
+%{diak
+
+\modulo{\value{page}}{2}\ifthenelse{\equal{\value{modulus}}{1}}{}{\hbox{}\newpage}
+\thispagestyle{empty}
+
+%%
+%% Személyi adatok táblázata %%
+%%
+%%% A méretek: \noindent\rule{32mm}{1mm}\rule{28mm}{0.1mm}\rule{28mm}{1mm}\rule{32mm}{0.1mm}\rule{70mm}{1mm}
+%%% A méretek: 32|28|28|32|70
+
+\begin{table}[ht]
+\begin{tabular}{|m{27.6mm} @{\hspace{2.2mm}\vline} p{56mm}@{\vline}p{29.8mm}|p{67mm} N |}
+
+\hline
+\centering\multirow{3}{*}{A tanuló}
+&\multirow{2}{56mm}{
+\begin{tabular}{ @{} p{26mm} @{\vline\hspace{1.6mm}} p{26mm} @{} }
+Törzslapszáma:&Osztálynapló \newline sorszáma:\\
+\centering\sffamily %$torzslapszam&\centering\sffamily %$diakNaploSorszam
+\end{tabular}
+}&\hspace{2.2mm}Tanév, évfolyam:&Állampolgársága:\newline &\\
+&&\hspace{2.2mm}\centering\sffamily %$tanevJele, %$evfolyamJel. évf.&\centering\sffamily %$allampolgarsag&\\
+
+\hline
+családi és&\centering\multirow{2}{*}{\sffamily\large %$diakNev}&\multicolumn{2}{l}{Anyja születési neve:}&\\
+utóneve&&\multicolumn{2}{@{}p{101mm}@{}}{\centering\sffamily %$anyaNev}&\\
+
+\hline
+\multirow{2}{*}{azonosító száma}
+&\centering\multirow{2}{*}{\sffamily\large %$oktatasiAzonosito}
+&\multicolumn{2}{|l}{Feljegyzések személyi adatok változásához:}
+&\\
+
+&
+&\multicolumn{2}{l}{
+\multirow{2}{90mm}{\newline
+\sffamily
+%$feljegyzesek
+}}
+&\\
+
+\cline{1-2}
+
+\multirow{4}{*}{születési helye}
+&\multirow{2}{*}{\hspace{2mm}\sffamily %$szuletesiHely}\hfill város\ \hspace{0mm}
+&\multicolumn{2}{l}{}
+&\\
+
+&\hfill község\ \hspace{0mm}
+&\multicolumn{2}{l}{}
+&\\
+
+\cline{2-2}
+
+&\multirow{2}{*}{\hspace{2mm}\sffamily %$szuletesiOrszag}\hfill \multirow{2}{*}{ország}\ \hspace{0mm}
+&\multicolumn{2}{l}{}
+&\\
+
+&
+&\multicolumn{2}{l}{}
+&\\
+
+\cline{1-2}
+
+\multirow{2}{*}{születési ideje}
+&\centering\multirow{2}{*}{\sffamily %$szuletesiIdo}
+&\multicolumn{2}{l}{}
+&
+\\
+
+
+&
+&\multicolumn{2}{l}{
+}
+&\\
+
+\hline
+
+\end{tabular}
+
+\end{table}
+
+
+%%
+%% Jegyek
+%%
+%%\small
+\centering
+\begin{tabular}{|@{\ \ }m{6cm}|>{\raggedleft\arraybackslash}m{4cm}@{\ \ }|@{}m{0pt}@{}}
+%?magatartas|\hline |%?
+%?magatartas|magatartás & \emph{%$magatartas}&\\[16pt]|%?
+%?magatartas|\hline |%?
+%?szorgalom|szorgalom & \emph{%$szorgalom}&\\[16pt]|%?
+%?szorgalom|\hline\hline |%?
+
+%{osztalyzatTargy
+%$targyNev & \emph{%$hivatalos}& \\[10pt]%% %$mJel kivéve
+\hline
+%}osztalyzatTargy
+\end{tabular}
+
+
+\begin{tabular}{|@{\ \ }m{3cm}|>{\raggedleft\arraybackslash}m{7cm}@{\ \ }|@{}m{0pt}@{}}
+\multicolumn{2}{c}{\bfseries mulasztott órák száma} &\\[10pt]
+\hline
+igazolt&{\sl %$igazolt}& \\[10pt]
+\hline
+igazolatlan&{\sl\ %$osszesIgazolatlan}& \\[10pt]
+\hline
+\multicolumn{2}{r}{\sl %$igazolatlan igazolatlan tanóra + %$kesesPercOsszeg perc késés} &\\[10pt]
+\end{tabular}
+%%%\centering
+
+
+%%
+%% Szöveges értékelés
+%%
+%\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+%\thispagestyle{fancy}%%%%\vspace*{8pt}
+%\rfoot{\footnotesize \rule{0cm}{0.1pt} \\ %$osztaly - %$diakNev}
+
+
+%?szovegesErtekeles|{\vspace*{12pt}\small\noindent A tanuló teljesítményének, magatartásának, szorgalmának szöveges minősítése:}| %?
+
+{\vspace{6pt}\scriptsize\raggedright
+%{targy
+{\vspace{5pt}\noindent\bfseries %$targyNev}
+\nopagebreak[4]%%
+\begin{description}[font=\mdseries\itshape, parsep=0pt, partopsep=0pt, topsep=0pt, leftmargin=4.5cm, style=nextline, itemsep=0pt, labelindent=\parindent]
+\nopagebreak[4]%%
+%{szempont
+\item[%$szempont]
+%{minosites
+%?elsoValasztott|%$minosites|%?%?tobbedikValasztott|, %$minosites|%?%%
+%}minosites
+%?egyediMinosites|\par{%$egyediMinosites}|%?%%
+\nopagebreak[4]%%
+%}szempont
+\end{description}
+%}targy
+
+%%
+%% Hiányzások - kell ez?
+%%
+%%%%{\vspace{6pt}\noindent\bfseries Hiányzások:}
+%%%%
+%%%%Igazolt/igazolatlan: %$igazolt/%$osszesIgazolatlan (%$igazolatlan tanóra + %$kesesPercOsszeg perc késés)
+%%%%
+}
+%%scriptsize vége
+
+{\raggedright
+{\vspace{6pt}\noindent\bfseries Bejegyzések:}
+
+%$bejegyzesek
+
+}%%raggedright vége
+
+{\raggedright
+{\vspace{6pt}\noindent\bfseries Záradékok:}
+
+%$zaradekok
+
+%$zaroZaradek
+}%%raggedright vége
+
+
+\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+
+%}diak
+
+\end{document}

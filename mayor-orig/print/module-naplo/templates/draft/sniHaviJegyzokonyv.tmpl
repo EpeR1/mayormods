@@ -1,0 +1,73 @@
+
+Nyomtatás dátuma: %$nyomtatasDt
+Dátzm: %$ev-%$honap-%$nap (%$hoNev)
+
+Intézmény neve: %$intezmenyNev
+Intézmény címe: %$intezmenyCimIrsz %$intezmenyCimHelyseg, %$intezmenyCimKozteruletNev %$intezmenyCimKozteruletJelleg %$intezmenyCimHazszam
+Intézmény telefon/fax: %$intezmenyTelefon / %$intezmenyFax
+Intézmény honlap/email: %$intezmenyHonlap / %$intezmenyEmail
+
+Osztály: %$osztaly
+
+%{diak
+    diakId: %$diakId
+    oktatási azonosító: %$oId
+    diákigazolvány szám: %$diakigazolvanySzam
+    TAJ: %$tajSzam
+    adoazóazonosító: %$adoazonosito
+    szemelyiIgazolvanySzam: %$szemelyiIgazolvanySzam
+    tartozkodasiOkiratSzam: %$tartozkodasiOkiratSzam
+    viseltNevElotag: %$viseltNevElotag
+    viseltCsaladinev: %$viseltCsaladinev
+    viseltUtonev: %$viseltUtonev
+    Diák teljes neve: %$diakNev
+    szuleteskoriNevElotag:
+    szuleteskoriCsaladinev
+    szuleteskoriUtonev
+    szuletesiHely
+    szuletesiIdo
+    nem
+    allampolgarsag
+    lakhelyOrszag
+    lakhelyHelyseg
+    lakhelyIrsz
+    lakhelyKozteruletNev
+    lakhelyKozteruletJelleg
+    lakhelyHazszam
+    lakhelyEmelet
+    lakhelyAjto
+    jogviszonyKezdete
+    jogviszonyVege
+    telefon
+    mobil
+    email
+    statusz
+    penzugyiStatusz
+    szocialisHelyzet
+    fogyatekossag
+    gondozasiSzam
+    elozoIskolaOMKod
+    kollegista
+    külső info: %$kulsoInfo
+    dátum: %$dt
+    gyengeségek: %$gyengesegek
+    erősségek: %$erossegek
+    célok: %$celok
+    fejlesztési feladatok: %$fejlesztesiFeladatok
+    eszközök / módszerek: %$eszkozokModszerek
+    ütemezés: %$utemezes
+    értekelés: %$ertekeles
+    eredmény: %$eredmeny
+    valtozás: %$valtozas
+    felelős: 
+%{felelos
+	Név: %$tanarNev
+%}felelos
+
+    ==========================
+%}diak
+
+Az osztály tanárai:
+%{osztalyTanar
+    %?paros|+ %$tanarNev|- %$tanarNev&&%?
+%}osztalyTanar

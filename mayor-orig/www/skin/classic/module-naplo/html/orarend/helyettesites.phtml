@@ -1,0 +1,90 @@
+<?php
+    
+    function putHelyettesitesTablazat($ADAT) {
+
+	if (count($ADAT['orak']['indexed'])==0) return false;
+
+	$TANAROK = $ADAT['tanarok'];
+	$TANKOROK = $ADAT['tankorok'];
+	echo '<h1 style="text-align: center">'.'</h1>';
+	// -----------------------------------------------
+	// FEJLÉC
+	// -----------------------------------------------
+	    echo '<p><table align="center" class="helyettesitesek" >';
+	    echo '<thead>'."\n";
+	    echo '<tr >';
+	    echo '<th colspan="5">Az órarendihez képest változó óra</th>';
+	    echo '<th rowspan="2">A helyettesítés<br />jellege</th>';
+	    echo '<th rowspan="2" style="background-color: #88aaa0">';
+		//echo '<a href="index.php?page=naplo&sub=orarend&f=helyettesit&dt='.$dt.'&lang='.$lang.'&order=3">';
+		echo 'Az órát tartó<br />tanár neve';
+		//if ($orderid==3) echo '<img src="/hu/img/start/arrow-down.jpg" alt="rendezés" />';
+		//echo '</a>';
+	    echo '</th>';
+	    echo '</tr>';
+	    echo '<tr style="background-color: #99aab0;">';
+	    echo '<th>óra</th>';
+	    echo '<th>';
+		//echo '<a href="index.php?page=naplo&sub=orarend&f=helyettesit&dt='.$dt.'&lang='.$lang.'&order=1">';
+		echo 'osztály';
+		//if ($orderid==1) echo '<img src="/hu/img/start/arrow-down.jpg" alt="rendezés" />';
+		//echo '</a>';
+	    echo '</th>';
+	    echo '<th>tantárgy</th>';
+	    echo '<th>';
+		//echo '<a href="index.php?page=naplo&sub=orarend&f=helyettesit&dt='.$dt.'&lang='.$lang.'&order=2">';
+		echo 'hiányzó';
+		//if ($orderid==2) echo '<img src="/hu/img/start/arrow-down.jpg" alt="rendezés" />';
+		//echo '</a>';
+	    echo '</th>';
+	    echo '<th>terem</th>';
+	    echo '</tr>';
+	    echo '</thead>';
+	    echo '<tfoot>';
+	    echo '<tr><th colspan="7">'.date('Y-m-d H:i:s').'</th></tr>';
+	    echo '</tfoot>';
+	//----------------------------------------------------------
+	echo '<tbody>';
+	for($i=0; $i<count($ADAT['orak']['indexed']); $i++) {
+	    $sor = $ADAT['orak']['indexed'][$i];
+	    if ($sor['tipus']=='összevonás') {
+		$_kidn= $sor['ki'];
+		$_dt  = $sor['dt'];
+		$_ora = $sor['ora'];
+	    } else {
+	    }
+	    // hack out ki=kit saját magával összevont óra!
+	    if ($sor['ki'] != $sor['kit'] && $sor['feladatTipusId']=='') {
+    		echo '<tr class="'.$sor['eredet'].'">';
+		echo '<td align="center">'.$sor['ora'].'.</td>';
+		echo '<td align="center" colspan="2" >'.$TANKOROK[$sor['tankorId']]['tankorNev'].'&nbsp;&nbsp;</td>';
+		echo '<td >&nbsp;'.$TANAROK[$sor['kit']]['tanarNev'].'</td>';
+		echo '<td align="center">'.$ADAT['termek'][$sor['teremId']]['leiras'].'</td>';
+		echo '<td align="center">';
+		if ($sor['eredet']=='plusz')
+		    if (in_array($sor['tipus'],array('elmarad','elmarad máskor')))
+			echo 'elmarad (plusz)';
+		    else
+			echo 'megtartva (plusz) '.$sor['tipus'];
+		else
+		    echo $sor['tipus'];
+		echo '</td>';
+		if ($sor['ki'] == '') {
+		    echo '<th height="35">-</th>';
+		} else {
+		    echo '<td height="35">';
+			echo '&nbsp;'.$TANAROK[$sor['ki']]['tanarNev'];
+			if ($sor['terem']!=$_terem) echo ' ('.$_terem.')';
+		    echo '</td>';
+		}
+		echo '</tr>';
+	    } // end of hackout
+
+	}
+	echo '</tbody>';
+	echo '</table>';
+
+    }
+
+
+?>

@@ -1,0 +1,62 @@
+<?php
+
+    function putDiakTanarLista($ADAT) {
+
+	echo '<table class="lista">'."\n";
+
+	echo '<thead>'."\n";
+	echo '<tr>'."\n";
+	    echo '<th>'._DIAK.' ('.count($ADAT['diak']).' '._FO.')</th>';
+	    echo '<th>'._OSZTALY.'</th>';
+	    echo '<th>'._TANAR.'</th>';
+	echo '</tr>'."\n";
+	echo '</thead>'."\n";
+
+	$db = 0;
+	for ($i = 0; $i < count($ADAT['diak']); $i++) {
+
+	    $diakId = $ADAT['diak'][$i]['diakId'];
+	    $tanarNev = array();
+	    for ($j = 0; $j < count($ADAT['diak'][$i]['tankorIds']); $j++) {
+		$tankorId = $ADAT['diak'][$i]['tankorIds'][$j];
+		for ($k = 0; $k < count($ADAT['tankorTanar'][$tankorId]); $k++) {
+
+		    if (!in_array($ADAT['tankorTanar'][$tankorId][$k]['tanarNev'], $tanarNev))
+			$tanarNev[] = $ADAT['tankorTanar'][$tankorId][$k]['tanarNev'];
+		}
+	    }
+
+	    if (count($tanarNev) > 0) {
+		$db++;
+		echo '<tr>'."\n";
+		echo '<td class="nev">'.$db.'. '.$ADAT['diak'][$i]['diakNev'].'</td>'."\n";
+		echo '<td class="osztaly">'.$ADAT['osztaly'][ $ADAT['diak'][$i]['osztalyId'] ]['osztalyJel'].'</td>'."\n";
+	    
+		echo '<td class="tanar">';
+		echo (count($tanarNev) == 0) ? '-' : implode(', ', $tanarNev);
+		echo '</td>'."\n";
+		echo '</tr>'."\n";
+	    }
+	}
+	echo '</table>'."\n";
+
+    }
+
+    function putOsztalyValaszto($ADAT) {
+
+	formBegin(array('class'=>'osztaly'));
+	echo '<input type="hidden" name="action" value="osztalyValasztas" />'."\n";
+	echo '<input type="hidden" name="targyId" value="'.$ADAT['targyId'].'" />'."\n";
+	foreach ($ADAT['osztaly'] as $osztalyId => $oAdat) {
+	    $CHK = (in_array($osztalyId, $ADAT['osztalyId']))?' checked="checked"':'';
+	    echo '<input type="checkbox" id="osztaly'.$osztalyId.'" name="osztalyIds[]" value="'.$osztalyId.'"'.$CHK.' />'."\n";
+	    echo '<label for="osztaly'.$osztalyId.'">'.$oAdat['osztalyJel'].'</label>'."\n";
+	}
+
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+
+    }
+
+?>

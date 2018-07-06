@@ -1,0 +1,133 @@
+<?php
+
+    function putOktoberiStatisztika($ADAT) {
+
+	putStat_a04t17($ADAT);
+	putStat_a04t79($ADAT);
+	putStat_a04t83($ADAT);
+
+    }
+    function putSTat_a04t79($ADAT) {
+	$stat = 'a04t79';
+	$D = $ADAT[$stat];
+
+	echo '<div class="oktstatszam">'.$stat.'</div>';
+	echo 'nem kompatibilis nézet'; //--TODO: a tábláazt pont fordítva van!
+
+	if (is_array($ADAT['osszes'][0])) {
+	    //if (!is_array($ADAT['osszes'][0])) return false;
+
+	    $KEYS = array_keys($ADAT['osszes'][0]);
+
+	    echo '<table class="info" align="center">';
+	    echo '<thead>';
+	    echo '<tr><th colspan="'.count($KEYS).'">Összes</th></tr>'."\n";
+	    echo '<tr>';
+        	for($i=0; $i<count($KEYS); $i++) {
+        	    echo '<th>'.$KEYS[$i].'</th>';
+		}
+	    echo '</tr>';
+	    echo '</thead>';
+	    echo '<tfoot>';
+	    echo '<tr>';
+        	for($i=0; $i<count($KEYS); $i++) {
+        	    echo '<th>'.$KEYS[$i].'</th>';
+		}
+	    echo '</tr>';
+	    echo '</tfoot>';
+	    echo '<tbody>';
+	    for ($j=0;$j<count($ADAT['osszes']); $j++) {
+		echo '<tr>';
+        	    for($i=0; $i<count($KEYS); $i++) {
+        		echo '<td>'.$ADAT['osszes'][$j][$KEYS[$i]].'</td>';
+		    }
+		echo '</tr>';
+	    }
+	    echo '</tbody>';
+
+	    echo '</table>';
+
+	}
+
+	if (is_array($ADAT['tankoteles'][0])) {
+	    //if (!is_array($ADAT['tankoteles'][0])) return false;
+
+	    $KEYS = array_keys($ADAT['tankoteles'][0]);
+
+	    echo '<table class="info" align="center">';
+	    echo '<thead>';
+	    echo '<tr><th colspan="'.count($KEYS).'">Tanköteles</th></tr>'."\n";
+	    echo '<tr>';
+        	for($i=0; $i<count($KEYS); $i++) {
+        	    echo '<th>'.$KEYS[$i].'</th>';
+		}
+	    echo '</tr>';
+	    echo '</thead>';
+	    echo '<tfoot>';
+	    echo '<tr>';
+        	for($i=0; $i<count($KEYS); $i++) {
+        	    echo '<th>'.$KEYS[$i].'</th>';
+		}
+	    echo '</tr>';
+	    echo '</tfoot>';
+	    echo '<tbody>';
+	    for ($j=0;$j<count($ADAT['tankoteles']); $j++) {
+		echo '<tr>';
+        	    for($i=0; $i<count($KEYS); $i++) {
+        		echo '<td>'.$ADAT['tankoteles'][$j][$KEYS[$i]].'</td>';
+		    }
+		echo '</tr>';
+	    }
+	    echo '</tbody>';
+
+	    echo '</table>';
+
+	}
+
+    }
+
+
+    function putStat_a04t17($ADAT) {
+
+	$stat = 'a04t17';
+	$D = $ADAT[$stat];
+	echo '<div class="oktstatszam">'.$stat.'</div>';
+
+	echo 'Iskolába lépő gyermekek';
+	echo '<table>';
+	echo '<tr><th colspan="2"></th><th>összesen</th><th>lány</th></tr>';
+	echo '<tr>';
+	    echo '<td>2</td>';
+	    echo '<td>tanköteles (május 31-ig a 6. életévét betöltötte)</td>';
+	    echo '<td>'._sum($D[$stat.'_2']).'</td>';
+	    echo '<td>'.$D[$stat.'_2']['lány']['db'].'</td>';
+	echo '</tr>';
+	echo '<tr>';
+	    echo '<td>3</td>';
+	    echo '<td>július 1. és augusztus 31. között töltötte be a 6. életévét</td>';
+	    echo '<td>'._sum($D[$stat.'_3']).'</td>';
+	    echo '<td>'.$D[$stat.'_3']['lány']['db'].'</td>';
+	echo '</tr>';
+	echo '<tr>';
+	    echo '<td>4</td>';
+	    echo '<td>szeptember 1-jén a 6. életévét még nem töltötte be</td>';
+	    echo '<td>'._sum($D[$stat.'_4']).'</td>';
+	    echo '<td>'.$D[$stat.'_4']['lány']['db'].'</td>';
+	echo '</tr>';
+	echo '</table>'."\n";
+    }
+
+    function putStat_a04t83($ADAT) {
+	$stat = 'a04t83';
+	$D = $ADAT[$stat];
+	echo '<div class="oktstatszam">'.$stat.'</div>';
+	// TODO: emelt szintű oktatásban részt vevő tanulók
+    }
+
+    function _sum($what) {
+
+	return (intval($what['lány']['db']) + intval($what['fiú']['db']) + intval($what['']['db']));
+
+    }
+
+?>

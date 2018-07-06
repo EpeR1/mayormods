@@ -1,0 +1,139 @@
+
+    table.uzeno, table.ujUzenet, table.egyUzenet  {
+	width:90%;
+	background-color: #fff;
+	margin-top:1em;
+	margin-bottom:1em;
+    }
+    table.uzeno thead tr th, table.ujUzenet tr th { 
+	color: white; border-bottom: solid 0px white; 
+	background-color: #3f51b5; 
+	padding:0.5em; font-weight: normal;
+    }
+    table.uzeno thead tr th a, table.ujUzenet tr th a { color:white; }
+
+    table.uzeno a { text-decoration: none; font-style:normal;}
+    table.uzeno a:hover { }
+
+    table.ujUzenet select   {  }
+    table.ujUzenet tr td { text-align: center }
+    table.ujUzenet textarea { width:98%; height: 100px; border: solid 1px rgb(100,100,90); background-color:#eeeeee; margin-bottom:10px;}
+    table.ujUzenet tr.admin td textarea { background-color: green; color: white; }
+
+    table.uzeno thead tr th.dt { width:30em; }
+    table.uzeno thead tr th.cimzett { width:30em; }
+
+    table.uzeno tfoot tr th, table.uzeno tfoot tr th a { color:white; }
+    table.uzeno tbody tr td { padding:0px 4px; background-color: #eee;}
+    table.uzeno tbody tr td div.nev--container { display:table-cell; vertical-align:middle; padding-left:2px; }
+
+    table.uzeno tbody tr td.felado { min-width:120px;}
+    table.uzeno tbody tr td.cimzett { min-width:120px;}
+    table.uzeno tbody tr td.uzenet { width:70%; padding:10px; }
+
+    table.uzeno tbody tr th { padding:0px 4px; text-align:left; font-weight: normal; }
+    table.uzeno tbody tr td.content { padding:10px; background-color:#eeeeee; }
+    table.uzeno tbody tr.uj td { background-color: #eeeeee; }
+    table.uzeno tbody tr.olvasott td { background-color: #dddddd;}
+    table.uzeno tbody tr td a { color: black; }
+    table.uzeno tbody tr td a:hover { color: rgb(100, 149, 237); }
+    table.uzeno tbody tr td.uzenet a { color: black; }
+    table.uzeno tbody tr td.uzenet:hover a { color: rgb(100,149,237); }
+
+    tr.diak th, select optgroup.diak { background-color: rgb(255, 140, 0);}
+    tr.tanar th, select optgroup.tanar { background-color: #88ccff;}
+    tr.szulo th, select optgroup.szulo { background-color: rgb(64, 224, 208);}
+
+    tr.diak.asterix th { background-color: #aaaaff;}
+    tr.tanar.asterix th { background-color: #aaaaff;}
+    tr.szulo.asterix th { background-color: #aaaaff;}
+
+    tr.munkakozosseg th, select optgroup.munkakozosseg { background-color: #99aacc;}
+    tr.tankor th, select optgroup.tankor { background-color: #aaccaa; }
+    tr.tankorSzulo th, select optgroup.tankorSzulo { background-color: #aacccc; }
+
+    tr.osztaly th, select optgroup.osztaly { background-color: #bbcc99; }
+    tr.osztalySzulo th, select optgroup.osztalySzulo { background-color: #bbcccc; }
+    tr.osztalyTanar th, select optgroup.osztalyTanar { background-color: rgb(140,200,100); }
+
+    span.dt { font-size: smaller; color: #888888; white-space:nowrap; }
+    a.more { 
+	text-decoration: none; 
+	margin:1px; 
+	padding:1px;
+    }
+    a.more:hover { color:rgb(170, 204, 170); } 
+
+/*
+    a.more.uj { background-color: #ffeeaa; } 
+    a.more.olvasott { background-color: #bbcc99; } 
+*/
+
+    table.uzeno tbody tr td.uzenoEszkozok { min-width: 40px; text-align:center; font-size:16px}
+    table.uzeno tbody tr td.uzenoEszkozok a { color:#aaa; text-decoration: none;}
+    table.uzeno tbody tr td.uzenoEszkozok a:hover { color: cornflowerblue; }
+    table.uzeno tbody tr td.uzenoEszkozok a.del:hover {color: red !important;}
+
+      table.lapozo { width: 80%; }
+        table.lapozo table { background-color: #cccccc; border: solid 1px #778890; font-size:14px;}
+        table.lapozo table th.title { background-color: navy; color: white; padding-left: 4px; padding-right:4px;}
+        table.lapozo table td { text-align: center; background-color: #eeeeee; }
+        table.lapozo table td.aktiv { background-color: #ffffff; font-weight: bold; }
+        table.lapozo table td.nav { background-color: #aaaaaa; }
+        table.lapozo a {color:black; text-decoration: none; }
+
+    form#uzenoKereso {
+	margin-bottom:100px;
+    }
+
+
+    form#uzenoKereso table tr td { color:;}
+    table.uzenetSzal { width:90%; background-color: rgb(50, 50, 100);}
+    table.uzenetSzal thead tr th { background-color: rgb(100, 149, 237); color:white; height:2em; border-bottom: solid 1px white; }
+
+    table.uzenetSzal tbody tr td { background-color: #eeeeee;}
+    table.uzenetSzal tbody tr td.uzenetDt { width:150px; font-weight:normal; text-align:center; }
+    table.uzenetSzal tbody tr td.uzenetSzerep { width:150px; font-weight: normal; text-align:left;}
+    table.uzenetSzal tbody tr td.uzenetSzerep a { color: black; }
+    table.uzenetSzal tbody tr td.uzenetSzerep a:hover { color: rgb(100,149,237); }
+    table.uzenetSzal tbody tr th.uzenet { width:80%; font-weight: normal;}
+
+    table.uzenetSzal tbody tr.uzenetSajat th { border-left:solid 2px rgb(100,149,237); border-right:solid 2px #dddddd;}
+    table.uzenetSzal tbody tr.uzenetPartner th { border-left: solid 2px #dddddd; border-right:solid 2px rgb(100,149,237);}
+
+    table.uzenetSzal tbody tr td.uzenet div {display: table-cell; padding:4px; border: solid 1px #aaaaaa;border-radius:2px; background-color: #f9f9f9; }
+    table.uzenetSzal tbody tr td.uzenet div:hover { background-color: #ffffff;}
+    table.uzenetSzal tbody tr td.uzenet div a { color: black; }
+    table.uzenetSzal tbody tr td.uzenet div a:hover { color: rgb(100,149,237); }
+
+    table.uzenetSzal tbody tr.uzenetPartner td.uzenet div { background-color: white; }
+
+/*
+    table.uzenetSzal tr td.uzenet div:before {
+	width: 0; 
+	height: 0; 
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent; 
+	border-right: 5px solid blue; 
+	content:"";
+	position:absolute;
+	display:block;
+    }
+*/
+
+    table.uzeno tbody tr td.uzenet a { 
+	display: inline-block; overflow: hidden; max-width:200px; text-overflow: ellipsis; line-height: 1em;
+    }
+
+    a span.icon-network { color: #aaa; }
+    a:hover span.icon-network { color: cornflowerblue; }
+
+@media (max-width: 764px) {
+
+    table.uzeno tbody tr td.felado { min-width:80px;}
+    table.uzeno tbody tr td.cimzett { min-width:80px;}
+    table.uzeno tbody tr td.uzenet { width:90%; padding:4px; word-break:break-word;}
+
+    table.uzeno tbody tr td.uzenoEszkozok { min-width:50px; text-align:center; font-size:20px}
+
+}

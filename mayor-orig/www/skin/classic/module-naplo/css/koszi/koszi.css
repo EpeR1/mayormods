@@ -1,0 +1,39 @@
+
+fieldset.koszi { margin: 4em 10em; border: solid 0px #888;}
+fieldset.koszi legend {
+    border: solid 1px #888;
+    background-color: #eee;
+    color: ;
+    padding: 0.1em 0.5em;
+    border-radius:5px;
+    text-align: right;
+}
+
+fieldset.koszi:hover legend { background-color: #9fbfd6; }
+
+fieldset.koszi table { width: 100%; background-color: #eee; }
+fieldset.koszi table tr.head th { background-color: #2e5282; color: white; border-bottom: solid 2px #434037; height:2em; }
+
+fieldset.koszi table tr.foot th { background-color: #aa0066; color: white;border-bottom: solid 1px black; border-top: solid 1px  #434037; height:2em; }
+fieldset.koszi table tr.foot th.r { text-align: right ; padding-right:2em;}
+
+fieldset.koszi table tr td {  }
+fieldset.koszi table tr td.r {  text-align: right; padding-right: 2em; }
+fieldset.koszi table tr:nth-child(even) td {  background-color: white; }
+fieldset.koszi table tr.jovahagyva td { background-color: #92ff93; }
+
+fieldset.koszi table tr td span.tag  { padding: 0.1em 2em; border-radius:5px;  }
+fieldset.koszi table tr td:hover span.tag  { opacity: 0.9; }
+fieldset.koszi table tr td span.tag1 { background-color: #CAE0F7; }
+fieldset.koszi table tr td span.tag2 { background-color: #9FBFD6; }
+fieldset.koszi table tr td span.tag0 { background-color: #2E5282; color: white; }
+fieldset.koszi table tr td span.tag4 { background-color: #434037; color: white; }
+fieldset.koszi table tr td span.tag5 { background-color: #929493; }
+fieldset.koszi table tr td span.tag3 { background-color: #EEEEEE; }
+
+div.koszi { padding-top: 1em; width:80%; padding-bottom: 1em; margin-left:auto; margin-right:auto; text-align: center; }
+
+div.koszi form select { font-size: normal; height:2.3em; }
+div.koszi form select option { color: black; }
+div.koszi form select option.placeholder:selected { background-color: red; }
+div.koszi form input  { height:2.3em; padding: 0.1em 3em;}

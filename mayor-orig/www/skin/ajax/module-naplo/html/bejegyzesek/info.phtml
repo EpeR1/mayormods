@@ -1,0 +1,11 @@
+<?php
+
+    function putBejegyzesInfo($ADAT) {
+	echo '<div>';
+	    echo _BEJEGYZESEK_SZAMA.': ';
+	    if ($ADAT['db'] > 0) echo '<span style="color: red;">'.$ADAT['db'].'</span>';
+	    else echo $ADAT['db'];
+	echo '</div>';
+    }
+
+?>

@@ -1,0 +1,317 @@
+<?php
+
+//    include_once('skin/classic/module-naplo/html/share/face.phtml');
+
+    function putFogadoOraLista($Lista, $Tanarok, $Szulok) {
+
+	formBegin(array('class'=>'fogado'));
+	foreach ($Tanarok as $tanarId => $tAdat) if ($Lista['adatok'][$tanarId]['tol'] != '') {
+
+	    $tol = $Lista['adatok'][$tanarId]['tol'];
+	    $ig = $Lista['adatok'][$tanarId]['ig'];
+
+	    echo '<table>'."\n";
+
+	    echo '<thead>';
+	    echo '<tr>';
+		echo '<th colspan="3">'.$tAdat['tanarNev'].'</th>';
+	    echo '</tr>'."\n";
+	    echo '<tr>';
+		echo '<th colspan="3">';
+		echo substr($tol, 0, 10).' ';
+		if ($Lista['adatok'][$tanarId]['teremId'] != '') {
+		    echo $Lista['adatok'][$tanarId]['leiras'];
+		    echo ' ('.$Lista['adatok'][$tanarId]['teremId'].') ';
+		    echo _TEREM;
+		}
+		echo '</th>';
+	    echo '</tr>'."\n";
+	    echo '<tr>';
+		echo '<th>'._TOL.'</th>';
+		echo '<th>'._SZULONEV.'</th>';
+		echo '<th>'._DIAKNEV.'</th>';
+	    echo '</tr>'."\n";
+	    echo '</thead>';
+
+	    echo '<tfoot><tr><th colspan="3"></th></tr></tfoot>';
+
+	    echo '<tbody>';
+	    $i = 0;
+	    for ($t = strtotime($tol); $t < strtotime($ig); $t = strtotime('+'._VIZITHOSSZ. ' minutes', $t)) {
+
+		$aktTol = date('Y-m-d H:i:s', $t);
+		if ($Lista['jelentkezesek'][$tanarId][$i]['tol'] == $aktTol) {
+		    $A = $Lista['jelentkezesek'][$tanarId][$i];
+		    $i++;
+		} else { $A = array(); }
+
+		$diakNevek = array();
+		for ($j = 0; $j < count($Szulok['diakjai'][$A['szuloId']]); $j++)
+	    	    $diakNevek[] = $Szulok['diakjai'][$A['szuloId']][$j]['diakNev'];
+
+		echo '<tr>';
+		    echo '<td>';
+			echo substr($aktTol,11,-3);
+		    echo '</td>';
+		    echo '<td>';
+			echo $Szulok[$A['szuloId']]['szuloNev'];
+
+		    echo '</td>';
+		    echo '<td>';
+			echo implode(',', $diakNevek);
+		    echo '</td>';
+		echo '</tr>'."\n";
+	    }
+	    echo '</tbody>';
+
+	    echo '</table>'."\n";
+
+	}
+	formEnd();
+
+    }
+
+    function putFogadoOsszes($FogadoOsszes, $Tanarok) {
+
+	formBegin(array('class'=>'fogado'));
+	echo '<input type="hidden" name="action" value="listaLekerdezese" />'."\n";
+	echo '<input type="hidden" name="tanarId" value="" />'."\n";
+    	echo '<table>'."\n";
+	echo '<thead>';
+	echo '<tr>';
+	    echo '<th>';
+	    echo _TANARNEV;
+	    echo '</th>'."\n";
+	    echo '<th>';
+	    echo _DATUM;
+	    echo '</th>'."\n";
+	    echo '<th>';
+	    echo _TOL;
+	    echo '</th>'."\n";
+	    echo '<th>';
+	    echo _IG;
+	    echo '</th>'."\n";
+	    echo '<th>';
+	    echo _TEREM;
+	    echo '</th>'."\n";
+	echo '</tr>';
+	echo '</thead>';
+	echo '<tfoot><tr><th colspan="5">';
+	    echo '<input type="submit" value="'._RESZLETES_LISTA.'" />';
+	echo '</th></tr></tfoot>'."\n";
+	echo '<tbody>';
+	if (is_array($FogadoOsszes)) foreach ($FogadoOsszes as $tId => $tAdat) {
+	    echo '<tr>';
+	    echo '<th>';
+		echo '<a href="'.href('index.php?page=naplo&sub=tanev&f=fogadoOra&tanarId='.$tAdat['tanarId']).'">';
+		echo $Tanarok[$tAdat['tanarId']]['tanarNev'];
+		echo '</a>';
+	    echo '</th>';
+	    echo '<td>'.substr($tAdat['tol'],0,10).'</td>';
+	    echo '<td>'.substr($tAdat['tol'],11,5).'</td>';
+	    echo '<td>'.substr($tAdat['ig'],11,5).'</td>';
+	    echo '<td>'.$tAdat['teremId'].'</td>';
+	    echo '</tr>'."\n";
+	}
+	echo '</tbody>';
+	echo '</table>'."\n";
+	formEnd();
+    }
+
+    function kovetkezoFogadoIdopont($FogadoDt) {
+
+	formBegin(array('class'=>'fogado'));
+	echo '<input type="hidden" name="action" value="kovetkezoFogado" />'."\n";
+
+	echo '<h1>'._KOVETKEZO_FOGADO_ORA.'</h1>'."\n";
+	echo '<div>';
+	echo '<input class="date" type="text" name="tolDt" value="'.$FogadoDt['dates'][0].'" />'."\n";
+	$SEL = array(substr($FogadoDt['tol'][0],11,5) => ' selected="selected" ');
+	echo '<select name="tolTime">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    for ($o = 0; $o < 24; $o++)
+//		for ($p = 0; $p < 60; $p += _VIZITHOSSZ) {
+		for ($p = 0; $p < 60; $p += 1) { // Ha pl 8-perces vizithossz van, akkor a második órában óra 4 perckor kellene kezdeni a fogadóórát...
+		    $time = str_pad($o, 2, '0', STR_PAD_LEFT).':'.str_pad($p, 2, '0', STR_PAD_LEFT);
+		    echo '<option value="'.$time.'"'.$SEL[$time].'>'.$time.'</option>'."\n";
+		}
+	echo '</select>';
+	$SEL = array(substr($FogadoDt['ig'][0],11,5) => ' selected="selected" ');
+    	echo '<select name="igTime">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    for ($o = 0; $o < 24; $o++)
+		for ($p = 0; $p < 60; $p += _VIZITHOSSZ) {
+		    $time = str_pad($o, 2, '0', STR_PAD_LEFT).':'.str_pad($p, 2, '0', STR_PAD_LEFT);
+		    echo '<option value="'.$time.'"'.$SEL[$time].'>'.$time.'</option>'."\n";
+		}
+	echo '</select>'."\n";
+	echo '<input type="submit" value="'._OK.'" title="'._BIZTOS_UJ_IDOPONT_E.'" class="confirm" />'."\n";
+	echo '</div>';
+	formEnd();
+
+    }
+
+    function tanarFogadoIdopontModosito($tanarFogado, $Termek) {
+
+	formBegin(array('class'=>'fogado'));
+	echo '<input type="hidden" name="action" value="tanarFogado" />'."\n";
+	echo '<input type="hidden" name="tanarId" value="'.$tanarFogado['tanarId'].'" />'."\n";
+
+	echo '<h1>'._TANAR_FOGADOORAJA.'</h1>'."\n";
+	echo '<div>';
+	echo '<input type="text" name="tolDt" value="'.substr($tanarFogado['tol'],0,10).'" />'."\n";
+	$SEL = array(substr($tanarFogado['tol'],11,5) => ' selected="selected" ');
+	echo '<select name="tolTime">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    for ($o = 0; $o < 24; $o++)
+//		for ($p = 0; $p < 60; $p += _VIZITHOSSZ) {
+		for ($p = 0; $p < 60; $p += 1) {
+		    $time = str_pad($o, 2, '0', STR_PAD_LEFT).':'.str_pad($p, 2, '0', STR_PAD_LEFT);
+		    echo '<option value="'.$time.'"'.$SEL[$time].'>'.$time.'</option>'."\n";
+		}
+	echo '</select>';
+	$SEL = array(substr($tanarFogado['ig'],11,5) => ' selected="selected" ');
+	echo '<select name="igTime">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    for ($o = 0; $o < 24; $o++)
+		for ($p = 0; $p < 60; $p += _VIZITHOSSZ) {
+		    $time = str_pad($o, 2, '0', STR_PAD_LEFT).':'.str_pad($p, 2, '0', STR_PAD_LEFT);
+		    echo '<option value="'.$time.'"'.$SEL[$time].'>'.$time.'</option>'."\n";
+		}
+	echo '</select>'."\n";
+	$SEL = array($tanarFogado['teremId'] => ' selected="selected" ');
+	echo '<select name="teremId">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    for ($i = 0; $i < count($Termek); $i++) {
+    		    echo '<option value="'.$Termek[$i]['teremId'].'"'.$SEL[$Termek[$i]['teremId']].'>'.$Termek[$i]['leiras'].'</option>'."\n";
+	    }
+	echo '</select>'."\n";
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+	echo '</div>';
+	formEnd();
+
+    }
+
+    function tanarFogadoIdopont($TF, $Termek, $Szulok) {
+
+	formBegin(array('class'=>'fogado'));
+	echo '<table cellspacing="1">'."\n";
+	echo '<thead>'."\n";
+	echo '<tr>';
+	    echo '<th colspan="3" class="cim">'._JELENTKEZESEK.'</th>';
+	echo '</tr>'."\n";
+	echo '<tr>';
+	    echo '<th colspan="1">'.substr($TF['adatok']['tol'],0,10).'</th>';
+	    echo '<th colspan="1">'._SZULONEV.'</th>';
+	    echo '<th colspan="1">'._DIAKNEV.'</th>';
+	echo '</tr>';
+	echo '</thead>'."\n";
+	echo '<tfoot><tr><th colspan="3">'.'</th></tr></tfoot>';
+	echo '<tbody>';
+
+	for ($t = strtotime($TF['adatok']['tol']); $t < strtotime($TF['adatok']['ig']); $t = strtotime('+'._VIZITHOSSZ.' minutes', $t)) {
+	    $szuloId = $TF['jelentkezesek'][date('Y-m-d H:i:s', $t)]['szuloId'];
+	    $DIAKJAI= array();
+	    for ($i = 0; $i < count($Szulok['diakjai'][$szuloId]); $i++) {
+		$DIAKJAI[] = $Szulok['diakjai'][$szuloId][$i];
+	    }
+	    echo '<tr>';
+	    echo '<th>'.date('H:i', $t).'</th>';
+	    echo '<td>';
+		echo $Szulok[$szuloId]['szuloNev'];
+	    echo '</td>';
+	    echo '<td>';
+		for ($i=0; $i<count($DIAKJAI); $i++) {
+		    $_D=$DIAKJAI[$i];
+		    echo '<div class="diak">';
+		    putFace($_D['diakId'],'diak');
+		    echo '<br/><span class="diakNev">'.$_D['diakNev'].'</span>';
+		    echo '</div>';
+		}
+	    echo '</td>';
+	    echo '</tr>'."\n";
+	}
+	echo '</tbody>'."\n";
+	echo '</table>'."\n";
+	formEnd();
+    }
+
+    function putFogadoOraJelentkezes($szuloId, $diakTanarai, $Alkalmak, $szuloJelentkezes, $TermekAsszoc) {
+
+	if (__FOGADOORA_JELENTKEZES) $DIS = '';
+	else $DIS = ' disabled="disabled" ';
+
+	formBegin(array('class'=>'fogado'));
+	echo '<input type="hidden" name="action" value="fogadoOraJelentkezes" />'."\n";
+	echo '<input type="hidden" name="szuloId" value="'.$szuloId.'" />'."\n";
+	echo '<table>'."\n";
+	echo '<thead>'."\n";
+	echo '<tr>';
+	echo '<th colspan="4">'._TANARADAT.'</th>';
+	$sor = '<tr><th colspan="2">'._NEV.'</th><th>'._TEREM.'</th><th>'._TOROL.'</th>';
+	$sum = 4;
+	foreach($Alkalmak['napok'] as $nap => $napAdat) {
+	    list($tolOra,$tolPerc) = explode(':', $napAdat['tol']);
+	    list($igOra,$igPerc) = explode(':', $napAdat['ig']);
+	    $Alkalmak['napok'][$nap]['colspan'] = $colspan = ceil(((60*$igOra+$igPerc) - (60*$tolOra+$tolPerc)) / _VIZITHOSSZ);
+	    $sum += $colspan;
+		echo '<th colspan="'.$colspan.'">'.$nap.'</th>';
+	    for ($t = strtotime($napAdat['tol']); $t < strtotime($napAdat['ig']); $t = strtotime('+'._VIZITHOSSZ.' minutes',$t)) {
+		$sor .= '<td>';
+		$sor .= date('H:i',$t);
+		$sor .= '</td>';
+	    }
+	}
+	$sor .= '</tr>'."\n";
+	echo '</tr>'."\n";
+	echo $sor;
+	echo '</thead>';
+	echo '<tfoot><tr><th colspan="'.$sum.'">';
+	    if (__FOGADOORA_JELENTKEZES) echo '<input type="submit" value="'._OK.'" />'."\n";
+	echo '</th></tr></tfoot>';
+	echo '<tbody>';
+	for ($i = 0; $i < count($diakTanarai); $i++) {
+	    $tanarId = $diakTanarai[$i]['tanarId'];
+	    echo '<tr>';
+		echo '<th>'.$diakTanarai[$i]['tanarNev'].'</th>';
+		echo '<th>';
+		    putFace($diakTanarai[$i]['tanarId'],'tanar');
+		echo '</th>';
+
+		echo '<th>'.$TermekAsszoc[ $Alkalmak['tanarTerme'][$diakTanarai[$i]['tanarId']] ]['leiras'].'</th>';
+		echo '<td class="torol">';
+		    echo '<input type="radio" name="jel'.$i.'" value="'.$tanarId.'/"'.$DIS.' />';
+		echo '</td>';
+	    foreach($Alkalmak['napok'] as $nap => $napAdat) {
+		for ($t = strtotime($napAdat['tol']); $t < strtotime($napAdat['ig']); $t = strtotime('+'._VIZITHOSSZ.' minutes',$t)) {
+		    $datetime = $nap.' '.date('H:i', $t).':00';
+		    if ($szuloJelentkezes[$tanarId]['tol'] == $datetime) $_class = ' class="ok" ';
+		    elseif (isset($diakTanarai[$i]['foglalt']['jelentkezesek'][$datetime])) $_class=' class="foglalt" ';
+		    else $_class='';
+		    echo '<td'.$_class.'>';
+		    if (
+			$Alkalmak[$tanarId]['tol'] <= $nap.' '.date('H:i:s', $t)
+			&& $Alkalmak[$tanarId]['ig'] > $nap.' '.date('H:i:s', $t)
+		    ) {
+			
+			if ($szuloJelentkezes[$tanarId]['tol'] == $datetime)
+			    echo '<input type="radio" name="jel'.$i.'" value="'.$tanarId.'/'.$datetime.'" checked="checked"'.$DIS.' />';
+			elseif (isset($diakTanarai[$i]['foglalt']['jelentkezesek'][$datetime]))
+			    echo '-';
+			else
+			    echo '<input type="radio" name="jel'.$i.'" value="'.$tanarId.'/'.$datetime.'"'.$DIS.' />';
+		    }
+		    echo '</td>';
+		}
+	    }
+	    echo '</tr>';
+
+	}
+	echo '</tbody>';
+	echo '</table>'."\n";
+	formEnd();
+
+    }
+
+
+?>

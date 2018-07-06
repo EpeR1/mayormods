@@ -1,0 +1,122 @@
+<?php
+
+    function putUjTankorCsoport($tankorAdat, $szTankorIds, $osztalyId) {
+
+	formBegin(array('class'=>'csoport'));
+	echo '<input type="hidden" name="action" value="ujTankorCsoport" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
+
+	echo '<table>';
+
+	echo '<tr>';
+	    echo '<th colspan="2">';
+	    echo _UJ_TANKOR_CSOPORT;
+	    echo '</th>';
+	echo '</tr>'."\n";
+
+	echo '<tr>';
+	    echo '<th>';
+		echo _CSOPORTNEV;
+	    echo '</th>';
+	    echo '<th>';
+		echo _TANKOROK;
+	    echo '</th>';
+	echo '</tr>'."\n";
+
+	echo '<tr>';
+	    echo '<td>';
+		echo '<input type="text" name="csoportNev" value="" /><br />';
+		echo '<input type="submit" value="'._OK.'" />';	    echo '</td>';
+	    echo '<td>';
+		echo '<select name="tankorId[]" multiple="multiple" size="5">';
+		foreach ($szTankorIds as $key => $tankorId)
+		    echo '<option value="'.$tankorId.'">'.$tankorAdat[$tankorId]['tankorNev'].' ('.$tankorId.')</option>'."\n";
+		echo '</select>'."\n";
+	    echo '</td>';
+	echo '</tr>'."\n";
+
+	echo '</table>';    
+	formEnd();
+
+    }
+
+    function putCsoportok($Csoportok, $tankorAdat, $szTankorIds, $osztalyId) {
+
+	echo '<table class="modosit">';
+
+	echo '<tr>';
+	    echo '<th>';
+	    echo _TANKOR_CSOPORT_MODOSITAS;
+	    echo '</th>';
+	echo '</tr>'."\n";
+
+
+	foreach ($Csoportok as $csoportId => $csoportAdat) {
+	echo '<tr><td>';
+
+	    formBegin(array('class'=>'csoport'));
+	    echo '<input type="hidden" name="action" value="tankorCsoportModositas" />'."\n";
+	    echo '<input type="hidden" name="csoportId" value="'.$csoportId.'" />'."\n";
+	    echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
+
+	    echo '<table>';
+
+
+	    echo '<tr>';
+		echo '<th>';
+		    echo _CSOPORTNEV;
+		echo '</th>';
+		echo '<th>';
+		    echo '<input type="submit" name="tankorCsoportTorles" class="torol confirm" title="'._BIZTOS_TOROL_E.'" value="'._TOROL.'" />';
+		    echo _TANKOROK;
+		echo '</th>';
+	    echo '</tr>'."\n";
+
+	    echo '<tr>';
+		echo '<td>';
+		    echo '<input type="text" name="csoportNev" value="'.$csoportAdat['csoportNev'].'" /><br />';
+		    echo '<input type="submit"  value="'._OK.'" /><br />';
+		echo '</td>';
+		echo '<td>';
+		    echo '<select name="tankorId[]" multiple="multiple" size="5">';
+		    foreach ($csoportAdat['tankorok'] as $key => $tankorId)
+			echo '<option value="'.$tankorId.'" selected="selected">'.$tankorAdat[$tankorId]['tankorNev'].' ('.$tankorId.')</option>'."\n";
+		    foreach ($szTankorIds as $key => $tankorId)
+			echo '<option value="'.$tankorId.'">'.$tankorAdat[$tankorId]['tankorNev'].' ('.$tankorId.')</option>'."\n";
+		    echo '</select>'."\n";
+		echo '</td>';
+	    echo '</tr>'."\n";
+
+	    echo '</table>';    
+	    formEnd();
+
+	echo '</td></tr>'."\n";
+	}
+
+	echo '</table>'."\n";
+
+    }
+
+    function putTankorCsoportKereso($osztalyId) {
+
+	formBegin(array('class'=>'csoportKereses'));
+
+	echo '<input type="hidden" name="action" value="tankorCsoportokKeresese" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
+
+	echo '<table>'."\n";
+	    echo '<tr>';
+		echo '<th>'._TANKORCSOPORTOK_KERESESE.'</th>';
+	    echo '</tr>'."\n";
+	    echo '<tr>'."\n";
+		echo '<td>';
+		echo '<input type="submit" value="'._OK.'" />';
+		echo '</td>';
+	    echo '</tr>'."\n";
+	echo '</table>'."\n";
+
+	formEnd();
+
+    }
+
+?>

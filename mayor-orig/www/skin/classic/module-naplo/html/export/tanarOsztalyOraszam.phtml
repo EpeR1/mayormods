@@ -1,0 +1,46 @@
+<?php
+
+    function putTanarOsztalyOraszamForm($ADAT) {
+
+        global $skin;
+
+        formBegin(array('action'=>href('index.php?page=naplo&sub=export&f=tanarOsztalyOraszam'), 'class'=>"export"));
+        echo '<input type="hidden" name="action" value="tanarOsztalyOraszam" />'."\n";
+
+        echo '<fieldset><legend>Tanár-osztály óraszám</legend>'."\n";
+        echo '<table>'."\n";
+
+	echo '<tr><th>A MaYoR tanár-osztály óraszám mátrixának letöltése (export)</th></tr>';
+
+	echo '<tr>';
+            echo '<td>';
+		echo '<ul>';
+		echo '<li>';
+                echo '<input type="radio" name="formatum" value="xml" id="xml" checked="checked" />'."\n";
+                echo '<label for="xml">.XML</label>'."\n";
+		echo '</li>';
+		echo '<li>';
+                echo '<input type="radio" name="formatum" value="csv" id="csv" />'."\n";
+                echo '<label for="csv">.CSV</label>'."\n";
+		echo '</li>';	
+		echo '<li>';
+                echo '<input type="radio" name="formatum" value="ods" id="ods" />'."\n";
+                echo '<label for="ods">.ODS</label>'."\n";
+		echo '</li></ul>';
+            echo '</td>'."\n";
+        echo '</tr>'."\n";
+
+        echo '<tr>';
+            echo '<th>';
+            echo '<input type="submit" value="'._LETOLTES.'" />'."\n";
+            echo '</th>';
+        echo '</tr>';
+
+        echo '</table>'."\n";
+        echo '</fieldset>';
+        //if ($skin != 'ajax') 
+	formEnd();
+    }
+
+
+?>

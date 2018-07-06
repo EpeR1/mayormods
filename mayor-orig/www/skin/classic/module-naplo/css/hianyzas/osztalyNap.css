@@ -1,0 +1,43 @@
+
+    table.hianyzas { margin: auto; border-spacing: 1px; background-color:#aaaaaa; }
+    table.hianyzas thead th { background-color: #440055; padding: 4px 8px; color: white; 
+    }
+    table.hianyzas tbody th { background-color: rgb(150,140,150); padding: 4px 2px; color: white; }
+    table.hianyzas tbody th.tk { background-color: #ffffff; color: black; font-weight:normal;font-style: italic; padding-left:10px; padding-right:10px; }
+
+    table.hianyzas tfoot th { background-color: #440055; padding: 1px; color: white; border-bottom: solid 1px white; text-align: right; font-size:xx-small; }
+    table.hianyzas tbody td { background-color: #ffffff; padding: 4px 8px; }
+
+
+    table.hianyzas tbody tr td.d { width:5px; padding:0px; 
+	border-width: 0px 4px 0px 4px;
+	border-style: solid;
+	text-align: center;
+	color: white;
+	font-weight: bold;
+    }
+
+    table.hianyzas tbody tr td.d.igazolatlan { 
+	background-color: #cc0000;
+    }
+    table.hianyzas tbody tr td.d.igazolt {
+	background-color: #00cc00;
+    }
+    table.hianyzas tbody tr td.d.hianyzas { 
+	border-color: rgb(200,100,100);
+    }
+    table.hianyzas tbody tr td.d.keses {
+	border-color: rgb(200,200,100);
+    }
+    table.hianyzas tbody tr td.d.felszereles { 
+	border-color: rgb(100,100,200);
+    }
+    table.hianyzas tbody tr td.d.egyenruha { 
+	border-color: orange;
+    }
+
+    table.hianyzas tbody th a { color: white; text-decoration: none; }
+    table.hianyzas tbody th.tk a { color: black; text-decoration: none; }
+    table.hianyzas tbody td a { color: black; text-decoration: none; }
+    table.hianyzas tbody th a:hover,
+    table.hianyzas tbody td a:hover { text-decoration: underline; }

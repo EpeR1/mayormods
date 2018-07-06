@@ -1,0 +1,273 @@
+<?php
+/*
+    module:	naplo
+    version:	3.0
+
+    function putDolgozatLista($DOLGOZAT)
+	A tanköröket még nem írja ki rendesen
+
+    function putDolgozat($DOLGOZAT,$TANAR_NEVSOR)
+	!!! Még nincs átnézve
+*/
+
+    function putDolgozatLista($Dolgozat) {
+
+	global $tanarId, $diakId, $tankorId, $osztalyId;
+	global $aHetNapjai;
+
+	echo '<table class="dolgozatLista" align="center" cellspacing="1">';
+	echo '<tr>';
+	    echo '<th colspan="4">'._DOLGOZATOK.'</th>';
+	echo '</tr>';
+	echo '<tr>';
+	    echo '<th>'._DOLGOZAT.'</th>';
+	    echo '<th>'._TANKOR.'</th>';
+	    echo '<th>'._BEJELENTES.'</th>';
+	    echo '<th>'._TERVEZETT.'</th>';
+	echo '</tr>';
+	if (count($Dolgozat['dolgozatIds']) > 0) {
+	    for ($i = 0; $i < count($Dolgozat['dolgozatIds']); $i++) {
+		$dolgozatId = $Dolgozat['dolgozatIds'][$i];
+		echo '<tr>';
+		echo '<td>';
+		    echo '<a href="'.href('index.php?page=naplo&sub=osztalyozo&f=dolgozat&dolgozatId='."$dolgozatId&tanarId=$tanarId&osztalyId=$osztalyId&diakId=$diakId&tankorId=$tankorId").'">';
+		    if ($Dolgozat[$dolgozatId]['dolgozatNev'] != '') echo $Dolgozat[$dolgozatId]['dolgozatNev'];
+		    else echo _NINCS_KITOLTVE;
+		    echo '</a>';
+		echo '</td>';
+		echo '<td>';
+
+		    $Tankorok = $Dolgozat[$dolgozatId]['tankor'];
+		    $TankorLista = array();
+		    for ($t = 0; $t < count($Tankorok); $t++) $TankorLista[] = $Tankorok[$t]['tankorNev'];
+		    echo implode('<br />',$TankorLista);
+
+		echo '</td>';
+		echo '<td>';
+		    $_dt = $Dolgozat[$dolgozatId]['bejelentesDt'];
+		    $_dow = date('w', strtotime($_dt));
+		    echo str_replace('-', '. ', $_dt).'. ';
+		    echo $aHetNapjai[($_dow - 1)];
+		echo '</td>';
+		echo '<td>';
+		    $_dt = $Dolgozat[$dolgozatId]['tervezettDt'];
+		    if ($_dt != '0000-00-00' && $_dt != '') {
+			$_dow = date('w', strtotime($_dt));
+			echo str_replace('-', '. ', $_dt).'. ';
+			echo $aHetNapjai[($_dow - 1)];
+		    }
+		echo '</td>';
+		echo '</tr>';
+		flush();
+	    }
+	} else {
+	    echo '<tr>';
+		echo '<td colspan="4">'._NINCS_DOLGOZAT.'</td>';
+	    echo '</tr>';
+	}
+	echo '</table>';
+    }
+
+    function putDolgozat($Dolgozat, $valaszthatoTankorok, $Tanarok) {
+    
+	global $_TANEV, $Osztalyzatok;
+
+	if (__MODOSITHAT) $disabled = '';
+	else $disabled=' disabled="disabled" ';
+
+	// -------------- A dolgozat adatai -------------- //
+	
+	formBegin();
+	echo '<input type="hidden" name="action" value="dolgozatModositas" />';
+	echo '<input type="hidden" name="dolgozatId" value="'.$Dolgozat['dolgozatId'].'" />';
+	echo '<table align="center" class="dolgozatAdatok" cellspacing="1">';
+	echo '<thead>';
+	    echo '<tr>';
+		echo '<th colspan="4">'._DOLGOZAT_ADATAI.'</th>';
+	    echo '</tr>';
+	echo '</thead>';
+
+	echo '<tfoot>';
+	    echo '<tr>';
+		echo '<th colspan="4">';
+		if ($disabled == '') echo '<input type="submit" value="'._OK.'" />';
+		echo '</th>';
+	    echo '</tr>';
+	echo '</tfoot>';
+
+	echo '<tbody>';
+	    echo '<tr>';
+		echo '<th>'._MEGNEVEZES.'</th>';
+		echo '<td><input class="hosszu" type="text" name="nev" value="'.$Dolgozat['dolgozatNev'].'" '.$disabled.' /></td>';
+	    echo '</tr><tr>';
+		echo '<th>'._BEJELENTES.'</th>';
+		echo '<td>'.$Dolgozat['bejelentesDt'].'</td>';
+	    echo '</tr><tr>';
+		echo '<th>'._TERVEZETT.'</th>';
+		echo '<td>';
+		    list($ev,$ho,$nap) = explode('-',$Dolgozat['tervezettDt']);
+		    list($kEv,$semmi) = explode('-',$_TANEV['kezdesDt']);
+		    list($vEv,$semmi) = explode('-',$_TANEV['zarasDt']);
+		    $SEL = array($ev => 'selected="selected"');
+
+		    echo '<select name="tervezett-ev"'.$disabled.'>';
+		    echo '<option value="">'._EV.'</option>';
+		    for ($i = $kEv; $i <= $vEv; $i++) {
+			echo '<option value="'.$i.'" '.$SEL[$i].'>'.$i.'</option>';
+		    }
+		    echo '</select>';
+
+		    echo '<select name="tervezett-ho"'.$disabled.'>';
+		    echo '<option value="">'._HO.'</option>';
+		    for ($i = 1; $i < 13; $i++) {
+			if ($ho == $i) $SEL = ' selected="selected"'; else $SEL = '';
+			echo '<option value="'.$i.'" '.$SEL.'>'.$i.'</option>';
+		    }
+		    echo '</select>';
+
+		    echo '<select name="tervezett-nap"'.$disabled.'>';
+		    echo '<option value="">'._NAP.'</option>';
+		    for ($i = 1;$i < 32; $i++) {
+			if ($nap == $i) $SEL = ' selected="selected"'; else $SEL = '';
+			echo '<option value="'.$i.'" '.$SEL.'>'.$i.'</option>';
+		    }
+		    echo '</select>';
+
+		echo'</td>';
+	    echo '</tr>';
+	echo '</tbody>';
+	echo '</table>';
+	formEnd();
+	
+	echo '<table align="center" class="dolgozatAdatok" cellspacing="1">';
+	
+	echo '<thead>'."\n";
+	    echo '<tr><th>'._TANKOROK.'</th></tr>'."\n";
+	echo '</thead>'."\n";
+	
+	echo '<tfoot><tr><td /></tr></tfoot>'."\n";
+	
+	echo '<tbody>'."\n";
+	    echo '<tr>'."\n";
+
+		// tankör választás
+		echo '<td>'."\n";
+		formBegin();
+		echo '<input type="hidden" name="action" value="dolgozatTankorHozzarendeles" />'."\n";
+		echo '<input type="hidden" name="dolgozatId" value="'.$Dolgozat['dolgozatId'].'" />'."\n";
+		echo '<select name="tankorIds[]" multiple="multiple" class="multiple"'.$disabled.'>'."\n";
+		for ($i = 0;$i < count($valaszthatoTankorok); $i++) {
+		    if (in_array($valaszthatoTankorok[$i]['tankorId'], $Dolgozat['tankorIds']))
+			echo '<option value="'.$valaszthatoTankorok[$i]['tankorId'].'" selected="selected">';
+		    else
+			echo '<option value="'.$valaszthatoTankorok[$i]['tankorId'].'">';
+		    echo $valaszthatoTankorok[$i]['tankorNev'];
+		    echo '</option>'."\n";
+		}
+		echo '</select><br />'."\n";
+		echo '<input type="submit" value="'._OK.'" />'."\n";
+		formEnd();
+		echo '</td>'."\n";
+
+	    echo '</tr>'."\n";
+	echo '</tbody>'."\n";
+
+	echo '</table>'."\n";
+    
+	// -------------- A dolgozat jegyei -------------- //
+
+	if (__NAPLOADMIN || __VEZETOSEG || __TANAR) {
+
+	    $colspan = count($Dolgozat['tankor'])*2;
+	    formBegin();
+
+	    echo '<input type="hidden" name="action" value="dolgozatJegyekTorlese" />'."\n";
+	    echo '<input type="hidden" name="dolgozatId" value="'.$Dolgozat['dolgozatId'].'" />'."\n";
+	    echo '<table align="center" class="dolgozatJegyek" cellspacing="1">';
+	
+	    echo '<thead>';
+		echo '<tr>';
+		    echo '<th colspan="'.$colspan.'">'._JEGYEK.'</th>';
+		echo '</tr>';
+		echo '<tr>';
+		    $maxDiakSzam = 0;
+		    for ($j = 0; $j < count($Dolgozat['tankor']); $j++) {
+			if ($maxDiakSzam < ($_count = count($Dolgozat['tankor'][$j]['diakok']['idk'])))
+			    $maxDiakSzam = $_count;
+			echo '<th colspan="2">';
+			echo '<a href="'.href('index.php?page=naplo&sub=osztalyozo&f=tankor&tankorId='.$Dolgozat['tankor'][$j]['tankorId']).'">';
+			echo $Dolgozat['tankor'][$j]['tankorNev'];
+			echo '</a>';
+			echo '</th>';
+		    }
+		echo '</tr>';
+		echo '<tr>';
+		    for ($j = 0; $j < count($Dolgozat['tankor']); $j++) {
+			echo '<th>'._NEV.'</th>';
+			echo '<th>'._JEGY.'</th>';
+		    }
+		echo '</tr>';
+	    echo '</thead>';
+
+	    echo '<tfoot>';
+		echo '<tr>';
+		for ($j = 0; $j < count($Dolgozat['tankor']); $j++) {
+		    $tankorAdat = $Dolgozat['tankor'][$j];
+		    $tankorId = $tankorAdat['tankorId'];
+		    echo '<th colspan="2">';
+		    echo '<input type="submit" name="tankorId'.$tankorId.'" value="'._TOROL.'" class="confirm" title="'._BIZTOS_TOROLE.'" />'."\n";
+		    echo '</th>';
+		}
+		echo '</tr>';
+		
+	    echo '</tfoot>';
+
+	    echo '<tbody>'."\n";
+	    for ($i = 1; $i < $maxDiakSzam; $i++) {
+		echo '<tr>'."\n";
+
+		for ($j = 0; $j < count($Dolgozat['tankor']); $j++) {
+		    $tankorAdat = $Dolgozat['tankor'][$j];
+		    $tankorId = $tankorAdat['tankorId'];
+		    if (is_array($Dolgozat['tankor'][$j]['diakok']['nevek'])) {
+			reset($Dolgozat['tankor'][$j]['diakok']['nevek']);
+			for ($d = 0; $d < $i; $d++) 
+			    list($diakId, $diakAdat) = each($Dolgozat['tankor'][$j]['diakok']['nevek']);
+			$diakNev = $diakAdat['nev'];
+		    } else { $diakNev = ''; }
+		    echo '<th><a href="'.href('index.php?page=naplo&sub=osztalyozo&f=diak&diakId='.$diakId).'">'.$diakNev.'</a></th>'."\n";
+			echo '<td>';
+			if (is_array($tankorAdat['jegyek'][$diakId])) {
+			    for ($k = 0; $k < count($tankorAdat['jegyek'][$diakId]);$k++) {
+				$jegy = $tankorAdat['jegyek'][$diakId][$k];
+				$href = href('index.php?page=naplo&sub=osztalyozo&f=jegy&jegyId='.$jegy['jegyId']);
+				$title = $jegy['dt'].' '.$jegy['megjegyzes'];
+				echo '<a href="'.$href.'" class="jegy'.$jegy['tipus'].'" title="'.$title.'">';
+				echo $Osztalyzatok[$jegy['jegy']]['num'].' ';
+				echo '</a>';
+			    }
+			}
+			echo '</td>'."\n";
+
+		}
+		echo '</tr>'."\n";
+	    }
+	    echo '</tbody>'."\n";
+
+	    echo '</table>'."\n";
+	    formEnd();
+	
+	} // csak admin, tanár és igazgató láthatja az összes jegyet!
+    }
+
+    function putDolgozatBejelento($tankorId) {
+
+	formBegin(array('class'=>'dolgozat'));
+	echo '<input type="hidden" name="action" value="dolgozatBejelentes" />';
+	echo '<input type="hidden" name="tankorId" value="'.$tankorId.'" />';
+	echo '<input type="submit" value="'._DOLGOZAT_BEJELENTES.'" />';
+	formEnd();
+
+    }
+
+?>

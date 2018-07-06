@@ -1,0 +1,127 @@
+<?php
+/*
+    module: naplo
+*/
+
+    function putOsztalyTankorei($osztalyId, $ADAT) {
+
+	formBegin();
+        echo '<input type="hidden" name="action" value="tankorNaplohozRendeles" />';
+        echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />';
+
+        echo '<table class="tankorBealliras" align="center" cellspacing="1">';
+
+        echo '<thead>';
+        echo '<tr>';
+            echo '<th>'._TANKOR.'</th>';
+            echo '<th>'._JELOLT.'</th>';
+            echo '<th>'._NAPLO.'</th>';
+        echo '</tr>';
+        echo '</thead>';
+
+        echo '<tfoot>';
+        echo '<tr>';
+            echo '<th colspan="3">';
+            echo _JELOLT_TANKOROK_SZAMA.': '.count($ADAT['naploTankorei'][$osztalyId]);
+            echo '</th>';
+        echo '</tr>';
+        echo '<tr>';
+            echo '<th colspan="3">';
+            echo '<input type="submit" value="'._OK.'" />';
+            echo '</th>';
+        echo '</tr>';
+        echo '</tfoot>';
+
+        echo '<tbody>';
+        for ($i = 0; $i < count($ADAT['osztalyTankorei'][$osztalyId]); $i++) {
+	    $tankorId = $ADAT['osztalyTankorei'][$osztalyId][$i];
+            $naplo = $ADAT['tankorNaploja'][$tankorId];
+            $tankorNev = $ADAT['tankorNeve'][$tankorId];
+            echo '<tr>';
+                echo '<th>'.$tankorNev.':'.$tankorId.'</th>';
+                if (isset($osztalyId)) {
+                    echo '<td>';
+
+                    if ($naplo == $osztalyId) $CHK = ' checked="checked" ';
+                    else $CHK = '';
+
+                    echo '<input type="checkbox" name="T[]" value="'."$tankorId/$osztalyId".'"'.$CHK.' />';
+
+                    echo '</td>';
+                }
+                echo '<td>'.$ADAT['osztalyJele'][$naplo].'</td>';
+            echo '</tr>';
+        }
+        echo '</tbody>';
+        echo '</table>';
+	formEnd();
+
+    }
+
+    function putHozzarendelesekTorlese() {
+	formBegin();
+	echo '<div id="torlesForm">'."\n";
+	echo '<input type="hidden" name="action" value="hozzarendelesekTorlese" />'."\n";
+	echo '<input type="submit" value="'._HOZZARENDELES_ALAPHELYZETBE_ALLITASA.'">'."\n";
+	echo '</div>'."\n";
+	formEnd();
+    }
+
+    function putHianyzoTankorok($ADAT) {
+
+        echo '<table class="tankorBealliras" align="center" cellspacing="1">';
+
+	$Hianyzo = array();
+        for ($i = 0; $i < count($ADAT['tankorIds']); $i++) {
+            $tankorId = $ADAT['tankorIds'][$i];
+            if ($ADAT['tankorNaploja'][$tankorId] == '') $Hianyzo[] = $tankorId;
+        }
+
+        echo '<thead>';
+        echo '<tr>';
+            echo '<th>'._TANKOR.'</th>';
+        echo '</tr>';
+        echo '</thead>';
+
+        echo '<tfoot>';
+        echo '<tr>';
+            echo '<th colspan="1">';
+            echo _HIANYZO_TANKOROK_SZAMA.': '.count($Hianyzo);
+            echo '</th>';
+        echo '</tr>';
+        echo '</tfoot>';
+
+        echo '<tbody>';
+        for ($i = 0; $i < count($Hianyzo); $i++) {
+            $tankorId = $Hianyzo[$i];
+    	    echo '<tr>';
+//		echo '<th>'.($i+1).'</th>';
+            	echo '<th>'.$ADAT['tankorNeve'][$tankorId].'</th>';
+    	    echo '</tr>';
+        }
+        echo '</tbody>';
+        echo '</table>';
+    }
+
+    function putEloszlas($ADAT) {
+
+        if (!isset($osztalyId)) {
+            echo '<table class="tankorBealliras" align="center" cellspacing="1">';
+            echo '<thead>';
+                echo '<tr><th>'._OSZTALY.'</th><th>'._DB.'</th></tr>';
+            echo '</thead>';
+            echo '<tfoot>';
+                echo '<tr><th colspan="2"></th></tr>';
+            echo '</tfoot>';
+            echo '<tbody>';
+                for ($i = 0; $i < count($ADAT['osztalyok']); $i++) {
+                    echo '<tr>';
+                        echo '<th>'.$ADAT['osztalyok'][$i]['osztalyJel'].'</th>';
+                        echo '<td>'.count($ADAT['naploTankorei'][ $ADAT['osztalyok'][$i]['osztalyId'] ]).'</td>';
+                    echo '</tr>';
+                }
+            echo '</tbody>';
+            echo '</table>';
+        }
+
+    }

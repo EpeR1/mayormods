@@ -1,0 +1,7 @@
+<?php
+    // site skin specific html head
+    $SSSHH = '';
+    //$SSSHH .= '<meta name="robots" content="index,follow" />'."\n";
+    //$SSSHH .= '<link rel="shortcut icon" href="/favicon.ico" />'."\n";
+    //define('_ENABLE_IFRAME_EMBEDDING',true); // IFRAME-be ágyazás engedélyezése - !! Biztonsági kockázat !!
+?>

@@ -1,0 +1,18 @@
+
+    form.export { text-align: center; margin: 1px; background-color: rgb(140,140,220); float-left; }
+    form.export h1 { text-align: center; border: solid rgb(140,160,180); border-width: 1px 0px; font-size: 12px; margin: 0px 0px 5px 0px; background-color: rgb(60,80,100); color: rgb(220,250,250); }
+    fieldset { width: 300px; margin: 0px auto; }
+
+    form.blokk { margin: 0px 5px; float: left; width: 310px; }
+    form.blokk ul { background-color: rgb(140,160,180); width: 300px; list-style-type: none; padding: 0px; margin: 0px; }
+    form.blokk ul li { background-color: rgb(180,200,220); padding: 6px; margin: 1px; height: 16px; font-size: 10px; text-align: left; }
+    form.blokk ul li select { height: 16px; font-size: 10px; }
+
+    form.tobbszoros { width: 400px; float: left; }
+    form.ok { width: 400px; float: left; }
+
+    form.export img { border: none; position: relative; top: 10px; }
+    form.export a { text-decoration: none; display: block; padding-bottom: 14px; background-color: rgb(20,40,60); color: white; margin-top: 40px; }
+    form.export a:hover { color: rgb(255,200,100); }
+
+    a#loadUrl { background: green; color: white; padding: 20px; fonr-weight: bold; margin: 30px; }

@@ -1,0 +1,47 @@
+<?php
+/*
+    module: naplo
+*/
+
+    function putUjBejegyzesForm($diakId) {
+
+	global $FOKOZATOK, $osztalyId;
+
+	formBegin(array('class'=>'bejegyzes'));
+
+	echo '<input type="hidden" name="action" value="ujBejegyzes" />';
+	echo '<input type="hidden" name="diakId" value="'.$diakId.'" />';
+	echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />';
+
+	$tipus = '';
+	echo '<select name="bejegyzesTipusId">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    foreach ($FOKOZATOK as $i => $F) {
+		if ($tipus != $F['tipus']) {
+		    if ($tipus != '') echo '</optgroup>'."\n";
+		    $tipus = $F['tipus'];
+		    echo '<optgroup label="'.$tipus.'">'."\n";
+		}
+		echo '<option value="'.$F['bejegyzesTipusId'].'">'.$F['bejegyzesTipusNev'].'</option>'."\n";
+	    }
+	if ($tipus != '') echo '</optgroup>'."\n";
+	echo '</select>';
+
+	echo '<input type="checkbox" id="evvegi" name="evvegi" value="true" />'."\n";
+	echo '<label for="evvegi">'._EVVEGI.'</label>'."\n";
+	_inlineHelp(_SUGO_EVVEGI);
+
+	echo '<br />'."\n";
+
+
+
+	echo '<label for="szoveg">'._MEGJEGYZES.'</label><br />'."\n";
+	echo '<textarea name="szoveg" id="szoveg"></textarea><br />'."\n";
+
+	echo '<input type="submit" value="'._ROGZIT.'" />'."\n";
+
+	formEnd();
+
+    }
+
+?>

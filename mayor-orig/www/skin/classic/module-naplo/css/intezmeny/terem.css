@@ -1,0 +1,15 @@
+
+    div.terem { text-align: center; background-color: #ffffff; }
+    div.terem table { margin: auto; background-color: #555555; }
+    div.terem table th { background-color: white; padding: 2px 4px; font-size:large; background-color: #555555; color:white; border-bottom:solid 2px white; padding:1px 10px;}
+    div.terem table td { background-color: rgb(240,240,240); text-align: left;  padding: 2px 4px; }
+    div.terem table tr:hover td { background-color: #826373; color: white; }
+    div.terem table tr td a { color: black; }
+    div.terem table tr:hover td a {  color: white; }
+
+    form.terem h1 { background-color: #555555; color:white; margin:0px; padding:0.4em 0.2em; border-bottom: solid 2px lightgreen;} 
+
+    form.terem { background-color: ; width: 80%; margin: auto;  padding: 20px; text-align: center; }
+    form.terem label { margin-left: 10px; margin-right:1em; }
+    form.terem div.tipus { width: 200px; float: right; background-color: #dddddd; border-width: 0px 1px 1px 1px; border-style: solid; border-color: #555555;}
+/*    form.terem label, form.terem input, form.terem select { vertical-align: top; }*/

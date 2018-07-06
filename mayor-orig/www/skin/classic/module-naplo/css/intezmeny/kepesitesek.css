@@ -1,0 +1,14 @@
+
+    form.kepesites { margin: 20px 30px; background-color: #ddd; padding: 30px; }
+    form.kepesites input[type=text] { width: 800px; padding: 10px; }
+    form.kepesites label { margin-left: 20px; margin-right: 10px; }
+    form.kepesites ul {}
+    form.kepesites span.delTargy,
+    form.kepesites span.delTanar { color: #aaa; margin: 0px 4px; cursor: pointer; display:none; }
+    form.kepesites ul li:hover span.delTargy,
+    form.kepesites ul li:hover span.delTanar { display: inline;}
+
+    form.kepesites ul li:hover span.delTargy:hover,
+    form.kepesites ul li:hover span.delTanar:hover { color: #f00;}
+
+

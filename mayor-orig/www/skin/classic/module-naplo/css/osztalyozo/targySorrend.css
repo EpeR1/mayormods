@@ -1,0 +1,10 @@
+
+    form.sorrend { width: 300px; margin: 10px auto; padding: 5px; text-align: center; background-color: rgb(100,120,140);  }
+    form.sorrend h1 { font-size: 14px; padding: 2px; margin: 0px; background-color: rgb(160,100,100); color: white; }
+    form.sorrend select { margin: 5px; }
+
+    #targyUl { list-style-image:none; list-style-type:none; margin-top:5px; margin:0px; padding:0px; text-align: left;}
+    #targyUl li { padding: 2px; margin:0px; background-color: white; margin-top: 1px; }
+    #targyUl li span.handle { padding: 2px; margin: 0px 10px 0px 2px; background-color: #E8A400; color: white; cursor: move; }
+
+    #submit { margin: 2px; }

@@ -1,0 +1,231 @@
+<?php
+// -------------------------------------------------------------------
+// html_base() : a html oldal szerkezete
+// -------------------------------------------------------------------
+
+function html_base($sessionID,$policy,$page,$sub,$f,$lang,$skin,$MENU) {
+
+    _httpheader();
+
+    html_head($page,$sub,$f,$lang,$skin);
+    html_mayor_head($sessionID,$page,$sub,$f,$lang,$MENU,$skin);
+
+    _debugLayer();
+
+    echo '<div class="mayorbody">';
+    page($page,$sub,$f,$lang,$skin,$policy);
+    echo '</div>';
+    html_mayor_foot();
+}
+
+// -------------------------------------------------------------------
+// html_head() : html fejlec kiirasa            
+// -------------------------------------------------------------------
+
+function html_head($page,$sub,$f,$lang,$skin) {
+
+    global $INCLUDES, $SSSHH;
+
+    if ($f == '') $f = $page;
+    ## ----------------------------------------------
+    ## Note http://hixie.ch/advocacy/xhtml
+    ## But this is crazy! Using Doctype sniffing instead...
+    ## Also read: http://www.mozilla.org/docs/web-developer/faq.html
+    ## header('Content-type: application/xhtml+xml');
+    ## -----------------------------------------------
+    echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
+    echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">'."\n";
+    echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="hu">'."\n";
+    echo '<head>'."\n";
+    echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'."\n";
+    echo '<title>';
+	if (defined('_SITE')) echo ' - '._SITE.' - Vakbarát ';
+	echo _MAIN_TITLE;
+	echo '.';
+	echo _MAYORREV;
+    echo '</title>'."\n";
+    includeCSS($page,$sub,$f,$skin);
+    //includeCSS($page,$sub,$f,$skin,'handheld'); // install css for handheld devices
+    //includeJS($page,$sub,$f,$skin);
+    if ($SSSHH!=null && $SSSHH!='') echo $SSSHH;
+
+    if (is_array(@$INCLUDES['html_head']['global'])) foreach ($INCLUDES['html_head']['global'] as $key => $include) {
+	if (file_exists("skin/$skin/$include")) {
+	    include("skin/$skin/$include");
+	} elseif (file_exists('skin/'._DEFAULT_SKIN.'/'.$include)) {
+	    include('skin/'._DEFAULT_SKIN.'/'.$include);
+	}
+    }
+    if (is_array(@$INCLUDES['html_head'][$page])) foreach ($INCLUDES['html_head'][$page] as $key => $include) {
+	if (file_exists("skin/$skin/$include")) {
+	    include("skin/$skin/$include");
+	} elseif (file_exists('skin/'._DEFAULT_SKIN.'/'.$include)) {
+	    include('skin/'._DEFAULT_SKIN.'/'.$include);
+	}
+    }
+    echo '<link rel="shortcut icon" href="/skin/classic/base/img/favicon.ico" />'."\n";
+    echo "</head>\n<body>\n";
+		    
+}
+
+// -------------------------------------------------------------------
+// mayor_menu(): a menü kiiratása
+// -------------------------------------------------------------------
+
+function mayor_menu($MENU,$sessionID,$lang = _DEFAULT_LANG,$skin = _DEFAULT_SKIN) {
+
+    global $page, $sub, $f;
+
+    echo '<ul id="pagemenu">';
+	// --------------------------------------------------------
+    if (is_array($MENU)) {
+	foreach ($MENU as $aModule => $items) {
+	    if ($aModule != 'modules') {
+		for ($i = 0; $i < count($items); $i++) {
+
+		    if ($page == $aModule and
+			(!isset($items[$i]['url']) or strpos($_SERVER["REQUEST_URI"],$items[$i]['url']) !== false)
+		    ) echo '<li class="active">';
+		    else echo '<li>';
+
+		    if (isset($items[$i]['url']) && $items[$i]['url'] != '') {
+			if ($items[$i]['url'][0] == '&') $href = href("index.php?page=$aModule".$items[$i]['url']);
+			elseif (substr($items[$i]['url'],0,4) == 'http') $href = href($items[$i]['url'], array());
+			elseif (isset($items[$i]['get']) && is_array($items[$i]['get'])) $href = href($items[$i]['url'], $items[$i]['get']);
+			else $href = href($items[$i]['url']);
+		    } else {
+			$href = href("index.php?page=$aModule");
+		    }
+		    //echo '<a accesskey="m" href="'.$href.'"'.((isset($items[$i]['target']))?' target="'.$items[$i]['target'].'" ':'').'>'.$items[$i]['txt'].'</a>';
+		    echo '<a accesskey="'.$items[$i]['txt'][0].'" href="'.$href.'"'.((isset($items[$i]['target']))?' target="'.$items[$i]['target'].'" ':'').'>'.$items[$i]['txt'].'</a>';
+
+		    echo '</li>';
+		}
+	    }
+	}
+    }
+	// ---------------------------------------------------
+    echo '</ul>';
+
+    // II: SZINT
+    @$pageArray = $MENU['modules'][$page];
+    $aPage = $page;
+
+    	if (is_array($pageArray)) {
+	    echo '<ul id="submenu">';
+	    foreach ($pageArray as $anF => $items) {
+		if ($anF != 'sub') {
+		    for ($i=0;$i<count($items);$i++) {
+			if (
+			    $page == $aPage and 
+			    (
+				(
+				    !isset($items[$i]['url']) 
+    				    and $f == $anF
+				)
+				or
+				(
+				    isset($items[$i]['url']) and
+				    strpos($_SERVER["REQUEST_URI"],$items[$i]['url']) !== false
+				)
+			    )
+			) echo '<li class="active">';
+			else echo '<li>';
+
+			    if (isset($items[$i]['url']) && $items[$i]['url'] != '') {
+				if ($items[$i]['url'][0] == '&') $href = href("index.php?page=$aPage&f=$anF".$items[$i]['url']);
+				elseif (substr($items[$i]['url'],0,4) == 'http') $href = href($items[$i]['url'], array());
+				elseif (isset($items[$i]['get']) && is_array($items[$i]['get'])) $href = href($items[$i]['url'], $items[$i]['get']);
+				else $href = href($items[$i]['url']);
+			    } else {
+				$href = href("index.php?page=$aPage&f=$anF",array('policy','sessionID','lang','skin'));
+			    }
+			    //echo '<a accesskey="n" href="'.$href.'"'.((isset($items[$i]['target']))?' target="'.$items[$i]['target'].'" ':'').'>'.$items[$i]['txt'].'</a>';
+			    echo '<a accesskey="'.$items[$i]['txt'][0].'" href="'.$href.'"'.((isset($items[$i]['target']))?' target="'.$items[$i]['target'].'" ':'').'>'.$items[$i]['txt'].'</a>';
+
+			echo '</li>';
+		    }
+		}
+	    }
+	    echo '</ul>'."\n";
+	}
+
+    // III: SZINT
+    @$subArray = $MENU['modules'][$page]['sub'][$sub];
+    $aSub = $sub;
+    
+	if (is_array($subArray)) {
+	    echo '<ul id="fmenu">';
+
+	    foreach ($subArray as $anF => $items) {
+		for ($i=0;$i<count($items);$i++) {
+		    if ($aPage == $page and
+			$aSub == $sub and
+			$anF == $f and
+			(!isset($items[$i]['url']) or strpos($_SERVER["REQUEST_URI"],$items[$i]['url']) !== false)
+		    ) echo '<li class="active">';
+		    else echo '<li>';
+
+		    if (isset($items[$i]['url']) && $items[$i]['url'] != '') {
+			if ($items[$i]['url'][0] == '&') $href = href("index.php?page=$aPage&sub=$aSub&f=$anF".$items[$i]['url']);
+			elseif (substr($items[$i]['url'],0,4) == 'http') $href = href($items[$i]['url'], array());
+			elseif (isset($items[$i]['get']) && is_array($items[$i]['get'])) $href = href($items[$i]['url'], $items[$i]['get']);
+			else $href = href($items[$i]['url']);
+		    } else {
+			$href = href("index.php?page=$aPage&sub=$aSub&f=$anF");
+		    }
+		    //echo '<a accesskey="b" href="'.$href.'"'.((isset($items[$i]['target']))?' target="'.$items[$i]['target'].'" ':'').'> '.$items[$i]['txt'].' </a>';
+		    echo '<a accesskey="'.$items[$i]['txt'][0].'" href="'.$href.'"'.((isset($items[$i]['target']))?' target="'.$items[$i]['target'].'" ':'').'> '.$items[$i]['txt'].' </a>';
+
+		    echo '</li>';
+		}
+	    }
+
+	    echo '</ul>'."\n";
+	}
+
+}
+
+// -------------------------------------------------------------------
+// html_mayor_head() : fejlec kiirasa (logo+menu+lastupdated)            
+// -------------------------------------------------------------------
+    
+function html_mayor_head($sessionID,$page,$sub,$f,$lang,$MENU,$skin = _DEFAULT_SKIN) {
+
+    global $INCLUDES, $INSTALLED_MODULES, $LANGUAGES, $SKINS, $SKINSSHOW, $policy;
+
+    _updateWindow();
+    _keyHelp();
+    
+    if (date('m')==12) $imgextra = '-santa'; else $imgextra = '';
+
+    if (!file_exists($HOME_LOGO = 'skin/'.$skin.'/base/img/mayor_small_ssl'.$imgextra.'.png'))
+		     $HOME_LOGO = 'skin/'._DEFAULT_SKIN.'/base/img/mayor_small_ssl'.$imgextra.'.png';
+    //if (!file_exists($HOME_LOGO = 'skin/'.$skin.'/base/img/mayor_small_ssl.gif'))
+    //		     $HOME_LOGO = 'skin/'._DEFAULT_SKIN.'/base/img/mayor_small_ssl.gif';
+    if (!file_exists($HELP_LOGO = 'skin/'.$skin.'/module-help/img/help_small.jpg'))
+		     $HELP_LOGO = 'skin/'._DEFAULT_SKIN.'/module-help/img/help_small.jpg';
+
+    ## Név, Oldal info, Policy
+//    echo '<div class="namepolicy">'."\n";
+	    echo '<a href="#tartalom">Ugrás a tartalomhoz</a><br />';
+	    echo '<a href="'.href('index.php').'" accesskey="h" class="nev">'._HOME.(_USERCN!='' ? ' ('._USERCN.')' : '').'</a>';
+//    echo '</div>'."\n";
+    ## ------------------------
+    echo '<h1 id="menu">Menü</h1>';
+    mayor_menu($MENU,$sessionID,$lang,$skin);
+    echo '<h1 id="tartalom">Tartalom</h1>'."\n";
+}
+
+// -------------------------------------------------------------------
+// html_mayor_foot() : lablec kiirasa (                     )            
+// -------------------------------------------------------------------
+
+function html_mayor_foot() {
+    echo '<h1 id="lablec">Lábléc</h1>'."\n";
+    echo '<a href="'.href('index.php?skin=classic',array('sessionID','lang','policy')).'">'._SWITCH_TO_CLASSIC_SKIN.'</a>';
+    echo '<div class="mayorfoot">'._MAIN_FOOTER.'</div>';
+    echo "</body>\n</html>";
+}
+
+?>

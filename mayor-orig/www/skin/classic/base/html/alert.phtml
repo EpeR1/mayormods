@@ -1,0 +1,85 @@
+<?php
+/*
+    Module: base
+    
+    js_alert($alert)
+    html_alert($alert)
+*/
+
+// ------------------------------------------------------------------- //
+// Az $alert két részből áll: típus:hiba                               //
+// típus: alert   : javaScript alert                                   //
+//	  message : hibaüzenet után az oldal betöltődik                //
+//	  page    : hibaüzenet után az oldal nem töltődik be           //
+//	  info    : információs üzenet                                 //
+// ------------------------------------------------------------------- //
+
+// ---------------------------------------------------------------- //
+//  Hibaüzenet kiiratása 
+//  visszatérési érték: legyen-e utána megjelenítve a lap?
+// --------------------------------------------------------------- //
+
+    function html_alert($alert='') {
+
+	global $ALERT_MSG;
+
+	//$alert = $_SESSION['alert'];
+	if (!isset($alert) || (is_array($alert) && count($alert)==0)) {
+	    return true;
+	    exit;
+	}
+
+	$showPage = true;
+	while ( ($a = array_pop($alert)) ) {
+	    $j++;
+	    $param = array();
+	    $tmp = explode(':', $a);
+	    $aType = readVariable($tmp[0], 'enum', 'message', array('message','info','page')); $aCode = $tmp[1];
+	    for ($p = 2; $p < count($tmp); $p++) $param[] = htmlspecialchars($tmp[$p]);
+	    $pstr = '';
+	    // preparing $msg
+	    if (!isset($ALERT_MSG[$aCode]) || $ALERT_MSG[$aCode] == '') 
+		$msg = $ALERT_MSG['default'].' <span class="alertParam">'.$aType.':'.$aCode.'</span>';
+	    else $msg = $ALERT_MSG[$aCode];
+
+	    // paraméter behelyettesítés
+	    for($i = 0; $i < count($param); $i++) {
+		$_msg = $msg;
+		$msg = @str_replace("%$i%",'<span class="alertParam">'.($param[$i]).'</span>',$msg);
+		if ($param[$i] != '' and $_msg == $msg) $pstr .= '<span class="alertParam">'.($param[$i]).'</span>,';
+	    }
+	    if ($pstr != '') $msg .= '<br/>' . substr($pstr,0,-1) . '';
+	    if (($aType == 'message') or ($aType == 'page')) {
+		$title = _ERROR;
+		$class = 'errorMsg';
+		if ($aType == 'page') $showPage = false;
+		$sign='<span class="icon-exclamation-sign '.$class.'"></span>';
+		$hasError = true;
+	    } else {
+		$title = _INFORMATION;
+		$class = 'infoMsg';
+		$sign='<span class="icon-info-sign '.$class.'"></span>';
+		$hasInfo = true;
+	    }
+	    $class .= ' hidden';
+
+	    $msg = '<span>'.$title.' ['.$j.']:</span> ' . $msg;
+	    //echo '<div class="'.$class.'">'.str_replace('***','<br/>',$msg).'</div>'."\n";
+
+	    $x .= $sign.str_replace('***',' ',str_replace('<br/>',' ',$msg))."<br/>\n";
+
+	    // Függetlenül attól, hogy milyen paramétert kaptunk a $_SESSION['alert']-et üresre állítjuk
+	    $_SESSION['alert'] = array();
+	}
+
+	if ($hasInfo==true && $hasError==false) {
+	    echo '<div id="mayorErrorSmall"  class="mayorErrorSmallInfo" ><div><span id="mayorErrorHide" class="icon-remove-sign"></span>'.$x.'</div></div>';
+	} else {
+	    echo '<div id="mayorErrorSmall"  class="mayorErrorSmallError"><div><span id="mayorErrorHide" class="icon-remove-sign"></span>'.$x.'</div></div>';
+	}
+
+	return $showPage;
+
+    }
+
+?>

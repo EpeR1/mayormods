@@ -1,0 +1,48 @@
+<?php
+    /*
+	$ADAT['meta'] = ['dbNap']
+	$ADAT['oszlopFej'][$index]
+	$ADAT['oszlopLab'][$index]
+	$ADAT['sorFej']
+        $ADAT['tabla']
+    */
+
+    function putOrarendTablazat($ADAT) {
+
+       echo '<table border="0" align="center" class="orarend">';
+	/* Header */
+	echo '<thead>';
+    	    echo '<tr>';
+		for ($nap=0; $nap<=$ADAT['meta']['dbNap']; $nap++) {
+            	    echo '<th>';
+			if (function_exists('_putOrarendHead')) _putOrarendHead($ADAT['oszlopFej'][$nap]);
+		    echo '</th>';
+		}
+	    echo '</tr>';
+	echo '</thead>'."\n";
+	/* Footer */
+	echo '<tfoot>';
+    	    echo '<tr>';
+		for ($nap=0; $nap<=$ADAT['meta']['dbNap']; $nap++) {
+            	    echo '<th>';
+			if (function_exists('_putOrarendFoot')) _putOrarendHead($ADAT['oszlopLab'][$nap]);
+		    echo '</th>';
+		}
+	    echo '</tr>';
+	echo '</tfoot>'."\n";
+
+	/* Table body */
+        for ($ora = 0; $ora<16; $ora++) {                                                                                                                                        
+            echo '<tr>';                                                                                                                                                         
+            echo '<th>'.$ora.'</th>';                                                                                                                                            
+            for ($nap=1; $nap<=$ADAT['meta']['dbNap']; $nap++) {                                                                                                                                       
+                echo '<td>';                                                                                                                                                     
+		if ($ADAT[$ora][$nap]['modosithato'] === true && function_exists('_egyOraMod')) _egyOraMod();
+                echo '</td>';                                                                                                                                                    
+            }                                                                                                                                                                    
+            echo '</tr>'."\n";                                                                                                                                                   
+        }                                                                                                                                                                        
+        echo '</table>';       
+
+    }    
+?>

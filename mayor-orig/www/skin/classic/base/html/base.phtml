@@ -1,0 +1,618 @@
+<?php
+/*
+    Module: base
+    
+    html_base($sessionID,$page,$sub,$f,$lang,$skin,$MENU)
+    html_head($page,$f,$lang,$skin)
+    html_mayor_head($sessionID,$page,$sub,$f,$lang,$MENU,$skin = 'default')
+    html_mayor_foot()
+    //page($page,$sub,$f,$lang,$skin) --> base.php
+    putValidXHTML()
+
+    Felhasználtuk: http://projects.lukehaas.me/css-loaders/
+
+*/
+
+    require('skin/blue/base/color_schemes.php'); // blue? !!!!!!!!!!!!????????????????
+    if (!defined('__COLOR_SCHEME') || !is_array($_COLOR_SCHEMES[__COLOR_SCHEME]))
+        $_COLORS = $_COLOR_SCHEMES['blue'];
+    else
+        $_COLORS = $_COLOR_SCHEMES[__COLOR_SCHEME];
+
+
+// -------------------------------------------------------------------
+// html_base() : a html oldal szerkezete
+// -------------------------------------------------------------------
+
+function html_base($sessionID,$policy,$page,$sub,$f,$lang,$skin,$MENU) {
+
+    _httpHeader();
+
+    if ($MENU['set'][$policy][$page][$sub][$f]['refresh'] > 0) {
+	@header("Refresh:".intval($MENU['set'][$policy][$page][$sub][$f]['refresh']));
+    }
+
+    html_head($page,$sub,$f,$lang,$skin);
+    _debugLayer();
+    html_mayor_head($sessionID,$page,$sub,$f,$lang,$MENU,$skin);
+    echo '<div id="mayorerror"></div>';
+    $_defaultPageLayout = ($_SESSION['pageLayout']==0) ? 'leftpad' : 'toppad';
+    echo '<div class="mayorbody '.$_defaultPageLayout.'" id="mayorbody">';
+    page($page,$sub,$f,$lang,$skin,$policy);
+    echo '</div>';
+    html_mayor_foot();
+}
+
+// -------------------------------------------------------------------
+// html_head() : html fejlec kiirasa            
+// -------------------------------------------------------------------
+
+function html_head($page,$sub,$f,$lang,$skin) {
+
+    global $INCLUDES, $SSSHH, $SSSBB;
+
+    if ($f == '') $f = $page;
+    ## ----------------------------------------------
+    ## Note http://hixie.ch/advocacy/xhtml
+    ## But this is crazy! Using Doctype sniffing instead...
+    ## Also read: http://www.mozilla.org/docs/web-developer/faq.html
+    ## header('Content-type: application/xhtml+xml');
+    ## -----------------------------------------------
+
+    // debug üzenetek layer-ének lezárása
+//    if (defined('__START_DEBUG') && __START_DEBUG === true) echo "</div>\n<!--// debug end //-->";
+
+    echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
+    echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'."\n";
+    echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="hu">'."\n";
+    echo '<head>'."\n";
+    echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'."\n";
+    echo '<meta name=viewport content="width=device-width, initial-scale=1" />'."\n"; 
+    echo '<title>';
+	if (defined('_SITE')) echo _SITE.' - ';
+	echo _MAIN_TITLE;
+	echo '.';
+	echo _MAYORREV;
+    echo '</title>'."\n";
+    includeCSS($page,$sub,$f,$skin);
+    includeCSS($page,$sub,$f,$skin,'handheld'); // install css for handheld devices
+    includeJS($page,$sub,$f,$skin);
+    includeSocial($page,$sub,$f);
+
+    if (is_string($SSSHH) && $SSSHH!='') echo $SSSHH;
+
+    if (is_array(@$INCLUDES['html_head']['global'])) foreach ($INCLUDES['html_head']['global'] as $key => $include) {
+	if (file_exists("skin/$skin/$include")) {
+	    include("skin/$skin/$include");
+	} elseif (file_exists('skin/'._DEFAULT_SKIN.'/'.$include)) {
+	    include('skin/'._DEFAULT_SKIN.'/'.$include);
+	}
+    }
+    if (is_array(@$INCLUDES['html_head'][$page])) foreach ($INCLUDES['html_head'][$page] as $key => $include) {
+	if (file_exists("skin/$skin/$include")) {
+	    include("skin/$skin/$include");
+	} elseif (file_exists('skin/'._DEFAULT_SKIN.'/'.$include)) {
+	    include('skin/'._DEFAULT_SKIN.'/'.$include);
+	}
+    }
+    echo '<link rel="shortcut icon" href="/skin/classic/base/img/favicon.ico" />'."\n";
+    echo '</head>'."\n".'<body data-sessionid="'._SESSIONID.'" data-mayortoken="'.$_SESSION['mayorToken'].'" data-mayorrev="'._MAYORREV.'">'."\n";
+    if (is_string($SSSBB) && $SSSBB!='') echo $SSSBB;
+		    
+}
+
+// -------------------------------------------------------------------
+// mayor_menu(): a menü kiiratása
+// -------------------------------------------------------------------
+
+function mayor_menu($MENU,$sessionID,$lang = _DEFAULT_LANG,$skin = _DEFAULT_SKIN) {
+
+    global $policy, $page, $sub, $f, $LANGUAGES, $SKINSSHOW, $_COLORS,$NAV;
+//    echo '<div id="hamburgerIcon"><span class="icon-align-justify"></span></div>';
+    echo '<div class="hamburger hamburger--squeeze"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div>';
+
+    echo '<ul id="nav" class="hideShowContainer">'."\n";
+    if (is_array($MENU)) {
+
+	$active_page=false;
+	foreach ($MENU as $aModule => $pItems) {
+	    if ($aModule != 'modules') {
+		for ($i = 0; $i < count($pItems); $i++) {
+		    if ($page == $aModule and
+			( $active_page===false && ( $_SERVER["REQUEST_URI"]=='/' || (!isset($pItems[$i]['url'])) || strpos($_SERVER["REQUEST_URI"],$pItems[$i]['url']) !== false || strpos($pItems[$i]['url'],"page=$page") !== false) )
+		    ) {
+			echo '<li class="active">';
+			$active_page=true;
+		    } else {
+			if ($page=='n4p1o' || count($NAV[1])>0)
+			    echo '<li style="display: none;" class="openable">'; //--none
+			else
+			    echo '<li style="display: ;" class="openable">'; //--none
+		    }
+		    if (isset($pItems[$i]['url']) && $pItems[$i]['url'] != '') {
+			if ($pItems[$i]['url'][0] == '&') $href = href("index.php?page=$aModule".$pItems[$i]['url']);
+			elseif (substr($pItems[$i]['url'],0,4) == 'http') $href = href($pItems[$i]['url'], array());
+			elseif (isset($pItems[$i]['get']) && is_array($pItems[$i]['get'])) $href = href($pItems[$i]['url'], $pItems[$i]['get']);
+			else $href = href($pItems[$i]['url']);
+		    } else {
+			$href = href("index.php?page=$aModule");
+		    }
+		    echo '<a href="'.$href.'"'.((isset($pItems[$i]['target']))?' target="'.$pItems[$i]['target'].'" ':'').'>'
+			.$pItems[$i]['txt']
+			.'</a>'."\n";
+		    // --- sub ---
+
+		    @$pageArray = $MENU['modules'][$aModule];
+
+		    if (is_array($pageArray) && count($pageArray)>0) {
+			echo '<ul class="sub">'."\n";
+			foreach ($pageArray as $aSub => $sItems) {
+			    if ($aSub != 'sub') {
+				for ($j=0;$j<count($sItems);$j++) {
+				    if (
+					$page == $aModule and 
+					(
+					    (!isset($sItems[$j]['url']) && $f == $aSub)
+					    || (isset($sItems[$j]['url']) && strpos($_SERVER["REQUEST_URI"],$sItems[$j]['url']) !== false)
+					)
+				    ) { 
+					echo '<li class="active">'; $activeSub = true;
+				    } else { 
+					echo '<li>'; $activeSub = false; 
+				    }
+				    if (isset($sItems[$j]['url']) && $sItems[$j]['url'] != '') {
+					if ($sItems[$j]['url'][0] == '&') $href = href("index.php?page=$aModule&f=$aSub".$sItems[$j]['url']);
+					elseif (substr($sItems[$j]['url'],0,4) == 'http') $href = href($sItems[$j]['url'], array());
+					elseif (isset($sItems[$j]['get']) && is_array($sItems[$j]['get'])) $href = href($sItems[$j]['url'], $sItems[$j]['get']);
+					else $href = href($sItems[$j]['url']);
+				    } else {
+					$href = href("index.php?page=$aModule&f=$aSub",array('policy','sessionID','lang','skin'));
+				    }
+				    @$subArray = $MENU['modules'][$aModule]['sub'][$aSub];
+				    if (!is_array($subArray) || count($subArray) == 0) {
+					echo '<a href="'.$href.'"'.((isset($sItems[$j]['target']))?' target="'.$sItems[$j]['target'].'" ':'').'>'
+						.$sItems[$j]['txt'].'</a>';
+				    } else { // vannak al-al menúk (f - menü)
+					echo '<a class="larr" href="'.$href.'"'.((isset($sItems[$j]['target']))?' target="'.$sItems[$j]['target'].'" ':'').'>'
+						.$sItems[$j]['txt'].'</a>';
+					// -- f menü --
+					echo '<ul class="fmenu">'."\n";
+
+					foreach ($subArray as $anF => $items) {
+					    for ($k=0;$k<count($items);$k++) {
+						if ($aModule == $page and
+						    $aSub == $sub and
+						    $anF == $f and
+						    (!isset($items[$k]['url']) or strpos($_SERVER["REQUEST_URI"],$items[$k]['url']) !== false)
+						) { echo  '<li class="active">'."\n"; }
+						else { echo '<li>'."\n"; }
+
+						if (isset($items[$k]['url']) && $items[$k]['url'] != '') {
+						    if ($items[$k]['url'][0] == '&') $href = href("index.php?page=$aModule&sub=$aSub&f=$anF".$items[$k]['url']);
+						    elseif (substr($items[$k]['url'],0,4) == 'http') $href = href($items[$k]['url'], array());
+						    elseif (isset($items[$k]['get']) && is_array($items[$k]['get'])) $href = href($items[$k]['url'], $items[$k]['get']);
+						    else $href = href($items[$k]['url']);
+						} else {
+						    $href = href("index.php?page=$aModule&sub=$aSub&f=$anF");
+						}
+						echo '<a href="'.$href.'"'.((isset($items[$k]['target']))?' target="'.$items[$k]['target'].'" ':'').'> '
+						    .$items[$k]['txt'].' </a>'."\n";
+
+						echo '</li>'."\n"; // al-al menüpont vége (f)
+					    } // for - on items
+					} // foreach - on subArray
+
+					echo '</ul>'."\n"; // fmenu
+				    } // vannak al-al menük (f -menü)
+
+				    echo '</li>'."\n"; // almenü-pont vége (sub)
+				} // for - on sItems
+			    } // ha nem sub == aSub
+			} // foreach pageArray
+			echo '</ul>'."\n"; // submenu
+		    } // vannak almenük (sub)
+		    echo '</li>'."\n"; // menüpont vége (page)
+		} // for - on pItems
+	    } // ha aModule != 'modules'
+	} // foreach on MENU
+    } 
+    echo '<li class="start onClickHideShow">&nbsp;</li>';
+    echo '</ul>'."\n";
+
+    // ------------------------
+
+
+
+}
+
+// -------------------------------------------------------------------
+// html_mayor_head() : fejlec kiirasa (logo+menu+lastupdated)            
+// -------------------------------------------------------------------
+    
+function html_mayor_head($sessionID,$page,$sub,$f,$lang,$MENU,$skin = _DEFAULT_SKIN) {
+
+    global $INCLUDES, $INSTALLED_MODULES, $LANGUAGES, $SKINS, $SKINSSHOW, $policy, $SCHOOL_LOGO, $SCHOOL_IDENTITY, $SCHOOL_URL, $NAV;
+    
+    _updateWindow();
+    _updateWindowSide();
+    _keyHelp();
+    _searchLayer();
+
+    echo '<div id="mayorhead">';
+    mayorGlobalLogin(defined('_USERACCOUNT') && (!is_string(_USERACCOUNT) || _USERACCOUNT=='') );
+
+    //if (date('m')==12) $imgextra = '-santa'; else $imgextra = '';
+    if (defined('_HOME_LOGO') && file_exists(_HOME_LOGO)) $HOME_LOGO=_HOME_LOGO;
+    elseif (!file_exists($HOME_LOGO = 'skin/'.$skin.'/base/img/mayor_small_ssl'.$imgextra.'.png'))
+	$HOME_LOGO = 'skin/'._DEFAULT_SKIN.'/base/img/mayor_small_ssl'.$imgextra.'.png';
+
+    if (defined('_HOME_LOGO_BADGE') && file_exists(_HOME_LOGO_BADGE)) $HOME_LOGO_BADGE=_HOME_LOGO_BADGE;
+//    elseif (!file_exists($HOME_LOGO = 'skin/'.$skin.'/base/img/mayor_small_ssl'.$imgextra.'.png'))
+//	$HOME_LOGO = 'skin/'._DEFAULT_SKIN.'/base/img/mayor_small_ssl'.$imgextra.'.png';
+
+	echo '<div id="head"></div>';
+
+	echo "<!--// NAV1 start //-->\n";
+	echo '<div id="nav1" data-nav1count="'.count($NAV[1]).'">';
+	
+	echo '<div class="hideShowContainer">';
+
+	$db = 0; $max = __MAX_MENU; // Az egy sorba megjeleníthető menüpontok maximális száma
+	if (is_array($NAV[1])) foreach ($NAV[1] as $N1) {
+	    $txt = '';
+	    $i = intval($N1['index']);
+	    if (isset($N1['sub'])) {
+		if (!isset($N1['f'])) {
+		    $M = $MENU['modules'][ $N1['page'] ][ $N1['sub'] ][ $i ];
+		} else {
+		    $M = $MENU['modules'][ $N1['page'] ]['sub'][ $N1['sub'] ][ $N1['f'] ][ $i ];
+		}
+	    } elseif (isset($N1['f'])) {
+		$M = $MENU['modules'][ $N1['page'] ][ $N1['f'] ][ $i ];
+	    } else {
+		$M = $MENU[$N1['page']][ $i ];
+	    }
+	    $txt = $M['txt'];
+	    $url = $M['url'];
+	    $get = $M['get'];
+	    if (isset($get)) $href = href( isset($url)?$url:'index.php?page='.$N1['page'].'&sub='.$N1['sub'].'&f='.$N1['f'], $get);
+	    else $href = href( isset($url)?$url:'index.php?page='.$N1['page'].'&sub='.$N1['sub'].'&f='.$N1['f']);
+	    if ($db<$max) {
+		if ($page == $N1['page'] && $sub == $N1['sub'] && (!isset($N1['f']) || $f == $N1['f'])) $class = ' class="aktiv" '; else $class = '';
+	    } else {
+		if ($page == $N1['page'] && $sub == $N1['sub'] && (!isset($N1['f']) || $f == $N1['f'])) $class = ' class="openable aktiv" '; else $class = ' class="openable" ';
+		$style = ' style="display: none;" ';
+	    }
+	    if ($txt != '') { // Hibás hivatkozás ne rontsa el a menüt!
+		if ($db == $max) echo '<span class="onClickHideShow openable">&nabla;</span><span class="onClickHideShow openable" style="display: none;">&Delta;</span><br />';
+		echo '<a href="'.$href.'"'.$class.$style.'>';
+		echo $txt;
+		echo '</a>';
+		$db++;
+	    }
+	}
+
+	echo '</div>';
+	echo '</div>'."\n<!--// NAV1 end //-->\n";
+
+	mayor_menu($MENU,$sessionID,$lang,$skin);
+
+
+	echo '<div class="mayorLogo">';
+	echo '<a href="'.href('index.php').'">';
+	    echo '<img src="'.$HOME_LOGO.'" alt="MaYoR" id="logo" />';
+	    if ($HOME_LOGO_BADGE!='') echo '<img src="'.$HOME_LOGO_BADGE.'" alt="" id="logobadge" />';
+	echo '</a>';
+	echo '</div>';
+
+	/* ----------------- POZ ----------------- */
+	$loginout_img = _svgLoginout(array('print'=>false, 'color' => $_COLORS['login']));
+	$down_svg = _svgDown(array('print'=>false, 'color' => $_COLORS['login']));
+	echo '<ul id="poz">';
+	    echo '<li>';
+	    if (!defined('_SCHOOL_NAME')) define('_SCHOOL_NAME',_SITE); // TODO - ?
+	    echo '<span class="school">'._SCHOOL_NAME.'</span>';
+	//    if ($policy == 'public') {
+	    if (defined('_USERACCOUNT') && (!is_string(_USERACCOUNT) || _USERACCOUNT=='')) {
+
+		echo '<div class="nev">';
+		//echo $down_svg.'<span class="onClickHideShow" style="padding-left:14px;" > '._LOGIN.'</span>';
+		echo '<a id="logout" title="'._LOGIN.'" href="'.href('index.php?page=auth&f=login&toPolicy=private',array('skin','lang','sessionID')).'">';
+		echo _LOGIN;
+		echo '</a>';
+		echo $loginout_img;
+
+	//	    echo '<div id="settings" class="openable" style="display: none">';
+	//		echo '<table>';
+	//		    echo '<tr>';
+	//			echo '<td><a href="'.href('index.php?page=auth&f=login&toPolicy=parent').'">'.str_replace(' ','&nbsp;',_PARENT_LOGIN).'</a></td>';
+	//			echo '<td><a href="'.href('index.php?page=auth&f=login&toPolicy=private').'">'._LOGIN.'</a></td>';
+	//		    echo '</tr>';
+	//		echo '</table>';
+	//	    echo '</div>';
+		echo '</div>';
+	    } else {
+		$_class = $_profileImg ='';
+		if ($_SESSION['googleapi_object']['picture']!='') {
+//		    $_profileImg = '<a href="'.href('index.php?page=session&f=googleapi&userAccount='._USERACCOUNT).'"><img src="'.$_SESSION['googleapi_object']['picture'].'" style="height:12px;" /></a>';
+		    $_class = 'googleapi';
+		}
+		if ($_SESSION['facebook_access_token']!='') {
+//		    echo '<a href="'.href('index.php?page=session&f=googleapi&userAccount='._USERACCOUNT).'"><img src="'.$_SESSION['googleapi_object']['picture'].'" style="height:12px;" /></a>';
+		    $_class = 'fbconnect';
+		}
+		echo '<div class="nev hideShowContainer '.$_class.'">';
+
+		echo '<a href="'.href('index.php?page=password&f=changeMyPassword&toPolicy='.$policy.'&userAccount='._USERACCOUNT.'&policy=public',array('skin','lang','sessionID')).'"><span class="icon-key" title="'._PASSWORD.'"></span></a>';
+		echo '<a href="'.href('index.php?page=session&f=googleapi&userAccount='._USERACCOUNT).'"><span class="icon-googleplus" title="'._GOOGLEAPI.'"></span></a>';
+		echo '<a href="'.href('index.php?page=session&f=facebookConnect&userAccount='._USERACCOUNT).'"><span class="icon-facebook" title="'._FACEBOOK_CONNECT.'"></span></a>';
+
+		echo '<span class="onClickHideShow" >'._USERCN.'</span>';
+		//echo '<a id="logout" title="'._LOGOUT.'" href="'.href('index.php?page=session&f=logout&policy=public',array('skin','lang','sessionID')).'">';
+		//echo $loginout_img;
+		//echo '</a>';
+		echo ' <span class="onClickHideShow icon-cog"></span>';
+		    echo '<div id="settings" class="openable" style="display: none">';
+			echo '<div>';
+			echo '<p class="name">'._USERCN.'</p>';
+			echo '<p class="account">'._USERACCOUNT.'</p>';
+			echo '</div>';
+			echo '<table>';
+			    echo '<tr>';
+				echo '<td><a href="'.href('index.php?page=password&f=changeMyPassword&toPolicy='.$policy.'&userAccount='._USERACCOUNT.'&policy=public',array('skin','lang','sessionID')).'">'._PASSWORD.'</a></td>';
+				echo '<td><a href="'.href('index.php?page=session&f=logout&policy=public',array('skin','lang','sessionID')).'">'._LOGOUT.'</a></td>';
+			    echo '</tr>';
+			echo '</table>';
+			formBegin();
+                		$sessionMaxIdleTime=$sessionAlertTime=0;
+                		if ((_SESSIONID!='' && _POLICY!='public') && defined('_SESSION_MAX_IDLE_TIME') && _SESSION_MAX_IDLE_TIME>0) {
+                    		    $sessionMaxIdleTime=((_SESSION_MAX_IDLE_TIME*1000*60*60)+1000);
+                    		    if (defined('_SESSION_ALERT_TIME')) $sessionAlertTime = ((_SESSION_MAX_IDLE_TIME*1000*60*60)-(_SESSION_ALERT_TIME*1000*60));
+                		}
+                		echo '<input type="hidden" id="SESSION_MAX_IDLE_TIME" value="'.$sessionMaxIdleTime.'" />';
+                		echo '<input type="hidden" id="SESSION_ALERT_TIME" value="'.$sessionAlertTime.'" />';
+			formEnd();
+		    echo '</div>';
+
+		echo '</div>';
+	    } // policy != public
+	    echo '</li>';
+	echo '</ul>';
+	// ------------- POZ ------------ 
+
+
+	echo "<!--// NAV2 start //-->\n";
+	$_defaultPageLayout = ($_SESSION['pageLayout']==0) ? 'vertical' : 'horizontal';
+	echo '<div id="nav2" class="'.$_defaultPageLayout.'">';
+//        echo '<span id="hideNav2:tavtarto" class="onClickHide">X</span>';
+
+//	$__M = $MENU['modules'][$page]['sub'][$sub];
+
+	echo '<div id="mayorIcons" class="icons" >';
+		echo '<span id="leftsideclose" class="icon-resize-full" title="'._ICON_SWAPNAV.'"></span>';
+//		echo '<span id="" class="icon-envelope"></span>';
+//		echo '<span id="skin-vakbarat" class="icon-blind"></span>';
+		if (in_array('vakbarat',$SKINSSHOW)) echo '<span id="skin-vakbarat" class="icon-braille" title="'._ICON_VAKBARAT.'"></span>';
+		if (in_array('oldschool',$SKINSSHOW)) echo '<span id="skin-oldschool" class="icon-view-mode" title="'._ICON_OLDSCHOOL.'"></span>';
+//		echo '<span id="nav2fullmenu" class="icon-list"></span>';
+		echo '<span id="mayorMenuSearchIcon" class="icon-search" title="'._ICON_SEARCH.'"></span>';
+		echo '<span id="mayorErrorSign" class="icon-exclamation-sign" style="display:none"></span>';
+		// echo '<div class="g-signin2" data-onsuccess="onSignIn"></div>';
+	echo '</div>';
+
+	echo '<ul>';
+	  if (is_array($NAV[2])) {
+	    /* Plusz menü - teszt */
+	    if (is_array($__M)) {
+		foreach ($__M as $__f=>$__D) {
+			echo '<li class="fullmenuitem">';
+			    echo '<a href="">'.$__D[0]['txt'].'</a>';
+			echo '</li>';
+		}
+	    }
+	    foreach ($NAV[2] as $N2) {
+		    $txt = '';
+		    $i = intval($N2['index']);
+		    if (isset($N2['sub'])) {
+			if (!isset($N2['f'])) {
+			    $M = $MENU['modules'][ $N2['page'] ][ $N2['sub'] ][ $i ];
+			} else {
+			    $M = $MENU['modules'][ $N2['page'] ]['sub'][ $N2['sub'] ][ $N2['f'] ][ $i ];
+			}
+		    } elseif (isset($N2['f'])) {
+			$M = $MENU['modules'][ $N2['page'] ][ $N2['f'] ][ $i ];
+		    } else {
+			$M = $MENU[$N2['page']][ $i ];
+		    }
+		    $txt = $M['txt'];
+		    $url = $M['url'];
+		    $get = $M['get'];
+		    if (isset($get)) $href = href( isset($url)?$url:'index.php?page='.$N2['page'].'&sub='.$N2['sub'].'&f='.$N2['f'], $get);
+		    else $href = href( isset($url)?$url:'index.php?page='.$N2['page'].'&sub='.$N2['sub'].'&f='.$N2['f']);
+
+		    if ($page == $N2['page'] && $sub == $N2['sub'] && (!isset($N2['f']) || $f == $N2['f'])) $class = ' class="aktiv" '; else $class ='';
+		    if ($txt != '') {
+			echo '<li class="nav2menuitem '.'">';
+			echo '<a href="'.$href.'"'.$class.'>';
+			    if (isset($M['icon'])) echo '<span class="'.$M['icon'].'"> </span>';
+			    echo $txt;
+			echo '</a>';
+			echo '</li>';
+		    }
+	    }
+	  }
+	echo '</ul>';
+	if (function_exists('_nav2widget')) _nav2widget();
+	echo '</div>'."\n<!--// NAV2 end //-->\n";
+    echo '</div>'."\n";
+
+    mayor_menu_full($MENU);
+    mayor_breadcrumb();
+
+}
+
+
+// -------------------------------------------------------------------
+// html_mayor_foot() : lablec kiirasa (                     )            
+// -------------------------------------------------------------------
+
+function html_mayor_foot() {
+    $_defaultPageLayout = ($_SESSION['pageLayout']==0) ? 'leftpad' : 'toppad';
+    echo '<div class="mayorfoot '.$_defaultPageLayout.'" id="mayorfoot">'._MAIN_FOOTER.'</div>'."\n\n";
+    echo "</body>\n</html>";
+}
+
+function mayor_menu_full($MENU,$lang = _DEFAULT_LANG,$skin = _DEFAULT_SKIN) { // TESTING ONLY
+
+    global $policy, $page, $sub, $f, $LANGUAGES, $SKINSSHOW, $_COLORS, $NAVI;
+
+    echo '<div id="mayorNav" style="display:none">';
+    
+    $NAVI[] = array('txt'=>'Kereső', 'url'=>'','icon'=>'icon-search','id'=>'mayorNaviSearchIcon');
+    if (count($NAVI)>0) {
+	echo '<div class="mayorNavIcons">';
+	for ($i=0; $i<count($NAVI); $i++) {
+	    echo '<div id="'.$NAVI[$i]['id'].'">';
+	    if ($NAVI[$i]['url']!='') echo '<a href="'.href($NAVI[$i]['url']).'">';
+		echo '<span class="'.$NAVI[$i]['icon'].'"></span><br/>';
+		echo $NAVI[$i]['txt'];
+	    if ($NAVI[$i]['url']!='') echo '</a>';
+	    echo '</div>';
+	}
+	echo '</div>';
+    }
+    echo '<ul>'."\n";
+    if (is_array($MENU)) {
+	$active_page=false;
+	foreach ($MENU as $aModule => $pItems) {
+	    if ($aModule != 'modules') {
+		for ($i = 0; $i < count($pItems); $i++) {
+		    if ($page == $aModule and
+			( $active_page===false && ( $_SERVER["REQUEST_URI"]=='/' || (!isset($pItems[$i]['url'])) || strpos($_SERVER["REQUEST_URI"],$pItems[$i]['url']) !== false || strpos($pItems[$i]['url'],"page=$page") !== false) )
+		    ) {
+			echo '<li class="active___">';
+			$active_page=true;
+		    } else {
+			echo '<li style="display: ;" class="openable___">';
+
+		    }
+		    if (isset($pItems[$i]['url']) && $pItems[$i]['url'] != '') {
+			if ($pItems[$i]['url'][0] == '&') $href = href("index.php?page=$aModule".$pItems[$i]['url']);
+			elseif (substr($pItems[$i]['url'],0,4) == 'http') $href = href($pItems[$i]['url'], array());
+			elseif (isset($pItems[$i]['get']) && is_array($pItems[$i]['get'])) $href = href($pItems[$i]['url'], $pItems[$i]['get']);
+			else $href = href($pItems[$i]['url']);
+		    } else {
+			$href = href("index.php?page=$aModule");
+		    }
+		    echo '<a href="'.$href.'"'.((isset($pItems[$i]['target']))?' target="'.$pItems[$i]['target'].'" ':'').'>'
+			.$pItems[$i]['txt']
+			.'</a>'."\n";
+		    // --- sub ---
+
+		    @$pageArray = $MENU['modules'][$aModule];
+
+		    if (is_array($pageArray) && count($pageArray)>0) {
+			echo '<ul class="sub">'."\n";
+			foreach ($pageArray as $aSub => $sItems) {
+			    if ($aSub != 'sub') {
+				for ($j=0;$j<count($sItems);$j++) {
+				    if (
+					$page == $aModule and 
+					(
+					    (!isset($sItems[$j]['url']) && $f == $aSub)
+					    || (isset($sItems[$j]['url']) && strpos($_SERVER["REQUEST_URI"],$sItems[$j]['url']) !== false)
+					)
+				    ) { 
+					echo '<li class="active">'; $activeSub = true;
+				    } else { 
+					echo '<li>'; $activeSub = false; 
+				    }
+				    if (isset($sItems[$j]['url']) && $sItems[$j]['url'] != '') {
+					if ($sItems[$j]['url'][0] == '&') $href = href("index.php?page=$aModule&f=$aSub".$sItems[$j]['url']);
+					elseif (substr($sItems[$j]['url'],0,4) == 'http') $href = href($sItems[$j]['url'], array());
+					elseif (isset($sItems[$j]['get']) && is_array($sItems[$j]['get'])) $href = href($sItems[$j]['url'], $sItems[$j]['get']);
+					else $href = href($sItems[$j]['url']);
+				    } else {
+					$href = href("index.php?page=$aModule&f=$aSub",array('policy','sessionID','lang','skin'));
+				    }
+				    @$subArray = $MENU['modules'][$aModule]['sub'][$aSub];
+				    if (!is_array($subArray) || count($subArray) == 0) {
+					echo '<a href="'.$href.'"'.((isset($sItems[$j]['target']))?' target="'.$sItems[$j]['target'].'" ':'').'>'
+						.$sItems[$j]['txt'].'</a>';
+				    } else { // vannak al-al menúk (f - menü)
+					echo '<a class="larr" href="'.$href.'"'.((isset($sItems[$j]['target']))?' target="'.$sItems[$j]['target'].'" ':'').'>'
+						.$sItems[$j]['txt'].'</a>';
+					// -- f menü --
+					echo '<ul class="fmenu">'."\n";
+
+					foreach ($subArray as $anF => $items) {
+					    for ($k=0;$k<count($items);$k++) {
+						if ($aModule == $page and
+						    $aSub == $sub and
+						    $anF == $f and
+						    (!isset($items[$k]['url']) or strpos($_SERVER["REQUEST_URI"],$items[$k]['url']) !== false)
+						) { echo  '<li class="active">'."\n"; }
+						else { echo '<li>'."\n"; }
+
+						if (isset($items[$k]['url']) && $items[$k]['url'] != '') {
+						    if ($items[$k]['url'][0] == '&') $href = href("index.php?page=$aModule&sub=$aSub&f=$anF".$items[$k]['url']);
+						    elseif (substr($items[$k]['url'],0,4) == 'http') $href = href($items[$k]['url'], array());
+						    elseif (isset($items[$k]['get']) && is_array($items[$k]['get'])) $href = href($items[$k]['url'], $items[$k]['get']);
+						    else $href = href($items[$k]['url']);
+						} else {
+						    $href = href("index.php?page=$aModule&sub=$aSub&f=$anF");
+						}
+						echo '<a href="'.$href.'"'.((isset($items[$k]['target']))?' target="'.$items[$k]['target'].'" ':'').'> '
+						    .$items[$k]['txt'].' </a>'."\n";
+
+						echo '</li>'."\n"; // al-al menüpont vége (f)
+					    } // for - on items
+					} // foreach - on subArray
+
+					echo '</ul>'."\n"; // fmenu
+				    } // vannak al-al menük (f -menü)
+
+				    echo '</li>'."\n"; // almenü-pont vége (sub)
+				} // for - on sItems
+			    } // ha nem sub == aSub
+			} // foreach pageArray
+			echo '</ul>'."\n"; // submenu
+		    } // vannak almenük (sub)
+		    echo '</li>'."\n"; // menüpont vége (page)
+		} // for - on pItems
+	    } // ha aModule != 'modules'
+	} // foreach on MENU
+    } 
+    echo '</ul>'."\n";
+    echo '</div>'."\n";
+
+    // ------------------------
+
+
+
+}
+
+function mayor_breadcrumb() { // TESTING ONLY
+
+    return false;
+    global $MENU,$page;
+    echo '<div class="breadcrumbs" style="position:fixed; top:100px; right:20px; z-index:100000; background-color: red;">';
+	echo '<ul>';
+	    for ($i=0; $i<count($_SESSION['breadcrumb']); $i++) {
+		$H = $_SESSION['breadcrumb'][$i];
+		echo '<li>';
+		    echo implode(':',$H).' = ';
+		    echo '<a href="'.href('index.php?page='.$H['page'].'&sub='.$H['sub'].'&f='.$H['f']).'">'.$H['txt'].'</a>';
+		echo '</li>';
+	    }
+	echo '</ul>';
+    echo '</div>';
+}
+
+//dump(array_keys($MENU));
+//dump($MENU['modules']); 
+    // naplo:orarend:i:[txt,url,refresh,icon]
+    // portal:sub:
+//die();
+
+?>

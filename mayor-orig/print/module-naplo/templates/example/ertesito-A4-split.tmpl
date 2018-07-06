@@ -1,0 +1,70 @@
+%!pdfLaTeXA4Split zip
+%
+% Félévi értesítő
+% A4-es méretű, kétsoros fejlécű értesítő, laponként külön pdf zip-be csomagolva
+%
+%
+\documentclass[8pt]{article}
+
+\usepackage[a4paper]{geometry} % A4-es méret
+\usepackage[utf8x]{inputenc} % UTF-8 kódolású forrás (ucs)
+\usepackage{ucs} % Jobb UTF-8 támogatás
+\usepackage{t1enc}
+\usepackage[magyar]{babel} % magyar elválasztási szabályok
+\frenchspacing % a magyar tipográfiai szabályoknak megfelelő szóközök írásjelek után
+\usepackage{booktabs} % táblázatok magasabb szintű formázása
+\usepackage{fancyhdr} % Ritkítás
+\pagestyle{fancy}
+\def\mayor{%
+\font\mayorfnt=cmsl4%
+\font\Mayorfnt=cmsl6
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+\renewcommand{\footnotesize}{\fontsize{6pt}{8pt}\selectfont}
+\addtolength{\skip\footins}{2mm}
+\addtolength{\textheight}{10mm}
+\setlength{\footskip}{16pt}
+\setlength{\headsep}{14pt}
+\cfoot{\normalsize \copyright\mayor\ elektronikus napló - Nyomtatva: %$nyomtatasDt}
+\chead{\large %$intezmenyNev\\ Értesítő %$tanevKezdesEv-%$tanevZarasEv/%$szemeszter}
+%\lhead{\large %$intezmenyNev}
+\begin{document}
+
+%{diak
+\begin{center}
+
+\ \Large
+\vspace{32pt}
+
+{\Huge %$diakNev}
+
+\vspace{6pt}
+{\Large %$osztaly osztály}
+
+\vspace{4pt}
+
+\begin{tabular}{@{\ \ }l|r@{\ \ }}
+\toprule\hline magatartás & \emph{%$magatartas}\\ 
+\hline szorgalom & \emph{%$szorgalom}\\ 
+\hline\hline
+
+%{targy
+%$targyNev & \emph{%$hivatalos %$mJel} \\
+\hline
+%}targy
+
+\bottomrule
+\end{tabular}
+
+\vspace{32pt}\begin{flushleft}
+{\Large %$intezmenyCimHelyseg, %$ev. %$hoNev 20.}
+\end{flushleft}
+\vspace{24pt}\slshape\Large
+\begin{tabular}{ccc}
+\rule{5cm}{0.1pt}&&\rule{5cm}{0.1pt}\\ 
+osztályfőnök&&szülő\\ 
+\end{tabular}
+\end{center}
+\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+%}diak
+
+\end{document}

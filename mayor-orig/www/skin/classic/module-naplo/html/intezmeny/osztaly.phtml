@@ -1,0 +1,424 @@
+<?php
+
+require_once('skin/classic/module-naplo/html/share/file.phtml');
+
+function putUjOsztalyForm($ADAT) {
+
+	$Tanev = $ADAT['tanevek']; $tanev = $ADAT['tanev'];
+
+	formBegin(array('class'=>'osztalyForm uj'));
+
+	echo '<h1>'._UJOSZTALY.'</h1>';
+	echo '<input type="hidden" name="action" value="ujOsztaly" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$tanev.'" />'."\n";
+	
+    echo '<div id="divOsztalyJelleg">';
+
+	echo '<label for="osztalyJellegId">'._OSZTALYJELLEG.'</label>';
+	putOsztalyJellegek($ADAT['osztalyJellegek'],$ADAT['osztalyAdat']['osztalyJellegId']);
+
+    echo '</div>';
+
+    echo '<div id="divKezdoTanev" style="display: none;">';
+	echo '<label for="kezdoTanev">'._KEZDOTANEV . ':</label>';
+	echo '<select tabindex="2" id="kezdoTanev" name="kezdoTanev">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	for ($i = 0; $i < count($Tanev); $i++) {
+		echo '<option value="'.$Tanev[$i].'">'.$Tanev[$i].'/'.($Tanev[$i]+1).'</option>'."\n";
+	}
+	echo '</select>'."\n";
+    echo '</div>';
+
+    echo '<div id="divVegzoTanev" style="display: none;">';
+	echo '<label for="vegzoTanev">'._VEGZOSTANEV . ':</label>';
+	echo '<select tabindex="3" id="vegzoTanev" name="vegzoTanev">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	for ($i = 0; $i < count($Tanev); $i++) {
+		echo '<option value="'.$Tanev[$i].'">'.$Tanev[$i].'/'.($Tanev[$i]+1).'</option>'."\n";
+	}
+	echo '</select><br />'."\n";
+    echo '</div>';
+
+    echo '<div id="divJel" style="display: none;">';
+	echo '<label for="jel">Osztaly jele induláskor</label>';
+	echo '<span id="kezdoEvfolyamJel"></span>.&nbsp;';
+	echo '<input tabindex="4" type="text" id="jel" name="jel" size="2" value="" />'."\n";
+    echo '</div>';
+
+    echo '<div id="divKezdoEvfolyamSorszam">';
+    echo '</div>';
+
+
+    echo '<div id="divLeirasTelephely">';
+	echo '<label for="leiras">'._LEIRAS . ':</label>';
+	echo '<input tabindex="6" type="text" id="leiras" name="leiras" value="" />'."\n";
+
+	echo '<label for="telephely">'._TELEPHELY . ':</label>';
+	echo '<select tabindex="6" id="telephely" name="telephelyId">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	for ($i = 0; $i < count($ADAT['telephely']); $i++) {
+		echo '<option value="'.$ADAT['telephely'][$i]['telephelyId'].'">'.$ADAT['telephely'][$i]['telephelyNev'].'</option>'."\n";
+	}
+	echo '</select><br />'."\n";
+
+    echo '</div>';
+
+	echo '<br/><input type="submit" value="'._OK.'" />';
+
+	formEnd();
+}
+
+/*
+// Már nem léptetünk osztályt...
+function putOsztalyLeptetes($ADAT) {
+    formBegin(array('class'=>'osztalyForm'));
+	echo '<h1>'._OSZTALY_LEPTETES.'</h1>'."\n";
+	echo '<input type="hidden" name="action" value="nyekOsztalyLeptetes" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyAdat']['osztalyId'].'" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+	echo '<input type="hidden" name="telephelyId" value="'.$ADAT['osztalyAdat']['telephelyId'].'" />'."\n";
+
+	echo '<label for="osztalyJel">'._OSZTALY_UJ_JELE.'</label>: &nbsp;&nbsp;&nbsp';
+//	echo $ADAT['osztalyAdat']['kezdoEvfolyam'].'. <input type="text" name="osztalyJel" id="osztalyJel" size="10" />';
+
+	echo '<label for="vegzoTanev">'._VEGZOSTANEV . ':</label>';
+	echo '<select id="vegzoTanev" name="vegzoTanev">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	for ($i = 0; $i < count($ADAT['tanevek']); $i++) {
+		echo '<option value="'.$ADAT['tanevek'][$i].'">'.$ADAT['tanevek'][$i].'/'.($ADAT['tanevek'][$i]+1).'</option>'."\n";
+	}
+	echo '</select>'."\n";
+	echo '<input type="submit" value="'._OK.'" />';
+    formEnd();
+
+}
+*/
+
+function putOsztalyAdatokForm($ADAT) {
+
+	formBegin(array('class'=>'osztalyForm'));
+	echo '<h1>'._OSZTALY_ADATAI.' ('.$ADAT['osztalyAdat']['osztalyId'].')</h1>'."\n";
+	echo '<input type="hidden" name="action" value="osztalyAdatModositas" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyAdat']['osztalyId'].'" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+	echo '<input type="hidden" name="telephelyId" value="'.$ADAT['osztalyAdat']['telephelyId'].'" />'."\n";
+
+	echo _KEZDOTANEV.'/'._VEGZOSTANEV.': <span class="data">'.$ADAT['osztalyAdat']['kezdoTanev'].'/'.($ADAT['osztalyAdat']['kezdoTanev']+1).' - '.$ADAT['osztalyAdat']['vegzoTanev'].'/'.($ADAT['osztalyAdat']['vegzoTanev']+1).'</span>';
+
+	echo '<ul>';
+	for ($_ev = $ADAT['osztalyAdat']['kezdoTanev']; $_ev<=$ADAT['osztalyAdat']['vegzoTanev']; $_ev++) {
+            echo '<li>'.$_ev."/".($_ev+1).' - '.$ADAT['osztalyJelek'][$_ev].'</li>';
+        }
+	echo '</ul>';
+
+	echo '<label for="kepzesId">'._KEPZES.'</label>'."\n";
+	$KepzesStr = array();
+	for ($i = 0; $i < count($ADAT['kepzesek']); $i++) {
+	    if (is_array($ADAT['osztalyAdat']['kepzesIds']) && in_array($ADAT['kepzesek'][$i]['kepzesId'], $ADAT['osztalyAdat']['kepzesIds']))
+		$KepzesStr[] = $ADAT['kepzesek'][$i]['kepzesNev'].' - '.$ADAT['kepzesek'][$i]['tanev'].' ('.$ADAT['kepzesek'][$i]['kepzesId'].')';
+	}
+	if (is_array($KepzesStr) && count($KepzesStr) > 0) echo '<span class="data">'.implode(' / ', $KepzesStr).'</span><br />';
+	else echo '<span class="data">&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;</span><br />';
+
+	echo '<hr />';
+	echo '<label for="leiras">'._LEIRAS.'</label>'."\n";
+	echo '<input type="text" id="leiras" name="leiras" value="'.$ADAT['osztalyAdat']['leiras'].'" />'."\n";
+
+	echo '<br/><label for="telephely">'._TELEPHELY.'</label>'."\n";
+	echo '<select id="telephely" name="telephelyId">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	$SEL = array($ADAT['osztalyAdat']['telephelyId'] => ' selected="selected" ');
+	for ($i = 0; $i < count($ADAT['telephely']); $i++) {
+		echo '<option value="'.$ADAT['telephely'][$i]['telephelyId'].'"'.$SEL[$ADAT['telephely'][$i]['telephelyId']].'>'.$ADAT['telephely'][$i]['telephelyRovidNev'].'</option>'."\n";
+	}
+	echo '</select>'."\n";
+	
+	echo '<br/><label for="osztalyJellegId">'._OSZTALYJELLEG.'</label> ';
+	putOsztalyJellegek($ADAT['osztalyJellegek'],$ADAT['osztalyAdat']['osztalyJellegId']);
+	echo '<br/><label for="kezdoEvfolyamSorszam">'._KEZDO_EVFOLYAM_SORSZAMA.'</label> ';
+	echo '<select name="kezdoEvfolyamSorszam">';
+	for ($i=1; $i <= count($ADAT['osztalyAdat']['evfolyamJelek'])-$ADAT['osztalyAdat']['vegzoTanev']+$ADAT['osztalyAdat']['kezdoTanev']; $i++) {
+	    $SEL = ($i == $ADAT['osztalyAdat']['kezdoEvfolyamSorszam'])?' selected="selected" ':'';
+	    echo '<option value="'.$i.'"'.$SEL.'>'.$i.'</option>';
+	}
+	echo '</select>';
+	echo '<hr />';
+
+	echo '<table cellspacing="1" cellpadding="0">'."\n";
+	echo '<tr><th colspan="3">'._OSZTALYFONOKOK.'</th></tr>'."\n";
+	echo '<tr><th>'._TANARNEVE.'</th><th>'._BEDT.'</th><th>'._KIDT.'</th></tr>'."\n";
+	
+	if (is_array($ADAT['osztalyAdat']['osztalyfonokok'])) {
+		for ($i = 0; $i < count($ADAT['osztalyAdat']['osztalyfonokok']); $i++) {
+			$O = $ADAT['osztalyAdat']['osztalyfonokok'][$i];
+			echo '<tr>';
+			echo '<td>';
+			// echo $ADAT['osztalyAdat']['osztalyfonokok'][$i]['tanarNev'];
+			echo $O['tanarNev'];
+			if ($ADAT['osztalyAdat']['osztalyfonokok'][$i]['kiDt'] == '') {
+				echo '<input type="hidden" name="ofoTanarId[]" value="'.$O['tanarId'].'" />'."\n";
+				echo '<input type="hidden" name="ofoBeDt[]" value="'.$O['beDt'].'" />'."\n";
+			}
+			echo '</td>';
+			echo '<td>'.$ADAT['osztalyAdat']['osztalyfonokok'][$i]['beDt'].'</td>';
+			if ($ADAT['osztalyAdat']['osztalyfonokok'][$i]['kiDt'] == '') {
+				echo '<td><input type="text" class="date" name="ofoKiDt[]" value="" placeholder="dátum" /></td>';
+			} else {
+				echo '<td>'.$ADAT['osztalyAdat']['osztalyfonokok'][$i]['kiDt'].'</td>';
+			}
+			echo '</tr>'."\n";
+		}
+	}
+	
+	echo '<tr><td>';
+	echo '<select name="tanarId">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	for ($i = 0; $i < count($ADAT['tanarok']); $i++) {
+		echo '<option value="'.$ADAT['tanarok'][$i]['tanarId'].'">'.$ADAT['tanarok'][$i]['tanarNev'].'</option>'."\n";
+	}
+	echo '</select>'."\n";
+	echo '</td><td>';
+	echo '<input class="date" type="text" name="beDt" value="" placeholder="dátum" />'."\n";
+	echo '</td><td>';
+# kiDt jobb ha nincs #	echo '<input class="date" type="text" name="kiDt" value="" />'."\n";
+	echo '</td></tr>'."\n";
+
+	echo '<tr><th colspan="3"><input type="submit" value="'._OK.'" /></th></tr>'."\n";
+	echo '</table>'."\n";
+	formEnd();
+
+
+
+
+	formBegin(array('class'=>'osztalyForm'));
+	echo '<input type="hidden" name="action" value="osztalyJelVegzesModositas" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyAdat']['osztalyId'].'" />'."\n";
+	echo '<input type="hidden" name="telephelyId" value="'.$ADAT['telephelyId'].'" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+    	echo '<h1>'._MODOSITAS.'</h1>';
+
+	echo '<label for="ujOsztalyJel">'._UJOSZTALYJEL.'</label>';
+	echo '<input type="text" id="ujOsztalyJel" name="ujOsztalyJel" value="" /></label>';
+
+	echo '<label for="ujKezdoTanev">'._KEZDOTANEV.'</label>';
+	echo '<select name="ujKezdoTanev" id="ujKezdoTanev">';
+	for ($kezd=$ADAT['osztalyAdat']['kezdoTanev']-12; $kezd<=$ADAT['osztalyAdat']['vegzoTanev']; $kezd++) {
+	    $_SEL = ( $kezd == $ADAT['osztalyAdat']['kezdoTanev'] ) ?  ' selected="selected" ':'';
+	    echo '<option value="'.$kezd.'" '.$_SEL.'>'.$kezd.'/'.($kezd+1).'</option>';
+	}
+	echo '</select>';
+
+	echo '<label for="ujVegzoTanev">'._VEGZOSTANEV.'</label>';
+	echo '<select name="ujVegzoTanev" id="ujVegzoTanev">';
+	for ($veg=$ADAT['osztalyAdat']['kezdoTanev']; $veg<=$ADAT['osztalyAdat']['kezdoTanev']+12; $veg++) {
+	    $_SEL = ( $veg == $ADAT['osztalyAdat']['vegzoTanev'] ) ?  ' selected="selected" ':'';
+	    echo '<option value="'.$veg.'" '.$_SEL.'>'.$veg.'/'.($veg+1).'</option>';
+	}
+	echo '</select>';
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+
+
+
+}
+
+function osztalyTorlesForm($osztalyId) {
+
+	global $tanev;
+	
+	formBegin(array('class'=>'osztalyForm'));
+
+	echo '<h1>'._OSZTALY_TORLESE.'</h1>'."\n";
+
+	echo '<input type="hidden" name="action" value="osztalyTorles" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$tanev.'" />'."\n";
+	echo '<input type="hidden" name="telephelyId" value="'.$ADAT['osztalyAdat']['telephelyId'].'" />'."\n";
+	echo '<input type="submit" value="'._TOROL.'" title="'._OSZTALY_TORLES_TITLE.'" class="confirm" />'."\n";
+
+	formEnd();
+}
+
+function putOsztalyNevsor($ADAT) {
+
+	formBegin(array('class'=>'osztalyForm'));
+
+	echo '<h1>'._OSZTALYNEVSOR.'</h1>'."\n";
+
+	echo '<input type="hidden" name="action" value="osztalyNevsor" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	echo '<input type="hidden" name="telephelyId" value="'.$ADAT['osztalyAdat']['telephelyId'].'" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+	if (is_array($ADAT['osztalyAdat']['kepzes'])) for ($j = 0; $j < count($ADAT['osztalyAdat']['kepzes']); $j++) {
+	    echo '<input type="hidden" name="kepzesIds[]" value="'.$ADAT['osztalyAdat']['kepzes'][$j]['kepzesId'].'" />'."\n";
+	}
+
+
+	echo '<ol>';
+
+	foreach ($ADAT['osztalyNevsor'] as $diakId => $value) {
+
+	    echo '<li>';
+		// Képzés
+		echo '<div class="kepzes">'; $CHK = array();
+		    if (is_array($ADAT['diakKepzes'][$diakId])) 
+			foreach ($ADAT['diakKepzes'][$diakId] as $index => $kAdat) {
+			    $kepzesId = $kAdat['kepzesId'];
+			    if (in_date_interval($ADAT['dt'], $kAdat['tolDt'], $kAdat['igDt'])) {
+				$CHK[ $kepzesId ] = ' checked="checked" ';
+				if (!in_array($kepzesId, $ADAT['osztalyAdat']['kepzesIds'])) {
+				    echo '<span class="chk mas">';
+				    echo '<input type="checkbox" id="k-'.intval($_loop).'" name="diakKepzes[]" value="'."$diakId/$kepzesId".'" checked="checked" />'."\n";
+				    echo '<label for="k-'.intval($_loop++).'" class="chk" >'.$kAdat['kepzesNev'].' ('.$kepzesId.')</label>';
+				    echo '</span>';
+				}
+			    }
+			}
+		    if (is_array($ADAT['osztalyAdat']['kepzes'])) {
+		      for ($j = 0; $j < count($ADAT['osztalyAdat']['kepzes']); $j++) {
+			$kepzesId = $ADAT['osztalyAdat']['kepzes'][$j]['kepzesId'];
+			$_class = ($CHK[$kepzesId]!='')? 'chk':'';
+			echo '<span class="'.$_class.'">';
+			echo '<input type="checkbox" id="k-'.intval($_loop).'" name="diakKepzes[]" value="'."$diakId/$kepzesId".'"'.$CHK[$kepzesId].' />'."\n";
+			echo '<label for="k-'.intval($_loop++).'" class="'.$_class.'" >'.$ADAT['osztalyAdat']['kepzes'][$j]['kepzesNev'].' ('.$kepzesId.')</label>';
+			echo '</span>';
+			if ($CHK[$kepzesId]!='') $_KEPZESDB[$kepzesId]++;
+		      }
+		    }
+
+		echo '<div class="hideShowContainer">';
+		    echo '<span class="onClickHideShow icon-chevron-down"></span>'; // &dArr;
+		    if (is_array($ADAT['diakKepzes'][$diakId])) {
+			echo '<ul class="openable" style="display: none">';
+			echo '<li class="close onClickHideShow">[X] '._BEZAR.'</li>';
+			foreach ($ADAT['diakKepzes'][$diakId] as $index => $kAdat) {
+			    echo '<li>';
+			    echo $kAdat['kepzesNev'].': ';
+			    echo '<span class="datum">';
+				echo $kAdat['tolDt'].' - ';
+				if (is_null($kAdat['igDt'])) echo '????-??-??';
+				else echo $kAdat['igDt'];
+			    echo '</span>';
+			    echo '</li>';
+			}
+			echo '</ul>';
+		    }
+		echo '</div>'."\n";
+
+		echo '</div>'."\n";
+
+		echo '<span class="diakNev" data-diakid="'.$value['diakId'].'">'.$value['diakNev'].'</span>';
+		$tmp = array(); 
+		if (is_array($value['osztalyDiak'])) foreach ($value['osztalyDiak'] as $dts) $tmp[] = $dts['beDt'].'-'.(($dts['kiDt'] == '' || $dts['kiDt'] == '0000-00-00') ? '?' : $dts['kiDt']);
+		echo '<span class="diakNev datumok">('.implode(', ', $tmp).')</span>';
+
+	    echo '</li>'."\n";
+	}
+	echo '</ol>';
+	echo '<div class="datum">'._REFERENCIA_DATUM.': <input class="date" readonly="readonly" type="text" name="dt" value="'.$ADAT['dt'].'" maxlength="10" size="10" /></div>'."\n";
+	echo '<div style="text-align:center"><input type="submit" value="'._OK.'" /></div>'."\n";
+
+	if (count($ADAT['kepzesek'])>0) {
+	    echo '<table>';
+	    echo '<tr><th>'._KEPZES.'</th><th>'._LETSZAM.'</th></tr>';
+	    for ($i = 0; $i < count($ADAT['kepzesek']); $i++) {
+		if (is_array($ADAT['osztalyAdat']['kepzesIds']) && in_array($ADAT['kepzesek'][$i]['kepzesId'], $ADAT['osztalyAdat']['kepzesIds'])) {
+		echo '<tr>';
+		echo '<td>'.$ADAT['kepzesek'][$i]['kepzesNev'].' - '.$ADAT['kepzesek'][$i]['tanev'].' ('.$ADAT['kepzesek'][$i]['kepzesId'].')'.'</td>';
+		echo '<td id="kepzesLetszam_'.$ADAT['kepzesek'][$i]['kepzesId'].'">'.$_KEPZESDB[ $ADAT['kepzesek'][$i]['kepzesId'] ].'</td>';
+		echo '</tr>';
+		}
+	    }
+	    echo '</table>';
+	}
+
+	formEnd();
+
+	echo '<div style="width: 100%; text-align:center; margin:0px; padding-top:20px;">';
+	echo '<h1>';
+	    echo ($ADAT['osztalyAdat']['osztalyJel']);
+	echo '</h1>';
+	    echo '<h2>'.($ADAT['osztalyAdat']['leiras']).'</h2>';
+	foreach ($ADAT['osztalyNevsor'] as $diakId => $value) {
+	    putFace($diakId,'diak',80);
+	}
+	echo '</div>';
+
+
+}
+
+function putUjTagForm($ADAT) {
+
+	formBegin(array('class'=>'osztalyForm'));
+
+	echo '<h1>'._UJ_TAG.'</h1>'."\n";
+
+	echo '<input type="hidden" name="action" value="ujTag" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	echo '<input type="hidden" name="telephelyId" value="'.$ADAT['osztalyAdat']['telephelyId'].'" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+	
+	echo '<select name="diakId">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	for ($i = 0; $i < count($ADAT['diakok']); $i++) {
+		echo '<option value="'.$ADAT['diakok'][$i]['diakId'].'">'.$ADAT['diakok'][$i]['diakNev'].' ('.$ADAT['diakok'][$i]['diakId'].')</option>'."\n";
+	}
+	echo '</select>'."\n";
+	echo '<input class="date" type="text" name="beDt" value="'.date('Y-m-d').'" size="10" maxlength="10" />'."\n";
+	echo '<input class="date" type="text" name="kiDt" value="" size="10" maxlength="10" />'."\n";
+	
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+	
+}
+
+function putTagTorlesForm($ADAT) {
+
+	formBegin(array('class'=>'osztalyForm'));
+
+	echo '<h1>'._TAG_TORLES.'</h1>'."\n";
+
+	echo '<input type="hidden" name="action" value="tagTorles" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	echo '<input type="hidden" name="telephelyId" value="'.$ADAT['osztalyAdat']['telephelyId'].'" />'."\n";
+	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+	
+	echo '<select name="diakId">'."\n";
+	echo '<option value=""> - </option>'."\n";
+	foreach ($ADAT['osztalyNevsor'] as $diakId => $dAdat) {
+		echo '<option value="'.$diakId.'">'.$dAdat['diakNev'].' ('.$diakId.')</option>'."\n";
+	}
+	echo '</select>'."\n";
+	echo '<input class="date" type="text" name="tolDt" value="'.date('Y-m-d').'" size="10" maxlength="10" />'."\n";
+	echo '<input class="date" type="text" name="igDt" value="" size="10" maxlength="10" />'."\n";
+	
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+	
+}
+
+function putOsztalyJellegek($ADAT,$osztalyJellegId) {
+
+	echo '<select tabindex="1" name="osztalyJellegId" id="osztalyJellegId">';
+	echo '<option value=""> - </option>';
+	foreach ($ADAT as $_ojId => $oAdat) {
+	    $evfolyamJelek = explode(',', $oAdat['evfolyamJelek']);
+	    if ($_ojId == $osztalyJellegId) {
+		$_SEL = ' selected="selected" ';
+	    } else  {
+		$_SEL = '';
+		if ($oAdat['osztalyJellegEles']==0) continue;
+	    }
+    	    //$_eles = ($oAdat['osztalyJellegEles']==1) ? '':'- ';
+
+	    echo '<option value="'.$_ojId.'" '.$_SEL.' data-evfolyamjelek=\''.json_encode($evfolyamJelek).'\'>'.$_eles.$oAdat['osztalyJellegNev'].' ['.$_ojId.']</option>'."\n";
+    	}
+	echo '</select>'."\n";
+
+}
+
+
+?>

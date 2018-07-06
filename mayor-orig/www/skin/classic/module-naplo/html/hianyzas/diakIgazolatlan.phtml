@@ -1,0 +1,42 @@
+<?php
+
+    function putDiakIgazolatlan($ADAT) {
+
+	echo '<table class="igazolatlan" cellspacing="1">'."\n";
+//	echo '<thead>'."\n";
+	    echo '<tr class="fej">';
+		echo '<th>'._DATUM.'</th>';
+		echo '<th>'._ORA.'</th>';
+		echo '<th>'._TIPUS.'</th>';
+		echo '<th>'._PERC.'</th>';
+	    echo '</tr>'."\n";
+//	echo '</thead>'."\n";
+//	echo '<tbody>'."\n";
+	
+	$hDb = $perc = 0;
+	foreach ($ADAT['igazolatlan'] as $iAdat) {
+	
+	    if ($iAdat['tipus'] == 'késés') $perc += $iAdat['perc'];
+	    else $hDb++;
+	    echo '<tr>';
+		echo '<td>'.str_replace('-','.',$iAdat['dt']).'.</td>';
+		echo '<td>'.$iAdat['ora'].'</td>';
+		echo '<td>'.$iAdat['tipus'].'</td>';
+		echo '<td>'.($iAdat['tipus'] == 'késés'?$iAdat['perc']:'').'</td>';
+	    echo '</tr>';
+	
+	}
+//	echo '</tbody>'."\n";
+//	echo '<tfoot>'."\n";
+	    echo '<tr class="lab">';
+		echo '<th>'._HIANZASOK_SZAMA.':</th>';
+		echo '<td>'.$hDb.'</td>';
+		echo '<th>'._KESESEK_OSSZESEN.':</th>';
+		echo '<td>'.$perc.'</td>';
+	    echo '</tr>'."\n";
+//	echo '</tfoot>'."\n";
+	echo '</table>'."\n";
+    
+    }
+
+?>

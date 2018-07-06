@@ -1,0 +1,126 @@
+<?php
+/*
+    Module:	base/session
+*/
+
+    function putSearchAccountForm($attr, $pattern, $searchAttrList) {
+
+        global $attrDef, $AUTH;
+
+	formBegin(array('class'=>'usersearch'));
+
+        echo '<input type="hidden" name="action" value="searchAccount" />';
+        echo '<table class="search" align="center" cellspacing="1">';
+        echo '<thead>';
+        echo '<tr><th colspan="3">'._SEARCH.'</th></tr>';
+        echo '</thead>';
+        echo '<tfoot><tr><td colspan="3"></td></tr></tfoot>';
+
+        echo '<tbody><tr>';
+        echo '<th style="width: 150px;">';
+        echo '<select name="attr">';
+        for ($i=0;$i<count($searchAttrList);$i++) {
+            if ($attr == $searchAttrList[$i]) {
+                echo '<option value="'.$searchAttrList[$i].'" selected="true">'.$attrDef[$searchAttrList[$i]]['desc'].'</option>';
+            } else {
+                echo '<option value="'.$searchAttrList[$i].'">'.$attrDef[$searchAttrList[$i]]['desc'].'</option>';
+            }
+        }
+        echo '</select>:</th>';
+        echo '<td>';
+        echo '<input type="text" name="pattern" value="'.$pattern.'" id="focus" />';
+	if (_POLICY == 'private' && __ADMIN) {
+	    global $POLICIES;
+	    $SEL = array($toPolicy => ' selected="selected" ');
+	    echo '<select name="toPolicy">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    for ($i = 0; $i < count($POLICIES); $i++) {
+		echo '<option value="'.$POLICIES[$i].'"'.$SEL[$POLICIES[$i]].'>'.$POLICIES[$i].'</option>'."\n";
+	    }
+	    echo '</select>'."\n";
+	}
+        echo '</td>';
+        echo '<td style="width: 50px;">';
+        echo '<input type="submit" value="'._OK.'" />';
+        echo '</td>';
+        echo '</tr></tbody>';
+        echo '</table>';
+
+	formEnd();
+
+    }
+
+    function putSearchResultBox($searchResult, $toPolicy) {
+
+	global $AUTH;
+
+        $count = $searchResult['count'];
+        echo '<table class="searchresult" align="center" cellspacing="1">';
+        echo '<thead>';
+	if ($toPolicy != _POLICY) echo '<tr><th colspan="4" class="policy">'.$toPolicy.'</th></tr>'."\n";
+        echo '<tr>';
+            echo '<th>'._ATTR_USERCN.'</th>';
+            echo '<th>'._CATEGORY.'</th>';
+            echo '<th>'._ATTR_MAIL.'</th>';
+            echo '<th>'._ACTION.'</th>';
+        echo '</tr>';
+        echo '</thead><tfoot><tr><th colspan="4"></th></tr></tfoot>';
+        echo '<tbody>';
+        if ($count == 0) {
+            echo '<tr><td colspan="5">'._NOTFOUND.'</td></tr>';
+        } else {
+            for ($i = 0; $i < $count; $i++) {
+                if ($i % 2 ==1) {
+                    $class = 'paratlan';
+                } else {
+                    $class = 'paros';
+                }
+                echo "\n".'<tr class="'.$class.'">';
+                echo '<td>';
+		    if (__ADMIN)
+                	echo '<a href="'.href('index.php?page=session&f=accountInfo&userAccount='.$searchResult[$i]['userAccount'][0].'&toPolicy='.$toPolicy)
+				. '" title="'.$searchResult[$i]['userAccount'][0].'">'.$searchResult[$i]['userCn'][0].'</a>';
+		    else
+                	echo $searchResult[$i]['userCn'][0];
+                echo '</td>';
+                echo '<td>';
+		    for ($j=0; $j < $searchResult[$i]['category']['count']; $j++) {
+			echo $searchResult[$i]['category'][$j].' ';
+                    }
+                echo '</td>';
+                echo '<td>';
+		    for ($j = 0; $j < $searchResult[$i]['mail']['count']; $j++) {
+                    echo '<a href="mailto:'.$searchResult[$i]['mail'][$j].'">'.$searchResult[$i]['mail'][$j].'</a><br />';
+		    }
+                echo '</td>';
+                echo '<td>';
+		    if (__ADMIN) {
+		    formBegin(array('name'=>'f'.$i));
+                        echo '<input type="hidden" name="action" value="deleteAccount" />';
+                        echo '<input type="hidden" name="userAccount" value="'.$searchResult[$i]['userAccount'][0].'" />';
+                        echo '<input type="hidden" name="toPolicy" value="'.$toPolicy.'" />';
+                        echo '<input type="submit" value="'._DELETE.'" title="'._ARE_YOU_SURE.' ('.$searchResult[$i]['userAccount'][0].')'.'" class="confirm" />';
+		    formEnd();
+		    }
+		    if (
+			__ADMIN or
+			(in_array('diák',$searchResult[$i]['category']) and __DIAKADMIN)
+		    ) {
+		    formBegin(array('name'=>'f'.$i, 'action'=>href('index.php?page=password&f=changePassword')));
+			echo '<input type="hidden" name="noModify" value="1" />';
+                        echo '<input type="hidden" name="userAccount" value="'.$searchResult[$i]['userAccount'][0].'" />';
+                        echo '<input type="hidden" name="toPolicy" value="'.$toPolicy.'" />';
+                        echo '<input type="submit" value="'._CHANGE_PASSWORD.'" title="'._CHANGE_PASSWORD.'" />';
+		    formEnd();
+		    }
+		    
+                echo '</td>';
+                echo '</tr>';
+            }
+        }
+        echo '</tbody>';
+        echo '</table>';
+
+    }
+
+?>

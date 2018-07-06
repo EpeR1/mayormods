@@ -1,0 +1,170 @@
+
+    table.hianyzas {
+	background-color: rgb(180,180,200);
+	color: white;
+	max-width:95%;
+    }
+
+    table.hianyzas thead th {
+	background-color: rgb(40,80,120);
+    }
+
+    table.hianyzas thead th.alcim {
+	background-color: rgb(255,255,255);
+	color: rgb(40,80,120);
+	font-style: italic;
+	padding: 0px 4px 0px 4px;
+    }
+
+    table.hianyzas thead th.alcim img { hight: 16px; }
+
+    table.hianyzas tfoot th { background-color: rgb(80,20,80); }
+    table.hianyzas tfoot td { background-color: rgb(95,75,95); text-align: center; }
+
+    table.hianyzas tbody td { text-align: center;  }
+    table.hianyzas tbody td.nev {
+	background-color: rgb(90,90,110);
+	font-style: italic;
+	padding: 4px 10px 4px 10px;
+	text-align:left;
+    }
+
+    table.hianyzas tbody tr.jogviszonyalezarva td.nev {
+	background-color: rgb(40,40,90);
+    }
+
+    table.hianyzas tbody tr.magantanulo td.nev {
+	background-color: rgb(140,40,90);
+    }
+
+    table.hianyzas tbody td.nev a {
+	color: white;
+	text-decoration: none;
+    }
+
+    table.hianyzas tbody td.nev a:hover {
+	color: white;
+	/* background-color: rgb(180,180,220); */
+	text-decoration: underline;
+    }
+
+    table.hianyzas tbody td.ulezart {
+	width: 18px;
+	background-color: rgb(200,200,220);
+    }
+
+    table.hianyzas tbody td.lezart {
+	width: 18px;
+	background-color: rgb(100,100,120);
+	text-align: center;
+    }
+
+    table.hianyzas tbody td.uigazolhato {
+	width: 18px;
+	background-color: rgb(240,240,260);
+    }
+
+    table.hianyzas tbody td.igazolhato {
+	width: 18px;
+	background-color: rgb(140,140,160);
+	text-align: center;
+    }
+
+    table.hianyzas tbody td.uosszes {
+	width: 18px;
+	background-color: rgb(220,240,230);
+    }
+
+    table.hianyzas tbody td.osszes {
+	width: 18px;
+	background-color: rgb(120,140,130);
+	text-align: center;
+    }
+
+    table.hianyzas tbody td.ufegyelmi {
+	width: 18px;
+	background-color: rgb(220,230,240);
+    }
+
+    table.hianyzas tbody td.fegyelmi {
+	width: 18px;
+	background-color: rgb(130,150,150);
+	text-align: center;
+    }
+
+    table.hianyzas tbody td.ufokozat {
+	width: 18px;
+	background-color: rgb(220,210,200);
+    }
+
+    table.hianyzas tbody td.fokozat { background-color: rgb(120,110,100); }
+    table.hianyzas tbody td.fokozat form { display: inline; }
+    table.hianyzas tbody td.fokozat form input,select { font-size:11px; }
+    table.hianyzas tbody td.fokozat form select option.megerdemelt { background-color: rgb(100,100,100); color: rgb(220,255,220); }
+    table.hianyzas tbody td.fokozat form select option.tiltott { background-color: rgb(100,100,100); color: rgb(250,100,100); font-family: italic }
+
+    table.hianyzas tbody td.oi { text-align: center; }
+
+    /* table.hianyzas tbody */
+    td.hianyzas {
+	border-color: rgb(200,100,100);
+	border-width: 0px 1px 3px 1px;
+	border-style: solid;
+    }
+
+    /* table.hianyzas tbody */
+    td.keses {
+	border-color: rgb(200,200,100);
+	border-width: 0px 1px 3px 1px;
+	border-style: solid;
+    }
+
+    /* table.hianyzas tbody */
+    td.felszereles {
+	border-color: rgb(100,100,200);;
+	border-width: 0px 1px 3px 1px;
+	border-style: solid;
+    }
+    td.egyenruha {
+	border-color: orange;
+	border-width: 0px 1px 3px 1px;
+	border-style: solid;
+    }
+
+    /* table.hianyzas tbody */
+    td.felmentes {
+	border-color: rgb(100,200,100);;
+	border-width: 0px 1px 3px 1px;
+	border-style: solid;
+    }
+
+    /* table.hianyzas tbody */
+    td.igazolt { color: rgb(55,255,55);  }
+    /* table.hianyzas tbody */
+    td.igazolatlan { color: rgb(255,55,55); }
+    /* table.hianyzas tbody */
+    td.mind { color: white; }
+
+    /* navi */
+
+    table.navi {
+        width:95%;
+        background-color: #666699;
+	color: #eeeee0;
+    }
+    table.navi th, table.navi td {
+	text-align: center;
+        border-style: solid none solid none;
+        border-width: 1px 0px 2px 0px;
+        border-color: #aabbc0;
+    }
+    table.navi input {
+        background-color: #778890;
+        border: solid 1px #aabbc0;
+        width:30px;
+    }
+    table.navi input.aktiv {
+        color: #aabbc0;
+        background-color: rgb(90,50,90);
+    }
+    table.navi select { border: 1px solid #eeeee0; background-color: #aabbc0; }

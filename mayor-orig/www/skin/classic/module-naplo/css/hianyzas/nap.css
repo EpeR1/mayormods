@@ -1,0 +1,125 @@
+
+    table.csoportNevsorHianyzok {
+	background-color: #eeeeee;
+	color: white;
+    }
+    table.csoportNevsorHianyzok thead { background-color: #440055; }
+    table.csoportNevsorHianyzok thead a { color: white; text-decoration: none }
+    table.csoportNevsorHianyzok thead a:hover { color: white; text-decoration: underline; }
+
+    table.csoportNevsorHianyzok thead th.neve {
+	background-color: purple;
+	font-size: 12px;
+	height: 2em;
+    }
+    table.csoportNevsorHianyzok thead.oraAdat table.oraAdat td { font-weight: normal; }
+
+    table.csoportNevsorHianyzok tfoot { background-color: #440055; }
+    table.csoportNevsorHianyzok tfoot input { background-color: #eeeeee; font-size:11px; }
+
+    table.csoportNevsorHianyzok tbody {
+	color: black
+    }
+    table.csoportNevsorHianyzok tbody a { color: black; text-decoration: none }
+    table.csoportNevsorHianyzok tbody a:hover { color: black; text-decoration: underline; }
+
+
+
+    table.csoportNevsorHianyzok tbody th {
+	/* background-color: rgb(80,100,120); */
+    }
+    
+    table.csoportNevsorHianyzok td { text-align: left; }
+    table.csoportNevsorHianyzok td.késés { text-align: center; }
+
+    table.csoportNevsorHianyzok tbody tr.delutani td,
+    table.csoportNevsorHianyzok tbody tr.tanoran_kivuli td,
+    table.csoportNevsorHianyzok tbody tr.egyeni_foglalkozas td
+	 { background-color: #aaaaaa; }
+
+    table.csoportNevsorHianyzok tbody tr:hover { background-color: #ffffff;}
+    table.csoportNevsorHianyzok td a { color: inherit; }
+
+    table.csoportNevsorHianyzok    select { border: solid 1px #888888; background-color: #eeeeee; } 
+    table.csoportNevsorHianyzok    select.igazolatlan { color: red }
+    table.csoportNevsorHianyzok    select.igazolt { color: green }
+    table.csoportNevsorHianyzok    td.igazolatlan { color: red }
+    table.csoportNevsorHianyzok    td.igazolt { color: green }
+    table.csoportNevsorHianyzok    th.radio { width: 28px; }
+    table.csoportNevsorHianyzok tr.magantanulo > td.nemkot { background-color: purple; color: white; }
+
+    table.csoportNevsorHianyzok    td.nemkot { text-align: center; color: #888888; font-style: italic; }
+
+    table.csoportNevsorHianyzok    tr td input.perc  {
+	font-size:10px;
+	vertical-align: top;
+	border: solid 1px #aabb99;
+	text-align: right;
+	width:1.5em;
+    }
+
+
+    .jelen {
+        border-color: rgb(100,200,100);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+    }
+
+    .hianyzas, .hiányzás {
+        border-color: rgb(200,100,100);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+    }
+
+    .keses, .késés {
+        border-color: rgb(200,200,100);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+    }
+    span.perc {
+        border-color: rgb(200,200,100);
+        border-width: 1px 1px 1px 1px;
+        border-style: solid;
+        background-color: rgb(230,210,130);
+        color: rgb(100,80,0);
+    }
+
+    .felszereles_hiany {
+	color: white;
+	background-color:blue;
+    }
+
+    .egyenruha_hiany {
+	color: white;
+	background-color: orange;
+    }
+
+    .felmentes {
+	background-color: #eeeeee;
+	color: purple;
+    }
+    .igazolt { background-color: #008800; }
+    .igazolatlan { background-color: #880000; }
+
+    .fbetus {
+        /* border-color: rgb(100,100,200); */
+        border-color: rgb(120,120,220) rgb(190,190,230);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+        background-color: rgb(210,210,255);
+        min-width: 18px;
+
+    }
+
+    .kesett {background-color: orange;}
+
+    table.hianyzasNaptar {
+	background-color: #778890;
+    }
+
+    table.hianyzasNaptar {background-color: #778877; font-size:10px}
+    table.hianyzasNaptar th {background-color: #889988; }
+    table.hianyzasNaptar a { color: #eeeee0; text-decoration: none }
+    table.hianyzasNaptar a:hover { background-color: #667766; }
+    table.hianyzasNaptar td.felszerelesHiany { background-color: rgb(100,100,200); }
+    table.hianyzasNaptar td.egyenruhaHiany { background-color: orange; }

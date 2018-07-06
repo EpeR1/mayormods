@@ -1,0 +1,19 @@
+
+    form.bejegyzes { }
+    form.bejegyzes ul { margin: 0px 20px 20px 30px; list-style-type: none; padding: 0; }
+    form.bejegyzes ul.dicseret { background-color: rgb(82,100,215);  }
+    form.bejegyzes ul.fegyelmi { background-color: rgb(180,82,215) }
+    form.bejegyzes ul.uzenet { background-color: rgb(215,215,180) }
+    form.bejegyzes lh { text-align: center; background: rgba(0,0,0,0.5); display: block; margin: 0px; padding: 10px; color: #fff; font-weight: bold; border-bottom: solid 1px white; }
+    form.bejegyzes ul li { padding: 5px; }
+    form.bejegyzes ul li input[type=text] { width: 300px; background: rgba(255,255,255,0.5); }
+    form.bejegyzes span { float: right; }
+    form.bejegyzes label { padding-right: 15px; }
+    form.bejegyzes input { border: solid 1px #eeeeee; }
+    form.bejegyzes ul li:hover { background-color: rgba(255,255,255,0.2); }
+    form.bejegyzes input:hover { border-bottom: solid 1px #aaaaaa; }
+    form.bejegyzes input.ok { width: 500px; }
+    form.bejegyzes input.del { width: 200px; color: red; float: right; }
+    form.bejegyzes input.new { width: 200px; color: green; float: right; }
+    form.bejegyzes input[type=submit] { background-color: rgba(255,255,255,0.5); }
+    form.bejegyzes input[type=submit]:hover { background-color: rgba(255,255,255,1); }

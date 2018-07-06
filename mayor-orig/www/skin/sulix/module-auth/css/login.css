@@ -1,0 +1,89 @@
+@media screen { 	
+
+#logo, #head, #nav, #nav1, #nav2 { display: none; }
+div.mayorbody { margin: 0; padding: 8px; }
+#header img { height: 40px; position: relative; top: 5px; left: 25px; }
+#header { width: 100%; background: #1A4B5C; height: 50px;  }
+body { background: #bfbfbf;}
+form { width: 960px; margin-left: auto; margin-right: auto; }
+div#body { 
+    width: 100%; height: 470px; padding-top: 70px; 
+    background-color: #3497B9;
+    background-attachment: inherit;
+    background-image: url('../../base/img/fur.png');
+    background-repeat: no-repeat;
+    background-position: bottom right;
+}
+table.loginablak { width: 160px; width: 180px; /*height: 178px;*/ background: #1A4B5C; border: #1A4B5C 8px solid; border-radius: 8px;}
+table.loginablak thead td { color: #F49430; font-weight: bold; font-size: 15px; font-family: sans-serif; text-align: center; padding-top: 5px; padding-bottom: 5px;}
+table.loginablak tbody td { height: 26px; padding-top: 15px; text-align: center; }
+table.loginablak div.input {
+    margin-left: auto; margin-right: auto;
+    width: 140px; height: 26px;
+    background-image: url(../../base/img/bejelentkezes_gomb_140x26.png);
+    background-origin: padding-box;
+    background-position: 50% 100%;
+    background-repeat: no-repeat;
+}
+table.loginablak input[type=text], table.loginablak input[type=password] { 
+    background-color: transparent; border: none; color: #767676; 
+    font-family: sans-serif; font-size: 10px; font-weight: 10px; height: 26px; width: 140px;
+    /*outline-color: #3C3B37; outline-width: 5px; outline-style: auto; */ padding: 1px 10px;
+}
+table.loginablak tfoot td { text-align: right; padding: 25px 0px 25px 0px;
+}
+table.loginablak tfoot select { float: left; background-color: transparent; color: white; border: 1px solid rgba(255,255,255,0.2); /*display: none; */}
+table.loginablak tfoot select option { background-color: #1a4b5c; }
+table.loginablak tfoot input[type=submit] {
+font-weight: bold; font-family: sans-serif; font-size: 10px;
+padding: 1px 6px 3px 6px;
+width: 66px; height: 28px;
+background-attachment: scroll;
+background-clip: border-box;
+background-color: transparent;
+background-image: url(../../base/img/bejelentkezes_gomb_66x28.png);
+background-origin: padding-box;
+background-position: 50% 100%;
+background-repeat: no-repeat;
+border: none;
+}
+
+/*
+div.mayorbody img 	{ border-width: 0px; } 	
+div.mayorbody h1	{text-align: center; margin: 10px; font-size:20px; } 	
+div.mayorbody h2	{text-align: center; margin: 10px; font-size: 15px; } 	
+div.mayorbody table	{ font-size: 12px; } 	
+div.mayorbody table.main {width: 100%; border-width: 0px;} 
+div.mayorbody table.loginablak {
+    background-color: #ffffff;
+    border-width: 1px; 
+    border-style: solid; 
+    border-color: #555550;
+    width:400px} 	
+div.mayorbody td	{ padding: 2px } 	
+div.mayorbody form	{ margin: 30px;padding: 0px; } 	
+div.mayorbody input	{ font-size: 12px; font-family:Verdana,Arial; background-color: #fffff0; border: solid 1px #666690;} 
+div.mayorbody select.pp {  	    padding: 0px; margin: 0px; 	    border: none 0px #778890; 	    font-size: 12px;  	    background-color: #eeeee0; 	   font-family: Verdana,Arial;  	    } 	
+div.mayorbody select.pp>option { border: none 0px black; } 	
+div.mayorbody input.submit 	{ border: solid 1px #776650; } 	
+div.mayorbody table.loginablak thead td {
+		background-color: #666690;
+		text-align: center;
+		font-family: Verdana,arial;
+		font-size: 10pt;
+		font-weight: bold;
+		color: white;
+		border-bottom: solid 1px white;
+div.mayorbody }
+div.mayorbody table.loginablak tbody tr.top td { border-top: solid 1px #666690; }
+
+div.mayorbody tfoot td { 	   background-color: #888880; 	    text-align: center; 	} 
+div.mayorbody td.co { 	    text-align: center; 	    vertical-align: bottom; 	    font-family: Verdana,arial; 	    font-size:8pt; 	} 	
+div.mayorbody img.aauthImg {
+    border-top: solid 1px #666690; 	   
+    border-bottom: solid 1px #888880; 	    
+    border-left: solid 1px #666690; 	    
+    border-right: solid 1px #888880; 	
+}
+*/
+}

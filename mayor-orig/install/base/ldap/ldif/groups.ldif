@@ -1,0 +1,59 @@
+# -------------------------------------------
+# MaYoR keretrendszer - alapvető csoportok
+# -------------------------------------------
+
+dn: cn=useradmin,ou=Groups,%BASEDN%
+cn: useradmin
+gidNumber: 6001
+description:: VXNlciBhZG1pbmlzenRyw6FjacOz
+member: uid=mayoradmin,ou=egyeb,%BASEDN%
+memberUid: mayoradmin
+objectClass: mayorGroup
+
+dn: cn=tanar,ou=Groups,ou=tanar,%BASEDN%
+cn: tanar
+gidNumber: 6002
+description:: QSB0YW7DoXJvaw==
+member: uid=mayoradmin,ou=egyeb,%BASEDN%
+memberUid: mayoradmin
+objectClass: mayorGroup
+
+dn: cn=titkarsag,ou=Groups,ou=titkarsag,%BASEDN%
+cn: titkarsag
+gidNumber: 6003
+description:: VGl0a8OhcnPDoWc=
+member: uid=mayoradmin,ou=egyeb,%BASEDN%
+memberUid: mayoradmin
+objectClass: mayorGroup
+
+dn: cn=gazdasagi,ou=Groups,ou=gazdasagi,%BASEDN%
+cn: gazdasagi
+gidNumber: 6004
+description:: R2F6ZGFzw6FnaQ==
+member: uid=mayoradmin,ou=egyeb,%BASEDN%
+memberUid: mayoradmin
+objectClass: mayorGroup
+
+dn: cn=egyeb,ou=Groups,ou=egyeb,%BASEDN%
+cn: egyeb
+gidNumber: 6005
+description: Egyeb
+member: uid=mayoradmin,ou=egyeb,%BASEDN%
+memberUid: mayoradmin
+objectClass: mayorGroup
+
+dn: cn=vezetoseg,ou=Groups,%BASEDN%
+cn: vezetoseg
+gidNumber: 6006
+description:: VmV6ZXTFkXPDqWc=
+member: uid=mayoradmin,ou=egyeb,%BASEDN%
+memberUid: mayoradmin
+objectClass: mayorGroup
+
+dn: cn=diakadmin,ou=Groups,%BASEDN%
+cn: diakadmin
+gidNumber: 6007
+description: Diak admin
+member: uid=mayoradmin,ou=egyeb,%BASEDN%
+memberUid: mayoradmin
+objectClass: mayorGroup

@@ -1,0 +1,23 @@
+
+    #tanmenet { margin: auto; border-spacing: 0px; border: #888888 solid 3px; border-collapse: collapse; }
+    #tanmenet th { text-align: left; }
+    #tanmenet td, #tanmenet th { height: 34px; vertical-align: middle; padding: 0px 10px; border: #888888 solid 1px; }
+    #tanmenet tr { background-color: #eeeeee; }
+    #tanmenet tr.uj { background-color: orange; }
+    #tanmenet tr.kesz { background-color: yellow; }
+    #tanmenet tr.jovahagyott { background-color: lightgreen; }
+    #tanmenet tr.publikus { background-color: cornflowerblue; }
+    #tanmenet tr.uj:hover { background-color: #eeaaaa; }
+    #tanmenet tr.kesz:hover { background-color: #eeeeaa; }
+    #tanmenet tr.jovahagyott:hover { background-color: #aaeeaa; }
+    #tanmenet tr.publikus:hover { background-color: #aaaaee; }
+    #tanmenet a { color: black; text-decoration: none; display: block; padding: 10px; }
+
+    #tanmenet tr.aktiv td, #tanmenet tr.aktiv th { border-top: 10px red solid; border-bottom: 10px red solid; }
+    #tanmenet tr.aktiv th { border-left: 10px red solid; }
+    #tanmenet tr.aktiv td:last-child { border-right: 10px red solid; }
+/*    #updateWindow { width: 80%; top: 10%; margin-top: auto; margin-bottom: auto; height: 80%; left: 50%; margin-left: -40%; }*/
+    #updateWindow { width: 40%; top: 10px; margin-top: auto; margin-bottom: auto; height: 100%; left: 0%; margin-left: 0%; }
+    #updateForm { max-height: 95%; overflow: auto; }
+    #updateHeader { cursor: pointer; }
+

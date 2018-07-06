@@ -1,0 +1,128 @@
+
+    table.naptar { background-color: #eeeeee; border-spacing: 0px; }
+    table.naptar thead { background-color: #770088; font-size: medium; height:3em; color: white; }
+    table.naptar thead a { color: white; text-decoration: none }
+    table.naptar thead a:hover { color: white; text-decoration: underline }
+
+    table.naptar thead tr th { padding: 0.4em 0.1em; border-bottom: solid 1px #aa00bb; }
+
+    table.naptar tfoot th { padding:0.3em; text-align: center; background-color: #440055; color: white }
+    table.naptar tfoot td { text-align: center; background-color: #770088; border-top: solid 1px #aa00bb; }
+    table.naptar tfoot td select { background-color: #770088; color: white; font-size:11px; font-family: Verdana;
+	border: solid 1px none; }
+    table.naptar tfoot td select option { color: white; background: #fff; color: #000;}
+
+
+    table.naptar tbody th.fejlec { background-color: #440055; color: white; font-style:italic; padding: 0.3em; border-bottom: solid 1px #777777; border-right: solid 0px #999999; }
+    table.naptar tbody th.fej2 {
+	background-color: #440055; color: white; font-style:italic; border-bottom: solid 1px #770088; border-right: solid 1px #999999;
+    }
+    table.naptar tbody th.fej2:last-child { border-right: solid 0px #999999; }
+    table.naptar tbody td.egynap { 
+	height: 40px; width:100px;
+	background-color: #dddddd;
+	border-width: 0px 0px;
+	border-style: solid;
+	border-color: #999999;
+    }
+    table.naptar tbody td.uresnap { background-color: #dddddd; height: 40px; }
+
+
+
+
+    table.naptar table.tanuloEgyNapja { height:100%; background-color: #667766; width:110px;}
+
+    table.naptar table.tanuloEgyNapja:hover { background-color: #778877; outline-offset: 0px; outline: solid 2px orange;}
+
+
+    table.tanuloEgyNapja th.datum { color: #ffffff; width: 40px; height: 10px; }
+    table.tanuloEgyNapja th.balgomb { width:15px; }
+    table.tanuloEgyNapja th.balgombokhelye { min-width:30px; width:30px; max-width:30px; }
+    table.tanuloEgyNapja th.jobbgomb { min-width:30px; width:30px; text-align: right; background-color: #889988; }
+
+    table.tanuloEgyNapja td {  }
+
+    table.tanuloEgyNapja form { margin:0px; }
+    table.tanuloEgyNapja input { border: solid 1px #666660; font-size:8px; width:14px; padding:0px; }
+    table.tanuloEgyNapja input.I { color: green; }
+    table.tanuloEgyNapja input.I:hover { background-color: green; color: white; outline: solid 1px lightgreen; }
+    table.tanuloEgyNapja input.H { color: red; }
+    table.tanuloEgyNapja input.H:hover { background-color: red; color: white; outline: solid 1px #ff5500; }
+
+    table.tanuloEgyNapja table.orak {background-color: #889988; }
+    table.tanuloEgyNapja table.orak a { color: #eeeee0; text-decoration: none }
+    table.tanuloEgyNapja table.orak a:hover { background-color: #667766; }
+
+    div.spec {
+	/* background-color: rgb(245,123,12); */
+	background-color: #556699;
+	color: white; width:100%; height: 100%;
+	font-size: 10px;
+	text-align: center;
+	margin-bottom:0px;
+	
+    }
+    table.szunet {
+	/* background-color: rgb(245,123,12); */
+	background-color: #667777;
+	color: white; width:100%; height: 100%;
+	font-size: 10px;
+    }
+
+
+
+
+    .jelen {
+        border-color: rgb(100,200,100);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+    }
+
+    .hianyzas {
+        border-color: rgb(200,100,100);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+    }
+
+    .keses {
+        border-color: rgb(200,200,100);
+        border-width: 0px 1px 3px 1px;
+        border-style: solid;
+    }
+
+    .felszereles_hiany {
+        color: white;
+        background-color:blue;
+    }
+
+    .egyenruha_hiany {
+        color: white;
+        background-color:orange;
+    }
+
+    .felmentes {
+        background-color: #eeeeee;
+        color: purple;
+    }
+
+    table.hianyzasNaptar {
+        background-color: #778890;
+    }
+
+    .igazolt { background-color: #008800; }
+    .igazolatlan { background-color: #880000; }
+
+    table.hianyzasNaptar {background-color: #778877; font-size:10px; width:100%;}
+    table.hianyzasNaptar th {background-color: #889988; font-weight: normal; }
+    table.hianyzasNaptar a { color: #eeeee0; text-decoration: none }
+    table.hianyzasNaptar a:hover { background-color: red; }
+    table.hianyzasNaptar a.igazolatlan:hover { background-color: lightgreen; }
+    table.hianyzasNaptar td.felszerelesHiany { background-color: rgb(100,100,200); }
+    table.hianyzasNaptar td.egyenruhaHiany { background-color: orange; }
+
+    table.naptar tr th span.kepzes {
+	padding: 1px 3px 1px 3px; font-size:10px; background-color: #776690;
+	border-radius: 2px 2px 2px 2px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+    }

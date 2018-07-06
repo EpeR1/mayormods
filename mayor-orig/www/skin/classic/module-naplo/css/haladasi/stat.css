@@ -1,0 +1,12 @@
+
+    table.stat { background-color: rgb(120,160,140); margin: 0px auto; }
+    table.stat thead tr th { background-color: rgb(60,100,80); padding-left: 8px; padding-right:8px; color: white;
+	border-bottom: solid 1px #00ff00;
+	height:2.5em;
+    }
+    table.stat tbody tr th  { text-align: left; background-color: #dddddd; padding:0px 8px; font-weight:normal;}
+    table.stat tbody tr:hover th  { color: white; background-color: rgba(255,255,255,0.1);}
+    table.stat tbody tr td { background-color: #eeeeee; text-align: right; padding: 0px 8px}
+    table.stat tbody tr:hover td  { background-color: rgba(255,255,255,0.8); }
+
+    table.stat tr td.ertesitendo { background-color: #880000; color: white; }

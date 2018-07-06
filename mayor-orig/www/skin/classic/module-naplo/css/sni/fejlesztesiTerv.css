@@ -1,0 +1,21 @@
+
+
+
+    div.sni { text-align: center; padding: 2px; }
+    div.sni h1 { text-align: center;  }
+
+    div.sni form { text-align: center; background-color: ; padding: 10px; margin: 2px auto; }
+    div.sni form:hover { background-color: ; }
+    div.mentor form { background-color: ; }
+    div.mentor form:hover { background-color:; }
+    div.sni form table { margin: auto; }
+    div.sni form td { text-align: left; padding: 20px; vertical-align: top; }
+    div.sni form h2 { text-align: center; border: solid black; border-width: 1px 0px; }
+    div.sni form label { }
+    div.sni form input { font-size: 12px; }
+    div.sni form option { font-size: 12px; padding: 2px; text-align: right; }
+    div.sni form select.multi option { text-align: left; }
+
+    div.sni form fieldset {  }
+    div.sni form fieldset.utolso {  }
+

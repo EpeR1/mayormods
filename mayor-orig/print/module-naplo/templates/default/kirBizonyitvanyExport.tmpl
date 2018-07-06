@@ -1,0 +1,15 @@
+%!nemvalosfuggveny xml
+<?xml version="1.0" encoding="UTF-8"?>                                                                                                                                                                      
+<TAN_EREDMENY_LISTA int_omkod="%$omkod" int_telepsorsz="%$telephelyId" tan_ev="%$tanevJel" evfolyam="%$evfolyamJel" felevi="%$feleviE" osztalyjelleg="%$kirOsztalyJelleg"
+xmlns="TanEredmenyek" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="TanEredmenyek C:\taneredmeny.sxd">
+
+%{diak                                                                                                                                                                                                     
+    <TANULO okt_azon="%$oId">                                                                                                                                                                              
+%{targy                                                                                                                                                                                                    
+        <OSZTALYZAT targykod="%$kirTargyKod" erdemjegy="%$jegy" />                                                                                                                                         
+%}targy                                                                                                                                                                                                    
+    </TANULO>                                                                                                                                                                                              
+%}diak     
+
+
+</TAN_EREDMENY_LISTA>            

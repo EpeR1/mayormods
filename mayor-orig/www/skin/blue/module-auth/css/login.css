@@ -1,0 +1,46 @@
+@media screen { 	
+
+div.mayorbody img 	{ border-width: 0px;  } 	
+div.mayorbody h1	{text-align: center;  margin:10px; font-size:20px; } 	
+div.mayorbody h2	{text-align: center;  margin:10px; font-size: 15px; } 	
+div.mayorbody table	{ font-size: 12px; } 	
+div.mayorbody table.main {width: 100%; border-width: 0px;} 
+div.mayorbody table.loginablak {
+    background-color: #ffffff;
+    border-width: 1px; 
+    border-style: solid; 
+    border-color: #555550;
+    width:400px} 	
+div.mayorbody td	{ padding: 2px } 	
+div.mayorbody form	{ margin: 30px;padding: 0px; } 	
+div.mayorbody input	{ font-size: 12px; font-family:Verdana,Arial; background-color: #fffff0; border: solid 1px #666690;} 
+div.mayorbody select.pp {  	    padding: 0px; margin: 0px; 	    border: none 0px #778890; 	    font-size: 12px;  	    background-color: #eeeee0; 	   font-family: Verdana,Arial;  	    } 	
+div.mayorbody select.pp>option { border: none 0px black; } 	
+div.mayorbody input.submit 	{ border: solid 1px #776650; } 	
+div.mayorbody table.loginablak thead td {
+		background-color: #666690;
+		text-align: center;
+		font-family: Verdana,arial;
+		font-size: 10pt;
+		font-weight: bold;
+		color: white;
+		border-bottom: solid 1px white;
+div.mayorbody }
+div.mayorbody table.loginablak tbody tr.top td { border-top: solid 1px #666690; }
+
+div.mayorbody tfoot td { 	   background-color: #888880; 	    text-align: center; 	} 
+div.mayorbody td.co { 	    text-align: center; 	    vertical-align: bottom; 	    font-family: Verdana,arial; 	    font-size:8pt; 	} 	
+div.mayorbody img.aauthImg {
+    border-top: solid 1px #666690; 	   
+    border-bottom: solid 1px #888880; 	    
+    border-left: solid 1px #666690; 	    
+    border-right: solid 1px #888880; 	
+}
+#warning { height: 40px; }
+#capsLockWarning { 
+    background: #ffffaa; color: #ffaaaa; 
+    text-align: center; font-size: 20px; font-weight: bold; 
+    padding: 20px; margin: 10px auto; width: 300px;
+}
+
+}

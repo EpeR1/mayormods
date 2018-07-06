@@ -1,0 +1,165 @@
+<?php
+
+    function putDiakAllapot($ADAT) {
+
+	if (__MENTOR || __NAPLOADMIN || __VEZETOSEG) echo '<div class="sni mentor">'."\n";
+	else echo '<div class="sni">'."\n";
+
+	formBegin(array('method'=>'post','action'=>'','class'=>'sni'));
+
+	echo '<input type="hidden" name="action" value="sniDiakAdatRogzites" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+
+	echo '<label for="kulsoInfo">'._KULSOINFO.'</label><br />'."\n";
+	echo '<textarea title="'._KULSOINFO.'" cols="100" rows="10" id="kulsoInfo" name="kulsoInfo">'."\n";
+	    echo $ADAT['sniDiakAdat']['kulsoInfo'];
+	echo '</textarea><br />'."\n";
+
+	echo '<label for="mentor">'._MENTOR.'</label>'."\n";
+	$SEL = array($ADAT['sniDiakAdat']['mentorTanarId'] => ' selected="selected" ');
+	echo '<select id="mentor" name="mentorTanarId">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    for ($i = 0; $i < count($ADAT['tanarok']); $i++) {
+		if (in_array($ADAT['tanarok'][$i]['tanarId'], $ADAT['tanarIds']))
+		echo '<option value="'.$ADAT['tanarok'][$i]['tanarId'].'"'.$SEL[$ADAT['tanarok'][$i]['tanarId']].'>'.$ADAT['tanarok'][$i]['tanarNev'].' ('.$ADAT['tanarok'][$i]['tanarId'].')</option>'."\n";
+	    }
+	echo '</select>';
+
+	echo '<fieldset><legend>'._DIAGNOZIS.'</legend>'."\n";
+	    echo '<table><tr><td>'."\n";
+	    for ($i = 0; $i < count($ADAT['fogyatekossag']); $i++) {
+		$value = $ADAT['fogyatekossag'][$i];
+		if (strpos($ADAT['diakAdat'][$ADAT['diakId']]['fogyatekossag'], $value) !== false) $CHK = 'checked="checked" '; else $CHK = '';
+		echo '<input type="checkbox" name="fogyatekossag[]" id="fogyatekossag" value="'.$value.'" '.$CHK.'/> '.$value.'<br />';
+		if ($i == 5 || $i == 12 ) echo '</td><td>'."\n";
+	    }
+	    echo '</td></tr></table>'."\n";
+	echo '</fieldset>'."\n";
+
+	if (__NAPLOADMIN || __VEZETOSEG || __MENTOR)
+	    echo '<p style="text-align: center"><input type="submit" value="'._OK.'" /></p>'."\n";
+
+	formEnd();
+
+	// Két állapot űrlapot rakunk ki - kezdő és vég állapot - itt 1. és 2. szemeszter
+	for ($szemeszter = 1; $szemeszter < 3; $szemeszter++) {
+
+	    formBegin(array('method'=>'post','action'=>'','class'=>'sni hideShowContainer'));
+
+	    echo '<h2 class="onClickHideShow">'.constant('_SZEMESZTER'.$szemeszter).'</h2>';
+	    echo '<div class="openable" style="display:none;">';
+
+	    echo '<input type="hidden" name="action" value="allapotRogzites" />'."\n";
+	    echo '<input type="hidden" name="szemeszter" value="'.$szemeszter.'" />'."\n";
+	    echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	    echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+
+	    foreach ($ADAT['fields'] as $attr => $values) {
+		if (in_array($attr, array('matematika','szovegertes'))) $class='utolso'; else $class='';
+		echo '<fieldset class="'.$class.'">';
+		echo '<legend>'.constant('_'.nagybetus($attr)).'</legend>'."\n";
+		for ($i = 0; $i < count($values); $i++) {
+		    if (in_array($attr, array('olvasasHibak','irasHibak','matematika'))) {
+			if (strpos($ADAT['diakAllapot'][$szemeszter][$attr], $values[$i]) !== false) $CHK = 'checked="checked" '; else $CHK = '';
+			echo '<input type="checkbox" name="'.$attr.'[]" id="'.$attr.$szemeszter.$i.'" value="'.$values[$i].'" '.$CHK.'/>';
+		    } else {
+			if ($ADAT['diakAllapot'][$szemeszter][$attr] == $values[$i]) $CHK = 'checked="checked" '; else $CHK = '';
+			echo '<input type="radio" name="'.$attr.'" id="'.$attr.$szemeszter.$i.'" value="'.$values[$i].'" '.$CHK.'/>';
+		    }
+		    echo ' <label for="'.$attr.$szemeszter.$i.'">'.constant('_'.nagybetus($attr).'_'.nagybetus(ekezettelen(str_replace(' ','_',str_replace(',','',str_replace('/','_',$values[$i]))))))."</label><br />\n";
+		}
+		echo '</fieldset>'."\n";
+	    }
+
+	    echo '<label for="szemelyes'.$szemeszter.'">'._SZEMELYES_KOMPETENCIAK.'</label>'."\n";
+	    echo '<textarea title="'._SZEMELYES_KOMPETENCIAK.'" cols="90" rows="7" id="szemelyes'.$szemeszter.'" name="szemelyesKompetenciak">'."\n";
+		echo $ADAT['diakAllapot'][$szemeszter]['szemelyesKompetenciak'];
+	    echo '</textarea><br />'."\n";
+
+	    echo '<label for="tarsas'.$szemeszter.'">'._TARSAS_KOMPETENCIAK.'</label>'."\n";
+	    echo '<textarea title="'._TARSAS_KOMPETENCIAK.'" cols="90" rows="7" id="tarsas'.$szemeszter.'" name="tarsasKompetenciak">'."\n";
+		echo $ADAT['diakAllapot'][$szemeszter]['tarsasKompetenciak'];
+	    echo '</textarea><br />'."\n";
+
+	    echo '<label for="kognitiv'.$szemeszter.'">'._KOGNITIV_KEPESSEGEK.'</label>'."\n";
+	    echo '<textarea title="'._KOGNITIV_KEPESSEGEK.'" cols="90" rows="7" id="kognitiv'.$szemeszter.'" name="kognitivKepessegek">'."\n";
+		echo $ADAT['diakAllapot'][$szemeszter]['kognitivKepessegek'];
+	    echo '</textarea><br />'."\n";
+
+	    echo '<label for="eljaras'.$szemeszter.'">'._ELJARAS_MEROESZKOZ.'</label><br />'."\n";
+	    echo '<input title="'._ELJARAS_MEROESZKOZ.'" type="text" maxlength="100" size="60" id="eljaras'.$szemeszter.'" name="eljarasEszkozok" value="'.$ADAT['diakAllapot'][$szemeszter]['eljarasEszkozok'].'" /><br />'."\n";
+
+	    echo '<label for="vizsgaltTerulet'.$szemeszter.'">'._VIZSGALT_TERULET.'</label><br />'."\n";
+	    echo '<input title="'._VIZSGALT_TERULET.'" type="text" maxlength="100" size="60" id="vizsgaltTerulet'.$szemeszter.'" name="vizsgaltTerulet" value="'.$ADAT['diakAllapot'][$szemeszter]['vizsgaltTerulet'].'" /><br />'."\n";
+
+	    echo '<label for="gyengesegek'.$szemeszter.'">'._FEJLESZTENDO_TERULET_KOMPETENCIA.'</label><br />'."\n";
+	    echo '<ul>';
+	    $ADAT['diakAllapot'][$szemeszter]['gyengeség'][] = array('leiras' => '', 'prioritas' => 0);
+	    foreach ($ADAT['diakAllapot'][$szemeszter]['gyengeség'] as $key => $gyAdat) {
+		echo '<li>';
+		echo '<input title="'._FEJLESZTENDO_TERULET_KOMPETENCIA.'" type="text" maxlength="150" size="60" id="gyengeseg'.$szemeszter.$key.'" name="gyengesegLeiras[]" value="'.$gyAdat['leiras'].'" />'."\n";
+
+		$SEL = array($gyAdat['prioritas'] => ' selected="selected" ');
+		echo '<select id="gyengesegPrioritas'.$szemeszter.$key.'" name="gyengesegPrioritas[]">'."\n";
+		    echo '<option value=""> - </option>'."\n";
+		    for ($i = 0; $i < 100; $i++) echo '<option value="'.$i.'"'.$SEL[$i].'>'.$i.'</option>'."\n";
+		echo '</select>'."\n";
+		
+		echo '</li>'."\n";
+	    }
+	    echo '</ul>'."\n";
+//--------
+
+	    echo '<label for="erossegek'.$szemeszter.'">'._EROSSEGEK.'</label><br />'."\n";
+	    echo '<ul>';
+	    $ADAT['diakAllapot'][$szemeszter]['erősség'][] = array('leiras' => '', 'prioritas' => 0);
+	    foreach ($ADAT['diakAllapot'][$szemeszter]['erősség'] as $key => $eAdat) {
+		echo '<li>';
+		echo '<input title="'._EROSSEGEK.'" type="text" maxlength="150" size="60" id="erosseg'.$szemeszter.$key.'" name="erossegLeiras[]" value="'.$eAdat['leiras'].'" />'."\n";
+
+		$SEL = array($eAdat['prioritas'] => ' selected="selected" ');
+		echo '<select id="erossegPrioritas'.$szemeszter.$key.'" name="erossegPrioritas[]">'."\n";
+		    echo '<option value=""> - </option>'."\n";
+		    for ($i = 0; $i < 100; $i++) echo '<option value="'.$i.'"'.$SEL[$i].'>'.$i.'</option>'."\n";
+		echo '</select>'."\n";
+		
+		echo '</li>'."\n";
+	    }
+	    echo '</ul>'."\n";
+//--------
+
+
+	    echo '<label for="problemaMegfogalmazasa'.$szemeszter.'">'._PROBLEMA_MEGFOGALMAZASA.'</label>'."\n";
+	    echo '<textarea title="'._PROBLEMA_MEGFOGALMAZASA.'" cols="90" rows="2" id="problemaMegfogalmazasa'.$szemeszter.'" name="problemaMegfogalmazasa">'."\n";
+		echo $ADAT['diakAllapot'][$szemeszter]['problemaMegfogalmazasa'];
+	    echo '</textarea><br />'."\n";
+
+	    echo '<label for="vizsgalatDt'.$szemeszter.'">'._VIZSGALAT_DATUMA.'</label>'."\n";
+	    echo '<input type="text" maxlength="10" size="10" class="date" id="vizsgalatDt'.$szemeszter.'" name="vizsgalatDt" value="'.$ADAT['diakAllapot'][$szemeszter]['vizsgalatDt'].'" />'."\n";
+	    
+	    echo '<br /><label for="vizsgalo'.$szemeszter.'">'._VIZSGALATOT_VEGZO.'</label>'."\n";
+	    $SEL = array($ADAT['diakAllapot'][$szemeszter]['vizsgalatTanarId'] => ' selected="selected" ');
+	    echo '<select id="vizsgalo'.$szemeszter.'" name="vizsgalatTanarId">'."\n";
+		echo '<option value=""> - </option>'."\n";
+		for ($i = 0; $i < count($ADAT['tanarok']); $i++) {
+		    if (in_array($ADAT['tanarok'][$i]['tanarId'], $ADAT['tanarIds']))
+		    echo '<option value="'.$ADAT['tanarok'][$i]['tanarId'].'"'.$SEL[$ADAT['tanarok'][$i]['tanarId']].'>'.$ADAT['tanarok'][$i]['tanarNev'].' ('.$ADAT['tanarok'][$i]['tanarId'].')</option>'."\n";
+		}
+	    echo '</select><br />'."\n";
+
+	    if (__NAPLOADMIN || __VEZETOSEG || __MENTOR)
+		echo '<p style="text-align: center"><input type="submit" value="'._OK.'" /></p>'."\n";
+
+	    echo '</div>';
+
+	    formEnd();
+
+	}
+
+	echo '</div>';
+
+
+    }
+
+?>

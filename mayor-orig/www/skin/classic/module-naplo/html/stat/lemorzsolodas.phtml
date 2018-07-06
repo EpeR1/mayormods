@@ -1,0 +1,59 @@
+<?php
+
+    function putLemorzsolodas($ADAT) {
+
+	//dump($ADAT['lemorzsolodas']);
+
+	echo '<h1>Két egymás követő félév alatt átlagosan >=1,1 romlás</h1>';
+	    _putTabla($ADAT['lemorzsolodas']['ronto']);
+	    
+	echo '<h1>A fél/év végén a tanulmányi átlaga < 3,0</h1>';
+	    _putTabla($ADAT['lemorzsolodas']['rosszTanulo']);
+
+	echo '<h1>A fél/év végén a tanulmányi átlaga < 2,5</h1>';
+	    _putTabla($ADAT['lemorzsolodas']['nagyonRosszTanulo']);
+
+	echo '<h1>Egy vagy több tárgyból bukik</h1>';
+	    _putTabla($ADAT['lemorzsolodas']['bukott']);
+
+	echo '<h1>Magatartása rossz</h1>';
+	    _putTabla($ADAT['lemorzsolodas']['rosszMagatartasu']);
+	    
+	echo '<h1>Szorgalma hanyag</h1>';
+	    _putTabla($ADAT['lemorzsolodas']['hanyagSzorgalmu']);
+
+	echo '<h1>50 órát elérő igazolatlan hiányzás</h1>';
+	    _putTabla($ADAT['lemorzsolodas']['igazolatlanHianyzo_50']);
+
+	echo '<h1>100 órát elérő igazolt hiányzás</h1>';
+	    _putTabla($ADAT['lemorzsolodas']['igazoltanHianyzo_100']);
+
+	echo '<h1>magántanulóvá vált</h1>';
+	    _putTabla($ADAT['lemorzsolodas']['magantanuloLett']);
+
+    }
+
+    function _putTabla($ADAT) {
+	// dump($ADAT);
+	echo 'Összesen: '.count($ADAT);
+	if (count($ADAT)==0) return false;
+	echo '<table class="lemorzsolodas" border="1">';
+	    echo '<tr>';
+		foreach($ADAT[0] as $k => $d) {
+		    echo '<th>'.$k.'</td>';
+		}
+	    echo '</tr>';
+	    for ($i=0; $i<count($ADAT); $i++) {
+		$D = $ADAT[$i];
+		echo '<tr>';
+		foreach($D as $k => $d) {
+		    if ($k=='diakNev') echo '<td class="diakNev" data-diakid="'.$D['diakId'].'">'.$D['diakNev'].'</td>';
+		    else echo '<td>'.$d.'</td>';
+		}
+		echo '</tr>';
+	    }
+	echo '</table>';
+
+    }
+
+?>

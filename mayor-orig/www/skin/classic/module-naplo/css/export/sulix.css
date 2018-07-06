@@ -1,0 +1,9 @@
+
+    form.export { width: 60%; float: left; margin: 0px 20%; }
+
+    form.export input[type=submit] { width: 100%; }
+    form.export input[type=submit]:hover { background: rgb(100,100,100); color: white }
+    form.export div.leiras { background: rgba(200,200,200,0.8); margin: 10px; text-align: left; padding: 6px; height: 300px; }
+
+    div.txt { margin: 1%; background: #3496B9; padding: 10px; padding-bottom: 50px; }
+    div.txt div { background: rgba(200,200,200,0.8); padding: 6px; margin-bottom: 10px; }

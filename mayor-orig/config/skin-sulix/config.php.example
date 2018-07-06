@@ -1,0 +1,6 @@
+<?php
+
+    // IFRAME-be ágyazás engedélyezése - !! Biztonsági kockázat !!
+    // DEPRECATED define('_ENABLE_IFRAME_EMBEDDING',true);
+
+?>

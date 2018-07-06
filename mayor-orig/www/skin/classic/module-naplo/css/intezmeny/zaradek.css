@@ -1,0 +1,16 @@
+
+    form.zaradek { margin: 10px 40px; padding: 10px; border: rgb(100,125,150) solid; border-width: 3px 1px; background-color: rgb(200,220,240); }
+    form.zaradek p { border: rgb(20,40,80) solid 1px; padding: 8px; text-align: center; background-color: white; }
+    form.zaradek p span { color: red; }
+    form.zaradek table { margin-left: 100px; }
+    form.zaradek th { padding: 4px; background-color: rgb(20,40,80); color: white; }
+    form.zaradek div { text-align: center; }
+    form.zaradek div input { padding: 4px; background-color: rgb(20,40,80); color: white; }
+
+    form.diakZaradek { margin: 10px; }
+    form.diakZaradek table { background-color: rgb(20,40,80); }
+    form.diakZaradek table th { background-color: rgb(100,100,200); color: white; }
+    form.diakZaradek table td { background-color: rgb(230,230,255); }
+    form.diakZaradek table td.jobbra { text-align: right; }
+
+    form.diakZaradek input.delZaradek { background-color: red; border: none; color: white; }

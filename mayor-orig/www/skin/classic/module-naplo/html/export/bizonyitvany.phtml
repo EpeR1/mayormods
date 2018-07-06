@@ -1,0 +1,47 @@
+<?php
+
+    function putExportForm($ADAT) {
+
+	global $skin;
+
+	formBegin(array('action'=>href('index.php?page=naplo&sub=export&f=bizonyitvany'), 'class'=>"export"));
+	echo '<input type="hidden" name="action" value="bizonyitvanyExport" />'."\n";
+
+	if (isset($ADAT['osztalyId'])) echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	if (isset($ADAT['szemeszterAdat']['szemeszterId'])) 
+	    echo '<input type="hidden" name="szemeszterId" value="'.$ADAT['szemeszterAdat']['szemeszterId'].'" />'."\n";
+
+	echo '<fieldset><legend>'._EXPORT.'</legend>'."\n";
+	echo '<table>'."\n";
+
+	$CHK = array('ods' => ' checked="checked" ');
+
+	echo '<tr>'."\n";
+	    echo '<th>'._FORMATUM.'</th>'."\n";
+	    echo '<td>';
+		echo '<input type="radio" name="formatum" value="csv" id="csv"'.$CHK['csv'].' />'."\n";
+		echo '<label for="csv">'._CSV.'</label><br />'."\n";
+	    echo '</td>';
+	    echo '<td>';
+		echo '<input type="radio" name="formatum" value="ods" id="ods"'.$CHK['ods'].' />'."\n";
+		echo '<label for="ods">'._ODS.'</label>'."\n";
+	    echo '</td>'."\n";
+	    echo '<td>';
+		echo '<input type="radio" name="formatum" value="xml" id="xml"'.$CHK['xml'].' />'."\n";
+		echo '<label for="xml">'._XML.'</label>'."\n";
+	    echo '</td>'."\n";
+	echo '</tr>'."\n";
+
+    	echo '<tr>';
+	    echo '<th>';
+	    echo '<input type="submit" value="'._OK.'" />'."\n";
+	    echo '</th>';
+	echo '</tr>';
+
+	echo '</table>'."\n";
+	echo '</fieldset>';
+	if ($skin != 'ajax') formEnd();
+    }
+
+
+?>

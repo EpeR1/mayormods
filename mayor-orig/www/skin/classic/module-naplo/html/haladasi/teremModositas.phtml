@@ -1,0 +1,49 @@
+<?php
+    /* 2010 */
+
+    function putTeremModositas($ADAT) {
+	formBegin();
+
+	foreach (array('dt','ora','tanarId','tankorId','oraId') as $key) {
+	    echo '<input type="hidden" name="'.$key.'" value="'.$ADAT[$key].'" />';
+	}
+	unset($key);
+
+	echo '<table class="terem" align="center">';
+	    echo '<tr>';
+	    echo '<td>';
+		_putOraAdat($ADAT['oraAdat']);
+	    echo '</td>';
+	    echo '</tr>';
+	    echo '<tr><th>';
+		echo '<select name="ujTeremId">';
+		echo '<option value="'.$ADAT['oraAdat']['teremId'].'">'._EREDETI.' ('.$ADAT['oraAdat']['teremId'].')</option>'; // nulla amúgy sincs
+		foreach($ADAT['szabadTerem'] as $key) {
+		    $_SEL = ($key['teremId'] == $ADAT['oraAdat']['teremId']) ? ' selected="selected" '  :  '';
+		    $_CLASS = ($ADAT['tankorLetszam']>$key['ferohely']) ? ' class="nemferbe" ' : ' ';
+		    echo '<option '.$_CLASS.' value="'.$key['teremId'].'">'.$key['leiras'].' '.$key['tipus'].' ('.$key['ferohely'].' '._HELY.') '.'</option>';
+		}	
+		echo '</select>';
+		echo '<input type="hidden" name="action" value="teremModosit" />';
+		echo '<input type="submit" name="kuld" value="'._OK.'" />';
+	    echo '</th></tr>';
+	echo '</table>';
+
+	formEnd();
+    }
+
+    function _putOraAdat($OA) {
+	/* Példa 
+	array(13) { ["oraId"]=>  string(5) "36513" ["dt"]=>  string(10) "2010-03-25" ["ora"]=>  string(1) "6" ["ki"]=>  string(2) "81" ["kit"]=>  NULL ["tankorId"]=>  string(4) "1267" ["teremId"]=>  NULL ["leiras"]=>  NULL ["tipus"]=>  string(7) "normál" ["eredet"]=>  string(8) "órarend" ["kiCn"]=>  string(16) "Ábrám László" ["kitCn"]=>  string(0) "" ["tankorNev"]=>  string(25) "7-8. fizika szakkör ALAP" }
+	*/
+	echo '<table align="center" class="terem oraAdat" cellspacing="1">';
+	foreach(array('oraId','dt','ora','tankorNev','kiCn','kitCn','teremId') as $key) {
+	    echo '<tr>';
+	    echo '<th>'.constant('_'.strtoupper($key)).'</th>';
+	    echo '<td>'.$OA[$key].'</td>';
+	    echo '</tr>';
+	}
+	echo '</table>';
+    }
+
+?>

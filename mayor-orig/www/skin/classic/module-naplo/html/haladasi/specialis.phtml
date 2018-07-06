@@ -1,0 +1,181 @@
+<?php
+/*
+    module: naplo
+*/
+
+    function putNapInfo($napAdat, $munkatervek) {
+
+	echo '<table class="napinfo">';
+	echo '<tr><th colspan="'.count($napAdat).'">'.$napAdat[0]['dt'].'</th></tr>';
+	echo '<tr>';
+	for ($i = 0; $i < count($napAdat); $i++) {
+	    echo '<td>';
+		echo '<h3>'._MUNKATERV.': '.$munkatervek[$napAdat[$i]['munkatervId']]['munkatervNev'].' ('.$napAdat[$i]['munkatervId'].')</h3>';
+		echo '<p>'._TIPUS.': <strong>'.$napAdat[$i]['tipus'].'</strong></p>';
+		echo '<p>'._ORARENDIHET.': <strong>'.$napAdat[$i]['orarendiHet'].'</strong></p>';
+		echo '<p>'._MEGJEGYZES.'<strong>: '.$napAdat[$i]['megjegyzes'].'</strong></p>';
+	    echo '</td>';
+	}
+	echo '</tr>';
+	echo '</table>';
+
+    }
+
+    function napiOrakTorleseForm($napAdat, $napTipusok) {
+
+	$dt = $napAdat[0]['dt'];
+	$tipus = array();
+	for ($i = 0; $i < count($napAdat); $i++) if (!in_array($napAdat[$i]['tipus'], $tipus)) $tipus[] = $napAdat[$i]['tipus'];
+	// Ha egyféle típus van rendelve a naphoz az összes munkatervben...
+	if (count($tipus) == 1) $SEL = array($tipus[0] => ' selected="selected" ');
+	formBegin(array('class'=>'specialis'));
+
+	    echo '<input type="hidden" name="action" value="napiOrakTorlese" />'."\n";
+	    echo '<input type="hidden" name="dt" value="'.$dt.'" />'."\n";
+	    echo '<label for="tipus">'._NAP_TIPUSA.'</label>'."\n";
+	    echo '<select name="tipus" id="tipus">'."\n";
+		echo '<option value=""> - </option>'."\n";
+	    for ($i = 0; $i < count($napTipusok); $i++) {
+		echo '<option value="'.$napTipusok[$i].'"'.$SEL[$napTipusok[$i]].'>'.$napTipusok[$i].'</option>'."\n";
+	    }
+	    echo '</select>'."\n";
+	    echo '<input type="submit" value="'._ORAK_TORLESE.'" class="confirm" title="'._TORLES_BIZTOS_E.'" />'."\n";
+	    
+	formEnd();
+    }
+
+    function orakBetolteseForm($napAdat, $Hetek) {
+
+	$dt = $napAdat[0]['dt'];
+	$orarendiHet = array();
+	for ($i = 0; $i < count($napAdat); $i++) if (!in_array($napAdat[$i]['orarendiHet'], $orarendiHet)) $orarendiHet[] = $napAdat[$i]['orarendiHet'];
+	// Ha egyetlen órarendi héthez van rendelve a nap az összes munkatervben...
+	if (count($orarendiHet) == 1) $SEL = array($orarendiHet[0] => ' selected="selected" ');
+	formBegin(array('class'=>'specialis'));
+
+	    echo '<input type="hidden" name="action" value="orakBetoltese" />'."\n";
+	    echo '<input type="hidden" name="dt" value="'.$dt.'" />'."\n";
+	    echo '<label for="het">'._ORARENDIHET.'</label>'."\n";
+	    echo '<select name="orarendiHet" id="het">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    for ($i = 0; $i < count($Hetek); $i++) {
+		echo '<option value="'.$Hetek[$i].'"'.$SEL[$Hetek[$i]].'>'.$Hetek[$i].'</option>'."\n";
+	    }
+	    echo '</select>'."\n";
+	    echo '<input type="submit" value="'._ORAK_BETOLTESE.'" class="confirm" title="'._BETOLTES_BIZTOS_E.'" />'."\n";
+	    
+	formEnd();
+    }
+
+    function specialisNapForm($dt, $szabadOrak, $Hetek) {
+
+	global $aHetNapjai, $napiMinOra, $napiMaxOra;
+
+	formBegin(array('class'=>'specialis'));
+	
+	    echo '<input type="hidden" name="action" value="specialisNap" />';
+	    echo '<input type="hidden" name="dt" value="'.$dt.'" />';
+
+	    echo '<table>'."\n";
+
+	    echo '<thead>'."\n";
+		echo '<tr><th colspan="5">'._ORAREND_OSSZEALLITASA.": $dt</th></tr>\n";
+		echo '<tr>';
+		    echo '<th>'._SZABAD_ORA.'</th>';
+		    echo '<th></th>';
+		    echo '<th>'._HET.'</th>';
+		    echo '<th>'._NAP.'</th>';
+		    echo '<th>'._ORA.'</th>';
+		echo '</tr>'."\n";
+	    echo '</thead>'."\n";
+
+	    echo '<tfoot>'."\n";
+		echo '<tr>';
+		    echo '<th colspan="5"><input type="submit" value="'._OK.'" /></th>';
+		echo '</tr>'."\n";
+	    echo '</tfoot>'."\n";
+
+	    echo '<tbody>'."\n";
+	    for ($j = 0; $j < count($szabadOrak); $j++) {
+		echo '<tr>'."\n";
+		    echo '<th><input type="hidden" name="celOra[]" value="'.$szabadOrak[$j].'" />'.$szabadOrak[$j].'</th>'."\n";
+		    echo '<td>&#8594;</td>'."\n";
+		    echo '<td>'."\n";
+			echo '<select name="het[]">'."\n";
+			echo '<option value=""> - </option>'."\n";
+			for ($h = 0; $h < count($Hetek); $h++) {
+			    echo '<option value="'.$Hetek[$h].'">'.$Hetek[$h].'</option>'."\n";
+			}
+			echo '</select>'."\n";
+		    echo '</td>'."\n";
+		    echo '<td>';
+			$dow = date('w',strtotime($dt));
+			if ($dow == 0 ) $dow = 7;
+			$SEL = array($dow => ' selected="selected" ');
+			echo '<select name="nap[]">';
+			echo '<option value=""> - </option>';
+			for ($k = 1; $k <= 7; $k++) {
+			    echo '<option value="'.$k.'"'.$SEL[$k].'>'.$aHetNapjai[$k-1].'</option>';
+			}
+			echo '</select>';
+		    echo '</td>'."\n";
+		    echo '<td>';
+			echo '<select name="ora[]">';
+			echo '<option value=""> - </option>';
+			for ($k = $napiMinOra; $k <= $napiMaxOra; $k++) {
+			    if ($szabadOrak[$j] == $k) {
+    				echo '<option value="'.$k.'" selected="selected">'.$k.'</option>';
+			    } else {
+    				echo '<option value="'.$k.'">'.$k.'</option>';
+			    }
+			}
+			echo '</select>';
+		    echo '</td>'."\n";
+		echo '</tr>'."\n";
+	    }	    
+	    echo '</tbody>'."\n";
+
+	    echo '</table>'."\n";
+
+	formEnd();
+
+    }
+
+    function orakTorleseForm($dt, $szabadOrak) {
+
+	global $napiMinOra, $napiMaxOra;
+
+	formBegin(array('class'=>'specialis'));
+
+	    echo '<input type="hidden" name="action" value="orakTorlese" />'."\n";
+	    echo '<input type="hidden" name="dt" value="'.$dt.'" />'."\n";
+	    echo '<table>'."\n";
+
+	    echo '<thead>'."\n";
+		echo '<tr><th colspan="2">'._FOGLALT_SAVOK_TORLESE.': '.$dt.'</th></tr>'."\n";
+		echo '<tr>';
+		    echo '<th>'._FOGLALT_ORA.'</th>';
+		    echo '<th>'._TORLENDO.'</th>';
+		echo '</tr>'."\n";
+	    echo '</thead>'."\n";
+
+	    echo '<tfoot>'."\n";
+		echo '<tr>';
+		    echo '<th colspan="2"><input type="submit" value="'._TORLES.'" class="confirm" title="'._ORA_TORLES_BIZTOS_E.'" /></th>';
+		echo '</tr>'."\n";
+	    echo '</tfoot>'."\n";
+	    
+	    for ($i = $napiMinOra; $i <= $napiMaxOra; $i++) {
+		if (!in_array($i, $szabadOrak)) {
+		    echo '<tr>';
+			echo '<th>'.$i.'</th>';
+			echo '<td><input type="checkbox" name="ora[]" value="'.$i.'" /></td>'."\n";
+		    echo '</tr>';
+		}
+	    }
+	    echo '</table>'."\n";
+	    
+	formEnd();
+	
+    }
+?>

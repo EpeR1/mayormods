@@ -1,0 +1,319 @@
+<?php
+
+    require_once('skin/classic/module-naplo/html/share/face.phtml');
+
+    function putHirnokFolyam($ADAT) {
+
+	if (!is_array($ADAT['hirnokFolyam'])) return false; 
+
+	// echo '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">';
+
+	for ($h=0; $h<count($ADAT['hirnokFolyam']); $h++) {
+	  if (count($ADAT['hirnokFolyam'])>=1) {
+	    echo '<div class="hirnokSeparator">';
+		putFace($ADAT['hirnokFolyam'][$h]['hirnokFolyamAdatok']['id'],$ADAT['hirnokFolyam'][$h]['hirnokFolyamAdatok']['tipus'],30);
+		echo '<a href="'.href('index.php?page=naplo&sub=hirnok&f=hirnok').'">'.$ADAT['hirnokFolyam'][$h]['hirnokFolyamAdatok']['cn'].'</a>';
+	    echo '</div>';
+	  }
+	  foreach ($ADAT['hirnokFolyam'][$h]['hirnokFolyamUzenetek'] as $stamp => $DA) {
+	    for ($i=0; $i<count($DA); $i++) {
+		$D = $DA[$i];
+		echo '<div class="hirnokDoboz '.$D['hirnokTipus'].'">';
+		    echo '<div class="hirnokBadgeHolder '.$D['hirnokTipus'].'">';
+			if (function_exists('putHirnokBadge_'.$D['hirnokTipus'])) call_user_func('putHirnokBadge_'.$D['hirnokTipus'],$D);
+		    echo '</div>';
+		    echo '<div class="hirnokDt">';
+			if (function_exists('putHirnokDetail_'.$D['hirnokTipus'])) call_user_func('putHirnokDetail_'.$D['hirnokTipus'],$D);
+			else echo superdate(date('Y-m-d H:i:s',$stamp));
+		    echo '</div>';
+		    echo '<div class="hirnokText '.$D['hirnokTipus'].'">';
+			if (function_exists('putHirnok_'.$D['hirnokTipus'])) call_user_func('putHirnok_'.$D['hirnokTipus'],$D);
+			// else dump($D);
+		    echo '</div>';
+		    echo '<div class="hirnokRight '.$D['hirnokTipus'].'">';
+			if (function_exists('putHirnokRight_'.$D['hirnokTipus'])) call_user_func('putHirnokRight_'.$D['hirnokTipus'],$D);
+		    echo '</div>';
+/*		    echo '<div class="hirnokFooter '.$D['hirnokTipus'].'">';
+			if (function_exists('putHirnokFooter_'.$D['hirnokTipus'])) call_user_func('putHirnokFooter_'.$D['hirnokTipus'],$D);
+		    echo '</div>';
+*/
+		echo '</div>';
+	    }
+	  }
+	}
+	echo '<div class="hirnokSeparator"><a href="'.href('index.php?page=naplo&sub=hirnok&f=hirnok').'"><span class="icon-calendar"></span> '.superdate($ADAT['tolDt']).'<span class="icon-bullhorn"></span></a></div>';
+
+    }
+    function putHirnokBadge_bejegyzes($D) {
+	// hint by rpetya (peter.rakolcza@gmail.com)
+	// $ICO = array('dicséret'=>'icon-smiley-alt','fegyelmi'=>'icon-exclamation-sign','üzenet'=>'icon-envelope');
+	$ICON = array('dicséret'=>'mood','fegyelmi'=>'mood_bad','üzenet'=>'mail');
+	$RGB = array('dicséret'=>'lightgreen','fegyelmi'=>'#e91e63','üzenet'=>'#9c27b0');
+	// echo '<a href="'.href('index.php?page=naplo&sub=bejegyzesek&f=bejegyzesek').'"><span style="background-color: '.$RGB[$D['bejegyzesAdat']['tipus']].'" class="'.$ICO[$D['bejegyzesAdat']['tipus']].'"></span></a>';
+	echo '<a href="'.href('index.php?page=naplo&sub=bejegyzesek&f=bejegyzesek').'"><span style="background-color: '.$RGB[$D['bejegyzesAdat']['tipus']].'" class="material-icons">'.$ICON[$D['bejegyzesAdat']['tipus']].'</span></a>';
+    }
+    function putHirnokBadge_idoszak($D) {
+	echo '<span class="icon-calendar-sign"></span>';
+    }
+    function putHirnokBadge_haladasiBeiratlan($D) {
+
+	if ($D['db']!=0)
+	    echo '<a href="'.href('index.php?page=naplo&sub=haladasi&f=haladasi').'"><span class="icon-bullhorn"></span></a>';
+	else
+	    echo '<a href="'.href('index.php?page=naplo&sub=haladasi&f=haladasi').'"><span class="icon-ok-sign" style="background-color:lightgreen"></span></a>';
+
+    }
+    function putHirnokBadge_dolgozat($D) {
+	echo '<a href="'.href('index.php?page=naplo&sub=osztalyozo&f=dolgozat').'">';
+	    //echo '<span class="icon-calendar-sign"></span>';
+	    echo '<span class="material-icons" style="background-color:orange;">lightbulb_outline</span>';
+	echo '</a>';
+    }
+    function putHirnokBadge_jegy($D) {
+	echo '<a href="'.href('index.php?page=naplo&sub=osztalyozo&f=diak').'">';
+	// echo '<span class="icon-pencil"></span>';
+	if (in_array($D['jegyAdat']['jegy'],array(1,2,3,4,5))) echo '<span class="material-icons">looks_'.intval(($D['jegyAdat']['jegy'])).'</span>';
+	else echo '<span class="material-icons">mode_edit</span>';
+	echo '</a>';
+    }
+    function putHirnokBadge_haladasiOra($D) {
+	$ICONS = array('helyettesítés'=>'cached', 'elmarad'=>'grid_off', 'elmarad máskor'=>'call_split','felügyelet'=>'border_clear', 'normál'=>'border_all', 'normál máskor'=>'call_merge','összevonás'=>'group_add');
+	echo '<a href="'.href('index.php?page=naplo&sub=orarend&f=orarend').'">';
+	// echo '<span class="icon-th"></span>';
+	echo '<span class="material-icons">'.$ICONS[$D['oraAdat']['tipus']].'</span>'; // grid_off
+	echo '</a>';
+    }
+    function putHirnokBadge_uzeno($D) {
+	$_szalId = $D['uzenoAdat']['feladoId'].'_'.$D['uzenoAdat']['feladoTipus'].'_'.$D['uzenoAdat']['cimzettId'].'_'.$D['uzenoAdat']['cimzettTipus'];
+	echo '<a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&szalId='.$_szalId).'">';
+	    // putFace($D['uzenoAdat']['cimzettId'],$D['uzenoAdat']['cimzettTipus'],30);
+	    // echo '<span class="icon-envelope"></span>';
+	    echo '<span class="material-icons">mail</span>';
+	echo '</a>';
+	//putFace($D['uzenoAdat']['feladoId'],$D['uzenoAdat']['feladoTipus'],30);
+    }
+    function putHirnokRight_uzeno($D) {
+	putFace($D['uzenoAdat']['feladoId'],$D['uzenoAdat']['feladoTipus'],30);
+    }
+    function putHirnokFooter_uzeno($D) {
+	echo '<div class="hidden">';
+	    // echo '<span class="icon-globe"></span>';
+	    echo '<span class="material-icons">swap_horiz</span>';
+	echo '</div>';
+    }
+
+    function putHirnokBadge_zaroJegy($D) {
+	echo '<a href="'.href('index.php?page=naplo&sub=osztalyozo&f=bizonyitvany').'">';
+	    // echo '<span class="icon-pencil-alt"></span>';
+	    echo '<span class="material-icons">border_color</span>';
+	echo '</a>';
+    }
+
+    function putHirnok_idoszak($D) {
+	echo 'Aktív <b>'.$D['idoszakAdat']['tipus'].'</b> időszak: '.$D['idoszakAdat']['tolDt'].' – '.$D['idoszakAdat']['igDt'];
+    }
+
+    function putHirnokBadge_hianyzas($D) {
+	$ICON = array('késés'=>'timer','felmentés'=>'accessible','felszerelés hiány'=>'accessibility',
+	    'hiányzás'=>'location_off'); // location_off, grid_off, blur_off
+	echo '<a href="'.href('index.php?page=naplo&sub=hianyzas&f=diak').'">';
+	    // echo '<span class="icon-time-alt"></span>';
+	    echo '<span class="material-icons">'.$ICON[$D['hianyzasAdat']['tipus']].'</span>';
+	echo '</a>';
+	;
+    }
+
+    function putHirnok_hianyzas($D) {
+	global $aHetNapjai;
+	$nap = kisbetus($aHetNapjai[date('w',strtotime($D['hianyzasAdat']['dt']))-1]);
+	echo $D['hianyzasAdat']['dt'].' '.$nap.' '.$D['hianyzasAdat']['ora'].'. órára (';
+	    echo $D['oraAdat']['tankorNev'].', '.$D['oraAdat']['kiCn'];
+	echo ') ';
+	if (in_array($D['hianyzasAdat']['tipus'],array('késés','hiányzás'))) echo $D['hianyzasAdat']['statusz'].' ';
+	if ($D['hianyzasAdat']['tipus']=='késés' && $D['hianyzasAdat']['perc']>0) echo ' '.$D['hianyzasAdat']['perc'].' perc ';
+	echo '<b>'.$D['hianyzasAdat']['tipus'].'</b> került rögzítésre.';
+    }
+
+    function putHirnok_haladasiOra($D) {
+	global $aHetNapjai;
+	$nap = kisbetus($aHetNapjai[date('w',strtotime($D['oraAdat']['dt']))-1]);
+	echo 'A '.$D['oraAdat']['tankorCn'].' tankör '.$D['oraAdat']['dt'].' '.$nap.'i '.$D['oraAdat']['ora'].'. óra státusza megváltozott. ';
+	if ($D['oraAdat']['teremId']>0) echo 'Terme: '.$D['oraAdat']['teremId'].'. ';
+	echo 'Új típusa: <b>'.$D['oraAdat']['tipus'].'</b>! ';
+	if ($D['oraAdat']['ki']>0) echo '('.$D['oraAdat']['kiCn'].')';
+    }
+
+    function putHirnokDetail_uzeno($D) {
+	$IMG = array( // jobb lenne valami shared helyen
+            'diak' => '<span title="diák" class="icon-child"></span>',
+            'szulo' => '<span title="szülő"  class="icon-adult"></span>',
+            'tanar' => '<span title="tanár"  class="icon-adult"></span>',
+            'munkakozosseg' => '<span title="munkaközösség tagjai" class="icon-slideshare"></span>',
+            'tankor' => '<span  title="tankör diákjai és tanára" class="icon-myspace"></span>',
+            'tankorSzulo' => '<span title="tankörbe járók szülei"  class="icon-group-alt"></span>',
+            'osztaly' => '<span  title="osztály diákjai és osztályfőnökei" class="icon-group"></span>',
+            'osztalySzulo' => '<span title="osztályba járók szülei"  class="icon-adult"></span>',
+            'osztalyTanar' => '<span title="osztályban tanítók"  class="icon-slideshare"></span>',
+	);
+	$TIPUS_STR = array(
+            'diak' => 'diák',
+            'szulo' => 'szülő',
+            'tanar' => 'tanár',
+            'munkakozosseg' => 'munkaközösség tagjai',
+            'tankor' => 'tankör diákjai és tanára',
+            'tankorSzulo' => 'tankörbe járók szülei',
+            'osztaly' => 'osztály diákjai és osztályfőnökei',
+            'osztalySzulo' => 'osztályba járók szülei',
+            'osztalyTanar' => 'osztályban tanítók',
+	);
+	$_szalId = $D['uzenoAdat']['feladoId'].'_'.$D['uzenoAdat']['feladoTipus'].'_'.$D['uzenoAdat']['cimzettId'].'_'.$D['uzenoAdat']['cimzettTipus'];
+	$_link1 = href('index.php?page=naplo&sub=uzeno&f=uzeno&feladoId='.$D['uzenoAdat']['feladoId'].'&feladoTipus='.$D['uzenoAdat']['feladoTipus']);
+	$_link2 = href('index.php?page=naplo&sub=uzeno&f=uzeno&cimzettId='.$D['uzenoAdat']['cimzettId'].'&feladoTipus='.$D['uzenoAdat']['cimzettTipus']);
+	echo '<a href="'.$_link1.'">';
+	    if ($D['uzenoAdat']['feladoId']==0) echo 'Adminisztrátor';
+	    else echo $D['feladoNev'];
+	echo '</a>';
+	//TESZT	echo '<span class="icon-caret-right" style="padding: 0px 4px; font-size:8px;"></span>';
+	if ($D['cimzettNev']!='') echo '<br/><span><a href="'.$_link2.'">'.$D['cimzettNev'].'</a></span>';
+	echo '<br/>';
+	echo '<span style="color:#aaa;">';
+	echo superdate(date('Y-m-d H:i:s',strtotime($D['uzenoAdat']['dt'])));
+	echo '<span style="padding: 0px 2px;">·</span>';
+	    if ($D['uzenoAdat']['cimzettId']==0) echo '<span class="icon-globe" title="minden"></span>';
+	    else echo $IMG[$D['uzenoAdat']['cimzettTipus']];
+	echo '<span style="padding: 0px 2px;">·</span>';
+	    if ($D['uzenoAdat']['cimzettId']==0) echo 'minden ';
+	    echo $TIPUS_STR[$D['uzenoAdat']['cimzettTipus']];
+	echo '</span>';
+
+    }
+
+    function putHirnok_zaroJegy($D) {
+	global $KOVETELMENY;
+
+	echo ucfirst($D['targyAdat']['targyNev']);
+	echo ' tárgyból ';
+
+	echo $D['zaroJegyAdat']['evfolyamJel'].'. évfolyam ';
+	echo ''.$D['zaroJegyAdat']['felev'].'. félévére ';
+
+	echo '<b>'.($KOVETELMENY[$D['zaroJegyAdat']['jegyTipus']][$D['zaroJegyAdat']['jegy']]['hivatalos']).'</b>';
+	echo ' ('.$KOVETELMENY[$D['zaroJegyAdat']['jegyTipus']][$D['zaroJegyAdat']['jegy']]['rovid'].') ';
+	echo $D['zaroJegyAdat']['jegyTipus'];
+	echo ' típusú osztályzat került beírásra / módosult a bizonyítványban.';
+
+
+	if (is_array($D['oraAdat'])) {
+	    echo 'Az óra adatai: '.$D['oraAdat']['tankorNev'].' '. 
+	    $D['oraAdat']['kiCn'].', '. 
+	    $D['oraAdat']['leiras'].', '. 
+	    $D['oraAdat']['dt'].' '.
+	    $D['oraAdat']['ora'].'. óra.';	    
+	}
+
+	// dump($D);
+    }
+    function putHirnok_jegy($D) {
+	global $KOVETELMENY;
+
+	if ($D['jegyAdat']['dt'] != date('Y-m-d',strtotime($D['jegyAdat']['modositasDt']))) {
+
+	    $str[] = 'Jegymódosítás! ';
+	    $str[] = ucfirst($D['targyAdat']['targyNev']);
+	    $str[] = 'tárgyból';
+
+	    $str[] = '<b>'.($KOVETELMENY[$D['jegyAdat']['jegyTipus']][$D['jegyAdat']['jegy']]['hivatalos']).'</b>';
+	    $str[] = '('.$KOVETELMENY[$D['jegyAdat']['jegyTipus']][$D['jegyAdat']['jegy']]['rovid'].') ';
+	    $str[] = $D['jegyAdat']['jegyTipus'];
+	    $str[] = 'típusú értékelésre módosult a '.$D['jegyAdat']['dt'].'-n kelt eredeti bejegyzés.';
+	} else {
+	    $str[] = '<b>'.ucfirst($D['targyAdat']['targyNev']).'</b>';
+	    $str[] = 'tárgyból';
+
+	    $str[] = '<b>'.($KOVETELMENY[$D['jegyAdat']['jegyTipus']][$D['jegyAdat']['jegy']]['hivatalos']).'</b>';
+	    $str[] = '('.$KOVETELMENY[$D['jegyAdat']['jegyTipus']][$D['jegyAdat']['jegy']]['rovid'].'),';
+	    $str[] = $D['jegyAdat']['jegyTipus'];
+	    $str[] = 'típusú értékelés került beírásra az osztályozó naplóba.';
+	}
+
+	if (is_array($D['oraAdat'])) {
+	    $str[] = 'Az óra adatai: '.$D['oraAdat']['tankorNev'].' '. 
+	    $D['oraAdat']['kiCn'].', '. 
+	    $D['oraAdat']['leiras'].', '. 
+	    $D['oraAdat']['dt'].' '.
+	    $D['oraAdat']['ora'].'. óra.';	    
+	}
+
+	// echo $D['jegyAdat']['jegy'];
+	// echo $D['jegyAdat']['jegyTipus'];
+	echo implode(' ',$str);
+
+	// dump($D);
+    }
+
+    function putHirnok_dolgozat($D) {
+
+	if (strtotime($D['dolgozatAdat']['tervezettDt'])>strtotime(date('Y-m-d H:i:s'))) {
+	    echo 'Új dolgozat várható! ';
+	} else {
+	    echo 'Új dolgozat került rögzítésre. ';
+	}
+	echo 'A bejelentés ideje: ';
+	echo $D['dolgozatAdat']['bejelentesDt'].', tervezett időpontja: ';
+	echo $D['dolgozatAdat']['tervezettDt'].'. ';
+
+	echo 'A dolgozat megnevezése: '.$D['dolgozatAdat']['dolgozatNev'].'. ';
+
+	echo 'Érintett tankör';
+	if (count($D['dolgozatAdat']['tankor'])>1) echo 'ök';
+	echo ': ';
+	for($i=0; $i<count($D['dolgozatAdat']['tankor']); $i++) {
+	    echo ($D['dolgozatAdat']['tankor'][$i]['tankorNev']);
+	    if ($i<count($D['dolgozatAdat']['tankor'])-1) echo ' ';
+	}
+	// dump( $D );
+    }
+
+    function putHirnokRight_haladasiBeiratlan($D) {
+        global $UdvozloKep,$skin;
+        if (!is_array($UdvozloKep) || count($UdvozloKep) == 0) $UdvozloKep = array('kutya','pingvin','smiley','garfield','majom');
+        if ($D['db']==0) {
+    	    $i = rand(0, count($UdvozloKep)-1);
+    	    echo '<img src="skin/classic/module-naplo/img/anim/'.$UdvozloKep[$i].'.gif" alt="anim gif" style="height: 60px;" />';
+        }
+    }
+
+    function putHirnok_haladasiBeiratlan($D) {
+
+        if ($D['db']==0) {
+            echo 'Köszönjük, hogy minden órádat beírtad!';
+        } else {
+	    echo 'Beíratlan órák száma: '.$D['db'];
+        }
+    }
+    function putHirnok_uzeno($D) {
+	if ($D['uzenoAdat']['flag']==1) echo '<i>– a szöveget a kérésedre elrejtettük –</i>';
+	else echo nl2br(makelinksclickable((supertext($D['uzenoAdat']['txt'])))); // egyelőre nem tudunk bővebbet, mert a backend nem szolgáltat infót
+	echo '<div class="hirnokIkonKontener" style="display: relativ; top:0px; right:0px; text-align:right;">';
+	    $_szalId = $D['uzenoAdat']['feladoId'].'_'.$D['uzenoAdat']['feladoTipus'].'_'.$D['uzenoAdat']['cimzettId'].'_'.$D['uzenoAdat']['cimzettTipus'];
+	    echo '<a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&szalId='.$_szalId).'">';
+	    echo '<span class="icon-pencil"></span>';
+	    echo '</a>';
+	    if ($D['uzenoAdat']['flag']!=1) {
+		echo '<a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&action=flagUzenet&flag=1&mId='.$D['uzenoAdat']['mId']).'"><span class="icon-eye-close"></span></a>';
+	    } else {
+		echo '<a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&action=flagUzenet&flag=0&mId='.$D['uzenoAdat']['mId']).'"><span class="icon-eye-open"></span></a>';
+	    }
+	    if (__UZENOADMIN===true) {
+		echo '<a href="'.href('index.php?page=naplo&sub=uzeno&f=uzeno&action=delUzenet&mId='.$D['uzenoAdat']['mId']).'"><span class="icon-trash-alt"></span></a>';
+	    }
+	echo '</div>';
+
+    }
+
+    function putHirnok_bejegyzes($D) {
+	echo 'Új '.ucfirst($D['bejegyzesAdat']['bejegyzesTipusNev']).' került rögzítésre. ';
+	if ($D['bejegyzesAdat']['szoveg'] !='') echo '<q>'.$D['bejegyzesAdat']['szoveg'].'</q>';
+	if ($D['tanarAdat']['tanarNev']!='') echo ' - '.$D['tanarAdat']['tanarNev'];
+    }
+?>

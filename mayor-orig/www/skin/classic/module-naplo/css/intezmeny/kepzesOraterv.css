@@ -1,0 +1,100 @@
+
+    form.kepzesOraterv table { background-color: rgb(20,40,60); color: white; width:98%;}
+    form.kepzesOraterv table th { background-color: rgb(40,60,80); }
+    form.kepzesOraterv table th.lezart { background-color: black; font-style:italic; }
+    form.kepzesOraterv table th.aktiv  { background-color: rgb(80,130,80); }
+
+
+    form.kepzesOraterv table tbody tr th.nm { background-color: rgb(80,100,140); }
+    form.kepzesOraterv table tbody tr td.nn { background-color: rgb(140,170,140); }
+
+    form.kepzesOraterv table tbody tr:hover th { background-color: rgb(80,130,80); }
+    form.kepzesOraterv table tbody tr:hover td  { background-color: rgb(80,130,80); }
+
+    form.kepzesOraterv table thead tr th  { height:2.5em; }
+    form.kepzesOraterv table tfoot tr th  { height:2.5em; }
+/*    form.kepzesOraterv table thead tr.evfolyamJel th  { height:3em; }*/
+    form.kepzesOraterv table thead td:hover  { background-color: orange; }
+    form.kepzesOraterv table tbody tr td:hover  { background-color: lightgreen; }
+
+    form.kepzesOraterv table tfoot tr td.alert  { background-color: #880000; color:white }
+    form.kepzesOraterv table tfoot tr td.ok  { background-color: #008800; color:white }
+
+    form.kepzesOraterv table th.bigleft { font-size: larger; border-bottom: solid 1px #667788; }
+
+    form.kepzesOraterv table td { background-color: rgb(60,70,80); text-align: center;}
+    form.kepzesOraterv table td.lezart { background-color: black;}
+    form.kepzesOraterv table td.aktiv  { background-color: rgb(80,130,80); }
+/*
+    form.kepzesOraterv table td {  max-width:100px; font-size:10px; }
+    form.kepzesOraterv table td div {  display: none;}
+    form.kepzesOraterv table td div {  display: none;}
+    form.kepzesOraterv table td:hover span {  display: none;}
+    form.kepzesOraterv table td:hover div { display: block; background-color: rgba(100,100,100,0.5); }
+*/
+
+/*
+    form.kepzesOraterv table td.nn select,    form.kepzesOraterv table td.nn input { 
+	border-bottom: solid 1px white;
+	background-color: rgb(140,170,140); color: white; 
+    }
+*/
+    form.kepzesOraterv table tbody td  { background-color: #222222;  }
+
+    form.kepzesOraterv table tfoot tr.ures th,
+    form.kepzesOraterv table tfoot tr.ures td { background-color: #888888; color:black; padding: 0 8px;}
+
+    form.kepzesOraterv table tbody th  { text-align:left; font-weight:normal; padding: 0px 8px;  }
+
+    form.kepzesOraterv table td input { 
+/*	background-color: rgb(20,40,60); color: white; 
+	border: solid 1px black;
+*/	text-align: right;
+
+    }
+    form.kepzesOraterv table td select{
+/*	background-color: rgb(20,40,60); color: white; 
+	border: solid 1px black;
+*/	font-size:10px;
+	padding:2px;
+	width:70px;
+
+    }
+    form.kepzesOraterv table td input:focus, 
+    form.kepzesOraterv table td select:focus { 
+	background-color: rgb(140,160,180); color:white; }
+
+
+    form.kepzesOraterv table td select option { font-size:smaller;} 
+    form.kepzesOraterv table td.lezart input { background-color: black }
+
+    form.kepzesOraterv table th a { text-decoration: none; color: white; border: none; }
+    form.kepzesOraterv table th a:hover { text-decoration: underline; }
+
+    form.kepzesOraterv table th span.tan { color: #aaaaaa; font-weight:normal; font-size:smaller; }
+
+    form.kepzesOraterv table input.torol { background-color: #880000; border: solid 1px red; color: white;}
+    form.kepzesOraterv table input.felvesz { background-color: #008800; border: solid 1px lightgreen; color: white;}
+    
+    form.kepzesOraterv table input:hover,form.kepzesOraterv table select:hover { outline:orange 1px solid; }
+    form.kepzesOraterv table input.torol:hover { background-color: #FF0000; border: solid 1px lightred; color: white;}
+
+    form.kepzesOraterv tr.rogzitett td select,
+    form.kepzesOraterv tr.rogzitett td input { display: none; }
+    form.kepzesOraterv tr span.kovetelmeny { display: none; }
+    form.kepzesOraterv tr.rogzitett td div.felev1 { ddisplay: none; }
+    form.kepzesOraterv tr .felev2 { display: none; }
+
+    form.kepzesOraterv thead th > span { padding: 10px 5px; }
+    form.kepzesOraterv thead span.icon-refresh { color: darkorange; }
+    form.kepzesOraterv thead span:hover span.icon-refresh { color: yellow; }
+    form.kepzesOraterv thead span:hover { cursor: pointer; background-color: #88a; }
+/*
+    form.kepzesOraterv tr.rogzitett td div.felev1 { background: red }
+    form.kepzesOraterv tr.rogzitett td div.felev2 { background: blue; }
+    form.kepzesOraterv tr.rogzitett td span.oraszam { color: yellow; }
+    form.kepzesOraterv tr.rogzitett td span.kovetelmeny { color: orange; }
+*/
+
+    form#oratervMasolas { background-color: darkorange; width: 98%; margin: auto; text-align: center; padding-bottom: 5px; }
+    form#oratervMasolas h1 { border-bottom: 2px yellow solid; font-size: 14px; font-weight: bold; background-color: #a40; color: white; padding: 4px; }

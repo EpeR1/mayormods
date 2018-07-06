@@ -1,0 +1,138 @@
+<?php
+
+    function putKretaTanarExportForm($ADAT) {
+
+        global $skin;
+
+        formBegin(array('action'=>href('index.php?page=naplo&sub=export&f=kreta'), 'class'=>"export"));
+        echo '<input type="hidden" name="action" value="kretaTanarExport" />'."\n";
+        echo '<input type="hidden" name="telephelyId" value="'.$ADAT['telephelyId'].'" />'."\n";
+
+        echo '<fieldset><legend>Kréta - Tanár adatbázis</legend>'."\n";
+        echo '<table>'."\n";
+
+        echo '<tr>'."\n";
+            echo '<th>Tanár adatok</th>'."\n";
+	echo '</tr><tr>';
+	    echo '<td>';
+		echo 'Elsődleges, hogy a KIR, KRÉTA és MaYoR rendszerekben a tanár neveket és születési dátumokat szinkronizálni kell!';
+	    echo '</td>';
+	echo '</tr>';
+
+	echo '<tr><th>A MaYoR tanár adatainak letöltése (export)</th></tr>';
+
+
+	echo '<tr>';
+            echo '<td>';
+		echo '<ul>';
+		echo '<li>';
+                echo '<input type="radio" name="formatum" value="xml" id="xml" checked="checked" />'."\n";
+                echo '<label for="xml">.XML</label>'."\n";
+		echo '</li>';
+		echo '<li>';
+                echo '<input type="radio" name="formatum" value="csv" id="csv" />'."\n";
+                echo '<label for="csv">.CSV</label>'."\n";
+		echo '</li>';	
+		echo '<li>';
+                echo '<input type="radio" name="formatum" value="ods" id="ods" />'."\n";
+                echo '<label for="ods">.ODS</label>'."\n";
+		echo '</li></ul>';
+            echo '</td>'."\n";
+        echo '</tr>'."\n";
+
+        echo '<tr>';
+            echo '<th>';
+            echo '<input type="submit" value="'._LETOLTES.'" />'."\n";
+            echo '</th>';
+        echo '</tr>';
+
+        echo '</table>'."\n";
+        echo '</fieldset>';
+        //if ($skin != 'ajax') 
+	formEnd();
+    }
+
+
+    function putKretaTankorTanarExportForm($ADAT) {
+
+        global $skin;
+
+        formBegin(array('action'=>href('index.php?page=naplo&sub=export&f=kreta'), 'class'=>"export"));
+        echo '<input type="hidden" name="action" value="tankorTanarExport" />'."\n";
+        echo '<input type="hidden" name="telephelyId" value="'.$ADAT['telephelyId'].'" />'."\n";
+
+        echo '<fieldset><legend>ETTF - Előzetes Tantárgyfelosztás</legend>'."\n";
+        echo '<table>'."\n";
+
+        echo '<tr>'."\n";
+            echo '<th>Előzetes Tantárgyfelosztás (ETTF) - egyszerű formátum</th>'."\n";
+	echo '</tr><tr>';
+	    echo '<td>';
+		echo 'Az előzetes tantárgyfelosztás a kiválasztott formátumú file letöltése és megnyitása után <span style="color:green; font-weight:bold;">.xlsx</span> formában elmentve közvetlenül importálható a központi Kréta rendszerbe.';
+	    echo '</td>';
+	echo '</tr><tr>';
+            echo '<td>';
+		echo '<ul>';
+		echo '<li>';
+                echo '<input type="radio" name="formatum" value="xml" id="xml" checked="checked" />'."\n";
+                echo '<label for="xml">.XML</label>'."\n";
+		echo '</li>';
+		echo '<li>';
+                echo '<input type="radio" name="formatum" value="csv" id="csv" />'."\n";
+                echo '<label for="csv">.CSV</label>'."\n";
+		echo '</li>';	
+		echo '<li>';
+                echo '<input type="radio" name="formatum" value="ods" id="ods" />'."\n";
+                echo '<label for="ods">.ODS</label>'."\n";
+		echo '</li></ul>';
+            echo '</td>'."\n";
+        echo '</tr>'."\n";
+
+	echo '</tr><tr>';
+	    echo '<td>';
+		echo 'A tankörtípusokban megkülönböztetjük a csak óratervi - képzési hálóban szereplő tanköröket.';
+	    echo '</td>';
+	echo '</tr><tr>';
+            echo '<td>';
+		echo '<ul>';
+		$_CHK1 = ($ADAT['csakOratervi']==false) ? 'checked="checked" ': '';
+		$_CHK2 = ($ADAT['csakOratervi']==true) ? 'checked="checked" ': '';
+		echo '<li><input type="radio" id="mindenTankor_radio" name="csakOratervi" value="false" '.$_CHK1.'/> <label for="mindenTankor_radio">minden tankört</label></li>';
+		echo '<li><input type="radio" id="csakOratervi_radio" name="csakOratervi" value="true" '.$_CHK2.'/> <label for="csakOratervi_radio">csak óratervinek jelölt tanköröket</label></li>';
+		echo '</ul>';
+            echo '</td>'."\n";
+        echo '</tr>'."\n";
+
+        echo '<tr>';
+            echo '<th>';
+            echo '<input type="submit" value="'._LETOLTES.'" />'."\n";
+            echo '</th>';
+        echo '</tr>';
+
+        echo '</table>'."\n";
+        echo '</fieldset>';
+        //if ($skin != 'ajax') 
+	formEnd();
+
+	/* ha ki szeretnénk írni a bontasOk === false okat
+	echo '<table align="center">';
+	for ($i=0; $i<count($ADAT['tankorok']); $i++) {
+	    $D = $ADAT['tankorok'][$i];
+            if ($ADAT['tankorok'][$i]['bontasOk']===false) {
+		//dump($ADAT['tankorok'][$i]);
+		echo '<tr>';
+		    echo '<td>'.$D['tankorNev'].' ('.$D['tankorId'].')</td>';
+		    echo '<td>'.$D['hetiOraszam'].'</td>';
+		    echo '<td>'.implode(',',$D['tanarIds']).'</td>';
+		    echo '<td>';
+		    dump($D['tervezettOraszamok']);
+		    echo '</td>';
+		echo '</tr>';
+	    }
+	}
+	echo '</table>';
+	*/
+
+    }
+
+?>

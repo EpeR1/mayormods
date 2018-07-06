@@ -1,0 +1,41 @@
+<?php
+
+function putVersenyek() {
+
+	echo '<h1>'._VERSENYEK.'</h1>';
+
+	formBegin();
+
+	echo '<input type="hidden" name="action" value="no-action" />'."\n";
+
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+
+}
+
+function putUjVerseny($ADAT) {
+
+    formBegin();
+
+	echo _TARGY;
+	echo '<select name="targyId">';	
+
+	    echo '<option value=""></option>';
+	    for($i=0; $i<count($ADAT); $i++) {
+		$targyId  = $ADAT[$i]['targyId'];		
+		$targyNev = $ADAT[$i]['targyNev'];
+		echo '<option value="'.$targyId.'">'.$targyNev.'</option>';
+	    }
+
+	echo '</select>';
+
+	echo _VERSENYNEV;
+	echo '<input type="text" name="versenyNev" />';
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+    formEnd();
+
+}
+
+?>

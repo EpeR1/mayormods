@@ -1,0 +1,25 @@
+<?php
+
+    function putTargyOraszam($ADAT) {
+
+	echo '<table align="center" class="targyOraszam">';
+	echo '<tr><th>'._TARGY.'</th><th>'._ORASZAM.'</th></tr>'."\n";
+	foreach($ADAT['targyOraszam'] as $targyNev => $_D) {
+
+		    $sum += $_D['db'];
+
+	    echo '<tr>';
+		echo '<td>';
+	    	    echo $targyNev;
+		echo '</td><td class="oraszam">';
+		    echo round($_D['db'],2);
+		echo '</td>';
+	    echo '</tr>';
+	    echo '</tr>'."\n";
+	}
+	echo '<tr><th colspan="2">'.$sum.'</th></tr>'."\n";
+	echo '</table>';
+
+    }
+
+?>

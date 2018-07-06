@@ -1,0 +1,36 @@
+@media screen {
+
+    table#tfStat tr.hide { display: none; }
+    
+    table#tfStat th { background-color: #ddd; padding: 2px 6px; }
+    table#tfStat td { background-color: #eee; padding: 2px 6px; }
+    table#tfStat td.gap { background-color: #fff; }
+    table#tfStat td.number { text-align: right;  min-width: 30px; }
+    table#tfStat td.alert,
+    table#tfStat td span.alert { color: red; }
+    
+    table#tfStat th.slide { cursor: pointer; min-width: 180px; }
+
+    table#tfStat span.icon-chevron-up,
+    table#tfStat span.icon-chevron-down { float: right; margin: 4px 0 0 10px; }
+}
+@media print {
+
+    table.toolBar, span.icon-lock, span.icon-remove-circle, div.icon-lock { display: none; }
+    table#tfStat span.icon-chevron-up,
+    table#tfStat span.icon-chevron-down { display: none; }
+
+    table#tfStat { border-spacing: 0; border-collapse: collapse; line-height: 24px; }
+    table#tfStat, table#tfStat td, table#tfStat th { border: 1px solid black; }
+    
+    table#tfStat th { background-color: #fff; padding: 2px 6px; }
+    table#tfStat td { background-color: #fff; padding: 2px 6px; }
+    table#tfStat td.gap { background-color: #fff; }
+    table#tfStat td.number { text-align: right;  min-width: 30px; }
+    table#tfStat td.alert,
+    table#tfStat td span.alert { color: red; }
+    
+    table#tfStat th.slide { min-width: 180px; }
+
+
+}

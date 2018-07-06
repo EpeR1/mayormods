@@ -1,0 +1,147 @@
+<?php
+
+    function putStatuszSor($ADAT) {
+
+	//TESZT echo '<img src="skin/classic/module-naplo/img/io/kreta.svg" style="height:24px; background-color:#30a8cb;">';
+
+	echo '<div id="statusz">';
+
+	echo '<span class="iicon-filter"></span>';
+
+	echo '<div id="limit">';
+	    echo 'Elfogadható óraszám: '
+		.'<i>«kötelező óraszám»</i>'
+		.'<span class="icon-minus-sign" id="minusz"> 2'
+		.'<ul class="limit">'
+		    .'<li class="setLimit">0</li><li class="setLimit">1</li><li class="setLimit selected">2</li><li class="setLimit">3</li><li class="setLimit">4</li>'
+		    .'<li class="setLimit">5</li><li class="setLimit">6</li><li class="setLimit">7</li><li class="setLimit">8</li><li class="setLimit">9</li>'
+		.'</ul>'
+		.'</span>'
+		.' – '
+		.'<i>«kötelező óraszám»</i>'
+		.'<span class="icon-plus-sign" id="plusz"> 2'
+		.'<ul class="limit">'
+		    .'<li class="setLimit">0</li><li class="setLimit">1</li><li class="setLimit selected">2</li><li class="setLimit">3</li><li class="setLimit">4</li>'
+		    .'<li class="setLimit">5</li><li class="setLimit">6</li><li class="setLimit">7</li><li class="setLimit">8</li><li class="setLimit">9</li>'
+		.'</ul>'
+		.'</span>';
+	echo '</div>';
+
+	echo '<div id="stat">';
+	    echo 'Tankörök száma: ';
+	    echo '<span id="tankorDbKesz">'.$ADAT['tankorStat']['kesz'].'</span>/';
+	    echo '<span id="tankorDbOsszes">'.$ADAT['tankorStat']['osszes'].'</span> = ';
+	    echo '<span id="tankorDbSzazalek">'.number_format($ADAT['tankorStat']['kesz'] / $ADAT['tankorStat']['osszes'] * 100,1,',','').'%</span>';
+	echo '</div>';
+
+	echo '<div id="filter">';
+	echo '<span class="icon-search"></span>'
+	    .' <span id="szuro" '.'data-szuro=\''.json_encode($ADAT['szuro']).'\' '.'>Szűrés</span> '
+	    .'<span class="icon-chevron-right"></span>';
+	echo '</div>';
+
+
+
+	echo '</div>';
+
+    }
+
+    function putTankorTanarMatrix($ADAT) {
+
+	$COLORS = array(1=>'#198198',2=>'#298298',3=>'green',4=>'#ffaaaa',5=>'#aabbcc',6=>'#bbccaa',7=>'#ccaabb',8=>'#aaccbb',9=>'#aaccee','9Ny'=>'#ffccee',10=>'#ffaacc',11=>'#eeffbb',12=>'#ccddff');
+	$TANKOROK = $ADAT['tankorok'];
+	$TANAROK = $ADAT['tanarok'];
+	for ($i=0; $i<count($TANKOROK); $i++) {
+	    $_T = $TANKOROK[$i];
+	    $TARGYTANKOR[$_T['targyId']][] = $_T;
+	}
+
+	formBegin(array('id'=>'tantargyFelosztasForm'));
+	echo '<div style="100%;overflow-x:auto;overflow-y:auto" class="tanarTankor">';
+	echo '<table id="tt" cellpadding="1"  cellspacing="1">';
+	echo '<thead>';
+	echo '<tr>';
+	    echo '<th class="toggleKesz"><span id="keszTankorDb">'.$ADAT['keszTankorDb'].'</span> db kész/<span id="osszTankorDb">'.count($TANKOROK).'</span> db tankör</th>';
+	    echo '<th rowspan="3" class="oraszam">Óraszám</th>';
+	    $first = true;
+	    foreach ($TARGYTANKOR as $_targyId => $_TA) {
+		if ($first) { $class=' class="first targy" '; $first=false; }
+		else { $class=' class="targy" '; }
+		echo '<th id="thTargy-'.$_targyId.'" colspan="'.count($_TA).'" data-targyid="'.$_targyId.'" data-colspan="'.count($_TA).'"'.$class.'>';
+		echo $ADAT['targyAdat'][$_targyId]['targyNev'];
+		echo '</th>';
+	    }
+	echo '</tr>';
+	echo '<tr>';
+	    echo '<th><span id="keszTanarDb">0</span> db kész/<span id="osszTanarDb">'.count($TANAROK).'</span> db tanár</th>';
+	    $first = true;
+	    foreach ($TARGYTANKOR as $_targyId => $TANKORSOR) 
+	    for ($i=0; $i<count($TANKORSOR); $i++) { 
+		$_tankorAdat = $TANKORSOR[$i];
+		if ($first) { $class='first tankor'; $first=false; }
+		else { $class='tankor'; }
+		if (is_array($_tankorAdat['tanarIds'])) { 
+		    if (count($_tankorAdat['tanarIds']) > 1) $class .= ' tobb';
+		    elseif (count($_tankorAdat['tanarIds']) == 1) $class .= ' kesz';
+		}
+		$class .= ' tdTargy-'.$_targyId;
+		if (!$_tankorAdat['bontasOk']) $class .= ' bontasHiba';
+		$color = $COLORS[substr($_tankorAdat['tankorNev'],0,strpos($_tankorAdat['tankorNev'],'.') )];
+		echo '<td id="col_'.$_tankorAdat['tankorId'].'" class="'.$class.'" style="background-color:'.$color.'"
+			data-tankorid="'.$_tankorAdat['tankorId'].'" 
+			data-targyid="'.$_tankorAdat['targyId'].'"
+			data-tanardb="'.count($_tankorAdat['tanarIds']).'" 
+			data-oraszam="'.number_format($_tankorAdat['hetiOraszam'],2,',','').'" 
+			title="tankör óraszam: '.$_tankorAdat['tervezettOraszamok'][1]['tszOraszam'].', '.$_tankorAdat['tervezettOraszamok'][2]['tszOraszam']."\n"
+				.'bontás óraszam: '.$_tankorAdat['tervezettOraszamok'][1]['btOraszam'].', '.$_tankorAdat['tervezettOraszamok'][2]['btOraszam'].'"
+			>';
+		    echo str_replace($ADAT['targyAdat'][$_tankorAdat['targyId']]['targyNev'].' ','',$_tankorAdat['tankorNev']);
+		echo '</td>';
+	    }
+	echo '</tr>';
+	echo '</thead>'."\n";
+
+	for ($i=0; $i<count($TANAROK); $i++) { $_tanarAdat = $TANAROK[$i];
+	    if ($i==0) $class='first tanar';
+	    else $class='tanar';
+	    foreach ($_tanarAdat['targyIds'] as $_targyId) $class .= ' targy'.$_targyId;
+	    echo '<tr class="'.$class.'">';
+		echo '<th id="row_'.$_tanarAdat['tanarId'].'" data-tanarid="'.$_tanarAdat['tanarId'].'" class="tanarNev">';
+		    echo $_tanarAdat['tanarNev'];
+		    echo '('.$_tanarAdat['tanarId'].')'; // DEBUG TODO, legyen inkább a beépülő jobb sáv
+		echo '</th>';
+		echo '<td class="lekotott">';
+		    echo '<span class="lekotott">'.number_format($_tanarAdat['lekotottOraszam'],2,',','').'</span>/';
+		    echo '<span class="kotelezo">'.number_format($_tanarAdat['hetiKotelezoOraszam'],1,',','').'</span>';
+		echo '</td>';
+		$first = true;
+		foreach ($TARGYTANKOR as $_targyId => $TANKORSOR) {
+		for ($j=0; $j<count($TANKORSOR); $j++) { 
+		    $_tankorAdat = $TANKORSOR[$j];
+		    if ($first) { $class='first tantan'; $first=false; }
+		    else { $class='tantan'; }
+		    $class .= ' col-'.$_tankorAdat['tankorId'].' row-'.$_tanarAdat['tanarId'];
+		    if (in_array($_tankorAdat['targyId'], $_tanarAdat['targyIds'])) {
+			echo '<td id="cell_'.$_tanarAdat['tanarId'].'_'.$_tankorAdat['tankorId'].'" class="'.$class.'">';
+			$_CHK = in_array($_tanarAdat['tanarId'],$_tankorAdat['tanarIds']) ? 'checked="checked" ':'';
+			echo '<input type="checkbox" class="chkTT" name="tanarTankor[]" value="'.$_tanarAdat['tanarId'].'_'.$_tankorAdat['tankorId'].'" '.$_CHK.'/>';
+			echo '</td>';
+		    } else {
+			echo '<td class="disable '. $class.'"></td>';
+		    }
+		}}
+	    echo '</tr>'."\n";
+	}
+	echo '</table>'."\n";
+	echo '</div>'."\n";
+	formEnd();
+    }
+
+    function _inarray($tanarId,$tankorTanar) {
+	for ($i=0;$i<count($tankorTanar);$i++) {
+	    if ($tankorTanar[$i]['tanarId']== $tanarId) return true;
+	}
+	return false;
+    }
+
+?>

@@ -1,0 +1,83 @@
+<?php
+
+    function putTankorLetszam($ADAT) {
+
+        echo '<table align="center" class="tankorLetszam" cellspacing="1">';
+        echo '<tr><th>'._TANKOR.'</th><th>'._TIPUS.'</th>';
+	    echo '<th colspan="2">';
+		echo _LETSZAM;
+
+		formBegin();
+		    $_CHK = ($ADAT['osztalyonkent']=='1') ? ' checked="checked" ':'';
+		    echo '<input type="checkbox" name="osztalyonkent" value="1" '.$_CHK.' />';
+		    _putLimit($ADAT['tankorLetszamLimit']);
+		    echo '<input type="submit" />';
+		    echo '<input type="hidden" name="mkId" value="'.$_POST['mkId'].'" />';
+		    echo '<input type="hidden" name="targyId" value="'.$_POST['targyId'].'" />';
+		formEnd();
+	    echo '</th>';
+	echo '<th>'._TANAROK.'</th></tr>'."\n";
+        for($i=0; $i<count($ADAT['tankorok']); $i++) {
+	    $_D = $ADAT['tankorok'][$i];
+            if (!is_numeric($ADAT['tankorLetszamLimit']) || $ADAT['tankorLetszamLimit']>=$_D['letszam']) {
+            echo '<tr>';
+                echo '<td>';
+		    echo '<a href="'.href('index.php?page=naplo&sub=intezmeny&f=tankor&tankorId='.$_D['tankorId']).'">';
+                    echo $_D['tankorNev'];
+		    echo ' ('.$_D['tankorId'].')';
+		    echo '</a>';
+                echo '</td>';
+		echo '<td>';
+                    echo $_D['tankorTipus'];
+                echo '</td>';
+		echo '<td class="letszam">';
+		    echo '<a href="'.href('index.php?page=naplo&sub=intezmeny&f=tankorDiak&tankorId='.$_D['tankorId']).'">';
+                    echo $_D['letszam'];
+		    echo '</a>';
+                echo '</td>';
+		echo '<td class="letszam">';
+
+		    if (is_array($_D['letszamOsztaly']))
+			foreach(
+			    $_D['letszamOsztaly'] as $osztalyJel => $db
+			) {
+			echo '<span style="color: white; background-color: #565650; padding:0px 5px;margin:0px 5px;">';
+                	echo $osztalyJel.':';
+                	echo $db;
+			echo '</span>';
+		    }
+
+                echo '</td>';
+                echo '<td class="tanar">';
+                    for ($j=0; $j<count($_D['tanarai']); $j++) {
+			echo $_D['tanarai'][$j]['tanarNev'];
+			if ($j<count($_D['tanarai'])-1) echo ', ';
+		    }
+		echo '</td>';
+/*
+                echo '<td class="osztaly">';
+                    for ($j=0; $j<count($_D['osztalyai']); $j++) {
+			echo $ADAT['osztaly'][$_D['osztalyai'][$j]]['osztalyJel'];
+			if ($j<count($_D['osztalyai'])-1) echo ', ';
+		    }
+                echo '</td>';
+*/            echo '</tr>';
+            echo '</tr>'."\n";
+	    }
+        }
+        echo '</table>';
+
+    }
+
+    function _putLimit($limit) {
+
+	echo '<select name="tankorLetszamLimit">';
+	    echo '<option value=""></option>';
+	    for ($i=0; $i<=40; $i++) {
+		$_SEL = ($limit!==$i) ? '': ' selected = "selected" ';
+		echo '<option value="'.$i.'" '.$_SEL.'>'.$i.'</option>';
+	    }
+	echo '</select>';
+    }
+
+?>

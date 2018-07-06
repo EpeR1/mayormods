@@ -1,0 +1,81 @@
+<?php
+
+    /* mert nem egységes a kapott eredmény */
+    function _convert(&$ADAT) {
+        foreach ( array('tankorSzulo') as $_i => $_t ) {
+            for ($i=0; $i<count($ADAT['r'][$_t]); $i++) {
+                if ($ADAT['r'][$_t][$i]['tankorNev']!='') $ADAT['r'][$_t][$i][$_t.'Nev'] = $ADAT['r'][$_t][$i]['tankorNev'];
+            }
+        }
+        foreach ( array('osztaly','osztalySzulo','osztalyTanar') as $_i => $_t ) {
+            for ($i=0; $i<count($ADAT['r'][$_t]); $i++) {
+		if ($ADAT['r'][$_t][$i][$_t.'Nev']=='')
+            	    $ADAT['r'][$_t][$i][$_t.'Nev'] = $ADAT['r'][$_t][$i]['osztalyJel'].' '.$ADAT['r'][$_t][$i]['leiras'];
+            }
+        }
+    }
+
+    function putUzenoPostazo($ADAT) {
+
+	_convert($ADAT);
+	$reassoc = array('tankorSzulo'=>'tankor','osztalySzulo'=>'osztaly', 'osztalyTanar'=>'osztaly');
+	$allowedZero = array('diak','szulo','tanar');
+
+        echo '<input type="hidden" name="mayorToken" class="mayorToken" value="'.$_SESSION['mayorToken'].'" />'; // rendhagyó eset, mert az egész tartalmat lecseréli az onLoadUpdate, és a form-tól kezdjük...
+        echo '<input type="hidden" name="kuuk" value="'.$ADAT['kuuk'].'" />';
+        echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />';
+        echo '<table class="ujUzenet" align="center">';
+        echo '<tr><th>'._UJ_UZENET;
+	    if (__UZENOADMIN ===true && $ADAT['user']['feladoTipus']!='admin') {
+		echo ' <select id="asWho" name="asWho" class="onChangeUpdate">';
+		$_SEL = ($ADAT['asWho']!='asAdmin') ? 'selected="selected"' : '';
+		echo '<option value="asAdmin">'._ADMINKENT.'</option>';
+		echo '<option value="asIs" '. $_SEL .'>'.constant('_'.strtoupper($ADAT['user']['feladoTipus']).'KENT').'</option>';
+		echo '</select>';
+	    }
+	echo '</th></tr>';
+
+        echo '<tr><td>';
+	echo _CIMZETT.': ';
+//	echo '<span style="" id="uzenoSearchIcon"><img src="/skin/classic/module-naplo/img/toolSearch.png" alt="ዖ" style="height:15px; width:15px;" align="middle" class="searchIcon"/>'.'</span>';
+	echo '<span style="font-size:15px; cursor:pointer" id="uzenoSearchIcon">⌕</span>';
+	echo '<input style="display:none" type="text" name="pattern" id="pattern" class="onChangeUpdate" placeholder="'._NEV.'" />';
+	echo '<button style="display:none" type="button">'._KERES.'</button>';
+	if (is_array($ADAT['r'])) {
+	    echo '<input type="hidden" name="diakokkal" value="1" /> ';
+	    echo '<select name="cimzett" id="cimzett">';
+	    echo '<option value="">'._VALASSZ.'</option>';
+	    foreach($ADAT['r'] as $tipus => $V) {
+		if (is_array($V)) {
+		    /* Ha nincs Id, próbáljuk meg kiegészítő megjegyzés (Szulo,Tanar) nélkül */
+		    $keyName = ($reassoc[$tipus]!='' && $V[0][$tipus.'Id']=='') ? $reassoc[$tipus].'Id' : $tipus.'Id';
+		    $valueName= $tipus.'Nev';
+        	    $kiir = @constant('_T'.strtoupper($tipus));
+		    echo '<optgroup label="'.$kiir.'" class="'.$tipus.'">';
+		    //if (in_array($tipus,$allowedZero)) echo '<option value="'.$tipus.'|0">'._MINDEN.' '.$kiir.'</option>';
+		    for ($i=0; $i<count($V); $i++) {
+			$_dis = ($V[$i][$keyName]!=='') ? '' : 'disabled="disabled"'; /* !== */
+			$_val = ($V[$i][$valueName]!='') ? $V[$i][$valueName].' ('.$V[$i][$keyName].')' : constant('_TP'.strtoupper($tipus));
+			if ($_val!='') {
+			    if (!($V[$i][$keyName]==__MEID && $tipus==__SZEREP)) {
+				echo '<option value="'.$tipus.'|'.$V[$i][$keyName].'" '.$_dis.'>'.$_val.'</option>';
+			    }
+			}
+			if ($i%10==0) echo "\n";
+		    }
+		    echo '</optgroup>';
+		}
+	    }
+	    echo '</select>';
+	}
+	echo '<span id="shTipus"></span>';    
+	echo '</td></tr>';
+        echo '<tr><td>';
+	echo '<textarea name="txt" id="postazoTxt" style="display:" ></textarea>';
+	echo '<input type="hidden" name="postazoHash" id="postazoHash" value="" />';
+	echo '<button type="submit" id="postazoButton" name="gomb" value="OK" class="DOA" style="display:">'._KULD.'</button>';
+	echo '</td></tr></table>';
+
+    }
+
+?>

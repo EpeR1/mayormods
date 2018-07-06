@@ -1,0 +1,20 @@
+
+    form.export { background-color: white; margin: 5px 30px 20px 20px; font-size:10px; }
+    form.export h1 { border: dotted white; border-width: 1px 0px; background-color: rgb(80,100,120); font-size: 20px; text-align: center; }
+    form.export input { font-size: 10px; border: solid 1px #777777; margin-left: 3px; padding-left: 2px; }
+    form.export label { font-size:11px; }
+    form.export input:focus { background-color: orange; }
+
+    form.export fieldset { border: solid 1px rgb(40,60,80); }
+    form.export fieldset th { text-align: right; }
+    form.export fieldset legend {
+        background-color: rgb(140,160,180);
+        color: white;
+        font-size:90%;
+        text-align: left;
+        margin-left:20px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border: solid 1px rgb(40,60,80);
+    }
+    form.export:hover fieldset legend { background-color: rgb(140,160,250); }

@@ -1,0 +1,89 @@
+
+    ol.kerelem { list-style-type: none; margin: 0px; padding:10px;}
+    ol.kerelem li { background-color: #ddd; margin: 10px 0px 10px 0px; padding: 10px; text-align: left; }
+    ol.kerelem li div.szoveg { background-color:; padding: 10px; margin: 0px auto; color: white;  font-size: 14px;}
+    ol.kerelem li div.valasz { background-color: rgb(220,200,180); width: 80%; padding: 10px; margin: 5px auto 10px auto; font-style: italic; }
+
+    ol.kerelem fieldset { background-color: #3F51B5;#3c3c64;#2196f3; border-style:hidden; }
+    ol.kerelem legend {  border: 1px solid white; padding: 6px; font-weight: normal; color: white;background-color: #aaa; ; }
+    ol.kerelem li textarea { width: 90%; margin: 10px auto; border: solid 1px #888888; font-size:14px; height:5em; padding:0.8em; }
+
+    ol.kerelem span.dt {  padding: 5px 10px; margin: 5px 20px; border: 1px solid white; font-weight: bold; color: white; background-color: rgb(60,100,60); }
+    ol.kerelem input {  padding: 5px 10px; margin: 5px 20px; border: 1px solid white; font-weight: bold; color: white; background-color: rgb(100,100,60); }
+
+    span.mg { background-color: orange; color: white; padding:7px 20px; margin:20px; border: solid 1px white; }
+    span.mg2 { background-color: rgb(200,100,100); color: white; padding:7px 20px; margin:20px; border: solid 1px white; }
+    ol.kerelem select.mg { background-color: orange; color: white; font-weight: bold; border: solid 1px orange; }
+    ol.kerelem select.telephely { background-color: rgb(200,100,100); color: white; font-weight: bold; border: solid 1px rgb(200,100,100); }
+
+    ol.kerelem input.mg {  background-color: rgb(100,100,100); }
+
+    ol.kerelem li.jovahagyott,
+    ol.kerelem input.jh {  background-color: rgb(100,160,100); }
+    ol.kerelem input.njh {  background-color: rgb(200,100,60); }
+    ol.kerelem input.done {  background-color: rgb(100,100,160); }
+
+    ol.kerelem li.jovahagyott { border: solid 1px green; }
+
+    table.kerelemValasz { width:99%; background-color: #efefef; margin:auto;}
+    table.kerelemValasz tr th { width:80px; font-weight:normal; text-align:right; vertical-align:top; padding:2px 4px;}
+    table.kerelemValasz tr td.userAccount { border-left: solid 2px white;}
+    table.kerelemValasz tr.c0 td.userAccount { border-color: #ffeb3b;}
+    table.kerelemValasz tr.c1 td.userAccount  { border-color: #ffc107;}
+    table.kerelemValasz tr.c2 td.userAccount  { border-color: #ff9800;}
+    table.kerelemValasz tr.c3 td.userAccount  { border-color: #ff5722;}
+    table.kerelemValasz tr.c4 td.userAccount  { border-color: #03a9f4;}
+
+    table.kerelemValasz tr td { background-color: white; padding:2px 4px; vertical-align:top;}
+    table.kerelemValasz tr td.userAccount { width:80px;}
+
+    table.kerelemValasz span.diakNev { height:10px; width:10px; font-size:10px; color:white; background-color: #6495ed; border-radius:50%; padding:2px; border: solid 2px #eee;}
+    table.kerelemValasz span.diakNev:hover { border: solid 2px #15477b;}
+
+    table.kerelemValasz span.tanarNev { height:10px; width:10px; font-size:10px; color:white; background-color: #db0601; border-radius:50%; padding:2px; border: solid 2px #eee;}
+    table.kerelemValasz span.tanarNev:hover { border: solid 2px #e91e63;}
+
+    form.hiba {
+	background-color:  cornflowerblue;
+	margin:10px;
+	padding-left: 0px;
+	padding-top: 0em;
+	padding-bottom: 0.5em;
+	color: white;
+	margin-bottom: 2em;
+	text-align: center;
+	border-bottom: solid 1px rgb(20,40,60);
+    }
+
+    form.hiba h1 { font-size: 14pt; border-bottom: solid 1px #eee; background-color: rgb(20,40,60); margin: 4px 0px; padding: 3px}
+/*
+    form.hiba textarea { font-size: 14px; background-color: rgb(250,250,250); width: 99%; height: 100px; border: solid 1px black; padding:2px;}
+*/
+form.hiba textarea {
+  font-size:14px;
+  margin-top: 10px;
+  margin-left: 0px;
+  width: 90%;
+  height: 100px;
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  background: none repeat scroll 0 0 rgba(255, 255, 255, 0.9);
+  border-color: -moz-use-text-color #FFFFFF #FFFFFF -moz-use-text-color;
+  border-image: none;
+  border-radius: 0px;
+  border-style: none solid solid none;
+  border-width: medium 1px 1px medium;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12) inset;
+  color: #555555;
+  line-height: 1.4em;
+  padding: 5px 8px;
+  transition: background-color 0.1s ease 0s;
+}
+
+textarea:focus {
+    background-color: #fff !important;
+    background: none repeat scroll 0 0 #FFFFFF;
+    outline-width: 0;
+}

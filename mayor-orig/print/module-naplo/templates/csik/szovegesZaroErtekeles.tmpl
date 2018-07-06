@@ -1,0 +1,105 @@
+%!pdfLaTeXA4 pdf
+%
+% Félévi szöveges értékelés
+% Szerző: Fűrész Edit <furesz.edit@gmail.com>
+%
+\documentclass[10pt]{article}
+
+\usepackage[a4paper]{geometry} % A4-os méret
+\usepackage[utf8x]{inputenc} % UTF-8 kódolású forrás (ucs)
+\usepackage{ucs} % Jobb UTF-8 támogatás
+\usepackage{t1enc}
+\usepackage[magyar]{babel} % magyar elválasztási szabályok
+\frenchspacing % a magyar tipográfiai szabályoknak megfelelő szóközök írásjelek után
+\usepackage{booktabs} % táblázatok magasabb szintű formázása
+\usepackage{fancyhdr} % Ritkítás
+\usepackage{graphicx} % Kép beillesztés
+\usepackage{soul} % ul - aláhúzás tördeléssel
+\pagestyle{fancy}
+\def\mayor{%
+\font\mayorfnt=cmsl4%
+\font\Mayorfnt=cmsl6
+{\mayorfnt\lower0.5ex\hbox{\lower-0.5ex\hbox{Ma}\kern-0.3em\lower0.25ex\hbox{\Mayorfnt Y}\kern-0.2em\hbox{o}\lower0ex\hbox{R}}}}
+\renewcommand{\footnotesize}{\fontsize{6pt}{8pt}\selectfont}
+\addtolength{\skip\footins}{2mm}
+\addtolength{\oddsidemargin}{-0.6in}
+\addtolength{\topmargin}{-0.5in}
+\setlength{\textwidth}{7in}
+\setlength{\textheight}{9.5in}
+\setlength{\footskip}{30pt}
+\setlength{\headsep}{30pt}
+\cfoot{\small \copyright\mayor\ elektronikus napló - Nyomtatva: %$nyomtatasDt}
+\lhead{\small
+%$intezmenyNev\\
+%$intezmenyCimIrsz %$intezmenyCimHelyseg, %$intezmenyCimKozteruletNev %$intezmenyCimKozteruletJelleg %$intezmenyCimHazszam
+}
+%%%\chead{
+%%%\includegraphics[width=24pt,height=24pt,type=eps,viewport=14 14 219 217]{/var/mayor/print/logo/logo.eps}\\
+%%%\tiny\scshape timor Domini principium scientiæ
+%%%}
+
+\begin{document}
+\vspace*{-18pt}
+
+%{diak
+\begin{center}
+\vspace{18pt}{\Large\underline{\scshape Félévi Szöveges Értékelés}}
+%%%\\ \vspace{10pt}Értesítjük a Tisztelt Szülőket, hogy %$negyedev negyedév tanulmányi eredményeinek felmérése szerint
+
+\vspace{12pt}
+
+\vspace{6pt}{\large\bfseries %$diakNev}
+
+\vspace{6pt}%$osztaly osztályos tanuló minősítése
+
+\end{center}
+
+\vspace{0pt}\small
+%{targy
+\begin{center}
+{\bfseries %$targyNev tantárgyból}
+\end{center}
+
+\vspace{-5pt}
+%{szempont
+
+{\noindent\bfseries %$szempont}
+\vspace{-15pt}
+\begin{center}
+\noindent
+%{minosites
+\parbox[t]{3.5cm}{
+\begin{itemize}
+\item %?valasztott|[\textbullet]|[$\circ$]%? %$minosites
+\end{itemize}
+}\hfil
+\vspace{0pt}\small
+%}minosites
+\vspace{-5pt}\small
+%?egyediMinosites|\parbox[t]{3.5cm}{\begin{itemize}\item[\textbullet]\slshape{}%$egyediMinosites\end{itemize}}\hfil|%?
+\end{center}
+%}szempont
+\vspace{0pt}\small
+%}targy
+
+
+\vspace{12pt}
+
+\vspace{12pt}\noindent
+Kérjük, hogy ezt az értesítőt mindkét szülő aláírásával ellátva az osztályfőnököknek juttassák vissza!\\ 
+
+\vspace{12pt}
+\noindent
+Budapest, %$ev. %$hoNev %$nap.\hspace{11.5em} P.H.\\ 
+
+\vspace{20pt}
+\begin{center}
+\slshape\scriptsize
+\begin{tabular}{ccc}
+\rule{3.5cm}{0.1pt}&\hspace{3cm}\ &\rule{3.5cm}{0.1pt}\\
+apa/gondviselő&&anya/gondviselő\\
+\end{tabular}
+\end{center}
+\newpage %%%%%%%%%%%%%%%%% új oldal %%%%%%%%%%%%%%%%%%%%
+%}diak
+\end{document}

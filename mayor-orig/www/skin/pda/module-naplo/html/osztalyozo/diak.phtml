@@ -1,0 +1,79 @@
+<?php
+/*
+    Module: naplo
+*/
+
+    function putTanuloJegyek($diakId, $diakNev, $Jegyek, $tolDt = '', $igDt = '', $ADAT) {
+
+
+	global $_TANEV, $Osztalyzatok, $bizonyitvanyMegjegyzesek;
+
+        $tolDt=$_TANEV['kezdesDt'];
+        $igDt=$_TANEV['zarasDt'];
+        $aktDt = $kDt = date('Y-m-01',strtotime($tolDt));
+        $vDt = date('Y-m-01',strtotime($igDt));
+
+	$Targyak = $Jegyek['targyak'];
+	//$Bizonyitvany = $Jegyek['bizonyitvany'];
+
+	// ----------------------------------------
+
+        while (strtotime($aktDt) <= strtotime($vDt)) {
+            list($ev,$ho,$nap) = explode('-',$aktDt);
+            $HO[] = array(
+                'év' => $ev,
+                'hó' => $ho
+            );
+            $HO['count']++;
+            $aktDt = date('Y-m-01',strtotime('next month',strtotime($aktDt)));
+        }
+	echo '<table class="osztalyozo" align="center" cellpadding="0">'."\n";
+
+	echo '<thead>'."\n";
+	    echo '<tr>'."\n";
+		echo '<th class="nev" colspan="3">'.$diakNev.' '.$_osztalystr.'</th>'."\n";
+	    echo '</tr>'."\n";
+	    echo '<tr>'."\n";
+		echo '<th rowspan="2">'._TARGY.'</th>'."\n";
+		echo '<td></td>';
+		echo '<th>'._ATLAG.'</th>'."\n";		
+	    echo '</tr>'."\n";
+	echo '</thead>'."\n";
+
+	echo '<tfoot>'."\n";
+	    echo '<tr>'."\n";
+		echo '<th >&nbsp;</th>'."\n";
+		echo '<th colspan="2">&nbsp;</th>'."\n";
+	    echo '</tr>'."\n";
+	echo '</tfoot>'."\n";
+
+	echo '<tbody>'."\n";
+	foreach ($Targyak as $targyId => $targyAdat) {
+	    echo '<tr>'."\n";
+		echo '<th>'.$targyAdat['targyNev'].'</th>'."\n";
+		echo '<td>';
+		for ($j = 0; $j < $HO['count']; $j++) {
+		    $honapJegyei = $targyAdat[$HO[$j]['év']][$HO[$j]['hó']];
+
+		    for ($k = 0; $k < count($honapJegyei); $k++) {
+			$jegyAdat = $Jegyek['jegyek'][$honapJegyei[$k]];
+			$href = href('index.php?page=naplo&sub=osztalyozo&f=jegy&jegyId='.$jegyAdat['jegyId']);
+			$title = $jegyAdat['tankorNev'].' ('.$jegyAdat['dt'].')';
+			echo '<a class="jegy'.$jegyAdat['tipus'].'" href="'.$href.'" title="'.$title.'">';
+			echo $Osztalyzatok[$jegyAdat['jegy']]['num'];
+			echo ' </a>';
+		    }
+		}
+		echo '</td>'."\n";
+		echo '<th class="atlag">'.$targyAdat['atlag'].'</th>'."\n";
+
+	    /* ------------------- */
+
+	    echo '</tr>'."\n";
+	}
+	echo '</tbody>'."\n";
+
+	echo '</table>'."\n";
+
+    }
+?>

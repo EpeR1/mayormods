@@ -1,0 +1,9 @@
+
+    div.emailFejlec {
+	text-align: center; border-bottom: solid 1px cornflowerblue ;
+	font-size:18px; line-height:30px; margin-bottom:20px; padding:4px;
+	margin-right:auto; margin-left: auto;
+	width:200px;
+	/* background: linear-gradient(90deg, #336, #0aa); */
+	color: cornflowerblue;
+    }

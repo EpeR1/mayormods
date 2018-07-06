@@ -1,0 +1,90 @@
+<?php
+/*
+    Module:	 base/session
+*/
+
+    function putCreateGroupForm($toPolicy = _POLICY) {
+
+        global $attrDef, $AUTH, $POLICIES;
+
+	formBegin(array('enctype'=>'multipart/form-data'));
+        echo '<input type="hidden" name="action" value="newUser" />';
+
+        echo '<table class="new" align="center" cellspacing="1">';
+        echo '<thead>';
+        echo '<tr>';
+            echo '<th colspan="2">'._CREATE_GROUP.'</th>';
+        echo '</tr>';
+        echo '<tr>';
+            echo '<td colspan="2">';
+            $SEL = array($toPolicy => ' selected="selected" ');
+            echo '<select name="toPolicy" class="onChangeSubmit">'."\n";
+            for ($i = 0; $i < count($POLICIES); $i++) {
+                echo '<option value="'.$POLICIES[$i].'"'.$SEL[$POLICIES[$i]].'>'.$POLICIES[$i].'</option>'."\n";
+            }
+            echo '</select>';
+            echo '</td>'."\n";
+	echo '</tr>'."\n";
+        echo '</thead>';
+        echo '<tfoot>';
+        echo '<tr>';
+            echo '<th colspan="2">';
+	    echo '<input name="new" type="submit" value="'._OK.'" />';
+	    echo '<input name="action" type="hidden" value="createGroup" />';
+	    echo '</th>';
+        echo '</tr>';
+        echo '</tfoot>';
+        echo '<tbody>';
+        echo '<tr>';
+            echo '<th>'.$attrDef['groupCn']['desc'].':</th>';
+            echo '<td><input type="text" name="groupCn" value="" id="focus" /></td>';
+        echo '</tr>';
+	$CONTAINERS = $AUTH[$toPolicy][$AUTH[$toPolicy]['backend'].'Containers'];
+	if (isset($CONTAINERS) and is_array($CONTAINERS) and count($CONTAINERS) > 0) {
+	echo '<tr>';
+            echo '<th>'._GROUP_CONTAINER.':</th>';
+            echo '<td>';
+                echo '<select name="container">';
+		    echo '<option value=""> - </option>'."\n";
+                    for ($i=0;$i<count($CONTAINERS);$i++) {
+                        echo '<option value="'.$CONTAINERS[$i].'">'.$CONTAINERS[$i].'</option>'."\n";
+                    }
+                echo '</select>';
+            echo '</td>';
+        echo '</tr>'."\n";
+	}
+
+	echo '<tr>';
+            echo '<th>'.$attrDef['groupDesc']['desc'].':</th>';
+            echo '<td><input type="text" name="groupDesc" value="" /></td>';
+        echo '</tr><tr>';
+            echo '<th style="width: 130px;">'._GROUP_CATEGORY.'</th>';
+            echo '<td style="width: 270px;">';
+                echo '<select name="category">';
+		    echo '<option value=""> - </option>'."\n";
+                    for ($i=0;$i<count($AUTH[_POLICY]['categories']);$i++) {
+                        echo '<option value="'.$AUTH[_POLICY]['categories'][$i].'">'.$AUTH[_POLICY]['categories'][$i].'</option>';
+                    }
+                echo '</select>';
+            echo '</td>';
+        echo '</tr>';
+
+        if (is_array($AUTH[$toPolicy]['groupAttrs'])) foreach ($AUTH[$toPolicy]['groupAttrs'] as $key => $attr) {
+        echo '<tr>';
+            echo '<th>'.$attrDef[$attr]['desc'].':</th>';
+            echo '<td><input type="text" name="'.$attr.'" value="'.$DEFAULTS[$attr].'" /></td>';
+        echo '</tr>'."\n";
+        }
+
+/*        echo '<tr>';
+            echo '<th>'._DATAFILE.':</th>';
+            echo '<td><input type="file" name="file" /></td>';
+        echo '</tr>';
+*/        echo '</tbody>';
+        echo '</table>';
+        formEnd();
+
+    }
+
+
+?>

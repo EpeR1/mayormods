@@ -1,0 +1,77 @@
+<?php
+
+    function putLoginForm($userAccount,$toPolicy,$toPSF='',$toSkin='') {
+	global $POLICIES, $AUTH, $sessionID;
+
+	// TODO IDEIGLENES OVERRIDE -- if ($toPolicy=='public') $toPSF='portal:portal:vmgNyiltnap';
+
+	/* reading data from SESSION */
+	if ($userAccount=='' && $_SESSION['lastCreatedAccount']!='') 
+	    $userAccount=$_SESSION['lastCreatedAccount'];
+
+	echo '<h1>'._SITE.'</h1>'."\n";
+	echo '<h2>'._GREETING.'</h2>'."\n";
+
+	if (is_array($AUTH[$toPolicy]['allowOnly']) && !in_array($userAccount,$AUTH[$toPolicy]['allowOnly'])) { 
+	    echo '<div style="text-align:center; background-color:#f06; border-radius: 5px; width:150px; margin:auto; color:white;">Korlátozott belépés!</div>';
+	}
+
+	// Caps-Lock
+	echo '<div id="warning"><div style="display:none;" id="capsLockWarning">'._CAPSLOCKWARNING.'</div></div>';
+
+	formBegin(array('method'=>'post',
+	    'class'=>'nagylogin', 
+	    'action'=>'index.php?policy=public&page=auth&f=login&toPolicy='.$toPolicy.'&sessionID='.$sessionID ,
+	    'name'=>"loginablak"));
+
+//	    echo '<input type="hidden" name="action" value="login" />';
+	    echo '<input type="hidden" name="action" value="mayorGlobalLogin" />';
+	    echo '<input type="hidden" name="toPSF" value="'.$toPSF.'" />';
+
+	    echo '<div class="loginlogo">';
+		_putsvg();
+	    echo '</div>';
+
+            	    echo '<input type="text" id="focus" accesskey="l" tabindex="1" name="userAccount" value="'.$userAccount.'" maxlength="32" placeholder="'._USERNAME.'" />'."\n";
+            	    echo '<input type="password" id="userPassword"  accesskey="p" tabindex="2" name="userPassword" maxlength="20" placeholder="'._PASSWORD.'" value="" />'."\n";
+
+
+		if (intval(_MAYORAUTHRESULT)>0 || (defined('_FORCE_LOGIN_POLICY_SELECT') && _FORCE_LOGIN_POLICY_SELECT===true)) {
+                    echo '<select class="pp" name="policyOrderIndex">'."\n";
+		    //$_SEL = array($toPolicy => ' selected="selected" ');
+            	    echo '<option value="0">'._LOGIN_ALL_AUTH_LEVEL.'</option>';
+		    for ($i=0; $i<count($POLICIES); $i++) {
+			$_policy = $POLICIES[$i];
+			if ($AUTH[$_policy]['authentication'] != 'none') {
+                	    echo '<option value="'.($i+1).'" '.$_SEL[$_policy].'>';
+			    echo constant('_'.strtoupper($_policy).'_LOGIN');
+			    echo '</option>'."\n";
+			}
+		    }
+                    echo '</select>'."\n";
+		}
+
+            		echo '<input type="submit" class="mayorButton" tabindex="3" name="button" value=" '. _LOGIN .' "
+			class="submit" />'."\n";
+			echo '<div class="loaderContainer"><div class="loader" style="display:none" ></div></div>';
+
+	formEnd();
+	//if ($AUTH[$toPolicy]['enablePasswordReset']===true) {
+    	    formBegin(array('class'=>'forgot'));
+	    echo '<div id="forgotten"><a href="'.href('index.php?page=auth&f=forgotten&userAccount='.$userAccount.'&toPolicy='.$toPolicy).'">'._FORGOTTEN.'</a></div>';
+    	    formEnd();
+	//}
+    }
+
+    function putAlreadyLoggedIn() {
+	echo '<div style="margin:40px auto; width:200px; padding:10px; background-color: #eeeeee; border: solid 2px #ddd; border-radius:2px; text-align:center; color: cornflowerblue">';
+		echo '<span class="icon-ok-sign" style="float:left; line-height:18px;font-size:18px; color:lightgreen; "></span>';
+		echo _BELEPVE;
+	echo '</div>';
+    }
+
+    function _putsvg() {
+	mayorLogoSvg();
+    }
+
+?>

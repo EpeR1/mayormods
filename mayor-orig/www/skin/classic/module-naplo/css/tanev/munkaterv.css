@@ -1,0 +1,149 @@
+@media screen {
+    /* összesités */
+
+    table.osszesites {
+	margin: 20px auto;
+	background-color: rgb(200,200,200);
+    }
+    table.osszesites  td {
+	padding: 2px 10px;
+	background-color: rgb(210,210,240);
+	font-style: italic;
+    }
+    table.osszesites  td.osszesMunkanap {
+	background-color: rgb(240,210,210);
+	color: red;
+    }
+    table.osszesites  th {
+	padding: 2px 10px;
+	background-color: rgb(100,100,120);
+	color: white;
+    }
+
+    /* munkaterv - naptár */
+
+    form.munkaterv h2 { width: 60%; margin: 10px auto; text-align: center; border: 1px dotted; border-width: 1px 0px; font-size: 12px; }
+
+    table.munkaterv {
+	background-color: rgb(220,230,240);
+	color: white;
+	width: 70%;
+	font-size: 12px;
+    }
+
+    table.munkaterv tfoot th {background-color: rgb(120,130,140);}
+    table.munkaterv tfoot th input {border: none;}
+
+    table.munkaterv thead th {
+	background-color: rgb(120,140,130);
+	vertical-align: center;
+    }
+    table.munkaterv thead th input {
+	background-color: rgb(120,140,130);
+	border-style: none;
+	padding: 0px;
+	margin: 0px;
+	float: right;
+	color: white;
+	font-size: 10px;
+    }
+    
+    table.munkaterv td {
+	width: 12%;
+	vertical-align: top;
+	text-align: center;
+	background-color: rgb(160,160,160);
+    }
+    table.munkaterv td input { width: 100%; }
+    table.munkaterv td.tanitasinap { background-color: rgb(200,100,100); border: none; }
+    table.munkaterv td.tanitasinap input { background-color: rgb(250,150,150); border: none; }
+    table.munkaterv td.tanitasinap select { background-color: rgb(250,150,150); border: 1px solid rgb(200,100,100); }
+
+    table.munkaterv td.specialistanitasinap { background-color: rgb(180,130,70); }
+    table.munkaterv td.specialistanitasinap input { background-color: rgb(220,180,120); border: none; }
+    table.munkaterv td.specialistanitasinap select { background-color: rgb(220,180,120); border: 1px solid rgb(180,130,70); }
+
+    table.munkaterv td.tanitasnelkulimunkanap {	background-color: rgb(200,200,100); }
+    table.munkaterv td.tanitasnelkulimunkanap input { background-color: rgb(250,250,150); border: none; }
+    table.munkaterv td.tanitasnelkulimunkanap select { background-color: rgb(250,250,150);  border: 1px solid rgb(200,200,100); }
+
+    table.munkaterv td.tanitasiszunet { background-color: rgb(70,140,70); }
+    table.munkaterv td.tanitasiszunet input { background-color: rgb(120,190,120); border: none; }
+    table.munkaterv td.tanitasiszunet select { background-color: rgb(120,190,120); border: 1px solid rgb(70,140,70); }
+
+    table.munkaterv td.szorgalmiidoszakonkivulimunkanap { background-color: rgb(240,130,60); }
+    table.munkaterv td.szorgalmiidoszakonkivulimunkanap input { background-color: rgb(250,175,100); border: none; }
+    table.munkaterv td.szorgalmiidoszakonkivulimunkanap select { background-color: rgb(250,175,100); border: 1px solid rgb(240,130,60); }
+
+    table.munkaterv td.felevZarasDt { border: red solid; border-width: 4px 0px 0px 4px; }
+    table.munkaterv td.felevZaras { border: red solid; border-width: 4px 0px 0px 0px; }
+
+    table.munkaterv td span { color:#ddd; margin:2px; font-size: 10px;  }
+
+    table.munkaterv td span.orarendiHet1 { background-color: rgba(0,0,0,0.2); }
+    table.munkaterv td span.orarendiHet2 { background-color: rgba(255,0,0,0.2); }
+    table.munkaterv td span.orarendiHet3 { background-color: rgba(255,255,0,0.2); }
+    table.munkaterv td span.orarendiHet4 { background-color: rgba(255,255,255,0.2); }
+
+    table.munkaterv td select {
+	width: 100pt;
+    }
+    
+    table.munkaterv a {
+	color: white;
+	text-decoration: none;
+    }
+
+    /* ------------------- */
+
+    form.init {	background: #d6e0e6; margin: 0; padding: 20px; text-align: center; }
+    form.init h2, #napokSzama h2 { text-align: center; margin: 10px; border: 1px dotted; border-width: 1px 0px; font-size: 12px; }
+    form.init p { background-color: rgb(180,180,210); padding: 10px; }
+    form.init label { background-color: rgb(200,200,250); padding: 10px; }
+    form.init input[type=submit] { background-color: rgb(200,200,200); margin: 10px 5px; }
+
+    /* admin form */
+    div.admin { width: 95%;max-width: 95%;margin: 2em auto 0px auto; }
+    div.admin .onClickShow { float: left; text-align: center; min-width: 100px; margin: 0 2px 0 0; color: white; 
+	background: rgba(52, 150, 185, 0.6); padding: 4px 10px; cursor: pointer; 
+	border-radius: 4px 4px 0 0;
+	border-bottom: solid 1px rgb(52, 150, 185);
+	}
+    div.admin .onClickShow:hover {
+	background: rgba(52, 150, 185, 1);
+	border-bottom: solid 1px orange;
+    }
+    div.admin .openable { clear: both; }
+    div.admin .selected { background: #d6e0e6; color: black; border-bottom: solid 1px orange; }
+    div.admin #napokSzama { background: #d6e0e6; margin: 0; padding: 20px; }
+
+    div.admin ul { list-style: none; text-align: left; margin: 0; padding: 0; }
+    div.admin ul li { margin: 0px auto 1px auto; background: #abcdef; padding: 10px; width: 500px; }
+    div.admin ul li:hover { background: rgb(100,100,200); color: white; }
+    div.admin ul li select { float: right; margin-top: -3px; }
+    div.admin ul li input[type=submit] { float: right; margin-top: -3px; }
+
+}
+@media print {
+
+    table.osszesites { width:100%; font-size:10px;
+	background-color: #eeeeee;
+    }
+    table.osszesites th { text-align: center; background-color: #ffffff; }
+    table.osszesites td { text-align: center; background-color: #ffffff; }
+    a { font-size:10px; text-decoration: none; color: black }
+    select { font-size:10px; border: none; }
+
+    table.munkaterv td.specialisTanitasiNap {
+	border: dotted 1px black;
+    }
+
+    table.munkaterv td.tanitasiSzunet {
+	background-color: #eeeeee;
+    }
+
+    table.munkaterv td.tanitasNelkuliMunkanap {
+	border: dotted 1px black;
+    }
+
+}

@@ -1,0 +1,30 @@
+
+    form.jelentkezes { margin: 10px 30px; padding: 10px; background-color: rgb(40,80,80); color: white; text-align: center; border: solid rgb(20,60,60); border-width: 3px 0px; }
+    form.jelentkezes h1 { border: solid white; border-width: 1px 0px; margin-top: 0px; font-size: 12pt; background-color: rgb(20,60,60); }
+
+    form.lista { margin: 0px 30px; padding: 0px; background-color: rgb(40,80,90); color: white; text-align: center; border: solid rgb(20,60,70); border-width: 3px 0px; }
+    form.lista h1 { border: solid white; border-width: 1px 0px; margin-top: 0px; font-size: 12pt; background-color: rgb(20,60,70);}
+    form.lista table { margin: 0px auto; background-color: rgb(40,50,60); }
+    form.lista th { background-color: rgb(10,30,50); padding: 2px 4px; }
+    form.lista td { background-color: rgb(20,30,30); padding: 2px 4px; }
+    form.lista table tbody tr td { text-align:left; padding-left:4px; }
+    form.lista table tbody tr:hover td { outline: solid 1px #888;}
+
+    form.lista table tbody tr.javitovizsga td { background-color: rgb(60,70,80);}
+    form.lista table tbody tr.beszamoltatovizsga td { background-color: rgb(80,70,60);}
+
+    form.lista td.kiemelt { background-color: rgb(240,150,0); }
+    form.lista td.hideShowContainer label { color: black; font-weight: bold; padding: 0px 10px 0px 4px; }
+    form.lista td.szoveg { text-align: left; width: 400px; font-style: italic; }
+    form.lista td.jegy { text-align: left; }
+    form.lista td.jegy span { float: left; }
+    form.lista td.jegy span.jegy { float: right; color: yellow;  padding-left: 10px;}
+    form.lista input[type="text"] { width: 100px; }
+    form.lista span.onClickHideShow { 
+	color: red; float: right; font-size: 12px; font-weight: bold;
+	border: red 1px dotted; 
+	padding: 2px 10px; 
+    }
+    form.lista td a { color: white; text-decoration: none; display: block; background-color: red; padding: 2px 4px; font-weight: bold;  }
+    form.lista td a:hover { color: red; background-color: white; }
+    form.lista span.onClickHideShow:hover { background-color: rgb(20,60,60); cursor: pointer; } 

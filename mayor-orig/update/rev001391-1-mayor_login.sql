@@ -1,0 +1,1 @@
+--rev1393--alter table session add sessionCookie char(40) not null;

@@ -1,0 +1,17 @@
+
+    table.terem {
+	background-color: #eeeeee;
+    }
+    table.terem tr th {
+	background-color: #666666;
+	color: white;
+	padding: 1px 3px;
+    }
+    table.terem tr td {
+	background-color: #cdcddc;
+    }
+    table.terem.oraAdat {
+	width:100%;
+    }
+
+    table.terem select option.nemferbe { color: red; }

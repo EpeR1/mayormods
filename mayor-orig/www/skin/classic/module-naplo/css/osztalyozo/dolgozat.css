@@ -1,0 +1,172 @@
+
+    table.dolgozatLista {
+	background-color: rgb(220,220,250);
+	margin-top: 20px;
+	width: 90%;
+	empty-cells: show;
+	margin-bottom:4em;
+	border-bottom: solid 1px rgb(40,40,100) ;
+    }
+
+    table.dolgozatLista th {
+	background-color: rgb(40,40,100);
+	color: white;
+	padding: 3px;
+    }
+
+    table.dolgozatLista th.kuszob {
+	background-color: rgb(0,100,100);
+	height:3px;
+	max-height:3px;
+    }
+
+    table.dolgozatLista td {
+	background-color: rgb(100,100,140);
+	color: white;
+	padding: 3px 10px;
+    }
+
+    table.dolgozatLista td  a {
+	color: rgb(255,255,255);
+	text-decoration: none;
+    }
+
+    table.dolgozatLista td  a:hover {
+	color: rgb(155,155,255);
+    }
+    table.dolgozatLista td.nincsdolgozat {background-color: rgb(100,100,100); text-align:center; }
+    table.dolgozatLista tbody tr:hover th {background-color: rgb(80,180,120); }
+    table.dolgozatLista tbody tr:hover td {background-color: rgb(80,80,120); }
+
+    /* ------- Adatok ------- */
+
+    table.dolgozatAdatok {
+	min-width:300px;
+	background-color: rgb(220,220,250);
+	margin-top: 10px;
+    }
+    
+    table.dolgozatAdatok thead th {
+	background-color: rgb(60,60,110);
+	color: white;
+	padding: 4px 0px;
+    }    
+
+    table.dolgozatAdatok tfoot th {
+	background-color: rgb(100,100,140);
+	padding: 4px;
+    }    
+
+    table.dolgozatAdatok tfoot input {
+/*	border-color: rgb(220,220,250);
+	border-width: 1px;
+	border-style: solid;
+	background-color: rgb(40,40,100);
+	color: rgb(255,255,255);
+*/
+    }    
+
+    table.dolgozatAdatok tbody th {
+	background-color: rgb(140,140,200);
+	color: white;
+	padding: 2px 6px;
+    }    
+
+    table.dolgozatAdatok tbody td {
+	background-color: rgb(100,100,160);
+	color: white;
+	padding: 2px 6px;
+    }    
+
+    table.dolgozatAdatok tbody td select.multiple {
+	height: 150px;
+	width: 100%;
+    }
+
+    table.dolgozatAdatok td input.hosszu {
+	width: 95%;
+    }
+
+    table.dolgozatAdatok tbody td span.onClickHideShow {
+	background-color: rgb(70,70,100);
+	color: white;
+	padding: 2px 4px;
+	border: 1px solid rgb(140,140,200);
+	cursor: pointer;
+    }    
+
+    table.dolgozatAdatok tbody td span.openable {
+	background-color: rgb(70,70,100);
+	color: white;
+	padding: 2px 4px;
+	border: 1px solid rgb(140,140,200);
+    }    
+
+    table.dolgozatAdatok tbody td ul { padding: 0px; margin: 0px; }
+    table.dolgozatAdatok tbody td ul li { list-style-type: none; background-color: rgb(70,70,100); margin: 1px 0px; padding: 4px 12px; }
+    table.dolgozatAdatok tbody td ul li a { color: white; text-decoration: none; }
+
+    /* ------- jegyek -------- */
+
+    table.dolgozatJegyek {
+	min-width:300px;
+        background-color: rgb(220,220,250);
+	margin-top: 10px;
+    }
+
+    table.dolgozatJegyek th {
+        background-color: rgb(60,60,110);
+        color: white;
+	padding: 2px 10px;
+    }
+
+    table.dolgozatJegyek tbody th {
+        background-color: rgb(100,100,160);
+	font-weight: normal;
+	text-align:left;
+    }
+
+    table.dolgozatJegyek th a {
+	text-decoration: none;
+        color: white;
+    }
+
+    table.dolgozatJegyek th a:hover {
+	text-decoration: underline;
+    }
+
+    table.dolgozatJegyek thead td {
+        background-color: rgb(100,100,140);
+        color: white;
+        text-align: center;
+    }
+
+    table.dolgozatJegyek td {
+        background-color: rgb(200,200,240);
+	color: rgb(60,60,110);
+	text-align: center;
+    }
+
+    table.dolgozatJegyek td a {
+	text-decoration: none;
+    }
+
+    table.dolgozatJegyek td a:hover {
+	text-decoration: underline;
+    }
+
+    table.dolgozatJegyek td a.jegy3 {
+	color: green;
+    }
+    
+    table.dolgozatJegyek td a.jegy4 {
+	color: red;
+    }
+
+    form.dolgozat { margin-left:5%; margin-right:5%; width:90%; color: white; text-align: center; }
+    form.dolgozat input { 
+	margin: 10px; background-color: rgb(0,100,100); border: 2px solid rgb(40,40,100); color: white; font-size: large; padding:2px 4px 2px 4px;    
+    }
+
+    table.dolgozatJegyek tr.atlag th { text-align:right; background-color: #9C64A0; }
+    table.dolgozatJegyek tr.atlag th:after { padding-left:4px; }

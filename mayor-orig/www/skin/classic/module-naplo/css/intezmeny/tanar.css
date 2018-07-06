@@ -1,0 +1,60 @@
+
+
+    form.tanar { background-color: white; }
+
+    form.tanar { margin: 5px 30px 20px 20px; font-size:10px; }
+    form.tanar h1 { border: dotted white; border-width: 1px 0px; background-color: rgb(80,100,120); font-size: 20px; text-align: center; }
+    form.tanar input, form.tanar select {
+        font-size:10px; border: solid 1px #777777; margin-left: 3px;
+        padding-left: 2px;
+    }
+    form.tanar input.kiemelt { background-color: rgb(255,255,100); border-width: 1px 1px 0px 1px; }
+    form.tanar label { font-size:11px; }
+    form.tanar label.kotelezo { color:rgb(100,20,20); }
+    form.tanar input:focus { background-color: orange; }
+
+    form.tanar fieldset { border: solid 1px rgb(40,60,80); }
+    form.tanar fieldset th { text-align: right; }
+    form.tanar fieldset legend {
+        background-color: rgb(140,160,180);
+        color: white;
+        font-size:90%;
+        text-align: left;
+        margin-left:20px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border: solid 1px rgb(40,60,80);
+    }
+    form.tanar fieldset:hover legend { background-color: navy; }
+
+    form.tanar input.kiemelt {
+        background-color: rgb(220,220,255);
+        border-width: 1px 1px 1px 1px; border-color: #777777 #777777 rgb(220,220,255) #777777;
+        margin-bottom: 0px; padding-top: 2px;
+    }
+
+    form.tanar table#kepesites { border-spacing: 0; margin: 10px 0; width: 800px; }
+    form.tanar table#kepesites th,
+    form.tanar table#kepesites td { text-align: left; border-left: 1px dotted black; padding: 0 10px; }
+    form.tanar table#kepesites th { padding-bottom: 5px; }
+    form.tanar table#kepesites tbody tr:last-child td { padding-bottom: 10px; }
+    form.tanar table#kepesites tr#ujKepesites { display: none; }
+    form.tanar table#kepesites tr#ujKepesites td { padding-top: 10px; }
+    form.tanar table#kepesites tr#uj td { padding: 6px 10px; cursor: pointer; border-top: 1px none #888; border-bottom: 1px dotted black; }
+    form.tanar table#kepesites td#kepesitesNev { width: 300px; }
+    form.tanar table#kepesites tr#ujKepesites input[type=text] { width: 260px; }
+    form.tanar table#kepesites tr#hozzarendel th { padding: 15px 10px 10px 10px; }
+
+    form.updateTable { color: white; width: 80%; background-color: rgb(180,180,200); margin: 20px auto; }
+    form.updateTable h1 { text-align: center; border: 1px dotted white; border-width: 1px 0px; background-color: rgb(60,60,80); }
+    form.updateTable label { color: white; padding: 8px; }
+    form.updateTable table { margin: 20px auto; background-color: rgb(140,140,180); color: red; }
+    form.updateTable table td { background-color: rgb(255,255,255); }
+    form.updateTable table th { background-color: rgb(120,120,160); }
+
+
+    from.tanar input.ajaxRequest { color: black; background-color: red; }                                                                                                                                   
+    form.tanar input.ajaxRequestDone {  color: white; background-color: rgb(0,130,0); }                                                                                                                     
+    form.tanar select.ajaxRequestDone { color: white; background-color: rgb(0,130,0); }                                                                                                                     
+    form.tanar input.ajaxRequestError {  color: white; background-color: rgb(130,0,0); }                                                                                                                    
+    form.tanar select.ajaxRequestError { color: white; background-color: rgb(130,0,0); }             

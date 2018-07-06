@@ -1,0 +1,144 @@
+<?php
+
+    function putVizsgaJelentkezesForm($ADAT) {
+
+	formBegin(array('class'=>'jelentkezes'));
+
+	echo '<h1>'._VIZSGAJELENTKEZES.'</h1>'."\n";
+
+	echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+	echo '<input type="hidden" name="targyId" value="'.$ADAT['targyId'].'" />'."\n";
+	echo '<input type="hidden" name="evfolyamJel" value="'.$ADAT['evfolyamJel'].'" />'."\n";
+	echo '<input type="hidden" name="felev" value="'.$ADAT['felev'].'" />'."\n";
+	echo '<input type="hidden" name="action" value="vizsgajelentkezes" />'."\n";
+
+	echo '<label for="jelentkezesDt">'._JELENTKEZES.'</label>'."\n";
+	echo '<input type="text" name="jelentkezesDt" class="date" value="" id="jelentkezesDt" />'."\n";
+	echo '<label for="tipus">'._VIZSGATIPUS.'</label>'."\n";
+	echo '<select name="tipus" id="tipus">'."\n";
+	    echo '<option value=""> - </option>'."\n";
+	    for ($i = 0; $i < count($ADAT['vizsgatipusok']); $i++) {
+		echo '<option value="'.$ADAT['vizsgatipusok'][$i].'"'.$SEL[ $ADAT['vizsgatipusok'][$i] ].'>'.$ADAT['vizsgatipusok'][$i].'</option>'."\n";
+	    }
+	echo '</select>'."\n";
+
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+
+    }
+
+    function putVizsgalista($ADAT) {
+
+	global $KOVETELMENY;
+
+	formBegin(array('class'=>'lista'));
+
+	echo '<h1>'._VIZSGALISTA.'</h1>'."\n";
+
+	echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+	echo '<input type="hidden" name="targyId" value="'.$ADAT['targyId'].'" />'."\n";
+	echo '<input type="hidden" name="evfolyamJel" value="'.$ADAT['evfolyamJel'].'" />'."\n";
+	echo '<input type="hidden" name="felev" value="'.$ADAT['felev'].'" />'."\n";
+	echo '<input type="hidden" name="action" value="vizsgaKezeles" />'."\n";
+
+	echo '<table>'."\n";
+	echo '<thead>';
+	    echo '<tr><th></th><th>'._DIAK.'</th><th>'._TARGY.'</th><th>'._EVFOLYAMJEL.'</th><th>'._JELENTKEZES.'</th><th colspan="2">'._VIZSGA.'</th><th colspan="2">'._ERTEKELES_HALASZTAS.'</th></tr>'."\n";
+	echo '</thead>';
+	echo '<tfoot><tr><th colspan="9"><input type="submit" value="'._OK.'" /></th></tr></tfoot>';
+	echo '<tbody>';
+	for ($i = 0; $i < count($ADAT['vizsga']); $i++) {
+
+	    extract($ADAT['vizsga'][$i]);
+	    echo '<tr class="'.ekezettelen($ADAT['vizsga'][$i]['tipus']).'">';
+	    echo '<td>';
+		if (__NAPLOADMIN===true) {
+		    echo '<a class="confirm" title="'._BIZTOSAN_TOROL_E.'" href="'.href('index.php?page=naplo&sub=osztalyozo&f=vizsga&action=vizsgaTorlese&vizsgaId='.$ADAT['vizsga'][$i]['vizsgaId'].'&diakId='.$ADAT['diakId'].'&targyId='.$ADAT['targyId'].'&evfolyamJel='.$ADAT['evfolyamJel']).'">';
+		    //echo $ADAT['vizsga'][$i]['vizsgaId'];
+		    echo 'X';
+		    echo '</a>';
+		}
+	    echo '</td>';
+	    echo '<td class="diakNev" data-diakid="'.$diakId.'">'.$ADAT['diakok'][ $diakId ]['diakNev'].'</td>';
+	    echo '<td>'.$ADAT['targyak'][$targyId]['targyNev'].'</td>';
+	    echo '<td>'.(($evfolyamJel!='')?$evfolyamJel:$evfolyam).'/'.$felev.'</td>';
+	    echo '<td>'.$jelentkezesDt.'</td>';
+	    echo '<td title="'.$tipus.'">'.nagybetus(substr($tipus,0,1)).'</td>';
+	    if (isset($vizsgaDt)) {
+		if (strtotime($vizsgaDt)>time()) {
+		    $halasztClass = ''; $ertekelClass = ' rejtett';
+		} else {
+		    $halasztClass = ' rejtett'; $ertekelClass = '';
+		}
+
+		echo '<td>';
+		echo $vizsgaDt;
+		echo '</td>';
+		if (isset($zaradekId)) {
+		    echo '<td class="szoveg">';
+		    echo $szoveg;
+		    echo '</td><td class="jegy zaroJegyAdat" data-zarojegyid="'.$zaroJegyId.'">';
+		    if (isset($zaroJegyId)) {
+			echo '<span>'._EREDMENY.': '.$jegyTipus.' &rarr;</span>';
+			echo '<span class="jegy">';
+			echo $KOVETELMENY[$jegyTipus][$jegy]['hivatalos'];
+			if ($KOVETELMENY[$jegyTipus][$jegy]['hivatalos'] != $KOVETELMENY[$jegyTipus][$jegy]['rovid'])
+			    echo ' ('.$KOVETELMENY[$jegyTipus][$jegy]['rovid'].')';
+			echo '</span>';
+		    }
+		    echo '</td>';
+		} else {
+		    echo '<td class="kiemelt hideShowContainer" colspan="2">';
+			echo '<input type="hidden" name="erthalVizsgaIds[]" value="'.$vizsgaId.'" />'."\n";
+			echo '<div class="halaszt openable'.$halasztClass.'">';
+			    echo '<span class="onClickHideShow ertekeles">&rang;&rang;&rang; '._ERTEKELES.' &rang;&rang;&rang;</span>';
+			    echo '<label for="halasztas'.$vizsgaId.'">'._HALASZTAS.':</label>';
+			    echo '<input type="text" name="halasztasDts[]" value="" class="date halasztasDt" id="halasztas'.$vizsgaId.'" />';
+			echo '</div><div class="ertekel openable'.$ertekelClass.'">';
+			    echo '<span class="onClickHideShow halasztas">&rang;&rang;&rang; '._HALASZTAS.' &rang;&rang;&rang;</span>';
+			    echo '<label for="ertekeles'.$vizsgaId.'">'._ERTEKELES.':</label>';
+			    echo '<select name="jegyTipus[]" class="jegyTipus">'."\n";
+			    echo '<option value=""> - </option>'."\n";
+			    foreach ($ADAT['zarojegytipusok'] as $key => $jegyTipus) {
+				echo '<option value="'.$jegyTipus.'">'.$jegyTipus.'</option>'."\n";
+			    }
+			    echo '</select>'."\n";
+
+			    echo '<select name="jegyAdat[]" class="jegyAdat" id="ertekeles'.$vizsgaId.'" title="'.$ADAT['tanev'].'/'.$felev.' - '.$evfolyamJel.'">'."\n";
+			    echo '<option value=""> - </option>'."\n";
+			    foreach ($ADAT['zarojegytipusok'] as $key => $jegyTipus) {
+				echo '<optgroup label="'.$jegyTipus.'">';
+				foreach ($KOVETELMENY[$jegyTipus]['értékek'] as $idx => $value) {
+				    if (in_array($value,$KOVETELMENY[$jegyTipus]['sikertelen'])) $_postfix=' !'; else $_postfix='';
+//				    echo '<option value="zaroJegyId=|diakId='.$diakId.'|targyId='.$targyId.'|evfolyam='.$evfolyam.'|tanev='.$ADAT['tanev'].'|felev='.$felev.'|jegy='.$value.'|jegyTipus='.$jegyTipus.'|megjegyzes=">'.$KOVETELMENY[$jegyTipus][$value]['rovid'].'</option>'."\n";
+				    echo '<option value="jegy='.$value.'|jegyTipus='.$jegyTipus.'|megjegyzes=">'.$KOVETELMENY[$jegyTipus][$value]['rovid'].$_postfix.'</option>'."\n";
+				}
+				echo '</optgroup>';
+			    }
+			    echo '</select>'."\n";
+			echo '</div>';
+		    echo '</td>';
+		}
+	    } else {
+		echo '<td class="kiemelt">';
+		echo '<input type="hidden" name="vizsgaDtVizsgaIds[]" value="'.$vizsgaId.'" />'."\n";
+		echo '<input type="text" class="date" name="vizsgaDts[]" value="" />'."\n";
+		echo '</td>';
+		echo '<td colspan="2"></td>';
+	    }
+	    echo '</tr>'."\n"; 
+	}
+	echo '</tbody>'."\n";
+	echo '</table>'."\n";
+
+	formEnd();
+
+	echo '<div class="hideShowContainer">';
+	echo '<h4 class="onClickHideShow"><span class="icon-braille"></span>Debug információ</h4>';
+	echo '<div class="openable" style="display:none">';
+	dump($KOVETELMENY);
+	echo '</div>';
+    }
+
+?>

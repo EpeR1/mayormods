@@ -1,0 +1,68 @@
+<?php
+
+    function putHirnokFeliratkozas($ADAT) {
+	formBegin();
+	echo '<input type="hidden" name="action" value="hirnokFeliratkozas" />';
+	echo '<table align="center" style="background-color: #eee">';
+	echo '<tr>';
+	    echo '<th>-|+</th>';
+	    echo '<td><input type="text" placeholder="diakId/tanarId" name="naploId" /></td>';
+	    echo '<td>';
+		echo '<select name="naploTipus">';
+		    echo '<option value="diak">diák</option>';
+		    echo '<option value="tanar">tanár</option>';
+		echo '</select>';
+	    echo '</td>';
+
+	    echo '<td><input type="text" value="'._USERACCOUNT.'" /></td>';
+	    echo '<td><input type="text" value="'._POLICY.'" /></td>';
+	    echo '<td><input type="text" placeholder="email" name="email" /></td>';
+	    echo '<td><input type="submit"></td>';
+	    echo '<th style="background-color: lightgreen">utolsó email dátum</th>';
+	echo '</tr>';
+//	foreach ($ADAT['hirnokFeliratkozas'] as $tipus => $HADAT) {
+	$HADAT = $ADAT['hirnokFeliratkozas'];
+	    for ($i=0; $i<count($HADAT); $i++) {
+		echo '<tr>';
+		echo '<td><input type="checkbox" name="hirnokFeliratkozasId" value="'.$HADAT[$i]['hirnokFeliratkozasId'].'"></td>';
+		echo '<td>'.$HADAT[$i]['naploId'].'</td>';
+		echo '<td>'.$HADAT[$i]['naploTipus'].'</td>';
+		echo '<td>'.$HADAT[$i]['userAccount'].'</td>';
+		echo '<td>'.$HADAT[$i]['policy'].'</td>';
+		echo '<td>'.$HADAT[$i]['email'].'</td>';
+		echo '<td>'.$HADAT[$i]['feliratkozasDt'].'</td>';
+		echo '<td>'.$HADAT[$i]['utolsoEmailDt'].'</td>';
+		echo '<td>'.$HADAT[$i]['megtekintesDt'].'</td>';
+		echo '</tr>'."\n";
+	    }
+//	}
+	echo '</table>';
+	formEnd();
+    }
+
+
+    function putHirnokFeliratkozas_user($ADAT) {
+	formBegin();
+	echo '<input type="hidden" name="action" value="hirnokFeliratkozas" />';
+	echo '<table align="center" style="background-color: #eee">';
+	echo '<tr>';
+	    echo '<th>-|+</th>';
+	    echo '<td><input type="text" placeholder="email" name="email" value="'.$ADAT['email'].'"/></td>';
+	    echo '<td><input type="submit"></td>';
+	    echo '<th style="background-color: lightgreen">utolsó email dátum</th>';
+	echo '</tr>';
+	$HADAT = $ADAT['hirnokFeliratkozas'];
+	    for ($i=0; $i<count($HADAT); $i++) {
+		echo '<tr>';
+		echo '<td><input type="checkbox" name="hirnokFeliratkozasId" value="'.$HADAT[$i]['hirnokFeliratkozasId'].'"></td>';
+		echo '<td>'.$HADAT[$i]['email'].'</td>';
+		echo '<td>'.'</td>';
+		echo '<td>'.$HADAT[$i]['utolsoEmailDt'].'</td>';
+		echo '<td>'.$HADAT[$i]['megtekintesDt'].'</td>';
+		echo '</tr>'."\n";
+	    }
+	echo '</table>';
+	formEnd();
+    }
+
+?>

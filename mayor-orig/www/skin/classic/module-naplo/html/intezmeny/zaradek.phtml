@@ -1,0 +1,78 @@
+<?php
+
+    function putZaradekForm($ADAT) {
+	formBegin(array('class'=>'zaradek'));
+
+	echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
+	echo '<input type="hidden" name="zaradekIndex" value="'.$ADAT['zaradekIndex'].'" />'."\n";
+	echo '<input type="hidden" name="action" value="zaradekRogzites" />'."\n";
+
+	$tmp = explode('%', $ADAT['zaradek']['szoveg']);
+	$szoveg = '<p>';
+	for ($i = 0; $i < count($tmp); $i++) {
+	    if ($i % 2 == 0) {
+		$szoveg .= $tmp[$i];
+	    } else {
+		$szoveg .= '<span id="param'.intval(($i+1)/2).'span">'.$tmp[$i].'</span>';
+	    }
+	}
+	$szoveg .= '</p>';
+
+	echo $szoveg;
+	echo '<table>';
+	for ($i = 0; $i < count($ADAT['params']); $i++) {
+	    echo '<tr>';
+	    echo '<th><label for="param'.$i.'">'.$ADAT['params'][$i].'</label></th>'."\n";
+	    echo '<td><input type="text" name="values[]" value="" id="param'.($i+1).'" class="onChangeReplaceSpan" /></td>'."\n";
+	    echo '</tr>';
+	}
+	    echo '<tr><th>'._IKTATOSZAM.'</th><td>';
+		echo '<input type="text" name="iktatoszam" />';
+	    echo '</td></tr>';
+	echo '</table>';
+
+	echo '<div><input type="submit" value="'._OK.'" /></div>'."\n";
+
+	formEnd();
+    }
+
+    function putDiakZaradekok($ADAT) {
+
+	formBegin(array('class'=>'diakZaradek'));
+	echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />';
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
+	echo '<input type="hidden" name="action" value="zaradekTorles" />';
+	echo '<table>'."\n";
+
+	echo '<thead><tr>';
+	    echo '<th>'._DATUM.'</th>';
+	    echo '<th>'._SORSZAM.'</th>';
+	    echo '<th>'._SZOVEG.'</th>';
+	    echo '<th colspan="2">'._DOKUMENTUM.'</th>';
+	echo '</tr></thead>'."\n";
+	echo '<tfoot></tfoot>'."\n";
+	echo '<tbody>';
+	for ($i = 0; $i < count($ADAT['diakZaradekok']); $i++) {
+	    echo '<tr>';
+	    echo '<td>'.$ADAT['diakZaradekok'][$i]['dt'].'</td>';
+	    echo '<td class="jobbra">'.$ADAT['diakZaradekok'][$i]['sorszam'].'</td>';
+	    echo '<td>'.$ADAT['diakZaradekok'][$i]['szoveg'].'</td>';
+	    echo '<td>'.$ADAT['diakZaradekok'][$i]['dokumentum'].'</td>';
+
+	    echo '<td>'; 
+	    if (__NAPLOADMIN) {
+		echo '<input class="confirm delZaradek" title="BIZTOS_TOROL_E" type="submit" value="X" name="del-'.$ADAT['diakZaradekok'][$i]['zaradekId'].'" />';
+	    }
+	    echo '</td>';
+
+	    echo '</tr>'."\n";
+	}
+	echo '</tbody>'."\n";
+	echo '</table>'."\n";	
+	formEnd();
+
+    }
+
+?>

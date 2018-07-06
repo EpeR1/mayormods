@@ -1,0 +1,21 @@
+<?php
+	define('_MONDAY','月曜日');
+	define('_TUESDAY','火曜日');
+	define('_WEDNESDAY','水曜日');
+	define('_THURSDAY','木曜日');
+	define('_FRIDAY','金曜日');
+	define('_SATURDAY','土曜日');
+	define('_SUNDAY','日曜日');
+	define('_JANUARY','1月');
+	define('_FEBRUARY','2月');
+	define('_MARCH','3月');
+	define('_APRIL','4月');
+	define('_MAY','5月');
+	define('_JUNE','6月');
+	define('_JULY','7月');
+	define('_AUGUSTUS','8月');
+	define('_SEPTEMBER','9月');
+	define('_OCTOBER','10月');
+	define('_NOVEMBER','11月');
+	define('_DECEMBER','12月');
+?>

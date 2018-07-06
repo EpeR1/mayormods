@@ -1,0 +1,101 @@
+<?php
+/*
+    Module: base
+    
+    html_base($sessionID,$page,$sub,$f,$lang,$skin,$MENU)
+    html_head($page,$f,$lang,$skin)
+    html_mayor_head($sessionID,$page,$sub,$f,$lang,$MENU,$skin = 'default')
+    html_mayor_foot()
+    //page($page,$sub,$f,$lang,$skin) --> base.php
+    putValidXHTML()
+*/
+
+
+	/* Egy JSON példa
+	    echo '{ "action" : [ '
+	    .'{ "func" : "alert", "param" : [ "Helló", "World" ] }, '
+	    .'{ "func" : "update", "param" : [ { "id" : "updateForm", "content" : "Helló Update" } ]}, '
+	    .'{ "func" : "hide", "param" : [ "settings" ] },'
+	    .'{ "func" : "show", "param" : [ "updateWindow" ] },'
+	    .'{ "func" : "remove", "param" : [ "head" ] },'
+	    .'{ "func" : "removeClass", "param" : [ { "id" : "jegy-1", "class" : "jegy1" } ] },'
+	    .'{}],'
+	    .' "name" : "Violet", "occupation" : "character" }';
+	*/
+
+
+// -------------------------------------------------------------------
+// html_base() : a html oldal szerkezete
+// -------------------------------------------------------------------
+
+function html_base($sessionID,$policy,$page,$sub,$f,$lang,$skin,$MENU) {
+
+    global $_JSON;
+
+    if ($_JSON['result'] === false) @header("HTTP/1.1 400 Bad Request");
+    else @header("HTTP/1.1 200 OK");
+
+    @header('Content-type: application/json; charset=utf-8');
+    @header("Etag: ".__SALTVALUE.'-'.__SALTNAME.'-'.$_SESSION['mayorToken']); // ajax request esetén innen tudható a _SALTVALUE
+
+    _httpHeader();
+
+    if ( (!is_array($_JSON)?false:json_encode($_JSON))  === false) {
+	ob_start();
+	    define('_UNIQUE', uniqid());
+	    //echo '<div id="alertMsg'._UNIQUE.'"></div>';
+	    page($page,$sub,$f,$lang,$skin,$policy);
+	$_JSON['html'] = ob_get_contents();
+	ob_end_clean();
+    }
+    if (is_array($_SESSION['alert']) && count($_SESSION['alert'])>0) {
+	for($i=0; $i<count($_SESSION['alert']); $i++) {
+	    
+	    /* állítsuk össze a hibaüzenetet */
+	    $_E = explode(':', $_SESSION['alert'][$i]);	    
+	    $_JSON['alert'][] = $_E;
+	}
+	$_JSON['alertHTML'] = _html_base_alert($_SESSION['alert']); // UJ
+    }
+    echo json_encode($_JSON);
+    $_SESSION['alert'] = array();
+
+}
+
+function _html_base_alert($alert) {
+    if (is_array($alert))
+	foreach($alert as $a) {
+            $param = array();
+            $tmp = explode(':', $a);
+            $aType = readVariable($tmp[0], 'enum', 'message', array('message','info','page')); $aCode = $tmp[1];
+            for ($p = 2; $p < count($tmp); $p++) $param[] = htmlspecialchars($tmp[$p]);
+            $pstr = '';
+            // preparing $msg
+            if (!isset($ALERT_MSG[$aCode]) || $ALERT_MSG[$aCode] == '')
+                $msg = $ALERT_MSG['default'].' (<span class="alertParam">'.$aType.':'.$aCode.')</span>';
+            else $msg = $ALERT_MSG[$aCode];
+
+            // paraméter behelyettesítés
+            for($i = 0; $i < count($param); $i++) {
+                $_msg = $msg;
+                $msg = @str_replace("%$i%",'<span class="alertParam">'.($param[$i]).'</span>',$msg);
+                if ($param[$i] != '' and $_msg == $msg) $pstr .= '<span class="alertParam">'.($param[$i]).'</span>,';
+            }
+            if ($pstr != '') $msg .= ' (' . substr($pstr,0,-1) . ')';
+            if (($aType == 'message') or ($aType == 'page')) {
+                $title = _ERROR;
+                $class = 'errorMsg';
+                if ($aType == 'page') $showPage = false;
+            } else {
+                $title = _INFORMATION;
+                $class = 'infoMsg';
+            }
+            $msg = '<span>'.$title.':</span> ' . $msg;
+            $showPage .= '<div class="'.$class.'">'.str_replace('***','<br/>',$msg).'</div>'."\n";
+        }
+
+        return $showPage;
+
+}
+
+?>

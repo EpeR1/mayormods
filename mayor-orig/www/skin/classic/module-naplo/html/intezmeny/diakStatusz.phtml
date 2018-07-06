@@ -1,0 +1,97 @@
+<?php
+
+    function putDiakJogviszonyForm($ADAT) {
+
+	global $Zaradek;
+
+	echo '<div class="dj">'."\n";
+	formBegin();
+	    echo '<input type="hidden" name="action" value="diakAdatModositas" />'."\n";
+	    echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+	    echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+	    echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+	    echo '<label for="jogviszonyKezdete">'._JOGVISZONY_KEZDETE.'</label>';
+	    echo '<input type="text" id="jogviszonyKezdete" name="jogviszonyKezdete" value="'.$ADAT['diakAdat']['jogviszonyKezdete'].'" class="date" />';
+	    echo '<label for="jogviszonyVege">'._JOGVISZONY_VEGE.'</label>';
+	    echo '<input type="text" id="jogviszonyVege" name="jogviszonyVege" value="'.$ADAT['diakAdat']['jogviszonyVege'].'" class="date" />';
+	    echo '<p>'._JELENLEGI_STATUSZ.': '.$ADAT['diakAdat']['statusz'].'</p>';
+	    echo '<input type="submit" value="'._OK.'" title="'._BIZTOS_MODOSIT.'" class="confirm" />'."\n";
+	formEnd();
+
+	echo '<hr />';
+
+	echo '<p>'._JOGVISZONYVALTOZASOK.'</p>';
+	echo '<ul>'."\n";
+	foreach ($ADAT['diakStatusz'] as $i => $djAdat) {
+	    echo '<li>';
+
+	    formBegin(array('class'=>'statusz'));
+		echo '<input type="submit" value="'._TOROL.'" title="'._BIZTOS_TOROL.'" class="confirm" />'."\n";
+		echo '<p><span class="dt">'.$djAdat['dt'].': '.$djAdat['statusz'].'</span></p>'."\n";
+		echo '<input type="hidden" name="action" value="diakJogviszonyTorles" />'."\n";
+		echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+		echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+		echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+		echo '<input type="hidden" name="dt" value="'.$djAdat['dt'].'" />'."\n";
+		echo '<input type="hidden" name="statusz" value="'.$djAdat['statusz'].'" />'."\n";
+		if (is_array($djAdat['zaradek'])) echo '<input type="hidden" name="zaradekId" value="'.$djAdat['zaradek']['zaradekId'].'" />'."\n";
+	    formEnd();
+
+	    formbegin(array('class'=>'zaradek'));
+		echo '<input type="hidden" name="action" value="diakZaradek" />'."\n";
+		echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
+		echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />'."\n";
+		echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />'."\n";
+		echo '<input type="hidden" name="dt" value="'.$djAdat['dt'].'" />'."\n";
+		echo '<input type="hidden" name="zaradekId" value="'.$djAdat['zaradek']['zaradekId'].'" />'."\n";
+	    echo '<h2>'._JELENLEGI_ZARADEK.'</h2><p>';
+	    if (is_array($djAdat['zaradek'])) echo $djAdat['zaradek']['szoveg'].' ['.$djAdat['zaradek']['sorszam'].'/'.$djAdat['zaradek']['zaradekId'].']';
+	    else echo _NINCS;
+	    echo '</p>'."\n";
+	    echo '<input type="submit" value="'._MEHET.'" style="display: none;" />'."\n";
+	    echo '<h2>'._UJ_MODOSITOTT_ZARADEK.'</h2>'."\n";;
+	    echo '<select name="zaradekIndex" class="zaradek" id="s'.$i.'">'."\n";
+		echo '<option value=""> - </option>'."\n";
+	    foreach ($ADAT['statusz2zaradek'][ $djAdat['statusz'] ] as $zaradekIndex) {
+		echo '<option value="'.$zaradekIndex.'">'.$Zaradek[$zaradekIndex]['szoveg'].'</option>'."\n";
+	    }
+	    echo '</select>'."\n";
+	    echo '<div></div>';
+	    formEnd();
+
+	    echo '</li>'."\n";
+	}
+	echo '</ul>'."\n";
+
+	echo '<hr />';
+
+	echo '<p>'._KIMARADT_JOGVISZONY_ZARADEKOK.'</p>';
+	echo '<ul>'."\n";
+	foreach ($ADAT['diakZaradekok'] as $dt => $dtAdat) {
+	    foreach ($dtAdat as $j => $dzAdat) {
+		if (in_array($dzAdat['zaradekIndex'], $ADAT['jogviszonyZaradekok'])) {
+		    echo '<li>';
+		    echo $dzAdat['dt'].': ['.$dzAdat['sorszam'].'/'.$dzAdat['zaradekId'].']'.$dzAdat['szoveg'].' ('.$dzAdat['dokumentum'].')';
+		    echo '</li>'."\n";
+		}
+	    }
+	}
+	echo '</ul>'."\n";
+	echo '</div>'."\n"; // class="dj"
+
+    }
+
+    function putHibasJogviszony($ADAT) {
+
+	if (count($ADAT['hibas']['tobbszoros']) == 0) return;
+	echo '<h2>'._HIBAS_JOGVISZONYU_DIAKOK.'</h2>';
+	echo '<h3>'._TOBBSZOROS_JOGVISZONY.'</h3>'; // egy stártusz egymás követlenül után többször is szerepel
+
+	foreach ($ADAT['hibas']['tobbszoros'] as $i => $diakId) {
+	    echo '<a href="'.href('index.php?page=naplo&sub=intezmeny&f=diakStatusz&diakId='.$diakId).'">';
+	    echo $diakId;
+	    echo '</a>, ';
+	}
+    }
+
+?>

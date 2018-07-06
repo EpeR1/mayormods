@@ -1,0 +1,61 @@
+<?php
+
+    function putSzemeszterAdat($ADAT) {
+
+	$Sz = $ADAT['szemeszterAdat'];
+
+	formBegin(array('class'=>'szemeszter'));
+	echo '<input type="hidden" name="action" value="idoszakModositas" />'."\n";
+	echo '<input type="hidden" name="szemeszterId" value="'.$Sz['szemeszterId'].'" />'."\n";
+
+
+//	echo '<h1>'.$Sz['tanev'].'/'.$Sz['szemeszter'].'('.$Sz['szemeszterId'].')</h1>'."\n";
+//	echo '<p>'.$Sz['kezdesDt'].' - '.$Sz['zarasDt'].' ('.$Sz['statusz'].')</p>'."\n";
+	echo '<h2>'._IDOSZAKOK.'</h2>';
+	echo '<table align="center" cellpadding="1" cellspacing="1">';
+	for ($i = 0; $i < count($Sz['idoszak']); $i++) {
+
+	    echo '<tr>';
+		echo '<td><input id="t'.$i.'" type="checkbox" name="torlendo[]" value="'.$Sz['idoszak'][$i]['idoszakId'].'" title="'._TORLENDO.'" /></td>'."\n";
+		echo '<td><input type="hidden" name="idoszakId[]" value="'.$Sz['idoszak'][$i]['idoszakId'].'" />'."\n";
+		echo '<label for="t'.$i.'">'.$Sz['idoszak'][$i]['tipus'].':</label></td>';
+		echo '<td><input type="text" name="tolDt[]" value="'.$Sz['idoszak'][$i]['tolDt'].'" class="datetime txt" /></td>'."\n";
+		echo '<td><input type="text" name="igDt[]" value="'.$Sz['idoszak'][$i]['igDt'].'" class="datetime txt" /></td>'."\n";
+	    echo '</tr>'."\n";
+
+	}
+	echo '</table>'."\n";
+
+	echo '<input type="submit" value="'._TORLES.'" />'."\n";
+
+	formEnd();
+    }
+
+    function putUjIdoszak($szemeszterId, $idoszakTipusok) {
+
+	formBegin(array('class'=>'szemeszter'));
+
+	echo '<input type="hidden" name="action" value="ujIdoszak" />'."\n";
+	echo '<input type="hidden" name="szemeszterId" value="'.$szemeszterId.'" />'."\n";
+
+	echo '<h2>'._UJ_IDOSZAK.'</h2>';
+
+	echo '<label for="tolDt">'._TOLDT.'</label>'."\n";
+		echo '<input class="datetime" type="text" name="tolDt" id="tolDt" value="" />'."\n";
+	echo '<label for="igDt">'._IGDT.'</label>'."\n";
+		echo '<input class="datetime" type="text" name="igDt" id="igDt" value="" />'."\n";
+	echo '<label for="tipus">'._TIPUS.'</label>'."\n";
+	    echo '<select name="tipus" id="tipus">'."\n";
+	    for ($i = 0; $i < count($idoszakTipusok); $i++) {
+		echo '<option value="'.$idoszakTipusok[$i].'">'.$idoszakTipusok[$i].'</option>'."\n";
+	    }
+	    echo '</select>'."\n";
+
+	echo '<input type="submit" value="'._OK.'" />'."\n";
+
+	formEnd();
+
+    }
+
+
+?>

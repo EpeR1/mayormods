@@ -1,0 +1,95 @@
+<?php
+
+    function putOraFelvetelForm($tankorId, $tanarId, $dt, $ora, $teremId, $ADAT) {
+	formBegin(array('class'=>'pluszora'));
+	    echo '<input type="hidden" name="action" value="oraFelvetele" />';
+	    echo '<input type="hidden" name="tankorId" value="'.$tankorId.'" />';
+	    echo '<input type="hidden" name="tanarId" value="'.$tanarId.'" />';
+	    echo '<input type="hidden" name="dt" value="'.$dt.'" />';
+	    echo '<input type="hidden" name="ora" value="'.$ora.'" />';
+	    echo '<input type="hidden" name="teremId" value="'.$teremId.'" />';
+	    
+	    echo '<label for="eredet">'._EREDET.'</label>';
+	    echo '<select name="eredet" id="eredet">';
+		echo '<option value="plusz">'._PLUSZ.'</option>';
+		echo '<option value="órarend">'._ORAREND.'</option>';
+	    echo '</select>';
+	    if ($ADAT['tipus'] != 'normál') echo '<strong> '.$ADAT['tipus'].' </strong>';
+
+	    echo '<input type="submit" value="'._ORA_FELVETELE.'" />';
+	formEnd();
+    }
+
+    function putOrak($Orak, $title, $ADAT) {
+
+	echo '<h1>'.ucfirst($title).' '._ORAI.'</h1>';
+	echo '<ul class="pluszora">';
+
+	    for ($i = $ADAT['napiMinOra']; $i <= $ADAT['napiMaxOra']; $i++) {
+		echo '<li>';
+		    echo '<span class="oraszam">' . $i . '. ' . _ORA . '</span> ';
+		    if (is_array($Orak[$i])) {
+			if (is_array($Orak[$i][0])) {
+			    for ($j = 0; $j < count($Orak[$i]); $j++) {
+				echo '<span>' . $Orak[$i][$j]['tankorNev'] . '</span> ';
+			    }
+			} else {
+			    echo '<span>' . $Orak[$i]['tankorNev'] . '</span>';
+			}
+		    }
+		echo '</li>';
+	    }
+
+	echo '</ul>';
+    }
+
+    function putLila($ADAT) {
+
+	echo '<h1>'._CSOPORTOS_PLUSZORA.'</h1>';
+	
+	formBegin(array('class'=>'pluszLila'));
+
+	    echo '<input type="hidden" name="action" value="csoportos" />';
+
+	    echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />';
+	    echo '<input type="hidden" name="ora" value="'.$ADAT['ora'].'" />';    
+
+	    echo '<label>'._TANAROK.'</label>';
+
+		echo '<button type="button" id="mindentanar">minden tanár</button>';
+		echo '<button type="button" id="invertal">kijelölés invertálása</button>';   
+//		echo '<button type="button" id="munkakozosseg">munkaközösség</button>';
+//		echo '<button type="button" id="targy">tárgy</button>';
+//		echo '<button type="button" id="tankorcsoport">tankörcsoport</button>';
+//		echo '<button type="button" id="tankorblokk">tankörblokk</button>';
+		echo '<select name="munkakozossegSelector" id="munkakozossegSelector">';
+		echo '<option value=""> - </option>';
+		for ($i=0; $i<count($ADAT['munkakozossegek']); $i++) {
+			$_D = $ADAT['munkakozossegek'][$i];
+			echo '<option value="'.$_D['mkId'].'">'.$_D['leiras'].' ('.$_D['mkVezNev'].')</option>';
+		}
+		echo '</select >';
+		echo '<button type="button" class="selectorButton" id="selectorPlus" ><span class="icon-plus"></span></button>';
+		echo '<button type="button" class="selectorButton" id="selectorMinus"><span class="icon-minus"></span></button>';
+	    echo '<br/>';
+    	    echo '<select multiple="multiple" size="15" name="tanarIdk[]" id="tanarLista">';
+		for ($i=0; $i<count($ADAT['tanarok']); $i++) {
+		    $_D = $ADAT['tanarok'][$i];
+		    echo '<option value="'.$_D['tanarId'].'" data-mk="['.implode(',',$ADAT['mkTanar']['tanarMk'][$_D['tanarId']]).']">'.$_D['tanarNev'].'</option>';
+		}
+	    echo '</select>';
+	    echo '<label>'._FELADAT.'</label>';
+    	    echo '<select name="feladatTipusId">';
+	    foreach ($ADAT['feladatTipus'] as $feladatTipusId => $FA) {
+		    echo '<option value="'.$feladatTipusId.'">'.$FA['feladatTipusLeiras'].'</option>';
+	    }
+	    echo '</select> ';
+	    echo '<label>'._LEIRAS.'</label>';
+	    echo '<input type="text" name="leiras" placeholder="a feladat részletes leírása"  style="width:50%;" />';
+	    echo '<input type="submit"> ';
+	    _inlineHelp('A gomb megnyomásával a kijelölt tanároknak előírt pluszfeladatot rögzítünk az adott nap ('.($ADAT['dt']).') adott órájára ('.$ADAT['ora'].')');
+	formEnd();
+
+    }
+
+?>

@@ -1,0 +1,11 @@
+
+    fieldset { margin: 20px; }
+    fieldset.alapadatok p { text-align: center; font-style: italic; }
+    fieldset.alapadatok p span { color: rgb(100,50,25); font-weight: bold; font-style: normal; } 
+
+    #temakor { list-style-type: none; }
+    #temakor li { margin-top: 10px; }
+    #temakor span.oraszam { display: block; float: left; width: 120px; text-align: right; color: rgb(160,80,40); margin-right: 6px; }
+    #temakor div.megnevezes { display: inline-block; color: #000; font-weight: normal; font-style: normal; } 
+
+    fieldset.tankor ul li span { color: rgb(100,50,25); font-weight: bold; }

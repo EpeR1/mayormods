@@ -1,0 +1,279 @@
+<?php
+
+    function putHianyzok($ORAADAT, $ADAT) {
+
+	global $napiMinOra, $napiMaxOra;
+
+	// make assoc
+	for($i=0; $i<count($ADAT['hianyzok']); $i++) {
+	    $_D = $ADAT['hianyzok'][$i];
+	    $HADAT[$_D['oraId']][$_D['diakId']][$_D['tipus']] = $_D;
+	}
+	
+	$NEVEK = $ADAT['nevsor']['nevek'];
+	$RESZLETEK = $ADAT['nevsor']['adatok'];
+
+	$HTIPUSOK1 = array('','késés','hiányzás');
+	if (__EGYENRUHA_HIANY_REGISZTRALAS === true) $HTIPUSOK2 = array('egyenruha hiány','felszerelés hiány','felmentés');
+	else $HTIPUSOK2 = array('','felszerelés hiány','felmentés');
+	$ITIPUSOK = getEnumField('naplo', 'hianyzas', 'igazolas'); // ez inkább a pre be lenne való?
+
+	$dt = $ORAADAT['dt'];
+	$ora = $ORAADAT['ora'];
+
+	$jovobeli = (strtotime($dt)>time()); // ezt csak itt tiltjuk le, a pre-ben nem!
+
+	if (!is_array($NEVEK) || count($NEVEK)==0) 
+	    if (!$ADAT['tagokFelvehetok'])
+		return false;
+	
+
+	formBegin(array('class'=>"vissza",'action'=>href('index.php?page=naplo&sub=haladasi&f=haladasi')));
+	echo '<input type="hidden" name="igDt" value="'.$ORAADAT['dt'].'" />';
+	echo '<input type="hidden" name="tanarId" value="'.$ORAADAT['ki'].'" />';
+	echo '<input type="submit" value="&larr; '._HALADASI.'" />';
+	formEnd();
+
+	if ($ADAT['tankorAdat']['oratervi'] != 'óratervi') $class = 'delutani';
+	formBegin(array('method' => 'post', 'action' => '','class' => $class));
+
+        echo '<table align="center"  cellspacing="1" cellpadding="1" class="csoportNevsorHianyzok">'."\n";
+	echo '<thead class="oraAdat">';
+        echo '<tr><th colspan="11">';
+	    _putOraAdat($ORAADAT);	
+	echo '</th></tr></thead>';
+        echo '<thead class="fejlec">';
+        echo '<tr><th colspan="11">'.
+		'<span title="'.
+		_JELENLET.': '.$ADAT['tankorAdat']['jelenlet'].'/'.
+		_REGISZTRALANDO.': '.$ADAT['tankorAdat']['regisztralando'].'/'.
+		_HIANYZAS_BELESZAMIT.': '.$ADAT['tankorAdat']['hianyzasBeleszamit'].
+		'">'.$ADAT['tankorAdat']['oratervi'].', '.$ADAT['tankorAdat']['jelleg'].'</span>';
+	echo '</th></tr>';
+        echo '<tr><th>'._ADOTT_NAP.'</th><th colspan="3">'._NEV_OSZTALY.'</th><th>'._J.'</th><th>'._K.'</th><th>'._H.'</th>'.
+		'<th title="'._EGYENRUHA.'">'._EH.'</th>'.'<th title="'._FELSZERELES.'">'._FH.'</th>'.'<th title="'._FELMENTETT.'">'._FM.'</th>'.'<th>'._IGAZOLT.'</th></tr>';
+        echo '</thead>';
+        echo '<tfoot>';
+        echo '<tr><th colspan="11">';
+                echo '<input type="submit" name="gomb" value="'._OK.'" />';
+                echo '<input type="hidden" name="action" value="hianyzokRogzitese" />';
+                echo '<input type="hidden" name="oraId" value="'.$ORAADAT['oraId'].'" />';
+        echo '</th></tr>';
+        echo '</tfoot>';
+
+
+	/* Ha a tagok felvehetők (módosíthatók) - tipikusan ilyen a tanulószoba */
+	if ($ADAT['tagokFelvehetok']===true) {
+	    echo '<body>';
+		echo '<tr class="ujTag">';
+		    echo '<th>';
+			echo _UJ_TAG;
+		    echo '</th>';
+		    echo '<td colspan="8" >';
+		    echo '<select name="diakId">';
+			    echo '<option value=""></option>';
+			    for ($i=0; $i<count($ADAT['diakok']); $i++) {
+				$_D = $ADAT['diakok'][$i];
+				echo '<option value="'.$_D['diakId'].'">'.$_D['diakNev'].' ('.$_D['diakId'].')</option>';
+			    }
+			echo '</select>';
+		    echo '</td>';
+		echo '</tr>';
+	    echo '</body>'."\n";
+	}
+	/* -- */
+
+
+
+        echo '<tbody>';
+	$i=0;
+	if (is_array($NEVEK))
+	foreach($NEVEK as $_diakId => $DA) {
+	    $JOG = $ADAT['jogosultsag'][$_diakId]['orak'][$ORAADAT['ora']];
+	    $JOGADAT = $ADAT['jogosultsag'][$_diakId]['igazolas'];
+	    $jogviszony = ekezettelen(str_replace(' ','',$ADAT['diakJogviszony'][$_diakId][$ORAADAT['dt']]['statusz']));
+	    $felmentett_class = (in_array($ADAT['tankorAdat']['tankorId'], $ADAT['felmentes'][$_diakId])) ? ' felmentett':'';
+	    echo '<tr class="'.$jogviszony.$felmentett_class.'">';
+		echo '<td>';
+		    _putHianyzasKistabla($ADAT['napiHianyzasok'][$_diakId], $ORAADAT, array('napiMinOra' => $napiMinOra, 'napiMaxOra' => $napiMaxOra));
+		echo '</td>';
+		echo '<td>';
+		    putFace($DA['diakId'],'diak','30');
+		echo '</td>';
+		echo '<th class="c diakNev" data-diakid="'.$_diakId.'">';
+		    echo '<span>';
+			printf("%02s. ", $i+1);
+		    echo '</span>';
+		echo '</th>';
+		echo '<td colspan="1" title="'.$ADAT['diakJogviszony'][$_diakId][$ORAADAT['dt']]['statusz'].'">';
+		    echo '<a href="'.href('index.php?page=naplo&sub=hianyzas&f=diak&diakId='.$_diakId).'">';
+			echo $DA['diakNev'];
+		    echo '</a>';
+		echo '</td>';
+		if (
+		    $ADAT['tankorAdat']['regisztralando']=='igen' 
+		    && !in_array($ADAT['tankorAdat']['tankorId'], $ADAT['felmentes'][$_diakId])
+		    && (in_array($jogviszony, array('jogviszonybanvan','vendegtanulo'))
+			|| ($jogviszony == 'magantanulo' && $ADAT['tankorAdat']['jelleg']=='gyakorlat')
+		    )
+		) {
+		    $_igtipus='';
+		    /* prepare data */
+		    reset($HTIPUSOK1);
+		    $__jelen=true;
+		    foreach ($HTIPUSOK1 as $j => $_tipus) {
+			if ($HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['hianyzasId']!='') $__jelen=false;
+		    }
+
+		    /* -- */
+		    reset($HTIPUSOK1);
+		    foreach ($HTIPUSOK1 as $j => $_tipus) {
+			$_disp='';
+			$_hid = $HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['hianyzasId']; 
+			if ($_hid!='') $_igtipus = $_tipus;
+			if ($_tipus=='') $_csstipus = 'jelen'; else $_csstipus=$_tipus;
+			echo '<td class="'.$_csstipus.'">';
+			if ($JOG['beirhato']==true && !$jovobeli) {
+			    $_radio = ($_hid!='' || ($_tipus=='' && $__jelen)) ?'checked="checked"' : '';
+			    //echo $_diakId.'/'.$_tipus.'/'.$_hid;
+			    if ($_tipus=='késés') {
+				$_perc = intval(($HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['perc']));
+				if ($_perc >0) $_kesett = ' kesett'; else $_kesett = '';
+				echo '<input class="perc'.$_kesett.'" type="text" maxlength="2" size="1" name="PERC_'.$i.'" value="'.$_perc.'" />';
+				$_disp = 'style="display:none"';
+			    }
+			    echo '<input type="radio" id="HIANYZOK1_'.$i.'" name="HIANYZOK1_'.$i.'" value="'.$_diakId.'/'.$dt.'/'.$ora.'/'.$_tipus.'/'.$_hid.'" '. $_radio . ' '.$_disp.'/>';
+
+			} else {
+			    if (($__jelen && $_tipus=='') || $_hid!='') {
+				if ($_hid!='') echo '<input type="hidden" name="HIANYZOK1_'.$i.'" value="'.$_diakId.'/'.$dt.'/'.$ora.'/'.$_tipus.'/'.$_hid.'"/>';
+				if ($_tipus=='késés' && ($_perc = intval(($HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['perc']))) != 0) {
+				    echo '<input class="perc'.$_kesett.'" type="text" maxlength="2" size="1" name="PERC_'.$i.'" value="'.$_perc.'" disabled="disabled" />';
+				    //echo '<span class="perc">'.$_perc.'</span>';
+				} else {
+				    _putImg($_tipus,$__jelen);
+				}
+			    }
+			}
+			echo '</td>';	
+		    }
+		    /* === */
+		    if ($JOG['fbeirhato']==true && !$jovobeli) {
+/*
+			echo '<td colspan="'.count($HTIPUSOK2).'" class="fbetus">';
+			    echo '<select id="HIANYZOK2_'.$i.'" name="HIANYZOK2_'.$i.'">';
+			    echo '<option value="'.$_diakId.'/"></option>';
+			    foreach ($HTIPUSOK2 as $j => $_tipus) {
+				$_hid = $HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['hianyzasId'];
+				$_radio = ($_hid!='') ?'selected="selected"' : '';
+                		echo '<option value="'.$_diakId.'/'.$dt.'/'.$ora.'/'.$_tipus.'/'.$_hid.'" '. $_radio .'>'.$_tipus.'</option>';
+			    }
+			    echo '</select>';
+			echo '</td>
+*/
+			foreach ($HTIPUSOK2 as $j => $_tipus) {
+			    echo '<td title="'.$_tipus.'" class="fbetus">';
+
+				$_hid = $HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['hianyzasId'];
+				if ($_tipus != '') {
+				    if ($_hid != '') $chk = ' checked="checked" '; else $chk = '';
+				    echo '<input type="checkbox" id="HIANYZOK'.($j+10).'_'.$i.'" name="HIANYZOK'.($j+10).'_'.$i.'" value="'.$_diakId.'/'.$dt.'/'.$ora.'/'.$_tipus.'/'.$_hid.'"'.$chk.' />';
+				}
+			    echo '</td>';
+			}
+		    } else {
+			echo '<td colspan="'.count($HTIPUSOK2).'" class="fbetus">';
+
+			    foreach ($HTIPUSOK2 as $j => $_tipus) {
+				$_hid = $HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['hianyzasId'];
+                		if ($_hid!='') {
+				    echo '<input type="hidden" name="HIANYZOK2_'.$i.'" value="'.$_diakId.'/'.$dt.'/'.$ora.'/'.$_tipus.'/'.$_hid.'" '. $_radio .'/>';
+				    echo $_tipus;
+				}
+			    }
+			echo '</td>';
+		    }
+		    echo '<td>';
+			    _putIgazolasSelect($HADAT[$ORAADAT['oraId']][$_diakId][$_igtipus], $ITIPUSOK,$JOG,$JOGADAT,array('diakId'=>$_diakId,'oraId'=>$ORAADAT['oraId'],'hianyzasId'=>$_hid));
+		    echo '</td>';
+		} else {
+		    echo '<td class="nemkot" colspan="'.(count($HTIPUSOK2)+count($HTIPUSOK2)+count($ITIPUSOK)).'">';
+			// echo _ORARA_NEM_KOTELEZO_BEJARNIA;
+			echo _NEM_REGISZTRALANDO;
+		    echo '</td>'."\n";
+		}
+
+	    echo '</tr>';
+	    $i++;
+	}
+	echo '</tbody>';
+	echo '</table>';
+	
+	formEnd();
+	
+    }
+
+    function _putIgazolasSelect($ADAT,$TIPUSOK,$JOG,$JOGADAT,$SET) {
+	//"'.$_diakId.'/'.$dt.'/'.$ora.'/'.$_tipus.'/'.$_hid.'"
+	if (is_array($ADAT)) {
+	    if ($JOG['igazolhato']===true) {
+		echo '<select name="IGAZOLAS[]">'."\n";
+                echo '<option value="'.$SET['diakId'].'////'.$ADAT['hianyzasId'].'">'._IGAZOLATLAN.'</option>'."\n";
+		for($i=0; $i<count($TIPUSOK); $i++){
+		    $_SEL = ($ADAT['igazolas']==$TIPUSOK[$i]) ? ' selected="selected"':'';
+		    if (in_array($TIPUSOK[$i], $JOGADAT['tipusok'])) {
+			echo '<option value="'.$SET['diakId'].'///'.$TIPUSOK[$i].'/'.$ADAT['hianyzasId'].'" '.$_SEL.'>'.$TIPUSOK[$i].'</option>'."\n";
+		    }
+		}
+		// és a kieg, ha elfogyott volna, de ez még azzal van igazolva:
+                if (!in_array($ADAT['igazolas'],$JOGADAT['tipusok']) && $ADAT['statusz']!='igazolatlan') {
+                        echo '<option value="" selected="selected">'.$ADAT['igazolas'].'</option>'."\n";
+            	}
+		echo '</select>'."\n";
+	    } else {
+		echo $ADAT['igazolas'];
+	    }
+	}
+
+    }
+
+    function _putOraAdat($ORAADAT) {
+	echo '<table align="center" class="oraAdat">';
+	echo '<tr><td>';
+	    echo '<span title="'.$ORAADAT['oraId'].'">';
+	    echo $ORAADAT['dt'].', '.$ORAADAT['ora'].'.'._ORA.'</span>';
+	echo '</td><td>';
+	    echo $ORAADAT['tankorNev'].' - '.$ORAADAT['kiCn'];
+	echo '</td></tr><tr>';
+	echo '<th colspan="2">';
+	    if ($ORAADAT['tankorTipus'] == 'délutáni') echo nagybetus($ORAADAT['tankorTipus']).' ';
+	    echo $ORAADAT['leiras'];
+	echo '</th></tr>';
+	echo '</table>';
+    }
+
+
+    function putOraAdatok($oraAdat) {
+    
+	list($evf,$oszt,$targy,$targycsoport,$tipus,$index) = explode('_',$oraAdat['tankor']);
+
+	#echo '<table align="center" class="oraAdatok" style="width:90%" cellpadding="0" cellspacing="0"><tr><td style="text-align: center">';
+	echo '<table align="right" style="border-style: none none dotted none; border-width: 0px 0px 1px 0px; border-color: #999999">';
+	echo '<tr>';
+	    echo '<td>'.str_replace('-','.',$oraAdat['dt']).'.</td>';
+	    echo '<td>'.$oraAdat['ora'].'. óra</td>';
+	    echo "<td> ~ $evf.$oszt $targy, $tipus $targycsoport</td>";
+	    echo '<td> ~ '.$oraAdat['tanarCn'].'</td>';
+	echo '</tr>';
+	echo '</table>'."\n";
+	#echo '</td></tr></table>'."\n";
+	#echo '<br/>';
+    }
+
+    function _putImg($tipus,$jelen) {
+	if ($jelen && $tipus=='') echo '<img src="/skin/classic/module-naplo/img/hianyzas/green.gif" alt="x" />';
+	elseif ($tipus=='késés') echo '<img src="/skin/classic/module-naplo/img/hianyzas/yellow.gif" alt="x" />';
+	elseif ($tipus=='hiányzás') echo '<img src="/skin/classic/module-naplo/img/hianyzas/red.gif" alt="x" />';
+    }
+
+?>

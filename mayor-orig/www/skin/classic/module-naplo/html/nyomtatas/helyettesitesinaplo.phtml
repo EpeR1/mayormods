@@ -1,0 +1,17 @@
+<?php
+
+    function putDownloadForm($tolDt, $igDt) {
+
+	formBegin(array('class'=>'letolt'));
+
+	echo '<input type="hidden" name="action" value="naploGeneralas" />'."\n";
+	echo '<input type="hidden" name="tolDt" value="'.$tolDt.'" />'."\n";
+	echo '<input type="hidden" name="igDt" value="'.$igDt.'" />'."\n";
+
+	echo '<input type="submit" value="'._DOWNLOAD.'" />'."\n";
+
+	formEnd();
+
+    }
+
+?>

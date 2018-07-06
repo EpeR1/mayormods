@@ -1,0 +1,167 @@
+
+	table.haladasiBejegyzesek {
+    	    background-color: rgb(50,60,80);
+	    margin-top: 30px;
+	    font-size: 10px;
+	    width: 98%;
+	}	
+	table.haladasiBejegyzesek tbody tr:hover td {
+	    background-color: white;
+        }
+	table.haladasiBejegyzesek tbody tr td input:focus {
+	    background-color:rgb(240,210,250);
+        }
+
+	table.haladasiBejegyzesek tbody.parosNap {
+    	    background-color: #cccccc;
+	}
+	table.haladasiBejegyzesek tbody.paratlanNap {
+    	    background-color: #eeeeee;
+	}
+	table.haladasiBejegyzesek tbody td.ora {
+	    text-align: center;
+	}
+
+/* TBODY TH */
+
+	table.haladasiBejegyzesek tbody th.nincsOra {
+	    background-color: rgb(200,200,200);
+	    color: rgb(100,100,100);
+	    text-align: center;
+	    border: none;
+	    font-weight: normal;
+	}
+	table.haladasiBejegyzesek tbody th.nap {
+	    text-align: center;
+    	    background-color: #666688;
+	    color: white;
+	    border: none;
+	}
+	table.haladasiBejegyzesek tbody.szunet th.nap {
+    	    background-color: #778877;
+	}
+	table.haladasiBejegyzesek tbody.tanitasNelkul th.nap {
+    	    background-color: #aaaa44;
+	}
+
+/* --- */
+
+	table.haladasiBejegyzesek tbody td.dolgozat {
+    	    background-color: #ffaa44;
+	    padding-left: 20px;
+	}
+	table.haladasiBejegyzesek tbody td.dolgozat a {
+	    text-decoration: none;
+	    color: black;
+	}
+
+	table.haladasiBejegyzesek tbody td.nincsBeirva {
+	    font-style:italic;
+	}
+
+	table.haladasiBejegyzesek th {
+		border-style: none none solid none;
+		border-width: 0 0 2px 0;
+		border-color: #556677;
+	        background-color: rgb(50,60,80);
+		color: rgb(210,215,220);
+		border-style: solid;
+		border-width: 1px;
+	}
+	table.haladasiBejegyzesek th.fejlec8 {
+	    font-size: 14px;
+	    height: 30px;
+	    text-align: center
+	}
+	table.haladasiBejegyzesek th.fejlec8 a { color: white }
+
+
+/*	table.haladasiBejegyzesek td { background-color: rgb(200,200,200); } */
+	table.haladasiBejegyzesek td.osztaly {
+	    text-align:".";
+	    text-align: center;
+	}
+	table.haladasiBejegyzesek select {
+	    font-family: Verdana,Arial;
+	    background-color: rgb(50,60,80);
+	    font-size: 10px;
+	    color: rgb(210,215,220);
+	    border-style: solid;
+	    border-width: 1px;
+	}
+
+	input { font-family: Verdana,Arial; color: inherit }
+	input.data { border-style: none none solid none;
+			 border-width: 1px;
+			 border-color: #dddddd;
+	}
+	input.data:hover { border: solid 1px #556677; background-color: white }
+	table.haladasiBejegyzesek tbody.parosNap input.beirva { background-color: #cccccc; }
+	table.haladasiBejegyzesek tbody.paratlanNap input.beirva { background-color: #eeeeee; }
+
+	table.haladasiBejegyzesek tbody.parosNap input.ajaxRequest { background-color: rgb(200,100,0); }
+	table.haladasiBejegyzesek tbody.paratlanNap input.ajaxRequest { background-color: rgb(200,100,0); }
+	table.haladasiBejegyzesek tbody.parosNap input.ajaxRequestDone,
+	table.haladasiBejegyzesek tbody.paratlanNap input.ajaxRequestDone { color: rgb(0,100,0); }
+
+
+	table.haladasiBejegyzesek tbody.parosNap tr.helyettesit td { background-color: #ccccaa; }
+	table.haladasiBejegyzesek tbody.paratlanNap tr.helyettesit td { background-color: #eeeecc; }
+	table.haladasiBejegyzesek tbody.parosNap tr.helyettesit input.beirva { background-color: #ccccaa; }
+	table.haladasiBejegyzesek tbody.paratlanNap tr.helyettesit input.beirva { background-color: #eeeecc; }
+
+	input.gomb {
+		border: outset 1px #777777; padding: 0px; margin: 0px;
+		background-color: #009900;
+		color: white;
+	}
+
+	input.rejtettGomb { border: none; background-color: rgb(50,60,80); }
+
+	table.haladasiBejegyzesek a.gomb {
+		padding: 1px;
+		background-color: #dddddd;
+		font-size: 10px;
+		border: outset 1px #556677; 
+		margin: 2px;
+		text-decoration: none;
+	}
+	table.haladasiBejegyzesek a.gomb:hover  {
+		padding: 1px;
+		background-color: #556677;
+		font-size: 10px;
+		border: outset 1px #dddddd; 
+		margin: 2px;
+		text-decoration: none;
+		color: white;
+	}
+
+	table.haladasiBejegyzesek a {
+	    display: block;
+	    text-align: center;
+	    color: red;
+	    text-decoration: none;
+	    border: solid 1px red;
+	}
+	table.haladasiBejegyzesek a:hover  {
+	    color: green;
+	    border: green 1px solid;
+	}
+
+	table.haladasiBejegyzesek td.parosOra { background-color: rgb(140,150,160); }
+	table.haladasiBejegyzesek td.paratlanOra { background-color: rgb(140,130,120); }
+	
+	table.haladasiBejegyzesek tr.dolgozat td {
+	    padding: 0px 10px;
+	    background-color: rgb(160,100,120);
+	}
+
+	table.haladasiBejegyzesek tr.dolgozat td a {
+	    color: white;
+	    text-decoration: none;
+	}
+
+	table.haladasiBejegyzesek tr.dolgozat td a:hover {
+	    color: rgb(260,200,220);
+	}
+

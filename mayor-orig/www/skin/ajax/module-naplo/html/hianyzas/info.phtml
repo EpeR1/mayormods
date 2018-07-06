@@ -1,0 +1,18 @@
+<?php
+
+    function putDiakHianyzasInfo($ADAT) {
+	    foreach(array_reverse($ADAT) as $dt => $D) { if ($dt!='') break; }
+	    echo '<div style="text-align: center">';
+	    if ($dt == date('Y-m-d')) {
+		echo _MA.' '._AZ_ORAK.' '.$D['oranHianyzasSzazalek'].'%-n '._VOLT_HIANYZO.'.<br/>';
+		echo _MA.' '.$D['hianyzokSulyozva'].' '._DIAK.' '._HIANYZIK.'.';
+	    } else {
+		list($ev,$ho,$nap) = explode('-',$dt);
+		echo decimal_to_roman($ho).'. '.$nap.'. napon '._AZ_ORAK.' '.$D['oranHianyzasSzazalek'].'%-n '._VOLT_HIANYZO.'.<br/>';
+		echo decimal_to_roman($ho).'. '.$nap.'. napon '.$D['hianyzokSulyozva'].' '._DIAK.' '._HIANYZOTT.'.';
+	    }
+	    echo '</div>';
+	    //echo '<a href="'.href('index.php?page=naplo&sub=hianyzas&f=info&toSkin='._SKIN).'">'._TOVABB.'</a>';
+    }
+
+?>

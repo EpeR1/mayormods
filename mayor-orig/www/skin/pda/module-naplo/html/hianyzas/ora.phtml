@@ -1,0 +1,215 @@
+<?php
+
+    function putHianyzok($ORAADAT, $ADAT) {
+
+	global $napiMinOra, $napiMaxOra;
+
+	// make assoc
+	for($i=0; $i<count($ADAT['hianyzok']); $i++) {
+	    $_D = $ADAT['hianyzok'][$i];
+	    $HADAT[$_D['oraId']][$_D['diakId']][$_D['tipus']] = $_D;
+	}
+	
+	$NEVEK = $ADAT['nevsor']['nevek'];
+	$RESZLETEK = $ADAT['nevsor']['adatok'];
+
+	$HTIPUSOK1 = array('','késés','hiányzás');
+	$HTIPUSOK2 = array('felszerelés hiány','felmentés','egyenruha hiány');
+	$ITIPUSOK = array('','orvosi','szülői','osztályfőnöki','tanulmányi verseny','nyelvvizsga','igazgatói','hatósági');
+
+	$dt = $ORAADAT['dt'];
+	$ora = $ORAADAT['ora'];
+
+	if (!is_array($NEVEK) || count($NEVEK)==0) return false;
+
+	formBegin(array( 'class'=>"vissza", 'action'=>href('index.php?page=naplo&sub=haladasi&f=haladasi')));
+	echo '<input type="hidden" name="igDt" value="'.$ORAADAT['dt'].'" />';
+	echo '<input type="hidden" name="tanarId" value="'.$ORAADAT['ki'].'" />';
+	echo '<input type="submit" value="&larr; '._HALADASI.'" />';
+	formEnd();
+
+	if ($ADAT['tankorAdat']['oratervi'] != 'óratervi') $class = 'delutani';
+	formBegin(array('method' => 'post', 'action' => '','class' => $class));
+
+        echo '<table align="center"  cellspacing="1" cellpadding="1" class="csoportNevsorHianyzok">'."\n";
+	echo '<thead class="oraAdat">';
+        echo '<tr><th colspan="6">';
+	    _putOraAdat($ORAADAT);	
+	echo '</th></tr></thead>';
+        echo '<thead>';
+        echo '<tr><th colspan="6">'.
+		'<span title="'.
+		_JELENLET.': '.$ADAT['tankorAdat']['jelenlet'].'/'.
+		_REGISZTRALANDO.': '.$ADAT['tankorAdat']['regisztralando'].'/'.
+		_HIANYZAS_BELESZAMIT.': '.$ADAT['tankorAdat']['hianyzasBeleszamit'].
+		'">'.$ADAT['tankorAdat']['oratervi'].'</span>';
+	echo '</th></tr>';
+        echo '<tr><th>'._NEV.'</th><th>'._J.'</th><th>'._K.'</th><th>'._H.'</th><th>'._F.'</th><th>'._FM.'</th></tr>';
+        echo '</thead>';
+        echo '<tfoot>';
+        echo '<tr><th colspan="6">';
+                echo '<input type="submit" name="gomb" value="'._OK.'" />';
+                echo '<input type="hidden" name="action" value="hianyzokRogzitese" />';
+                echo '<input type="hidden" name="oraId" value="'.$ORAADAT['oraId'].'" />';
+        echo '</th></tr>';
+        echo '</tfoot>';
+
+        echo '<tbody>';
+	$i=0;
+	foreach($NEVEK as $_diakId => $DA) {
+	    $JOG = $ADAT['jogosultsag'][$_diakId]['orak'][$ORAADAT['ora']];
+	    $JOGADAT = $ADAT['jogosultsag'][$_diakId]['igazolas'];
+	    echo '<tr>';
+//		echo '<td>';
+//		    _putHianyzasKistabla($ADAT['napiHianyzasok'][$_diakId], $ORAADAT, array('napiMinOra' => $napiMinOra, 'napiMaxOra' => $napiMaxOra));
+//		echo '</td>';
+		echo '<td>';
+		    echo '<a href="'.href('index.php?page=naplo&sub=hianyzas&f=diak&diakId='.$_diakId).'">';
+			//printf("%2s. ", $i+1);
+			echo $DA['diakNev'];
+		    echo '</a>';
+		echo '</td>';
+		if (
+		    $ADAT['tankorAdat']['regisztralando']=='igen' 
+		    && 
+//		    $RESZLETEK[$_diakId][0]['jelenlet'] != 'nem kötelező' // az elnevezés félrevezető. Napközi? ILYEN MÁR NINCS!!!
+		    !in_array($ADAT['tankorAdat']['tankorId'], $ADAT['felmentes'][$_diakId])
+		) {
+		    $_igtipus='';
+		    /* prepare data */
+		    reset($HTIPUSOK1);
+		    $__jelen=true;
+		    foreach ($HTIPUSOK1 as $j => $_tipus) {
+			if ($HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['hianyzasId']!='') $__jelen=false;
+		    }
+		    /* -- */
+		    reset($HTIPUSOK1);
+		    foreach ($HTIPUSOK1 as $j => $_tipus) {
+			$_hid = $HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['hianyzasId']; 
+			if ($_hid!='') $_igtipus = $_tipus;
+			if ($_tipus=='') $_csstipus = 'jelen'; else $_csstipus=$_tipus;
+			echo '<td class="'.$_csstipus.'">';
+			if ($JOG['beirhato']==true) {
+			    $_radio = ($_hid!='' || ($_tipus=='' && $__jelen)) ?'checked="checked"' : '';
+			    //echo $_diakId.'/'.$_tipus.'/'.$_hid;
+			    echo '<input type="radio" id="HIANYZOK1_'.$i.'" name="HIANYZOK1_'.$i.'" value="'.$_diakId.'/'.$dt.'/'.$ora.'/'.$_tipus.'/'.$_hid.'" '. $_radio . '/>';
+			    if ($_tipus=='késés') {
+				$_perc = intval(($HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['perc']));
+				echo '<input class="perc" type="text" maxlength="2" size="1" name="PERC_'.$i.'" value="'.$_perc.'" />';
+			    }
+			} else {
+			    if (($__jelen && $_tipus=='') || $_hid!='') {
+				if ($_hid!='') echo '<input type="hidden" name="HIANYZOK1_'.$i.'" value="'.$_diakId.'/'.$dt.'/'.$ora.'/'.$_tipus.'/'.$_hid.'"/>';
+				if ($_tipus=='késés' && ($_perc = intval(($HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['perc']))) != 0) {
+				    echo '<span class="perc">'.$_perc.'</span>';
+				} else {
+				    _putImg($_tipus,$__jelen);
+				}
+			    }
+			}
+			echo '</td>';	
+		    }
+		    /* === */
+		    echo '<td colspan="'.count($HTIPUSOK2).'" class="fbetus">';
+			if ($JOG['fbeirhato']==true) {
+			    echo '<select id="HIANYZOK2_'.$i.'" name="HIANYZOK2_'.$i.'">';
+			    echo '<option value="'.$_diakId.'/"></option>';
+			    foreach ($HTIPUSOK2 as $j => $_tipus) {
+				$_hid = $HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['hianyzasId'];
+				$_radio = ($_hid!='') ?'selected="selected"' : '';
+                		echo '<option value="'.$_diakId.'/'.$dt.'/'.$ora.'/'.$_tipus.'/'.$_hid.'" '. $_radio .'>'.$_tipus.'</option>';
+			    }
+			    echo '</select>';
+			} else {
+			    foreach ($HTIPUSOK2 as $j => $_tipus) {
+				$_hid = $HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['hianyzasId'];
+                		if ($_hid!='') {
+				    echo '<input type="hidden" name="HIANYZOK2_'.$i.'" value="'.$_diakId.'/'.$dt.'/'.$ora.'/'.$_tipus.'/'.$_hid.'" '. $_radio .'/>';
+				    echo $_tipus;
+				}
+			    }
+			}
+		    echo '</td>';
+//		    echo '<td>';
+//			    _putIgazolasSelect($HADAT[$ORAADAT['oraId']][$_diakId][$_igtipus], $ITIPUSOK,$JOG,$JOGADAT,array('diakId'=>$_diakId,'oraId'=>$ORAADAT['oraId'],'hianyzasId'=>$_hid));
+//		    echo '</td>';
+		} else {
+		    echo '<td class="nemkot" colspan="'.(count($HTIPUSOK2)+count($HTIPUSOK2)+count($ITIPUSOK)).'">';
+			// echo _ORARA_NEM_KOTELEZO_BEJARNIA;
+			echo _NEM_REGISZTRALANDO;
+		    echo '</td>'."\n";
+		}
+
+	    echo '</tr>';
+	    $i++;
+	}
+	echo '</tbody>';
+	echo '</table>';
+	
+	formEnd();
+	
+    }
+
+    function _putIgazolasSelect($ADAT,$TIPUSOK,$JOG,$JOGADAT,$SET) {
+	//"'.$_diakId.'/'.$dt.'/'.$ora.'/'.$_tipus.'/'.$_hid.'"
+	if (is_array($ADAT)) {
+	    if ($JOG['igazolhato']===true) {
+		echo '<select name="IGAZOLAS[]">'."\n";
+                echo '<option value="'.$SET['diakId'].'////'.$ADAT['hianyzasId'].'">'._IGAZOLATLAN.'</option>'."\n";
+		for($i=0; $i<count($TIPUSOK); $i++){
+		    $_SEL = ($ADAT['igazolas']==$TIPUSOK[$i]) ? ' selected="selected"':'';
+		    if (in_array($TIPUSOK[$i], $JOGADAT['tipusok'])) {
+			echo '<option value="'.$SET['diakId'].'///'.$TIPUSOK[$i].'/'.$ADAT['hianyzasId'].'" '.$_SEL.'>'.$TIPUSOK[$i].'</option>'."\n";
+		    }
+		}
+		// és a kieg, ha elfogyott volna, de ez még azzal van igazolva:
+                if (!in_array($ADAT['igazolas'],$JOGADAT['tipusok']) && $ADAT['statusz']!='igazolatlan') {
+                        echo '<option value="" selected="selected">'.$ADAT['igazolas'].'</option>'."\n";
+            	}
+		echo '</select>'."\n";
+	    } else {
+		echo $ADAT['igazolas'];
+	    }
+	}
+
+    }
+
+    function _putOraAdat($ORAADAT) {
+	echo '<table align="center" class="oraAdat">';
+	echo '<tr><td>';
+	    echo $ORAADAT['dt'].', '.$ORAADAT['ora'].'. ('.$ORAADAT['oraId'].')';
+	echo '</td><td>';
+	    echo $ORAADAT['tankorNev'].' - '.$ORAADAT['kiCn'];
+	echo '</td></tr><tr>';
+	echo '<th colspan="2">';
+	if ($ORAADAT['tankorTipus'] == 'délutáni') echo nagybetus($ORAADAT['tankorTipus']);
+	    echo $ORAADAT['leiras'];
+	echo '</th></tr>';
+	echo '</table>';
+    }
+
+
+    function putOraAdatok($oraAdat) {
+    
+	list($evf,$oszt,$targy,$targycsoport,$tipus,$index) = explode('_',$oraAdat['tankor']);
+
+	#echo '<table align="center" class="oraAdatok" cellpadding="0" cellspacing="0"><tr><td style="text-align: center">';
+	echo '<table align="right" style="border-style: none none dotted none; border-width: 0px 0px 1px 0px; border-color: #999999">';
+	echo '<tr>';
+	    echo '<td>'.str_replace('-','.',$oraAdat['dt']).'.</td>';
+	    echo '<td>'.$oraAdat['ora'].'. óra</td>';
+	    echo "<td> ~ $evf.$oszt $targy, $tipus $targycsoport</td>";
+	    echo '<td> ~ '.$oraAdat['tanarCn'].'</td>';
+	echo '</tr>';
+	echo '</table>'."\n";
+	#echo '</td></tr></table>'."\n";
+	#echo '<br/>';
+    }
+
+    function _putImg($tipus,$jelen) {
+	if ($jelen && $tipus=='') echo '<img src="/skin/classic/module-naplo/img/hianyzas/green.gif" alt="x" />';
+	elseif ($tipus=='késés') echo '<img src="/skin/classic/module-naplo/img/hianyzas/yellow.gif" alt="x" />';
+	elseif ($tipus=='hiányzás') echo '<img src="/skin/classic/module-naplo/img/hianyzas/red.gif" alt="x" />';
+    }
+
+?>
