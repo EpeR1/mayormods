@@ -12,6 +12,10 @@ host=$MYSQL_HOST
 user=$MYSQL_USER
 password=$MYSQL_PW
 " > $BASEDIR/config/my.cnf
+
+PRECHARSET="SET NAMES 'utf8' COLLATE 'utf8_hungarian_ci'; "
+#PRECHARSET="$PRECHARSET SET collation_connection = utf8_hungarian_ci; "
+
 MYSQL_CONFIG="--defaults-extra-file=$BASEDIR/config/my.cnf"
 MYSQL_PARAMETERS=""
 TEST=`$MYSQL -h$MYSQL_HOST -u$MYSQL_USER -p$MYSQL_PW -e exit 2>&1 >/dev/null`

@@ -29,7 +29,7 @@ if (!__NAPLOADMIN && !__VEZETOSEG && !__TITKARSAG) {
 
 	$ADAT['file'] = fileNameNormal('zaradekok-'.$ADAT['osztaly']['osztalyJel'].'-'.date('Ymd'));
 	$ADAT['diak'] = getDiakokByOsztaly($osztalyId, $ADAT);
-	// Azok a diákok, akik az adott időszakban voltak jogviszonyban (esetleg magáán- vagy venfégtanulóként
+	// Azok a diákok, akik az adott időszakban voltak jogviszonyban (esetleg magán- vagy vendégtanulóként
 	$ADAT['diakIds'] = array_values(array_unique(array_merge($ADAT['diak']['jogviszonyban van'], $ADAT['diak']['magántanuló'], $ADAT['diak']['vendégtanuló'])));
 	for ($i = 0; $i < count($ADAT['diakIds']); $i++) {
 	    $ADAT['zaradek'][ $ADAT['diakIds'][$i] ] = getDiakZaradekok($ADAT['diakIds'][$i], array('result' => 'indexed', 'tolDt' => $ADAT['tolDt'], 'igDt' => $ADAT['igDt'], 'dokumentum' => 'osztálynapló'));

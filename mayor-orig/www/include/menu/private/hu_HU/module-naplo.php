@@ -68,7 +68,7 @@
 	    array('txt' => 'Munkaterv', 'url' => 'index.php?page=naplo&sub=tanev&f=munkaterv')
 	);
 	$MENU['modules']['naplo']['sub']['hibabejelento'] = array(
-	    'hibabejelento' => array(array('txt' => 'Új kérelem')),
+	    'hibabejelento' => array(array('txt' => 'Új kérelem a hangyának')),
 	);
 	$MENU['modules']['naplo']['intezmeny'] = array(array('txt' => 'Tanévváltás', 'url' => 'index.php?page=naplo&sub=intezmeny'));
 
@@ -121,7 +121,7 @@
 	    'diakTanarai' => array(array('txt' => 'Diák tanára')),
 	);
 	$MENU['modules']['naplo']['sub']['hibabejelento'] = array(
-	    'hibabejelento' => array(array('txt' => 'Új kérelem')),
+	    'hibabejelento' => array(array('txt' => 'Új kérelem a hangyának')),
 	);
 	$MENU['modules']['naplo']['sub']['osztalyozo'] = array(
 	    'tankor' => array(array('txt' => 'Tankör osztályzatai')),
@@ -203,7 +203,7 @@
 	    'diakTanarai' => array(array('txt' => 'Diák tanára')),
 	);
 	$MENU['modules']['naplo']['sub']['hibabejelento'] = array(
-	    'hibabejelento' => array(array('txt' => 'Új kérelem')),
+	    'hibabejelento' => array(array('txt' => 'Új kérelem a hangyának')),
 	);
 	$MENU['modules']['naplo']['sub']['osztalyozo'] = array(
 	    'tankor' => array(array('txt' => 'Tankör osztályzatai')),
@@ -288,7 +288,7 @@
 
 
 	$MENU['modules']['naplo']['sub']['hibabejelento'] = array(
-	    'hibabejelento' => array(array('txt' => 'Új kérelem')),
+	    'hibabejelento' => array(array('txt' => 'Új kérelem a hangyának')),
 	);
 	$MENU['modules']['naplo']['sub']['haladasi'] = array(
 	    'helyettesites' => array(array('txt' => 'Helyettesítés')),
@@ -433,7 +433,7 @@
 	    'hetes' => array(array('txt' => 'Hetesek')),
 	);
 	$MENU['modules']['naplo']['sub']['hibabejelento'] = array(
-	    'hibabejelento' => array(array('txt' => 'Új kérelem')),
+	    'hibabejelento' => array(array('txt' => 'Új kérelem a hangyának')),
 	);
 	$MENU['modules']['naplo']['sub']['koszi'] = array(
 	    // ez csak diákoknak van, nem? // 'koszi' => array(array('txt' => 'Köszi')),
@@ -558,7 +558,7 @@
 	);
 	$MENU['modules']['naplo']['sub']['admin'] = array(
 		'intezmenyek' => array(array('txt' => 'Intézmények')),
-		'tanevek' => array(array('txt' => 'Tanévek')),
+		'tanevek' => array(array('txt' => 'Tanévek megnyitása, lezárása')),
 		'szemeszterek' => array(array('txt' => 'Szemeszterek')),
 		'fillhaladasi' => array(array('txt' => 'Haladási napló feltöltése')),
 		'import' => array(array('txt' => 'Import')),

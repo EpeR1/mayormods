@@ -2,16 +2,21 @@
 
 	table.haladasiBejegyzesek {
     	    background-color: rgb(50,60,80);
+	    background: linear-gradient( rgb(50,60,80), white);
 	    margin-top: 10px;
-	    font-size: 11px;
+	    /* font-size: 11px; */
 	    width: 98%;
 	}
-	table.haladasiBejegyzesek thead tr th {height:18px;}
+	table.haladasiBejegyzesek thead tr th, table.haladasiBejegyzesek tfoot tr th {height:18px; font-weight: normal;}
 	table.haladasiBejegyzesek thead tr th span.aktiv {
 	    position:relative; top:-5px; padding-left:5px;
-	    color: orange;
+	    /*color: orange;*/
 	}
-	
+
+	table.haladasiBejegyzesek tbody tr:first-child th { border-top:solid 16px white; }
+	table.haladasiBejegyzesek tbody:hover tr:first-child th { background-color: orange; 
+	    transition: all ease 0.1s;
+	}
 	table.haladasiBejegyzesek tbody tr td {height:18px;}
 	table.haladasiBejegyzesek tbody tr:hover td { background-color: rgba(255,255,255,0.2); }
 	table.haladasiBejegyzesek tbody tr td input:focus {
@@ -39,6 +44,9 @@
 	}
 	table.haladasiBejegyzesek tbody td.t {
 	    padding-left:4px;
+	}
+	table.haladasiBejegyzesek tbody tr th.nap span.napNev {
+	    background-color:white; border-radius: 2px; color: #444;padding: 0px 4px;
 	}
 
 	/* ajax eredménye */
@@ -106,10 +114,10 @@
 
 	table.haladasiBejegyzesek td.osztaly { text-align: center; }
 	table.haladasiBejegyzesek select {
-	    font-size: 10px;
+	    /* font-size: 10px; */
 	}
 
-	input { font-family: Verdana,Arial; color: inherit; }
+	input { color: inherit; outline: none;}
 	input.data { border-style: none none solid none;
 			 border-width: 1px;
 			 border-color: #dddddd;
@@ -117,6 +125,9 @@
 		    padding-right: 10px;
 	}
 	input.data:hover { border-bottom: solid 1px #556677; background-color: white }
+
+	table.haladasiBejegyzesek tbody tr td.ora {text-align:center;}
+	table.haladasiBejegyzesek tbody tr td div.oraTime {font-size:xx-small; display: block; padding-left:4px; color:#888;}
 
 	table.haladasiBejegyzesek span.INFO { display: none; width:1em; padding:2px 2px; position: relative; left:-12px; border-radius:2px;color: white;}
 	table.haladasiBejegyzesek input.ajaxRequestDone+span.INFO { display: inline; background-color: green; }
@@ -150,7 +161,8 @@
 	table.haladasiBejegyzesek tbody tr.egyeb.órarend { background-color: #aaaacc; }
 
 	input.gomb {
-		font-size: xx-small; border: solid 1px #777777; 
+		font-size: xx-small;
+		border: solid 1px #777777; 
 		padding: 0px 1px; margin: 0px;
 		background-color: #009900;
 		color: white;
@@ -165,7 +177,7 @@
 	table.haladasiBejegyzesek a.gomb {
 		padding: 1px;
 		background-color: #dddddd;
-		font-size: 10px;
+		/* font-size: 10px; */
 		border: outset 1px #556677; 
 		margin: 2px;
 		text-decoration: none;
@@ -173,7 +185,7 @@
 	table.haladasiBejegyzesek a.gomb:hover  {
 		padding: 1px;
 		background-color: #556677;
-		font-size: 10px;
+		/* font-size: 10px; */
 		border: outset 1px #dddddd; 
 		margin: 2px;
 		text-decoration: none;
@@ -233,7 +245,7 @@
 	form.hetes input { color: black; border: none; margin: 4px; border: solid 1px #008800; }
 	form.hetes span { padding-right:2em; }
 	form.hetes select option {
-	    font-size:small;
+	    /* font-size:small; */
 	    background-color:# white;
 	    border: solix 1px #00aa00;
 	}
@@ -242,17 +254,13 @@
     table.haladasiNaplo {
     	    background-color: rgb(50,60,80);
 	    width: 98%;
-	    font-size: 11px;
+	    /* font-size: 11px; */
     }	
     table.haladasiNaplo thead tr th{
     	    background-color: rgb(50,60,80);
 	    color: white;
 	    border-bottom: solid 1px white;
 	    height:1.5em;
-    }	
-    table.haladasiNaplo tfoot tr th{
-	    font-size: 10px;
-	    color: white;
     }	
     table.haladasiNaplo tr td{ padding:0.6em; background-color: #eee; }
 
@@ -282,7 +290,7 @@
 	border: none 0px;
     }
 
-    table.haladasiBejegyzesek button.gomb { font-size:8px; padding:4px;}
+    table.haladasiBejegyzesek button.gomb { /*font-size:8px;*/ padding:4px;}
 
     table.haladasiBejegyzesek tbody tr td.ora a.tankorStat {display:none;}
     table.haladasiBejegyzesek tbody tr:hover td.ora a.tankorStat { display:inline;}

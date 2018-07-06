@@ -68,6 +68,10 @@
 			echo str_replace('-', '. ', $_dt).'. ';
 			echo $aHetNapjai[($_dow - 1)];
 		    }
+
+		    echo '<div class="dolgozatDATA" style="display:none"
+			data-dolgozatadat="'.implode('+',$TankorLista).':'.$Dolgozat[$dolgozatId]['bejelentesDt'].':'.$Dolgozat[$dolgozatId]['tervezettDt'].'"></div>';
+
 		echo '</td>';
 		echo '</tr>';
 		flush();
@@ -79,6 +83,9 @@
 	}
 	echo '</tbody>';
 	echo '</table>';
+
+	echo '<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>'; 
+	echo '<div id="chart_div"></div>';
     }
 
     function putDolgozat($Dolgozat, $valaszthatoTankorok, $Tanarok, $ADAT) {
@@ -289,6 +296,8 @@
 	    formEnd();
 	
 	} // csak admin, tanár és igazgató láthatja az összes jegyet!
+
+
     }
 
     function putDolgozatBejelento($tankorId) {

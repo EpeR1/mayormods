@@ -86,7 +86,7 @@ if (isset($osztalyId)) {
 	$diakIds = $ADAT['osztalyAdat']['kepzesIds'] = array();
 	if (is_array($ADAT['osztalyAdat']['kepzes'])) 
 	    for ($i = 0; $i < count($ADAT['osztalyAdat']['kepzes']); $i++) $ADAT['osztalyAdat']['kepzesIds'][] = $ADAT['osztalyAdat']['kepzes'][$i]['kepzesId'];
-	$OsztalyNevsor = getDiakokByOsztaly($osztalyId, array('tanev' => $tanev));
+	$OsztalyNevsor = getDiakokByOsztaly($osztalyId, array('tanev' => $tanev,'felveteltNyertEkkel'=>true));
 
 	foreach ($OsztalyNevsor as $key => $value) if (is_numeric($key)) {
 	    $diakIds[] = $key;
@@ -254,7 +254,7 @@ if ($action == 'osztalyAdatModositas' && __NAPLOADMIN) {
 	$kiDt = readVariable($_POST['kiDt'], 'date');
 	if (isset($diakId)  && isset($beDt)) {
 	    if (ujTag($osztalyId, $diakId, $beDt, $kiDt)) {
-		$OsztalyNevsor = getDiakokByOsztaly($osztalyId, array('tanev' => $tanev));
+		$OsztalyNevsor = getDiakokByOsztaly($osztalyId, array('tanev' => $tanev,'felveteltNyertEkkel'=>true));
 		foreach ($OsztalyNevsor as $key => $value) if (is_numeric($key)) {
 		    $ADAT['osztalyNevsor'][$key] = $value;
 		}
@@ -271,7 +271,7 @@ if ($action == 'osztalyAdatModositas' && __NAPLOADMIN) {
     $PARAM['zaradekkal'] = false;
     if (isset($PARAM['osztalyId']) && isset($PARAM['diakId']) && isset($PARAM['tolDt'])) {
 	if (osztalyDiakTorol($PARAM)) {
-	    $OsztalyNevsor = getDiakokByOsztaly($osztalyId, array('tanev' => $tanev));
+	    $OsztalyNevsor = getDiakokByOsztaly($osztalyId, array('tanev' => $tanev,'felveteltNyertEkkel'=>true));
 	    foreach ($OsztalyNevsor as $key => $value) if (is_numeric($key)) {
 		$ADAT['osztalyNevsor'][$key] = $value;
 	    }
@@ -293,11 +293,12 @@ if (isset($osztalyId)) {
 	$diakIds = $ADAT['osztalyAdat']['kepzesIds'] = array();
 	if (is_array($ADAT['osztalyAdat']['kepzes'])) 
 	    for ($i = 0; $i < count($ADAT['osztalyAdat']['kepzes']); $i++) $ADAT['osztalyAdat']['kepzesIds'][] = $ADAT['osztalyAdat']['kepzes'][$i]['kepzesId'];
-	$OsztalyNevsor = getDiakokByOsztaly($osztalyId, array('tanev' => $tanev));
+	$OsztalyNevsor = getDiakokByOsztaly($osztalyId, array('tanev' => $tanev,'felveteltNyertEkkel'=>true));
         $ADAT['osztalyNevsor'] = array();
 	foreach ($OsztalyNevsor as $key => $value) if (is_numeric($key)) {
 	    $diakIds[] = $key;
 	    $ADAT['osztalyNevsor'][$key] = $value;
+	    $ADAT['osztalyNevsor'][$key]['diakNaploSorszam'] = getDiakNaploSorszam($key,$tanev,$osztalyId);
 	}
 	$ADAT['diakKepzes'] = getKepzesByDiakId($diakIds, array('result' => 'assoc'));
 	$ADAT['diakok'] = getDiakok(array('tanev' => $tanev));

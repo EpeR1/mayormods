@@ -88,7 +88,40 @@
 
     }
 
- // --------------------------------------------------------- //
+    function getDolgozatAdat($dolgozatId, $olr = null) {
+
+	if ($dolgozatId=='') return false;
+	$lr = (!is_resource($olr)) ? db_connect('naplo') : $olr;
+	$q = "SELECT * FROM dolgozat WHERE dolgozatId = %u";
+	$v = array($dolgozatId);
+	$RET = db_query($q, array('fv' => 'getDolgozatAdat', 'modul' => 'naplo', 'result' => 'record', 'values' => $v), $lr);
+	$dt = $RET['bejelentesDt'];
+	$q = "SELECT tankorId FROM tankorDolgozat WHERE dolgozatId = %u";
+	$v = array($dolgozatId);
+	$r = db_query($q, array('fv' => 'getDolgozatAdat', 'modul' => 'naplo', 'result' => 'idonly', 'values' => $v), $lr);
+	for ($i=0; $i<count($r); $i++) {
+	    $_tankorId = $r[$i];
+	    $_TA = getTankorAdat($_tankorId);
+            $_TA[$_tankorId]['tanarok'] = getTankorTanaraiByInterval(
+                        $_tankorId,
+                        array('tanev' => $tanev, 
+			    'tolDt' => $dt, 
+			    'igDt' => $dt,
+			    'result' => 'idonly',
+                            'datumKenyszeritessel' => true
+                        )
+                    );
+	    $RET['tankorok'][] = $_TA[$_tankorId];
+	}
+
+	$q = "SELECT avg(jegy) AS atlag, count(jegyId) AS db FROM jegy WHERE dolgozatId = %u";
+	$v = array($dolgozatId);
+	$RET['jegyStatisztika'] = db_query($q, array('fv' => 'getDolgozatAdat', 'modul' => 'naplo', 'result' => 'record', 'values' => $v), $lr);
+
+	if (!is_resource($olr)) db_close($lr);
+
+	return $RET;
+    }
 
     function ujDolgozat($tanarId, $tankorId, $olr = null) {
 
@@ -104,30 +137,18 @@
 
     }
 
-    function getDolgozatAdat($dolgozatId, $olr = null) {
+    function dolgozatModositas($dolgozatId, $dolgozatNev, $tervezettDt) {
 
-	if ($dolgozatId=='') return false;
-	$lr = (!is_resource($olr)) ? db_connect('naplo') : $olr;
-	$q = "SELECT * FROM dolgozat WHERE dolgozatId = %u";
-	$v = array($dolgozatId);
-	$RET = db_query($q, array('fv' => 'getDolgozatAdat', 'modul' => 'naplo', 'result' => 'record', 'values' => $v), $lr);
-
-	$q = "SELECT tankorId FROM tankorDolgozat WHERE dolgozatId = %u";
-	$v = array($dolgozatId);
-	$r = db_query($q, array('fv' => 'getDolgozatAdat', 'modul' => 'naplo', 'result' => 'idonly', 'values' => $v), $lr);
-	for ($i=0; $i<count($r); $i++) {
-	    $_tankorId = $r[$i];
-	    $_TA = getTankorAdat($_tankorId);
-	    $RET['tankorok'][] = $_TA[$_tankorId];
+	if (intval($dolgozatId)==0) return false;
+	if ($tervezettDt=='') return false;
+	if ($dolgozatNev!='') {
+	    $q = "UPDATE dolgozat SET dolgozatNev='%s', tervezettDt='%s', modositasDt=now() WHERE dolgozatId=%u";
+	    $v = array($dolgozatNev, $tervezettDt, $dolgozatId);
+	} else {
+	    $q = "UPDATE dolgozat SET tervezettDt='%s', modositasDt=now() WHERE dolgozatId=%u";
+	    $v = array($tervezettDt, $dolgozatId);
 	}
+        return db_query($q, array('fv' => 'dolgozatModositas', 'modul' => 'naplo', 'values' => $v));
 
-	$q = "SELECT avg(jegy) AS atlag, count(jegyId) AS db FROM jegy WHERE dolgozatId = %u";
-	$v = array($dolgozatId);
-	$RET['jegyStatisztika'] = db_query($q, array('fv' => 'getDolgozatAdat', 'modul' => 'naplo', 'result' => 'record', 'values' => $v), $lr);
-
-	if (!is_resource($olr)) db_close($lr);
-
-	return $RET;
     }
-
 ?>

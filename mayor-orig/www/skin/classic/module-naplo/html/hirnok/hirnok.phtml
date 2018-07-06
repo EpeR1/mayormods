@@ -136,6 +136,7 @@
 
     function putHirnok_haladasiOra($D) {
 	global $aHetNapjai;
+	// if ($D['oraAdat']['dt']=='1970-01-01 01:00:00') return false;
 	$nap = kisbetus($aHetNapjai[date('w',strtotime($D['oraAdat']['dt']))-1]);
 	echo 'A '.$D['oraAdat']['tankorCn'].' tankör '.$D['oraAdat']['dt'].' '.$nap.'i '.$D['oraAdat']['ora'].'. óra státusza megváltozott. ';
 	if ($D['oraAdat']['teremId']>0) echo 'Terme: '.$D['oraAdat']['teremId'].'. ';

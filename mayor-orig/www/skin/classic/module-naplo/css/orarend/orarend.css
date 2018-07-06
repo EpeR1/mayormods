@@ -93,6 +93,7 @@ table.orarend tbody tr td div.jegyzet.mase.publikus2 { background-color: #4caf50
 
 table.orarend tbody tr.orarendJegyzetSor th { background-color: orange; border-color: orange; font-weight:normal; font-size: x-small; cursor: pointer}
 table.orarend tbody tr.orarendJegyzetSor td.jegyzetContainer { background-color: cornflowerblue; }
+table.orarend tbody tr.orarendJegyzetSor td.jegyzetContainer div:hover { border-color: #bbb;   transition : border 50ms ease-out;}
 
 table.orarend tr td {
     text-align: center;

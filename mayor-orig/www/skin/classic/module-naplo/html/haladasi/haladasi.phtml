@@ -1,25 +1,4 @@
 <?php
-/*
-    module:	naplo
-
-    todo: függvény paraméterezések tisztítása (2010)
-
-    függőségek:
-
-    function putHaladasiBejegyzesek($data, $tankorId, $osztalyId, $tanarId, $title, $diakId, $order, $ADAT)
-	|- function putNap($dt, $dNap, $napInfo, $doga, $napInfo2)
-	    |-function putHaladasiDolgozat
-	    |-function putOra($dOra)
-	|- function putTankorNap($dt, $dNap, $doga, $order)
-	    |-function putHaladasiDolgozat($dt,$doga)
-	    |-function putTankorOra($dOra)
-    function putHetesForm($ADAT)
-
-*/
-##
-# Haladási naplo megjelenítése
-##
-
     global $SZLO;
 
     function putHaladasiBejegyzesek($ADAT) {
@@ -62,8 +41,8 @@
 	    }
 	echo '</th>';
 	echo '<th colspan="7" class="fejlec8">';
-            echo $title;
     	    if ($tanarId!='') {
+        	echo '<span class="tanarNev" data-tanarid="'.$tanarId.'">'.$title.'</span>';
 		if ($ADAT['csakUres']==true) {
 		    $_CHK = ' checked="checked" ';
 		    $_ACTIVE = ' class="on" ';
@@ -72,8 +51,11 @@
 		echo ' <label for="csakUres" '.$_ACTIVE.'><span class="icon-bullhorn"></span></label>';
 		echo '<input type="checkbox" id="csakUres" name="csakUres" value="1" class="onChangeSubmit" '.$_CHK.' style="display:none;" />';
 		$AKTIV_TH['tanar'] = true;
+	    } else {
+		echo $title;
 	    }
 	echo '</th></tr>'."\n";
+/*
 	echo '<tr>';
 		echo '<th style="width:30px;">';
 		    // ENTER esetén az első submit érvényes - ne a dátum gomb legyen
@@ -90,7 +72,7 @@
 		echo '<th>';
 		    echo _TANAR;
 		    if ($AKTIV_TH['tanar']) echo '<span class="aktiv icon-bookmark"></span>';
-		echo '</th><th>'._ORASZAM.'</th>';
+		echo '</th><th>'.'</th>';
 		echo '<th style="width:45%">';
 		    echo _TANANYAG;
 		    if ($AKTIV_TH['tananyag']) echo '<span class="aktiv icon-bookmark"></span>';
@@ -101,6 +83,7 @@
 		    if (_SHOW_DAYS_FROM > $_TANEV['kezdesDt']) 	echo '<button class="gomb" type="submit" name="lapoz1" value="prevWeek" tabindex="7"><span class="icon-chevron-left"></span></button>';
 		    if (_SHOW_DAYS_TO < date('Y-m-d'))  	echo '<button class="gomb" type="submit" name="lapoz1" value="nextWeek" tabindex="8"><span class="icon-chevron-right"></span></button>';
 		echo '	</th></tr>'."\n";
+*/
 	echo '</thead>'."\n";
 	echo '<tfoot>'."\n";
                 echo '<tr>';
@@ -188,21 +171,14 @@
 	} else {
 	    echo '<tbody class="szunet">'."\n";
 	}
-/*
-	if ($napInfo['tipus'] == 'tanítási szünet') echo '<tbody class="szunet">'."\n";
-	elseif ($napInfo['típus'] == 'tanítás nélküli munkanap') echo '<tbody class="tanitasNelkul">'."\n";
-	elseif (date('w',$time) % 2 == 0) echo '<tbody class="parosNap">'."\n";
-	else echo '<tbody class="paratlanNap">'."\n";
-<button type="button" name="orderInvert" value="" class="rejtMutat" tabindex="10">
-
-*/
 	echo '<tr>';
 	    echo '<th class="nap">';
 		if (__PLUSZBEIRHAT===true) echo '<div class="icon-plus-sign rejtMutat"></div>';
 	    echo '</th>'."\n";
 	    // Az első cella a dátum/nap
 	    echo '<th colspan="7" class="nap">';
-		echo str_replace('-','.',$dt) .'. '. $aHetNapjai[(date('w',$time)+6)%7];
+		echo str_replace('-','.',$dt) .'. ';
+		echo '<span class="napNev">'.$aHetNapjai[(date('w',$time)+6)%7].'</span>';
 		if ($napInfo2['napszam']!='' || $napInfo['orarendiHet'] != 0) {
 		    echo ' (';
 		    // if ($napInfo2['napszam']!='') {
@@ -399,10 +375,13 @@
 //			echo '<span class="oraAdat icon-bullhorn" data-oraid="'.$dOra['oraId'].'"></span>';
 		}
 
+		if ($dOra['tolTime']!='') 
+		    echo '<div class="oraTime">'.substr($dOra['tolTime'],0,5).'–'.substr($dOra['igTime'],0,5).'</div>';
+
 	    echo '</td>'."\n";
 
 	    // ----- Tankör -------------------------------
-	    echo '<td class="t">';
+	    echo '<td class="t tankorAdat" data-tankorid="'.$dOra['tankorId'].'">';
 		// -------------------------------------------------------------------------
 		// Csoportok kezelése - Váltható tankörök (egy csoportba és egy tanárhoz tartozó tankörök
 		// FeladatTípus kezelése
@@ -425,9 +404,9 @@
 				if ($__SEL == '') echo '<option value="'.$dOra['csoportId'].':'.$dOra['tankorId'].' selected="selected">'.$dOra['tankorNev'].'</option>';
 				echo '</select>';
 			    // ugyanakkor js-ből meg kellene változtatni a tankorId paramétert...
-			    echo '<a style="display:inline" href="'.href('index.php?page=naplo&sub=haladasi&f=haladasi&tankorId='.$dOra['tankorId']).'" class="onClickUpdateWindow" title="'.$dOra['tankorNev'].' '._TANKOR_HALADASI.'">';
+			    echo '<span style="display:inline" href="'.href('index.php?page=naplo&sub=haladasi&f=haladasi&tankorId='.$dOra['tankorId']).'" title="'.$dOra['tankorNev'].' '._TANKOR_HALADASI.'">';
 			    echo '☰'; //≡
-			    echo '</a>';
+			    echo '</span>';
 
 			} elseif ($dOra['tipus']=='egyéb') {
 			    /*for ($t = 0; $t<count($ADAT['feladatTipus']); $t++) {
@@ -436,9 +415,9 @@
 			    }*/
 			    echo $ADAT['feladatTipus'][$dOra['feladatTipusId']]['feladatTipusLeiras'].' ('.$dOra['eredet'].')';
 			} else { // nincs választási lehetőség, vagy a módosítási határidő lejárt
-			    echo '<a href="'.href('index.php?page=naplo&sub=haladasi&f=haladasi&tankorId='.$dOra['tankorId']).'" class="onClickUpdateWindow" title="'.$dOra['tankorNev'].' '._TANKOR_HALADASI.'">';
+			    echo '<span href="'.href('index.php?page=naplo&sub=haladasi&f=haladasi&tankorId='.$dOra['tankorId']).'" class="tankorNev"  data-tankorId = "'.$dOra['tankorId'].'" title="'.$dOra['tankorNev'].' '._TANKOR_HALADASI.'">';
 			    echo $dOra['tankorNev'];
-			    echo '</a>';
+			    echo '</span>';
 			}
 			echo '<input type="hidden" name="tanmenetIdContainer[]" value="'.$ADAT['tankorTanmenet'][ $dOra['tankorId'] ].'" />'."\n";
 			echo '<input type="hidden" name="tankorIdContainer[]" value="'.$dOra['tankorId'].'" />'."\n";
@@ -510,7 +489,7 @@
 		    } else {
 			echo '<input type="text" tabindex="1" name="L_'.($dOra['oraId']).'" class="data" size="30" value="'.htmlspecialchars($dOra['leiras']).'" />';
 			echo '<span class="INFO" id="B_'.($dOra['oraId']).'">✓</span>';
-			echo '<input type="submit" class="gomb DOA" value="'._ROGZIT.'" tabindex="" />';
+			echo '<input type="submit" class="gomb DOA" value="'._OK.'" tabindex="" />';
 		    }
 		    echo '<input type="hidden" name="oraId[]" value="'.$dOra['oraId'].'" />';
 		    //echo '<span type="text" class="INFO" style="display:none;" id="B_'.($dOra['oraId']).'">√</span>';

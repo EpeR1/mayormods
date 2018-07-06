@@ -247,12 +247,13 @@
 		for($j=0; $j<count($ORAK); $j++) {
 		    $ORAADAT = $ORAK[$j];
 		    $ora = $ORAADAT['ora'];
-		    $jog = array('fbeirhato'=>false, 'beirhato' => false, 'igazolhato' => false);
+	
+	    $jog = array('fbeirhato'=>false, 'beirhato' => false, 'igazolhato' => false);
 		
 		    if ($_TANEV['statusz']=='aktív') {
-
+			$marElkezdodott = (strtotime($ORAADAT['dt'].' '.$ORAADAT['tolTime']) < strtotime(date('Y-m-d H:i:s')));
 	    		if ($ORAADAT['ki'] == __USERTANARID) {
-			    if ( !in_array($ORAADAT['tipus'], array('elmarad' , 'elmarad máskor')) ) {
+			    if ( !in_array($ORAADAT['tipus'], array('elmarad' , 'elmarad máskor')) && $marElkezdodott) {
 				if ( strtotime($ORAADAT['dt']) >= strtotime(_HIANYZAS_HATARIDO) )
 				    $jog['beirhato'] = true;
 				if ( strtotime($ORAADAT['dt']) >= strtotime(_LEGKORABBAN_IGAZOLHATO_HIANYZAS) )
@@ -279,7 +280,6 @@
 			}
 
 		    }
-
 		    $JOGOSULTSAG[$diakId]['orak'][$ora] = $jog;
 		} // end of diakidk
 	    } // end of orak
@@ -315,8 +315,8 @@
 		    ) {
 			$IG[] = 'szülői';
 		    }
-		    $IG[] = 'tanulmányi verseny';
-		    $IG[] = 'nyelvvizsga';
+		    $IG[] = 'verseny';
+		    $IG[] = 'vizsga';
 		    if (
 			(__NAPLOADMIN || $diakOfoje) && // !__VEZETOSEG && - ez nem jó, ha vezetőségi tag ofő is egyben
 			(__OSZTALYFONOKI_IGAZOLAS_EVRE == 0 or __OSZTALYFONOKI_IGAZOLAS_EVRE > intval($_IGAZOLAS['napok']['osszesen']['osztályfőnöki'])) and

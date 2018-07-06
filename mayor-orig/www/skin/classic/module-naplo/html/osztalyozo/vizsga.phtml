@@ -15,7 +15,8 @@
 	echo '<label for="jelentkezesDt">'._JELENTKEZES.'</label>'."\n";
 	echo '<input type="text" name="jelentkezesDt" class="date" value="" id="jelentkezesDt" />'."\n";
 	echo '<label for="tipus">'._VIZSGATIPUS.'</label>'."\n";
-	echo '<select name="tipus" id="tipus">'."\n";
+	$SEL = array($ADAT['vizsgaTipus'] => ' selected="selected" ');
+	echo '<select name="vizsgaTipus" id="tipus">'."\n";
 	    echo '<option value=""> - </option>'."\n";
 	    for ($i = 0; $i < count($ADAT['vizsgatipusok']); $i++) {
 		echo '<option value="'.$ADAT['vizsgatipusok'][$i].'"'.$SEL[ $ADAT['vizsgatipusok'][$i] ].'>'.$ADAT['vizsgatipusok'][$i].'</option>'."\n";

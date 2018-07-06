@@ -58,7 +58,7 @@
         $ADAT['telephelyIds'] = array_keys($ADAT['telephelyAdat']);
         $ADAT['telephelyId'] = $telephelyId = readVariable($_GET['telephelyId'], 'id', readVariable(
                 $_POST['telephelyId'], 'id', (isset($_POST['telephelyId'])?null:readVariable(__TELEPHELYID,'id')), $ADAT['telephelyIds']
-            ), $ADAT['telephelyId']);
+            ), $ADAT['telephelyIds']);
 	
     	if (!__DIAK) {
 	    if (isset($_POST['osztalyId']) && $_POST['osztalyId'] != '') { $osztalyId = $ADAT['osztalyId'] = readVariable($_POST['osztalyId'],'id'); }

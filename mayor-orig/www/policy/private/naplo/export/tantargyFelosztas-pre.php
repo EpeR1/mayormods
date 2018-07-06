@@ -55,6 +55,8 @@
     	    if (exportTantargyFelosztas($file, $ADAT))
         	header('Location: '.location('index.php?page=session&f=download&download=true&dir=naplo/export/tantargyFelosztas&file='.$file.'.'.$ADAT['formatum'].'&mimetype='.$ADAT['mime']));
 
+//	    dump($ADAT);
+
 	}
 
     }

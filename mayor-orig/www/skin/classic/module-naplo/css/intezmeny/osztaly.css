@@ -55,3 +55,6 @@
     form.osztalyForm span.data { margin: 20px; background-color: white; color: black; padding: 5px; font-size: 12px; font-weight: bold; }
     form.osztalyForm ol li span.diakNev { padding-left:0.5em; cursor:pointer; }
     form.osztalyForm ol li span.datumok { color: #888; padding-left:1em; }
+
+    span.diakNaploSorszam { padding-left:4px; padding-right:4px; background-color: cornflowerblue; color:white; border-radius: 2px; margin: 0px 4px;}
+    span.diakJogviszony { padding-left:4px; padding-right:4px; background-color: orange; color:white; border-radius: 2px; margin: 0px 4px;}

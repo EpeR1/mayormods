@@ -196,7 +196,7 @@
 			}
 			// TODO , evfolyamJel re való áttérés a képzéseknél - ellenőrzés, tesztelés...
 			if ($osztalyAdat[$osztalyId]['evfolyamJel'] != $osztalyAdat[ $kepzesOsztaly[$kepzesId] ]['evfolyamJel']) { 
-			    $_SESSION['alert'][] = 'message:wrong_data:getTargyakByDiakId:egy képzés több különböző évfolyamú osztályhoz tartozik';
+			    $_SESSION['alert'][] = 'message:wrong_data:getTargyakByDiakId:egy képzés több különböző évfolyamú osztályhoz tartozik.:osztalyAdat('.$osztalyAdat[$osztalyId]['evfolyamJel'].' vs. '.$osztalyAdat[ $kepzesOsztaly[$kepzesId] ]['evfolyamJel'].')';
 			}
 		    } else {
 			$kepzesOsztaly[$kepzesId] = $osztalyId;

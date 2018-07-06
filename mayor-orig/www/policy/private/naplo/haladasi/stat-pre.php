@@ -9,9 +9,11 @@
 	require_once('include/modules/naplo/share/diak.php');
 	require_once('include/modules/naplo/share/hianyzas.php');
 	require_once('include/modules/naplo/share/nap.php');
+	require_once('include/modules/naplo/share/munkakozosseg.php');
 
 	$tanarId = readVariable($_POST['tanarId'],'numeric unsigned');
 	$osztalyId = readVariable($_POST['osztalyId'],'numeric unsigned');
+	$mkId = readVariable($_POST['mkId'],'numeric unsigned');
 	if (__DIAK) $diakId = __USERDIAKID;
 	else $diakId = readVariable($_POST['diakId'], 'numeric unsigned', readVariable($_GET['diakId'], 'numeric unsigned'));
 
@@ -22,6 +24,7 @@
         if (isset($diakId)) $Tankorok = getTankorByDiakId($diakId, __TANEV, array('tolDt' => $_TANEV['kezdesDt']));
         elseif (isset($osztalyId)) $Tankorok = getTankorByOsztalyId($osztalyId, __TANEV);
         elseif (isset($tanarId)) $Tankorok = getTankorByTanarId($tanarId, __TANEV);
+        elseif (isset($mkId)) $Tankorok = getTankorByMkId($mkId, __TANEV);
 
 	$tankorIds = array();
 	for ($i = 0; $i < count($Tankorok); $i++) $tankorIds[] = $Tankorok[$i]['tankorId'];
@@ -41,6 +44,7 @@
                 $TOOL['diakSelect'] = array('tipus'=>'cella','paramName'=>'diakId', 'post'=>array('osztalyId','igDt'));
                 if (isset($diakId)) $TOOL['diakLapozo'] = array('tipus'=>'sor',  'paramName'=>'diakId', 'post'=>array('osztalyId','igDt'));
             }
+            $TOOL['munkakozossegSelect'] = array('tipus'=>'cella', 'post'=>array('igDt'));
         }
 	if (isset($diakId)) {
             $TOOL['oldalFlipper'] = array('tipus' => 'cella',

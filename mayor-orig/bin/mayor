@@ -1,15 +1,15 @@
 #!/bin/bash
 
-VERSION="2.0"
-echo -e "\nmayor szkript - verzió: $VERSION (" `date '+%Y-%m-%d'` ")\n"
+VERSION="2.0.1"
+echo -e "\nmayor szkript - verzió: $VERSION (" $(date '+%Y-%m-%d') ")\n"
 
-CMDS=(backup update crypt-backup decrypt-backup remote-backup restore help)
+CMDS=(backup update lock unlock crypt-backup decrypt-backup remote-backup restore help)
 MODS=(mayor-base mayor-portal mayor-naplo mayor-naplo-sni mayor-wiki mayor-felveteli mayor-installer mayor-installer-sulix mayor-jatek mayor-locales-de_DE mayor-locales-en_US mayor-local-jp_JP)
-DESC=('a rendszer mentése' 'a rendszer frissítése' 'a mentés titkosítása (ß)' 'a titkosított mentés visszakódolása (ß)' 'mentés a központi (távoli) szerverre' 'mentés visszatöltése' 'A parancs működésének leírása')
+DESC=('a rendszer mentése' 'a rendszer frissítése' 'a rendszer zárolása (lockfile)' 'a rendszer feloldása' 'a mentés titkosítása (ß)' 'a titkosított mentés visszakódolása (ß)' 'mentés a központi (távoli) szerverre' 'mentés visszatöltése' 'A parancs működésének leírása')
 #OPTS=('--skip-lock')
 #OPTDESC=('a rendszer zárolásának kihagyása')
-DATE=`date "+%Y%m%d"`
-DATETIME=`date "+%Y-%m-%d %H:%M:%S"`
+DATE=$(date "+%Y%m%d")
+DATETIME=$(date "+%Y-%m-%d %H:%M:%S")
 
 print_help() {
     echo -e "\nHasználat: mayor [parancs] [opciók]\n\nParancs"
@@ -64,4 +64,3 @@ if [ -z $UPDATELOG ]; then
 else
     . ./$CMD.sh 2>&1 | tee -a $UPDATELOG
 fi
-

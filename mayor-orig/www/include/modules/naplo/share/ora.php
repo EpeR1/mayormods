@@ -379,14 +379,14 @@
 	    $q = "SELECT oraId FROM ora WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count($TANKORIDK), '%u')).")";
 	    $RE = db_query($q, array('modul' => 'naplo', 'fv' => 'getOrak', 'result' => 'idonly', 'values' => $v));
 	} elseif ($SET['result']=='forXml') {
-	    $q = "SELECT * FROM ora WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count($TANKORIDK), '%u')).")";
+	    $q = "SELECT *,getOraTolTime(ora.oraId) AS tolTime,getOraIgTime(ora.oraId) AS igTime FROM ora WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count($TANKORIDK), '%u')).")";
 	    $RE = db_query($q, array('modul' => 'naplo', 'fv' => 'getOrak', 'result' => 'indexed', 'values' => $v));
 	} else {
 	    if ($SET['elmaradokNelkul'])
-		$q = "SELECT * FROM ora WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count($TANKORIDK), '%u')).") 
+		$q = "SELECT *,getOraTolTime(ora.oraId) AS tolTime,getOraIgTime(ora.oraId) AS igTime FROM ora WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count($TANKORIDK), '%u')).") 
 			AND tipus NOT IN ('elmarad','elmarad máskor')";
 	    else 
-		$q = "SELECT * FROM ora WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count($TANKORIDK), '%u')).")";
+		$q = "SELECT *,getOraTolTime(ora.oraId) AS tolTime,getOraIgTime(ora.oraId) AS igTime FROM ora WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count($TANKORIDK), '%u')).")";
 	    $R = db_query($q, array('modul' => 'naplo', 'fv' => 'getOrak', 'result' => 'indexed', 'values' => $v));
 	    $RE['tankorok']=array();
 	    for ($i = 0; $i < count($R); $i++) {

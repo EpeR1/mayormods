@@ -1150,9 +1150,10 @@
 		echo '<th>'._SZULOI.'</th>';
 		echo '<th>'._OSZTALYFONOKI.'</th>';
 		echo '<th>'._TANULMANYI_VERSENY.'</th>';
-		echo '<th>'._NYELVVIZSGA.'</th>';
+		echo '<th>'._VIZSGA.'</th>';
 		echo '<th>'._IGAZGATOI.'</th>';
 		echo '<th>'._HATOSAGI.'</th>';
+		echo '<th>'._PALYAVALASZTAS.'</th>';
 	    echo '</tr>'."\n";
 	    echo '<tr>';
 
@@ -1165,16 +1166,19 @@
 		    }
 		echo '</td>';
 		echo '<td>'.(int)$H['napok']['osszesen']['osztályfőnöki'].'/'.__OSZTALYFONOKI_IGAZOLAS_EVRE. ' '._NAP.'</td>';
-		echo '<td>'.(int)$H['napok']['osszesen']['tanulmányi verseny'].' '._NAP.'</td>';
-		echo '<td>'.(int)$H['napok']['osszesen']['nyelvvizsga'].' '._NAP.'</td>';
+		echo '<td>'.(int)$H['napok']['osszesen']['verseny'].' '._NAP.'</td>';
+		echo '<td>'.(int)$H['napok']['osszesen']['vizsga'].' '._NAP.'</td>';
 		echo '<td>'.(int)$H['napok']['osszesen']['igazgatói'].' '._NAP.'</td>';
 		echo '<td>'.(int)$H['napok']['osszesen']['hatósági'].' '._NAP.'</td>';
+		echo '<td>'.(int)$H['napok']['osszesen']['pályaválasztás'].' '._NAP.'</td>';
 	    echo '</tr>'."\n";
 	    echo '<tr>';
 		echo '<td>';
 		    echo '<span style="color: white; font-weight:bold;margin-right:3px; border: solid 1px white; padding:2px 5px;background-color: green;">'.intval($TOOL['igazolasOsszegzo']['hianyzasok']['igazolt']).'</span>';
 		    echo '<span style="color: white; font-weight:bold;margin-right:3px; border: solid 1px white; padding:2px 5px;background-color: red;">'.intval($TOOL['igazolasOsszegzo']['hianyzasok']['igazolatlan']).'</span>';
-		    echo '<span style="color: white; font-weight:bold;margin-right:3px; border: solid 1px white; padding:2px 5px;background-color: #C8C864;">'.intval($TOOL['igazolasOsszegzo']['hianyzasok']['kesesPercOsszeg']).'\'</span>';
+		    echo '<span style="color: white; font-weight:bold;margin-right:3px; border: solid 1px white; padding:2px 5px;background-color: #C8C864;">'.intval($TOOL['igazolasOsszegzo']['hianyzasok']['kesesPercOsszeg']).'\'';
+			echo '/'.intval($TOOL['igazolasOsszegzo']['hianyzasok']['kesesDb']).'';
+		    echo '</span>';
 		echo '</td>'; // igazolatlan, kesesPercOsszeg
 		echo '<td>'.(int)$H['orak']['osszesen']['orvosi'].' '._ORA.'</td>';
 		echo '<td>';
@@ -1185,10 +1189,11 @@
 		echo '</td>';
 
 		echo '<td>'.(int)$H['orak']['osszesen']['osztályfőnöki'].'/'.__OSZTALYFONOKI_ORA_IGAZOLAS_EVRE.' '._ORA.'</td>';
-		echo '<td>'.(int)$H['orak']['osszesen']['tanulmányi verseny'].' '._ORA.'</td>';
-		echo '<td>'.(int)$H['orak']['osszesen']['nyelvvizsga'].' '._ORA.'</td>';
+		echo '<td>'.(int)$H['orak']['osszesen']['verseny'].' '._ORA.'</td>';
+		echo '<td>'.(int)$H['orak']['osszesen']['vizsga'].' '._ORA.'</td>';
 		echo '<td>'.(int)$H['orak']['osszesen']['igazgatói'].' '._ORA.'</td>';
 		echo '<td>'.(int)$H['orak']['osszesen']['hatósági'].' '._ORA.'</td>';
+		echo '<td>'.(int)$H['orak']['osszesen']['pályaválasztás'].' '._ORA.'</td>';
 	    echo '</tr>'."\n";
 	echo '</table>'."\n";	
     }

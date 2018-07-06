@@ -25,6 +25,8 @@ if (!__NAPLOADMIN && !__VEZETOSEG && !__TITKARSAG) {
     if (isset($osztalyId)) {
 
 	require_once('include/share/str/hyphen.php');
+	require_once('include/modules/naplo/share/osztalyModifier.php');
+	osztalyTorzslapszamGeneralas($osztalyId);
 
 	// Adatok lekérése
 
@@ -87,6 +89,8 @@ if (!__NAPLOADMIN && !__VEZETOSEG && !__TITKARSAG) {
 			array('result'=>'idonly', 'osztatlyId' => $osztalyId, 'csakOratervi'=>true, 'tolDt' => $_TANEV['kezdesDt'], 'igDt' => $_TANEV['zarasDt'], 'filter' => 'kovetelmeny')
 		    ); //TODO getTargyakByDiakId() itt a visszatérési érték változott, evfolyam, evfolyamJel is van! ellenőrizni kell!
 //echo '<pre>'; var_dump($ret2); echo '</pre>';
+
+	    $ADAT['diakAdat'][ $ret[$i]['diakId'] ]['torzslapszam'] = getDiakTorzslapszam($ret[$i]['diakId'], $osztalyId);
 	    
 	    $diakKiDts[ $ret[$i]['diakId'] ] = $diakByOsztaly[ $ret[$i]['diakId'] ]['osztalyDiak'][0]['kiDt']; // mikor lépett ki a diák az osztályból
 	}
@@ -115,7 +119,7 @@ if (!__NAPLOADMIN && !__VEZETOSEG && !__TITKARSAG) {
 
             // Tanulónként egy-egy lap....
             for ($i = 0; $i < count($ADAT['diakIds']); $i++) {
-                $sorsz = $i+1; // Napló sorszám
+                $sorsz = $i+1; // Napló sorszám // TODO ???
                 $diakId = $ADAT['diakIds'][$i];
                 $cn = $ADAT['diakAdat'][$diakId]['diakNev'];
                 $birthlocality = $ADAT['diakAdat'][$diakId]['szuletesiHely'];

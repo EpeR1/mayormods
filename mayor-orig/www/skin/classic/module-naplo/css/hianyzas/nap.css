@@ -1,3 +1,4 @@
+@charset "utf-8";
 
     table.csoportNevsorHianyzok {
 	background-color: #eeeeee;
@@ -69,6 +70,9 @@
         border-color: rgb(200,100,100);
         border-width: 0px 1px 3px 1px;
         border-style: solid;
+    }
+    .hianyzas.checked, .hiányzás.checked {
+	background-color: darkred;
     }
 
     .keses, .késés {

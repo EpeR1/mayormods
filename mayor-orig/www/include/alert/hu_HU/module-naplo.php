@@ -1,6 +1,6 @@
 <?php
 
-$ALERT_MSG['checkNaploFailed'] = 'Még nincs betöltve órarend, vagy nem megfelelő/hiányos a tankör-órarend összerendelés.';
+$ALERT_MSG['checkNaploFailed'] = 'Tanév inicializálás még nem történt meg.';
 
 $ALERT_MSG['done'] = 'Sikeresen végrehajtva.';
 $ALERT_MSG['not_implemented'] = 'Ez a funkció még nincs implementálva vagy tesztelés alatt!';

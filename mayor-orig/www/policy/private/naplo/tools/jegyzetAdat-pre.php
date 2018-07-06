@@ -62,7 +62,6 @@
     // generate HTML Template
 if (__READONLY===false) {
 
-
     // formBegin!!!!!! a pre-ben nem létezik :(
     $jegyzetForm = '<form method="post" action="'.href('index.php?page=naplo&sub=tools&f=jegyzetAdat').'">
 	<input class="salt" type="hidden" name="'.__SALTNAME.'" value="'.__SALTVALUE.'" />
@@ -76,8 +75,9 @@ if (__READONLY===false) {
 	<ul style="list-style-type=none">
 	<input type="radio" name="publikus" id="publikus0" value="0" '.$_CHK[0].'/><label for="publikus0">privát</label>
 	<br/><input type="radio" name="publikus" id="publikus1" value="1" '.$_CHK[1].' /><label for="publikus1">látható a kapcsolódó csoportoknak</label>';
-	if (__JEGYZETSZEREPTIPUS=='tanar') $jegyzetForm .= '<br/><input type="radio" name="publikus" id="publikus2" value="2" '.$_CHK[2].' /><label for="publikus2">publikus</label>';
-	else $jegyzetForm .= '<br/><input type="radio" name="publikus" id="publikus2" value="2" '.$_CHK[2].' disabled="disabled" /><label for="publikus2">publikus</label>';
+	//--@madas filter :( 
+	if (__VEZETOSEG===true && __JEGYZETSZEREPTIPUS=='tanar') $jegyzetForm .= '<br/><input type="radio" name="publikus" id="publikus2" value="2" '.$_CHK[2].' /><label for="publikus2">publikus (vezetőség)</label>';
+	else $jegyzetForm .= '<br/><input type="radio" name="publikus" id="publikus2" value="2" '.$_CHK[2].' disabled="disabled" /><label for="publikus2">publikus (csak a vezetőségnek elérhető)</label>';
     $jegyzetForm .= '</ul>';
 
 

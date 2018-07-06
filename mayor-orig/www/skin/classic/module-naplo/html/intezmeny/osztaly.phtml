@@ -308,7 +308,10 @@ function putOsztalyNevsor($ADAT) {
 
 		echo '</div>'."\n";
 
+		if ($value['diakNaploSorszam']!='') echo '<span class="diakNaploSorszam">'.$value['diakNaploSorszam'].'</span>';
 		echo '<span class="diakNev" data-diakid="'.$value['diakId'].'">'.$value['diakNev'].'</span>';
+		if ($value['statusz'][0]['statusz'] != 'jogviszonyban van') echo '<span class="diakJogviszony">'.$value['statusz'][0]['statusz'].'</span>';
+
 		$tmp = array(); 
 		if (is_array($value['osztalyDiak'])) foreach ($value['osztalyDiak'] as $dts) $tmp[] = $dts['beDt'].'-'.(($dts['kiDt'] == '' || $dts['kiDt'] == '0000-00-00') ? '?' : $dts['kiDt']);
 		echo '<span class="diakNev datumok">('.implode(', ', $tmp).')</span>';

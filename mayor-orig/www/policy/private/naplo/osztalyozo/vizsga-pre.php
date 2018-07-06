@@ -29,11 +29,11 @@
 	$ADAT['vizsgatipusok'] = getEnumField('naplo_intezmeny', 'vizsga', 'tipus');
 	$ADAT['zarojegytipusok'] = getEnumField('naplo_intezmeny', 'zaroJegy', 'jegyTipus');
         $ADAT['statusz'] = getEnumField('naplo_intezmeny', 'diak', 'statusz');
+	$ADAT['vizsgaTipus'] = $vizsgaTipus = readVariable($_POST['vizsgaTipus'], 'enum', null, $ADAT['vizsgatipusok']);
 
 	if ($action == 'vizsgajelentkezes' && isset($diakId) && isset($targyId) && isset($evfolyamJel)) {
 	    $ADAT['jelentkezesDt'] = readVariable($_POST['jelentkezesDt'], 'date');
-	    $ADAT['tipus'] = readVariable($_POST['tipus'], 'enum', null, $ADAT['vizsgatipusok']);
-	    if (isset($ADAT['jelentkezesDt']) && isset($ADAT['tipus'])) {
+	    if (isset($ADAT['jelentkezesDt']) && isset($ADAT['vizsgaTipus'])) {
 		vizsgajelentkezes($ADAT);
 	    }
 	} elseif ($action == 'vizsgaKezeles') {
@@ -75,15 +75,20 @@
 	if (count($ADAT['diakIds']) > 0) $ADAT['diakok'] = getDiakokById($ADAT['diakIds']);
 
 
-	$TOOL['diakSelect'] = array('tipus'=>'cella', 'paramName'=>'diakId', 'post'=>array('targyId','jelentkezesDt', 'vizsgaDt', 'evfolyamJel', 'felev'), 'statusz'=>$ADAT['statusz']);
-	$TOOL['targySelect'] = array('tipus'=>'cella', 'mkId' => $mkId, 'post' => array('diakId', 'evfolyamJel', 'felev'));
+	$TOOL['diakSelect'] = array('tipus'=>'cella', 'paramName'=>'diakId', 'post'=>array('targyId','jelentkezesDt', 'vizsgaDt', 'evfolyamJel', 'felev','vizsgaTipus'), 'statusz'=>$ADAT['statusz']);
+	$TOOL['targySelect'] = array('tipus'=>'cella', 'mkId' => $mkId, 'post' => array('diakId', 'evfolyamJel', 'felev','vizsgaTipus'));
 	$TOOL['evfolyamJelSelect'] = array(
                 'tipus' => 'cella', 'paramName' => 'evfolyamJel', 'paramDesc'=>'evfolyamJel','adatok' => getEvfolyamJelek(),
-        	'post' => array('targyId', 'diakId', 'jelentkezesDt', 'vizsgaDt','felev')
+        	'post' => array('targyId', 'diakId', 'jelentkezesDt', 'vizsgaDt','felev','vizsgaTipus')
         );
 	$TOOL['felevSelect'] = array(
-                'tipus' => 'cella', 'paramName' => 'felev', 'post' => array('targyId', 'diakId', 'jelentkezesDt', 'vizsgaDt', 'evfolyamJel')
+                'tipus' => 'cella', 'paramName' => 'felev', 'post' => array('targyId', 'diakId', 'jelentkezesDt', 'vizsgaDt', 'evfolyamJel','vizsgaTipus')
         );
+	for ($i=0; $i<count($ADAT['vizsgatipusok']); $i++) $toolData[$i] = array('vizsgaTipus'=>$ADAT['vizsgatipusok'][$i]);
+	$TOOL['vizsgatipusSelect'] = array(
+	    'tipus' => 'cella', 'paramName' => 'vizsgaTipus', 'paramDesc' => 'vizsgaTipus', 'post' => array('targyId', 'diakId', 'jelentkezesDt', 'vizsgaDt', 'evfolyamJel','felev'), 
+	    'adatok' => $toolData, 'title'=>'VIZSGATIPUS'
+	);
 
 	getToolParameters();
     }

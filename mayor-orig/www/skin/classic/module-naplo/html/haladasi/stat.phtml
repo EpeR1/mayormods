@@ -3,13 +3,12 @@
 
     function putTankorStat($tankorStat) {
 	$mutatHianyzasStat = (is_array($tankorStat['hianyzasStat'])) ? true : false;
-
 	echo '<table class="stat" cellspacing="1">'."\n";
 	echo '<thead><tr>'."\n";
 	    echo '<th>'._TANKORNEV.'</th>'."\n";
 	    echo '<th>'._MEGTARTOTT_ORASZAM.'</th>'."\n";
 	    echo '<th>'._BECSULT_HATRALEVO_ORASZAM.'</th>'."\n";
-	    echo '<th>'._BECSULT_OSSZES_ORASZAM.'</th>'."\n";
+	    echo '<th colspan="2">'._BECSULT_OSSZES_ORASZAM.'</th>'."\n";
 	    echo '<th>'._TERVEZETT_ORASZAM.'</th>'."\n";
 	    if ($mutatHianyzasStat) echo '<th>'._HIANYZAS_ARANY.'</th>'."\n";
 	    echo '<th>'._TANKOR_JEGYEK_SZAMA.'</th>'."\n";
@@ -21,7 +20,7 @@
 	    echo '<tbody>';
 	    echo '<tr>'."\n";
 
-	    echo '<th>';
+	    echo '<th class="tankorNev tankorAdat" data-tankorid="'.$tankorId.'">';
 		echo $tervezettAdat[0]['tankorNev'];
 	    echo '</th>'."\n";
 	    echo '<td>';
@@ -31,8 +30,17 @@
 		echo $tankorStat['becsult'][$tankorId]['oraSzam'];
 	    echo '</td>'."\n";
 	    echo '<td>';
-		echo $tankorStat['becsult'][$tankorId]['oraSzam']+$tankorStat['megtartott'][$tankorId]['oraSzam'];
+		echo $_tmp = $tankorStat['becsult'][$tankorId]['oraSzam']+$tankorStat['megtartott'][$tankorId]['oraSzam'];
 	    echo '</td>'."\n";
+	    $_terv_szazalek = number_format(($_tmp*100/$tervezettAdat['evesOraszam']),2);
+	    if ($_terv_szazalek<70) $_style=' style="background-color: red" ';
+	    elseif ($_terv_szazalek<80) $_style=' style="background-color: orange" ';
+	    elseif ($_terv_szazalek<90) $_style=' style="background-color: yellow" ';
+	    elseif ($_terv_szazalek<100) $_style=' style="background-color: lightgreen" ';
+	    elseif ($_terv_szazalek>=100) $_style=' style="background-color: cornflowerblue" ';
+	    echo '<td data-tervszazalek="'.$_terv_szazalek.'" '.$_style.'>';
+		echo $_terv_szazalek."%";
+	    echo '</td>';
 	    echo '<td title="'.$tankorStat['tanitasiHetekSzama'][$tankorId].' '._TANITASI_HET.'">';
 		    echo $_tervezett=$tervezettAdat['evesOraszam'];
 	    echo '</td>'."\n";
@@ -55,11 +63,11 @@
 	    }
 
 	    echo '<td>';
-		echo '<span title="'._JEGYEK_SZAMA.'">'.intval($tankorStat['jegyekSzama'][$tankorId]).'</span> / ';
-		echo '<span title="'._LETSZAM.'">'.intval($tankorStat['letszam'][$tankorId]).'</span> / ';
-		echo '<span title="'._HETI_ORASZAM.'">'.$tankorStat['tervezett'][$tankorId]['hetiOraszam'].'</span> = ';
-		echo '<span title="'._JEGYSZAM_PER_FO.'">'.((intval($tankorStat['letszam'][$tankorId])!=0)?number_format($tankorStat['jegyekSzama'][$tankorId]/$tankorStat['letszam'][$tankorId],2):'-').'</span> / ';
-		echo '<span title="'._HETI_ORASZAM.'">'.$tankorStat['tervezett'][$tankorId]['hetiOraszam'].'</span> = ';
+		echo '<span title="'._JEGYEK_SZAMA.'">'.intval($tankorStat['jegyekSzama'][$tankorId]).' db </span> / ';
+		echo '<span title="'._LETSZAM.'">'.intval($tankorStat['letszam'][$tankorId]).' fő</span> / ';
+		echo '<span title="'._HETI_ORASZAM.'">'.$tankorStat['tervezett'][$tankorId]['hetiOraszam'].' óra </span> = ';
+		echo '<span title="'._JEGYSZAM_PER_FO.'">'.((intval($tankorStat['letszam'][$tankorId])!=0)?number_format($tankorStat['jegyekSzama'][$tankorId]/$tankorStat['letszam'][$tankorId],2):'-').' db/fő </span> / ';
+		echo '<span title="'._HETI_ORASZAM.'">'.$tankorStat['tervezett'][$tankorId]['hetiOraszam'].' óra </span> = ';
 		echo '<span title="'._ATLAGOS_JEGYSZAM.'">'.((intval($tankorStat['letszam'][$tankorId])!=0 && intval($tankorStat['tervezett'][$tankorId]['hetiOraszam'])!=0)?number_format($tankorStat['jegyekSzama'][$tankorId]/$tankorStat['letszam'][$tankorId]/$tankorStat['tervezett'][$tankorId]['hetiOraszam'],2):'- - . -').'</span>';
 	    echo '</td>'."\n";
 

@@ -16,6 +16,8 @@
     require_once('include/modules/naplo/share/osztaly.php');
     require_once('include/modules/naplo/share/munkakozosseg.php');
 
+global $SZEMESZTER;
+
     function hirnokWrapper($SET) {
 	global $_TANEV;
 	$RESULT = array();
@@ -69,6 +71,7 @@
 	return $RESULT;
     }
 
+
     function getHirnokFolyam($SET = array()) {
 
 	global $_TANEV;
@@ -115,7 +118,7 @@
         }
 
 	if (__DIAK===true || (__NAPLOADMIN===true && $diakId>0)) {
-	    if (_OSZTALYZATOK_ELREJTESE !== true || time() > strtotime($_TANEV['szemeszter'][1]['zarasDt'])) { // --TODO
+	    if (_OSZTALYZATOK_ELREJTESE !== true || time() > strtotime($_TANEV['szemeszter'][2]['zarasDt'])) { // --TODO
 		// új zárójegyek, osztályzatok (diák esetén)
 		$q = "SELECT * from zaroJegy WHERE diakId=%u AND modositasDt>='%s'";
 		$v = array($diakId,$SET['tolDt']);

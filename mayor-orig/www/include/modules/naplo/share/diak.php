@@ -255,6 +255,7 @@
 	$statusz = readVariable($SET['statusz'], 'enum', null, array('jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva'));
 	if (!is_array($statusz) || count($statusz) == 0) $statusz = array('jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva');
 	$statuszonkent = readVariable($SET['statuszonkent'],'bool',true);
+	$felveteltNyertEkkel = readVariable($SET['felveteltNyertEkkel'],'bool',false);
 	$intezmenyDb = intezmenyDbNev(__INTEZMENY);
 
 	// Az összes diák lekérdezése (esetleg lehet majd bent többször is az osztályban!)
@@ -289,7 +290,10 @@
 		// Szűrés a státuszra
 		// Ha az utolsó státusz jó, akkor ok (order by dt desc)
 		$i = 0;
-		$ok = in_array($ret2[$diakId][$i]['statusz'], $statusz) || $_felveteltNyert;
+		if ($felveteltNyertEkkel===true) // ha a paraméter listában nincs felvételt nyert felsorolva, akkor miért engedjük meg? Nem értem.
+		    $ok = in_array($ret2[$diakId][$i]['statusz'], $statusz) || $_felveteltNyert;
+		else 
+		    $ok = in_array($ret2[$diakId][$i]['statusz'], $statusz);
 		// addig megyünk visszafele, amíg
 		//     - nem $ok (még nem találtunk megfelelő státuszt)
 		//     - van még statusz bejegyzés
@@ -314,7 +318,6 @@
 		}
 	    }
 	}
-
 	return $return;
 
     }
@@ -597,6 +600,12 @@
         $r = db_query($q, array('fv'=>'getDiakokTorzslapszama/osztaly', 'modul'=>'naplo_intezmeny','result'=>'keyvaluepair','values'=>$v));
 
         return $r;
+    }
+
+    function getDiakNaploSorszam($diakId,$tanev,$osztalyId) {
+	$q = "SELECT diakNaploSorszam(%u,%u,%u)";
+        $v = array($diakId,$tanev,$osztalyId);
+        return db_query($q, array('fv'=>'getDiakNaploSorszam', 'modul'=>'naplo_intezmeny','result'=>'value','values'=>$v));
     }
 
 ?>

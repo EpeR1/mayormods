@@ -25,6 +25,10 @@
 	    $T[0][] = $oAdat['osztalyJel'];  
 	}
 */
+	foreach ($ADAT['osztalyok'] as $oAdat) {
+	    $T[0][] = $oAdat['osztalyJel'];
+	}
+
 	foreach ($ADAT['tanarAdat'] as $tanarId => $tAdat) {
 	    // tanár neve, képesítései, összes óraszáma, kötelező óraszáma, besorolas
 	    $elsoSor = count($T);
@@ -43,11 +47,11 @@
 		    $sor = array('', $ADAT['targyAdat'][$targyId]['targyNev'],0);
 		    $resz = 0;
 		    foreach ($ADAT['osztalyok'] as $oAdat) { 
-/*
+
 			if (($targyAdat[$oAdat['osztalyId']][1]+$targyAdat[$oAdat['osztalyId']][2])/2 != 0)
 			    $sor[] = ($targyAdat[$oAdat['osztalyId']][1]+$targyAdat[$oAdat['osztalyId']][2])/2;
 			else $sor[] = null;
-*/
+
 			$resz += ($targyAdat[$oAdat['osztalyId']][1]+$targyAdat[$oAdat['osztalyId']][2])/2;
 		    }
 		    $sor[2] = $resz;

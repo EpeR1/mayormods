@@ -113,11 +113,4 @@
 
     }
 
-    function dolgozatModositas($dolgozatId, $dolgozatNev, $tervezettDt) {
-
-	$q = "UPDATE dolgozat SET dolgozatNev='%s', tervezettDt='%s', modositasDt=now() WHERE dolgozatId=%u";
-        return db_query($q, array('fv' => 'dolgozatModositas', 'modul' => 'naplo', 'values' => array($dolgozatNev, $tervezettDt, $dolgozatId)));
-
-    }
-
 ?>

@@ -703,6 +703,8 @@ CREATE TABLE `jegyzetTankor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 DROP FUNCTION IF EXISTS getNev;
+DROP FUNCTION IF EXISTS getOraIgTime;
+DROP FUNCTION IF EXISTS getOraTolTime;
 
 DELIMITER //
  CREATE FUNCTION getNev(id int(10) unsigned, tipus varchar(20))
@@ -725,6 +727,54 @@ DELIMITER //
     END IF;
 
     RETURN (nev);
+ END
+ //
+
+ CREATE FUNCTION getOraTolTime(id int(10) unsigned)
+ RETURNS TIME DETERMINISTIC
+ BEGIN
+    DECLARE oraTolTime TIME;
+
+    SELECT DISTINCT tolTime FROM 
+    (SELECT ora.*,osztalyDiak.osztalyId, osztalyDiak.diakId, %DB%.csengetesiRend.csengetesiRendTipus,
+    tolTime, igTime FROM ora
+    LEFT JOIN %DB%.tankorDiak ON (ora.tankorId = tankorDiak.tankorId AND tankorDiak.beDt<=ora.dt AND (tankorDiak.kiDt IS NULL or tankorDiak.kiDt>=ora.dt))
+    LEFT JOIN %DB%.osztalyDiak ON (tankorDiak.diakId = osztalyDiak.diakId AND tankorDiak.beDt<=ora.dt AND (osztalyDiak.kiDt IS NULL or osztalyDiak.kiDt>=ora.dt))
+    LEFT JOIN %DB%.osztaly ON (osztalyDiak.osztalyId = osztaly.osztalyId)
+    LEFT JOIN %DB%.telephely USING (telephelyId)
+    LEFT JOIN %DB%.csengetesiRend ON (telephely.telephelyId = csengetesiRend.telephelyId AND ora.ora=csengetesiRend.ora)
+    WHERE oraId = id) AS a
+    LEFT JOIN munkatervOsztaly USING (osztalyId)
+    LEFT JOIN nap ON (nap.dt=a.dt AND nap.munkatervId=munkatervOsztaly.munkatervId)
+    WHERE nap.csengetesiRendTipus = a.csengetesiRendTipus
+    LIMIT 1
+    INTO oraTolTime;
+
+    RETURN (oraTolTime);
+ END
+ //
+
+ CREATE FUNCTION getOraIgTime(id int(10) unsigned)
+ RETURNS TIME DETERMINISTIC
+ BEGIN
+    DECLARE oraIgTime TIME;
+
+    SELECT DISTINCT igTime FROM 
+    (SELECT ora.*,osztalyDiak.osztalyId, osztalyDiak.diakId, %DB%.csengetesiRend.csengetesiRendTipus,
+    tolTime, igTime FROM ora
+    LEFT JOIN %DB%.tankorDiak ON (ora.tankorId = tankorDiak.tankorId AND tankorDiak.beDt<=ora.dt AND (tankorDiak.kiDt IS NULL or tankorDiak.kiDt>=ora.dt))
+    LEFT JOIN %DB%.osztalyDiak ON (tankorDiak.diakId = osztalyDiak.diakId AND tankorDiak.beDt<=ora.dt AND (osztalyDiak.kiDt IS NULL or osztalyDiak.kiDt>=ora.dt))
+    LEFT JOIN %DB%.osztaly ON (osztalyDiak.osztalyId = osztaly.osztalyId)
+    LEFT JOIN %DB%.telephely USING (telephelyId)
+    LEFT JOIN %DB%.csengetesiRend ON (telephely.telephelyId = csengetesiRend.telephelyId AND ora.ora=csengetesiRend.ora)
+    WHERE oraId = id) AS a
+    LEFT JOIN munkatervOsztaly USING (osztalyId)
+    LEFT JOIN nap ON (nap.dt=a.dt AND nap.munkatervId=munkatervOsztaly.munkatervId)
+    WHERE nap.csengetesiRendTipus = a.csengetesiRendTipus
+    LIMIT 1
+    INTO oraIgTime;
+
+    RETURN (oraIgTime);
  END
  //
 DELIMITER ; //

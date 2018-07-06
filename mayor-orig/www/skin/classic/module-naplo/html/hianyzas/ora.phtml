@@ -21,7 +21,7 @@
 	$dt = $ORAADAT['dt'];
 	$ora = $ORAADAT['ora'];
 
-	$jovobeli = (strtotime($dt)>time()); // ezt csak itt tiltjuk le, a pre-ben nem!
+	$jovobeli = (strtotime($dt)>time()); // ezt csak itt tiltjuk le, a pre-ben nem! -- ennél szigorúbb a korlátozás a getHianyzasJogosultsag() -on keresztül
 
 	if (!is_array($NEVEK) || count($NEVEK)==0) 
 	    if (!$ADAT['tagokFelvehetok'])
@@ -132,9 +132,10 @@
 			$_hid = $HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['hianyzasId']; 
 			if ($_hid!='') $_igtipus = $_tipus;
 			if ($_tipus=='') $_csstipus = 'jelen'; else $_csstipus=$_tipus;
+			$_radio = ($_hid!='' || ($_tipus=='' && $__jelen)) ?'checked="checked"' : '';
+			$_csstipus .= ($JOG['beirhato'] && ($_hid!='' || ($_tipus=='' && $__jelen))) ?' checked ' : '';
 			echo '<td class="'.$_csstipus.'">';
 			if ($JOG['beirhato']==true && !$jovobeli) {
-			    $_radio = ($_hid!='' || ($_tipus=='' && $__jelen)) ?'checked="checked"' : '';
 			    //echo $_diakId.'/'.$_tipus.'/'.$_hid;
 			    if ($_tipus=='késés') {
 				$_perc = intval(($HADAT[$ORAADAT['oraId']][$_diakId][$_tipus]['perc']));
@@ -271,9 +272,9 @@
     }
 
     function _putImg($tipus,$jelen) {
-	if ($jelen && $tipus=='') echo '<img src="/skin/classic/module-naplo/img/hianyzas/green.gif" alt="x" />';
-	elseif ($tipus=='késés') echo '<img src="/skin/classic/module-naplo/img/hianyzas/yellow.gif" alt="x" />';
-	elseif ($tipus=='hiányzás') echo '<img src="/skin/classic/module-naplo/img/hianyzas/red.gif" alt="x" />';
+        if ($jelen && $tipus=='') echo '<span class="icon-ok-sign" style="display:block;color:green; text-align:center"></span>';
+        elseif ($tipus=='késés') echo '<span class="icon-time" style="display:block;color:yellow; text-align:center"></span>';
+        elseif ($tipus=='hiányzás') echo '<span class="icon-remove-sign" style="display:block;color: red; text-align:center"></span>';
     }
 
 ?>

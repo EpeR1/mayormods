@@ -115,6 +115,7 @@ CREATE TABLE `diak` (
   `gondviseloId` int(10) unsigned DEFAULT NULL,
   `neveloId` int(10) unsigned DEFAULT NULL,
   `anyaId` int(10) unsigned DEFAULT NULL,
+  `beiratoId` int(10) unsigned DEFAULT NULL,
   `allampolgarsag` varchar(16) COLLATE utf8_hungarian_ci DEFAULT 'magyar',
   `lakhelyOrszag` varchar(16) COLLATE utf8_hungarian_ci DEFAULT 'Magyarország',
   `lakhelyHelyseg` varchar(32) COLLATE utf8_hungarian_ci DEFAULT NULL,
@@ -161,9 +162,11 @@ CREATE TABLE `diak` (
   KEY `gondviseloId` (`gondviseloId`),
   KEY `apaId` (`apaId`),
   CONSTRAINT `diak_ibfk_2` FOREIGN KEY (`kezdoTanev`, `kezdoSzemeszter`) REFERENCES `szemeszter` (`tanev`, `szemeszter`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `diak_ibfk_3` FOREIGN KEY (`anyaId`) REFERENCES `szulo` (`szuloId`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `diak_ibfk_3` FOREIGN KEY (`anyaId`)       REFERENCES `szulo` (`szuloId`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `diak_ibfk_4` FOREIGN KEY (`gondviseloId`) REFERENCES `szulo` (`szuloId`) ON DELETE SET NULL ON UPDATE SET NULL,
-  CONSTRAINT `diak_ibfk_5` FOREIGN KEY (`apaId`) REFERENCES `szulo` (`szuloId`) ON DELETE SET NULL ON UPDATE SET NULL
+  CONSTRAINT `diak_ibfk_5` FOREIGN KEY (`apaId`)        REFERENCES `szulo` (`szuloId`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `diak_ibfk_6` FOREIGN KEY (`neveloId`)     REFERENCES `szulo` (`szuloId`) ON DELETE SET NULL ON UPDATE SET NULL,
+  CONSTRAINT `diak_ibfk_7` FOREIGN KEY (`beiratoId`)    REFERENCES `szulo` (`szuloId`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 CREATE TABLE `diakJogviszony` (

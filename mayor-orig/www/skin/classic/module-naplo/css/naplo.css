@@ -26,7 +26,7 @@
 
 
     table.toolBar { width: 95%; max-width: 95%;	border-spacing: 0px; margin: 1em auto; overflow: auto; border-collapse: collapse;}
-    table.toolBar tr.first td.toolBarTitle { border: solid 1px #333333; }
+    table.toolBar tr.first td.toolBarTitle { border-bottom: solid 1px #333; padding-left:4px; }
     table.toolBar tr.first td.toolBarTool { border-style: solid; border-width: 1px 1px 1px 1px; border-color: #333333; }
 
     table.toolBar form { margin: 0px; padding: 0px;}
@@ -42,7 +42,7 @@
 	font-weight: 600;
 	letter-spacing: 0.2px;
 	border-color: rgb(21,71,123);
-	border-width: 1px 0px 1px 1px;
+	border-width: 1px 1px 1px 1px;
 	border-style: solid;
     }
     table.toolBar th button.toolBarClear { float:right; border: none; background-color: #5A85B8; height:10px;font-size:9px; color:inherit; padding:0px 2px; color: rgba(255,255,255,0.5);}
@@ -59,6 +59,8 @@
 
 
 /* TD */
+    table.toolBar td {padding: 0px;}
+    table.toolBar td form td {padding: 1px;}
     table.toolBar td.gap { width: 50%; border-spacing: 0px; }
     table.toolBar td.help {
 	background-color: rgb(11,51,103);
@@ -203,7 +205,7 @@
 
 /*    #updateWindowSide h3:before { font-family: 'Elusive-Icons'; font-size:10px; content: "\e0a4"; padding-right:8px;font-weight:100; }*/
 
-    .updateWindowSide button.mentes,    .updateWindowSide button.torles  { margin: 4px 18px; height:2em; border-radius:2px; border: solid 1px white; color:white;}
+    .updateWindowSide button.mentes,    .updateWindowSide button.torles  { margin: 4px 18px; height:2em; border-radius:2px; border: solid 1px white; color:white; background-color: #ddd;}
     .updateWindowSide button.mentes:hover { background-color: lightgreen; }
     .updateWindowSide button.torles:hover { background-color: red; }
 

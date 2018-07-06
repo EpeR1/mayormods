@@ -22,14 +22,18 @@
     /* PRIVÁT ADATOK */
     if (__NAPLOADMIN === true || __VEZETOSEG === true || __TITKARSAG === true || __TANAR === true || __DIAK === true ) {
 	$oraBeirhato = oraBeirhato($oraId);
+	$dolgozatBeirhato = $oraBeirhato;
 	if ($oraBeirhato===true && $action=='oraBeiras') {
 	    $leiras = readVariable($_POST['leiras'], 'string');
 	    updateHaladasiNaploOra($oraId,$leiras);
 	}
 
-//	$tmp = getTanarAdatById($tanarId);
-//	$_JSON = $tmp[0];
 	$_JSON['oraAdat'] = $ORAADAT = getOraAdatById($oraId);
+
+	if ($dolgozatBeirhato === true && $action=='dolgozatBeiras') {
+	    $dolgozatId = ujDolgozat('',$ORAADAT['tankorId']);
+	    dolgozatModositas($dolgozatId,'',$ORAADAT['dt']);
+	}
 	
 	$q = "SELECT oraId FROM ora WHERE tankorId=%u AND dt<'%s' ORDER BY oraId DESC";
 	$v = array($ORAADAT['tankorId'],$ORAADAT['dt']);
@@ -43,6 +47,7 @@
 //	$_JSON['jegyzet'] = getJegyzet(array('tolDt'=>$tolDt,'igDt'=>$igDt,'tankorIdk'=>$JA['tankorIdk'],
        // módosítható az óra?
         $_JSON['oraBeirhato'] = $oraBeirhato;
+        $_JSON['dolgozatBeirhato'] = $dolgozatBeirhato;
 
         if ($oraBeirhato===true) { // HTML FORM
             $oraForm = '<form method="post" action="'.href('index.php?page=naplo&sub=tools&f=getOraAdat').'">
@@ -54,6 +59,16 @@
 	    $oraForm .= '<button type="button" class="setOraAdat mentes" value="mentés" data-oraid="'.$oraId.'"><span class="icon-ok"></span> MENTÉS </button>';
 	    $oraForm .= '</form>';
             $_JSON['oraForm'] = $oraForm;
+        }
+        if ($dolgozatBeirhato===true) { // HTML FORM
+            $dolgozatForm = '<form method="post" action="'.href('index.php?page=naplo&sub=tools&f=getOraAdat').'">
+    		<input class="salt" type="hidden" name="'.__SALTNAME.'" value="'.__SALTVALUE.'" />
+	        <input class="mayorToken" type="hidden" name="mayorToken" value="'.$_SESSION['mayorToken'].'" />
+	        <input type="hidden" name="action" value="dolgozatBeiras" />
+	        <input type="hidden" name="oraId" value="'.$oraId.'" />';
+	    $dolgozatForm .= '<button type="button" class="setOraAdat mentes" value="mentés" data-dolgozatid="'.$dolgozatId.'"><span class="icon-ok"></span> Új dolgozat bejelentés '.$ORAADAT['dt'].'</button>';
+	    $dolgozatForm .= '</form>';
+            $_JSON['dolgozatForm'] = $dolgozatForm;
         }
     }
 
