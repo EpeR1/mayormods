@@ -46,7 +46,7 @@ fi
 # --
 
 run_script() {
-    FILEELEJE=`echo $FILE | cut -f 1 -d '-'`
+    FILEELEJE=$(basename $FILE | cut -f 1 -d '-')
     FILEREV=${FILEELEJE: -6}
     LOGSQL=""
     if [ "$FILEREV" != "" ]; then
@@ -55,14 +55,14 @@ run_script() {
 	fi
     fi
     if [ ! "${FILEREV}" \< "${REVSTR}" ]; then
-	FILEEXT=`echo $FILE | cut -f 2 -d '.'`
+	FILEEXT=$(basename $FILE | cut -f 2 -d '.')
 	if [ "$FILEEXT" == "sh" ]; then
 	    echo "    - Szkript futtatása ($FILE)..."
 	    . $FILE
 	    if [ $? != 0 ]; then exit 13; fi
 	elif [ "$FILEEXT" == "sql" ]; then
 	    echo "    - SQL utasítások végrehajtása ($FILE)..."
-	    FILEDB=`echo $FILE | cut -f 1 -d '.' | cut -f 3 -d '-'`
+	    FILEDB=$(basename $FILE | cut -f 1 -d '.' | cut -f 3 -d '-')
 	    case "$FILEDB" in
 	        naplo)
 		    DBS=$DB_NAPLO
