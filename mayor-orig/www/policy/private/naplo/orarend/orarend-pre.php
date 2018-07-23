@@ -206,6 +206,7 @@
 	$ADAT['napiMinOra'] = getMinOra();
 	$ADAT['napiMaxOra'] = getMaxOra();
 	$ADAT['hetiMaxNap'] = getMaxNap(array('haladasi'=>true,'tolDt'=>$tolDt,'igDt'=>$igDt));
+	if ($ADAT['hetiMaxNap']<5) $ADAT['hetiMaxNap'] = 5;
 	$ADAT['tankorTipus'] = getTankorTipusok();
 	$ADAT['orakMost'] = getOrakMost();
 

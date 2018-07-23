@@ -248,8 +248,6 @@
 		initTanev($RESULT['intezmeny'], $RESULT['tanev']);
 	    if (_POLICY == 'parent' && $RESULT['parentDiakId'] != '')
 		define('__PARENTDIAKID', $RESULT['parentDiakId']);
-//var_dump($RESULT);
-//die();
 
 	}
 	// Az (alapértelmezett) intézmény lekérdezése - ha még nincs meg

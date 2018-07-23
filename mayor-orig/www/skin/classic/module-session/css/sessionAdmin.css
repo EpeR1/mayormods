@@ -1,6 +1,10 @@
 
-    table.lista { background-color: #aaa; margin: auto; }
-    table.lista thead th, table.lista tfoot th { background-color: rgb(100,40,20); color: white; padding: 2px 5px; }
+    table.lista { width:95%; background-color: #aaa; margin: auto; margin-top:10px;
+	border-spacing: 1px;
+	/*border-collapse: separate;*/
+	font-size:smaller;
+    }
+    table.lista thead th, table.lista tfoot th { background-color: orange; color: white; padding: 2px 5px; }
     table.lista tbody th, table.lista tbody td { background-color: white; padding: 2px 5px; } 
     table.lista tbody tr:nth-child(even) th, table.lista tbody tr:nth-child(even) td { background-color: #eee; } 
     table.lista tbody tr:hover th, table.lista tbody tr:hover td { background-color: #999; color:white; } 

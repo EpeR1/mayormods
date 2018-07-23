@@ -2,7 +2,7 @@
 
     function putSessionList($ADAT) {
 
-	echo '<table class="lista">'."\n";
+	echo '<table class="lista" >'."\n";
 	
 	echo '<thead>'."\n";
 	    echo '<tr>';
@@ -30,13 +30,14 @@
 	    foreach ($ADAT['session'] as $sAdat) {
 		echo '<tr>';
 		    echo '<th>';
-//var_dump($sAdat);
+			if ($sAdat['sessionID']!=_SESSIONID) {
 			formBegin();
 			    echo '<input type="hidden" name="action" value="deleteSession" />'."\n";
 			    echo '<input type="hidden" name="delSessionID" value="'.$sAdat['sessionID'].'" />'."\n";
 			    echo '<input type="hidden" name="delPolicy" value="'.$sAdat['policy'].'" />'."\n";
 			    echo '<input type="submit" class="confirm" title="'._BIZTOS_TOROL.'" name="del" value="'._DELETE.'" />'."\n";
 			formEnd();
+			}
 		    echo '</th>';
 		    echo '<th>'.$sAdat['userAccount'].'</th>';
 		    echo '<td>'.$sAdat['userCn'].'</td>';

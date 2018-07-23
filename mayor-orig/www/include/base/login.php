@@ -86,8 +86,8 @@
 		}
 	    } else {
 		$result = userAuthentication($userAccount, $userPassword, $accountInformation, $toPolicy); // ??? toPolicy benne van az AccountInformation-ben!!! Ldap backend only?
-		logLogin($toPolicy, $userAccount, $result);
 	    }
+	    logLogin($toPolicy, $userAccount, $result);
 
 	    define('_MAYORAUTHRESULT',$result);
 	    if ($result === _AUTH_SUCCESS) {

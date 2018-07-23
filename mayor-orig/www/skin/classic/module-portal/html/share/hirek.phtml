@@ -3,11 +3,15 @@
     function putHirek($ADAT) {
 
 	if (count($ADAT['hirek']['szovegek'])==0) {
-/*	    echo '<div class="egyHir"><div class="hirCim">';
+
+	    if (_POLICY=='public') echo '<div style="width:100%;  color:#eee; text-align:center;margin-top:40px;margin-bottom:40px;"><span style="font-size:120px;" class="icon-eye-close"></span>
+		<br/>Nincs aktuális hír</div>';
+/*
+	    echo '<div class="egyHir"><div class="hirCim">';
 		echo 'MaYoR elektronikus napló';
 	    echo '</div><div class="hir">';
 		echo 'Szabadszoftver a közoktatási intézmények napi adminisztrációjához.';
-		echo '<ul><li><a href="http://www.mayor.hu">www.mayor.hu</a> - a mindennapokra</li></ul>';
+		echo '<ul><li><a href="http://www.mayor.hu">www.mayor.hu</a></li></ul>';
 	    echo '</div></div>';
 */
 	} else {

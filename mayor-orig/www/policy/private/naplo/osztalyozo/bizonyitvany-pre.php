@@ -45,7 +45,7 @@
 	$szemeszterId = readVariable($_POST['szemeszterId'],'id',null);
 	if (!is_null($szemeszterId)) {
 	    //$_TANEV2 = getTanevAdat($szemeszterId);
-	    $_TANEV2 = getTanevAdatBySzemeszterId($szemeszterId); // itt volt egy TYPO
+	    $_TANEV2 = getTanevAdatBySzemeszterId($szemeszterId);
 	    for ($i = 1; $i <= count($_TANEV2['szemeszter']); $i++) { // aktuális tanév szemeszter számai alapján... (???)
 		if (
 		    strtotime($_TANEV2['szemeszter'][$i]['kezdesDt']) <= _TIME
@@ -73,8 +73,8 @@
 	    // diák adatai
 	    $ADAT['diakAdat'] = getDiakAdatById($diakId);
 	    $ADAT['diakKepzes'] = getKepzesByDiakId($diakId, array('result'=>'indexed')); // itt a valaha volt összes képzés lekérdezésre kerül!
-	    if (count($ADAT['diakKepzes'])===1) { /* egyelőre csak ha egy képzésben vesz részt a diák */
-		$ADAT['kepzesOraterv'] = getKepzesOraterv($ADAT['diakKepzes'][0]['kepzesId'],array('arraymap'=>array('targyId','evfolyam','szemeszter')));
+	    for ($i=0; $i<count($ADAT['diakKepzes']); $i++) {
+		$ADAT['kepzesOraterv'][$ADAT['diakKepzes'][$i]['kepzesId']] = getKepzesOraterv($ADAT['diakKepzes'][$i]['kepzesId'],array('arraymap'=>array('targyId','evfolyam','szemeszter')));
 	    }
 
 	    if (isset($szemeszterId)) {
@@ -135,7 +135,7 @@
 		$ADAT['bizonyitvany'] = getDiakBizonyitvany($diakId, $ADAT);
 		$ADAT['hianyzas'] = getHianyzasOsszesitesByDiakId($diakId);
 	    }
-
+// dump($ADAT['bizonyitvany']);
 	    $_VIZSGA = getVizsgak(array('diakId'=>$diakId));
 	    /* REINDEX */
 	    for ($i=0; $i<count($_VIZSGA); $i++) {

@@ -137,16 +137,6 @@
         $r = db_query($q,  array('modul'=>'naplo_intezmeny','fv'=>'getKepzesOraterv', 'result'=>'indexed','values'=>$v));
 
 	$RE = reindex($r, $SET['arraymap']);
-
-	/* Figyelem! Nem az arraymap-et használjuk még. Ezt a függvényt NE írd át! */
-/*        for ($i=0; $i<count($r); $i++) {
-            $targy = (($r[$i]['targyId']=='')) ? $r[$i]['tipus'] : $r[$i]['targyId'];
-            $RE[$targy][$r[$i]['evfolyam']][$r[$i]['szemeszter']] = array(
-                'hetiOraszam'=>$r[$i]['hetiOraszam'],
-                'kovetelmeny'=>$r[$i]['kovetelmeny']
-            );
-        }
-*/
         return $RE;
     }
 

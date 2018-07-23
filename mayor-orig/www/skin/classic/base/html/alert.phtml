@@ -61,6 +61,7 @@
 		$sign='<span class="icon-info-sign '.$class.'"></span>';
 		$hasInfo = true;
 	    }
+
 	    $class .= ' hidden';
 
 	    $msg = '<span>'.$title.' ['.$j.']:</span> ' . $msg;
@@ -71,7 +72,6 @@
 	    // Függetlenül attól, hogy milyen paramétert kaptunk a $_SESSION['alert']-et üresre állítjuk
 	    $_SESSION['alert'] = array();
 	}
-
 	if ($hasInfo==true && $hasError==false) {
 	    echo '<div id="mayorErrorSmall"  class="mayorErrorSmallInfo" ><div><span id="mayorErrorHide" class="icon-remove-sign"></span>'.$x.'</div></div>';
 	} else {

@@ -47,6 +47,7 @@
 
 	echo '<td class="toolBarTitle" id="toolBarTitle" colspan="3">';
 	    if (defined('__PAGETITLE')) echo __PAGETITLE.'<br/>';
+	    else echo 'MaYoR eleketronikus napló'.'<br/>';
 	    echo '<a href="'.href('index.php?page=naplo&sub=intezmeny&f=valtas').'">';
 		if (defined('__TELEPHELYID')) echo '<span id="toolBarIntezmeny" title="TelephelyId:".'.__TELEPHELYID.'>'.__INTEZMENY .', ' . __TANEV.'/'.(__TANEV+1).'</span>';
 		else echo '<span id="toolBarIntezmeny">'.__INTEZMENY . '/' . __TANEV.'</span>';
@@ -54,9 +55,6 @@
 	    if ($showHelp) echo '<span id="toolBarHelpButton" class="onClickHideShow">?</span>';
 	echo '</td>'."\n";
 	reset($TOOL); 
-	// TESZT	echo '<td class="toolBarTool cella" style="position:; vertical-align:top; background-color: #5A85B8">';
-	//	    echo '<div class="icon-search" style="color:white; font-size:30px;max-width:30px;"></div>';
-	//	echo '</td>';
 	foreach ( $TOOL as $tool => $params ) {
 //	    if ( function_exists( $func = "put$tool" ) && $params['tipus']=='cella') {
 	    if ( isset($params['tipus']) && $params['tipus']=='cella') {

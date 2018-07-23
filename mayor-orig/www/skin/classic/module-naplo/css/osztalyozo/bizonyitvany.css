@@ -1,50 +1,5 @@
 @media screen {
 
-/*
-    table.osztalyozo { background-color: rgb(220,220,220); color: white; }
-    table.osztalyozo a { color: white; text-decoration:none }
-    table.osztalyozo a:hover { color: white; text-decoration:underline }
-    table.osztalyozo thead th {	background-color: rgb(100,120,120); }
-    table.osztalyozo thead th.nev { height:30px }
-    table.osztalyozo thead td {	background-color: rgb(100,140,130); text-align: center;	padding: 0px 4px 0px 4px; }
-    table.osztalyozo tfoot th {	background-color: rgb(100,120,120); padding: 0px; vertical-align: center; }
-    table.osztalyozo tfoot th select { width: 200px; }
-    table.osztalyozo tfoot th input { width: 100px; }
-    table.osztalyozo tfoot th input.jegy1 { color: blue; }
-    table.osztalyozo tfoot th input.jegy2 { color: black; }
-    table.osztalyozo tfoot th input.jegy3 { color: green; }
-    table.osztalyozo tfoot th input.jegy4 { color: red; }
-    table.osztalyozo tfoot td {	font-size:10px;	background-color: rgb(100,140,130); text-align: center; }
-    table.osztalyozo tbody th {	background-color: rgb(130,140,150); font-weight: normal; }
-    table.osztalyozo tbody th.atlag { background-color: rgb(100,100,130); padding: 0px 4px 0px 4px; }
-    table.osztalyozo tbody th.kituno { background-color: #ff0000; }
-    table.osztalyozo tbody th.jeles { background-color: #883333; }
-    table.osztalyozo tbody th.bukott { background-color: black; }
-    table.osztalyozo tbody th.i { background-color: #f1f1f1; color: green; }
-    table.osztalyozo tbody th.ni {background-color: #f1f1f1;  color: red; }
-    table.osztalyozo tbody td.jegyek { background-color: #eeeeee; color: black; text-align: center; }
-    table.osztalyozo tbody td.biz { background-color: rgb(180,100,140);	text-align: center; }
-    table.osztalyozo tbody td.biz select { background-color: rgb(180,100,140); }
-    table.osztalyozo tbody td.biz select:hover { background-color: rgb(250,250,250); }
-
-    table.bizstat { margin-left:60px; border: solid 1px orange; }
-    table.bizstat th { background-color: #eeeeee; font-weight: normal; }
-    table.bizstat td { background-color: #f7f7f7; text-align: right; padding-right:5px; padding-left: 5px;}
-    table.bizstat tr.ossz th { background-color: #dddddd; }
-    table.bizstat tr.ossz td { background-color: #dddddd; }
-    table.bizstat caption {
-	margin-left: 60px;
-	caption-side: top;
-	font-size:11px;
-	background-color: #778877;
-	color: white;
-	padding:2px;
-    }
-
-    table.floatleft { float:left }
-*/
-
-
     /* TanuloBizonyitvany */
     table.tanuloBizonyitvany { background-color: #ffffff; }
     table.tanuloBizonyitvany thead th { background-color: rgb(100,140,130);

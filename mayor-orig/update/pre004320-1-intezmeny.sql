@@ -5,7 +5,8 @@ CREATE PROCEDURE upgrade_database_4320()
 BEGIN
 SET NAMES utf8 COLLATE utf8_hungarian_ci;
 
-IF NOT EXISTS (SELECT * FROM information_schema.statistics WHERE TABLE_SCHEMA=DATABASE() and TABLE_NAME='diak' AND INDEX_NAME='diak_ibfk_6') THEN
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME='diak_ibfk_6') THEN
+    UPDATE diak LEFT JOIN szulo ON (neveloId=szuloId) SET diak.neveloId=NULL WHERE diak.neveloId IS NOT NULL AND szulo.szuloId IS NULL;
     ALTER TABLE diak ADD CONSTRAINT `diak_ibfk_6` FOREIGN KEY (`neveloId`) REFERENCES `szulo` (`szuloId`) ON DELETE SET NULL ON UPDATE SET NULL;
 END IF;
 
@@ -15,7 +16,8 @@ IF NOT EXISTS (
     ALTER TABLE `diak` ADD `beiratoId` int(10) unsigned DEFAULT NULL AFTER neveloId;
 END IF;
 
-IF NOT EXISTS (SELECT * FROM information_schema.statistics WHERE TABLE_SCHEMA=DATABASE() and TABLE_NAME='diak' AND INDEX_NAME='diak_ibfk_7') THEN
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS WHERE CONSTRAINT_NAME='diak_ibfk_7') THEN
+    UPDATE diak LEFT JOIN szulo ON (beiratoId=szuloId) SET diak.beiratoId=NULL WHERE diak.beiratoId IS NOT NULL AND szulo.szuloId IS NULL;
     ALTER TABLE diak ADD CONSTRAINT `diak_ibfk_7` FOREIGN KEY (`beiratoId`) REFERENCES `szulo` (`szuloId`) ON DELETE SET NULL ON UPDATE SET NULL;
 END IF;
 

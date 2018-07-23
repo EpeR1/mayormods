@@ -39,7 +39,7 @@
 	    }
 	}
     }
-    $ADAT['tanarok'] = getTanarok(array('extraAttrs'=>'titulus'));
+    $ADAT['tanarok'] = getTanarok(array('extraAttrs'=>'titulus','telephelyId'=>__TELEPHELYID));
     $lr = db_connect('naplo_intezmeny');
     for($i=0; $i<count($ADAT['tanarok']); $i++) {
 	$_tanarId = $ADAT['tanarok'][$i]['tanarId'];

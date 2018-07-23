@@ -38,12 +38,12 @@
 	    array_push($v, $kiDt);
 	}
 	if ($SET['extraAttrs'] != '') $extraAttrs = ', '.$SET['extraAttrs'];
-/* --not implemented
+
+/*
 	if ($SET['telephelyId'] != '') { 
 	    $where[] = " (telephelyId = %u OR telephelyId IS NULL) ";
 	    array_push($v, $SET['telephelyId']);
 	}
-
 	// 2015-08-06 - aktualisStatusz kiiktatása - statusz mező megjelenése miatt...
 	IF( beDt <= CURDATE() AND (kiDt IS NULL OR CURDATE()<=kiDt),'jogviszonyban van','nincs jogviszonyban') as aktualisStatusz, 
 */
@@ -165,6 +165,30 @@
 	$v = array($tanarId, $tanev);
 	return db_query($q, array('fv' => 'getTanarOraszam', 'modul' => 'naplo_intezmeny', 'result' => 'value', 'values' => $v), $olr);
     }
+/*
+    NOT IMPLEMENTED
 
+    function getTanarTelephely($tanarId) {
+
+	$q = "SELECT * FROM tanarTelephely WHERE tanarId=%u";
+	$v = array($tanarId);
+	$r = db_query($q, array('fv' => 'getTanarOraszam', 'modul' => 'naplo_intezmeny', 'result' => 'indexed', 'values' => $v), $olr);
+	for ($i=0; $i<count($r); $i++) {
+	    $RET[$r[$i]['tanarId']][] = $r[$i]['telephelyId']; 
+	}
+	return $RET;
+    }
+
+    function getTelephelyTanar($telephelyId) {
+
+	$q = "SELECT * FROM tanarTelephely WHERE telephelyId=%u";
+	$v = array($telephelyId);
+	$r = db_query($q, array('fv' => 'getTanarOraszam', 'modul' => 'naplo_intezmeny', 'result' => 'indexed', 'values' => $v), $olr);
+	for ($i=0; $i<count($r); $i++) {
+	    $RET[$r[$i]['telephelyId']][] = $r[$i]['tanarId']; 
+	}
+	return $RET;
+    }
+*/
 
 ?>

@@ -10,7 +10,7 @@
         return ($_SERVER['HTTP_X_FORWARDED_FOR']!='')?$_SERVER['HTTP_X_FORWARDED_FOR']:$_SERVER['REMOTE_ADDR'];
     }
 
-    function logLogin($policy, $userAccount, $flag) {
+    function logLogin($policy, $userAccount, $flag) { //loginLog
 	$q = "INSERT INTO loginLog (dt,ip,userAccount,policy,flag) VALUES (NOW(),'%s','%s','%s', %u)";
 	db_query($q, array('fv' => 'logLogin', 'modul' => 'login', 'values' => array(_clientIp(), $userAccount, $policy, $flag)));
     }

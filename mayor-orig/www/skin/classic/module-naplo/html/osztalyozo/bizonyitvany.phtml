@@ -84,21 +84,22 @@
 	    foreach ($ADAT['bizonyitvany']['jegyek'] as $targyId => $targyAdat) {
 
 		if (!in_array($targyId, array_merge($ADAT['magatartasIdk'],$ADAT['szorgalomIdk'])) ) {
-		    $TARGYORATERV = $ADAT['kepzesOraterv'][$targyId];
+		    // // $TARGYORATERV = $ADAT['kepzesOraterv'][$targyId];
 		    echo '<tr>';
 		    echo '<th>';
 			echo $ADAT['targyak'][$targyId]['targyNev'];
-//			echo $ADAT['targyak'][$targyId]['targyId'];
+			echo '<span class="noprint"> ('.$ADAT['targyak'][$targyId]['targyId'].')</span>';
 		    echo '</th>';
 		    /* Bizonyítvány kiírás */
 		    foreach ($ADAT['bizonyitvany']['szemeszterek'] as $i => $szAdat) {
 
 			$_jegyAdat = $ADAT['bizonyitvany']['jegyek'][$targyId][$szAdat['tanev']][$szAdat['szemeszter']];
+
 			echo '<td class="biz">';
 			for ($j=0; $j<count($_jegyAdat); $j++) {
 			    $jegyAdat = $_jegyAdat[$j];    
 			    if (__DIAK !== true || _OSZTALYZATOK_ELREJTESE !== true || time() > strtotime($jegyAdat['hivatalosDt'])) {
-			    $_targyOraterv = $TARGYORATERV[$jegyAdat['evfolyam']][$jegyAdat['szemeszter']][0]; // TODO: evfolyamJel
+			    // // $_targyOraterv = $TARGYORATERV[$jegyAdat['evfolyamJel']][$jegyAdat['szemeszter']][0];
 			    $_title = $jegyAdat['evfolyam'].'. évfolyam';
 			    if ($jegyAdat['evfolyamJel']!='') $_title .= ' ('.$jegyAdat['evfolyamJel'].'. évfolyamjel)'  ;
 			    if ($_targyOraterv['kovetelmeny'] != $jegyAdat['jegyTipus']) {

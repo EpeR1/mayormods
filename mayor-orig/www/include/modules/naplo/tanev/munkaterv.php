@@ -27,7 +27,14 @@
             $r[] = db_query($q, array('fv' => 'initNapok2', 'modul' => 'naplo', 'values' => $v), $lr);
 	/* --- */
 
-	$kovetkezoTanevAdat = getTanevAdat(__TANEV+1); $tanevVege = date('Y-m-d',strtotime('-1 days',strtotime($kovetkezoTanevAdat['kezdesDt'])));
+	$kovetkezoTanevAdat = getTanevAdat(__TANEV+1); 
+	if (strtotime($kovetkezoTanevAdat['kezdesDt']) > strtotime($kovetkezoTanevAdat['zarasDt']))
+	{
+	    $_SESSION['alert'][] = 'alert:Hiba, a következő ('.(__TANEV+1).') tanév előbb végződik, mint kezdődik! Van következő tanév? (admin/tanévek megnyitása menüpont)';
+	    $r[] = false;
+	}
+
+	$tanevVege = date('Y-m-d',strtotime('-1 days',strtotime($kovetkezoTanevAdat['kezdesDt'])));
 	$r[] = napokHozzaadasa(__TANEV, $_TANEV['kezdesDt'], $tanevVege, $_TANEV, $lr);
 
 	orarendiHetekHozzarendelese($_TANEV['kezdesDt'], $_TANEV['zarasDt'], $Hetek, $lr);

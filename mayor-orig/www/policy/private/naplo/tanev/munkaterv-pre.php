@@ -25,7 +25,7 @@
 	else $munkatervId = readVariable($_POST['munkatervId'], 'id');
 	if (!isset($munkatervId)) $munkatervId = 1;
 	$ADAT['munkatervId'] = $munkatervId;
-	if (__NAPLOADMIN || __VEZETOSEG) { // csak admin és a vezetőség módosíthat bármit!
+	if (__NAPLOADMIN===true || __VEZETOSEG===true) { // csak admin és a vezetőség módosíthat bármit!
 
 	    $ADAT['osztaly'] = getOsztalyok();
 	    for ($i = 0; $i < count($ADAT['osztaly']); $i++) {
