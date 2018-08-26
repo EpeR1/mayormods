@@ -142,7 +142,8 @@
     			    } else {
         			$txt = 'nem ered sehonnan!!!!!!!!';
     			    }
-    			    echo '<option value="">'.$txt.$_ki_txt.'</option>'."\n";
+//			    if ('__HELYETTESITES_RENDEZES' == 'súly')
+				echo '<option value="">'.$txt.$_ki_txt.'</option>'."\n";
 
 			    if ($tanarOrak[$i]['tipus'] == 'egyéb') {
     				    echo '<option value="/'.$tanarOrak[$i]['oraId'].'/töröl">töröl</option>'."\n";
@@ -190,7 +191,8 @@
 					$_tanarAdat['súly'] .= '!';
 					/* */
 					echo '<option value="'.$value.'" '.($_disabled?' disabled="disabled" ':'').'>'."\n";
-					echo ''.$_tanarAdat['súly'].'| '.$_tanarAdat['tanarNev'].' ('.$_tanarAdat['tipus'].') '.$_tanarAdat['txt'];
+					if ('__HELYETTESITES_RENDEZES' == 'súly') echo ''.$_tanarAdat['súly'].'| ';
+					echo $_tanarAdat['tanarNev'].' ('.$_tanarAdat['tipus'].') '.$_tanarAdat['txt'];
 					echo ' terhelés:';
 					echo ' '.$ADAT['tanarTerheles'][ $_tanarId ]['lekotott']['heti'];
 					echo ' '.$ADAT['tanarTerheles'][ $_tanarId ]['kotottEloirt']['heti'];

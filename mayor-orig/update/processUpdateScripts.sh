@@ -46,7 +46,9 @@ fi
 # --
 
 run_script() {
-    FILEELEJE=`echo $FILE | cut -f 1 -d '-'`
+    # FILEELEJE=`echo $FILE | cut -f 1 -d '-'`
+    # patch by Acsai Gabor <acsi@c3.hu> - FreeBSD
+    FILEELEJE=$(basename $FILE | cut -f 1 -d '-')
     FILEREV=${FILEELEJE: -6}
     LOGSQL=""
     if [ "$FILEREV" != "" ]; then
@@ -55,14 +57,18 @@ run_script() {
 	fi
     fi
     if [ ! "${FILEREV}" \< "${REVSTR}" ]; then
-	FILEEXT=`echo $FILE | cut -f 2 -d '.'`
+	# FILEEXT=`echo $FILE | cut -f 2 -d '.'`
+	# patch by Acsai Gabor <acsi@c3.hu> - FreeBSD
+	FILEEXT=$(basename $FILE | cut -f 2 -d '.')
 	if [ "$FILEEXT" == "sh" ]; then
 	    echo "    - Szkript futtatása ($FILE)..."
 	    . $FILE
 	    if [ $? != 0 ]; then exit 13; fi
 	elif [ "$FILEEXT" == "sql" ]; then
 	    echo "    - SQL utasítások végrehajtása ($FILE)..."
-	    FILEDB=`echo $FILE | cut -f 1 -d '.' | cut -f 3 -d '-'`
+	    # FILEDB=`echo $FILE | cut -f 1 -d '.' | cut -f 3 -d '-'`
+	    # patch by Acsai Gabor <acsi@c3.hu> - FreeBSD
+	    FILEDB=$(basename $FILE | cut -f 1 -d '.' | cut -f 3 -d '-')
 	    case "$FILEDB" in
 	        naplo)
 		    DBS=$DB_NAPLO

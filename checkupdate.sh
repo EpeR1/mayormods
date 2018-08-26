@@ -25,6 +25,10 @@ if [ "$nrev" -gt "$orev" ]; then
 	tar -xzf /tmp/mayor-naplo-current.tgz
 	tar -xzf /tmp/mayor-portal-current.tgz
         
+	
+	cd $pd
+	git add --all
+	git commit -a -m "Rev: $nrev"
         
         
 fi
