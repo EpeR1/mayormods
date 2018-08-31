@@ -104,7 +104,7 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 	$m2n['mindenki_csop'] = "naplós_felhasználók";		//A Nextcloud "mindenki" csoportja
 								// ebbe a "mindenki" csoportba minden, a script által létrehozott felhasználó bekerül.
 
-	$m2n['zaras_tartas'] =  "2018-06-19";                   //A jelölt napon befejezett, de nem lezárt tanév adatainak tartása tovább, ha már nem kell, akkor állítsd 0-ra.;
+	$m2n['zaras_tartas'] =  "2018-06-19";                   //A jelölt napon befejezett, de nem lezárt tanév adatainak tartása tovább, ha már nem kell, akkor állítsd "1970-01-01"-ra.;
 
 	$m2n['verbose'] = 3 					//Log bőbeszédűség  	(A leg informatívabb, talán a 3-mas fokozat.)
 								// 0: csak fatális hibák, 1: fontosabbak, 2: csop./felh. elvétel, 3: csop./felh. hozzáadás, 

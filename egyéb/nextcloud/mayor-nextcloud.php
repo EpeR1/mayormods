@@ -28,7 +28,7 @@ $m2n['csoportnev_hossz'] = 40;
 $m2n['felhasznalo_hossz'] = 45;
 $m2n['default_lang']  = "hu";
 $m2n['mindenki_csop'] = "naplós_felhasználók";
-$m2n['zaras_tartas'] =  "2018-06-14";
+$m2n['zaras_tartas'] =  "2018-06-14";	// Ha nem kell, akkor állítsd át "1970-01-01"-re.
 $m2n['verbose'] = 3 ;  
 
 $occ_path = "/var/www/nextcloud/";
