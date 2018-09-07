@@ -125,8 +125,13 @@
 	    $A = $ADAT; // az alapértelmezett adatokat vegyük át, majd írjuk felül:
 	    $A['tankorId'] = $TANKORIDK[$i];
 	    $A['tanarIdk'] = getTankorTanaraiByInterval($A['tankorId'],array('tolDt' => $ADAT['tolDt'], 'igDt' => $ADAT['igDt']));
-	    $A['tanarId'] = $A['tanarIdk'][0]['tanarId']; // az elsőt vegyük alapul ha több van :(
-	    $ok = pluszOraFelvesz($A, $lr);
+	    $A['tanarId'] = $A['tanarIdk'][0]['tanarId']; // az elsőt vegyük alapul ha több van
+	    if ($A['tanarId']>0) {
+		$ok = pluszOraFelvesz($A, $lr);
+		dump($A);
+	    }else{
+		$_SESSION['alert'][]= 'info:ennek a tankörnek nincs ('.serialize($A['tankorId']).') tanára az adott intervallumban';
+	    }
 	    if ($ok === false) break;
 	}
 

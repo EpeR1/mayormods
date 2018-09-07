@@ -53,4 +53,6 @@ tagjait kiléptetjük, a tankör óráit a következő szemesztertől töröljü
     define('_TANKORNEV_MODOSITAS_HELP','A jelen ('.__TANEV.') tanévben módosítja a tankör nevét, alapértelmezetten a tagok alapján. Ha nincs még tagja a tankörnek, az osztály-tankör hozzárendelést vesszül alapul.');
     define('_TAGOK_ALAPJAN','Tagok alapján (ha lehet)');
 
+    define('_TANKORCN','Megjegyzés');
+
 ?>

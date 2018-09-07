@@ -6,7 +6,7 @@ if (defined('_LOCKFILE') && @file_exists(_LOCKFILE)) {
     echo '<!DOCTYPE html>'."\n";
     echo '<html>'."\n";
     echo '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">'."\n";
-    echo '<title>MaYoR elektronikus napló karbantartás</title>';
+    echo '<title>MaYoR karbantartás</title>';
 	echo '<style type="text/css">
 	    html {height:100%; min-height: 100%;}
 	    body {font-family: Verdana; background-color: white;
@@ -39,7 +39,7 @@ background: linear-gradient(135deg, rgba(167,207,223,1) 0%,rgba(35,83,138,1) 100
 	echo '<p>The system is down for maintenance.</p>'."\n";
 	echo '<p style="font-size:smaller;">'.date('Y-m-d H:i:s').'</p>';
     echo '</div>'."\n";
-    echo '<footer><a href="https://www.mayor.hu">mayor.hu</a> elektronikus napló &copy; GPL</footer>';
+    echo '<footer><a href="https://www.mayor.hu">mayor.hu</a> &copy; GPL</footer>';
     echo '</body></html>';
 } else {
     header('index.php');

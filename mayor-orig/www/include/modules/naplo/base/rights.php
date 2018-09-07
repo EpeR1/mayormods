@@ -84,7 +84,9 @@
 	    checkNaploStatus();
 	    if (__FOLYO_TANEV === true) 
 		if (__MUNKATERV_OK && __ORAREND_OK && __TANKOROK_OK) checkNaplo(date('Y-m-d'));
-		else $_SESSION['alert'][]= 'info:checkNaploFailed:Tanév:'.($_TANEV['tanev']).':Részletek '.((__MUNKATERV_OK)?'munkaterv ok':'#chknaplo1 nincs munkaterv!').':'.((__ORAREND_OK)?'órarend ok':'#chknaplo2 nincs órarend!').':'.((__TANKOROK_OK)?'órarend-tankörök ok':'#chknaplo3 órarendi óra tankör összerendezési hiány!');
+		else {
+		    if (MAYOR_SOCIAL!==true) $_SESSION['alert'][]= 'info:checkNaploFailed:Tanév:'.($_TANEV['tanev']).':Részletek '.((__MUNKATERV_OK)?'munkaterv ok':'#chknaplo1 nincs munkaterv!').':'.((__ORAREND_OK)?'órarend ok':'#chknaplo2 nincs órarend!').':'.((__TANKOROK_OK)?'órarend-tankörök ok':'#chknaplo3 órarendi óra tankör összerendezési hiány!');
+		}
 	}
     }
 

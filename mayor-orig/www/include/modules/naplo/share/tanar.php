@@ -26,7 +26,7 @@
 	initTolIgDt($SET['tanev'], $beDt, $kiDt, $SET['override']);
 
 	$where = $v = array();
-	if ($SET['összes']!==true && in_date_interval(date(),$beDt,$kiDt)==true) { // ha nincs benne a mai nap a vizsgált intervallumban, akkor értelmetlen (lehet) ez a feltétel
+	if ($SET['összes']!==true && in_date_interval(date('Y-m-d H:m:s'),$beDt,$kiDt)==true) { // ha nincs benne a mai nap a vizsgált intervallumban, akkor értelmetlen (lehet) ez a feltétel
 	    $where[] = "statusz IN ('határozatlan idejű','határozott idejű','külső óraadó')";
 	}
 	if ($beDt != '') {

@@ -3,7 +3,7 @@ h2 { text-align: center;  color: red;}
 h2.toPrint { display: none; }
 
 table.toolBar tr td select, table.toolBar tr td option {
-    font-size:11px;
+font-size:10px; 
 }
 
 table.orarend {
@@ -45,6 +45,7 @@ table.orarend tr td select {
     font-size: 10px;
     background-color:#000011;
     color: white;
+    max-width:140px;
 }
 
 div.unfinished {

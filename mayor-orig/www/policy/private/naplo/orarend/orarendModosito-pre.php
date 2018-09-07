@@ -73,7 +73,6 @@
     }
     if ($action==='do') {
 	$HOT = readVariable($_POST['HALADASIORATOROL'],'id');
-	//dump($HOT);
 	for ($i=0; $i<count($HOT); $i++) {
 	    oraElmarad($HOT[$i]);
 	}
@@ -132,16 +131,17 @@
 	for ($i=0; $i<count($_POST['ORARENDPLUSZ']); $i++) {
 	    if ($_POST['ORARENDPLUSZ'][$i]!='') {
 		$_ADAT = array();
-		list($_TB,$_het,$_nap,$_ora,$_Id) = explode('.',$_POST['ORARENDPLUSZ'][$i]);
+		list($_TB,$_het,$_nap,$_ora,$_Id,$_tanarId) = explode('.',$_POST['ORARENDPLUSZ'][$i]);
 		$_teremId = readVariable($_POST["T_".$_het."_".$_nap."_".$_ora], 'id');
 		$_ADAT['het'] = readVariable($_het,'id');
 		$_ADAT['nap'] = readVariable($_nap,'id');
 		$_ADAT['ora'] = readVariable($_ora,'id');
 		$_ADAT['tolDt'] = readVariable($refTolDt,'date');
 		$_ADAT['igDt'] = readVariable($refIgDt,'date');
-		$_ADAT['tankorId'] = $_ADAT['blokkId'] =readVariable($_Id,'id'); // vagy tankör vagy blokk ID szerepel. a $_TB mondja meg
+		$_ADAT['tankorId'] = $_ADAT['blokkId'] = readVariable($_Id,'id'); // vagy tankör vagy blokk ID szerepel. a $_TB mondja meg
 		$_ADAT['teremId'] = readVariable($_teremId,'id',null);
-		$_ADAT['tanarId'] = readVariable($tanarId,'id',null);
+		if ($tanarId>0) $_ADAT['tanarId'] = readVariable($tanarId,'id',null);
+		else $_ADAT['tanarId'] = readVariable($_tanarId,'id',null);
 		$_ADAT['haladasiModositando'] = $ADAT['haladasiModositando'];
 		if ($_TB == 'T') pluszOraFelvesz($_ADAT);
 		elseif ($_TB == 'B') pluszBlokkFelvesz($_ADAT);
@@ -161,7 +161,6 @@
 		$_ADAT['igDt'] = readVariable($refIgDt,'date');
 		$_ADAT['refDt'] = readVariable($refDt,'date');
 		$_ADAT['tanarId'] = readVariable($_tanarId,'id',null);
-dump($_ADAT);
 		teremModosit($_ADAT);
 	    }
 	}
@@ -191,8 +190,18 @@ dump($_ADAT);
         $ADAT['orarend'] = getOrarendByDiakId($diakId,array('tolDt'=>$tolDt,'igDt'=>$igDt));
     } elseif ($osztalyId!='') {
 	$ADAT['orarend'] = getOrarendByOsztalyId($osztalyId,array('tolDt'=>$tolDt,'igDt'=>$igDt));
+
 	$OADAT = getOsztalyAdat($osztalyId);
 	$ADAT['toPrint'] = $OADAT['osztalyJel'];
+
+
+	$ADAT['felvehetoTankorok'] = getTankorByOsztalyId($osztalyId,$tanev, array('csakId'=>false,'tolDt'=>$refTolDt, 'igDt'=>$refIgDt, 'tanarral'=>true));
+//TEST-TODO
+	$TANKORIDK = getTankorByOsztalyId($osztalyId, __TANEV, array('csakId' => true, 'tolDt' => $tolDt, 'igDt' => $igDt, 'result' => 'indexed', 'tanarral' => false));
+//TEST
+	$ADAT['haladasi'] = getOrak($TANKORIDK, array('tolDt'=>$tolDt,'igDt'=>$igDt, 'result'=>'likeOrarend', 'elmaradokNelkul'=>false));
+//TEST
+	$ADAT['vanHaladasi'] = checkHaladasi(array('tolDt'=>$refTolDt,'igDt'=>$refIgDt));
     } elseif ($mkId!='') {
 	$ADAT['orarend'] = getOrarendByMkId($mkId,array('tolDt'=>$tolDt,'igDt'=>$igDt,'telephely'=>$telephely));
     } elseif ($teremId!='') {
@@ -235,6 +244,7 @@ dump($_ADAT);
 	if ($ADAT['hetiMaxNap'] < __HETIMAXNAP_MINIMUMA) $ADAT['hetiMaxNap'] = __HETIMAXNAP_MINIMUMA;
 
 	$ADAT['tanarId'] = $tanarId;
+	$ADAT['osztalyId'] = $osztalyId;
 	$ADAT['refTolDt'] = $refTolDt;
 	$ADAT['refIgDt'] = $refIgDt;
 	$ADAT['tolDt'] = $tolDt;
@@ -268,7 +278,7 @@ dump($_ADAT);
 //	} else 
 //	    $TOOL['munkakozossegSelect'] = array('tipus'=>'sor', 'paramName'=>'mkId', 'post'=>array('refTolDt','refIgDt','tolDt','telephely'));
 	$TOOL['tanarSelect'] = array('tipus'=>'cella', 'paramName'=>'tanarId', 'post'=>array('refTolDt','refIgDt','tolDt','telephely'));
-//	$TOOL['osztalySelect']= array('tipus'=>'cella', 'paramName'=>'osztalyId', 'post'=>array('refTolDt','refIgDt','tolDt'));
+	$TOOL['osztalySelect']= array('tipus'=>'cella', 'paramName'=>'osztalyId', 'post'=>array('refTolDt','refIgDt','tolDt'));
 //	$TOOL['telephelySelect'] = array('tipus'=>'cella', 'paramName'=>'telephely', 'post'=>array('refTolDt','refIgDt','tolDt','mkId','tanarId'));
 //	$TOOL['teremSelect'] = array('tipus'=>'cella', 'paramName'=>'teremId', 'telephely'=>$telephely, 'post'=>array('refTolDt','refIgDt','tolDt','telephely'));
         if ($osztalyId!='' || $tanarId!='' || $diakId!='' || $mkId!='') $TOOL['tankorSelect'] = array('tipus'=>'sor','paramName'=>'tankorId', 'post'=>array('refTolDt','refIgDt','tolDt','osztalyId','targyId','tanarId','diakId','telephely'));

@@ -12,16 +12,21 @@
 		echo '<th>'._FEROHELY.'</th>';
 		echo '<th>'._TIPUS.'</th>';
 		echo '<th>'._TELEPHELY.'</th>';
+		echo '<th>'._TEREMALLAPOT.'</th>';
 	    echo '</tr></thead>'."\n";
 	    echo '<tfoot><tr></tr></tfoot>'."\n";
 	    echo '<tbody>';
 	    foreach ($ADAT['teremAdat'] as $teremId => $tAdat) {
 		echo '<tr>';
 		    echo '<td>'.$tAdat['teremId'].'</td>';
-		    echo '<td><a href="'.href('index.php?page=naplo&sub=intezmeny&f=terem&teremId='.$tAdat['teremId'].'&telephelyId='.$ADAT['telephelyId']).'">'.$tAdat['leiras'].'</a></td>';
+		    echo '<td><a href="'.href('index.php?page=naplo&sub=intezmeny&f=terem&teremId='.$tAdat['teremId'].'&telephelyId='.$ADAT['telephelyId']).'">';
+			echo '<span class="icon-pencil-alt" style="color:#aaa;"></span> ';
+			echo $tAdat['leiras'];
+		    echo '</a></td>';
 		    echo '<td>'.$tAdat['ferohely'].'</td>';
 		    echo '<td>'.$tAdat['tipus'].'</td>';
 		    echo '<td>'.$ADAT['telephelyAdat'][ $tAdat['telephelyId'] ]['telephelyRovidNev'].'</td>';
+		    echo '<td>'.$tAdat['teremAllapot'].'</td>';
 		echo '</tr>'."\n";
 	    }
 	    echo '</tbody>'."\n";

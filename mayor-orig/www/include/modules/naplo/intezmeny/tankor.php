@@ -12,8 +12,9 @@
 	/* pre-check */
 	if (isset($ADAT['tankorId']) && $ADAT['tankorId']!='') {
 	    $return = $tankorId = $ADAT['tankorId'];
-	    $q = "UPDATE tankor SET felveheto=%u, min=%u, max=%u, kovetelmeny='%s' WHERE tankorId=%u";
-	    $v = array($ADAT['felveheto'], $ADAT['min'], $ADAT['max'], $ADAT['kovetelmeny'],$tankorId);
+	    $_tankorCn = $ADAT['tankorCn'];
+	    $q = "UPDATE tankor SET felveheto=%u, min=%u, max=%u, kovetelmeny='%s', cn='%s' WHERE tankorId=%u";
+	    $v = array($ADAT['felveheto'], $ADAT['min'], $ADAT['max'], $ADAT['kovetelmeny'],$_tankorCn,$tankorId);
 	    db_query($q, array('fv' => 'ujTankor', 'modul' => 'naplo_intezmeny', 'values' => $v));
 	    $tanarFelvesz = false;
 	} else {

@@ -55,6 +55,25 @@
 //	if (is_array($ADAT['orarend']['assoc'])) {
 	if (TRUE) {
 		$T = $ADAT['orarend']['assoc'];
+
+		if (MAYOR_SOCIAL === true) {
+		    echo '<h2 style="text-align: center;
+    background-color: #f06;
+    width: 220px;
+    margin: auto;
+    color: #fff;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    padding: 2px;">MaYoR Social Edition</h2>';
+		    formBegin();
+		    echo '<input type="hidden" name="action" value="orarendiOraTeremModosit" />';
+		    echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />';
+		    echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarId'].'" />';
+		    echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
+		    echo '<input type="hidden" name="teremId" value="'.$ADAT['teremId'].'" />';
+		    echo '<input type="hidden" name="diakId" value="'.$ADAT['diakId'].'" />';
+		    echo '<input type="hidden" name="tankorId" value="'.$ADAT['tankorId'].'" />';
+		}
 		echo '<h2 class="toPrint">'.$ADAT['toPrint'].'</h2>';
 		echo '<table cellspacing="1" class="orarend '.$ADAT['orarendTipus'].'" align="center">'."\n";
 		echo '<thead>';
@@ -214,7 +233,9 @@
 				    //
 				    $het = $_T['het'];
 				    $_ORA = $ADAT['haladasi']['orak'][$dt][$ora][$_T['tankorId']]; 
-				    $_valosTeremId = (is_null($_ORA['teremId']))? $_T['teremId']:$_ORA['teremId'];
+
+$_valosTeremId = (is_null($_ORA['teremId']))? $_T['teremId']:$_ORA['teremId'];
+
 				    $_tankorTipus = $ADAT['tankorok'][$_T['tankorId']][0]['tankorTipus'];
 				    $_tankorTipusId = $ADAT['tankorok'][$_T['tankorId']][0]['tankorTipusId'];
 				    $_oraMostVan = (in_array($_ORA['oraId'],$ADAT['orakMost']));
@@ -260,8 +281,8 @@
 					}
 					if ($TANKOR_DOLGOZAT[$_T['tankorId']][$dt]>0) echo '<span style="color:orange;" class="icon-idea-alt" title="bejelentett dolgozat dolgozatAdat" data-dolgozatid="'.$TANKOR_DOLGOZAT[$_T['tankorId']][$dt].'"></span>';
 					if ($TANKOR_JEGYZET[$_T['tankorId']][$dt]>0) echo '<span style="color:lightgreen;" class="icon-file-edit-alt" title="jegyzet"></span>';
-					$_teremKiir = ($_T['teremId'] != $_valosTeremId) ? '<del>'.$ADAT['termek'][$_T['teremId']]['leiras'].'</del><ins>'.$ADAT['termek'][$_valosTeremId]['leiras'].'</ins>' : $ADAT['termek'][$_T['teremId']]['leiras'];
-					$_ferohely = $ADAT['termek'][$_valosTeremId]['ferohely'];
+$_teremKiir = ($_T['teremId'] != $_valosTeremId) ? '<del>'.$ADAT['termek'][$_T['teremId']]['leiras'].'</del><ins>'.$ADAT['termek'][$_valosTeremId]['leiras'].'</ins>' : $ADAT['termek'][$_T['teremId']]['leiras'];
+$_ferohely = $ADAT['termek'][$_valosTeremId]['ferohely'];
 					$_letszam  = $ADAT['tankorLetszamok'][$_T['tankorId']];
 					if ($_T['tankorId']!='') {
 					    echo '<span title="'.$_targyJel.' '.$_osztalyJel.' ('.$ADAT['tankorok'][$_T['tankorId']][0]['tankorId'].') '.$_tankorTipus.'" >';
@@ -271,7 +292,27 @@
 					    echo "$_targyjel : $_osztalyJel : ";
 					}
 					echo ', ';
-					echo '<span title="'.$_ferohely.'/'.$_letszam.'" class="t'.( ($_ferohely!=0 && $_ferohely<$_letszam) ? 0 : 1).'">'.$_teremKiir.'</span>';
+					echo '<span class="normalTerem" data-tmpid="'.intval(++$tmpid).'" title="'.$_ferohely.'/'.$_letszam.'" class="t'.( ($_ferohely!=0 && $_ferohely<$_letszam) ? 0 : 1).'">'.$_teremKiir.'</span>';
+
+// mindenkinek módosítható (social edition)
+if (MAYOR_SOCIAL === true) {
+//  if ($_valosTeremId == 0) {
+    // (`het`,`nap`,`ora`,`tanarId`,`tolDt` = teremId),
+    $_keyBase = 'OOM+'.$_T['het'].'+'.$nap.'+'.$ora.'+'.$_T['tanarId'].'+'.$_T['tolDt'];
+    $_hidden = ($_valosTeremId > 0)?' style="display:none" ':'';
+    echo '<select class="teremModosit onChangeSubmit" data-tmpid="'.intval($tmpid).'" name="'.$_keyBase.'" '.$_hidden.'>';
+	if ($_valosTeremId!=0)
+	    echo '<option value="teremTorol">-nem tudom, de nem ez-</option>';
+	else
+	    echo '<option value="0">-</option>';
+	foreach ($ADAT['termek'] as $__teremId => $__teremAdat) {
+	    $_SEL = ($_valosTeremId == $__teremId) ? ' selected="selected" ':'';
+	    echo '<option value="'.$__teremId.'" '.$_SEL.'>'.$__teremAdat['leiras'].'</option>';
+	}
+    echo '</select>';
+//  }
+}
+
 					echo '<br/>';
 					if ($_ORA['kit']!='') {
 					    echo '<span class="helyett">';
@@ -339,6 +380,8 @@
 		}
 		echo '</tbody>';
 		echo '</table>'."\n\n<!-- EOT -->\n\n";
+
+	    if (MAYOR_SOCIAL === true) formEnd();
 
 //	    } // foreach
 

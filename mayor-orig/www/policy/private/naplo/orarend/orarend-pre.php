@@ -48,7 +48,7 @@
 	}
     }
     
-// -- TESZT VÉGE
+    // -- TESZT VÉGE
     $targyId = readVariable($_POST['targyId'], 'id', getPSFvar('targyId'));
     $tankorId = readVariable($_POST['tankorId'], 'id', readVariable($_GET['tankorId'],'id',getPSFvar('tankorId')));
     $osztalyId = readVariable($_POST['osztalyId'], 'id', readVariable($_GET['osztalyId'],'id',getPSFvar('osztalyId')));
@@ -95,6 +95,26 @@
 	if ($het == '') $het = getLastOrarend();
 	$igDt = date('Y-m-d', mktime(0,0,0,date('m',strtotime($tolDt)), date('d',strtotime($tolDt))+6, date('Y',strtotime($tolDt))));
 
+    // SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL
+    if (MAYOR_SOCIAL === true && $action== 'orarendiOraTeremModosit') {
+	dump($_POST);
+	$_MODIFY;
+	if(is_array($_POST)) {
+	    $TMP_TERMEK = getTermek(array('result' => 'assoc'));
+	    $TMP_TEREMIDS = array_keys($TMP_TERMEK);
+	    foreach($_POST as $_pk => $_pv) {
+		if (($_pv>0 || $_pv=="teremTorol") && substr($_pk,0,3) == 'OOM') {
+		    list($placeholder, $M['het'], $M['nap'], $M['ora'], $M['tanarId'],$M['tolDt']) = explode('+',$_pk);
+		    if ($_pv=='teremTorol') $_pv=0; // hackit
+		    $M['teremId'] = readVariable($_pv,'id',0,$TMP_TEREMIDS);
+		    $M['tanev'] = __TANEV;
+                    $teremModositasResult = teremModositas($M);
+		}
+	    }
+	}	
+    }
+    // SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL
+
     $ADAT['termek'] = getTermek(array('result'=>'assoc','telephelyId'=>$telephelyId));
     $ADAT['tanarok'] = getTanarok(array('result'=>'assoc','telephelyId'=>$telephelyId));                                 //--TODO telephely
 // =====================
@@ -115,6 +135,9 @@
 	/* ide kerülhet, hogy a diák (__NAGYKORU)/szülő engedélyezte-e a saját/gyermeke órarendjének mutatását */
 	$ADAT['adatKezeles'] = getDiakAdatkezeles($diakId,array('publikusOrarend'=>1));
 	$ADAT['publikusOrarend'] = ($ADAT['adatKezeles']['publikusOrarend']['ertek'] == 1) ? true : false;
+
+	// if (MAYOR_SOCIAL === true) $ADAT['publikusOrarend'] = true;
+
 	/* Ha belül vagyunk, akkor állíthassa be egy gombnyomással, hogy ő bizony engedélyezi */
 	define(__ALLOWSET, ((__NAGYKORU===true && $diakId==__USERDIAKID) || (__NAGYKORU === false && $diakId==__SZULODIAKID))); 
 	if (_POLICY == 'public' && $ADAT['publikusOrarend'] === false) { 
@@ -235,6 +258,13 @@
 		$ADAT['hianyzas'] = getHianyzasByDiakIds(array($diakId), array('tolDt' => $tolDt, 'igDt' => $igDt, 'result' => 'multiassoc', 'keyfield'=>'oraId'));
 	    }
         }
+
+	$ADAT['dt'] = $tolDt;
+	$ADAT['tanarId'] = $tanarId;
+	$ADAT['osztalyId'] = $osztalyId;
+	$ADAT['diakId'] = $diakId;
+	$ADAT['tankorId'] = $tankorId;
+	$ADAT['teremId'] = $teremId;
 	if ($skin=='ajax' && $_REQUEST['httpResponse']=='json') $_JSON['orarend']=$ADAT;
 
 //=====================================

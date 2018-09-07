@@ -26,6 +26,7 @@
 		}
 		echo '<input type="hidden" name="action" value="do" />';
 		echo '<input type="hidden" name="tanarId" value="'.$ADAT['tanarId'].'" />';
+		echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
 		echo '<input type="hidden" name="refTolDt" value="'.$ADAT['refTolDt'].'" />';
 		echo '<input type="hidden" name="refIgDt" value="'.$ADAT['refIgDt'].'" />';
 		echo '<input type="hidden" name="tolDt" value="'.$ADAT['tolDt'].'" />';
@@ -194,11 +195,11 @@ for ($oi=0; $oi<count($ADAT['orarendioraTankor']['orarendiOra'][$het][$nap][$ora
           //if ($_tankorId==$ADAT['assoc'][$nap][$ora]['orak'][$i]['tankorId']) {
           //      $X[] = $_tankorId;
           //}
-          echo '<option value="'.$__tanarId.'%'.$__osztalyJel.'%'.$__targyJel.'%'.$__tankorId.'"'.$__SEL.'>';
-          echo $__TANKOR['tankorNev'];
-          echo "($__tankorId)";
+        	echo '<option value="'.$__tanarId.'%'.$__osztalyJel.'%'.$__targyJel.'%'.$__tankorId.'"'.$__SEL.'>';
+        	echo $__TANKOR['tankorNev'];
+        	echo "($__tankorId)";
           //if (is_array($X) && in_array($_tankorId,$X)) echo '+';
-          echo '</option>'."\n";
+        	echo '</option>'."\n";
 	}
       echo '</select>';
 	echo '</div>';
@@ -272,12 +273,15 @@ for ($oi=0; $oi<count($ADAT['orarendioraTankor']['orarendiOra'][$het][$nap][$ora
 
     function _putPluszOra($het,$nap,$ora,$TANKOROK,$BLOKKOK) {
 
+
 	echo '<select name="ORARENDPLUSZ[]">';
 	    echo '<option value="">'."$het-$nap-$ora".'</option>';
 	    echo '<optgroup class="tankor" label="'._TANKOR.'">';
 	    for ($i=0; $i<count($TANKOROK); $i++) {
-		$key = "T.$het.$nap.$ora.".($_id = $TANKOROK[$i]['tankorId']);
+		$key = "T.$het.$nap.$ora.".($_id = $TANKOROK[$i]['tankorId']).'.'.$TANKOROK[$i]['tanarok'][0]['tanarId'];
 		$value = $TANKOROK[$i]['tankorNev'].' ('.$_id.')';
+		for ($j=0; $j<count($TANKOROK[$i]['tanarok']);$j++) 
+		    $value .= ' '.$TANKOROK[$i]['tanarok'][$j]['tanarNev'];
 		echo '<option value="'.$key.'">'.$value.'</option>'."\n";
 	    }
 	    echo '</optgroup><optgroup class="blokk" label="'._BLOKK.'">';

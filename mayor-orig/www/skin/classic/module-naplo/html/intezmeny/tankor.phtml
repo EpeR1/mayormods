@@ -28,11 +28,6 @@
 
 	global $TANKOR_TIPUS;
 	/* $TOPOST['tankoradat'] */
-
-	$TT=array();
-	for ($i=0; $i<count($TOPOST['tankortanar']); $i++) {
-	    $TT[] = $TOPOST['tankortanar'][$i]['tanarNev'];
-	}
     
 	if (!is_array($TARGY)) return false;
 	    $SZEMCHECK = array();
@@ -61,11 +56,16 @@
 	    echo '<h2>'._TANKOR.' ';
 		echo $MK['leiras'].'/'.$TARGY['targyNev'];
 		if ($TARGY['targyJelleg']!='') echo ' ('.$TARGY['targyJelleg'].')';
-		echo ' '.implode(', ',$TT);
+		for ($i=0; $i<count($TOPOST['tankortanar']); $i++) {
+		    echo ' ';
+		    echo '<span class="tanarNev" data-tanarid="'.$TOPOST['tankortanar'][$i]['tanarId'].'" >';
+		    echo $TOPOST['tankortanar'][$i]['tanarNev'];
+		    echo '</span>';
+		}
 	    echo '</h2>'."\n";	
 
-
 	echo '<table>';
+
 	echo '<tr>'."\n";
 	echo '<th>'._ELNEVEZES.'</th>';
 	    echo '<td>';
@@ -98,6 +98,12 @@
 	    echo '</td>';
 	echo '</tr>';
 	echo '<tr>'."\n";
+	echo '<th>'._TANKORCN.'</th>';
+	    echo '<td colspan="2">';
+		echo '<input type="text" name="tankorCn" value="'.$TOPOST['tankoradat']['cn'].'" />';
+	    echo '</td>';
+	echo '</tr>'."\n";
+
 	echo '</table>';
 
 	echo '<h2>'._ALTALANOS.'</h2>'."\n";	

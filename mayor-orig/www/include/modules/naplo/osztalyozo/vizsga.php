@@ -3,7 +3,7 @@
     function vizsgajelentkezes($ADAT) {
 
 	$q = "INSERT INTO vizsga (diakId, targyId, evfolyam, evfolyamJel, felev, tipus, jelentkezesDt) VALUES (%u, %u, %u, '%s', %u, '%s', '%s')";
-	$v = array($ADAT['diakId'], $ADAT['targyId'], $ADAT['evfolyam'], $ADAT['evfolyamJel'], $ADAT['felev'], $ADAT['tipus'], $ADAT['jelentkezesDt']);
+	$v = array($ADAT['diakId'], $ADAT['targyId'], $ADAT['evfolyam'], $ADAT['evfolyamJel'], $ADAT['felev'], $ADAT['vizsgaTipus'], $ADAT['jelentkezesDt']);
 	return db_query($q, array('modul' => 'naplo_intezmeny', 'fv' => 'vizsgajelentkezes', 'result' => 'insert', 'values' => $v));
 
     }
@@ -65,7 +65,6 @@
 
 	if (is_array($jegyek)) foreach ($jegyek as $vizsgaId => $jegyAdat) {
 	    $vizsgaAdat = getVizsgaAdatById($vizsgaId);
-// dump($vizsgaAdat);
 	    // A beírandó jegy adatai szinkronban kell legyenek a vizsga adataival
 	    $jegyAdat['felev'] = $vizsgaAdat['felev'];
 	    $jegyAdat['diakId'] = $vizsgaAdat['diakId'];
@@ -78,13 +77,16 @@
 	    if ($vizsgaAdat['vizsgaDt'] != '' && !isset($vizsgaAdat['zaroJegyId']) && !isset($vizsgaAdat['zaradekId'])) {
 		// vizsga értékelés záradékai
 		if ($bukas) {
-		    if (
-			$jegyAdat['jegyTipus'] != 'jegy' 
-		        && $jegyAdat['jegyTipus'] != 'féljegy'
-			&& $vizsgaAdat['tipus'] == 'javítóvizsga'
-		    ) $zaradekIndex = $ZaradekIndex['vizsga'][$vizsgaAdat['tipus'].' nem teljesített'];
-		    else $zaradekIndex = $ZaradekIndex['vizsga'][$vizsgaAdat['tipus'].' bukás'];
-		} else { $zaradekIndex = $ZaradekIndex['vizsga'][ $vizsgaAdat['tipus'] ]; }
+		    if ($jegyAdat['jegyTipus'] != 'jegy' 
+		    && $jegyAdat['jegyTipus'] != 'féljegy'
+		    && $vizsgaAdat['tipus'] == 'javítóvizsga') {
+			$zaradekIndex = $ZaradekIndex['vizsga'][$vizsgaAdat['tipus'].' nem teljesített'];
+		    } else {
+			$zaradekIndex = $ZaradekIndex['vizsga'][$vizsgaAdat['tipus'].' bukás'];
+		    }
+		} else { 
+		    $zaradekIndex = $ZaradekIndex['vizsga'][ $vizsgaAdat['tipus'] ]; 
+		}
 		$Z = array(
 		    'zaradekIndex' => $zaradekIndex,
 		    'diakId' => $vizsgaAdat['diakId'],

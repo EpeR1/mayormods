@@ -7,8 +7,8 @@
 
 */
 
-define('_MAIN_TITLE','MaYoR elektronikus napló');
-define('_MAIN_FOOTER','<a href="http://www.mayor.hu./">MaYoR</a> elektornikus napló - 2002-2018 &copy; <a href="LICENSE.txt">GPL</a>');
+define('_MAIN_TITLE','MaYoR');
+define('_MAIN_FOOTER','<a href="http://www.mayor.hu./">MaYoR</a> - 2002-2018 &copy; <a href="LICENSE.txt">GPL</a>');
 
 define('_TANAR','tanár');
 define('_DIAK','diák');
@@ -25,7 +25,7 @@ define('_CONTROL_FLAG_OPTIONAL','A bejelentkezés nem kötelező.');
 define('_PRIVATE_PASSWORD','Jelszó');
 define('_PARENT_PASSWORD','Szülői jelszó');
 define('_PUBLIC_PASSWORD','Külső jelszó');
-define('_MAYOR_DESC','MaYoR elektronikus napló program');
+define('_MAYOR_DESC','MaYoR');
 
 define('_HELP','Súgó');
 define('_LOGOUT','Kilépés');

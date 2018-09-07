@@ -549,7 +549,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                             nxt_register_userena($link, $curr);			//Ha netán le lenne tiltva, akkor engedélyezi,
                             user_ena($curr);					//ha a script tiltotta le.
                         }
-                    } else { if ($log['verbose'] > 1 ){ echo "? -\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."\tnincs benne a nyilvántartásban.\n";} }
+                    } else { if ($log['verbose'] > 1 ){ echo "? -\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."\tszerepel a naplóban, de nincs benne az m2n nyilvántartásában.\n";} }
                     
                     foreach($nxt_group as $key3 => $val3){			//A tankörök egyeztetése
                         if(in_array($key3, $tankorei) or $key3 == $m2n['mindenki_csop']){ //szerepel-e a felhasználó tankörei között a csoport, vagy a "mindenki" csoport?

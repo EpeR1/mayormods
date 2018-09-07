@@ -30,7 +30,6 @@
 	$ADAT['zarojegytipusok'] = getEnumField('naplo_intezmeny', 'zaroJegy', 'jegyTipus');
         $ADAT['statusz'] = getEnumField('naplo_intezmeny', 'diak', 'statusz');
 	$ADAT['vizsgaTipus'] = $vizsgaTipus = readVariable($_POST['vizsgaTipus'], 'enum', null, $ADAT['vizsgatipusok']);
-
 	if ($action == 'vizsgajelentkezes' && isset($diakId) && isset($targyId) && isset($evfolyamJel)) {
 	    $ADAT['jelentkezesDt'] = readVariable($_POST['jelentkezesDt'], 'date');
 	    if (isset($ADAT['jelentkezesDt']) && isset($ADAT['vizsgaTipus'])) {
