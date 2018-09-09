@@ -2,8 +2,7 @@
 <?php 
 $db = array();
 $m2n = array();
-
-
+////////////////////////////////////////////// Figyelem! az alábbi konfig külön fájból töltődik/töltődhet!! /////////////////////////////////
 $db['host'] = "localhost";
 $db['port'] = "3306";
 $db['user'] = "root";
@@ -33,6 +32,12 @@ $m2n['verbose'] = 3 ;
 
 $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
+
+$cfgfile = getcwd()."mayor-nextcloud.cfg.php";      // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
+if( file_exists($cfgfile)===TRUE ){     include($cfgfile);  }
+
+
+
 
 // Le kell cserélni az ékezetes betűket, mert a Vezetéknév.Keresztnév nem POSIX kompatibilis.
 $search = array( 'á', 'ä', 'é', 'í', 'ó', 'ö', 'ő', 'ú', 'ü', 'ű', 'Á', 'Ä', 'É', 'Í', 'Ó', 'Ö', 'Ő', 'Ú', 'Ü', 'Ű');	// egyelőre csak a magyar betűket ismeri
@@ -107,7 +112,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 $ret['status'][] = $row['status'];
             }
             mysqli_free_result($r);
-            if ($log['verbose'] > 4 ){ echo "*\tFelhasználó-feljegyzések lekérdezése.\n"; }
+            if ($log['verbose'] > 4 ){ echo "*\tFelhasználó m2n nyilvántartás lekérdezése.\n"; }
             return $ret;
         } else {
             echo "\nM2N -> \t**** Adatbázislekérdezési hiba! ****\n";
@@ -124,7 +129,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 $ret[] = $row['account'];
             }
             mysqli_free_result($r);
-            if ($log['verbose'] > 4 ){ echo "*\tFelhasználó-letiltások feljegyzésének lekérdezése.\n"; }
+            if ($log['verbose'] > 4 ){ echo "*\tFelhasználó-letiltások m2n nyilvántartás lekérdezése.\n"; }
             return $ret;
         } else {
             echo "\nM2N ->\t**** Adatbázislekérdezési hiba! ****\n";
@@ -136,7 +141,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         $q = "INSERT INTO ".$db['m2n_db'].".".$db['m2n_prefix']."register (account) VALUES ('".$account."')";
         if ($log['verbose'] > 5 ){ echo "M2N -> \t".$q."\n"; }
         if(( mysqli_query($link, $q)) !== FALSE ){
-            if ($log['verbose'] > 4 ){ echo "*\tFelhasználó-hozzáadás feljegyzése.\n"; }
+            if ($log['verbose'] > 4 ){ echo "*\tFelhasználó-hozzáadás, m2n nyilvántartásba vétele.\n"; }
         } 
     }
 
@@ -145,7 +150,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         $q = "UPDATE ".$db['m2n_db'].".".$db['m2n_prefix']."register SET status='active' WHERE account='".$account."'";
         if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
         if(( mysqli_query($link, $q)) !== FALSE ){
-            if ($log['verbose'] > 4 ){ echo "*\tFelhasználó-engedélyezés feljegyzése.\n" ;}
+            if ($log['verbose'] > 4 ){ echo "*\tFelhasználó-engedélyezés, m2n nyilvántartásba vétele.\n" ;}
         }
     }
 
@@ -154,7 +159,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         $q = "DELETE FROM ".$db['m2n_db'].".".$db['m2n_prefix']."register WHERE account='".$account."' ";
         if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
         if(( mysqli_query($link, $q)) !== FALSE ){
-            if ($log['verbose'] > 5 ){ echo "*\tFelhasználó-törlés feljegyzése.\n"; }
+            if ($log['verbose'] > 5 ){ echo "*\tFelhasználó-törlés, m2n nyilvántartásba vétele.\n"; }
         }
     }
     
@@ -163,7 +168,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         $q = "UPDATE ".$db['m2n_db'].".".$db['m2n_prefix']."register SET status='disabled' WHERE account='".$account."'";
         if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
         if(( mysqli_query($link, $q)) !== FALSE ){
-            if ($log['verbose'] > 5 ){ echo "*\tFelhasználó-letiltás feljegyzése.\n"; }
+            if ($log['verbose'] > 5 ){ echo "*\tFelhasználó-letiltás, m2n nyilvántartásba vétele.\n"; }
         }
     }
 
@@ -459,6 +464,14 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     if($log['verbose'] > 0) { echo "\n\n######## Mayor-Nextcloud Script ########\n\n\n"; }
 
+    if( file_exists($cfgfile)===TRUE ){
+        include($cfgfile);
+        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: ($cfgfile fájlból.)"; }
+    } else {
+        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: (mayor-nextcloud.php fejlécéből.)"; }
+    }
+    
+    
     if(($link = db_connect($db)) == FALSE){			//csatlakozás
         echo "\n******** MySQL (general) kapcsolat hiba. ********\n";
         echo "\n******** Script leáll... ********\n";
@@ -549,7 +562,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                             nxt_register_userena($link, $curr);			//Ha netán le lenne tiltva, akkor engedélyezi,
                             user_ena($curr);					//ha a script tiltotta le.
                         }
-                    } else { if ($log['verbose'] > 1 ){ echo "? -\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."\tszerepel a naplóban, de nincs benne az m2n nyilvántartásában.\n";} }
+                    } else { if ($log['verbose'] > 1 ){ echo "_??? -\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."\tszerepel a naplóban, de nincs benne az m2n nyilvántartásában.\n";} }
                     
                     foreach($nxt_group as $key3 => $val3){			//A tankörök egyeztetése
                         if(in_array($key3, $tankorei) or $key3 == $m2n['mindenki_csop']){ //szerepel-e a felhasználó tankörei között a csoport, vagy a "mindenki" csoport?
@@ -577,9 +590,11 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 user_add($curr, $curr_n);					//Akkor hozzá kell adni
                 nxt_register_useradd($link, $curr);
                     
-                foreach($tankorei as $key3 => $val3){				//Hozzáadja a (tankör)csoportokhoz is egyből.
-                    group_user_add($val3,$curr);
-                    if ($log['verbose'] > 2 ){ echo "* -\t\tHozzáadva a:".po("\t $val3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n"; }
+                foreach($tankorei as $key3 => $val3){				//Hozzáadja a (tankör)csoportokhoz is egyből,
+                    if(in_array($key3, $nxt_group) {                //de, csak akkor, ha az a csoport a Nextcloud-ban is létezik.
+                        group_user_add($val3,$curr);
+                        if ($log['verbose'] > 2 ){ echo "* -\t\tHozzáadva a:".po("\t $val3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n"; }
+                    }
                 }                
                 $params['quota'] = $m2n['default_quota'];			// Alapértelmezett kvóta
                 $params['lang'] = $m2n['default_lang'];				// Nyelv
