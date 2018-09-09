@@ -116,7 +116,10 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
     $occ_user = "www-data";                             //A Nextcloud-servert futtató (Apache) felhasználónév
 
-
+    $cfgfile  = getcwd()."mayor-nextcloud.cfg.php";     //Lehetőség van a konfig-fejléc exportálására egy külön fájlba, 
+                                                        // így a mayor-nextcloud scriptet nem kell szerkeszteni, ha frissítés érkezik hozzá.
+                                                        // Ez alapértelmezetten a maxor-nextcloud.php -val kell egy könyvtárba legyen.
+                                                        
 
 	FONTOS!!
 		A Nextcloud szerver "occ" parancsa elérhető kell legyen a script számára!
