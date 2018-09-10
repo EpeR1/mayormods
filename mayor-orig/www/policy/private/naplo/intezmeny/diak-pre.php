@@ -23,6 +23,7 @@
 	require_once('include/modules/naplo/share/hianyzasModifier.php');
 	require_once('include/modules/naplo/share/jegyModifier.php');
 	require_once('include/modules/naplo/share/osztalyModifier.php');
+	require_once('include/modules/naplo/share/targy.php');
 	require_once('include/share/print/pdf.php');
 
 	global $_JSON;
@@ -39,6 +40,9 @@
 	$ADAT['fogyatekossag'] = getSetField('naplo_intezmeny', 'diak', 'fogyatekossag');
 	$ADAT['kozteruletJelleg'] = getEnumField('naplo_intezmeny', 'diak', 'lakhelyKozteruletJelleg');
 	$ADAT['statusz'] = getEnumField('naplo_intezmeny', 'diak', 'statusz');
+	$ADAT['vizsgaSzintek'] = getEnumField('naplo_intezmeny', 'diakNyelvvizsga', 'vizsgaSzint');
+	$ADAT['vizsgaTipusok'] = getEnumField('naplo_intezmeny', 'diakNyelvvizsga', 'vizsgaTipus');
+
 // EZ MI????
 	$ADAT['zaradek'] = $ZaradekIndex['jogviszony megnyitás'];
 	$ADAT['iktatoszam'] = readVariable($_POST['iktatoszam'], 'string' );
@@ -105,6 +109,17 @@
 		} elseif ($action == 'diakKepUpload') {
 		    // --TODO könyvtár létrehozás?
 		    mayorFileUpload(array('subdir'=>_DOWNLOADDIR.'/private/naplo/face/'.__TANEV,'filename'=>$diakId.'.jpg'));
+		} elseif ($action == 'diakNyelvvizsgaFelvesz') {
+		    $M['diakId'] = readVariable($_POST['diakId'],'id');
+		    $M['targyId'] = readVariable($_POST['targyId'],'id');
+		    $M['vizsgaSzint'] = readVariable($_POST['vizsgaSzint'],'enum',null,$ADAT['vizsgaSzintek']);
+		    $M['vizsgaTipus'] = readVariable($_POST['vizsgaTipus'],'enum',null,$ADAT['vizsgaTipusok']);
+		    $M['vizsgaIntezmeny'] = readVariable($_POST['vizsgaIntezmeny'],'string');
+		    $M['vizsgaBizonyitvanySzam'] = readVariable($_POST['vizsgaBizonyitvanySzam'],'string');
+		    $M['vizsgaDt'] = readVariable($_POST['vizsgaDt'],'date',date('Y-m-d'));
+		    if ($M['targyId']>0) diakNyelvvizsgaFelvesz($M); unset($M);
+		    $M = readVariable($_POST['nyelvvizsgaTorol'],'id');
+		    diakNyelvvizsgaTorol($M);
 		} elseif ($action == 'sulixREST') {
 /*
 		    require('include/share/net/rest.php');
@@ -136,10 +151,7 @@
 			dump($e->getMessage());
 		    }
 		    if ($ret['http']['status'] == 200) {
-//dump('Success');
 		    } else {
-//dump($ret['http']['status']);
-//dump($ret);
 		    }
 */
 		}
@@ -171,6 +183,7 @@
 	    // diák adatainak lekérdezése
 	    $Szulok = getSzulok();
 	    $ADAT['diakAdat'] = getDiakAdatById($diakId);
+	    $ADAT['diakAdat']['diakNyelvvizsga'] = getDiakNyelvvizsga($diakId);
 	    switch ($ADAT['diakAdat']['statusz']) {
 		case 'felvételt nyert': 
 		    $ADAT['valthatoStatusz'] = array('jogviszonyban van');
@@ -214,6 +227,7 @@
 
 
 	$ADAT['osztalyok'] = getOsztalyok($tanev,array('result'=>'assoc', 'minden'=>true));
+	$ADAT['nyelviTargyak'] = getTargyByJelleg('nyelv');
 
 	// ToolBar
 	$TOOL['tanevSelect'] = array('tipus' => 'cella', 'action' => 'tanevValasztas', 'post' => array('tanev','diakId'));

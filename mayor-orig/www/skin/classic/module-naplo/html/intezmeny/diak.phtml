@@ -43,6 +43,8 @@
 
 	$cssClass2 = (_MODOSITHAT===true) ? "":" readonly";
 
+	echo '<a href="#diakNyelvvizsgaAdatok">'._DIAK_NYELVVIZSGA_ADATOK.'</a>';
+
 	echo '<div class="'.$cssClass[$diakAdat['statusz']].$cssClass2.'" >';
 	    for ($i=0; $i<=count($ADAT['diakKepzes'][$ADAT['diakId']]); $i++) {
 		    $_DK = $ADAT['diakKepzes'][$ADAT['diakId']][$i];
@@ -63,6 +65,7 @@
 	    putDiakCim($diakAdat, 'lakhely', $POSTTHESE);
 	    putDiakCim($diakAdat, 'tart', $POSTTHESE);
 	    putDiakTanulmanyiAdatok($diakAdat, $POSTTHESE, $OSZTALYOK, $ADAT);
+	    putDiakNyelvvizsga($ADAT, $POSTTHESE);
 	    putDiakSzocialisAdatok($diakAdat, $POSTTHESE);
 
 	echo '</div>';
@@ -436,7 +439,6 @@
 	echo '<input type="hidden" name="diakId" value="'.$diakAdat['diakId'].'" />'."\n";
 	    _postThese($POSTTHESE);
 	echo '<fieldset><legend>'._DIAK_TANULMANYI_ADATOK.'</legend>'."\n";
-//var_dump($diakAdat['mindenOsztaly']);
 	echo '<table>'."\n";
 
 	    $voltOsztaly = $Osztaly = array();
@@ -937,6 +939,100 @@
 	formEnd();
 
     }
+
+
+    function putDiakNyelvvizsga($ADAT, $POSTTHESE) {
+	
+	$diakAdat  = $ADAT['diakAdat'];
+
+	$tanev = $POSTTHESE['tanev'];
+
+	formBegin(array('method'=>'post', 'class'=>'diak'));
+
+	echo '<input type="hidden" name="action" value="diakNyelvvizsgaFelvesz" />'."\n";
+	echo '<input type="hidden" name="diakId" value="'.$diakAdat['diakId'].'" />'."\n";
+	    _postThese($POSTTHESE);
+
+	echo '<fieldset id="diakNyelvvizsgaAdatok"><legend>'._DIAK_NYELVVIZSGA_ADATOK.'</legend>'."\n";
+	echo '<table>'."\n";
+
+	    echo '<tr>'."\n";
+		echo '<td colspan="2">';
+		    // echo '<span class="icon-globe"></span>';
+
+		    $NY = $ADAT['diakAdat']['diakNyelvvizsga'];
+		    if (count($NY)>0) {
+		    echo '<table class="diakNyelvvizsgak">';
+			echo '<tr>';
+			    echo '<th><span class="icon-trash-alt"></span></th>';
+			    echo '<th>Nyelv</th>';
+			    echo '<th>Szint</th>';
+			    echo '<th>Típus</th>';
+			    echo '<th>Intézmény</th>';
+			    echo '<th>Bizonyítvány szám</th>';
+			    echo '<th>Kiállítás dátuma</th>';
+			echo '</tr>';
+			for ($i=0; $i<count($NY); $i++) {
+			    echo '<tr>';
+				echo '<td>';
+				    echo '<input type="checkbox" name="nyelvvizsgaTorol[]" value="'.$NY[$i]['nyelvvizsgaId'].'">';
+				echo '</td>';
+				echo '<td>';
+				    for ($j=0; $j<count($ADAT['nyelviTargyak']); $j++) {
+					if ($ADAT['nyelviTargyak'][$j]['targyId'] == $NY[$i]['targyId'])
+					    echo $ADAT['nyelviTargyak'][$j]['targyNev'];
+				    }
+				echo '</td>';
+				echo '<td>'.$NY[$i]['vizsgaSzint'].'</td>';
+				echo '<td>'.$NY[$i]['vizsgaTipus'].'</td>';
+				echo '<td>'.$NY[$i]['vizsgaIntezmeny'].'</td>';
+				echo '<td>'.$NY[$i]['vizsgaBizonyitvanySzam'].'</td>';
+				echo '<td>'.$NY[$i]['vizsgaDt'].'</td>';
+			    echo '</tr>';
+			}
+		    echo '</table>';
+		    }
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+	    echo '<tr>'."\n";
+
+		echo '<th>';
+		echo '<label for="">'._UJ_NYELVVIZSGA.'</label>'."\n";
+		echo '</th>'."\n";
+		echo '<td>'."\n";
+		echo '<select name="targyId" id="targyId">'."\n";
+		    echo '<option value=""> - </option>'."\n";
+		    for ($i = 0; $i < count($ADAT['nyelviTargyak']); $i++)
+		    echo '<option value="'.$ADAT['nyelviTargyak'][$i]['targyId'].'">'.$ADAT['nyelviTargyak'][$i]['targyNev'].'</option>'."\n";
+		echo '</select>'."\n";
+		echo '<select name="vizsgaSzint" id="vizsgaSzint">'."\n";
+		    echo '<option value=""> - </option>'."\n";
+		    for ($i = 0; $i < count($ADAT['vizsgaSzintek']); $i++)
+		    echo '<option value="'.$ADAT['vizsgaSzintek'][$i].'">'.$ADAT['vizsgaSzintek'][$i].'</option>'."\n";
+		echo '</select>'."\n";
+		echo '<select name="vizsgaTipus" id="vizsgaTipus">'."\n";
+		    echo '<option value=""> - </option>'."\n";
+		    for ($i = 0; $i < count($ADAT['vizsgaTipusok']); $i++)
+		    echo '<option value="'.$ADAT['vizsgaTipusok'][$i].'">'.$ADAT['vizsgaTipusok'][$i].'</option>'."\n";
+		echo '</select>'."\n";
+
+		echo '<input type="text" name="vizsgaIntezmeny" placeholder="Vizsgáztató Intézmény">';
+		echo '<input type="text" name="vizsgaBizonyitvanySzam" placeholder="Bizonyítványszám">';
+		echo '<input type="text" name="vizsgaDt" class="datum date" placeholder="Vizsgadátum">';
+
+
+		echo '</td>'."\n";
+	    echo '</tr>'."\n";
+
+	echo '</table>'."\n";
+
+	if (_MODOSITHAT===true)    	    echo '<input type="submit" class="diakSubmit" value="'._OK.'" />';
+
+	echo '</fieldset>'."\n";
+	formEnd();
+
+    }
+
 
 
 ?>

@@ -286,12 +286,13 @@
 		$ADAT['jegyek'] = getZarojegyStatBySzemeszter($ADAT['szemeszterAdat'],array('telephelyId'=>$telephelyId));
 		$ADAT['tantargyiAtlagok'] = getTargyAtlagokBySzemeszter($ADAT['szemeszterAdat']);
 		$ADAT['hianyzas'] = getOsztalyHianyzasOsszesites($ADAT['szemeszterAdat']);
+		$ADAT['vizsgaSzint'] = getEnumField('naplo_intezmeny','diakNyelvvizsga','vizsgaSzint');
+		$ADAT['nyelvvizsgak'] = getNyelvvizsgak(array('tolDt'=>$ADAT['szemeszterAdat']['kezdesDt']));
 	    }
 
 	    $ADAT['targyTargy'] = getTargyTargy();
 
 	}
-
 
 	$TOOL['telephelySelect'] = array('tipus' => 'cella','paramName'=>'telephelyId');
 	$TOOL['szemeszterSelect'] = array('tipus'=>'cella','paramName' => 'szemeszterId', 'statusz' => array('aktív','lezárt') , 'post' => array('sorrendNev', 'osztalyId', 'telephelyId'));

@@ -423,4 +423,10 @@
 	return $r = db_query($q, array('fv'=>'getTargyNev','modul'=>'naplo_intezmeny','result'=>'value','values'=>$v));
     }
 
+    function getTargyByJelleg($targyJelleg) {
+	$q = "SELECT targyNev,targyId FROM targy WHERE targyJelleg='%s'";
+	$v = array($targyJelleg);
+	return $r = db_query($q, array('fv'=>'getTargyByJelleg','modul'=>'naplo_intezmeny','result'=>'indexed','values'=>$v));
+    }
+
 ?>

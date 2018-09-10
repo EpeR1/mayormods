@@ -131,4 +131,7 @@
 
     define('_IKTATOSZAM','Iktatószám');
     define('_UJ_STATUSZ','Új státusz');
+
+    define('_DIAK_NYELVVIZSGA_ADATOK','Nyelvvizsga adatok');
+    define('_UJ_NYELVVIZSGA','Új nyelvvizsga');
 ?>

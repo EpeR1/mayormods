@@ -58,7 +58,7 @@
 	    'dolgozat' => array(array('txt' => 'Dolgozatok')),
 	    'szovegesErtekeles' => array(array('txt' => 'Szöveges értékelés')),
 	    'bizonyitvany' => array(array('txt' => 'Bizonyítvány')),
-	    'stat' => array(array('txt' => 'Zárási statisztika')),
+	    'stat' => array(array('txt' => 'Zárási statisztika, tanulmányi statisztika')),
 	);
 	$MENU['modules']['naplo']['orarend'] = array(
 	    array('txt' => 'Órarend', 'url' => 'index.php?page=naplo&sub=orarend'),
@@ -129,7 +129,7 @@
 	    'dolgozat' => array(array('txt' => 'Dolgozatok')),
 	    'szovegesErtekeles' => array(array('txt' => 'Szöveges értékelés')),
 	    'bizonyitvany' => array(array('txt' => 'Bizonyítvány')),
-	    'stat' => array(array('txt' => 'Zárási statisztika')),
+	    'stat' => array(array('txt' => 'Zárási statisztika, tanulmányi statisztika')),
 	);
 	if (__OSZTALYFONOK === true) $MENU['modules']['naplo']['sub']['osztalyozo']['targySorrend'] = array(array('txt' => 'Tárgysorrend'));
 	$MENU['modules']['naplo']['sub']['bejegyzesek'] = array(
@@ -158,7 +158,7 @@
 	    'diak' => array(array('txt' => 'Diák hiányzásai (naptár nézet)')),
 	    'diakLista' => array(array('txt' => 'Diák hiányzásai (lista)')),
 	    'diakIgazolatlan' => array(array('txt' => 'Diák igazolatlanjai (lista)')),
-	    'info' => array(array('txt' => 'Statisztika')),
+	    'info' => array(array('txt' => 'Hiányzás statisztika')),
 	);
 	$MENU['modules']['naplo']['sub']['nyomtatas'] = array(
 	    'osztalyozonaplo' => array(array('txt' => 'Osztályozónapló nyomtatása')),
@@ -189,7 +189,7 @@
 	$MENU['modules']['naplo']['hibabejelento'] =  array(array('txt' => 'Kérelmek', 'url' => 'index.php?page=naplo&sub=hibabejelento&f=admin'));
 	$MENU['modules']['naplo']['nyomtatas'][] = array('txt' => 'Nyomtatás', 'url' => 'index.php?page=naplo&sub=nyomtatas');
 	$MENU['modules']['naplo']['export'][] = array('txt' => 'Export', 'url' => 'index.php?page=naplo&sub=export&f=diakExport');
-	$MENU['modules']['naplo']['stat'][] = array('txt' => 'Statisztika', 'url' => 'index.php?page=naplo&sub=export&f=letszam');
+	$MENU['modules']['naplo']['stat'][] = array('txt' => 'Létszám statisztika', 'url' => 'index.php?page=naplo&sub=export&f=letszam');
 	$MENU['modules']['naplo']['tanev'] = array(
 	    array('txt' => 'Munkaterv', 'url' => 'index.php?page=naplo&sub=tanev&f=munkaterv'),
 	    array('txt' => 'Fogadóóra', 'url' => 'index.php?page=naplo&sub=tanev&f=fogadoOra'),
@@ -210,7 +210,7 @@
 	    'diak' => array(array('txt' => 'Diák osztályzatai')),
 	    'dolgozat' => array(array('txt' => 'Dolgozatok')),
 	    'bizonyitvany' => array(array('txt' => 'Bizonyítvány')),
-	    'stat' => array(array('txt' => 'Zárási statisztika')),
+	    'stat' => array(array('txt' => 'Zárási statisztika, tanulmányi statisztika')),
 	    'targySorrend' => array(array('txt' => 'Tárgysorrend')),
 	);
 	$MENU['modules']['naplo']['sub']['haladasi'] = array(
@@ -227,7 +227,7 @@
 	    'tantargyFelosztas' => array(array('txt' => 'Tantárgyfelosztás export')),
 	);
 	$MENU['modules']['naplo']['sub']['hianyzas'] = array(
-	    'info' => array(array('txt' => 'Statisztika')),
+	    'info' => array(array('txt' => 'Hiányzás statisztika')),
 	    'oktstat' => array(array('txt' => 'Októberi statisztika')),
 	    'osztaly' => array(array('txt' => 'Osztály hiányzásösszesítő')),
 	);
@@ -267,7 +267,7 @@
 
 	$MENU['modules']['naplo']['intezmeny'] = array(array('txt' => 'Intézményi adatok', 'url' => 'index.php?page=naplo&sub=intezmeny'));
 
-	$MENU['modules']['naplo']['stat'] = array(array('txt' => 'Statisztika', 'url' => 'index.php?page=naplo&sub=stat&f=letszam'));
+	$MENU['modules']['naplo']['stat'] = array(array('txt' => 'Létszám statisztika', 'url' => 'index.php?page=naplo&sub=stat&f=letszam'));
 
 	$MENU['modules']['naplo']['sub']['intezmeny'] = array (
 	    'tankorDiak' => array(array('txt' => 'Tankörnévsor', 'url' => 'index.php?page=naplo&sub=intezmeny&f=tankorDiak')),
@@ -310,7 +310,7 @@
 	    'dolgozat' => array(array('txt' => 'Dolgozatok')),
 	    'vizsga' => array(array('txt' => 'Vizsga')),
 	    'bizonyitvany' => array(array('txt' => 'Bizonyítvány')),
-	    'stat' => array(array('txt' => 'Zárási statisztika')),
+	    'stat' => array(array('txt' => 'Zárási statisztika, tanulmányi statisztika')),
 	    'targySorrend' => array(array('txt' => 'Tárgysorrend')),
 	);
 	$MENU['modules']['naplo']['sub']['bejegyzesek'] = array(
@@ -377,7 +377,7 @@
 	    'diak' => array(array('txt' => 'Diák hiányzásai (naptár nézet)')),
 	    'diakLista' => array(array('txt' => 'Diák hiányzásai (lista)')),
 	    'oktstat' => array(array('txt' => 'Októberi statisztika')),
-	    'info' => array(array('txt' => 'Statisztika')),
+	    'info' => array(array('txt' => 'Hiányzás statisztika')),
 
 	);
 
@@ -404,7 +404,7 @@
 	$MENU['modules']['naplo']['export'][] = array('txt' => 'Export', 'url' => 'index.php?page=naplo&sub=export&f=diakExport');
 	$MENU['modules']['naplo']['intezmeny'] = array(array('txt' => 'Intézményi adatok', 'url' => 'index.php?page=naplo&sub=intezmeny'));
 
-	$MENU['modules']['naplo']['stat'] = array(array('txt' => 'Statisztika', 'url' => 'index.php?page=naplo&sub=stat&f=letszam'));
+	$MENU['modules']['naplo']['stat'] = array(array('txt' => 'Látszám statisztika', 'url' => 'index.php?page=naplo&sub=stat&f=letszam'));
 	$MENU['modules']['naplo']['ertekeles'] =  array(array('txt' => 'Értékelés', 'url' => 'index.php?page=naplo&sub=ertekeles', 'rejtett' => true));
 	$MENU['modules']['naplo']['admin'] = array(array('txt' => 'Admin', 'url' => 'index.php?page=naplo&sub=admin'));
 	$MENU['modules']['naplo']['koszi'] =  array(array('txt' => 'Köszi', 'url' => 'index.php?page=naplo&sub=koszi&f=kosziAdmin'));
@@ -447,7 +447,7 @@
 	    'diakLista' => array(array('txt' => 'Diák hiányzásai (lista)')),
 	    'diakIgazolatlan' => array(array('txt' => 'Diák igazolatlanjai (lista)')),
 	    'oktstat' => array(array('txt' => 'Októberi statisztika')),
-	    'info' => array(array('txt' => 'Statisztika')),
+	    'info' => array(array('txt' => 'Hiányzás statisztika')),
 
 	);
 	$MENU['modules']['naplo']['sub']['osztalyozo'] = array(
@@ -458,7 +458,7 @@
 	    'bizonyitvany' => array(array('txt' => 'Bizonyítvány', 'rejtett' => true)),
 //	    'bizelomenetel' => array(array('txt' => 'Előmenetel', 'rejtett' => true)),
 	    'zaroJegyCheck' => array(array('txt' => 'Zárójegy évfolyam ellenőrző')),
-	    'stat' => array(array('txt' => 'Zárási statisztika')),
+	    'stat' => array(array('txt' => 'Zárási statisztika, tanulmányi statisztika')),
 	    'targySorrend' => array(array('txt' => 'Tárgysorrend', 'rejtett' => true)),
 	    'szovegesErtekeles' => array(array('txt' => 'Szöveges értékelés', 'rejtett' => true)),
 	    'szempontRendszer' => array(array('txt' => 'Szempont rendszer', 'rejtett' => true)),

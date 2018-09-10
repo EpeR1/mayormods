@@ -105,7 +105,9 @@
 	    if (is_array($ADAT['targyak'])) {    
 		foreach ($ADAT['targyak'] as $i => $targyAdat) {
 		    echo '<tr>';
-			echo '<th>'.$targyAdat['targyNev'].'</th>';
+			echo '<th>'.$targyAdat['targyNev'];
+			    if ($targyAdat['targyJelleg']!='') echo ' ('.$targyAdat['targyJelleg'].')';
+			echo '</th>';
 			$_c = 0;$_sum=0;
 			for ($i = 0; $i < count($ADAT['osztaly']); $i++) {
 				if ($ADAT['tantargyiAtlagok'][ $targyAdat['targyId'] ][ $ADAT['osztaly'][$i]['osztalyId'] ] != 0) {
@@ -141,8 +143,33 @@
 
 	echo '</tbody>';
 
-	echo '<tbody>';
-	echo '</tbody>';
+/*
+
+--TODO 
+
+	if (is_array($ADAT['targyak'])) {    
+	    foreach($ADAT['vizsgaSzint'] as $vizsgaSzint) {
+	    echo '<tbody>';
+	    echo '<th colspan="'.(count($ADAT['osztaly'])+1).'">'.$vizsgaSzint.' <span class="icon-globe-alt"></span></th>';
+		foreach ($ADAT['targyak'] as $i => $targyAdat) {
+		    if ($targyAdat['targyJelleg'] == 'nyelv') {
+		    echo '<tr>';
+			echo '<td>';
+			    echo $targyAdat['targyNev'];
+			echo '</td>';
+			$_c = 0;$_sum=0;
+			for ($i = 0; $i < count($ADAT['osztaly']); $i++) {
+			    echo '<td>';
+				echo '-';
+			    echo '</td>';
+			}
+		    echo '</tr>'."\n";
+		    }
+		}
+	    echo '</tbody>';
+	    }
+	}
+*/
 
 	echo '</table>';
 

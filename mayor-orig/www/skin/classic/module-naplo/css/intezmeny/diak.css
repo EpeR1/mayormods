@@ -146,3 +146,22 @@ button:hover,  .toolBarTool table.flipper input:hover,form.diak input.diakSubmit
  background-image: -o-linear-gradient(top, #1ab0ec, #1a92c2);
  background-image: linear-gradient(to bottom, #1ab0ec, #1a92c2);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#1ab0ec, endColorstr=#1a92c2);
 }
+
+
+table.diakNyelvvizsgak {
+    background-color: white;
+    padding:10px;
+    margin:auto;
+    margin-bottom: 2em;
+}
+table.diakNyelvvizsgak tr th {
+    background-color: #e91e63;
+    color:white;
+    text-align:center;
+    padding: 2px 4px;
+    border-bottom: solid 1px #aaa;
+}
+table.diakNyelvvizsgak tr td {
+    border: solid 1px black; border-collapse: collapse;
+    padding: 4px;
+}

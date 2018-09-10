@@ -608,4 +608,31 @@
         return db_query($q, array('fv'=>'getDiakNaploSorszam', 'modul'=>'naplo_intezmeny','result'=>'value','values'=>$v));
     }
 
+
+    function getDiakNyelvvizsga($diakId) {
+	$q = "SELECT * FROM diakNyelvvizsga WHERE diakId=%u";
+        $v = array($diakId);
+        return db_query($q, array('fv'=>'getDiaknyelvvizsga', 'modul'=>'naplo_intezmeny','result'=>'indexed','values'=>$v));
+    }
+
+    function diakNyelvvizsgaFelvesz($ADAT) {
+	$q = "INSERT INTO diakNyelvvizsga  (diakId,targyId,vizsgaSzint,vizsgaTipus,vizsgaDt,vizsgaIntezmeny,vizsgaBizonyitvanySzam) 
+	VALUES (%u,%u,'%s', '%s', '%s', '%s', '%s')";
+        $v = array($ADAT['diakId'],$ADAT['targyId'],$ADAT['vizsgaSzint'],$ADAT['vizsgaTipus'],$ADAT['vizsgaDt'],$ADAT['vizsgaIntezmeny'],$ADAT['vizsgaBizonyitvanySzam']);
+        return db_query($q, array('fv'=>'diakNyelvvizsgaFelvesz', 'modul'=>'naplo_intezmeny','result'=>'record','values'=>$v));
+    }
+    function diakNyelvvizsgaTorol($ADAT) {
+	if (count($ADAT)>0) {
+	    $q = "DELETE FROM diakNyelvvizsga WHERE nyelvvizsgaId IN (".implode(',',$ADAT).") ";
+    	    return db_query($q, array('fv'=>'diakNyelvvizsgaTorol', 'modul'=>'naplo_intezmeny','values'=>$v));
+	}
+    }
+
+    function getNyelvvizsgak($SET) {
+	if ($SET['igDt']=='') $SET['igDt'] = date('Y-m-d', strtotime('+365 days',strtotime($SET['tolDt'])));
+	$q = "SELECT * FROM diakNyelvvizsga WHERE vizsgaDt>='%s' AND vizsgaDt<'%s'";
+        $v = array($SET['tolDt'],$SET['igDt']);
+	return $r = db_query($q, array('fv'=>'getDiaknyelvvizsga', 'modul'=>'naplo_intezmeny','result'=>'indexed','values'=>$v));
+    }
+
 ?>

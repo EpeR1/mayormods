@@ -162,7 +162,7 @@ CREATE TABLE `hianyzas` (
   `perc` tinyint(3) unsigned DEFAULT NULL,
   `tipus` enum('hiányzás','késés','felszerelés hiány','felmentés','egyenruha hiány') COLLATE utf8_hungarian_ci DEFAULT NULL,
   `statusz` enum('igazolt','igazolatlan') COLLATE utf8_hungarian_ci DEFAULT NULL,
-  `igazolas` enum('orvosi','szülői','osztályfőnöki','verseny','vizsga','igazgatói','hatósági','pályaválasztás','') COLLATE utf8_hungarian_ci DEFAULT NULL;
+  `igazolas` enum('orvosi','szülői','osztályfőnöki','verseny','vizsga','igazgatói','hatósági','pályaválasztás','') COLLATE utf8_hungarian_ci DEFAULT NULL,
   `tankorTipus` enum('tanórai','tanórán kívüli','első nyelv','második nyelv','egyéni foglalkozás','délutáni') COLLATE utf8_hungarian_ci DEFAULT NULL,
   `tankorTipusId` int(10) unsigned DEFAULT NULL,
   `rogzitoTanarId` int(10) unsigned DEFAULT NULL,
