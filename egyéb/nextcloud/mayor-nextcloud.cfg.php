@@ -1,5 +1,8 @@
-#!/usr/bin/php
 <?php 
+
+//////////////////////// Figyelem! Az alábbi config érvényes a Mayor-Nextcloud scripthez, nem a script fejléce!!  ////////////////////////////
+
+
 $db = array();
 $m2n = array();
 

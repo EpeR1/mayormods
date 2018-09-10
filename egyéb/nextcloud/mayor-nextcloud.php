@@ -466,9 +466,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     if( file_exists($cfgfile)===TRUE ){
         include($cfgfile);
-        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: ($cfgfile fájlból.) ***\n"; }
+        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: ($cfgfile fájlból.) ***\n\n"; }
     } else {
-        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: (mayor-nextcloud.php fejlécéből.) ***\n"; }
+        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: (mayor-nextcloud.php fejlécéből.) ***\n\n"; }
     }
     
     
