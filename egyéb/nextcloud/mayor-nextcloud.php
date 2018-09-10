@@ -33,7 +33,7 @@ $m2n['verbose'] = 3 ;
 $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
 
-$cfgfile = getcwd()."mayor-nextcloud.cfg.php";      // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
+$cfgfile = getcwd()."/"."mayor-nextcloud.cfg.php";      // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
 if( file_exists($cfgfile)===TRUE ){     include($cfgfile);  }
 
 
@@ -466,9 +466,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     if( file_exists($cfgfile)===TRUE ){
         include($cfgfile);
-        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: ($cfgfile fájlból.)"; }
+        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: ($cfgfile fájlból.) ***\n"; }
     } else {
-        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: (mayor-nextcloud.php fejlécéből.)"; }
+        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: (mayor-nextcloud.php fejlécéből.) ***\n"; }
     }
     
     
@@ -586,12 +586,13 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             }
             unset($nxt_user[$curr]);  						//Megvizsgálva, többször már nem kell dönteni róla.
             if($curr != $key2 and $curr != null){				//Nincs még ilyen felhasználó
-                if ($log['verbose'] > 2 ){ echo "**-\tFelhasználó:".po("\t$curr_n ($curr)",$m2n['felhasznalo_hossz'],1)."--\tlétrehozva.\n";}
+                
                 user_add($curr, $curr_n);					//Akkor hozzá kell adni
                 nxt_register_useradd($link, $curr);
+                if ($log['verbose'] > 2 ){ echo "**-\tFelhasználó:".po("\t$curr_n ($curr)",$m2n['felhasznalo_hossz'],1)."--\tlétrehozva.\n";}
                     
-                foreach($tankorei as $key3 => $val3){				//Hozzáadja a (tankör)csoportokhoz is egyből,
-                    if(in_array($key3, $nxt_group) {                //de, csak akkor, ha az a csoport a Nextcloud-ban is létezik.
+                foreach($tankorei as $key3 => $val3){                   //Hozzáadja a (tankör)csoportokhoz is egyből,
+                    if(array_key_exists($val3, $nxt_group)) {                   //de, csak akkor, ha az a csoport a Nextcloud-ban is létezik.
                         group_user_add($val3,$curr);
                         if ($log['verbose'] > 2 ){ echo "* -\t\tHozzáadva a:".po("\t $val3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n"; }
                     }
