@@ -16,8 +16,21 @@ A fenti könyvtárak struktúrája:
 
 ---------------------------------------------------------------------
 
-**Munin Plugin példa** :
+**Munin Plugin** :
+
+(A MaYor-napló aktuális leterheltségének monitorozása munin segítségével.)
 
 ![munin](https://raw.githubusercontent.com/EpeR1/mayormods/master/egy%C3%A9b/munin/mayor_munin-day.png)
+
+.
+
+
+**Nextcloud-MaYor script** :
+
+(Felhasználókat (tanár, diák), és csoportokat (tankörök) tölthetünk be vele a mayorból, a nextcloudba. )  
+(Csoportokat hoz létre a mayor tankörei alapján, majd ezen csoportokba belépteti az adott tankör diákjait, és a tanárait. )
+
+![munin](https://raw.githubusercontent.com/EpeR1/mayormods/master/egy%C3%A9b/nextcloud/nextcloud.png)
+
 
 .

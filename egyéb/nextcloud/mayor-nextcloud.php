@@ -33,7 +33,7 @@ $m2n['verbose'] = 3 ;
 $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
 
-$cfgfile = getcwd()."/"."mayor-nextcloud.cfg.php";      // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
+$cfgfile = realpath(pathinfo($argv[0])['dirname'])."/"."mayor-nextcloud.cfg.php";  // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
 if( file_exists($cfgfile)===TRUE ){     include($cfgfile);  }
 
 
@@ -468,7 +468,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         include($cfgfile);
         if($log['verbose'] > 0) { echo "***	M2N Config betöltése: ($cfgfile fájlból.) ***\n\n"; }
     } else {
-        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: (mayor-nextcloud.php fejlécéből.) ***\n\n"; }
+        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: (".pathinfo($cfgfile)['dirname']."/mayor-nextcloud.php fejlécéből.) ***\n\n"; }
     }
     
     
@@ -562,8 +562,11 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                             nxt_register_userena($link, $curr);			//Ha netán le lenne tiltva, akkor engedélyezi,
                             user_ena($curr);					//ha a script tiltotta le.
                         }
-                    } else { if ($log['verbose'] > 1 ){ echo "_??? -\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."\tszerepel a naplóban, de nincs benne az m2n nyilvántartásában.\n";} }
-                    
+                    } else { 
+                        nxt_register_useradd($link, $curr);
+                        if ($log['verbose'] > 1 ){ echo "??? -\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."\tlétezik a naplóban, és a nextcloudban, de nem szerepelt az m2n nyilvántartásában. +++ Felvéve.\n";} 
+                    }
+
                     foreach($nxt_group as $key3 => $val3){			//A tankörök egyeztetése
                         if(in_array($key3, $tankorei) or $key3 == $m2n['mindenki_csop']){ //szerepel-e a felhasználó tankörei között a csoport, vagy a "mindenki" csoport?
                             if( in_array($curr, $val3)){			//Igen, és már benne is van +++
