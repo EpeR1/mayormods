@@ -66,6 +66,7 @@
 
     $tolDt = readVariable($_POST['tolDt'], 'date', getTanitasihetHetfo(array('napszam'=>0)));
     $dt = readVariable($_POST['dt'], 'date'); // mutatni
+
 	if ($mkId=='' && $tanarId=='' && $diakId=='' && $osztalyId=='' && $tankorId=='' && $teremId=='') { // ez itt mind isnotset
 	    if (__DIAK && defined('__USERDIAKID')) $diakId=__USERDIAKID;
 	    if (__TANAR && defined('__USERTANARID')) $tanarId=__USERTANARID;
@@ -84,6 +85,7 @@
 	    // A következő nap előtti hétfő
 	    $tolDt = date('Y-m-d', strtotime('last Monday', strtotime('+1 days', time())));
 
+
 /*
 	if (strtotime($tolDt) > strtotime($_TANEV['zarasDt'])) $_tolDt = $_TANEV['zarasDt'];
 	elseif (strtotime($tolDt) < strtotime($_TANEV['kezdesDt'])) $_tolDt = $_TANEV['kezdesDt'];
@@ -97,7 +99,6 @@
 
     // SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL
     if (MAYOR_SOCIAL === true && $action== 'orarendiOraTeremModosit') {
-	dump($_POST);
 	$_MODIFY;
 	if(is_array($_POST)) {
 	    $TMP_TERMEK = getTermek(array('result' => 'assoc'));
@@ -259,7 +260,7 @@
 	    }
         }
 
-	$ADAT['dt'] = $tolDt;
+	// $ADAT['dt'] = $tolDt; // BUG - ez vajon miért volt???
 	$ADAT['tanarId'] = $tanarId;
 	$ADAT['osztalyId'] = $osztalyId;
 	$ADAT['diakId'] = $diakId;
@@ -309,4 +310,5 @@
 	}
 	if ($stateCounter>0) setcookie($page.'_'.$sub.'_'.$f, implode('+',$SAVESTATE), 0, '', '', TRUE, TRUE);
     }
+
 ?>

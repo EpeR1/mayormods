@@ -47,7 +47,7 @@
 	$_refStamp = mktime(date('H')+8,0,0,date('m'), date('d'), date('Y'));
         $dt = date('Y-m-d', $_refStamp);
 	putDoboz('Órarend '.$dt,ajaxUpdaterForm('orarend','index.php?page=naplo&sub=orarend&f=orarend',array('dt' => $dt),'post',true)
-	,array('header-link'=>'index.php?page=naplo&sub=orarend&f=orarend','header-color'=>'#f06'));
+	,array('header-link'=>href('index.php?page=naplo&sub=orarend&f=orarend'),'header-color'=>'#f06'));
 
 	// putDoboz('Hangya',ajaxUpdaterForm('hangya','index.php?page=naplo&sub=hibabejelento&f=admin',array(),'post',true),
 	//    array('header-color'=>'rgb(150,100,150)'));

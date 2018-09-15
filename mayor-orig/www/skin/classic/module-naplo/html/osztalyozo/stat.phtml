@@ -9,7 +9,8 @@
 	    echo '<tr>';
 	    echo '<th>'._SZEMPONT.'</th>';
 	    for ($i = 0; $i < count($ADAT['osztaly']); $i++) {
-		echo '<th>';
+		$nyekClass = in_array($ADAT['osztaly'][$i]['osztalyJellegId'],$ADAT['nyekJellegu']) ? ' style="background-color: #f60"':'';
+		echo '<th '.$nyekClass.'>';
 		if ($ADAT['osztaly'][$i]['osztalyJel'] != '') echo $ADAT['osztaly'][$i]['osztalyJel'];
 		else echo $ADAT['osztaly'][$i]['kezdoTanev'].'/'.$ADAT['osztaly'][$i]['jel'];
 		echo '</th>';
@@ -143,33 +144,36 @@
 
 	echo '</tbody>';
 
-/*
-
---TODO 
-
+	$_nyvColor = array('#8bc34a','#2196f3','#e91e63','#263238');
 	if (is_array($ADAT['targyak'])) {    
-	    foreach($ADAT['vizsgaSzint'] as $vizsgaSzint) {
+	    $_szintIndex=0;
+	    foreach($ADAT['vizsgaSzint'] as $vizsgaSzint) { 
 	    echo '<tbody>';
-	    echo '<th colspan="'.(count($ADAT['osztaly'])+1).'">'.$vizsgaSzint.' <span class="icon-globe-alt"></span></th>';
-		foreach ($ADAT['targyak'] as $i => $targyAdat) {
-		    if ($targyAdat['targyJelleg'] == 'nyelv') {
-		    echo '<tr>';
+	    echo '<th style="color:white; background-color: '.$_nyvColor[($_szintIndex)].'" colspan="'.(count($ADAT['osztaly'])+1).'">Nyelvvizsgák – '.$vizsgaSzint.' <span class="icon-globe-alt"></span></th>';
+		foreach ($ADAT['mindenTargy'] as $_index => $targyAdat) {
+		    if ($targyAdat['targyJelleg'] == 'nyelv' && count($ADAT['nyelvvizsgak'][$targyAdat['targyId']])>0) {
+		      echo '<tr>';
 			echo '<td>';
 			    echo $targyAdat['targyNev'];
 			echo '</td>';
 			$_c = 0;$_sum=0;
 			for ($i = 0; $i < count($ADAT['osztaly']); $i++) {
-			    echo '<td>';
-				echo '-';
+			    $_db = count($ADAT['nyelvvizsgak'][$targyAdat['targyId']][$ADAT['osztaly'][$i]['osztalyId']][$vizsgaSzint]);
+			    if ($_db>0) {
+				$nyekClass = in_array($ADAT['osztaly'][$i]['osztalyJellegId'],$ADAT['nyekJellegu']) ? ' style="color: white; background-color: #f60"':'style="color:white; background-color: #648c82"';
+				echo '<td '.$nyekClass.'>';
+			    }
+			    else echo '<td>';
+				if ($_db>0) echo $_db;
 			    echo '</td>';
 			}
-		    echo '</tr>'."\n";
+		      echo '</tr>'."\n";
 		    }
 		}
 	    echo '</tbody>';
+	    $_szintIndex++;
 	    }
 	}
-*/
 
 	echo '</table>';
 

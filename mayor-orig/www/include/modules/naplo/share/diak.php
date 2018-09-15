@@ -629,9 +629,18 @@
     }
 
     function getNyelvvizsgak($SET) {
-	if ($SET['igDt']=='') $SET['igDt'] = date('Y-m-d', strtotime('+365 days',strtotime($SET['tolDt'])));
-	$q = "SELECT * FROM diakNyelvvizsga WHERE vizsgaDt>='%s' AND vizsgaDt<'%s'";
-        $v = array($SET['tolDt'],$SET['igDt']);
+	if ($SET['igDt']=='') {
+	    $SET['igDt'] = date('Y-m-d', strtotime('+365 days',strtotime($SET['tolDt'])));
+	    $q = "SELECT * FROM diakNyelvvizsga WHERE vizsgaDt>='%s' AND vizsgaDt<'%s'";
+    	    $v = array($SET['tolDt'],$SET['igDt']);
+	} elseif ($SET['igDt']!='' && $SET['tolDt']=='') {
+	    $q = "SELECT * FROM diakNyelvvizsga WHERE vizsgaDt<'%s'";
+    	    $v = array($SET['igDt']);
+	} else {
+	    $q = "SELECT * FROM diakNyelvvizsga";
+    	    $v = array();
+	}
+	
 	return $r = db_query($q, array('fv'=>'getDiaknyelvvizsga', 'modul'=>'naplo_intezmeny','result'=>'indexed','values'=>$v));
     }
 

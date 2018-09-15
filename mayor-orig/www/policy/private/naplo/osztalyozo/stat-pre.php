@@ -282,12 +282,23 @@
 	    if (!isset($osztalyId)) { // lehet, hogy az előzőben lett "törölve" az osztalyId
 		// iskolai statisztika
 		$ADAT['osztaly'] = getOsztalyok($ADAT['szemeszterAdat']['tanev'],array('result' => 'indexed', 'minden'=>false, 'telephelyId' => $telephelyId));
-		$ADAT['targyak'] = getTargyakBySzemeszter($ADAT['szemeszterAdat']);
+		$ADAT['targyak'] = getTargyakBySzemeszter($ADAT['szemeszterAdat']); // nem kéne minden tárgy?
+		$ADAT['mindenTargy'] = getTargyak(array('targySorrendNev' => $sorrendNev) );
 		$ADAT['jegyek'] = getZarojegyStatBySzemeszter($ADAT['szemeszterAdat'],array('telephelyId'=>$telephelyId));
 		$ADAT['tantargyiAtlagok'] = getTargyAtlagokBySzemeszter($ADAT['szemeszterAdat']);
 		$ADAT['hianyzas'] = getOsztalyHianyzasOsszesites($ADAT['szemeszterAdat']);
 		$ADAT['vizsgaSzint'] = getEnumField('naplo_intezmeny','diakNyelvvizsga','vizsgaSzint');
-		$ADAT['nyelvvizsgak'] = getNyelvvizsgak(array('tolDt'=>$ADAT['szemeszterAdat']['kezdesDt']));
+		$ADAT['nyelvvizsgak'] = getNyelvvizsgak(array('igDt'=>$ADAT['szemeszterAdat']['zarasDt']));
+		$intezmeny_lr = db_connect('naplo_intezmeny');
+		for ($x=0; $x<count($ADAT['nyelvvizsgak']); $x++) {
+		    $_diakId = $ADAT['nyelvvizsgak'][$x]['diakId'];
+		    $ADAT['nyelvvizsgak'][$x]['osztalyAdat'] = getDiakOsztalya($_diakId, array('tanev'=>__TANEV,'tolDt'=>$ADAT['szemeszterAdat']['kezdesDt'],'igDt'=>$ADAT['szemeszterAdat']['zarasDt']), $intezmeny_lr);
+		    $ADAT['nyelvvizsgak'][$x]['osztalyId'] = $ADAT['nyelvvizsgak'][$x]['osztalyAdat'][0]['osztalyId'];
+		}
+		db_close($intezmeny_lr);
+		$ADAT['nyelvvizsgak'] = reindex($ADAT['nyelvvizsgak'],array('targyId','osztalyId','vizsgaSzint'));
+		//select * from osztalyJelleg where osztalyJellegNev like '%nyelvi%';
+    		$ADAT['nyekJellegu'] = array(36,46,53,54,63,76);
 	    }
 
 	    $ADAT['targyTargy'] = getTargyTargy();

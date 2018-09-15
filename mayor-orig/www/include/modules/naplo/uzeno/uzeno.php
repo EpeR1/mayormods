@@ -1,11 +1,20 @@
 <?php
 
+    function magicSzerep() { // TODO
+	if (_RUNLEVEL=='cron') {
+	    return __SZEREP;
+	} else {
+	    return __SZEREP;
+	}
+    }
+
     function initSzerep() {
 
 	if (defined('__SZEREP')) return false;
-
 	define('__SZEREP',__UZENOSZEREP);
+
 /*
+	if (_RUNLEVEL=='cron') {}
 	if (__UZENOADMIN===true && __ASWHO==='asAdmin') define('__SZEREP','admin');
 	elseif (__TANAR===true) define('__SZEREP', 'tanar');
 	elseif (__DIAK===true && defined('__PARENTDIAKID') && intval(__PARENTDIAKID)>0) define('__SZEREP','szulo');
@@ -35,11 +44,14 @@
 
     function getUzenoUzenetek($SET=array('tanev'=>__TANEV,'count'=>false,'filter'=>array(),'ignoreAdmin'=>false,'filterFlag'=>array(),'limits'=>array(),'order'=>'DESC')) {
 
+	$__SZEREP = __SZEREP; // cronból is szeretnénk használni
+
 	if (__SZEREP=='') return array();
+
 
 	$feladoId = setUzenoFeladoId();
 	$TIPUSOK = initUzenoTipusok(array('csakId'=>true,'result'=>'idonly','tanev'=>$SET['tanev'],'forRead'=>true));
-	$TIPUSOK[__SZEREP][] = setUzenoFeladoId();
+	$TIPUSOK[$__SZEREP][] = setUzenoFeladoId();
 
 	if (__UZENOADMIN===true && $SET['ignoreAdmin']===true) return array(); // skip useradmin (pl hirnok)
 
@@ -62,7 +74,7 @@
 	if (is_array($X) && count($X)>0) $WX = implode(' AND ',$X).' AND'; else $WX = '';
 	if (is_array($Y) && count($Y)>0) $HAVING = 'HAVING '.implode(' AND ',$Y); else $HAVING = '';
 
-	$JOINTABLE = "LEFT JOIN `$dbName`.`uzenoFlagek` ON (uzeno.mId=uzenoFlagek.mId AND Id=$feladoId AND Tipus='".__SZEREP."')";
+	$JOINTABLE = "LEFT JOIN `$dbName`.`uzenoFlagek` ON (uzeno.mId=uzenoFlagek.mId AND Id=$feladoId AND Tipus='".$__SZEREP."')";
 
 	if (__UZENOADMIN!==true) {
 	    foreach ($TIPUSOK as $tipus=>$DATA) {
@@ -72,8 +84,8 @@
 
 		}
 	    }
-	    $q  = "SELECT uzeno.*,uzenoFlagek.flag AS flag FROM $dbName.uzeno $JOINTABLE WHERE ".$WX." ((feladoId=$feladoId and feladoTipus='".__SZEREP."') OR (".implode(' OR ',$W).")) $HAVING ORDER BY uzeno.mId ".$O.$L;
-	    $qc = "SELECT count(*) AS db FROM $dbName.uzeno WHERE ".$WX." ((feladoId=$feladoId and feladoTipus='".__SZEREP."') OR (".implode(' OR ',$W)."))";
+	    $q  = "SELECT uzeno.*,uzenoFlagek.flag AS flag FROM $dbName.uzeno $JOINTABLE WHERE ".$WX." ((feladoId=$feladoId and feladoTipus='".$__SZEREP."') OR (".implode(' OR ',$W).")) $HAVING ORDER BY uzeno.mId ".$O.$L;
+	    $qc = "SELECT count(*) AS db FROM $dbName.uzeno WHERE ".$WX." ((feladoId=$feladoId and feladoTipus='".$__SZEREP."') OR (".implode(' OR ',$W)."))";
 	} else {
 	    // NOTE - nem minden id-nek az adatai lesznek lekérdezve később!!!
 	    $WX = ($WX=='')?'':'WHERE '.$WX.' 1=1';

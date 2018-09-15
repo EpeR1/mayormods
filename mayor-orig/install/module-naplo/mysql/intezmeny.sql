@@ -301,7 +301,7 @@ CREATE TABLE `tankor` (
   `kovetelmeny` enum('jegy','magatartás','szorgalom','négyszintű (szöveges minősítés)','féljegy','százalékos','aláírás','háromszintű','egyedi felsorolás','szöveges szempontrendszer','teljesített óra','nincs') COLLATE utf8_hungarian_ci DEFAULT NULL,
   `_jelenlet` enum('kötelező','nem kötelező') COLLATE utf8_hungarian_ci DEFAULT NULL,
   `felveheto` tinyint(3) unsigned DEFAULT NULL,
-  `cn` varchar(64) COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `tankorCn` varchar(64) COLLATE utf8_hungarian_ci DEFAULT NULL,
   `min` tinyint(3) unsigned NOT NULL,
   `max` tinyint(3) unsigned NOT NULL,
   `_tankorTipus` enum('tanórai','tanórán kívüli','első nyelv','második nyelv','egyéni foglalkozás','délutáni') COLLATE utf8_hungarian_ci DEFAULT 'tanórai',

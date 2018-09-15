@@ -241,6 +241,7 @@ global $SZEMESZTER;
 	$_SET['filter'][] = 'dt>="'.$SET['tolDt'].'"';
 	$_SET['ignoreAdmin'] = true;
 	$r = getUzenoUzenetek($_SET);
+
 	for ($i=0; $i<count($r); $i++) {
 	    // üzenő címzett/feladó kitalálós
 	    $feladoNev=$cimzettNev = '';

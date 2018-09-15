@@ -81,8 +81,6 @@
     }
 
     function getTargyakBySzemeszter($szemeszterAdat) {
-    //??? 2009. shared lib ?
-
 	// A tárgyak lekérdezése a beírt jegyek alapján (lehet hozott jegy)
 	$q = "SELECT DISTINCT targyId,targyNev,targyJelleg, zaroKovetelmeny
 		FROM targy LEFT JOIN zaroJegy USING (targyId) 
