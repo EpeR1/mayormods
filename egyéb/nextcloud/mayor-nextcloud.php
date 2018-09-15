@@ -99,6 +99,15 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             if ($log['verbose'] > 0 ){ echo "*\tAz ".$db['m2n_db'].".".$db['m2n_prefix']."register (nextcloud-register) tábla sikeresen létrehozva.\n";}
         }
     }
+
+    function nxt_get_version(){
+        global $occ_path,$occ_user,$m2n,$log;
+        // sudo -u honlap-felho php /home/honlap-felho/web/occ status --output=json
+        $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" status --output=json'" ;
+        if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+        return explode(".", json_decode(shell_exec($e),true)['version'])[0]; 
+        echo "\n\n\n".explode(".", json_decode(shell_exec($e),true)['version'])[0]."\n\n\n";
+    }
     
     function nxt_register_userlist($link){	//akiket a script hozott létre
         global $db,$log;
@@ -171,10 +180,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             if ($log['verbose'] > 5 ){ echo "*\tFelhasználó-letiltás, m2n nyilvántartásba vétele.\n"; }
         }
     }
-
     
-    
-
     function user_add($userAccount, $fullName){		// létrehoz egy felhasználót a Nextcloud-ban
         global $occ_path,$occ_user,$m2n,$log;
 //  	export OC_PASS=ErősJelszó123; su -s /bin/sh www-data -c 'php web/occ user:add --password-from-env  --display-name="Teszt Tamás" --group="csop" t.tamas'
@@ -263,29 +269,42 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
     
     function group_add($groupName){ 	//Új csoport létrehozása a Nextcloud-ban 
-        global $link,$db,$log;
+        global $occ_user,$occ_path,$link,$db,$log;
         if(strlen($groupName) > 64){	//mivel (egyelőre) nics erre 'occ' parancs, ezért közvetlenül kell...
             echo "\n****** Hiba: a csoportnév nagyobb, mint 64 karakter!! ******\n";
         } else {
-            $q = "INSERT IGNORE INTO ".$db['nxt_dbname'].".".$db['nxt_prefix']."groups (gid) VALUES ('".$groupName."'); ";
-            if ($log['verbose'] > 5 ){ echo "NXT ->\t".$q."\n"; }
-            if(mysqli_query($link, $q) !== TRUE ) echo "\nNXT -> \t****** Csoport létrehozási hiba. (adatbázis) ******\n";
+            if(nxt_get_version() < 14) {
+                $q = "INSERT IGNORE INTO ".$db['nxt_dbname'].".".$db['nxt_prefix']."groups (gid) VALUES ('".$groupName."'); ";
+                if ($log['verbose'] > 5 ){ echo "NXT ->\t".$q."\n"; }
+                if(mysqli_query($link, $q) !== TRUE ) echo "\nNXT -> \t****** Csoport létrehozási hiba. (adatbázis) ******\n";
+            } else {
+                $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:add \"$groupName\" '";
+                if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+                shell_exec($e);
+            }
         }
     }
     
     function group_del($groupName){	// Csoport törlése a Nextcloud-ból
         global $occ_user,$occ_path,$db,$link,$log,$m2n;
         $grp = nxt_group_list();
-        if(isset($grp[$groupName])){	// Mivel erre még nincs hivatalos "occ" parancs, ezért közvetlenül kell...
-            foreach($grp[$groupName] as $key => $user){
-                $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:removeuser \"$groupName\" $user'";
+        if(isset($grp[$groupName])){
+            if(nxt_get_version() < 14){	// Mivel erre csak a Nextcloud 14-től van "occ" parancs, ezért néha közvetlenül kell...
+                foreach($grp[$groupName] as $key => $user){
+                    $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:removeuser \"$groupName\" $user'";
+                    if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+                    shell_exec($e);
+                    if ($log['verbose'] > 1 ){ echo "*--\t\tTörölve".po(" ($user) a: $groupName",$m2n['csoportnev_hossz']+5,1)."\t csoportból.\n"; }
+                }
+                $q = "DELETE FROM ".$db['nxt_dbname'].".".$db['nxt_prefix']."groups WHERE gid='".$groupName."'; " ;
+                if ($log['verbose'] > 5 ){ echo "NXT ->\t".$q."\n"; }
+                if(mysqli_query($link, $q) !== TRUE ) echo "\n NXT -> \t****** csoport törlési hiba. (adatbázis) ******\n";
+                
+            } else {
+                $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:delete \"$groupName\" '";
                 if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
                 shell_exec($e);
-                if ($log['verbose'] > 1 ){ echo "*--\t\tTörölve".po(" ($user) a: $groupName",$m2n['csoportnev_hossz']+5,1)."\t csoportból.\n"; }
             }
-            $q = "DELETE FROM ".$db['nxt_dbname'].".".$db['nxt_prefix']."groups WHERE gid='".$groupName."'; " ;
-            if ($log['verbose'] > 5 ){ echo "NXT ->\t".$q."\n"; }
-            if(mysqli_query($link, $q) !== TRUE ) echo "\n NXT -> \t****** csoport törlési hiba. (adatbázis) ******\n";
         }
     }
 
