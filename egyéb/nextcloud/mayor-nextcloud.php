@@ -289,7 +289,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         global $occ_user,$occ_path,$db,$link,$log,$m2n;
         $grp = nxt_group_list();
         if(isset($grp[$groupName])){
-            if(nxt_get_version() < 14){	// Mivel erre csak a Nextcloud 14-től van "occ" parancs, ezért néha közvetlenül kell...
+	    if(nxt_get_version() < 14){	// Mivel erre csak a Nextcloud 14-től van "occ" parancs, ezért néha közvetlenül kell...
+
                 foreach($grp[$groupName] as $key => $user){
                     $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:removeuser \"$groupName\" $user'";
                     if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
@@ -303,7 +304,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             } else {
                 $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:delete \"$groupName\" '";
                 if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
-                shell_exec($e);
+                shell_exec($e);  
             }
         }
     }
