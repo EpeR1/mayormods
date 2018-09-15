@@ -269,11 +269,11 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
     
     function group_add($groupName){ 	//Új csoport létrehozása a Nextcloud-ban 
-        global $link,$db,$log;
+        global $occ_user,$occ_path,$link,$db,$log;
         if(strlen($groupName) > 64){	//mivel (egyelőre) nics erre 'occ' parancs, ezért közvetlenül kell...
             echo "\n****** Hiba: a csoportnév nagyobb, mint 64 karakter!! ******\n";
         } else {
-            if(nxt_get_version < 14) {
+            if(nxt_get_version() < 14) {
                 $q = "INSERT IGNORE INTO ".$db['nxt_dbname'].".".$db['nxt_prefix']."groups (gid) VALUES ('".$groupName."'); ";
                 if ($log['verbose'] > 5 ){ echo "NXT ->\t".$q."\n"; }
                 if(mysqli_query($link, $q) !== TRUE ) echo "\nNXT -> \t****** Csoport létrehozási hiba. (adatbázis) ******\n";
