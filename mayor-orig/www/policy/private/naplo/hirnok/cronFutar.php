@@ -8,12 +8,10 @@
         $D = $ADAT['hirnokFolyam'][$i];
 	$_data = $D['hirnokFolyamAdatok'];
 	$cn = $_data['cn'];
-
 	for ($j=0; $j<count($ADAT['feliratkozas'][$_data['tipus']][$_data['id']]); $j++) {
 	    $_toUser = $ADAT['feliratkozas'][$_data['tipus']][$_data['id']][$j];
 	    $_toEmail = $_toUser['email'];
     	    // if ($_toEmail=='') continue;;
-dump($ADAT['hirnokFolyam']);
 	    $body = generateFutarEmailTorzs(array('hirnokFolyam'=>array($D)));
 	    if ($body !='') {
 		echo "Email cím: ".$_toEmail."\n";
@@ -32,7 +30,7 @@ dump($ADAT['hirnokFolyam']);
 		} else { 
 		    $q = "UPDATE hirnokFeliratkozas SET utolsoEmailDt ='%s' WHERE naploId=%u AND naploTipus='%s' AND userAccount='%s' AND policy='%s'";
 		    $v = array($_toUser['setDt'],$_data['id'],$_data['tipus'],$_toUser['userAccount'],$_toUser['policy']);
-//		    db_query($q,array('modul'=>'naplo_intezmeny','fv'=>'cron','values'=>$v,'result'=>'update'));
+		    db_query($q,array('modul'=>'naplo_intezmeny','fv'=>'cron','values'=>$v,'result'=>'update'));
 		    echo "Email elküldve: ".$_toEmail." - ".$cn." - ".date('Y-m-d H:i:s')."\n";
 		}
 
