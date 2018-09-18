@@ -20,7 +20,7 @@ A fenti könyvtárak struktúrája:
 
 (A MaYor-napló aktuális leterheltségének monitorozása munin segítségével.)
 
-![munin](https://raw.githubusercontent.com/EpeR1/mayormods/master/egy%C3%A9b/munin/mayor_munin-day.png)
+![munin](http://git.bmrg.hu/mayormods.git/pic/mayor_munin-day.png)
 
 .
 
@@ -30,7 +30,7 @@ A fenti könyvtárak struktúrája:
 (Felhasználókat (tanár, diák), és csoportokat (tankörök) tölthetünk be vele a mayorból, a nextcloudba. )  
 (Csoportokat hoz létre a mayor tankörei alapján, majd ezen csoportokba belépteti az adott tankör diákjait, és a tanárait. )
 
-![munin](https://raw.githubusercontent.com/EpeR1/mayormods/master/egy%C3%A9b/nextcloud/nextcloud.png)
+![munin](http://git.bmrg.hu/mayormods.git/pic/nextcloud.png)
 
 
 .
