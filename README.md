@@ -1,5 +1,7 @@
 Ez a tároló, a MaYoR elektornikus napló (© [www.mayor.hu](http://www.mayor.hu))-hoz készített apróbb javítások/módosítások/kiegészítések gyüjteménye.  
 
+**Az eredeti fájlok elérhetőek itt: [http://git.bmrg.hu/mayormods.git](http://git.bmrg.hu/mayormods.git/)**   
+
 
 A fenti könyvtárak struktúrája:
 

@@ -27,10 +27,12 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 -(II.)  Helyezzük el a "mayor-nextcloud.php"-t biztos, védett helyre,a nextcloud szerveren, akár a /etc/ mappába, akár a /root könyvtárba,
         ezt később "root"-ként kell majd futtatnunk, és mysql jelszó is (lehet/) van benne, 
         ezért ennek megfelelően állítsuk be a tulajdonost, és vegyük el a jogosultságokat. (chown root; chmod 600)
+        Majd töltsük ki a konfigurációs fájlt az alább felsorolt beállítások szerint!
 
 
 
--(III.) A fajl elején találhatóak a konfigurációs adatok, ezeket a következőképpen módosíthatjuk:
+
+-(III.) A "mayor-nextcloud.cfg.php" fajl elején találhatóak a konfigurációs adatok, ezeket a következőképpen módosíthatjuk:
 
 
     $db['host'] = "localhost";              //Ez a nextcloud alatt futó mysql elérhetősége.

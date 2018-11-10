@@ -2,7 +2,7 @@
 <?php 
 $db = array();
 $m2n = array();
-////////////////////////////////////////////// Figyelem! az alábbi konfig külön fájból töltődik/töltődhet!! /////////////////////////////////
+////////////////////////////////////////////// Figyelem! az alábbi konfig automatikusan külön fájból töltődik, ha létezik a "mayor-nextcloud.cfg.php" fájl!! /////////////////////////////////
 $db['host'] = "localhost";
 $db['port'] = "3306";
 $db['user'] = "root";
@@ -27,7 +27,7 @@ $m2n['csoportnev_hossz'] = 40;
 $m2n['felhasznalo_hossz'] = 45;
 $m2n['default_lang']  = "hu";
 $m2n['mindenki_csop'] = "naplós_felhasználók";
-$m2n['zaras_tartas'] =  "2018-06-14";	// Ha nem kell, akkor állítsd át "1970-01-01"-re.
+$m2n['zaras_tartas'] =  "2018-06-14";	//A jelölt napon befejezett, de nem lezárt tanév adatainak megtartása. (pl. szeptemberig) Ha már nem kell, akkor állítsd "1970-01-01"-ra !;
 $m2n['verbose'] = 3 ;  
 
 $occ_path = "/var/www/nextcloud/";
