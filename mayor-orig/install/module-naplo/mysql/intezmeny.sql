@@ -283,6 +283,7 @@ CREATE TABLE `tanar` (
   `titulus` varchar(32) COLLATE utf8_hungarian_ci DEFAULT '',
   `titulusRovid` varchar(10) COLLATE utf8_hungarian_ci DEFAULT '',
   `email` varchar(64) COLLATE utf8_hungarian_ci DEFAULT '',
+  `kretaNev` varchar(64) COLLATE utf8_hungarian_ci DEFAULT NULL,
   PRIMARY KEY (`tanarId`),
   UNIQUE KEY `tanarOid` (`oId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;

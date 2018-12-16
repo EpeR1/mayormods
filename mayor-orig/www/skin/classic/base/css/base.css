@@ -630,9 +630,10 @@ border: solid 0px #eee;
 
 }
 @media print {
-    #nav, #nav1, #nav2, #poz, #head, #logo, #mayorfoot, #logobadge, #mayorGlobalLogin, #updateWindowSide, #updateWindowSideSub, #mayorErrorSmall, .noprint	 { display: none; }
+    #nav, #nav1, #nav2, #poz, #head, #logo, #logobadge, #mayorGlobalLogin, #updateWindowSide, #updateWindowSideSub, #mayorErrorSmall, .noprint	 { display: none; }
     div.arckep--container {display: none;}
     div.arckepContainer {display: none;}
+    #mayorfoot { text-align:center; font-size:x-small; }
 }
 
 @media (max-width: 900px) {

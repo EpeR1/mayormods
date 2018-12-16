@@ -4,8 +4,9 @@
 */
 
     if (_RIGHTS_OK !== true) die();
-    if (!__NAPLOADMIN and !__VEZETOSEG) {
-	$_SESSION['alert'][] = 'message:insufficient_access';
+
+    if (!(__NAPLOADMIN===true || __VEZETOSEG===true || (MAYOR_SOCIAL===true && __TANAR===true))) {
+	$_SESSION['alert'][] = 'page:insufficient_access';
     } else {
 
 	require_once('include/modules/naplo/share/tanar.php');
@@ -45,14 +46,6 @@
 
 	if ($action == 'hianyzoModositas') {
 	
-	    /* Régi megoldás
-	    $hianyzok = $_POST['hianyzok'];
-	    if (!is_array($hianyzok)) $hianyzok = array();
-	    $voltHianyzok = getHianyzok($dt);
-
-	    $ujHianyzok = array_diff($hianyzok, $voltHianyzok);
-	    $toroltHianyzok = array_diff($voltHianyzok, $hianyzok);
-	    */
 	    $ujHianyzok = readVariable($_POST['addHianyzo'], 'numeric unsigned');
 	    $toroltHianyzok = readVariable($_POST['delHianyzo'], 'numeric unsigned');
 
@@ -168,7 +161,12 @@
 	    $HELYETTESITES['tanarTerheles'] = getOraTerhelesStatByTanarId(array('dt'=>$dt));
 	}
 	db_close($lr);
-    }
+
+
+
+
+
+
 
    // toolBar
     if (__NAPLOADMIN) {
@@ -180,7 +178,7 @@
 	    'igDt' => getTanitasiNap(array('direction'=>'elore', 'napszam'=>10, 'fromDt'=>'curdate()')),
 	    'napTipusok' => array('tanítási nap', 'speciális tanítási nap')
         );
-    } elseif (__VEZETOSEG) {
+    } elseif (__VEZETOSEG || MAYOR_SOCIAL===true) {
         $TOOL['datumSelect'] = array(
             'tipus' => 'cella', 'post' => array('tanarId', 'diakId', 'osztalyId', 'tankorId'),
             'paramName' => 'dt', 'hanyNaponta' => 1,
@@ -190,5 +188,8 @@
         );
     }
     getToolParameters();
+
+    }
+
 
 ?>

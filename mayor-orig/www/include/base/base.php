@@ -126,12 +126,19 @@ function page($page, $sub, $f, $lang, $skin, $policy = _DEFAULT_POLICY) {
 
     global $_JSON;
     if (html_alert($_SESSION['alert'])) { // A figyelmeztető üzenet letilthatja az oldal további megjelenítését.
-
         if ($sub != '') {
             $load = "$sub/$f";
         } else {
             $load = $f;
         }
+
+	// --TEST $API_DICTIONARY['api']['naplo']['orarend']['orarend'] = true;
+	if ($skin=='api') {
+	    $_JSON['api']['version'] = '1.0';
+	    if (isset($API_DICTIONARY[$skin][$page][$sub][$f])===false) { // --TODO API_DICTIONARY
+		return false;
+	    }
+	}
 
         if (file_exists("policy/$policy/$page/$load.php")) {
     	    if (file_exists("lang/$lang/module-$page/base.php")) {
@@ -146,20 +153,19 @@ function page($page, $sub, $f, $lang, $skin, $policy = _DEFAULT_POLICY) {
     	    }
     	    if (file_exists("skin/$skin/module-$page/html/base.phtml")) {
 		require_once("skin/$skin/module-$page/html/base.phtml");
-	    } elseif (file_exists("skin/"._DEFAULT_SKIN."/module-$page/html/base.phtml")) {
+	    } elseif ($skin!=='api' && file_exists("skin/"._DEFAULT_SKIN."/module-$page/html/base.phtml")) { // api esetén nem töltjük be a default skin phtml-t
 		require_once("skin/"._DEFAULT_SKIN."/module-$page/html/base.phtml");
     	    }
     	    if (file_exists("skin/$skin/module-$page/html/$load.phtml")) {
 		require_once("skin/$skin/module-$page/html/$load.phtml");
-	    } elseif (file_exists("skin/"._DEFAULT_SKIN."/module-$page/html/$load.phtml")) {
+	    } elseif ($skin!=='api' && file_exists("skin/"._DEFAULT_SKIN."/module-$page/html/$load.phtml")) { // api esetén nem töltjük be a default skin phtml-t
 		require_once("skin/"._DEFAULT_SKIN."/module-$page/html/$load.phtml");
     	    }
+	    $_JSON['api']['debug'] = serialize($page.$load);
 
 	    include("policy/$policy/$page/$load.php");
-	    //szamlal($policy,$page);
         } elseif (file_exists("static/$lang/$page/$load.html")) {
 	    include("static/$lang/$page/$load.html");
-	    //szamlal($policy,$page);
         } else {
             //??? ha már kiírtuk a hibaüzeneteket, újabbat nem írhatunk ki sajnos :( html_alert(array('page:page_missing:'."[$page]:[$sub]:[$f]")); --> rights.php
         }

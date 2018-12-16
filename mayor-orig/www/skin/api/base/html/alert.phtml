@@ -1,0 +1,13 @@
+<?php
+
+    function html_alert() {
+	// global $ALERT_MSG; // jelenleg nem használjuk
+	if (isset($_SESSION['alert'])===true && is_array($_SESSION['alert'] === true && count($_SESSION['alert'])>0)) {
+	    var_dump($_SESSION['alert']);
+	    return false; // ne jelenjen meg az oldal
+	} else {
+	    return true; // nincs hiba
+	}
+    }
+
+?>

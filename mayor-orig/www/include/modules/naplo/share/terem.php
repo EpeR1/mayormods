@@ -124,19 +124,25 @@
         if (is_array($ADAT['foglaltTermek'][ $ADAT['teremId'] ])) {
             $return = $ADAT['foglaltTermek'][ $ADAT['teremId'] ]['tanarId'];
             // A foglalt terem felszabadítása
-            $q = "UPDATE `%s`.orarendiOra SET teremId=NULL WHERE tolDt<='%s' AND '%s'<=igDt AND het=%u AND nap=%u AND ora=%u AND teremId=%u";
+            $q = "UPDATE `%s`.orarendiOra SET teremId=NULL WHERE tolDt<='%s' AND ('%s'<=igDt OR igDt IS NULL) AND het=%u AND nap=%u AND ora=%u AND teremId=%u";
             $v = array($tanevDb, $dt, $dt, $ADAT['het'], $ADAT['nap'], $ADAT['ora'], $ADAT['teremId']);
             db_query($q, array('fv' => 'teremModositas/foglalt terem felszabadítása', 'modul' => 'naplo', 'values' => $v));
         }
         // teremhozzárendelés módosítása
 	if ($ADAT['teremId']>0) {
-    	    $q = "UPDATE `%s`.orarendiOra SET teremId=%u WHERE tolDt <= '%s' AND '%s' <= igDt AND het=%u AND nap=%u AND ora=%u AND tanarId=%u";
+    	    $q = "UPDATE `%s`.orarendiOra SET teremId=%u WHERE tolDt <= '%s' AND ('%s' <= igDt OR igDt IS NULL) AND het=%u AND nap=%u AND ora=%u AND tanarId=%u";
     	    $v = array($tanevDb, $ADAT['teremId'], $dt, $dt, $ADAT['het'], $ADAT['nap'], $ADAT['ora'], $ADAT['tanarId']);
 	} else {
-    	    $q = "UPDATE `%s`.orarendiOra SET teremId=NULL WHERE tolDt <= '%s' AND '%s' <= igDt AND het=%u AND nap=%u AND ora=%u AND tanarId=%u AND teremId IS NOT NULL";
+    	    $q = "UPDATE `%s`.orarendiOra SET teremId=NULL WHERE tolDt <= '%s' AND ('%s' <= igDt OR igDt IS NULL) AND het=%u AND nap=%u AND ora=%u AND tanarId=%u AND teremId IS NOT NULL";
     	    $v = array($tanevDb, $dt, $dt, $ADAT['het'], $ADAT['nap'], $ADAT['ora'], $ADAT['tanarId']);
 	}
-        db_query($q, array('debug'=>true,'fv' => 'teremModositas/foglalt terem felszabadítása', 'modul' => 'naplo', 'values' => $v));
+        db_query($q, array('debug'=>false,'fv' => 'teremModositas/foglalt terem felszabadítása', 'modul' => 'naplo', 'values' => $v));
+
+	if (MAYOR_SOCIAL === true && $ADAT['oraId']>0) {
+	    $q = "UPDATE ora SET teremId = NULL WHERE ora=%u AND oraId=%u";
+    	    $v = array($ADAT['ora'], $ADAT['oraId']);
+    	    db_query($q, array('fv' => 'teremModositas/foglalt terem felszabadítása', 'modul' => 'naplo', 'values' => $v));
+	}
 
         return $return;
 

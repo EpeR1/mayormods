@@ -12,10 +12,11 @@
 	Ebben egy sor egy óra adatait tartalmazza - akár az orarendiOra adatbázis egy rekordja.
 	Feltételezzük, hogy a tanárnevek _pontosan_ megegyeznek a naplóbeli nevekkel, továbbá a termek rövid neve
 	az azonosító számuk.
-	A szkript kezeli a blokkokat, ezeket szétbontja különrekordokra
+	A szkript kezeli a blokkokat, ezeket szétbontja külön rekordokra (???)
 
-	0. Óra érvényességének kezdete	- yyyy.mm.dd formátumú dátum		- eldobjuk
-	1. Őra érvényességének vége	- yyyy.mm.dd formátumú dátum		- eldobjuk
+	0. Óra érvényességének kezdete	- yyyy.mm.dd formátumú dátum		- eldobjuk - de előfordul, hogy eleve nincs is...
+	1. Őra érvényességének vége	- yyyy.mm.dd formátumú dátum		- eldobjuk - de előfordul, hogy eleve nincs is...
+
 	2. Hetirend			- Minden héten/A hét/B hét		- 1. hét esetén az első kettő, 2. esetén az 1. és a harmadik érvényes - többit eldobjuk
 	3. Nap				- a nap magyar neve			- konvertáljuk hétfő --> 1, ..., vasárnap --> 7 alakra
 	4. Óra (az adott napon belül)	- pozitív egész szám			- --> ora
@@ -30,7 +31,9 @@
 
     require_once('include/modules/naplo/share/tanar.php');
 
-    function terem2teremId($terem) {
+    $vanErvenyesseg = false;
+
+    function terem2teremId($terem) { // -- TODO kretaNev
 	if ($terem == 'könyvtár') return 12;
 	else if ($terem == 'fonotéka') return 13;
 	else if ($terem == 'studió') return 14;
@@ -50,8 +53,13 @@
         $OrarendiOra = array();
 
 	$Napok = array('hétfő'=>1, 'kedd'=>2, 'szerda'=>3, 'csütörtök'=>4, 'péntek'=>5, 'szombat'=>6, 'vasárnap'=>7);
-        $Tanarok = getTanarok(array('tanev' => __TANEV, 'result' => 'assoc'));
-        foreach ($Tanarok as $tanarId => $tanarAdat) $Tanar[ $tanarAdat['tanarNev'] ] = $tanarId;
+        $Tanarok = getTanarok(array('tanev' => __TANEV, 'result' => 'assoc', 'extraAttrs' => 'kretaNev'));
+
+        foreach ($Tanarok as $tanarId => $tanarAdat) {
+	    if ($tanarAdat['tanarNev']!='') $Tanar[ $tanarAdat['tanarNev'] ] = $tanarId;
+	    if ($tanarAdat['kretaNev']!='') $Tanar[ $tanarAdat['kretaNev'] ] = $tanarId;
+	}
+	/* VMG további HACK!!! --TODO */
 	$Tanar['Pintér László (1961. 03. 14.)'] = $Tanar['Pintér László'];
 	$Tanar['Pintér László (1975. 02. 25.)'] = $Tanar['Pintér László Sp'];
 	$Tanar['Balkayné Kalló Ágnes Zsófia'] = $Tanar['Balkayné Kalló Ágnes'];
@@ -66,7 +74,7 @@
 	$Tanar['Csapody Barbara Mária'] = $Tanar['Csapody Barbara'];
 	$Tanar['dr Szabóné Karácsonyi Virág'] = $Tanar['dr. Szabóné Karácsonyi Virág'];
 	$Tanar['dr Kas Géza Imre'] = $Tanar['Dr. Kas Géza Imre'];
-
+	
 
         $fp = fopen($ADAT['fileName'], 'r');
         if (!$fp) return false;
@@ -79,6 +87,7 @@
 	while ($sor = fgets($fp, 1024)) {
 
 	    $rec = explode('	', chop($sor));
+	    if (!$vanErvenyesseg) array_unshift($rec, "", "");
 
 	    $nap = $Napok[$rec[3]];
 	    $ora = $rec[4];

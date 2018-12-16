@@ -31,7 +31,7 @@ if (!defined('_SECURECOOKIE')) define('_SECURECOOKIE', true);
 define('_BASE_URL',( ($_SERVER['HTTPS']=='on')?"https://".$_SERVER['SERVER_NAME']:"http://".$_SERVER['SERVER_NAME'] ));
 
 /* classic, blue, ajax + rpc, + cron kiegészítés */
-$SKINS = @array_unique(array_merge($SKINS,array('classic','blue','ajax','rpc','gray','cron')));
+$SKINS = @array_unique(array_merge($SKINS,array('classic','blue','ajax','rpc','gray','cron','api')));
 $SKINSSHOW = @array_unique(array_merge($SKINSSHOW,array('classic','vakbarat','gray')));
 
 if (is_array($POLICIES) && defined('_CONFIGDIR')) {

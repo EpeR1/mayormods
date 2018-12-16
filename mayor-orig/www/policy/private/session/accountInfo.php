@@ -10,6 +10,8 @@
 
     putUserSettingsForm($ADAT);
 
+    putEduroamForm($ADAT);
+
     putAccountInfoForm($userInfo, $accountInfo, $backendAttrDef, $toPolicy);
 
 ?>

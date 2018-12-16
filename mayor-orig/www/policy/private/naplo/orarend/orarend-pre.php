@@ -63,7 +63,6 @@
     foreach ($ADAT['telephelyek'] as $tAdat) $telephelyIds[] = $tAdat['telephelyId'];
     $telephelyId = readVariable($_POST['telephelyId'], 'id', (count($ADAT['telephelyek'])>1?null:1), $telephelyIds);
     /* A telephelyet ki tudnánk találni a lekérdezett órák termeiből is... */
-
     $tolDt = readVariable($_POST['tolDt'], 'date', getTanitasihetHetfo(array('napszam'=>0)));
     $dt = readVariable($_POST['dt'], 'date'); // mutatni
 
@@ -85,7 +84,6 @@
 	    // A következő nap előtti hétfő
 	    $tolDt = date('Y-m-d', strtotime('last Monday', strtotime('+1 days', time())));
 
-
 /*
 	if (strtotime($tolDt) > strtotime($_TANEV['zarasDt'])) $_tolDt = $_TANEV['zarasDt'];
 	elseif (strtotime($tolDt) < strtotime($_TANEV['kezdesDt'])) $_tolDt = $_TANEV['kezdesDt'];
@@ -99,13 +97,12 @@
 
     // SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL SOCIAL
     if (MAYOR_SOCIAL === true && $action== 'orarendiOraTeremModosit') {
-	$_MODIFY;
 	if(is_array($_POST)) {
 	    $TMP_TERMEK = getTermek(array('result' => 'assoc'));
 	    $TMP_TEREMIDS = array_keys($TMP_TERMEK);
 	    foreach($_POST as $_pk => $_pv) {
 		if (($_pv>0 || $_pv=="teremTorol") && substr($_pk,0,3) == 'OOM') {
-		    list($placeholder, $M['het'], $M['nap'], $M['ora'], $M['tanarId'],$M['tolDt']) = explode('+',$_pk);
+		    list($placeholder, $M['het'], $M['nap'], $M['ora'], $M['tanarId'],$M['dt']) = explode('+',$_pk);
 		    if ($_pv=='teremTorol') $_pv=0; // hackit
 		    $M['teremId'] = readVariable($_pv,'id',0,$TMP_TEREMIDS);
 		    $M['tanev'] = __TANEV;
@@ -260,7 +257,8 @@
 	    }
         }
 
-	// $ADAT['dt'] = $tolDt; // BUG - ez vajon miért volt???
+	// $ADAT['dt'] = $tolDt; // BUG - ez vajon miért volt??? - Mert a MSE (Social Edition), ben használtuk. Hibásan. Áttérés tolDt - re
+	$ADAT['tolDt'] = $tolDt; 
 	$ADAT['tanarId'] = $tanarId;
 	$ADAT['osztalyId'] = $osztalyId;
 	$ADAT['diakId'] = $diakId;
@@ -271,7 +269,7 @@
 //=====================================
 
         $TOOL['datumSelect'] = array(
-            'tipus'=>'cella', 'post'=>array('tanarId','osztalyId','tankorId','mkId','diakId','telephelyId'),
+            'tipus'=>'cella', 'post'=>array('tanarId','osztalyId','tankorId','mkId','diakId','telephelyId','teremId'),
 	    'paramName' => 'tolDt', 'hanyNaponta' => 7,
 	    'override'=>true, // használathoz még át kell írni pár függvényt!!!
 //	    'tolDt' => date('Y-m-d', strtotime('Monday', strtotime($_TANEV['kezdesDt']))),

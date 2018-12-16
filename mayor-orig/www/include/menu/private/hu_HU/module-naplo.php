@@ -152,6 +152,9 @@
 	    'stat' => array(array('txt' => 'Haladási statisztika')),
 	    'elszamolas' => array(array('txt' => 'Munkaidő')),
 	);
+	if (MAYOR_SOCIAL === true) {
+	    $MENU['modules']['naplo']['sub']['haladasi']['helyettesites'] = array(array('txt' => 'Helyettesítés kezelés'));
+	}
 	$MENU['modules']['naplo']['sub']['hianyzas'] = array(
 	    'osztaly' => array(array('txt' => 'Osztály hiányzásösszesítő')),
 	    'osztalyNap' => array(array('txt' => 'Osztály napi hiányzásösszesítő')),
@@ -420,7 +423,7 @@
 	);
 
 	$MENU['modules']['naplo']['sub']['haladasi'] = array(
-	    'helyettesites' => array(array('txt' => 'Helyettesítés')),
+	    'helyettesites' => array(array('txt' => 'Helyettesítés kiírás')),
 	    'pluszora' => array(array('txt' => 'Plusz óra')),
 	    'minuszora' => array(array('txt' => 'Óra elmaradás')),
 	    'osszevonas' => array(array('txt' => 'Összevonás', 'rejtett' => true)),

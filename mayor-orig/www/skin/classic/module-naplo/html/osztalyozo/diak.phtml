@@ -35,12 +35,12 @@
 	    echo '<tr>'."\n";
 		if (__SHOW_FACES_TF) {
 		    echo '<th id="virtualJegyEasterEgg">';
-			//putFace($diakId,'diak');
 		    echo '</th>';
 		    $_sub=-1;
 		} else $_sub=0;
 		echo '<th class="nev diakNev" data-diakid="'.$diakId.'" colspan="'.($HO['count']+count($_TANEV['szemeszter'])-1+$_sub).'">';
-		echo $diakNev.' '.$_osztalystr;
+			putFace($diakId,'diak');
+			echo ' '.$diakNev.' '.$_osztalystr;
 		echo '</th>'."\n";
 
 		if (__ATLAG_MUTATAS !== false) {

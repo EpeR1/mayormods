@@ -39,13 +39,18 @@
 	$changeSkinTo = readVariable($_POST['changeSkinTo'],'enum',null,$SKINSSHOW);
 	setUserSettings($userAccount, $toPolicy, array('skin'=>$changeSkinTo));
 
+    } elseif ($action=='generateEduroamId') {
+
+    } elseif ($action=='modoifyEduroamId') {
+
     }
-
-
 
     $userInfo = getUserInfo($userAccount, $toPolicy);		// keretrendszer attribútumai
     $accountInfo = getAccountInfo($userAccount, $toPolicy);	// backend attribútumai
 
     $ADAT = getUserSettings($userAccount, $toPolicy);
-
+    if ($toPolicy=='private' && _POLICY ==='private') {
+	$ADAT['eduroamAdat'] = getEduroamSettings($userAccount, $toPolicy);
+	// dump($ADAT);
+    }
 ?>

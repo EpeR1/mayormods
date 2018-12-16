@@ -6,17 +6,21 @@
     }
 
     table.personalSettings thead th {
-	background-color: rgb(60,20,100);
+	background-color: cornflowerblue;
 	padding: 5px 40px 5px 40px;
     }
-
+    table.personalSettings.asAdamin thead th {
+	background-color: cornflowerblue;
+    }
     table.personalSettings thead th.policy {
 	background-color: rgb(225,125,25);
     }
 
     table.personalSettings tfoot th {
-	background-color: rgb(60,20,100);
+	background-color: cornflowerblue;
+	height:30px;
     }
+    table.personalSettings.asAdmin tfoot th { background-color: #f60; }
 
     table.personalSettings tbody td {
 	background-color: rgb(200,200,210);
@@ -98,3 +102,11 @@
     div.wall h2 { font-size:smaller; margin:0px; padding:0px; text-align: right;}
     div.wall img { border: none; top:5px; right:5px; float:right; }
     
+
+    table.attr { min-width: 320px; width: 100%; }
+    table.attr tr th { min-width: 100px; text-align:left; font-weight:normal; height:2em; padding:4px 8px; }
+    table.attr tr td { background-color: white; color: black; text-align: left; min-width: 150px; }
+
+
+    div.unknownAttr { background-color: orange; text-align: center; }
+

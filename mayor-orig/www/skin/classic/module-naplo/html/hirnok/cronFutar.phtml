@@ -59,7 +59,7 @@
         global $aHetNapjai;
         $nap = kisbetus($aHetNapjai[date('w',strtotime($D['oraAdat']['dt']))-1]);
         $RETURN_STR .= 'A '.$D['oraAdat']['tankorCn'].' tankör '.$D['oraAdat']['dt'].' '.$nap.'i '.$D['oraAdat']['ora'].'. óra státusza megváltozott. ';
-        if ($D['oraAdat']['teremId']>0) $RETURN_STR .= 'Terme: '.$D['oraAdat']['teremId'].'. ';
+	if ($D['oraAdat']['teremId']>0) $RETURN_STR .= 'Terme: '.$D['oraAdat']['teremLeiras'].' ('.$D['oraAdat']['teremId'].') ';
         $RETURN_STR .= 'Új típusa: <b>'.$D['oraAdat']['tipus'].'</b>! ';
         if ($D['oraAdat']['ki']>0) $RETURN_STR .= '('.$D['oraAdat']['kiCn'].')';
 	return $RETURN_STR;

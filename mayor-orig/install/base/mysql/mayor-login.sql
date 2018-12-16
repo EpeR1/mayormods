@@ -177,5 +177,8 @@ CREATE TABLE `eduroam` (
     `eduroamUID` varchar(32)  COLLATE utf8_hungarian_ci NOT NULL,
     `eduroamPASSWORD` varchar(128) COLLATE utf8_hungarian_ci NOT NULL,
     `eduroamAFFILIATION` ENUM ('staff','faculty','student','') DEFAULT '',
-    `modositasDt` datetime DEFAULT NULL
+    `eduroamDOMAIN` varchar(128) COLLATE utf8_hungarian_ci NOT NULL,
+    `modositasDt` datetime DEFAULT NULL,
+  UNIQUE KEY `eduroamUID` (`eduroamUID`),
+  UNIQUE KEY `userAccount` (`userAccount`,`policy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;

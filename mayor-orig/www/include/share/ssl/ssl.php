@@ -431,7 +431,7 @@ function random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzAB
 	    $this->sessionKey = $this->_sessionKeyDecode($PACKED['sessionKeyEncoded']);
 	    if ($this->_verifyHash($PACKED)) {
 		$this->incomingRequest = $this->_unpackData($PACKED);
-openlog("MaYoR Interconnect", LOG_PID | LOG_PERROR, LOG_LOCAL0);
+openlog("MaYoR", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 syslog(LOG_WARNING, "Data unpacked: ".(json_encode($this->incomingRequest))." {$_SERVER['REMOTE_ADDR']} ({$_SERVER['HTTP_USER_AGENT']})");
 closelog();
 		$this->status = 'ok:success request';

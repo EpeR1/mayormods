@@ -15,6 +15,7 @@
                                  kit,
                                  ora.tankorId AS tankorId,
                                  teremId,
+                                 ".__INTEZMENYDBNEV.".terem.leiras AS teremLeiras,
                                  ora.leiras AS leiras,
                                  ora.tipus AS tipus,
                                  eredet,
@@ -28,6 +29,7 @@
                             LEFT JOIN ".__INTEZMENYDBNEV.".tanar AS t1 ON ki=t1.tanarId
                             LEFT JOIN ".__INTEZMENYDBNEV.".tanar AS t2 ON kit=t2.tanarId
                     	    LEFT JOIN ".__INTEZMENYDBNEV.".feladatTipus USING (feladatTipusId)
+                    	    LEFT JOIN ".__INTEZMENYDBNEV.".terem USING (teremId)
                             WHERE oraId=%u AND (tanev=%u OR feladatTipusId IS NOT NULL)";
 	    $v = array(tanevDbNev(__INTEZMENY, $tanev), $oraId, $tanev);
 	    return db_query($q, array('fv' => 'getOraAdatById', 'modul' => 'naplo_intezmeny', 'result' => 'record', 'values' => $v), $olr);

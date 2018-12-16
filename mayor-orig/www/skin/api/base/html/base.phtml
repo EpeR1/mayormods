@@ -1,0 +1,11 @@
+<?php
+
+    function html_base($sessionID,$policy,$page,$sub,$f,$lang,$skin,$MENU) {
+	global $_JSON;
+	@header("Content-Type: application/json; charset=utf-8");
+	define('_UNIQUE', uniqid()); //--TODO GLOBAL
+	page($page,$sub,$f,$lang,$skin,$policy);
+	echo json_encode($_JSON);
+    }
+
+?>

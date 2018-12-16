@@ -45,4 +45,34 @@
 
     }
 
+    function setEduroamRecord($ADAT) {
+
+	//	ALTER TABLE eduroam ADD UNIQUE  INDEX (userAccount,policy);
+	//	ALTER TABLE eduroam ADD UNIQUE  INDEX (eduroamUID);
+	// https://wiki.niif.hu/index.php?title=Sulinet_felhaszn%C3%A1l%C3%B3k_t%C3%B6meges_felvitele
+
+	    $q = "UPDATE eduroam SET eduroamPASSWORD='%s', modositasDt = NOW() WHERE userAccount='%s' AND policy='%s'";
+	    $res = db_query($q, array('modul'=>'login','values'=>array($ADAT['eduroamPASSWORD'],$userAccount,$toPolicy)));
+
+    }
+
+    function getEduroamSettings($userAccount,$toPolicy,$ADAT) {
+
+	$res = false;
+	if (_ACCESS_AS == _ADMIN_ACCESS) {
+	    $userAccoungt = ($userAccount);
+	    $toPolicy = ($toPolicy);
+	} else {
+	    $userAccount = (_USERACCOUNT);
+	    $toPolicy = (_POLICY);
+	}
+
+	if ($toPolicy == 'private') {
+	    $q = "SELECT * FROM eduroam WHERE userAccount='%s' AND policy='%s'";
+	    $res = db_query($q, array('modul'=>'login','values'=>array($userAccount,$toPolicy), 'result'=>'record'));
+	}
+	return $res;
+
+    }
+
 ?>

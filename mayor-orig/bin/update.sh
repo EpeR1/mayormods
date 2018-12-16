@@ -137,12 +137,12 @@ if [ "$EXECONLY" != "1" ]; then
 	if [ "$HTTP_SERVER" == '' ]; then
 	    if [ -f $SVN ]; then
 		# frissítés SVN-ből
-		$SVN --force export https://svn.mayor.hu/svn/trunk/mayor-base/bin "$BASEDIR/bin" > /dev/null
+		$SVN --force export svn+ssh://svn.mayor.hu/var/svn/trunk/mayor-base/bin "$BASEDIR/bin" > /dev/null
 		for MODULE in $MODULES; do
 		    echo -n "     $MODULE... "
 		    chmod +x $BASEDIR/bin/mayor
 		    if [ $? != 0 ]; then exit 2; fi
-		    UJ_REV=`$SVN --force export https://svn.mayor.hu/svn/trunk/$MODULE/update "$BASEDIR/update" | grep revision | cut -d ' ' -f 3 | uniq | sed -e 's/\.//g'`
+		    UJ_REV=`$SVN --force export svn+ssh://svn.mayor.hu/var/svn/trunk/$MODULE/update "$BASEDIR/update" | grep revision | cut -d ' ' -f 3 | uniq | sed -e 's/\.//g'`
 		    if [ $? != 0 ]; then exit 3; fi
 		    echo "kész."
 		done

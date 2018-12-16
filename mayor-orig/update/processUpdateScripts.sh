@@ -180,7 +180,7 @@ if [ "$EXECONLY" != "1" ]; then
     for MODULE in $MODULES; do
 	echo -e "\n     $MODULE... \n"
 	if [ "$HTTP_SERVER" == '' ]; then
-	    $SVN --force --quiet export https://svn.mayor.hu/svn/trunk/$MODULE "$BASEDIR"
+	    $SVN --force --quiet export svn+ssh://svn.mayor.hu/var/svn/trunk/$MODULE "$BASEDIR"
 	    if [ $? != 0 ]; then exit 13; fi
 	else
 	    # Ha rpm csomag futtatja, akkor már ki van csomagolva minden és nincs md5sum

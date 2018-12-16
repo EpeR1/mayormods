@@ -25,6 +25,63 @@
 	formEnd();
     }
 
+    function putEduroamForm($ADAT) {
+return false;
+	global $eduroamDOMAINS;
+	if (__TANAR===true) {
+	    $eduroamAFFILIATION = 'faculty';
+	} elseif (__DIAK===true) {
+	    $eduroamAFFILIATION = 'student';
+	} else {
+	    $eduroamAFFILIATION = 'staff';
+	}
+	// info https://wiki.niif.hu/SulinetMassImport
+
+	formBegin();
+	if ($ADAT['eduroamAdat']['userAccount']!='') {
+	    echo '<input type="hidden" name="action" value="modifyEduroamId" />';
+	} else {
+	    echo '<input type="hidden" name="action" value="generateEduroamId" />';
+	    $ADAT['eduroamAdat']['eduroamUID'] = _USERACCOUNT;
+	    $ADAT['eduroamAdat']['eduroamPASSWORD'] =  @exec('pwgen'); // --TODO
+	}
+	echo '<table align="center" class="personalSettings">';
+	    echo '<thead>';
+		echo '<tr><th colspan="2">Eduroam</th></tr>';	
+	    echo '</thead>';
+
+    	    echo '<tr>';
+	    echo '<th>Eduroam felhasználói név:</th>';
+	    echo '<td>'.($ADAT['eduroamAdat']['eduroamUID']).'@';
+		if ($ADAT['eduroamDOMAIN']!='') {
+		    echo $ADAT['eduroamDOMAIN'];
+		} else {
+		    echo '<select name="eduroamDOMAIN">';
+		    for ($i=0; $i<count($eduroamDOMAINS); $i++) {
+			$_domain = $eduroamDOMAINS[$i];
+			echo '<option value="'.$_domain.'">'.$_domain.'</option>';
+		    }
+		    echo '</select>';
+		}
+	    echo '</td>';
+	    echo '</tr>';
+
+	    echo '<tr>';
+	    echo '<th>Eduroam jelszó:</th>';
+	    echo '<td>'.($ADAT['eduroamAdat']['eduroamPASSWORD']).'</td>';
+	    echo '</tr>';
+
+	    echo '<tr>';
+	    echo '<th>Eduroam viszony:</th>';
+	    echo '<td>'.($eduroamAFFILIATION).'</td>';
+	    echo '</tr>';
+
+    	    echo '<tr><th colspan="2"><input type="submit" value="'._OK.'" /></th></tr>';
+	echo '</table>';	
+	formEnd();
+
+    }
+
     function putAttr($name, $values, $anAttrDef, $toPolicy = _POLICY) {
 
 	global $AUTH;
@@ -35,7 +92,8 @@
         elseif ($anAttrDef['type'] == 'radio') putRadioAttr($name, $values, $anAttrDef);
         elseif ($anAttrDef['type'] == 'timestamp') putTimestampAttr($name, $values, $anAttrDef);
         elseif ($anAttrDef['type'] == 'image') putImageAttr($name, $userAccount, $anAttrDef);
-        else echo 'Ismeretlen atribútum típus: '.$name.' ('.$anAttrDef[$name]['type'].')';
+        elseif ($anAttrDef['type'] != '') echo '<div class="unknownAttr">ismeretlen attribútum típus: '.$name.' ('.($anAttrDef[$name]['type']).')</div>';
+        else echo '<div class="unknownAttr">'.$name.': nem elérhető</div>';
 
     }
 
@@ -55,7 +113,6 @@
         echo '</tr>';
 
         echo '</table>'."\n";
-
     }
 
     function putIntAttr($name, $values, $anAttrDef) {
@@ -191,7 +248,9 @@
         echo '<input type="hidden" name="action" value="changeSettings" />';
         echo '<input type="hidden" name="toPolicy" value="'.$toPolicy.'" />';
         echo '<input type="hidden" name="userAccount" value="'.$userInfo['userAccount'][0].'" />';
-        echo '<table class="personalSettings" align="center" cellspacing="1">';
+
+	if (_ACCESS_AS === _ADMIN_ACCESS) $_class = "asAdmin";
+        echo '<table class="personalSettings '.$_class.'" align="center" cellspacing="1">';
         echo '<thead>';
 	if ($toPolicy != _POLICY) echo '<tr><th class="policy">'.$toPolicy.'</th></tr>'."\n";
         echo '<tr><th>'.$userInfo['userCn'][0].'</th></tr>';
