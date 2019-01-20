@@ -2,6 +2,9 @@
 
     if (_RIGHTS_OK !== true) die();
 
+    _clearSessionCache($sessionID);
+    unsetTokenCookies(); // ha valaki ide tévedne, visszavonjuk a Tokenjét és a cache-t is vissza kell
+
     $toPolicy = readVariable($_REQUEST['toPolicy'], 'enum', 'private', $POLICIES);
     $userAccount = readVariable($_REQUEST['userAccount'], 'emptystringnull', (defined('_USERACCOUNT'))?_USERACCOUNT:null);
 

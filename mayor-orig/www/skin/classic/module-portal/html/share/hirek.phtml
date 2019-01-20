@@ -4,22 +4,25 @@
 
 	if (count($ADAT['hirek']['szovegek'])==0) {
 
-	    if (_POLICY=='public') echo '<div style="width:100%;  color:#eee; text-align:center;margin-top:40px;margin-bottom:40px;"><span style="font-size:120px;" class="icon-eye-close"></span>
-		<br/>Nincs aktuális hír</div>';
-/*
-	    echo '<div class="egyHir"><div class="hirCim">';
-		echo 'MaYoR elektronikus napló';
-	    echo '</div><div class="hir">';
-		echo 'Szabadszoftver a közoktatási intézmények napi adminisztrációjához.';
-		echo '<ul><li><a href="http://www.mayor.hu">www.mayor.hu</a></li></ul>';
-	    echo '</div></div>';
-*/
+	    if (_POLICY=='public') {
+		echo '<div style="width:100%;  color:#eee; text-align:center;margin-top:40px;margin-bottom:40px;"><span style="font-size:120px;" class="icon-eye-close"></span><br/>Nincs aktuális hír</div>';
+	    }
+
 	} else {
-	for ($i=0; $i<count($ADAT['hirek']['szovegek']); $i++) {
-	    echo '<div class="egyHir">';
+	  for ($i=0; $i<count($ADAT['hirek']['szovegek']); $i++) {
+
 	    $D = $ADAT['hirek']['szovegek'][$i];
+	    $_class = ($D['class']==6 && _POLICY!='public') ? 'asPrivate':'';
 	    list ($a,$b) = explode('<!-- more -->',$D['txt']);
-	    echo '<div class="hirCim"><a href="'.href('index.php?page=portal&sub=portal&f=hir&hirId='.$D['id']).'">'.$D['cim'].'</a></div>';
+
+	    echo '<div class="egyHir '.$_class.'">';
+	    echo '<div class="hirCim">';
+		if ($D['class']==6) {
+		    echo '<span title="Védett hír" class="icon-lock-alt" style="padding-right:4px;"></span>';
+		}
+		echo '<a href="'.href('index.php?page=portal&sub=portal&f=hir&hirId='.$D['id']).'">'.$D['cim'].'</a>';
+
+	    echo '</div>';
 	    echo '<div class="hir">';
 		echo $a;
 		if ($b!="") echo ' <a href="'.href('index.php?page=portal&sub=portal&f=hir&hirId='.$D['id']).'">Tovább...</a>';
@@ -29,9 +32,17 @@
 		echo $ADAT['hirek']['linkek'][$D['id']][$j]['szoveg'];
 		echo '</a>';
 	    }
+
+	    if ($D['csoport']!='') {
+		$CSOPORT = explode(',',$D['csoport']);
+		echo '<div style="margin-top:10px">';
+		for ($j=0; $j<count($CSOPORT); $j++) echo '<span class="tag">'.$CSOPORT[$j].'</span>';
+		echo '</div>';
+	    }
+
 	    echo '<hr style="clear:both; height:0px; margin-top:2em; margin-bottom:2em; width:80%; background-color: #777777; border-style: solid; border-color: #eeeeee; border-width: 0px 0px 1px 0px;" />';
 	    echo '</div>';
-	}
+	  }
 	}
     }
 

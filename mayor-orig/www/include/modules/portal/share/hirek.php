@@ -14,6 +14,7 @@
     }
 
     function getHirek($SET = array('all'=>true,'tolDt'=>'', 'igDt'=>'', 'id' => '', 'flag'=>array(), 'class'=>array(), 'cid'=>array(), 'limit'=>'', 'lang'=>'hu_HU') ) {
+
 	$tolDt = $SET['tolDt']; $igDt = $SET['igDt'];
 	if ($tolDt!='') $W[] = "kdt<='$tolDt'";
 	if ($igDt!='')  $W[] = "vdt>='$igDt'";

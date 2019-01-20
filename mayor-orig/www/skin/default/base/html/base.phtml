@@ -167,7 +167,6 @@ function includeJS($page,$sub,$f,$skin) {
 	    }
 	}
     }
-
 }
 
 // -------------------------------------------------------------------
@@ -335,7 +334,7 @@ l53 -52 55 54 55 55 42 -43 43 -42 -55 -55 -54 -55 54 -55 55 -55 -43 -42 -42
 
     function _svgLoginout($SET=array('print'=>true, 'color'=>'#00c0ff')) {
 	return false;
-	global $page;
+/*	global $page;
 	if (//_POLICY=='public'
 	    defined('_USERACCOUNT') && (!is_string(_USERACCOUNT) || _USERACCOUNT=='')) {
 	    if($page=='auth') $_bg = 'rgb(247, 197, 14)';
@@ -348,7 +347,7 @@ l53 -52 55 54 55 55 42 -43 43 -42 -55 -55 -54 -55 54 -55 55 -55 -43 -42 -42
 	    $img .= '<span id="mayorLoginoutSmall" class="icon-lock"></span></a>';
 	}
         if ($print===true) echo $img; else return $img;
-
+*/
     }
 
     function _svgDown($SET=array('print'=>true, 'color' => '#3496b9')) {
@@ -370,7 +369,6 @@ l53 -52 55 54 55 55 42 -43 43 -42 -55 -55 -54 -55 54 -55 55 -55 -43 -42 -42
 	if (is_array($AUTH['private']['allowOnly'])) $_class='class="restricted"'; else $_class = '';
 
 	echo '<div id="mayorGlobalLogin" '.$_class.'>';
-
 	    if ($loggedIn) {
 		if (defined('_MAYORAUTHRESULT') && defined('_AUTH_FAILURE') && intval(_MAYORAUTHRESULT)>=intval(_AUTH_FAILURE)) {
 		    $_class=' failed';
@@ -405,7 +403,10 @@ l53 -52 55 54 55 55 42 -43 43 -42 -55 -55 -54 -55 54 -55 55 -55 -43 -42 -42
 		}
 		echo '</td></tr></table>';
 	    } else {
-		echo '<a href="'.href('index.php?page=session&f=logout&toPolicy=public',array('skin','lang','sessionID')).'"><div class="large icon-lock"></div></a>';
+		if ($_SESSION['mayorapiauth']===true) {
+		    echo '<span style="position: absolute; top:8px; left:0px; color: lightgreen; font-size: 14px;" class="icon-star-alt" title="Megbízható böngésző"></span>';
+		}
+		echo '<a href="'.href('index.php?page=session&f=logout&toPolicy=public',array('skin','lang','sessionID')).'"><div class="large icon-lock" '.$_style.'></div></a>';
 	    }
 	echo '</div>';
 

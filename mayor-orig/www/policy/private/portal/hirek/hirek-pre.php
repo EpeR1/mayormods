@@ -1,7 +1,8 @@
 <?php
 
-  if (_RIGHTS_OK !== true) die();
+    if (_RIGHTS_OK !== true) die();
     require_once('include/modules/portal/share/hirek.php');
-    $ADAT['hirek'] = getHirek(array('tolDt'=>date('Y-m-d'), 'igDt'=>date('Y-m-d'),'flag'=>array(1)));
+    $FILTER=array('tolDt'=>date('Y-m-d H:i:s'), 'igDt'=>date('Y-m-d H:i:s'),'flag'=>array(1),'class'=>array(1,6));
+    $ADAT['hirek'] = getHirek($FILTER);
 
 ?>

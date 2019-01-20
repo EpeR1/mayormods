@@ -34,21 +34,40 @@
 
 	changeAccountInfo($userAccount, $toPolicy);
 
+    } elseif ($action=='tokenLogout') {
+
+	revokeTokens();
+
     } elseif ($action=='userSettingsModify') {
 
 	$changeSkinTo = readVariable($_POST['changeSkinTo'],'enum',null,$SKINSSHOW);
 	setUserSettings($userAccount, $toPolicy, array('skin'=>$changeSkinTo));
 
     } elseif ($action=='generateEduroamId') {
-
+	$eduroamDOMAIN = readVariable($_POST['eduroamDOMAIN'],'enum',null,$eduroamDOMAINS);
+	$eduroamPASSWORD =  @exec('pwgen');
+        if (__TANAR===true) {
+            $eduroamAFFILIATION = 'faculty';
+        } elseif (__DIAK===true) {
+            $eduroamAFFILIATION = 'student';
+        } else {
+            $eduroamAFFILIATION = 'staff';
+        }
+	createEduroamSettings(array('userAccount'=>$userAccount,'policy'=> $toPolicy, 
+	    'eduroamUID' => $userAccount,
+	    'eduroamDOMAIN'=>$eduroamDOMAIN, 
+	    'eduroamAFFILIATION'=>$eduroamAFFILIATION, 
+	    'eduroamPASSWORD'=>$eduroamPASSWORD));
     } elseif ($action=='modoifyEduroamId') {
-
+	
     }
 
     $userInfo = getUserInfo($userAccount, $toPolicy);		// keretrendszer attribútumai
     $accountInfo = getAccountInfo($userAccount, $toPolicy);	// backend attribútumai
 
     $ADAT = getUserSettings($userAccount, $toPolicy);
+    $ADAT['activity'] = getMyActivity();
+
     if ($toPolicy=='private' && _POLICY ==='private') {
 	$ADAT['eduroamAdat'] = getEduroamSettings($userAccount, $toPolicy);
 	// dump($ADAT);

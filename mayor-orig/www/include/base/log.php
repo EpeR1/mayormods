@@ -5,7 +5,7 @@
     function naploz($aCode)
     function szamlal($policy,$page)
 */
-
+    define('CLIENTIPADDRESS',_clientIp());
     function _clientIp() {
         return ($_SERVER['HTTP_X_FORWARDED_FOR']!='')?$_SERVER['HTTP_X_FORWARDED_FOR']:$_SERVER['REMOTE_ADDR'];
     }

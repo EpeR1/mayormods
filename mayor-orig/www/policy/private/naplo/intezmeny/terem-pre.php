@@ -37,6 +37,9 @@
 	$ADAT['teremAdat'] = getTermek(array('result' => 'assoc', 'keyfield' => 'teremId', 'telephelyId' => $telephelyId));
 
 	$TOOL['telephelySelect'] = array('tipus'=>'cella','paramName' => 'telephelyId', 'post' => array('tanev'));
+	if ($ADAT['teremId']!='' || $ADAT['teremId']!='') {
+    	    $TOOL['vissza']['icon'] = 'arrow-left';
+	}
 	getToolParameters();
     }
 ?>

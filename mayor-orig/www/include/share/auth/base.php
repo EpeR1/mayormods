@@ -93,7 +93,7 @@
 	    db_query($query, array('fv' => 'newSession', 'modul' => 'login', 'values' => array($sessionID, $policy)), $lr);
 	} 
 	$now = date('Y-m-d H:i:s');
-	$_SC = sessionCookieEncode($sessionID, $now);
+	$_SC = sessionCookieEncode($sessionID, $now); // TODO
 	$_studyId = ($studyId=='') ? 'NULL' : $studyId;
 	if ($studyId=='') {
     	    $query="INSERT INTO session
@@ -109,9 +109,7 @@
         db_query($query, array('fv' => 'newSession', 'modul' => 'login', 'values' => $v), $lr);
         db_close($lr);
 
-	// Megjegyzés: a sessionID elhashelése nem jelent semmiféle védelmet, így tökéletesen megfelelő az md5 is
-	// értékénél viszont a $now alkalmazása tökéletesen hibás, hiszen a lejárati dátumból 1:1-ben reprodukálható
-	
+	// Megjegyzés: a sessionID elhashelése nem jelent semmiféle védelmet, így tökéletesen megfelelő a gyenge hash is, de now alkalmazása hibás
 	setcookie($_SC['name'],$_SC['value'],time()+60*60*_SESSION_MAX_TIME,'/','',_SECURECOOKIE);
 
         return $sessionID;

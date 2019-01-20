@@ -8,6 +8,6 @@
 	putTeremForm($ADAT);
     } else {
 	putTeremLista($ADAT);
-//NEM TESZTELT!	putTeremForm($ADAT);
+	putTeremForm($ADAT);
     }
 ?>

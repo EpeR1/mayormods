@@ -182,3 +182,18 @@ CREATE TABLE `eduroam` (
   UNIQUE KEY `eduroamUID` (`eduroamUID`),
   UNIQUE KEY `userAccount` (`userAccount`,`policy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+CREATE TABLE `authToken` (
+  `tokenId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `policy` enum('private','parent','public') COLLATE utf8_hungarian_ci NOT NULL,
+  `userAccount` varchar(32) COLLATE utf8_hungarian_ci NOT NULL,
+  `userCn` varchar(64) COLLATE utf8_hungarian_ci NOT NULL,
+  `studyId` bigint(20) unsigned DEFAULT NULL,
+  `selector` char(16) COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `token` char(64) COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `expires` datetime DEFAULT NULL,
+  `ipAddress` varchar(64) COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `activity` datetime DEFAULT NULL,
+  PRIMARY KEY (`tokenId`),
+  UNIQUE KEY `selector` (`selector`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;

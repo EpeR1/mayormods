@@ -12,6 +12,8 @@
 
     putEduroamForm($ADAT);
 
+    putAccountActivityForm($ADAT);
+
     putAccountInfoForm($userInfo, $accountInfo, $backendAttrDef, $toPolicy);
 
 ?>

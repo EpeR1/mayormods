@@ -26,7 +26,7 @@
     }
 
     function putEduroamForm($ADAT) {
-return false;
+// return false;
 	global $eduroamDOMAINS;
 	if (__TANAR===true) {
 	    $eduroamAFFILIATION = 'faculty';
@@ -43,7 +43,7 @@ return false;
 	} else {
 	    echo '<input type="hidden" name="action" value="generateEduroamId" />';
 	    $ADAT['eduroamAdat']['eduroamUID'] = _USERACCOUNT;
-	    $ADAT['eduroamAdat']['eduroamPASSWORD'] =  @exec('pwgen'); // --TODO
+	    $ADAT['eduroamAdat']['eduroamPASSWORD'] =  "********";
 	}
 	echo '<table align="center" class="personalSettings">';
 	    echo '<thead>';
@@ -307,6 +307,33 @@ return false;
         echo '<input type="hidden" name="emptyAttrs" value="'.$emptyAttrs.'" />';
 	formEnd();
 
+    }
+
+    function putAccountActivityForm($ADAT) {
+	formBegin();
+	echo '<input type="hidden" name="action" value="tokenLogout" />';
+        echo '<table class="personalSettings" align="center" cellspacing="1">';
+	    echo '<thead>';
+	    echo '<tr><th colspan="3">Hosszú lejáratú munkamenetek</th></tr>';
+	    echo '</thead>';
+	    echo '<tfoot>';
+	    echo '<tr><th colspan="3"><input type="submit" value="Kijelentkezés mindenhonnan" /></th></tr>';
+	    echo '</tfoot>';
+	    echo '<tr><th></th><th>Ip</th><th>Aktivitás</th></tr>';
+	    for ($i=0; $i<count($ADAT['activity']); $i++) {
+		echo '<tr>';
+		    echo '<th>'.($i+1);
+		    echo '</th>';
+		    echo '<td>';
+		    echo ($ADAT['activity'][$i]['ipAddress']);
+		    echo '</td>';
+		    echo '<td>';
+		    echo ($ADAT['activity'][$i]['activity']);
+		    echo '</td>';
+		echo '</tr>';
+	    }
+	echo '</table>';
+	formEnd();
     }
 
 ?>

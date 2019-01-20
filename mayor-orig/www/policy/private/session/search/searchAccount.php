@@ -5,7 +5,7 @@
 
     if (_RIGHTS_OK !== true) die();
 
-    global $attr, $pattern, $searchResult, $searchAttrList, $toPolicy;
+    global $attr, $pattern, $searchResult, $searchAttrList, $toPolicy, $ADAT;
 
     putSearchAccountForm($attr, $pattern, $searchAttrList, $toPolicy);
 

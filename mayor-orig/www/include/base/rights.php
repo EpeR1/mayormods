@@ -1,4 +1,9 @@
 <?php
+
+// --TODO-- ez nem ide való!
+require_once('include/modules/auth/base/token.php');
+
+
 /*
     Module: base
 
@@ -43,16 +48,14 @@ function sessionCookieEncode($sessionID,$now,$extra='')
 {
     if ($extra=='') $extra = uniqid(rand(), true);
     $extraHash=sessionHash('ripemd160',$extra);
-// pwHash added
-//  $value = base64_encode(strtotime($now).'g'.$extraHash);
     $pwHash = sessionHash('ripemd160',uniqid(rand(), true));
     $value = base64_encode(strtotime($now).'g'.$extraHash.'g'.$pwHash);
-    return array('name'=>md5($sessionID), 'value'=>$value, 'store'=> $extraHash, 'pwHash'=>$pwHash);
+    return array('name'=>($sessionID), 'value'=>$value, 'store'=> $extraHash, 'pwHash'=>$pwHash);
 }
 
 function sessionCookieDecode($sessionID) 
 {
-    return explode('g',base64_decode($_COOKIE[md5($sessionID)]));
+    return explode('g',base64_decode($_COOKIE[($sessionID)]));
 }
 
 function pseudoTokenGenerator() {
@@ -68,10 +71,8 @@ function pseudoTokenGenerator() {
 # Azonosított user ellenőrzése a session tábla alapján
 ######################################################################
 
-
-
 function validUser($sessionID,$policy,$skin='',$lang='') {
-
+    global $page;
     if (_RUNLEVEL === 'cron') {
     	    define('_USERPASSWORD','MaYoR-cron');
     	    define('_USERACCOUNT','MaYoR-cron');
@@ -82,31 +83,25 @@ function validUser($sessionID,$policy,$skin='',$lang='') {
 	    return true;
     }
 
+//    if ($sessionID == '' || $MAYORAPIAUTH['valid']!==true) {
     if ($sessionID == '') {
-
-	if ($policy == _POLICY) {
+	$MAYORAPIAUTH = mayorApiAuth(); // van-e hosszulejáratu session-je
+	if ($policy == _POLICY && $MAYORAPIAUTH['valid']!==true) {
     	    define('_USERPASSWORD','');
     	    define('_USERACCOUNT','');
     	    define('_USERCN','');
     	    define('_STUDYID','');
-//    	    define('_SKIN',$skin);
     	    define('_LANG',$lang);
     	    define('_SESSIONID','');
 	}
         return false;
-
     } else {
 
        $lr = db_connect('login', array('fv' => 'validUser'));
 
         if ($lr === false) die('A keretrendeszer adatbázisa nem érhető el! (validUser)');
 	// ha nem tudta beállítani a sütit, akkor az $_sc üres lesz így a dt feltétel 1970-01-01, ami nem gond.
-// pwHash
-//	list($_sessionDt,$_sessionCookie) = sessionCookieDecode($sessionID);
 	list($_sessionDt,$_sessionCookie,$_sessionPwHash) = sessionCookieDecode($sessionID);
-// pwHash
-//        $query = "SELECT userAccount, userCn, studyId, decode(userPassword, '"._MYSQL_ENCODE_STR."'), skin, lang, activity, dt
-//                    FROM session WHERE sessionID='%s' AND policy='%s'";
         $query = "SELECT userAccount, userCn, studyId, aes_decrypt(userPassword, '%s'), skin, lang, activity, dt
 		    FROM session WHERE sessionID='%s' AND policy='%s'"; // [SECURITY-002] quickfix from marton.drotos@sztaki.hu
 
@@ -116,12 +111,30 @@ function validUser($sessionID,$policy,$skin='',$lang='') {
 	$query .= " AND sessionCookie='%s'";
 
 	$ret = db_query($query, array('fv' => 'validUser', 'modul' => 'login', 'result' => 'indexed', 'values' => array($_sessionPwHash, $sessionID, $policy, $_sessionCookie)), $lr);
-
 	$num = count($ret);
+	$sessionMode = 1;
+
+	// ha nincs találat, nézzük meg, van-e a kliensnek hosszú lejáratú tokenje, kivéve, ha ...
+	if ($num !== 1 && $page!='password') {
+	    $MAYORAPIAUTH = mayorApiAuth();
+	    if ($MAYORAPIAUTH['valid'] === true) {
+		global $sessionMode;
+		$sessionMode = 2;
+		// reauth AS:
+        	$toPolicy = $MAYORAPIAUTH['policy'];
+        	$userAccount = $MAYORAPIAUTH['userAccount'];
+		$userCn = $MAYORAPIAUTH['userCn'];
+		$studyId = $MAYORAPIAUTH['studyId'];
+		$userPassword = '';
+		$lang = _DEFAULT_LANG;
+	    } else {
+		unsetTokenCookies();
+	    }
+	} // --token vizsgálat vége
+
         if ($num == 1) {
 
-            list($userAccount, $userCn, $studyId, $userPassword, $savedSkin, $lang, $activity, $dt) = array_values($ret[0]);
-	    /* PDA */
+	    if ($sessionMode == 1) list($userAccount, $userCn, $studyId, $userPassword, $savedSkin, $lang, $activity, $dt) = array_values($ret[0]);
 	    global $SKINS;
 	    if (_USER_AGENT!=='ppc' && @in_array($savedSkin,$SKINS) ) $skin=$savedSkin;
 	    if ($policy == _POLICY) {
@@ -133,7 +146,8 @@ function validUser($sessionID,$policy,$skin='',$lang='') {
                 define('_LANG',$lang);
         	define('_SESSIONID',$sessionID);
 	    }
-	    // Aktivitás figyelése!
+
+	    // Aktivitás figyelése! // hopp, nem biztos, hogy van session!
 	    $query = "UPDATE session SET activity = NOW() WHERE sessionID = '%s'";
 	    db_query($query, array('fv' => 'validUser', 'modul' => 'login', 'values' => array($sessionID)), $lr);
     	    db_close($lr);
@@ -247,7 +261,10 @@ function validUser($sessionID,$policy,$skin='',$lang='') {
 		unset($_POST['action']);
 		unset($action);
 	    }
-	} else { // klasszikus ellenőrzés, fallback // TODO BEGIN DEPRECATED BLOCK
+	} else { // klasszikus ellenőrzés, fallback
+	    echo 'FATAL ERROR 696';
+	    die();
+	    /*
 	    // $_JSON['result'] = false; // ITT gátolhatjuk a működést
 	    if ($_COOKIE[__SALTNAME]=='') { // a session átállásig - ez semmitől nem véd, adott nevű sütit generálni bárki tud
 		$_SESSION['alert'][] = 'message:not_valid_form:no cookie'.$_SESSION[__SALTNAME]; 
@@ -264,13 +281,17 @@ function validUser($sessionID,$policy,$skin='',$lang='') {
 		unset($_POST['action']);
 		unset($action);
 	    }
+	    */
 	} // END DEPRECATED BLOCK
     }
     // eredeti post kezelés + ETAG prevent cache
     if (($_SERVER['HTTPS']!=='on') || (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER']!='' && substr($_SERVER['HTTP_REFERER'],4,1)!=='s')) $_ssl = false; else $_ssl=true;
-    if (@setcookie(__SALTNAME,__SALTVALUE,time()+60*60*_SESSION_MAX_IDLE_TIME,'/','',$_ssl, true) == false) {
-        $_SESSION['alert'][] = 'message:no_cookie:unabletoset';
-    }
+
+//4400    if (@setcookie('xxxDEPRECATEDxxx_'.__SALTNAME,__SALTVALUE,time()+60*60*_SESSION_MAX_IDLE_TIME,'/','',$_ssl, true) == false) {
+//4400        $_SESSION['alert'][] = 'message:no_cookie:unabletoset';
+//4400    }
+
+
     /* /XSRF2 previous revision: r4138 */
 
     // betöltjük az össes config-ot... (lásd még widgets)

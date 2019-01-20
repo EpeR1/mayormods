@@ -1,6 +1,6 @@
 <?php
 
-    if ($action == 'mayorGlobalLogin' || $action == 'facebooklogin' || $action== 'googleapilogin') {
+    if ($sessionMode===2 || $action == 'mayorGlobalLogin' || $action == 'facebooklogin' || $action== 'googleapilogin') {
 
         $toPolicy = readVariable($_REQUEST['toPolicy'], 'enum', 'private', $POLICIES);
         $policyOrderIndex = readVariable($_POST['policyOrderIndex'], 'id', 0);
@@ -46,6 +46,15 @@
 		$userAccount = $GOOGLEAPIDATA['userAccount'];
 		$googleapiAuth = true;
 	    }
+	} elseif ($sessionMode===2) {
+	    $MAYORAPIDATA = mayorApiAuth();
+	    if ($MAYORAPIDATA!==false && $MAYORAPIDATA['userAccount']!="") {
+		$userAccount = $MAYORAPIDATA['userAccount'];
+		$toPolicy = $MAYORAPIDATA['toPolicy'];
+		$mayorapiAuth = true;
+	    } else {
+		unsetTokenCookies(); // + unregister token
+	    }
 	} else {
 	    $userPassword = readVariable($_POST['userPassword'], 'string');
 	    // $userAccount = readVariable($_POST['userAccount'], 'regexp', null, array("^([a-z]|[A-Z]|[0-9]| |\.|,|_|[űáéúőóüöíŰÁÉÚŐÓÜÖÍäÄ]|-|@)*$"));
@@ -56,7 +65,7 @@
 	if (is_array($AUTH[$toPolicy]['allowOnly']) && !in_array($userAccount,$AUTH[$toPolicy]['allowOnly'])) $userAccount='';
 
 	if ($sessionID != '') $accountInformation['sessionID'] = $sessionID;
-	if ($userAccount != '' and ($userPassword != '' or $fbAuth===true or $googleapiAuth===true)) {
+	if ($userAccount != '' and ($userPassword != '' or $fbAuth===true or $googleapiAuth===true or $mayorapiAuth === true)) {
 
 	  for ($i=0; $i<count($__POLICYORDER[$policyOrderIndex]); $i++) {
 	    $toPolicy=$__POLICYORDER[$policyOrderIndex][$i];
@@ -84,6 +93,15 @@
 		    $_SESSION['alert'][] = 'info:A google azonosító nincs még összekötve! Először lépj be a MaYoR-ba, és kezdeményezd!';
 		    continue;;
 		}
+	    } elseif ($mayorapiAuth===true) {
+		if ($MAYORAPIDATA['toPolicy'] == $toPolicy) {
+		    $result = _AUTH_SUCCESS; // az authentikációt a mayorApiAuth() csinálta
+		    $accountInformation['cn'] = $MAYORAPIDATA['userCn'];
+		    // $accountInformation['mail'] = $MAYORAPIDATA['userEmail'];
+        	    $accountInformation['studyId'] = $MAYORAPIDATA['studyId'];	
+		} else {
+		    continue;;
+		}
 	    } else {
 		$result = userAuthentication($userAccount, $userPassword, $accountInformation, $toPolicy); // ??? toPolicy benne van az AccountInformation-ben!!! Ldap backend only?
 	    }
@@ -93,6 +111,7 @@
 	    if ($result === _AUTH_SUCCESS) {
 		$_SESSION['alert'] = array();
 		$sessionID = newSession($accountInformation, $toPolicy);
+		if ($mayorapiAuth!==true) generateAuthToken(array('userAccount'=>$userAccount, 'policy'=>$toPolicy, 'userCn'=>$accountInformation['cn'], 'studyId'=>$accountInformation['studyId'])); // --TODO untrusted clients
 		if ($toSkin == '') $toSkin = $skin;
 		header('Location: '.location("index.php?page=$toPage&sub=$toSub&f=$toF&sessionID=$sessionID&policy=$toPolicy&lang=$lang&skin=$toSkin", array('alertOLD')));
 		break;

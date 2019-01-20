@@ -12,9 +12,12 @@
 		echo '<th>'._FEROHELY.'</th>';
 		echo '<th>'._TIPUS.'</th>';
 		echo '<th>'._TELEPHELY.'</th>';
-		echo '<th>'._TEREMALLAPOT.'</th>';
+		echo '<th>'.'</th>';
 	    echo '</tr></thead>'."\n";
-	    echo '<tfoot><tr></tr></tfoot>'."\n";
+	    echo '<tfoot><tr>';
+		echo '<td colspan="6">';
+		echo '</td>';
+	    echo '</tr></tfoot>'."\n";
 	    echo '<tbody>';
 	    foreach ($ADAT['teremAdat'] as $teremId => $tAdat) {
 		echo '<tr>';

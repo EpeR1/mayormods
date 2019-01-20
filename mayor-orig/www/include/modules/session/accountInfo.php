@@ -56,6 +56,22 @@
 
     }
 
+    function createEduroamSettings($ADAT) {
+
+	    $q = "INSERT INTO eduroam (userAccount,policy,eduroamUID,eduroamPASSWORD,eduroamAFFILIATION,eduroamDOMAIN)
+	    VALUES ('%s','%s','%s','%s','%s','%s')";
+	    $values = array(
+		$ADAT['userAccount'],
+		$ADAT['policy'],
+		$ADAT['eduroamUID'],
+		$ADAT['eduroamPASSWORD'],
+		$ADAT['eduroamAFFILIATION'],
+		$ADAT['eduroamDOMAIN'],
+	    );
+	    $res = db_query($q, array('modul'=>'login','values'=>$values));
+	    return $res;
+    }
+
     function getEduroamSettings($userAccount,$toPolicy,$ADAT) {
 
 	$res = false;

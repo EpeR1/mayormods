@@ -30,6 +30,8 @@
     function closeSession($sessionID = '') {
 	// _SESSIONID csak validUser esetén van, de mi lehet, hogy másik policy-ből jöttünk!
 	if ($sessionID == '') $sessionID = $_REQUEST['sessionID'];
+	_clearSessionCache($sessionID);
+	unsetTokenCookies();
 	$q = "DELETE FROM session WHERE sessionID='%s'";
 	return db_query($q, array('fv' => 'closeSession', 'modul' => 'login', 'result' => 'affected rows', 'values' => array($sessionID)));
     }

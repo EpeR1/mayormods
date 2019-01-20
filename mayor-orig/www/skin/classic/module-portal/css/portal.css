@@ -55,24 +55,18 @@
 
     div.doboz:hover div.dobozCim { opacity: 0.8;  }
 
-/*
-    div.doboz div.dobozCim , div.doboz div.dobozCim { border-bottom: solid 1px black; }
-    div.doboz div.dobozCim tr th {color:white; font-weight:bold; text-align: left; font-size:10px;}
-*/
-
     table.kerdoiv { font-size:10px; }
     div.kerdes    { text-align: center; font-weight:bold; }
     table.kerdoiv tr td.j { text-align: right }
 
     div.egyHir {position:relative;}
+    div.egyHir.asPrivate div.hirCim { color: #e91e63;}
+    div.egyHir.asPrivate div.hirCim a { color: #e91e63;}
     div.egyHir div.hir a { color:#325C99; }
-    div.egyHir div.hir a:hover { color:#1E90FF; }
-/*
-div.egyHir div.hirCim:after {position:absolute; display:block; content:""; background-color:#eeeeee; height:1px; width:100%;
-bottom:0px; right:0px; }
-*/
 
-/*Az a hr mindig a halálom volt :) */
+    div.egyHir span.tag { background-color: #bbb; padding: 0px 4px; margin: 0px 2px; border-radius:2px; color:white;}
+
+
 div.egyHir:after {
   clear: both;
   height: 0px;

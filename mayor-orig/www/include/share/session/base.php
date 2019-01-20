@@ -115,9 +115,11 @@
 	db_query($q, array('fv' => 'cache', 'modul' => 'login', 'result' => 'indexed', 'values'=>$v));
     }
 
-
-
-
+    function _clearSessionCache($sessionID) {
+	$q = "DELETE FROM `cache` WHERE sessionID  IN ('%s','%s')";
+	$v = array(_SESSIONID,$sessionID);
+	db_query($q, array('debug'=>false,'fv' => 'cache', 'modul' => 'login', 'result' => 'indexed', 'values'=>$v));
+    }
 
 ######################################################
 # getBackendAttrs - az adott policy backend-jéhez tartozó attribútumok - session modul
