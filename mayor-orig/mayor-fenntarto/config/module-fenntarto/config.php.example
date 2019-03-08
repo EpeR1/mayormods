@@ -1,0 +1,10 @@
+<?php
+
+    //define('__FENNTARTO_INSTALLED',true);
+
+    $MYSQL_DATA['fenntarto']['user']= 'mayor_fenntarto';
+    $MYSQL_DATA['fenntarto']['pw']= '%SQLPW%';
+    $MYSQL_DATA['fenntarto']['db']= 'mayor_fenntarto';
+
+
+?>

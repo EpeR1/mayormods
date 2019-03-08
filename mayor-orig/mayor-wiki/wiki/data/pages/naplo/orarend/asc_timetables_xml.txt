@@ -1,0 +1,16 @@
+====== Órarend import: aSc Timetables XML ======
+
+Ezt az import modult akkor használhatjuk, ha előzőleg az aSc számára [[ascExport|az adatokat átadtuk]] a MaYoR rendszerből, majd ezen adatok felhasználásával készítettünk órarendet. Az így elkészült órarendet az aSc ''Fájl/Export/aSc Órarend XML'' menüpontjában exportálhatjuk - megfelelő licence birtokában. Az exportáláshoz először le kell tölteni az export sablon állományt. Az importáláskor ezt az állományt kell felülírni, és felmásolni a szerverre.
+
+A modul az állományt beolvassa és tartalmát konvertálja UTF-8 kódolásúvá. Ezek után beolvassa az így kapott XML-ből a tanárok, osztályok, tárgyak és termek adatait (alapadatok). Következő lépésben az órák adatait dolgozza fel (lesson): megkeresi, hogy egy óra mely tanköröket érinti, és ezekhez milyen tanárok, illetve osztályok tartoznak. Ebben a lépésben többféle hibát is észlelhet a program:
+
+  * Hiányzó tanár: Ez azt jelenti, hogy az érintett tankörhöz a naplóban (MaYoR) nincs megadva tanár. A problémán könnyen segíthetünk: rendeljünk hozzá tanárt (tanár nélkül nem beszélhetünk kész órarendről - ha tehát tényleg nincs információnk a tanárról, akkor vagy halasszuk el a betöltést, vagy "kényszerítsük" a programot az adatok betöltésére a megjelenő opció bejelölésével. Ilyenkor a hibás adatok kivételével a többi óra adata bekerül az órarendbe)
+  * Hibás tanár hozzárendelés: Azt jelenti, hogy a tankör naplóban szereplő (első) tanára nem szerepel az aSc-ben megjelölt lehetséges tanárok között. Az ellentmondást valahogy fel kell oldanunk: vagy a naplóban kell javítanunk a tankör tanárát, vagy az aSc-ben kell hozzárendelni az érintett órához a naplóban megjelölt tanárt (is), esetleg közvetlenül javíthatjuk az XML állományt is - de akkor vigyázunk, hogy az érintett ''lesson'' bejegyzésen túl a ''card'' bejegyzéseket is javítanunk kell.
+  * Hibás osztály hozzárendelés: Kevésbé kritikus, mint az előzőek, de mindenképp valami hibára utal - nevezetesen arra, hogy a tankör naplóban szereplő (első) osztálya nem szerepel az aSc-ben megjelölt lehetséges osztályok listájában. A javítás az előzőekhez hasonlóan történhet a MaYoR felületen, az aSc-ben, vagy közvetlenül az XML állományban (csak a lesson bejegyzést érinti).
+
+Az órák adatainak feldolgozása után következnek a kártyák. Ezen belül az első lépés a lessonid elemzése. Ennek formátuma a korábbi MaYoR-aSc adatátadáskor kellett, hogy kialakuljon. Formája a következő:
+  t|b[óraszám]-tankorId[_tankorId ...]
+Például:
+  b2-243_233_126
+Az első karakter jelzi, hogy blokk, avagy tankör adata következik-e (a feldolgozás szempontjából mindegy, de könnyebb értelmezni így), ezek után jön (jöhet), hogy hány egymást követő órát kell lerakni az érintett tankörökből (szimpla, dupla, vagy tripla órák), végül egy kötőjel után az érintett tankör/tankörök azonosítója/azonosíytói következnek (egymástól aláhúzás karakterekkel elválasztva). A fenti példa jelentése tehát, egy olyan tankör blokk duplaórája, melybe a 243, 233 és 126 azonosítójú tankörök tartoznak. Ha a program a fent vázolttól eltérő formátumú lessonid-t talál, akkor hibaüzenetet generál - kényszerített módban az ilyen bejegyzéseket, kártyákat figyelmen kívül hagyja.
+

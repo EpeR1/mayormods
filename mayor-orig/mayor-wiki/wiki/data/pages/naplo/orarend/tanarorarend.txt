@@ -1,0 +1,10 @@
+====== Összesített tanári órarend ======
+
+A már működő, teljesen feltöltött naplóból különböző célokra kinyerhető az összesített tanári órarend (hetenkénti) óriás lepedője.
+Négyféle formátumú exportra van lehetőség:
+  * csv
+  * xls
+  * txt
+  * html
+A tantárgyak neve mögötti számok, jelölések a tankör (//tankorId//) és a terem azonosítóját (//teremId//) jelölik!
+Az export fájlok tovább szerkeszthetők, importálhatók esetleg nyomtathatók (pl. teremajtókra, tanári szobába, stb.).

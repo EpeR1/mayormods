@@ -1,0 +1,84 @@
+====== Határidők kezelése ======
+
+A naplóban az egyes beírási feladatokhoz (saját óra, helyettesítés, stb.) tartozó **határdiőket** a ///var/mayor/config/module-naplo/config-[iskolarovidneve].php// állomány tartalmazza.
+
+Bár technikailag szinte bármilyen határidő beállítható, az iskolai szabályozás, a józan ész és az egymással összefüggő határidők (pl. igazolások köre) miatt célszerű alaposan átgondolni, mit állítunk be.
+
+A beállításokat mindenképpen a **Vezetőség jóváhagyásával** végezzük el!
+
+Az állományokban történő módosításkor a lehető legnagyobb gondossággal járjunk el! Célszerű az eredeti beállításokat kikommentelni, mert így biztosan megmarad egy működőképes érték.
+
+
+
+
+Lássunk néhány példát!
+
+===== Kommentelés: =====
+
+
+Ez az eredeti:
+
+  define('_ZARAS_HATARIDO',date('Y-m-01 00:00:00',strtotime('50 days ago')));
+
+Ez pedig a "hatástalanított"... (minden sor elejére dupla törtjel kerül):
+
+  //define('_ZARAS_HATARIDO',date('Y-m-01 00:00:00',strtotime('50 days ago')));
+
+Ugyanazt érjük el a legelső sor elé tett /* és az utolsó sor után tett */-gal):
+
+  /*
+  define('_ZARAS_HATARIDO',date('Y-m-01 00:00:00',strtotime('50 days ago')));
+  */
+
+===== Eredeti haladási (saját óra beírás) határidő értelmezése: =====
+
+Így néz ki:
+
+  // Azaz egy óra a következő hétfői tanítási nap 16:00-ig írható be.
+        define('_HALADASI_HATARIDO',
+            date('Y-m-d H:i:s',
+                strtotime('last Monday',
+                    strtotime('next day',
+                        strtotime(
+                            getTanitasiNapVissza(5,date('Y-m-d H:i:s',strtotime('+8hours')))
+                        )
+                    )
+                )
+            )
+        );
+
+És mit jelent (belülről kifelé haladva)?
+
+A mostani dátum/időhöz adjunk 8 órát! Lépjünk vissza 5 tanítási napot! Vegyük a következő (naptári) napot! Majd ugorjunk az azt megelőző hétfőre!
+
+===== Más beállítások: =====
+
+==== Visszamenőleg szeptember 1-ig engedjük a saját órák beírását ====
+
+  define('_HALADASI_HATARIDO','2015-09-01 00:00:00');
+
+==== Folyamatoasan, 10 (naptári) napig lehet a saját órákat beírni ====
+
+  define('_HALADASI_HATARIDO',date('Y-m-d H:i:s',strtotime('10 days ago')));
+  
+==== Folyamatoasan, 3 tanítási napig lehet a saját órákat beírni ====
+
+  define('_HALADASI_HATARIDO',getTanitasiNapVissza(3,'curdate()'));
+
+==== A hét péntekjén 20:00-ig lehet az aktuális heti saját órákat beírni ====
+
+  define('_HALADASI_HATARIDO',
+                date('Y-m-d H:i:s',
+                        strtotime('monday this week',
+                                strtotime('+28hours'))));
+
+==== A hét péntekjén 24:00-ig lehet az aktuális és az előző heti saját órákat beírni ====
+
+  define('_HALADASI_HATARIDO',
+                date('Y-m-d H:i:s',
+                        strtotime('monday last week',
+                                strtotime('+24hours'))));
+
+Az adott vagy az előző hétre történő számolásnál vegyük figyelembe, hogy az angolszász módi szerint a hét vasárnappal kezdődik... :-)
+
+**Figyelem**! Mindenki csak a saját felelősségére módosítson! Adatvesztést ugyan egyik sem okozhat, de sok kellemetlen konfliktus kiindulópontja lehet egy rosszul kivitelezett módosítás!

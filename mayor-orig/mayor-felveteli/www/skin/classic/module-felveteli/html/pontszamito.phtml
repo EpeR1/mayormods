@@ -1,0 +1,66 @@
+<?php
+
+function putFelveteliPontszamito() {
+
+    $TARGYAK = array( 
+	'irodalom',
+	'magyar nyelv',
+	'történelem',
+	'matematika',
+	'term.ism./fizika',
+	'id. nyelv'
+    );
+
+    echo '<style type="text/css">
+	h1 { text-align: center }
+	table.pontszamitoOsszegzo tr th { text-align: right; }
+	table.pontszamito tr th { height: 2em; border-bottom: solid 1px #999;} 
+	table.pontszamito tr td { border-bottom: solid 1px #aaa;} 
+    </style>';
+
+    echo '<h1>Városmajori Gimnázium Pontszámító</h1>';
+
+    echo '<form id="felviPontszamito"action="return false">';
+	echo '<table align="center" class="pontszamito" style="margin: 2em auto 2em auto;" >';
+	for ($evfolyam = 5; $evfolyam<=8; $evfolyam++) {
+	    echo '<tr><th>'.$evfolyam.'. évfolyam</th>';
+	    echo '<td>';
+		echo '<button type="button" id="btn_'.$evfolyam.'_5" >mind jeles</button>';
+		echo '<button type="button" id="btn_'.$evfolyam.'_4" >mind jó</button>';
+	    echo '</td>';
+	    foreach ($TARGYAK as $t => $t2) {
+		echo '<td>';
+		echo $t2;
+		echo '</td>';
+		echo '<td>';
+		_putFPSelect('p_'.$evfolyam.'_'.$t);
+		echo '</td>';
+	    }
+	    echo '</tr>';
+	}
+	echo '</table>';
+    echo '</form>';
+    
+
+    echo '<table class="pontszamitoOsszegzo" align="center" >';
+    echo '<tr><th>Átlagod:</th><td><input type="text" id="targyAtlagok" readonly="readonly" /></td></tr>';
+    echo '<tr><th>Hozott tanulmányi pontjaid:</th><td></td><td><input type="text" id="hozottPont"  readonly="readonly" />pont (max:20)</td></tr>';
+    echo '<tr><th>Központi magyar dolgozatod eredménye:</th><td><input type="number" id="magyar" class="pontszamitoUpdate" min="0" max="50" />pont (max:50)</td><td><input type="number" value="0" id="magyarSzamitott" readonly="readonly" >pont (max: 40)</td></tr>';
+    echo '<tr><th>Központi matematika dolgozatod eredménye:</th><td><input type="number" id="matek" class="pontszamitoUpdate"  min="0" max="50" />pont (max:50)</td><td><input type="number" value="0" id="matekSzamitott" readonly="readonly" >pont (max: 40)</td></tr>';
+    echo '<tr><th>Számított majoros felvételi pontod:</th><td></td><td><input type="text" id="osszpont" readonly="readonly" />pont (max:100)</td></tr>';
+    echo '</table>';
+
+}
+
+function _putFPSelect($name) {
+
+    echo '
+    <select name="'.$name.'" id="'.$name.'" class="pontszamitoSelect pontszamitoUpdate">
+	<option value="0">-</option>
+	<option value="5">5</option><option value="4">4</option>
+	<option value="3">3</option><option value="3">3</option>
+	<option value="2">2</option>
+    </select>';
+
+}
+?>

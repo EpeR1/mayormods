@@ -1,0 +1,26 @@
+====== ldap backend ======
+
+
+===== Rendszer-követelmények =====
+
+  * OpenLDAP 2.*
+  * Az csak ékezettelen azonosítókat tudunk létrehozni
+
+===== MaYoR schema =====
+
+Az ldap backend-hez saját sémát készítettünk, mely a Unix/Linux környzetekben felhasználói azonosításra használt posicAccount és posixGroup objektum osztályokra épül, azokat bővíti újabb attribútumokkal. A schema file-t célszerűen a ''/etc/ldap/mayor/schema/mayor.schema'' szokás helyezni (eredetileg az ''install/base/ldap'' alatt található). A schema eredetileg úgy jött létre, hogy képes legyen tárolni az összes fontos személyes és csoport adatot. A mayor 3.0 verziójától kezdve ezeket nem használjuk ki.
+
+===== Konfigurációs beállítások =====
+
+A beállításokat az ''include/config/$policy-conf.php''-ban definiált ''$AUTH'' globális tömb tartalmazza.
+
+  * ''$AUTH[$policy]['ldap hostname']''
+Az LDAP kiszolgáló host neve, vagy IP címe. Általában 'localhost'.
+
+  * ''$AUTH[$policy]['ldap protocol version']''
+Az LDAP lekérdezésekhez használt protokol verziószáma. Erősen ajánlott: 3.
+
+  * ''$AUTH[$policy]['ldap base dn']''
+Az adatok eléréséhez szükséges gyökér bejegyzés. Általában ''o=intezmeny,c=hu'' alakú.
+
+

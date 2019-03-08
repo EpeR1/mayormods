@@ -1,0 +1,3 @@
+====== Osztályozónapló ======
+
+A tanulók osztályzatainak megtekintése, kezelése.

@@ -1,0 +1,21 @@
+<?php
+
+    // Az iskola logója
+    define('_SCHOOL_LOGO',_BASEDIR.'/skin/teszt/base/img/mayor_small_ssl.png');
+    // Átszínezzük-e a logo-t?
+    define('_SCHOOL_LOGO_COLORIZE', true);
+    // Átméretezzük-e a logo-t?
+    define('_SCHOOL_LOGO_RESIZE', true);
+    // Készerítsük a logo generálására - akkor is, ha el van cache-elve? (csak az "próbálgatás" idejére érdemes true-ra állítani!)
+    define('_SCHOOL_LOGO_FORCE_GENERATE', false);
+
+    // Az intézmény megjelenítendő neve
+    define('_SCHOOL_IDENTITY','MaYoR elektronikus napló');
+    // Az iskole honlapcíme
+    define('_SCHOOL_URL','http://www.mayor.hu');
+
+    // site skin specific html head
+    $SSSHH = '';
+    //$SSSHH .= '<meta name="robots" content="index,follow" />'."\n";
+    //$SSSHH .= '<link rel="shortcut icon" href="/favicon.ico" />'."\n";
+?>

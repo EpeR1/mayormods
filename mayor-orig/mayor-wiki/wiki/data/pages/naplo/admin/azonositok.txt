@@ -1,0 +1,21 @@
+====== Diák azonosítók generálása ======
+
+Az oldal arra szolgál, hogy a naplóba felvett tanulói adatokból generálhassunk felhasználói azonosítókat.
+A generálás előtt minden diáknak meg kell adni az oktatási azonosítóját is.
+
+A felhasználói azonosítók a ''kezdoEvfolyam+Betujel+kezdoTanev'' (pl. 7a2008) diák kategóriába kerülnek. Ez a private hozzáférési szint háttéradatbázisának típusától függően a következőt jelenti:
+  * ldap: A fenti néven az ''ou=diak'' alá kerülnek az azonosítók.
+  * mysql: Az azonosítók a fenti nevű csoportba kerülnek.
+Ha szükséges, a program létrehozza az azonosítókat tartalmazó kategóriát, csoportot is.
+
+A megjelenő űrlap első sorában megadhatjuk a generálandó diákok indulási jelszavát. Ha ilyet nem adunk meg, akkor a program a diák vezetéknevének CRC32-es kódját adja meg első jelszóként
+(sikeres létrehozás után meg is jeleníti a generált jelszót a név melett a program).
+
+Alatta az osztály diákjai jelennek meg. A program megpróbál minden névhez azonosítót keresni az oktatási azonosító alapján. Ha talál pontosan egy ilyet, akkor azt jeleníti meg a második oszlopban, egyéb esetben egy beviteli mezőt, az új azonosító generálásához. Ha az oktatási azonosítóhoz egyáltalán nem talál felhasználói azonosítót a rendszer, akkor javasol egy felhasználói azonosítót. Ezt kétféle algoritmus alapján teszi:
+  * unix stylusú azonosító: csupa kisbetűs, maximum nyolc karakteres, ékezettelen azonosító a vezetéknév és a keresztnév első betűjének felhasználásával.
+  * Vezetéknév.Keresztnév alakú, ékezetes, kis- és nagybetűket is használó azonosító.
+Hogy melyiket használja a rendszer, azt a ''/var/mayor/config/private-conf.php'' állomány ''$AUTH['private']['unixStyleAccounts'] true illetve false értékével befolyásolhatjuk.
+
+A következő oszlopban arról látunk információt, hogy a program talált-e olyan azonosítókat, amik esetleg az adott diákhoz tartozhatnak. Itt jelennek meg a diákéval azonos oktatási azonosítóval rendelkező azonosítók, ha több is van belőlük - ez nyilvánvaló hibát jelez, ilyenkor a kiírt azonosítókat kell rendbe rakni. Megjelenhetnek itt olyan azonosítók is, melyekhez a diákkal azonos név tartozik (de az oktatási azonosító különbözik). Ilyenkor ellenőrizhetjük, hogy nem az oktatási azonosító esetleges elírásáról van-e szó.
+
+Jóváhagyás után a progam felveszi a megadott azonosítókat - ha az azonosító nem foglalt már.

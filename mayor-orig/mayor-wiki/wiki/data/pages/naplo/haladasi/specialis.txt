@@ -1,0 +1,15 @@
+====== Speciális nap összeállítása ======
+
+Ez az oldal akkor használható, ha speciális órarendű tanítási napot akarunk összeállítani - felhasználva az aktuális órarendet.
+
+Lépésenként:
+  - választása ki a dátumot
+  - ha szükséges, akkor a nap típusát állítsuk át (speciális tanítási nap) - ekkor az esetleg már betöltött órák törlődnek az adott napról (erre figyelmeztet is a program).
+  - a megjelenő űrlapon óránként (sáv) adhatjuk meg a betöltendő órákat - egész iskolára vonatkozóan. Ha van már az adott sávban óra, akkor az nem jelenik meg a szabad sávok között.
+  - ha rosszul vettünk fel egy sávot akkor törölhetjük az alsó űrlapon, majd felvehetjük újra.
+
+
+==== Mit tegyünk, ha ez nem megfelelő számunkra? ====
+
+Mit tehetünk, ha ennél összetettebb az órarendi változás, ha nem rakható össze az aktuális órarendből a speciális nap tanmenete?
+Betölthetjük a haladási napló adatait [[hogyan:speciális_tanításinap|közvetlenükl is]].

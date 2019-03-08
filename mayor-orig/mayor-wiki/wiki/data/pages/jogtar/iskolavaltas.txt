@@ -1,0 +1,124 @@
+
+====== Tanuló iskolaváltása ======
+
+Az iskolaváltással kapcsolatban másként kezelendő a jegy/osztályzat és másként a hiányzás; 
+illetve el kell választanunk a tartalmi kérdéseket a technikai megvalósítás lehetőségeitől.
+
+És persze a helyzet a tanév előrehaladtával fokozódik: más szeptember 2-án és más március 20-án átvenni egy diákot.
+
+===== Egy tanuló iskolaváltásának lehetséges okai =====
+
+Egy tanuló iskolaváltásának lehetnek objektív és szubjektív okai.
+
+==== Objektív okok ====
+
+Az objektív ok klasszikus esete a költözés. Bár gyakorlatunkban arra is volt példa, hogy egy súlyosan beteg diák a 
+gyógykezelése miatt jött iskolánkba (közel vannak hozzánk a SOTE klinikái).
+
+Úgy gondolom, hogy ebben az esetben a - kétségtelenül hiányos - szabályokat rugalmasan, a diák javára kell alkalmazni.
+
+==== Szubjektív okok ====
+
+A tanuló (szülő) egyszerűen élni kíván - tanév közben - a szabad iskolaválasztás jogával, mert például csalódott 
+(okkal vagy ok nélkül) az aktuális iskolában.
+
+Véleményem szerint ezen esetben a potenciális befogadó iskola mindenféle értelemben szabadon járhat el, de ha az 
+átvétel mellett dönt, annak jogkövetkezményeit is vállalnia kell (hiányzások „göngyölített” nyilvántartása, 
+különbözeti vizsgák megtartása, stb.). És erről a diákot/szülőt tájékoztatnia kell!
+
+===== Az átvételhez kapcsolódó jogszabályok =====
+
+>> (1993. évi LXXIX. törvény a közoktatásról) **42. § (1)** //Az iskola - jogszabályban meghatározottak szerint - állapíthatja meg a tanulói jogviszony létesítésének tanulmányi feltételeit (a továbbiakban: felvételi követelmények). Az iskola a felvételi követelményeket a tanév rendjéről szóló rendelet által meghatározott időben a felvételi tájékoztatóban köteles nyilvánosságra hozni.// \\
+>> **46. § (1)** //Az iskola helyi tantervének - a szakképzés kivételével - biztosítania kell az iskolaváltást, a tanuló átvételét, szükség esetén különbözeti vizsgával vagy évfolyamismétléssel.// \\
+>> **66. § (1)** //A tanuló (magántanuló) az iskolával tanulói jogviszonyban áll. A tanulói jogviszony felvétel vagy átvétel útján keletkezik. A felvétel és az átvétel jelentkezés alapján történik. A felvételről vagy átvételről az iskola igazgatója dönt a 42. § (1)-(2) bekezdésében és a 46-47. §-ban meghatározottak alapján. //
+>> **(10)** //Az iskolába felvett tanulók osztályba vagy csoportba való beosztásáról - a szakmai munkaközösség, annak hiányában a nevelőtestület véleményének kikérésével - az igazgató dönt.// \\
+>> **83. § (1)** //A nevelési-oktatási intézmény a gyermekkel, a tanulóval kapcsolatos döntéseit - jogszabályban meghatározott esetben és formában - írásban közli a tanulóval, illetve a szülővel.// \\
+
+>> (11/1994. (VI. 8.) MKM rendelet a nevelési-oktatási intézmények működéséről) **17. § (3)** //A középiskolában és a szakiskolában a tanuló beiratkozásához be kell mutatni a tanuló személyi igazolványát vagy születési anyakönyvi kivonatát, és az elvégzett iskolai évfolyamokat tanúsító bizonyítványokat; továbbá a szakképző évfolyamra történő beiratkozáskor a megfelelő iskolai előképzettséget igazoló bizonyítványt, szükség esetén az egészségügyi, pályaalkalmassági szakvéleményt.// \\
+>> **18. § (1)** //A tanuló átvételére … a tanítási év során bármikor lehetőség van. Az átvételi kérelemhez a 17. § (3) bekezdésben felsorolt iratokat kell bemutatni.// \\
+>> **(3)** //Az … iskolai felvételi, átvételi kérelem elbírálásáról a tanulót, kiskorú tanuló esetén a szülőt is, tanköteles esetén továbbá … az előző iskola igazgatóját; … is értesíteni kell. …// \\
+
+
+==== Az iskolák által alkalmazott záradékok  ====
+
+>> (4. számú melléklet a 11/1994. (VI. 8.) MKM rendelethez) \\
+>> //1. Felvéve [átvéve, a(z) ......... számú határozattal áthelyezve] a(z) (iskola címe) .................. iskolába. (Bn., N., TI., B.; azaz Beírási napló, Osztálynapló, Törzslap, Bizonyítvány)// \\
+>> //35. Az iskola a … vagy egyéb, a záradékok között nem szereplő, a tanulóval kapcsolatos közlés dokumentálásához a záradékokat megfelelően alkalmazhatja, illetve megfelelően záradékot alakíthat ki.//
+
+==== Konklúzió ====
+
+Az iskolákban kell(ene) egy írásban lefektetett (nyilvános) **protokoll** az átvétel eljárásrendjéről (vö: 1993. évi LXXIX. törvény, 46. § (1) bekezdés). 
+Továbbá az átvételről igazgató által hozott **határozat** születik(?) (vö: 11/1994. MKM rendelet 18. § (3) bekezdés, ill. 4. számú melléklet), ami 
+tartalmazhatja a jegyek,osztályzatok, hiányzások kezelésével kapcsolatos **döntést** is. (Például az ofők, szaktanárok, napló-adminisztrátorok eligazítása 
+céljából is…) Azaz: a probléma kezelése nem tolható át a napló-adminisztrátorokra, írásbeli vezetői döntés kell(ene)! Mindez a naplóban (is) záradékolandó! 
+
+===== Az érdemjegyek, osztályzatok kezelésére vonatkozó kapcsolódó jogszabályok =====
+
+>> (1993. évi LXXIX. törvény a közoktatásról) **45. § (2)** //Az iskola pedagógiai programot, annak részeként … helyi tantervet készít, vagy az ilyen módon készített helyi tantervek közül választ, és azt építi be helyi tantervként a pedagógiai programjába. …// \\
+>> **48. § (1)** //Az iskola pedagógiai programja meghatározza:// \\
+>> //b) az iskola helyi tantervét, ennek keretén belül// \\
+>> //      - az iskola egyes évfolyamain tanított tantárgyakat, a kötelező és választható tanórai foglalkozásokat, valamint azok óraszámait, az előírt tananyagot és követelményeit,// \\
+>> //      - az iskola magasabb évfolyamára lépés feltételeit,// \\
+>> //      - az iskolai beszámoltatás, az ismeretek számonkérésének követelményeit és formáit, a tanuló magatartása, szorgalma értékelésének és minősítésének követelményeit, …// \\
+>> **70. § (1)** //A pedagógus … a tanuló teljesítményét, előmenetelét tanítási év közben rendszeresen érdemjeggyel értékeli, félévkor és a tanítási év végén osztályzattal minősíti. A tanuló magatartásának és szorgalmának értékelését és minősítését az osztályfőnök … végzi. …// \\
+>> **(4)** //Az egyes tanulók év végi osztályzatát a nevelőtestület osztályozó értekezleten áttekinti, és a pedagógus, illetve az osztályfőnök által megállapított osztályzatok alapján dönt a tanuló magasabb évfolyamba lépéséről. …// \\
+
+>> (11/1994. (VI. 8.) MKM rendelet a nevelési-oktatási intézmények működéséről) **21. § (3)** //A tanuló osztályzatait évközi teljesítménye és érdemjegyei vagy … a különbözeti vizsgán, … nyújtott teljesítménye alapján kell megállapítani. … Különbözeti vizsgát a tanuló abban az iskolában tehet, amelyben tanulmányait folytatni kívánja. … //
+
+==== Konklúzió ====
+
+Az érdemjegyek, osztályzatok **felettébb helyiek**: „helyi” tantárgyakból, „helyi” tananyagok, „helyi” követelmények alapján;, „helyi” pedagógusok, 
+„helyi” nevelőtestületek döntése révén születnek meg. A fogadó iskola így két dolgot tehet:
+
+ - elfogadja ezeket a jegyeket, osztályzatokat (mindet, vagy néhányat),
+
+ - az el nem fogadott jegyek, osztályzatok esetében különbözeti vizsgát ír elő.
+
+Technikailag:
+
+ -  az esetlegesen előírt különbözeti vizsgák tárgyait, időpontját az átvételről szóló (említett) határozatnak tartalmaznia kell(ene),
+
+ -  az „elfogadott” jegyeket, osztályzatokat ezen határozat melléklete tartalmazza, hogy az „átvevő” pedagógus - mérlegelve - fel tudja őket használni (vö: 1993. évi LXXIX. törvény, 70. § (1) bekezdés).
+
+ - az e-naplóba ezek az „átvett” jegyek, osztályzatok nem kerülnek be, hanem a fenti határozat csatolható az osztályozó napló kinyomtatott változatához, vagy záradékkal hivatkozni lehet rá.
+
+===== A hiányzások kezelésére vonatkozó kapcsolódó jogszabályok =====
+
+>> (1993. évi LXXIX. törvény a közoktatásról) **75. § (3)** //Megszűnik a tanuló tanulói jogviszonya - a tanköteles tanuló kivételével - ha az iskola kötelező foglalkozásairól a jogszabályban meghatározott időnél igazolatlanul többet mulasztott.//
+
+>> (11/1994. (VI. 8.) MKM rendelet a nevelési-oktatási intézmények működéséről) **20. § (2)** //Ha a … tanuló a tanítási óráról, … mulasztását igazolnia kell. A mulasztást igazoltnak kell tekinteni, ha// \\
+>> //      b) a tanuló … a házirendben meghatározottak szerint engedélyt kapott a távolmaradásra,// \\
+>> //      c) a gyermek, a tanuló beteg volt, és azt a házirendben meghatározottak szerint igazolja,// \\
+>> //      d) a tanuló hatósági intézkedés vagy egyéb alapos indok miatt nem tudott kötelezettségének eleget tenni.// \\
+>> **(3)** //Ha a távolmaradást nem igazolják, a mulasztás igazolatlan. Az iskola köteles a szülőt … értesíteni a tanköteles tanuló első alkalommal történt igazolatlan mulasztásakor, illetve ha a nem tanköteles, kiskorú tanuló igazolatlan mulasztása a tíz órát eléri. // \\
+>> **(4)** //Ha … a tanköteles tanuló igazolatlan mulasztása egy tanítási évben eléri a tíz órát, az iskola igazgatója … értesíti a gyermek tényleges tartózkodási helye szerint illetékes jegyzőt és a gyermekjóléti szolgálatot.// \\
+>> **(5)** //Ha a tanköteles tanuló igazolatlan mulasztása egy tanítási évben eléri a harminc órát, az iskola ismételten tájékoztatja a gyermekjóléti szolgálatot, amely közreműködik a tanuló szülőjének az értesítésében. Ha a tanköteles tanuló igazolatlan mulasztása egy tanítási évben eléri az ötven órát, az iskola igazgatója értesíti a gyermek tényleges tartózkodási helye szerint illetékes jegyzőt.// \\
+>> **(6)** //Ha a tanulónak egy tanítási évben az igazolt és igazolatlan mulasztása együttesen// \\
+>> //      a) a … kettőszázötven tanítási órát,// \\
+>> //      d) egy adott tantárgyból a tanítási órák harminc százalékát meghaladja// \\
+>> //      és emiatt a tanuló teljesítménye tanítási év közben nem volt érdemjeggyel értékelhető, a tanítási év végén nem osztályozható, kivéve, ha a nevelőtestület engedélyezi, hogy osztályozóvizsgát tegyen. …// \\
+>> **28. § (2)** //Megszűnik a tanulói jogviszonya - a tanköteles kivételével - annak, aki igazolatlanul harminc tanítási óránál többet mulaszt, … //
+
+==== Konklúzió ====
+
+a hiányzásokhoz tehát súlyos jogkövetkezmények tartoznak. Ennek megfelelően a fogadó iskola nem teheti meg, hogy a „hozott” hiányzásokat 
+figyelmen kívül hagyja, különös tekintettel arra, hogy a jogszabály több helyen egyértelműen „**tanítási év**” alatti hiányzásokat említ. 
+Azaz: a hiányzásokat („hozott” + „szerzett”) valahogyan folyamatosan kell regisztrálni.
+
+Technikailag:
+ - a „hozott” hiányzások mértékét az átvételről szóló határozat mellékletének tartalmaznia kell(ene),
+ - az e-naplóba ezek az „átvett” hiányzások nem kerülnek be (hiszen hova?), hanem a fenti határozat csatolható az osztályozó napló kinyomtatott változatához, vagy záradékkal hivatkozni lehet rá.
+ - az „átvevő” osztályfőnöknek fokozottan kell figyelnie ezen diákok hiányzásaira. (Lsd. „jegyzői” teendők.) 
+
+----
+
+//(Budapest, 2011. január 22. Bánhegyesi Zoltán - LKG)//
+
+
+
+
+
+
+
+
+

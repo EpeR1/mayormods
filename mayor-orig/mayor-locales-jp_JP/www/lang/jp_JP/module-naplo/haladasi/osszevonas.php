@@ -1,0 +1,12 @@
+<?php
+	define('_EREDET','ソース');
+	define('_PLUSZ','プラスレッスン');
+	define('_ORAREND','授業時間割');
+	define('_ORA_FELVETELE','追加レッスン');
+	define('_ORA_FELVETELE_CONFIRM','にしてもよろしいですか?');
+	define('_ORAI','\'秒クラス');
+	define('_OSZTALY','クラス');
+	define('_ORA','レッスン');
+	define('_TORLENDOK','この合併は、次のレッスンをしない原因に開催される');
+	define('__PAGETITLE','マージ');
+?>

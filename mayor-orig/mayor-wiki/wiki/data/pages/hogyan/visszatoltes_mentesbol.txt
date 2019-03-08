@@ -1,0 +1,176 @@
+
+[color=red][size=40px]**Ez az oldal még félkész!**[/size][/color]
+
+====== Adatok visszatöltés mentésből ======
+
+**Feltétlenül olvassuk végig az eljárást, és csak után kezdjünk neki a munkának!**
+
+Bármennyire is gondosan üzemeljük, felügyeljük a MaYoR-t, előfordulhat, hogy adataink sérülnek, elvesznek, ilyenkor - viszonylag - kevés munkával visszaállítható valamelyik (célszerűen az utolsó ép) mentéskori állapot.
+Hasznos lehet, ha gyakorlás, próbálgatás, kísérletezés vagy éppen egy előadás, bemutató céljából az éles rendszer adatait egy fizikailag más gépre, vagy épp egy virtuális gépre átemeljük, ezeket aztán következmények nélkül lehet használni. Ez esetben a teljes visszatöltés metódusát kövessük!
+
+A napló új gépre költöztetésekor, vagy új telepítés esetén, tesztrendszer kialakításakor a teljes rendszert kell visszaállítani/áttölteni, míg egy elírás, rosszul kiadott sql-parancs következtében általában elég csak az egyik adatbázis kérdéses tábláját beemelni.
+
+Mindegyik esetben a jelszó: **don't panic!!!** :-)
+
+(Az alábbi leírások Debian/MySQL-alapú rendszerhez passzolnak.)
+
+Célszerű a visszatöltés idejére a webszervert leállítani, részint, hogy a Felhasználók ne kapjanak töménytelen mennyiségű hibaüzenettel teletűzdelt felületet, részint, hogy megakadályozzuk a Felhasználók visszatöltés közbeni üzeneteit, jegybeírásait, és egyéb - számunkra épp ekkor nemkívánatos - tevékenységeit (adódhat olyan, hogy az egyik, épp visszatöltött táblába már beír a Felhasználó, miközben a többi, esetleg ehhez kapcsolódó tábla még a backup-adattárolón vár a sorára...)
+
+===== Visszatöltés új telepítésre (másik hardware, op.rendszer újratelepítés, tesztrendszer) =====
+Tesztrendszer kialakítása, új gép vásárlása a MaYoR napló számára, nagyobb merevlemez beszerzés, hardware-hiba, netán illetéktelen hozzáférés után - számtalan oka lehet annak, hogy vadonatúj rendszer alá kell visszatöltenünk régi adatainkat.
+Ebben az esetben is (de minden más esetben) roppant fontos a rendszeres, biztonságos helyen tárolt [[hogyan:karbantartas#mentes|mentés]])!
+
+==== Mielőtt nekifogunk... ====
+
+Első és legfontosabb, hogy az [[hogyan:telepites#operacios_rendszer_telepitese|operációs rendszer]], a MaYoR és a szükséges csomagok [[hogyan:telepites#mayor_installer_ss_hasznalata|telepítése]] megtörténjen (esetleg [[hogyan:telepites-man|kézi]] telepítéssel).
+
+Állítsuk le a webszervert:
+
+  /etc/init.d/apache2 stop
+  
+Lépjünk be az MySQL-be:
+
+  # mysql -p
+  Password:
+  
+Liztázzuk ki az adatbázisokat:
+
+  mysql> SHOW DATABASES;
+  
+Az aktuális tanév (és esetleg a régebbiek) kivételével ott kell szerepelnie a(z) //information_schema, intezmeny_[iskolarovidneve], mayor_login, mayor_naplo, mayor_parent, mayor_private// és //mysql// adatbázisoknak.
+
+==== Az első komoly buktató ====
+
+Itt következik az egyik olyan lépés, amelybe könnyen beletörik a bicska, és melyen kétféleképp is átléphetünk, mindkét módszer jó, használható.
+
+----
+
+**a)** Ha áll a webszerver, erre a rövid időre indítsuk el! Lépjünk be a friss MaYoR-ba (mayoradmin és jelszo az első belépés, a jelszavunkat rögtön meg is kell változtatni. Célszerű arra változtatni, ami a betöltendő naplóhoz passzoló jelszó, így egy lépést spórolunk...)!
+
+Hozzuk létre az(oka)t a tanév(ek)et, amit be kívánunk tölteni! Ezzel a lépéssel lefutnak azok a jogosukltság-beállítások, amik a használathoz a későbbiek során szükségesek.
+
+Lépjünk ki, állítsuk le a webszervert!
+
+----
+
+**b)** A MaYoR-ba történő belépés nélkül hozzuk létre az aktuális tanév (és szükség esetén a visszatöltendő többi tanév) adatbázisát:
+
+  mysql> CREATE DATABASE naplo_[iskolarovidneve]_[aktualistanev];
+  
+vagyis például //naplo_szag_2010// (a 2010/2011-es tanév adatbázisa), majd biztos, ami biztos, ellenőrizzük:
+
+  mysql> SHOW DATABASES;
+  
+Immár szerepelnie kell a többi mellett a //naplo_[iskolarovidneve]_[aktualistanev]// adatbázisnak is.
+
+Ez a lépés azonban nem állítja be a mysql-usereknek a használathoz szükséges hozzáférést. Ezt kézzel kell megtennünk:
+
+A //mayor_naplo// user számára az //intezmeny_[iskolarovidneve] és a naplo_[iskolarovidneve]_[tanev]// adatbázisok tábláihoz állítsuk be a hozzáférést:
+
+  mysql> GRANT ALL ON intezmeny_szag.* TO 'mayor_naplo'@'localhost' IDENTIFIED BY "jelszo";
+  mysql> GRANT ALL ON naplo_szag_2010.* TO 'mayor_naplo'@'localhost' IDENTIFIED BY "jelszo";
+
+A jelszo helyére a ///var/mayor/config/module-naplo/config.php// állományban találjuk a //mayor_naplo// user jelszavát, amit a legegyszerűbben talán a
+
+  # cat /var/mayor/config/module-naplo/config.php | grep -a2 mayor_naplo
+  
+paranccsal kapunk meg (a jelszó egy véletlenszerűen, a mayor telepítésekor generált karaktersor).
+
+Ehhez hasonló módon kell beállítani a //mayor_naplo_read// user jogosultságait is:
+
+  mysql> GRANT SELECT,EXECUTE ON intezmeny_szag.* TO 'mayor_naplo_read'@'localhost' IDENTIFIED BY "jelszo";
+  mysql> GRANT SELECT,EXECUTE ON naplo_szag_2010.* TO 'mayor_naplo_read'@'localhost' IDENTIFIED BY "jelszo";
+
+A jelszo helyére a ///var/mayor/config/module-naplo/config.php// állományban találjuk a //mayor_naplo_read// user jelszavát, amit a legegyszerűbben talán a
+
+  # cat /var/mayor/config/module-naplo/config.php | grep -a2 mayor_naplo_read
+
+paranccsal kapunk meg (a jelszó egy véletlenszerűen, a mayor telepítésekor generált karaktersor).
+
+Szükség esetén a többi tanévvel is így kell eljárni!
+
+A végén a
+
+  mysql> FLUSH PRIVILEGES;
+
+paranccsal aktualizáljuk az előbb beállított jogokat!
+
+==== Adatbetöltés ====
+
+Keressük meg a betölteni kívánt mentést! A MaYoR a ///home/backup// könyvtárba ment, de természetesen egy új telepítésnél, másik gépre költöztetésnél itt nem lesz semmi. Példánkban a másik adathordozón levő mentés átmásolásával nem foglalkozunk, (ha gond van ezzel, a support segít), és onnan indulunk, hogy a ///tmp// könyvtárban ott van az //ééééhhnn.tgz// mentés!
+
+Csomagoljuk ki a mentést:
+
+  # cd /tmp && tar xfz 20100815.tgz
+  
+A visszatöltés adatbázisonként külön-külön történik, vagyis sorban az összessel végig kell csinálni:
+
+  # cat /tmp/intezmeny_[iskolarovidneve].sql | mysql -p intezmeny_[iskolarovidneve]
+  Enter password:
+
+A MySQL root-jelszó megadása után a fenti adatbázis a teli tábláival együtt már a helyén van, ugyanígy kell eljárni //mayor_login, mayor_naplo, mayor_private, mayor_parent// és a //naplo_[iskolarovidneve]_2010// (meg esetleg a régebbi) adatbázisokkal.
+
+==== A második komoly buktató... ====
+
+Amennyiben a különböző config-állományainkat is szerentnénk (és miért ne...?) az új, áttelepített rendszeren használni, ismét két lehetőségünk van:
+
+----
+
+**a)** A régi config-állományok beállításait egyenként, kézzel átírjuk az új config-állományokba. Ez a módszer is jó lehet, ha egy-két különbségről van csupán szó, nagyobb léptékben azonban ez a módszer lassú, nehézkes, és sok hibalehetőséggel jár.
+
+----
+
+**b)** A másik módszer egyszerűbb, gyorsabb, de veszélyei ennek is vannak.
+
+Első lépésként az új config (ez tartalmazza a telepítéskor létrejövő véletlenszerű jelszavakat...) könyvtárat másoljuk át biztonságos helyre, például a ///home/backup//-ba:
+
+  # cp -R /var/mayor/config /home/backup
+  
+Gyűjtsük ki sorra a /home/backup állományaiból a jelszavakat:
+  * mayor_private - config/private-conf.php
+  * mayor_parent - config/parent-conf.php
+  * mayor_portal - config/module-portal/config.php
+  * mayor_naplo - config/module-naplo/config.php
+  * mayor_naplo_read - config/module-naplo/config.php
+  * mayor_login - config/main-config.php
+  * mysql root -config/main.conf
+
+Ezek után érdemes a config-állományokat, skin-eket és egyéb - már jól bevált, régi állományokat - is visszamásolni a helyére, felülírva az ott levőket. Például:
+
+  # cp /tmp/config/module-naplo/config-[iskolarovidneve].php /var/mayor/config/module-naplo/
+
+A ///home/backup//-beli jelszavakat szépen sorban, konzekvensen, a kis- és nagybetűkre különös figyelemmel írjuk át a ///var/mayor/config//-beliekre.
+
+Amennyiben nem szeretnénk így eljárni (ez esetben is mentsük a friss //config// könyvtárat, biztos, ami biztos!), arra is van lehetőség, hogy a visszatöltött adatbázisban kicseréljük a mysql-felhasználók jelszavait. Ekkor is ki kell keresni a ///var/mayor/config// könyvtárban az egyes jelszvakat, majd egyesével lecserélni a mysql-ben:
+
+  mysql> UPDATE mysql.user SET Password=PASSWORD('kikeresett-jelszo') WHERE user='mayor_private';
+  
+... és sorban az összes többit.
+
+==== Befejezés ====
+
+Nincs más hátra, mint elindítani a webszervert:
+
+  # /etc/init.d/apache2 start
+  
+Ha jól csináltunk mindent, az eredetivel megegyező naplót kapunk.
+
+==== Vissza lehet-e tölteni régebbi adatbázist újabb revision-számú MaYoR-ra? ====
+
+Technikaligag igen, azonban a működésben szinte biztos, hogy gubancok lesznek: esetleg hiányzó, átírt mezőnevek, értékek, a függvények pedig biztos, hogy nem a régi adatbázishoz passzolnak... :-(
+Ahhoz, hogy egy régi verziót az akkori állapotok szerint tesztelni lehessen (egyezzen az adatbázis-szerkezet a revision-nel) szinte semmi esély. :-(
+
+Ha azonban a csak régi adatbázist tudunk visszatölteni (pl. adatvesztés okán), a problémák __valószínűleg__ áthidalhatók egy csellel: keressük meg a ///var/mayor/log/revision// állományt, írjuk vissza a benne szereplő számot a visszatöltendő rendszer revision-számára, majd mentés után frissítsük a MaYoR-t:
+
+  # mayor update
+  
+Jó eséllyel hibátlanul működő rendszert kapunk.
+
+===== Visszatöltés régi op.rendszerre újratelepített MaYoR esetében =====
+
+
+Átalakítás alatt...
+
+===== Részleges visszatöltés (csak egy - vagy néhány - tábla sérülése esetén) =====
+
+Átalakítás alatt...

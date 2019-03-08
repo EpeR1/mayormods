@@ -1,0 +1,104 @@
+====== Arcok a naplóban ======
+
+Nem, linkjével ellentétben ez nem a **Small Faces** zenekar oldala, azt [[http://en.wikipedia.org/wiki/Small_Faces|itt]] találod! :-)
+
+===== Első feltöltés =====
+
+A napló egyik extra szolgáltatása, hogy a diákok neve mellé a **fényképük** is belekerülhet. Ezt a diákok úgy értelmezik, hogy immár biztos, miszerint a tanárok pofára fognak osztályozni, de jobban átgondolva beláthatjuk, hogy rendkívüli segítség a pedagógusok számára, hogy az új diákok arcát-nevét gyorsabban megtanulják, a helyettesítő Kolléga hamarabb azonosíthatja a tankör tagjait, illetve a titkárság, a rendszergazda munkája során könnyebben tudja, melyik diákról is van az adott esetben szó.
+
+Első lépésként meg kell szereznünk a diákok fényképeit. Lehet egy lelkes diákkal végigfotóztatni - célszerűen osztályonként, vagy valamilyen iskolai központi nyilvántartásból kiszedni, esetleg jobb minőségű osztályfényképről szkennelgetni...
+
+Lényeg, hogy **négyzetes arányú** képre van szükség. A naplóban kicsi képek jelennek meg, és a gyors oldalbetöltés végett okos dolog kisméretű, de még felismerhető képekkel dolgozni (az alapértelmezett 100x100 px-es képek, kb. 4-5 kB-osak).
+
+Egy roppant jó működő, wine-vel is tökéletesen működő program: [[http://www.oldapps.com/old_version_XnView.php|XnView 1.50]] (az újabb verziók kevésbé hatékony méretcsökkentéssel dolgoznak...) :-o
+
+A képek lehetnek **jpg, png, gif** formátumúak.
+
+A napló config-jában (///var/mayor/config/module-naplo/config.php//) állítsuk be, hogy a képek látszódjanak:
+
+  define('__SHOW_FACES', 'always');
+
+A napló main-conf.php állományában lehet a megjelenő képek kinézetét beállítani:
+
+  define('__SHOW_FACES_TYPE','classic'); // circle, square, classic
+
+A kész képeket töltsük fel valamilyen módszerrel a naplóba:
+
+==== Feltöltés a felületen ====
+
+A diák adatlapján - kitallózva a fényképet - egyesével feltölthetőek. A képet a napló a megfelelő könyvtárba teszi, és átnevezi a diák naplóbeli diakId-jére.
+
+==== Scp, ssh, putty és WinScp használata ===
+
+A képeket a diák naplóbeli //diakId//-jére (//intezmeny_[iskolarovidneve]// adatbázis //diak// tábla) kell nevezni (pl. //574.png//)
+A fenti programok, parancsok segítségével töltsük fel a képeket a ///var/mayor/download/private/naplo/face/[adotttanev]// könyvtárába (pl. ///var/mayor/download/private/naplo/face/2010//), a könyvtár(ak)nak adjunk **755**, a fényképeknek **644** jogosultságot, valamint tulajdonosnak állítsuk be a **www-data** user-t!
+
+  # chown www-data /var/mayor/download/private/naplo/face/2010/
+  # chmod 755 /var/mayor/download/private/naplo/face/2010/
+  # chown www-data /var/mayor/download/private/naplo/face/2010/*
+  # chmod 644 /var/mayor/download/private/naplo/face/2010/*
+
+A képek az __Osztályzónaplóban__, az __Üzenőben__, és a diák __adatlapján__ jelennek meg.
+
+=====Tanári fényképek=====
+
+A tanárok fényképeit - szintén az Id-jük (tanarId) szerint - a ///var/mayor/download/private/naplo/face/tanar/// könyvtárba töltsük fel, a fenti könyvtár- és fájljogosultságokkal.
+
+A tanárok fényképe az __Üzenőben__ jelenik meg.
+
+=====Fényképek a szülői oldalakon====
+
+Alapértelmezés szerint a szülői oldalakon nem jelennek meg a fényképek. A Szülő csak a saját gyereke(i) dolgaiban érdekelt - az ő arcukat meg úgyis ismeri =), de pl. az __Üzenőben__ csökkenti a technika adta személytelenséget, ha a tanárokkal (esetleg hébe-hóba a diákokkal) történő üzenetváltás során fényképet is lát a Szülő.
+
+A ///var/mayor/download/parent/naplo// könyvtár alatt hozzuk létre hasonlóan //...private// részhez a //face//, //tanar// és a tanévek könyvtárait!
+
+Ellenőrizzük, hogy megvan-e a **www-data** tulajdonos és a **755** jog!
+
+Hozzunk létre //symlink//eket az eredeti fényképekhez!
+
+  ln -s /var/mayor/download/private/naplo/face/tanar/* /var/mayor/download/parent/naplo/face/tanar/
+
+Ezzel megjelennek a tanári fényképek a szülői oldalakon.
+
+  ln -s /var/mayor/download/private/naplo/face/2011/* /var/mayor/download/parent/naplo/face/2011/
+
+Ezzel a 2011-es (2011/2012) tanév diákjainak fényképe jeleni meg a szülői oldalakon.
+----
+**FIGYELEM!** Ha új diák- vagy tanárkép kerül a naplóba (évközbeni belépéskor), az adott képe(ek)re a //sylink//(ek)et létre kell hozni!
+
+===== A képek átvitele az új tanévre =====
+
+Először a ///var/mayor/download/private/naplo/face/// könyvtár alatt hozzuk létre az új tanévnek megfelelő könyvtárat, pl. a //2011//-est:
+
+  # mkdir /var/mayor/download/private/naplo/face/2011
+
+Ellenőrizzük:
+
+  # ls -l /var/mayor/download/private/naplo/face/
+
+Másoljuk át a tavalyi összes képet! (Ez a lépés badarságnak tűnik, hiszen a tavaly végzettek képére már nincs is szükség, de egyszerűbb az új könyvtárból törölgetni, mint a régiből válogatva másolni. Persze, ha valakinek ez a szimpatikus... :-) )
+
+Természetesen megtehetjük, hogy nem töröljük a tavaly végzettek képeit, így minden évben (5 kB-os képekkel számolva) osztályonként cca. 150-200 kB-tal növekszik a könyvtár mérete. Hosszú távon azonban érdemes rendbe tenni a fájlokat...
+
+  # cp /var/mayor/download/private/naplo/face/2010/* var/mayor/download/private/naplo/face/2011/
+
+Ellenőrizzük a tulajdonost és a jogokat!
+
+  # ls -l /var/mayor/download/private/naplo/face/2011
+
+Ilyesmit kell látni:
+
+  rw-r--r-- 1 www-data mayor  3963 2010 okt 12 100.jpg
+
+Ha nem passzol, javítsuk (lásd fentebb)!
+
+A távozott diákok fényképeinek a szűrését többféleképp is el tudjuk végezni, ehhez mindenképp némi kézimunkára van szükség.
+Gyűjtsük ki az adatbázisból, vagy a felületen a diákexportból a még hozzánk járó diákokat:
+
+  mysql> SELECT diakId, viseltCsaladinev, viseltUtonev FROM diak WHERE jogviszonyVege IS NULL;
+
+A kapott listát és ///var/mayor/download/private/naplo/face/2011// tartalmát másoljuk egy táblázatkezelőbe, sorberendezés (és némi kozmetikázás után) pl. feltételes formázással jelöljük azokat a diakId-ket (sorokat) ahol nem egyezik a két érték (a fénykép-fájl neve és a diákId). Így viszonylag egyszerűen szűrhetjük a már nem hozzánk járó, illetve a fényképpel még nem rendelkező diákokat.
+
+===== Mentés =====
+
+Mivel a **MaYoR** "gyári" automata mentőszkriptje nem végzi a fényképek mentését, ezt feltétlen érdemes kézzel megtenni - legalább a tanév elején, a bejövő diákok fotóinak elkészülte után!

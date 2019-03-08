@@ -1,0 +1,74 @@
+====== A felhasználók azonosítása ======
+
+A felhasználók azonosítása hozzáférési szintenként ([[policy]]) külön szabályozható.
+
+Az adott [[policy]] beállításai az ''config/$policy-conf.php'' állományban definiált ''$AUTH'' tömbben tárolódnak.
+
+
+
+
+===== Opciók =====
+
+  * ''$AUTH[$policy]['backend']''
+A felhasználói adatok tárolását végző háttéradatbázis típusa. Lehetséges értékei: [[base:backend:ldap]], [[base:backend:ad]], [[base:backend:mysql]], [[base:backend:file]]
+
+  * ''$AUTH[$policy]['authentication']''
+Az adott policy-ben kötelező-e az azonosítás. Lehetséges értékei: required (kötelező), optional (opcionális), none (nincs)
+
+  * ''$AUTH[$policy]['onExpired']''
+Mi történjen nem letiltott, delejárt jelszó esetén? Lehetséges értékei: force update (kötelező jelszóváltoztatás), warning (figyelmeztető üzenet), none (semmi)
+
+  * ''$AUTH[$policy]['onDisabed']''
+Mi történjen letiltott azonosító esetén? Lehetséges értékei: refuse (utasítsuk vissza), none (ne történjen semmi - azaz engedjük be)
+
+  * ''$AUTH[$policy]['enableSelfPasswordChange']''
+Engedélyezett-e a jelszó felhasználó általi megváltoztatása (''onExpired=force update'' esetén szükséges!)? Lehetséges értékei: true (igen), false (nem)
+
+  * ''$AUTH[$policy]['createAccount']''
+Azonosító létrehozásának módja. Lehetséges értékei: byRegistration (regisztrációval), byAdmin (adminisztrátor által)
+
+  * ''$AUTH[$policy]['adminGroup']''
+Adminisztrátor csoport megadása (azonosító).
+
+  * ''$AUTH[$policy]['categories']''
+A policy-ban érvényes fő kategóriákat felsoróló tömb. ''private'' esetén például: ''array('tanár','diák','titkárság','egyéb')''
+
+  * ''$AUTH[$policy]['accountAttrs']''
+A fontos account attribútumokat felsoroló tömb (backend-től is függhet!). Például: ''array('studyId','mail','telephoneNumber')''
+
+==== Shadow ====
+
+  * ''$AUTH[$policy]['shadowLastChange']''\\
+Az utolsó jelszóváltoztatás időpontja (1970-01-01 óta eltelt napok számával megadva).
+  * ''$AUTH[$policy]['shadowMin']''\\
+A jelszó érvényességének minimális ideje - **nem használjuk**.
+  * ''$AUTH[$policy]['shadowMax']''\\
+A jelszó érvényességi ideje napokban. Az itt megadott érték határozza meg, hogy hány naponta kell jelszót változtatni. Ha üres, vagy nulla értékű, akkor nem vesszük figyelembe. Ilyenkor a ''shadowInactive'' értéket sem vesszük figyelembe.
+  * ''$AUTH[$policy]['shadowWarning']''\\
+A jelszó érvényességének lejárata előtt hány nappal kezdjük figyelmeztetni a felhasználót.
+  * ''$AUTH[$policy]['shadowExpire']''\\
+A jelszó érvényességének lejárati időpontja (1970-01-01-től eltelt napok számával megadva).
+Ha üres vagy nulla, akkor nem vesszük figyelembe!
+  * ''$AUTH[$policy]['shadowInactive']''\\
+A jelszó érvényességének lejárta után még hány napig nem kerül letiltásra az azonosító. Ha a ''shadowMax'' és a ''shadowExpire'' is nulla, vagy üres, akkor nem vesszük figyelembe.
+
+
+
+Lássuk hogyan működnek ezek a keretrendszerben!
+Haladjunk végig időrendben, hogy mikor mi fog történni:
+   * Ha ''shadowLastchange+shadowMax-shadowWarning'' után, de ''shadowLastchange+shadowMax'' előtt vagyunk, ''onExpire<>none'' és ''shadowMax<>0'', akkor figyelmezetést küldünk, hogy le fog járni a jelszó. Hasonlóan ''shadowExpire-shadowWarning'' után és ''shadowExpire'' előtt is.
+   * Ha ''shadowLastchange+shadowMax'' után vagyunk, ''shadowMax<>0'', vagy ''shadowExpire'' után vagyunk és ''onExprired<>none'', akkor figyelmeztetést küldünk, hogy lejárt a jelszó.
+   * Ha még ''shadowLastchange+shadowMax+shadowInactive'' és ''shadowExpire+shadowInactive"" előtt vagyunk, ''shadowMax<>0'' és ''onDisabled=refuse'', akkor figyelmeztetést küldünk, hogy az azonosító le lesz tiltva.
+   * Ha már ''shadowLastchange+shadowMax+shadowInactive'' után vagyunk, ''shadowMax<>0'' és ''onDisabled=refuse'', akkor nem engedjük belépni.
+   * Ha ''onDisabled=refuse'' és ''shadowExpire+shadowInactive'' után vagyunk, akkor nem engedjük belépni.
+
+
+Tehát lejárat szempontjából a ''shadowExpire'' és a ''shadowLastChange+shadowMax'' közül a kisebb lesz érvényes.
+
+
+----
+
+A backend függő beállításokat lásd a backend leírásánál.
+
+
+====== Facebook connect ======

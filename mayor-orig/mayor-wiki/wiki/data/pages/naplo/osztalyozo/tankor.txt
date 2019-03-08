@@ -1,0 +1,47 @@
+====== Osztályozónapló - tankör nézet ======
+
+Az osztályozónaplónak ezt a nézetét a tanárok használják, hiszen itt egy-egy tankör összes osztályzatát áttekinthetjük.
+
+==== Tankör kiválasztása ====
+
+Első lépésként a megfelelő tankört kell kiválasztanunk. Ezt két úton tehetjük meg: vagy egy tanárt választunk ki először az [[naplo:toolbar|eszközsoron]], vagy egy osztályt. Az első esetben a tanár tankörei, a második esetben az osztály tankörei jelennek meg új elemként az eszköztár alatt. Az osztály tanköreinek körét tovább szűkíthatjük, ha egy tanulót az osztály egy tagját választjuk ki.
+
+
+
+==== Osztályzatok megjelenítése ====
+
+Az oldal valójában nem a tankör jegyeit, hanem a tankör tanulóinak a tankör tárgyához tartozó jegyeit jeleníti meg.
+A diákok közt a tankör összes tanulóját felsorolja a rendszer, függetlenül attól, hogy az adott tanuló osztályozható-e az adott tankörben.
+
+A más tankörhöz tartozó jegyeket, illetve dolgozatokat barnás színezetű háttérszínük különbözteti meg a tankörhöz tartozó jegyektől.
+
+Fontos, hogy a tankör tagjait, illetve az érintett tanköröket és azok tanárait a program a megadott időintervallum alapján kérdezi le, így ezek az adatok a dátumok függvényében változhatnak.
+
+A megjelenített jegyre állítva a kurzort láthatjuk, hogy az adott jegy mikor, melyik tankörben született, valamint láthatjuk az adott tankörhöz tartozó tanárok listáját is.
+
+A jegy típusára a színe utal.
+
+A jegyen kattintva a jegy adatainak részleteit láthatjuk, illetve megfelelő jogosultsággal módosíthatjuk is.
+
+
+
+==== Osztályzatok beírása ====
+
+Év közben jegyet azok a tanulók kapnak, akik tankörbeli követelménye "jegy" (lásd [[naplo:intezmeny:tankorDiak|Tankör tagok kezelése]]).
+
+Az osztályzatok két típusba sorolhatók:
+  * Egyéni jegy (kis és normál jegy típus): egy-egy személy számára adható, nincs összefüggésben más jegyekkel. Ilyen lehet például egy felelet.
+  * Csoportos jegy (dolgozat, témazáró, vizsgajegy): a tankör összes tanulóját érintő számonkérések. Az így adott osztályzatok összetartoznak, számítható belőlük átlag.
+
+A jegyek beírásánál első lépésként válasszuk ki tanulónként a kívánt jegyet. Ezután, ha akarjuk megjelölhetjük, hogy az óra melyik tanítási órához kötődik (mikor történt a számonkérés). Csoportos jegy beírása esetén ki kell választanunk az értékelendő számonkérést, dolgozatot a jobb alsó sarokban. A dolgozatokat felvehetjük előre, vagy választhatjuk itt is az "új dolgozat" lehetőséget. Ilyen esetben javasolt a jegyek beírása után a dolgozat adatainak, elnevezésének megváltoztatása ([[dolgozat|dolgozatok módosítása]]).
+
+Az adatok módosítása után a kívánt jegytípusnak megfelelő gomb megnyomásával rögzíthetjük a jegyeket.
+
+A rögzített jegyek módosítása, törlése egyessével történhet, az adott jegyre való kattintás után ([[jegy|Jegy módosítása]]).
+
+
+==== Zárójegyek beírása ====
+
+Zárójegyet az a tanuló kaphat kinek tankör beli követelménye "jegy", vagy "vizsga" (lásd [[naplo:intezmeny:tankorDiak|Tankör tagok kezelése]]).
+
+Az osztályozó naplóban írhatjuk be a szemesztereket (féléveket) lezáró jegyeket is. Az adminisztrátor bármely zárójegyet módosíthatja, ha nincs lezárva a tanév. A szaktanárok mindig az épp aktuális, épp folyó szemeszterek lezárására jogosultak, persze a beírt jegy a szemeszter végéig szabadon módosítható.

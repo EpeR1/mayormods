@@ -1,0 +1,48 @@
+==== Valid cert létrehozása ====
+A napló a https kapcsolathoz saját certificate-et készít, de azt a böngészők nem fogadják el. (A Firefox-szal ugyan meg lehet jegyeztetni, de hosszú távon mindenképp érdemes "zöld" tanúsítványra váltani.)
+Ilyen tanúsítványokat lehet venni is, most az ingyenesek közül mutatunk be egyet. Ennek hátránya, hogy 90 naponta újítani kell, de erre van automata megoldás... :-)
+Kérdezzük le a naplót futtató gépen a disztribúciót!
+  # cat /etc/issue
+És biztos, ami biztos, a hostnevet is:
+  # hostname
+A kapott eredmények alapján [[https://letsencrypt.org/|ezen]] az oldalon leírtak alapján kell eljárni.
+Válasszuk a **Get Started** gombot, ami átvisz a [[https://certbot.eff.org/|certbot]] oldalra. Célszerű itt a **With Shell Access** (Certbot ACME client) részt választani. A szoftver (példánkban apache) disztribúció (példánkban Debian jessie) választása után (angol nyelven) részletes leírásra jutunk.
+
+**FIGYELEM! 2018. szeptemberben a Let'sEncrypt már nem támogatja a Debian Jessie-t, így a leírás egyes részei elavultak lehetnek! Az elvi megoldás a Sterch (és más) verziók esetén azonban ugyanez!**
+
+A telepítés, beállítás viszonylag egyszerű, ám naná, hogy van trükközés benne...! :-)
+
+Elsőként szerkesszük meg a ///etc/apt/sourses.list// állományt (mert a kíván backports repo alapból senkinek sincs benne)!
+  # nano /etc/apt/sources.list
+Adjuk hozzá:
+  deb http://ftp.debian.org/debian jessie-backports main
+Mentsük, és frissítsük a listát:
+  # apt-get update
+Most már lehet telepíteni:
+  # apt-get install python-certbot-apache -t jessie-backports
+Jöhet a tényleges munka:
+  # certbot --apache
+A parancs kiadása után az értelmes kérdésekre adjunk értelmes válaszokat (hostname, email, stb.)!
+
+A futás során egy piros hibaüzenetet látunk, nem is fog működni még a tanúsítvány:
+  Cannot find a cert or key directive in /files/etc/apache2/sites-available/mayor.conf/VirtualHost. VirtualHost was not modified!
+Nem kell megrémülni, a létrehozott **pem** állományok helyét kell csak megmagyarázni a MaYoR-nak, és kész is vagyunk! A **pem**-ek a ///etc/letsencrypt/archive/yeti.szag.hu// könyvtárba kerültek (mert yeti.szag.hu a példa-hostnév), de a ///etc/letsencrypt/live/yeti.szag.hu// alatt mindig van rá symlink... (Ennek később látjuk hasznát!)
+Szerkesszük a webszerver mayor.conf állományát!
+  # nano /etc/apache2/sites-available/mayor.conf
+Kommentezzük ki az eredeti apache.pem-et tartalmazó sort (az elejére tett #-kal):
+  SSLCertificateFile /etc/apache2/ssl/apache.pem
+helyett
+  # #     SSLCertificateFile /etc/apache2/ssl/apache.pem
+legyen és értelemszerűen ebbe a szekcióba vegyünk fel két sort:
+  SSLCertificateFile /etc/letsencrypt/live/yeti.szag.hu/fullchain.pem
+  SSLCertificateKeyFile /etc/letsencrypt/live/yeti.szag.hu/privkey.pem
+Mentsük az állományt, majd indítsuk újra a webszervert!
+  # service apache2 restart
+Minden böngészőben zöld lakatnak kell fogadnia minket!
+
+**FONTOS!** A tanúsítvány csak erre a hostnévre érvényes, ha a (külső vagy belső) IP-címmel próbálkozunk (esetleg a belső hálózatból másik hostnévvel), ugyanúgy nem biztonságos kapcsolatot kapunk!
+Ez a tanúsítvány 90 napig érvényes, a megadott email-címre kapunk majd figyelmeztető üzenetet a lejárat előtt. Ilyenkor kell futtatni a megújításhoz szükséges parancsokat:
+  # certbot renew --dry-run
+Ha ez megfelelően működik, akkor lehet automatizálni cron vagy systemd segítségével:
+  # certbot renew
+Ha sikeresen megkaptuk az újabb 90 napra szóló tanúsítványt, akkor csak a webszervert kell újraindítani, és minden megy tovább...

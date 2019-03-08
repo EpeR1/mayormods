@@ -1,0 +1,32 @@
+# naploadmin, group, vmayort.hu
+dn: cn=naploadmin,ou=group,dc=vmayort,dc=hu
+cn: naploadmin
+displayName: naploadmin
+sambaSID: S-1-5-21-3317027340-1707170271-2205240687-3095
+sambaGroupType: 2
+MailCommand: "|/usr/bin/formail -I \"From \" | sudo -u mail /usr/lib/cyrus-ima
+ pd/deliver -r 12D -a cyrus -m 12D"
+gidNumber: 1047
+description:: T3N6dMOhbHk=
+member: uid=admin,ou=people,dc=vmayort,dc=hu
+memberUid: admin
+phpgwAccountType: g
+phpgwAccountStatus: A
+phpgwAccountExpires: -1
+objectClass: top
+objectClass: posixGroup
+objectClass: MailRecipient
+objectClass: sambaGroupMapping
+objectClass: groupOfNames
+objectClass: SchoolClass
+objectClass: phpgwAccount
+parentList: 12D-szulok
+parentListAdminEmail: admin@vmayort.hu
+parentListCommand: "|/usr/sbin/filter_parent_list 12D"
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1

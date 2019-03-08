@@ -1,0 +1,15 @@
+
+====== Tanmenet részletei ======
+
+Ezen az oldalon csak tűjékozódhatunk, nincs mód semmilyen módosításra: megnézhetjük egy kivűlasztott tanmenet adatait.
+
+A megjelenített adatok:
+  * évfolyam
+  * tárgy
+  * éves óraszám
+  * tanmenet neve
+  * készítő tanár
+  * készítés dátuma
+  * jóváhagyott tanmenet-e
+  * A tanmenet témakörei (a rászánt óraszámokkal)
+  * hozzárendelt tankörök listája

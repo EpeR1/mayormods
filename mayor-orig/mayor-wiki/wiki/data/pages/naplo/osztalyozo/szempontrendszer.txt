@@ -1,0 +1,32 @@
+====== Szöveges értékelés szempontrendszerének megadása ======
+
+A [[szovegesErtekeles#szöveges értékelés]]hez először el kell készítenünk egy szempontrendszert. Egy szempontrendszer értékelési szempontokat és ezekhez tartozó, előre definiált minősítéseket tartalmaz. Például egy szempont lehet magyar irodalom tárgyból: "Hangos olvasás", a hozzá tartozó minősítések pedig: "jól hangsúlyozott", "folyamatos", "akadozó", "szótagoló"... A minősítéseknek nem kell egymást kizáróknak lenniük.
+
+===== A szempontrendszer tágyának megadása =====
+
+Először azt kell meghatározzuk, hogy mire vonatkozik a szempontrendszer. Végeredményben a szöveges értékelés mindig egy diák adott tárgyban nyújtott teljesítményére vonatkozik majd, de a szempontrendszer lehet ennél általánosabb.
+
+Három dolog határozza meg, hogy mikor, milyen tárgyak/diákok esetén alkalmazzuk az adott szempontrendszert (és tervezünk egy negyediket):
+
+  * Az évfolyam - ez kötelező paraméter. Ha más paraméter nincs megadva, akkor az évfolyam összes tárgyára alkalmazható a szempontrendszer.
+  * A tárgy - nem kötelező, de ezzel szűkíthetjük, hogy csak az adott évfolyam ezen tárgyára legyen alkalmazható a szempontrendszer.
+  * A képzés - (fejlesztés alatt) nem kötelező, de tovább szükíthetjük az érintett tárgyak körét, hogy csak az adott képzési formában tanuló diákok értékelésénél lehessen használni a szempontrendszert
+  * Tárgy típus - (tervezett) nem lesz kötelező, a tárgyhoz hasonlóan működik majd, de annál kicsit általánosabb, lehet pl: nyelv, szakmai gyakorlat...
+
+Amikor egy diákot adott tárgyból értékelünk, akkor a rendszer megpróbálja kiválasztani a "legspecifikusabb" szempontrendszert, tehát azt, ami a legtöbb szempontból illeszkedik a diákra. Az egyezést évfolyam, tárgy (majd tárgy típus), képzés sorrendben vizsgálja. Ha van olyan, ami mindhárom szempontból stimmel, akkor azt választja, ha nincs, akkor először az évfolyam/tárgy párnak megfelelőt keres, ha ilyet sem talál, akkor az évfolyam/képzés párt vizsgálja, végül ha egyik sincs, akkor olyan szempontrendszert keres, ami az adott évfolyamra vonatkozik csak.
+
+===== A szempontok és minősítések megadása =====
+
+A szempontok és minősítések egy egyszerű szöveges formában adhatók meg:
+
+  Szempont1
+  Minoősítés1/1
+  Minoősítés1/2
+  Minoősítés1/3
+  
+  Szempont2
+  Minoősítés2/1
+  Minoősítés2/2
+  ...
+
+A szempontok között üres sor kell legyen, egy-egy szemponthoz tartozó minősítések pedig sor kihagyás nélkül, külön-külön sorba kerülnek.

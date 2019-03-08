@@ -1,0 +1,15 @@
+====== Végzős osztályok órarendjének lezárása ======
+
+Ha egyes végzős osztályok tanulmányi időszaka rövidebb, mint a többi osztályé, tehát nem tart a tanév végéig (pl. a tavaszi érettségi időszak miatt), akkor ezen az oldalon törölhetjük az ő óráikat egy adott dátumtól kezdeve az órarendből - ennek hatására a program nem tölti be a haladási naplóba ezeket az órákat.
+
+===== Hogy csináljam? =====
+
+  * Válasszuk ki azt a dátumot, amitől kezdve már nem kell betölteni a végzősök óráit. Tehát a kiválasztott nap az első olyan nap, amikor nem lesznek betöltve az órák.
+  * Jelöljük meg a lezárni kívánt osztályokat (csak a végzős osztályok közül választhatunk).
+  * Nyomjuk meg az OK gombot.
+
+===== Mi történik ekkor? =====
+
+A program alapvetően két dolgot csinál:
+  - Módosítja az órarendet, hogy a megjelölt osztályokat - és csak azokat - érintő órák az adott dátum után már ne legyenek az órarendben. Azok az órák, amik nem csak a megjelölt osztályokhoz vannak rendelve nem lesznek törölve. Ha pl. megjelöltük a 12.a és 12.b osztályt, akkor a 12.a, 12.b és 12.ab kezdetű tankörök törlődnek, de pl. a 12.ac, 12.abd vagy 11-12 kezdetűek nem.
+  - Azokból a tankörökből, melyekben az érintett osztályoknak vannak tagjai, de nem lettek törölve az órarendből, törli a program az érintett osztályok tagjait - a megadott dátumtól.

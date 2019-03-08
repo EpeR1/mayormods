@@ -1,0 +1,21 @@
+<?php
+	define('_MONDAY','Montag');
+	define('_TUESDAY','Dienstag');
+	define('_WEDNESDAY','Mittwoch');
+	define('_THURSDAY','Donnerstag');
+	define('_FRIDAY','Freitag');
+	define('_SATURDAY','Samstag');
+	define('_SUNDAY','Sonntag');
+	define('_JANUARY','Januar');
+	define('_FEBRUARY','Februar');
+	define('_MARCH','März');
+	define('_APRIL','April');
+	define('_MAY','Mai');
+	define('_JUNE','Juni');
+	define('_JULY','Juli');
+	define('_AUGUSTUS','August');
+	define('_SEPTEMBER','September');
+	define('_OCTOBER','Oktober');
+	define('_NOVEMBER','November');
+	define('_DECEMBER','Dezember');
+?>

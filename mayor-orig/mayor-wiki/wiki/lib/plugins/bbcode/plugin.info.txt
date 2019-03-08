@@ -1,0 +1,7 @@
+base   bbcode
+author Michael Klier, Gina Häussge
+email  dokuwiki@chimeric.de
+date   2010-06-04
+name   BBCode Plugin
+desc   BBCode implementation for DokuWiki
+url    http://dokuwiki.org/plugin:bbcode

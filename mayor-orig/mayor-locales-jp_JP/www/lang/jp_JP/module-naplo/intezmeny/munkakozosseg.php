@@ -1,0 +1,9 @@
+<?php
+	define('__PAGETITLE','部署');
+	define('_MUNKAKOZOSSEGNEV','部署の名前');
+	define('_TARGYNEV','件名の名前');
+	define('_VEGLEGES_TORLES','永久削除');
+	define('_MUNKAKOZOSSEGVEZETO','頭部');
+	define('_MUNKAKOZOSSEGTAGOK','メンバーの部');
+	define('_UJTAGOK','新規会員');
+?>

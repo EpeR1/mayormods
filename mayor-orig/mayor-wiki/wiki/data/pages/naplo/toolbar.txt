@@ -1,0 +1,17 @@
+====== Eszköztár ======
+
+A napló modulban a menü alatt minden oldalon megjelenik egy speciális sáv - az eszköztár, vagy eszközsor.
+Itt láthatjuk az épp megjelenő oldal nevét (pl. Haladási napló, Osztályozó naplo...), a kiválasztott intézmény rövidítését és a kiválasztott tanév kezdetének évét, végül az esetleg megjelenő, az oldal használatát megkönnyítő eszközöket.
+
+===== Eszközök =====
+
+Az eszközök általában egy-egy legördülő menüből álnak, melyek segítségével kiválaszthatjuk, hogy az adott oldal milyen paraméterekkel dolgozzon (pl. kiválasztjuk, hogy a Haladási napló melyik osztály óráit jelenítse meg, vagy hogy az osztályozó naplóban melyik tanuló jegyeit szeretnénk látni).
+
+A használható eszközök a következők
+  * Osztály kiválasztása
+  * Tanár kiválasztása
+  * Diák kiválasztása
+  * Tankör kiválasztása
+  * Dátum kiválasztása
+  * ...
+

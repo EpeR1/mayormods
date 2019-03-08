@@ -1,0 +1,60 @@
+@media screen {
+
+div.felveteli    h1 { text-align: center; margin:0px;}
+div.felveteli    h2 { text-align: center; margin:0px;}
+
+div.felveteli    h3 {
+	border-style: none none dotted none;
+	border-width: 1px;
+	border-color: #444444;
+	margin: 20px;
+    }    
+div.felveteli    p { margin-left: 30px; margin-right:30px; line-height:1.5em; text-align: justify;}
+
+div.felveteli    a { color: #06a; font-weight: normál; }
+
+    
+div.felveteli    div.ft h1 { text-align: left; margin:0px;
+        border-style: none none dotted none;
+        border-width: 1px;
+        border-color: #444444;
+        margin: 30px 30px 0px 30px;
+        font-size: 24px;
+    }
+div.felveteli    div.ft h2 { text-align: left; margin:50px 30px 10px 30px; font-size:18px;}
+div.felveteli    div.ft h3 { text-align: left; margin:30px 30px 10px 30px; border: none; text-decoration: underline; font-size:14px;}
+
+div.felveteli    div.ft table.tagozat { background-color: #eeeeee; }
+div.felveteli    div.ft table.tagozat th { text-align: center; }
+div.felveteli    div.ft table.tagozat td { background-color: #ffffff; text-align: center; }
+
+
+
+div.felveteli    dl { margin: 20px;}
+div.felveteli    dt { font-style:italic;}
+div.felveteli    dd { padding: 4px; }
+
+div.felveteli    dt.old, 
+div.felveteli    dd.old { color:#777777; display: none;}
+div.felveteli    code { padding-left:10px; padding-right:10px; font-style: normal; font-weight: bold;
+	border-style: none none solid none; border-color: orange; border-width: 1px;
+	padding-top:1px;
+	background-color: #00C0FF; color: white;
+    }
+div.felveteli    code.hat  { background-color: purple; color: orange; }
+div.felveteli    code.ot  { background-color: green; color: orange; }
+div.felveteli    code.negy { background-color: navy; color: orange;   }
+div.felveteli    code.hatarido { background-color: #ff0066; }
+
+div.felveteli    div#tszulok {
+	margin-left:50px;
+	margin-right:50px;
+    }
+div.felveteli    div#tszulok p {
+	line-height:1.5em;
+    }
+
+div.felveteli    a.gyik { color: #00c0ff;}
+div.felveteli    a.gyik:hover { text-decoration: underline;}
+
+}

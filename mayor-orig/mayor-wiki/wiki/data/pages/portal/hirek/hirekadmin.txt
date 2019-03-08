@@ -1,0 +1,25 @@
+====== Hírek ======
+A **hír** a napló külső (bejelentkezés nélküli), vagy belső (bejelentkezés utáni) kezdőlapján megjelenő, mindenki számára olvasható rövid (?) szöveges információ. Előnye, hogy tág célcsoportnak szól (diákok, tanárok...), mindig szem előtt van, megjelenési időpontja finoman szabályozható.
+A hírek publikálásának feltétele, hogy az adott felhasználó (továbbiakban Szerkesztő) a //hirekadmin csoport// tagja legyen.
+===== Hír beküldése =====
+Bármely felhasználó (diák, szülő is) tud hírt beküldeni publikálásra (bejelentkezés után a Védett modulok->Hír beküldés pontban).
+Célszerű a felhasználókat rávenni arra, hogy beküldéskor a szöveg végére írják a megjelentetés dátumát, és a célcsoportot (kik lássák az üzenetet).
+Rögzítés után a beküldött hírt a Szerkesztő a saját felületén már megtalálja.
+===== Hír szerkesztése, publikálás =====
+A Szerkesztő a Kezdőlapon, a Hírek adminisztrálása menüben tudja a már beküldött, vagy épp aktuális híreket szerkeszteni. A nagy **+** gomb nyitja ki a teljes listát.
+A megjelenő listában a színek jelentése:
+  * fehér: érvényes hír (aktuális vagy jövőbeni);
+  * kék: lejárt határidős;
+  * lila: beküldött, még nem rendbe tett elem;
+A szerkeszteni kívánt hírre kattintva módosíthatók, illetve beállíthatók a megjelenés paraméterei:
+  * mettől meddig legyen érvényes;
+  * látszik/nem látszik;
+  * külső/belső hír (azaz bejelentkezés nélkül, vagy csak azután legyen olvasható);
+  * célcsoport: tanár/diák/titkárság/egyéb (ha a hírt a szülők felé is szeretnénk megjeleníteni, vagy külső hírt válasszunk, vagy ne jelöljük be a célcsoportok checkbox-ait...)
+
+Célszerű gyors helyesírás-ellenőrzést végezni, a felesleges részeket (pl. a szerkesztőnek szóló üzenet, hogy ki, mikor láthassa a hírt) kitörölni.
+A hírek esetében a szöveg-, vagy karakterformázást a szokásos HTML-tagekkel (<font...>; <b> <br /> stb.) végezhetjük.
+
+A formázáshoz egy kis "színes" segítség: [[http://darsh.uw.hu/modules.php?name=Content&pa=showpage&pid=4|Darshi]]
+
+A lap alján látható a kész hír.

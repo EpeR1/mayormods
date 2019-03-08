@@ -1,0 +1,9 @@
+<?php
+	define('_TANULO_OSZTALYZATAI','学生の成績');
+	define('__PAGETITLE','学生の成績');
+	define('_TARGY','件名');
+	define('_ATLAG','平均');
+	define('_BIZONYITVANY','学校の報告書');
+	define('_FELEVI','任期の半分');
+	define('_EVVEGI','年度末');
+?>

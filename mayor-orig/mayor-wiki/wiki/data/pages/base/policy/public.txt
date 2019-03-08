@@ -1,0 +1,3 @@
+====== public hozzáférési szint ======
+
+Nyilvános adatok közlésére szolgáló hozzáférési szint, opcionális azonosítási lehetőséggel. Bizonyos modulok megkövetelhetik az előzetes regisztrációt (pl. [[mayor-forum]]).

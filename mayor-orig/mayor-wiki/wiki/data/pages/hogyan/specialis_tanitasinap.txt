@@ -1,0 +1,25 @@
+====== Speciális tanításinap kezelése ======
+
+Hogyan tölthetünk be a haladási naplóba az órarendtől jelentősen eltérő órákat egy speciális tantervű tanításinap esetén?
+
+Alapvetően a rendszer biztosít egy alapszintű [[naplo:haladasi:specialis|speciális nap]] kezelő lehetőséget. Itt az órarend egyes órarebdi sávjaiból rakhatunk össze új tanrendet.
+
+Másik lehetőség lehet a [[naplo:haladasi:pluszora|plusz óra felvétel]]. Így elvben bármilyen órarend összeállítható, de elég fáradtságos úton.
+
+Mit tehetünk még?
+
+==== Órák közvetlen importálása ====
+
+Megpróbálhatjuk a haladási naplóba közvetlenül betölteni az adatokat. Ehhez először el kell készínetünk a betöltendő órák listáját a következő formátumban:
+
+| dt | ora | ki | tankorId | teremId | tipus | eredet |
+
+Ebből a teremId paraméter nem kötelező (ha nem adjuk meg, akkor legjobb, ha teljesen kihagyjuk az oszlopot, ha csak egyes helyeken hiányzik, akkor ott írjunk a terem azonosító helyére ''NULL'' értéket), a ki mező az órát tartó tanár azonosítója, a típus konstans 'normál', az eredet konstans 'plusz' érték lehet. A tanár és tankör azonosító számok kiolvashatók a rendszerből (a legtöbb helyen megjelennek a nevek mellett zárójelben).
+
+Ezek után mentsük el az állományt tabulátorokkal tagolt szöveges állományként, majd másoljuk fel a szerver ''/tmp'' könyvtárába.
+Ezek után adminisztrátorként belépve az adatokat be tudjuk tölteni [[naplo:admin:import|Napló/Admin/Import]] menüpont alatt.
+Ehhez válasszuk ki az sql táblák közül az adott tanévhez tartozó ''ora'' táblát, majd adjuk meg a feltöltött állomány elérési útját.
+A program ekkor beolvassa az állomány első öt sorát és megpróbálja felismerni az egyes mezőket az első sor alapján. Ha tehát az első sort a fentiek szerint írtuk be, akkor ezzel nem lesz dolgunk. Meg kell viszont jelölnünk a kulcsot alkotó mezőket. Erre általában a (dt, ora, ki) hármas a legmegfelelőbb - így a tanár szerinti ütközések lehetőségét kizárjuk. Ha biztosak vagyunk benne, hogy a megadott sorokat változtatás nélkül akarjuk betölteni, akár ütközéseket is megengedve, akkor több oszlopot kell kulcsként megjelölni, akár az összeset. Végül betöltjük az adartokat az ''OK'' gomb megnyomásával - és kész is! :o)
+
+**Megjegyzés:**
+Importálás előtt gondoskodjunk róla, hogy ne legyenek órák betöltve az adott napra! Ha vannak, akkor ezeket a [[naplo:haladasi:specialis|speciális nap]] belítását végző oldalon törölhetjük.

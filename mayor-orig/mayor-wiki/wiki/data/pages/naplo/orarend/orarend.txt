@@ -1,0 +1,3 @@
+====== Órarend ======
+
+Megjegyzés: Ha egy tanárhoz nincs egyetlen darab orarendiOraTankor összerendelt pár sem, akkor az órarendben redukált módon jelennek meg az órái.

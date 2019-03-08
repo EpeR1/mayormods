@@ -1,0 +1,19 @@
+<?php
+	define('_SEARCH','グループ検索');
+	define('_OK','OK');
+	define('_NOTFOUND','結果はありません');
+	define('_CATEGORY','category');
+	define('_ACTION','変更');
+	define('_DELETE','削除');
+	define('_CHANGE_PASSWORD','パスワードを変更');
+	define('_ARE_YOU_SURE','てもよろしいですか？');
+	define('_NAME','名前');
+	define('_CLASS','クラス');
+	define('_EMAIL','電子メール');
+	define('_PASSWORD','パスワード');
+	define('_RETYPEPASSWORD','パスワードを再入力');
+	define('_DEFAULTGROUP','グループ');
+	define('_DATAFILE','データファイル');
+	define('_NEWUSER','新規ユーザー');
+	define('_ARE_YOU_SURE','てもよろしいですか？');
+?>

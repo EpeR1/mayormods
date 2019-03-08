@@ -1,0 +1,38 @@
+<?php
+	define('__PAGETITLE','Closing statistics');
+	define('_OSZTALY','class');
+	define('_TANKOR','Studygroup');
+	define('_NEV','Name');
+	define('_ATLAG','Average');
+	define('_ORA','lesson');
+	define('_MAGATARTAS','conduct');
+	define('_SZORGALOM','diligance');
+	define('_BIZONYITVANY','Report');
+	define('_BEIR','add');
+	define('_ATLAGOSAN','average');
+	define('_OSSZESEN','total');
+	define('_IGAZOLT','certified');
+	define('_IGAZOLATLAN','uncertified');
+	define('_HIANYZAS','absency');
+	define('_HIANYZASOK','absencies');
+	define('_LETSZAM','number of students');
+	define('_KITUNO','excellent');
+	define('_BUKASOK','failure');
+	define('_BUKOTTAK','failures');
+	define('_NINCS','none');
+	define('_TOBB','more');
+	define('_IGAZOLATLANJA','uncertifed absencies');
+	define('_OTNEL','than five');
+	define('_TIZNEL','than ten');
+	define('_DICSERETES','commendation');
+	define('_FIGYELMEZTETOS','warning');
+	define('_NYELVVIZSGAS','language exam');
+	define('_TARGY','Subject');
+	define('_OSZTALYATLAG','Class average');
+	define('_SZEMPONT','Aspect');
+	define('_OSSZESITES','summarize');
+	define('_BUKOTT','failed');
+	define('_BUKAS','failure');
+	define('_ÁTLAG','average');
+	define('_NYOMTATAS','Print reports');
+?>

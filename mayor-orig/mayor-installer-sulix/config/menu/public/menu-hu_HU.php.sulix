@@ -1,0 +1,18 @@
+<?php
+
+    // Órarend, helyettesítés eltűntetése
+    unset($MENU['naplo']);
+    unset($MENU['modules']['naplo']['tanev']);
+
+    // A bejelentkezés oldal almenüjének törlése
+    unset($MENU['modules']['auth']);
+
+    // Külső hivatkozás: Sulinet portál
+    $MENU['sulinet'] = array(
+        array('txt' => 'SuliNet', 'url' => 'http://www.sulinet.hu', 'target' => '_blank'),
+    );
+
+    $MENU['auth'] = array(array('txt'=>'Szülői bejelentkezés','url'=>'index.php?page=auth&f=login&toPolicy=parent'));
+    if ($page!='auth') $NAV[1][] = array('page'=>'auth');
+
+?>

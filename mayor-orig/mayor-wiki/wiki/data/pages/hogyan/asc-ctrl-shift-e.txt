@@ -1,0 +1,53 @@
+
+====== aSc szöveges export: Ctrl-Shift-E ======
+
+Az aSc Timetables program képes - az XML exportnál ugyan kevésbé részletes, de használható - szöveges fomátumú exportra.
+A varázslatos billentyűkombináció: **Ctrl-Shift-E**
+
+(Sajnos az aSc nem ad csak úgy ilyen exportot (csak az első 10 rekordot adja ki). A gyártótól kell kérni - normál licensz birtokában - speciális export-licenszet.)
+
+===== Mit tegyünk a keletkezett állománnyal =====
+
+==== Eredeti állomány ====
+
+A kapott **txt** állományt mentsük el, készítsünk róla egy biztonsági másolatot, és nyissuk meg [[http://libreoffice.hu|LibreOffice Calc]]-cal (sokkal jobb ezzel dolgozni, mint Excel-lel, mert a végső csv export itt pofonegyszerű!)
+
+Az exportált állomány mezői:
+
+  Day Name, Day Number in Cycle, Period in Day, Period in Cycle, Form, Form 'short', Subject, Subject 'short', Classroom, Classroom 'short', Teacher Name, Teacher Short, Group, Cycle
+
+==== Átalakítás====
+
+Az állományt érdemes először a táblázatkezelő saját formátumában menteni, és a legvégén átalakítani **tabulátorokkal tagolt, UTF-8 kódolású csv**-be!
+
+A kinyert fájlban a **'Day Number in Cycle'**, a '**Period in Day'**, a **'Form'**, a **'Subject'**, a  **'Classroom'** és a **'Teacher Name'** hordoz lényeges információt a megfelelő import fájl számára, a többi törölhető - de még ne tegyük!!!
+
+Az órarend MaYoR-ba való importálásához a következő mezőkre van csak szükség:
+
+  het    nap    ora    tanarId    osztalyJel    targyJel    teremId    tolDt    igDt
+
+  * A **het** mező vagyis az órarendi hét, mely egyhetes órarendnél persze végig 1. A '**Day Name'** mezőt érdemes átnevezni "het"-re majd végig egyessel feltölteni. Kéthetes órarendnél 1 és 2 az érték, lásd később!
+
+  * A **nap** mező tartalma a **'Day Number in Cycle'** tartalma legyen,
+
+  * az **ora** mezőjé a **'Period in Day'**,
+
+  * a **tanarId** a MaYoR-ban lévő tanárazonosítók,
+
+  * az **osztalyJel** tartalma a **'Form'** mező. Ez azonban a naplóban egy 6 karakteres mező, tehát célszerű rövidíteni: '7.a, 7.b' helyett '7ab', '5.a, 5.b, 6.a, 6.b' helyett '5-6' és hasonlók. Ha nem tesszük meg, az import során csonkolódik!
+
+  * A mumus a **targyJel**... nos, a kiexportált fájl **'Subject'** mezője sajnos nem hordoz elegendő információt erről. Ellenben az azonos tárgyhoz kapcsolódó eltérő tankörök kiválóan megkülönböztethetők a **'Subject'** és a **'Group'** mezők együttes használatával. Ez különösen akkor fontos, ha __azonos nevű tárgyat ugyanabban az osztályban ugyanaz a tanár több csoportban is__ tanít. A táblázatkezelő remek lehetőséget ad a tömeges módosításra, csak okosan kell használni.
+Erre valók az ÖSSZEFŰZ, HA, BAL és hasonló függvények.
+
+  * A **teremId** persze a **'Classroom'** (de itt is a MaYoR-ban használt teremId-k kellenek!),
+
+  * A **tolDt** és az **igDt** egyértelmű (éééé-hh-nn formában).
+
+==== Kéthetes órarend ====
+
+Kéthetes órarendnél szintén az eredeti export-állományt hívjuk segítségül. A **'Cycle'** mező mondja meg, hogy minden héten vagy csak az egyiken van a bizonyos óra. A külön hetieket hagyhatjuk, a közös órákat duplázni kell (megfelelő mező szerinti sorrend, sorok kijelölése, másolás, új sor, beillesztés).
+
+==== Feltöltés, összerendezés ====
+
+Ezt a csv fájlt kell feltölteni a szerverre, majd //Admin/Import - orarendiOra//, text fájl útvonala, és OK.
+A Ctrl-Shift-E módszer esetén mindenképp kézzel kell hozzárendelgetni a tanköröket az órarendi órákhoz (Órarend/Órarendi óra - tankör hozzárendelés) - de ez egy egészséges kompromisszum... :-).

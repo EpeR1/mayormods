@@ -1,0 +1,89 @@
+<?php
+
+    function putAddNodeForm($ADAT) {
+	formBegin(array('id'=>'addNode'));
+	echo '<h3>'._UJ_VEGPONT.'</h3>';
+	echo '<input type="hidden" name="action" value="addNode" />';
+	echo '<p>';
+	echo '<select name="nodeId">';
+	foreach ($ADAT['nodes'] as $nodeId => $nAdat) {
+	    echo '<option value="'.$nAdat[0]['nodeId'].'">'.$nAdat[0]['nev'].' - '.$nAdat[0]['cimHelyseg'].' ('.$nAdat[0]['nodeId'].')</option>';
+	}
+	echo '</select>';
+	    echo '<br/>';
+	echo '<label for="OMKod">'._OMKOD.'</label>';
+	echo '<input type="text" id="OMKod" name="OMKod" value="" />';
+	    echo '<br/>';
+	echo '</p>';
+	echo '<input type="submit" value="'._ADD.'" />';
+	formEnd();
+    }
+
+    function putRequestsForm($ADAT) {
+	echo '<table id="requNodes">';
+	echo '<thead>';
+	    echo '<tr>';
+	    echo '<th colspan="2">'._NODE.'</th>';
+	    echo '<th>'._NODEID.'</th>';
+	    echo '<th>'._OMKOD.'</th>';
+	    echo '<th>'._REQUS.'</th>';
+	    echo '<th>'.'</th>';
+	    echo '</tr>';
+	echo '</thead>';
+	echo '<tbody>';
+	foreach ($ADAT['requ'] as $index => $pAdat) {
+	    echo '<tr>';
+	    echo '<td>';
+		formBegin(array('id'=>'del'));
+		echo '<input type="hidden" name="action" value="delRequ" />';
+		echo '<input type="hidden" name="nodeId" value="'.$pAdat['nodeId'].'" />';
+		echo '<input type="hidden" name="userAccount" value="'.$pAdat['userAccount'].'" />';
+		echo '<input type="hidden" name="OMKod" value="'.$pAdat['OMKod'].'" />';
+		echo '<input type="submit" value="X" class="confirm" title="'._BIZTOS_TOROL_E.'" />';
+		formEnd();
+	    echo '</td>';
+	    echo '<td>'.$ADAT['nodes'][ $pAdat['nodeId'] ][0]['nev'].'</td>';
+	    echo '<td>'.$pAdat['nodeId'].'</td>';
+	    echo '<td>'.$pAdat['OMKod'].'</td>';
+	    echo '<td>';
+		formBegin(array('id'=>'requ'));
+		echo '<input type="hidden" name="action" value="setRequ" />';
+		echo '<input type="hidden" name="nodeId" value="'.$pAdat['nodeId'].'" />';
+		echo '<input type="hidden" name="userAccount" value="'.$pAdat['userAccount'].'" />';
+		echo '<input type="hidden" name="OMKod" value="'.$pAdat['OMKod'].'" />';
+		$nRequ = explode(',',$pAdat['requ']);
+		foreach ($ADAT['requests'] as $index => $requ) {
+		    if (in_array($requ, $nRequ)) $CHK=' checked="checked" ';
+		    else $CHK = '';
+		    if (is_array($ADAT['nodes'][ $pAdat['nodeId'] ][0]['priv'])) {
+			if (in_array($requ, $ADAT['nodes'][ $pAdat['nodeId'] ][0]['priv'])) $class='allow'; 
+			else $class = 'forbid'; 
+		    } else { $class=''; }
+		    $id = 'n'.$pAdat['nodeId'].ekezettelen($pAdat['userAccount']).$pAdat['OMKod'].$index;
+		    echo '<label class="'.$class.'" for="'.$id.'">';
+		    echo '<input class="'.$class.'" id="'.$id.'" type="checkbox" name="requ[]" value="'.$requ.'"'.$CHK.' />';
+		    echo $requ.'</label>';
+		}
+		echo '<input type="submit" value="'._OK.'" />';
+		formEnd();
+	    echo '</td>';
+	    echo '<td>';
+		if (in_array('Jogosultság',$nRequ)) {
+		formBegin(array('id'=>'requ'));
+		echo '<input type="hidden" name="action" value="checkJogosultsag" />';
+		echo '<input type="hidden" name="nodeId" value="'.$pAdat['nodeId'].'" />';
+		echo '<input type="hidden" name="userAccount" value="'.$pAdat['userAccount'].'" />';
+		echo '<input type="hidden" name="OMKod" value="'.$pAdat['OMKod'].'" />';
+		echo '<input type="submit" value="'._JOGOSULTSAG.'" />';
+		formEnd();
+		}
+	    echo '</td>';
+	    echo '</tr>';
+	}
+	echo '</tbody>';
+	echo '</table>';
+
+
+    }
+
+?>

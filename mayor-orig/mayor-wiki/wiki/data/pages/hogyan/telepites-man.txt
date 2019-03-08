@@ -1,0 +1,521 @@
+====== Manuális telepítés ======
+
+==== Az első indítás után ====
+
+A telepítendő szoftverek listája (vagy ezek megfelelői):
+  - ''apache2'' - a web szerver (más webszerver is szóbajöhet természetesen)
+  - ''php5'', ''php5-mysql'', ''php5-ldap'' (ez utóbbi csak akkor, ha ''ldap'' háttéradatbázist használunk a felhasználók azonosítására)
+  - ''mysql-server-5.0'' - A keretrendszer és a napló adatait tároló adatbázis szerver
+  - ''recode'' - a nyomtatványok előállításakor használjuk a különböző kódolások közötti konverzióra
+  - ''texlive'', ''texlive-plain-extra'', ''texlive-fonts-extra'', ''texlive-fonts-recommended'', ''texlive-lang-hungarian'', ''texlive-latex-extra'', ''cm-super'' - TeX keretrendszer, fontok, makro csomagok
+  - ''texlive-xetex'', ''ttf-mscorefonts-installer'' - opcionális (ha a haladási napló nyomtatásához a XeTeX rendszert akarjuk használni)
+  - ''gs-common''/''ghostscript'' - a nyomtatáshoz szükséges ps2pdf programot tartalmazzó csomag
+  - ''ntp'' - a pontos idő karbantartásához, a munkamenetek lejárati idejének kezeléséhez
+  - ''wget'' - a frissítések letöltéséhez
+  - ''ssl-cert'' - ha saját tanúsítványt akarunk készíteni a web-szerver számára
+  - ''ssh'' - a távoli adminisztráció lehetőségét biztosító szolgáltatás
+
+=== Debian/Ubuntu ===
+
+Belépés után szerkesszük a csomag-források listáját és kommentezzük ki a telepítő CD-re és a forrásokra (src) vonatkozó sorokat:
+
+  editor /etc/apt/sources.list
+
+Majd frissítsük a csomaglistát (ezzel egyúttal ellenőrizzük, hogy nem rontottunk-e el valamit ''sources.list'' állományban)
+
+  apt-get update
+
+És telepítsük a  szükséges csomagokat:
+
+  apt-get install apache2 php5 php5-mysql php5-ldap mysql-server-5.0 recode texlive ... ssh ssl-cert ntp
+
+Ez 3-400MB letöltését jelenti, majd a csomagkezelő telepíti a szoftvereket.
+
+=== SuSE ===
+
+A csomagok telepítésére itt a ''yast'' használatos:
+
+  yast2 -i mc gpm apache2 php5 php5-mysql php5-ldap mysql-server-5.0 recode texlive subversion less ssh php5-mbscript
+
+Az ''ssl-cert'' helyett a ''gensslcert'' programot kell használnunk - a működése lényegében teljesen megegyezik a "debianos" ''ssl-cert''-el.
+
+=== freeBSD ===
+
+A telepítés után tegyünk fel GNU bash-t, mert a frissítő szkriptek ezt igénylik majd, ráadásul a ''/bin/bash'' útvonalon, így ha nem ott lenne, akkor készítsűnk
+szimolikus linket!
+
+Szintén a frissítésekhez szükség lesz egy ''md5sum'' nevű szkriptre, ami a linux-ok alatt használatos hasonló nevű alkalmazást helyettesíti
+(pontosabban az ''md5sum -c --status'' alakú hívását):
+
+   #!/bin/bash
+   
+   read inputline
+   
+   md5sum=`(echo $inputline | cut -d" " -f1)`
+   filename=`(echo $inputline | cut -d" " -f2)`
+   md5sum_new=`(md5 $filename | tr -d " " | cut -f2 -d=)`
+   
+   if [ $md5sum = $md5sum_new ]; then
+       exit 0
+   else
+       exit 1
+   fi
+
+Ezt a szkriptet helyezzük el valahova a keresési útvolaban lévő könyvtárba.
+
+Utána tegyük fel a felsoroltaknak megfelelő csomagokat... Legnagyobb gondot várhatóan a texlive kiváltása fogja okozni, mert freeBSD-re
+csak a korábbi tetex rendszer létezik.
+
+(Aki tud pontosabb leírást, az bátran küldje le a support-ra)
+
+===== MaYoR rendszer telepítése =====
+
+Szedjük le a MaYoR keretrendszer és napló forrását:
+
+  cd /tmp
+  wget http://www.mayor.hu/download/current/mayor-base-current.tgz
+  wget http://www.mayor.hu/download/current/mayor-naplo-current.tgz
+
+Majd csomagoljuk ki őket közös könyvtárba (pl ''/var/mayor'')
+
+  mkdir /var/mayor
+  cd /var/mayor/
+  tar xvfz /tmp/mayor-base-current.tgz
+  tar xvfz /tmp/mayor-naplo-current.tgz
+
+Végül ellenőrizzük, hogy  a ''/var/mayor/log/mayor-base.rev'' állományba az aktuális revision szám található-e! Ha valamilyen okból nem, akkor kérj segítséget a support@mayor.hu-n!
+
+
+==== Konfigurációs állományok ====
+
+A MaYoR rendszer konfigurációs állományait a ''/var/mayor/config'' könyvtárban lévő ''*.example'' állományok átnevezésével és szerkesztésével kapjuk.
+
+  mv /var/mayor/config/main-config.php.example /var/mayor/config/main-config.php
+  editor /var/mayor/config/main-config.php
+
+Ebben az állományban adhatjuk meg a ''_SITE'' stringet, ami a HTML oldalak ''title'' mezőjében fog megjelenni (általában az intézmény neve), érdemes megváltoztatni a ''_MYSQL_ENCODE_STR'' konstanst, amit a jelszavak kódolásához használunk, valamint a keretrendszer adatbázisának eléréséhez szükséges jelszót - ezt csak a program használja, így bátran adjunk meg akármilyen össze-vissza karaktersort!
+
+  define('_SITE','MaYoR Használó Gimnázium');
+  
+    define('_MAYOR_DIR','/var/mayor');
+    define('_BASEDIR',_MAYOR_DIR.'/www');
+    define('_CONFIGDIR',_MAYOR_DIR.'/config');
+    define('_LOGDIR',_MAYOR_DIR.'/log');
+    define('_LOCKFILE','/var/run/mayor.lock');
+    define('_DATADIR',_MAYOR_DIR.'/data');
+    define('_DOWNLOADDIR',_MAYOR_DIR.'/download');
+  
+  // --- Jelszó kódolt tárolásához ----------------------------------------//
+  define('_MYSQL_ENCODE_STR','___________');
+  
+  $MYSQL_DATA['login']['db']  ='mayor_login';
+  $MYSQL_DATA['login']['user']='mayor_login';
+  $MYSQL_DATA['login']['pw']  ='___________';
+  ...
+
+Következnek az egyes hozzáférési szintek (policy) beállításai. A "parent" és "public" policy beállításaiban elég csak a jelszavakat módosítani (az előzőekhez hasonlóan), míg a "private" hozzáférési szint esetén - hacsak nem LDAP alapú azonosítást szeretnénk - még néhány paramétert módosítunk:
+
+''parent-conf.php'', ''public-conf.php'' - csak a jelszavakat írjuk át
+
+  mv /var/mayor/config/parent-conf.php.example /var/mayor/config/parent-conf.php
+  editor /var/mayor/config/parent-conf.php
+  ...
+  mv /var/mayor/config/public-conf.php.example /var/mayor/config/public-conf.php
+  editor /var/mayor/config/public-conf.php
+  ...
+  mv /var/mayor/config/private-conf.php.example /var/mayor/config/private-conf.php
+  editor /var/mayor/config/private-conf.php
+
+  ...
+      //'backend' => 'ldap',
+      'backend' => 'mysql',
+      ...
+       
+       //'ldap hostname' => 'localhost',
+       //'ldap protocol version' => 3,
+       //'ldap base dn' => 'o=mayor,c=hu',
+       //'createAccountScript' => 'accounts.sh'
+    
+      'mysql db' => 'mayor_private',
+      'mysql user' => 'mayor_private',
+      'mysql pw' => '________'
+  ...
+
+=== A napló modul konfigurációja ===
+
+Készítsük el a minta alaján saját konfigurációs állományunkat:
+
+  mv /var/mayor/config/module-naplo/config.php.example /var/mayor/config/module-naplo/config.php
+  editor /var/mayor/config/module-naplo/config.php
+
+Szerkesztéskor a legfontosabb itt is a jelszavak megváltoztatása.
+
+Majd szintén a minták alapján készítsük el saját intézmény konfigurációs állományunkat ''config-[intézmény rövid neve].php'' néven 
+(itt az ''[intézmény rövid neve]'' meg kell egyezzen a felületen később megadandó rövid névvel - lásd: 
+[[hogyan:telepites#uj_intezmeny_felvetele|Új intézmény felvétele]] - például: ''vmg'', ''illyes'', ''toldy''...):
+
+  mv /var/mayor/config/module-naplo/config-pl.php.example /var/mayor/config/module-naplo/config-[intézmény rövid neve].php
+  editor /var/mayor/config/module-naplo/config-[intézmény rövid neve].php
+
+Ebben az állományban hangolhatjuk a rendszert határidőkkel és egyéb korlátozásokkal...
+
+Van még egy konfigurációs állomány, ami a javascript függvénykönyvtárak betöltését szabályozza, ezen szerkesztenünk nem szükséges:
+
+  mv /var/mayor/config/skin-classic/naplo-config.php.example /var/mayor/config/skin-classic/naplo-config.php
+
+==== MySQL beállítása ====
+
+=== SuSE ===
+SuSE alatt a szolgáltatások indítását és a fontosabb beállításokat célszerű a ''yast'' segítségével végezni. Az adatbázisok létrehozása már nem rendszerfüggő, az a Debin/Ubuntu leírás szerint történhet.
+
+=== Debian/Ubuntu ===
+A telepítés után ne felejtsük el a MySQL root jelszavát megváltoztatni!
+
+  # mysql
+  Welcome to the MySQL monitor.  Commands end with ; or \g.
+  Your MySQL connection id is 8
+  Server version: 5.0.32-Debian_7etch5-log Debian etch distribution
+  
+  Type 'help;' or '\h' for help. Type '\c' to clear the buffer.
+  
+  mysql> SET PASSWORD=PASSWORD('*****');
+  Query OK, 0 rows affected (0.00 sec)
+
+Majd az UTF-8 kódolás beállítása következik:
+
+  cp /var/mayor/install/base/mysql/utf8.cnf /etc/mysql/conf.d/utf8.cnf
+
+Az ''utf8.cnf'' állomány a következőket tartalmazza:
+
+  [client]
+    default-character-set = utf8
+    
+  [mysqld]
+    default-character-set = utf8
+    default-collation = utf8_hungarian_ci
+
+Ne felejtsük el a szervert újraindítani a beállítások mósosítása után!
+
+  /etc/init.d/mysql restart
+
+=== A keretrendszer adatbázisainak létrehozása ===
+
+Az adatbázisok létrehozásához a MaYoR rendszer könyvtárában találunk minta állományokat. Ezekben legfeljebb az adatbázisok nevét és a jelszavakat kell majd módosítani.
+
+A ''mayor-login.sql''-ben ''%MYSQL_LOGIN_DB%''-t, ''%MYSQL_LOGIN_USER%''-t és ''%MYSQL_LOGIN_PW%''-t cseréljük 
+a ''/var/mayor/config/main-config.php''-ban megadott adatbázis, user, jelszó hármasra.
+
+A ''mayor-auth.sql''-ből készítsünk ''mayor-parent.sql'' néven másolatot, melyben a 
+''%MYSQL_AUTH_DB%''-t, ''%MYSQL_AUTH_USER%''-t és ''%MYSQL_AUTH_PW%''-t cseréljük 
+a ''/var/mayor/config/parent-conf.php''-ben megadottakra.
+
+Végül hasonlóan készítsünk a ''mayor-auth.sql''-ből ''mayor-private'' néven másolatot, melyben a
+''%MYSQL_AUTH_DB%''-t, ''%MYSQL_AUTH_USER%''-t és ''%MYSQL_AUTH_PW%''-t cseréljük 
+a ''/var/mayor/config/private-conf.php''-ben megadottakra.
+
+Lehet simán editorral végezni a szerkesztéseket, de aki jobban szereti a shell parancsokat, így is eljárhat:
+
+  mkdir /tmp/mysql
+  cd /tmp/mysql
+  DB=`grep db /var/mayor/config/main-config.php | sed -e "s/$.*=\ *['|\"]//g" -e "s/['|\"];//g"`
+  USER=`grep user /var/mayor/config/main-config.php | sed -e "s/$.*=\ *['|\"]//g" -e "s/['|\"];//g"`
+  PW=`grep pw /var/mayor/config/main-config.php | sed -e "s/$.*=\ *['|\"]//g" -e "s/['|\"];//g"`
+  cat /var/mayor/install/base/mysql/mayor-login.sql | sed -e "s/%MYSQL_LOGIN_DB%/$DB/g" -e "s/%MYSQL_LOGIN_USER%/$USER/g" \
+          -e "s/%MYSQL_LOGIN_PW%/$PW/g" > mayor-login.sql
+
+  DB=`grep db /var/mayor/config/parent-conf.php | sed -e "s/^.*>\ *['|\"]//g" -e "s/['|\"],//g"`
+  USER=`grep user /var/mayor/config/parent-conf.php | sed -e "s/^.*>\ *['|\"]//g" -e "s/['|\"],//g"`
+  PW=`grep pw /var/mayor/config/parent-conf.php | sed -e "s/^.*>\ *['|\"]//g" -e "s/['|\"],//g"`
+  cat /var/mayor/install/base/mysql/mayor-auth.sql | sed -e "s/%MYSQL_AUTH_DB%/$DB/g" -e "s/%MYSQL_AUTH_USER%/$USER/g" \
+          -e "s/%MYSQL_AUTH_PW%/$PW/g" > mayor-parent.sql
+
+  DB=`grep db /var/mayor/config/private-conf.php | sed -e "s/^.*>\ *['|\"]//g" -e "s/['|\"],//g"`
+  USER=`grep 'mysql user' /var/mayor/config/private-conf.php | sed -e "s/^.*>\ *['|\"]//g" -e "s/['|\"],//g"`
+  PW=`grep pw /var/mayor/config/private-conf.php | sed -e "s/^.*>\ *['|\"]//g" -e "s/['|\"],//g"`
+  cat /var/mayor/install/base/mysql/mayor-auth.sql | sed -e "s/%MYSQL_AUTH_DB%/$DB/g" -e "s/%MYSQL_AUTH_USER%/$USER/g" \
+          -e "s/%MYSQL_AUTH_PW%/$PW/g" > mayor-private.sql
+
+Mindenképp ellenőrizzük, hogy a keletkezett állományok jók lettek-e, a jelszavak, azonosítók, adatbázis nevek megfelelők-e. 
+Ezek után létrehozzuk az adatbázisokat:
+
+  cat /tmp/mysql/mayor-login.sql | mysql -p
+  cat /tmp/mysql/mayor-parent.sql | mysql -p
+  cat /tmp/mysql/mayor-private.sql | mysql -p
+
+=== A napló modul adatbázisának létrehozása ===
+
+Az előzőekhez hasonlóan itt is egy meglévő minta állomány segítségével hozzuk létre az adatbázist, melyben kicseréljük a
+''%MYSQL_NAPLO_DB%'', ''%MYSQL_NAPLO_USER%'', ''%MYSQL_NAPLO_PW%'', ''%MYSQL_NAPLO_USER_READ%'', %MYSQL_NAPLO_PW_READ%
+paramétereket a ''/var/mayor/config/module-naplo/config.php'' megfelelő értékeire - editorral, vagy valahogy így:
+
+  DB=`grep db /var/mayor/config/module-naplo/config.php | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
+  USER=`egrep 'userWrite.*=' /var/mayor/config/module-naplo/config.php | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
+  USERREAD=`egrep 'userRead.*=' /var/mayor/config/module-naplo/config.php | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
+  PW=`egrep 'pwWrite.*=' /var/mayor/config/module-naplo/config.php | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
+  PWREAD=`egrep 'pwRead.*=' /var/mayor/config/module-naplo/config.php | sed -e "s/^.*=\ *['|\"]//g" -e "s/['|\"];//g"`
+
+  cat /var/mayor/install/module-naplo/mysql/base.sql | sed -e "s/%MYSQL_NAPLO_DB%/$DB/g" -e "s/%MYSQL_NAPLO_USER%/$USER/g" \
+          -e "s/%MYSQL_NAPLO_PW%/$PW/g"  -e "s/%MYSQL_NAPLO_USER_READ%/$USERREAD/g" \
+          -e "s/%MYSQL_NAPLO_PW_READ%/$PWREAD/g" > /tmp/mysql/base.sql
+
+Ellenőrizzük az elkészült állományt, majd hozzuk léttre az adatábázist:
+
+  cat /tmp/mysql/base.sql | mysql -p
+
+
+==== A szükséges csoportok és a mayoradmin account létrehozása ====
+
+Ehhez a lépéshez is tartoznak előkészített sql állományok. Először létrehozzuk a mayoradmin felhasználót (induló jelszava 'jelszo') és az
+alaprendszer csoportjait, majd a naplóhoz tartozó csoportokat. Az állományoban a ''%MYSQL_PRIVATE_DB%'' sztringet cseréljük ki a
+''/var/mayor/config/private-conf.php'' állományban megadott adatbázis névre.
+
+  DB=`grep db /var/mayor/config/private-conf.php | sed -e "s/^.*>\ *['|\"]//g" -e "s/['|\"],//g"`
+  cat /var/mayor/install/base/mysql/private-users.sql | sed -e "s/%MYSQL_PRIVATE_DB%/$DB/g" > /tmp/mysql/private-users.sql
+  cat /tmp/mysql/private-users.sql | mysql -p
+
+  cat /var/mayor/install/module-naplo/mysql/naplo-users.sql | sed -e "s/%MYSQL_PRIVATE_DB%/$DB/g" > /tmp/mysql/naplo-users.sql
+  cat /tmp/mysql/naplo-users.sql | mysql -p
+
+==== Az Apache Web-szerver beállításai ====
+
+=== SuSE ===
+
+Az Apache2 alapvető konfigurálása és a szolgáltatás elindítása továbbra is a ''yast''-al történik, sőt a megfelelő virtual host létrehozására is van lehetőség, de a megfelelő konfigurációs állományok szerkesztése is jó, univerzális megoldás, mindegyik rendszeren működnie kell.
+
+=== Debian/Ubuntu ===
+
+Először az Apache2 ssl támogatását kell beállítanunk:
+
+  mkdir /etc/apache2/ssl
+  make-ssl-cert /usr/share/ssl-cert/ssleay.cnf /etc/apache2/ssl/apache.pem
+  a2enmod ssl
+  a2enmod rewrite
+
+A make-ssl-cert feltesz majd néhány egyszrű kérdést - de ettől ne hátráljunk meg...
+A MaYoR-t használó intézmények számára kérésre mi is készítünk [[gyik:mayorCA|általunk (MaYoR Hungary) hitelesített]] tanúsítványt.  
+
+Ezek után a MaYoR rendszer site információit állítsuk be - a letöltött minta másolatának értelemszerű szerkesztésével:
+
+  cp /var/mayor/install/base/apache2/mayor /etc/apache2/sites-available
+  editor /etc/apache2/sites-available/mayor
+
+Itt a szerver nevére, a portra (alapértelmezett: 443) és az előbb generált SSLCertificateFile elérési útjára kell különösen figyelni.
+
+Majd a default site-ban állítsuk be, hogy csak a 80 porton legyen érvényes (de akár le is tilthatjuk):
+
+  editor /etc/apache2/sites-available/default
+
+  NameVirtualHost *:80
+  <virtualhost *:80>
+
+Esetleg irányítsuk át a 80-as port forgalmát a 443-as portra:
+
+  RedirectMatch ^.*$ https://your.mayor.server.hu/
+
+Beállítjuk, hogy a web-szerver a 443-as (https) porton is figyeljen:
+
+  editor /etc/apache2/ports.conf
+
+  Listen 443
+
+Végül engedélyezzük a mayor site-ot és indítsuk újra a web szervert:
+
+  a2ensite mayor
+  /etc/init.d/apache2 restart
+
+Ide tartozik még a php5 modul konfigurációja. Az alapbeállításokhoz képest elég egy helyen módosítani a ''/etc/php5/apache2/php.ini'' állományt:
+
+  editor /etc/php5/apache2/php.ini
+
+  memory_limit = 128M	; Maximum amount of memory a script may consume (16MB)
+
+  /etc/init.d/apache2 reload
+
+A memória limitet a nagyobb lekérdezések miatt kell megnövelni - ilyen például a haladási vagy osztályozó naplók nyomtatása.
+
+
+==== Karbantartást segítő szkriptek ====
+
+Egy egyszerű shell scriptet használhatunk a rendszer frissítésére (''update'') és mentésére (''backup''). Készítsünk először szimbólikus linket, hogy parancssorból könnyen elérhető legyen a szkript:
+
+  ln -s /var/mayor/bin/mayor /usr/local/sbin
+
+Majd készítsünk saját konfigurációs állományokat a mentési és frissítési feladatokhoz:
+
+  cp /var/mayor/config/main.conf.example /var/mayor/config/main.conf
+  chmod 600 /var/mayor/config/main.conf
+  editor /var/mayor/config/main.conf
+  ...
+
+Itt adhatjuk meg a mentési könyvtárat, illetve a MySQL adatbázisok mentéséhez és az adatbázis frissítések elvégzéséhez szükséges 
+felhasználói azonosítót és jelszót (dump készítéshez legyen joga és a frissítendő adatbázisokon teljes jogosultságú felhasználó legyen!).
+A frissítéssel kapcsolatban beállíthatjuk, hogy mely modulokat frissítsen a parancs (alapértelmezés szerint: mayor-base, mayor-naplo).
+
+A frissítés a ''/var/mayor/log/revision'' állományból tudja, hogy a rendszer épp melyik változaton áll, így ennek kezdeti értékét is be kell állítani.
+Erre a célra tökéletesen megfelel, ha a ''/var/mayor/log/mayor-base.rev'' állományt másoljuk le ''revision'' néven:
+
+  cp /var/mayor/log/mayor-base.rev /var/mayor/log/revision
+
+A mentést, frissítést rendszeressé tehetjük, ha egy erre szolgáló szkriptet ''cron''-ból hívunk meg:
+
+  ln -s /var/mayor/bin/etc/cron.daily/mayor /etc/cron.daily
+
+Ez a script alapértelmezés szerint napi mentést és vasárnaponként frissítést végez, de szükség szerint átalakítható (akkor persze a szimbolikus link helyett a skript másolatával érdemes dolgozni).
+
+Tovább növelhetjük a biztonságot, ha a mentést rögtön egy másik számítógépre is átmásoljuk (pl scp-vel).
+
+==== Szimbolikus linkek és jogosultságok ====
+
+A webszerver számára hozzáférhetővé kell tenni bizonyos könyvtárakat:
+
+  chown -R www-data /var/mayor/download
+  chown -R www-data /var/mayor/www/wiki/conf
+  chown -R www-data /var/mayor/www/wiki/data
+
+A publikus és szülői oldalakon úgy tudjuk elérhetővé tenni az egyes oldalakat, ha szimbolikus linket készítünk a private-on
+belüli megfelelőjükre. Például, ha szeretnénk elérhetővé tenni az Órarendet a publikus oldalakon, akkor két szimbolikus linkre
+is szükség lesz:
+
+  ln -s /var/mayor/www/policy/private/naplo/tanev/orarend-pre.php /var/mayor/www/policy/public/naplo/tanev/
+  ln -s /var/mayor/www/policy/private/naplo/tanev/orarend.php /var/mayor/www/policy/public/naplo/tanev/
+
+Alapértelmezett telepítés esetén elég sok ilyen oldal lesz. A szükséges könyvtárak és linkek elkészítését az alábbi szkript végezheti:
+
+  parentSymlink="naplo/hibabejelento/hibabejelento naplo//szulinap naplo/haladasi/haladasi naplo/haladasi/stat naplo/osztalyozo/diak
+      naplo/osztalyozo/jegy naplo/osztalyozo/dolgozat naplo/osztalyozo/bizonyitvany naplo/osztalyozo/stat
+      naplo/bejegyzesek/bejegyzesek naplo/tanev/fogadoOra naplo/tanev/helyettesites naplo/tanev/munkaterv naplo/tanev/orarend
+      naplo/intezmeny/valtas naplo/hianyzas/diak naplo/hianyzas/diakLista naplo/hianyzas/nap naplo/uzeno/uzeno naplo/ertekeles/ertekeles
+      portal/hirek/egyhir"
+  
+  publicSymlink="naplo/tanev/orarend naplo/tanev/szabadTerem naplo/tanev/helyettesites"
+  BASEDIR="/var/mayor"
+  POLICIES="parent public"
+  
+  for POLICY in $POLICIES; do
+    eval "LIST=\$${POLICY}Symlink"
+    for f in $LIST; do
+        DIR=`echo $f | cut -d / -f 1-2`
+        if [ ! -d $BASEDIR/www/policy/$POLICY/$DIR ]; then
+            echo "    Könyvtár: $BASEDIR/www/policy/$POLICY/$DIR"
+            mkdir -p $BASEDIR/www/policy/$POLICY/$DIR
+        fi
+        FILES="$f-pre.php $f.php"
+        for file in $FILES; do
+            if [ ! -e $BASEDIR/www/policy/$POLICY/$file ]; then
+                if [ -f $BASEDIR/www/policy/private/$file ]; then
+                    echo "      $BASEDIR/www/policy/private/$file --> $BASEDIR/www/policy/$POLICY/$file"
+                    ln -s $BASEDIR/www/policy/private/$file $BASEDIR/www/policy/$POLICY/$file
+                else
+                    echo "      Hiányzó file: $BASEDIR/www/policy/private/$file"
+                fi
+            fi
+        done
+    done
+  done
+
+A fenti szkript lépéseit az update folyamat is elvégzi a main.conf-ban rögzített paraméterek alapján. Így, ha kényelmesebb megvárni az első
+frissítést (mayor update), akkor azzal is elvégeztethető a feladat.
+
+===== Belépés a MaYoR rendszerbe =====
+
+Ezek után beléphetünk a korábban létrehozott ''mayoradmin'' azonosítóval. A rendszer kötelező jelszóváltoztatást ír elő. Írjuk be a régi, majd kétszer az új jelszót. A sikeres jelszóváltoztatás után végre valóban beléphetünk.
+
+==== Új intézmény felvétele ====
+
+A ''Napló'' menüpontra kattintva a program arra figyelmeztet minket, hogy nincs intézmény felvéve, és rögtön az intézmény felvétel elvégzésére szolgáló oldalra rak.
+
+Adjuk meg az intézmény OM kódját, rövid nevét (egy kisbetűs, ékezet nélküli szó, 3-6 betű), hivatalos nevét, címét (később a napló nyomtatásakor szükség lesz rá), valamint a MySQL rendszergazda jelszavát - hogy létrehozhassa a program az intézményi adatbázist.
+
+Az intézmény felvétele után újabb hibaüzenetet kapunk: nincs érvényes tanév felvéve.
+
+
+==== Tanévek, szemeszterek felvétele ====
+
+A hibaüzenet után a program az új tanév felvételére szolgáló oldalra továbbít minket. A feladatot itt is elvégezhetjük, de - a betöltendő adatok mennyisége miatt - kényelmesebb lehet egy sql dump állományból betölteni a szemeszterek adatait. A dump állomány például:
+
+  $ cat szemeszter.dump
+  LOCK TABLES `szemeszter` WRITE;
+  INSERT INTO `szemeszter` VALUES 
+  (1997,1,1,'tervezett','1997-09-01','1998-01-31'),(1997,2,2,'tervezett','1998-02-01','1998-06-30'),(1998,1,3,'tervezett','1998-09-01','1999-01-31'),
+  (1998,2,4,'tervezett','1999-02-01','1999-06-30'),(1999,1,5,'tervezett','1999-09-01','2000-01-31'),(1999,2,6,'tervezett','2000-02-01','2000-06-30'),
+  (2000,1,7,'tervezett','2000-09-01','2001-01-31'),(2000,2,8,'tervezett','2001-02-01','2001-06-30'),(2001,1,9,'tervezett','2001-09-01','2002-01-31'),
+  (2001,2,10,'tervezett','2002-02-01','2002-06-30'),(2002,1,11,'tervezett','2002-09-01','2003-01-31'),(2002,2,12,'tervezett','2003-02-01','2003-06-30'),
+  (2003,1,13,'tervezett','2003-09-01','2004-01-31'),(2003,2,14,'tervezett','2004-02-01','2004-06-30'),(2004,1,15,'tervezett','2004-09-01','2005-01-31'),
+  (2004,2,16,'tervezett','2005-02-01','2005-06-30'),(2005,1,17,'tervezett','2005-09-01','2006-01-31'),(2005,2,18,'tervezett','2006-02-01','2006-06-30'),
+  (2006,1,19,'tervezett','2006-09-01','2007-01-19'),(2006,2,20,'tervezett','2007-01-20','2007-06-15'),(2007,1,21,'tervezett','2007-09-03','2008-01-18'),
+  (2007,2,22,'tervezett','2008-01-19','2008-06-13'),(2008,1,23,'tervezett','2008-09-01','2009-01-31'),(2008,2,24,'tervezett','2009-02-01','2009-06-30'),
+  (2009,1,25,'tervezett','2009-09-01','2010-01-31'),(2009,2,26,'tervezett','2010-02-01','2010-06-30'),(2010,1,27,'tervezett','2010-09-01','2011-01-31'),
+  (2010,2,28,'tervezett','2011-02-01','2011-06-30'),(2011,1,29,'tervezett','2011-09-01','2012-01-31'),(2011,2,30,'tervezett','2012-02-01','2012-06-30'),
+  (2012,1,31,'tervezett','2012-09-01','2013-01-31'),(2012,2,32,'tervezett','2013-02-01','2013-06-30'),(2013,1,33,'tervezett','2013-09-01','2014-01-31'),
+  (2013,2,34,'tervezett','2014-02-01','2014-06-30');
+  UNLOCK TABLES;
+
+Fontos, hogy mindegyik 'tervezett' státuszú. Ennek betöltése:
+
+  cat szemeszter.dump | mysql -p intezmeny_[rovid]
+
+Ahol '[rovid]' az intézmény rövid neve.
+
+A szemeszterek betöltése után aktivvá tehetünk tanéveket (tanév megnyitása) - ekkor jönnek létre a tanév adatait tároló adatbázisok. Ehhez a tanév kiválasztása után a MySQL rendszergazdai jelszót kell csak megadnunk.
+
+Ha van aktív tanév, akkor a korábbi hibaüzenet eltűnik és helyette egy kék keretes figyelmeztető üzenetet kapunk, ami arra hívja fel a figyelmet, hogy a tanév adatai nincsenek felvéve (éves munkaterv, órarend, tankörök). 
+
+
+===== Adatok felvitele =====
+
+Az adatok betöltése a munka legnagyobb része. Fontos, hogy az adatfelvitelnek van egy logikus sorrendje, hiszen az egyes adatok egymásra épülhetnek. Órarendet betölteni például csak akkor van értelme, csak akkor lehet, ha már fent van az összes tanár adata, munkaközösségekbe sorolva, renden vannak a tárgyak, a termek, és ki vannak alakítva a tankörök is.
+
+==== Tanárok felvétele ====
+
+A tanárokat [[naplo:intezmeny:tanar#Tanárok felvétele adatállományból|adatállományból érdemes betölteni]], bár felvehetjük őket egyesével is a felületről.
+
+==== Osztályok felvétele ====
+
+Az új osztályokat (esetleg osztályfőnökkel, de tagok nélkül egyelőre) a felületről vehetjük fel legkönnyebben: [[naplo:intezmeny:osztaly|Napló/Intézményi adatok/Osztályok]].
+
+==== Diákok felvétele ====
+
+A diákokat rögtön osztályokba sorolva vehetjük fel adatállományból: [[naplo:intezmeny:osztaly#Osztály tagjainak felvétele/frissítése adatállományból|Napló/Intézményi adatok/Osztályok]]
+
+==== Munkaközösségek/Tárgyak felvétele ====
+
+A munkaközösség elnevezés kissé félrevezető. Valójában inkább a tanárok végzettségéről van szó, ez határozza meg, hogy ki milyen tárgyat taníthat, milyen órát helyettesíthet szakszerűen. Egy tanár természetesen több munkaközösségbe is beletartozhat.
+
+Az új tárgyakat a felületről vehetjük legkönnyebben: [[naplo:intezmeny:munkakozosseg|Napló/Intézményi adatok/Munkaközösségek]] (munkaközösség vezetőkkel,tagokkal, tárgyakkal).
+
+==== Éves munkaterv betöltése ====
+
+Az éves munkaterv lényege, hogy rögzítse a tanév tanítási napjainak, speciális tanítási napjainak, tanításnélküli munkanapjainak és tanítási szünetek dátumát, valamint több hetes órarend esetén ezek beosztását.
+
+Az éves munkaterv felvétele a [[naplo:tanev:munkaterv|Tanév adatok/Éves munkaterv]] menüpont alatt történhet.
+
+==== Termek adatainak felvétele ====
+
+A temek adatait közvetlenül az intézményi adatbázis ''terem'' táblájába tölthetjük SQL szinten, vagy az [[naplo:admin:import|Admin/Import]] menüpont alatt. A tábla mezői:
+
+  teremId  | smallint(5) unsigned                                                                                                                                                               
+  leiras   | varchar(64)                                                                                                                                                                        
+  ferohely | tinyint(3) unsigned                                                                                                                                                                
+  tipus    | set('tanterem','szaktanterem','osztályterem','labor','gépterem','tornaterem','tornaszoba','fejlesztőszoba','tanműhely','előadó','könyvtár','díszterem','tanári','templom','egyéb') 
+
+==== Tankörök felvétele ====
+
+Az egyik legnagyobb feladat - különösen egy épp induló intézmény esetén - a [naplo:intezmeny:tankor|tankörök felvétele]]. Ugyanakkor a tankörök alkotják a rendszer alapját, így ezek felvétele és karbantartása kiemelten fontos feladat.
+
+==== Órarend betöltése ====
+
+Az órarend betöltés talán a másik egnehezebb feladat. Külön nehézsége, hogy általában nem lehet vele előre elkészülni, viszonylag szűk határidő van a betöltésre.
+Az órarendet nem a MaYoR rendszerben készyítjük, hanem valamilyen erre a célra készült szoftverrel. A további lépések nagyban függenek a használt programtól.
+
+Alapvetően három lehetőségünk van:
+  * Betöltjük az adatokat közvetlenül az ''orarendiOra'' táblába az [[naplo:admin:import|Admin/Import]] menüpont alatt, majd elvégezzük az [[naplo:orarend:orarendTankor|órarend-tankör összerendelést]]
+  * Használjuk a prgram által biztosított [[naplo:orarend:orarendbetolto|órarend betöltő]] funkciót, valamelyik import modullal
+  * Felvesszük az órarendet "kézzel", tanáronként az [[naplo:orarend:orarendmodositas|Órarend módosítás]] menüpont alatt.
+
+==== Tanári és diák azonosítók generálása ====
+
+Szükség esetén a ''tanar'' és ''diak'' tábla adatait felhasználva generálhatunk felhasználói azonosítókat: [[hogyan:Felhasználói azonosítók generálása]]
+
+==== Szülői adatok felvétele ====
+
+A szülők adatait általában a diákok adatival együtt kapjuk meg, egy táblázatban. A MaYoR rendszerben viszont a szülők adatai külön adattáblába kerülnek. Ez az használat során előnyös (pl. testvér gyerekek szülői adatai csak egy helyen lesznek eltárolva), de a betöltéskor nehézségeket okoz: [[hogyan:Szülői adatok betöltése]].

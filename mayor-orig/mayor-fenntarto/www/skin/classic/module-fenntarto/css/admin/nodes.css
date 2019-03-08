@@ -1,0 +1,16 @@
+
+    form#addNode { background-color: #ceddec; margin: 10px auto; width: 600px; padding: 10px; text-align: center; border: outset 2px; color: #234; }
+    form#addNode p { text-align: left; padding: 1px 4px; }
+    form#addNode p select { width: 100%;  color: #234; }
+    form#addNode h3 { border-bottom: 1px solid #a00; }
+    form#addNode label { margin-right: 5px; }
+
+
+    table#requNodes { background-color: white; border: 1px solid #ceddec; border-spacing: 0px; margin: auto; }
+    table#requNodes th, table#requNodes td { border: 1px solid #ddd; padding: 2px 5px; }
+    table#requNodes td label { padding: 2px 5px; border: 1px solid #ddd; border-radius: 4px; margin: 1px 2px; }
+    table#requNodes td label.allow { border-color: #060; color: #0a0; }
+    table#requNodes td label.forbid { border-color: #600; color: #a00; }
+    table#requNodes td input[type=checkbox] { position: relative; top: 2px; }
+
+    form#del input[type=submit] { color: white; background-color: #d00; }

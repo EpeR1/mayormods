@@ -1,0 +1,11 @@
+====== Diák osztályzatai ======
+
+===== Diák kiválasztása =====
+
+A tanuló kiválasztásához használjuk az eszközsort! Válasszunk először osztályt, majd az osztály tagjai közül egy tanulót!
+
+===== Diák jegyeinek áttekintése =====
+
+A megjelenő táblázatban a tanuló egyes tárgyakból (nem tankörökből!!) szerzett osztályzatait láthatjuk. Egy jegyre állva leolvashatjuk, hogy melyik tankörben és mikor született, illetve a jegyre kattintva megnézhetjük annak egyéb adatait is ([[jegy|Jegy módosítása]]).
+
+A diák által meg nem írt dolgozatokat egy kötőjel jelzi a jegy helyén, erre állva láthatjuk melyik dolgozatról van szó, és mikor jelentették be az érintett dolgozatot. További részleteket tudhatunk meg, ha rá is kattintunk a kötőjelre [[dolgozat|--> dolgozat adatai]]

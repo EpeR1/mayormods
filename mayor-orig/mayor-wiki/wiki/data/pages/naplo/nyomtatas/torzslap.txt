@@ -1,0 +1,50 @@
+====== Törzslap nyomtatása ======
+
+A MaYoR napló A4-es méretű, egy tanév adatait tartalmazó törzslap-nyomtatvány generálására képes egy osztály, vagy azon belül egy konkrét tanuló számára.
+
+A nyomtatvány részei:
+
+  * Alapadatok (táblázat)
+  * Osztályzatok (magatartás/szorgalom, tantárgyak)
+  * Hiányzási adatok
+  * Szöveges minősítés
+  * Bejegyzések (dicséretek)
+  * Záradékok
+
+===== Alapadatok =====
+
+==== Törzslapszám ====
+
+A program két forrásból veheti a törzslapszámot: generálhatja automatikusan, vagy kiolvashatja a ''diak'' tábla megfelelő mezőjéből. Amennyiben ez utóbbi mező (ami a diák adatlapján módosítható) nem üres, úgy a program az itt található értéket jeleníti meg törzslapszámként, amúgy a generált törzslapszámot használja.
+
+==== Osztálynapló sorszáma ====
+
+Program által generált adat, a tanuló adott osztálynaplóbeli sorszáma.
+
+==== Feljegyzések személyi adatok változásához ====
+
+A program itt az 39/B jelű, "egyedi törzslap záradék" típusú, kötetlen szövegű záradékok szövegét jeleníti meg ebben a mezőben. Ilyen típusú záradékot használjunk tehát pl. név változás rögzítésére.
+
+===== Osztályzatok =====
+
+Amennyiben a tanulót az adott tanévben valamely tantárgyból nyújtott teljesítményét, illetve magatartását, szorgalmát osztályzattal értékelték/minősítették, a  program ezt egyszerű táblázatos formában megjeleníti a nyomtatványon. A tantárgyi dicséretek nem itt, hanem a **Bejegyzések** szakaszban fognak megjelenni szöveges formában.
+
+===== Hiányzási adatok =====
+
+Az előző táblázat folytatásaként, szintén táblázatos formában jelennek meg a hiányzási adatok: igazolt és igazolatlan hiányzások, illetve késésekből összeadódó mulasztások.
+
+===== Szöveges minősítés =====
+
+Amennyiben a tanuló valamely tantárgyból nyújtott teljesítményét szöveges minősítéssel értékelték, a program ezt szöveges felsorolásként megjeleníti a törzslap nyomtatványon.
+
+===== Bejegyzések =====
+
+Bejegyzések alatt a törzslap esetén a különböző dicséreteket értjük. Ezek két forrásból kerülhetnek a nyomtatványra:
+  * Az osztályzatoknál jelölt dicséreteket a program szöveges formába öntve jeleníti meg
+  * A ''Bejegyzések/Új bejegyzés'' menüpont alatt "tanévvégi bejegyzés"-ként megjelölt bejegyzéseket a program ezen a helyen szöveges formában szintén megjeleníti
+
+===== Záradékok =====
+
+Az egyedi törzslap záradék kivételével itt jelenik meg az összes, a rendeletben törzslapban is megjelenítendőnek jelölt záradék. Ide kerül az utolsó helyre a tanuló továbbhaladására vonatkozó záradék is.
+
+

@@ -1,0 +1,125 @@
+@media screen {
+
+    table.lekerdezes { 
+	background-color: #667760; width:300px; 
+	margin-top:20px;
+	margin-bottom:20px;
+    }
+    table.lekerdezes thead th { background-color: #eeeee0;
+	padding-top:5px;
+	padding-bottom: 4px;
+	border-style: none none solid none;
+	border-width: 2px;
+	border-color: #aaaaa0;
+    }
+    table.lekerdezes tbody th {
+	color: white;
+	padding-left: 10px;
+	padding-right: 10px;
+	text-align: left;
+    }
+    table.lekerdezes tbody input {
+	border: solid 1px #eeeee0;
+    }
+    table.lekerdezes tfoot th {
+	color: #888880;
+    }
+    table.lekerdezes tfoot th input {
+	color: white;
+	background-color: #889980;
+	border: solid 1px #aaaaa0;
+	font-size: smaller;
+    }    
+
+    #felvierr { margin-left: auto; margin-right:auto;
+	margin-top:20px; margin-bottom: 50px;
+	width:300px;
+	background-color: #770000;
+	border: solid 1px red;
+	color: white;
+	padding:5px;
+	text-align: center;
+    }
+
+    table.irasbeliEredmeny {
+	margin-top:10px; margin-bottom: 50px;
+	width:300px;
+	background-color:#556670;
+    }
+    table.irasbeliEredmeny thead th { background-color: #eeeee0;
+	padding-top:5px;
+	padding-bottom: 4px;
+	border-style: none none solid none;
+	border-width: 2px;
+	border-color: #aaaaa0;
+    }
+    table.irasbeliEredmeny tbody th {
+	color: white;
+	padding-left: 10px;
+	padding-right: 10px;
+	text-align: left;
+	border-style: none none solid none;
+	border-width: 1px;
+	border-color: #aaaaa0;
+
+    }
+    table.irasbeliEredmeny tbody td {
+	color: white;
+	text-align: right;
+	margin-right:10px;
+	border-style: none none solid none;
+	border-width: 1px;
+	border-color: #aaaaa0;
+    }
+    table.irasbeliEredmeny tbody th.nincsbehivva {
+	border-style: none none none solid;
+	border-width:3px;
+	border-color:red;
+    }
+    table.irasbeliEredmeny tbody th.behivva {
+	border-style: none none none solid;
+	border-width:3px;
+	border-color: #33ff00;
+    }
+
+    table.felveteliAdatok {
+	margin-top:10px; margin-bottom: 0px;
+	width:300px;
+	background-color:#556670;
+    }
+    table.felveteliAdatok thead th { background-color: #eeeee0;
+	padding-top:5px;
+	padding-bottom: 4px;
+	border-style: none none solid none;
+	border-width: 2px;
+	border-color: #aaaaa0;
+    }
+    table.felveteliAdatok tbody th {
+	color: white;
+	padding-left: 10px;
+	padding-right: 10px;
+	text-align: left;
+    }
+    table.felveteliAdatok tbody td {
+	color: white;
+	text-align: right;
+	margin-right:10px;
+    }
+
+    div#felviWait {
+	padding-top:	5px;
+	padding-bottom: 5px;
+	margin:10px auto;
+	width:300px;
+	border: solid 2px #667780;
+	display: none;
+    }
+    div#felviWait img {
+	vertical-align: baseline;
+    }
+
+}
+@media print {
+    table.irasbeliEredmeny { display: none; }
+    table.lekerdezes { display: none; }
+}

@@ -1,0 +1,115 @@
+====== Oldalszerkezet ======
+
+Itt röviden összefoglaljuk milyen sorrendben kerülnek csatolásra az eyes állományok, majd részletezzük az egyes elemek szerepét.
+
+
+
+
+===== Az állományok csatolási sorrendje =====
+  index.php
+    include/base/config.php
+      ../config/main-config.php
+      _CONFIGDIR/$policy-conf.php
+    include/base/mysql.php
+    include/base/var.php
+    include/base/base.php
+      lang/$lang|_DEFAULT_LANG/base/base.php
+      _CONFIGDIR."/skin-$skin|_DEFAULT_SKIN/config.php
+    include/base/cache.php
+    include/base/str.php
+    include/base/log.php
+    include/alert/base.php
+      include/alert/'.$lang.'/base.php
+      include/alert/'.$lang.'/'.$AUTH[$policy]['backend'].'.php
+      include/alert/'.$lang.'/module-'.$page.'.php (*** VALID_MODULES)
+    include/base/rights.php
+      include/share/session/base.php
+        include/backend/'.$AUTH[$toPolicy]['backend'].'/session/base.php
+          include/backend/__backend__/base/attrs.php
+        include/backend/'.$AUTH[_POLICY]['backend'].'/session/base.php
+      include/share/ssl/ssl.php - RPC
+      _CONFIGDIR . "/module-$page/config.php (*** VALID_MODULES)
+      include/widgets/*.php
+      include/modules/$_module/base/*.php
+      include
+      skin
+      pre
+    include/base/login.php
+      include/share/auth/base.php
+      include/modules/auth/base/login.php
+        include/share/auth/base.php
+        include/backend/'.$AUTH[$toPolicy]['backend'].'/auth/login.php
+      include/share/session/close.php
+      include/share/facebook/autoload.php
+    include/menu/base.php
+      include/menu/'._POLICY.'/'.$lang.'/base.php
+      include/menu/'._POLICY.'/'.$lang/module-*.php (*** VALID_MODULES)
+      ../config/menu/'._POLICY.'/menu-'.$lang.'.php
+    skin/default/base/html/base.phtml
+      skin/$skin/base/html/alert.phtml
+      skin/$skin/base/html/base.phtml -- page()
+        lang/$lang/module-$page/base.php
+        lang/$lang/module-$page/$psf.php
+        skin/$skin/module-$page/html/base.phtml
+        skin/$skin/module-$page/html/$psf.phtml
+        policy/$policy/$page/$psf.php
+      
+      
+... RÉGEBBEN ...
+
+  index.php
+    include/config/main-config.php
+    include/config/module-*.php
+    include/base/log.php
+    include/base/base.php
+    include/config/$policy-conf.php
+    lang/$lang/base/base.php
+    skin/$skin/config.php
+    include/base/str.php
+    include/base/mysql.sql
+    include/alert/base.php
+        include/alert/lang/base.php
+        include/alert/$lang/$backend.php
+        include/alert/$lang/module-$page.php
+    include/base/rights.php
+        include/share/session/base.php
+            include/backend/session/base.php (ez csatolhat egyebet is pl: ldap/attrs.php)
+        include/modules/$page/base/*.php
+        include/modules/$page/$psf.php
+        config/skin-$skin/$page-config.php
+        private/$page/$psf-pre.php
+    include/menu/base.php
+        include/menu/$policy/$lang/base.php
+        include/menu/$policy/$lang/module-*.php
+    skin/$skin/base/alert.phtml
+    skin/$skin/base/base.phtml
+    page() függvény
+        lang/$lang/module-$page/base.php      static/lang/$page/$psf.html
+        lang/$lang/module-$page/$psf.php
+        skin/$skin/module-$page/base.phtml
+        skin/$skin/module-$page/$psf.php
+        policy/$policy/$psf.php
+
+===== A backend függő részekről =====
+
+A keretrendszer három fő moduljában a [[backend]] függő részek felépítéséről a következőket kell tudni:
+
+=== auth ===
+    A toPolicy-től függő file-t csatoljuk => egyszerre több policyben azonosítani nem lehet.
+    A backend függő függvények az include/backend/$backend/auth alatt vannak
+
+=== password ===
+    A toPolicy-től függő file-t csatoljuk => egyszerre több policyben jelszóváltoztatás nem lehet.
+    backend függő függvények a include/backend/$backend/password alatt vannak.
+
+=== session ===
+    A backend függő függvényeknek előtagja a backend neve (pl. ldapMemberOf). Így egy program részen belül
+    több backend függvényei is használhatóak (általában erre nincs ugyan szükség, de pl. a login-ban igen,
+    vagy egy szülő keres a felhasználók között...).
+
+    A "fedő"-függvények ezeket a backend függő függvényeket hívják - a $toPolicy-től függően.
+    A backend-hez tartozó file-t a függvény csatolja require_once()-al.
+
+    A backend függő részek az include/backend/$backend/session alatt vannak.
+
+

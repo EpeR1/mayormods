@@ -1,0 +1,18 @@
+<?php
+
+    define('__JATEK_INSTALLED',true);
+
+    $MYSQL_DATA['jatek']['userRead']= 'mayor_jatek_read';
+    $MYSQL_DATA['jatek']['pwRead']= '1234';
+    $MYSQL_DATA['jatek']['userWrite']= 'mayor_jatek';
+    $MYSQL_DATA['jatek']['pwWrite']= '1212';
+
+/* default */
+
+    $MYSQL_DATA['jatek']['user']=     $MYSQL_DATA['jatek']['userRead'];
+    $MYSQL_DATA['jatek']['pw']=     $MYSQL_DATA['jatek']['pwRead'];
+
+
+    $MYSQL_DATA['jatek']['db']= 'mayor_jatek';
+
+?>

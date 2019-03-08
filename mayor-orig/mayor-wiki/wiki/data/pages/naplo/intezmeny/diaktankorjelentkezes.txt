@@ -1,0 +1,10 @@
+====== Tankörjelentkezés ======
+
+Az intézmény által felajánlott választható tankörökbe jelentkezhetnek az erre jogosult diákok.
+
+Ehhez a vezetőségnek fel kell vennie a választható tanköröket. A [[naplo:intezmeny:tankor|tankörök felvételekor]] meg kell jelölni, hogy a tankör választható, meg kell adni a minimális és maximális létszámokat, fel kell venni a szemeszterenkénti óraszámokat, valamint meg kell jelölni, hogy a tankörbe mely osztályok tanulói jelentkezhetnek.
+
+Szükséges még a jelentkezési [[naplo:admin:szemeszterek|időszakok felvétele]] az adott tanévhez. Két időszakot féle időszakot adhatunk meg:
+  * előzetes tárgyválasztás: ebben az időszakban a program csak a maximális létszámokat figyeli. Ebben az időszakban dől el, hogy mely tankörökre lesz kellő számú jelentkező.
+  * tárgyválasztás: ebben az időszakban a program a maximális és minimáslis létszámokat is figyeli, így egy tárgyat leadni nem lehet, ha a létszám a minimális létszám alá menne, illetve tárgyat felvenni nem lehet, ha a létszám a maximális létszámot meghaladná.
+

@@ -1,0 +1,41 @@
+====== Regisztráció ======
+
+===== Miért? =====
+
+A regisztrációnak alapvetően három szerepe van:
+
+A regisztráció...
+  - a fejlesztők fele fontos visszajelzés (a programot használó intézmények száma és kiléte más érdeklődők számára is fontos adat lehet...)
+  - lehetőség arra, hogy önkéntes alapon támogatást nyújthasson minden felhasználó a projekt számára.
+  - megalapozza azt a lehetőséget, hogy a különböző MaYoR telepítések egymással kommunikálhassanak.
+
+Ez utóbbiról annyit kell tudni, hogy a kommunikációhoz két kulcsos SSL hitelesítést használunk, s a publikus kulcsok elérhetőségét a regisztrációt követően a www.mayor.hu (a controller node) hivatott biztosítani - enélkül tehát a kommunikáció nem képes működni.
+
+===== Hogyan? =====
+
+  * Frissítsd a rendszered!
+  * Adminként (useradmin) belépve a ''Felhasználók/Szerver regisztráció'' menüpontban kell a regisztrációt rendbe tenni.
+Erre alapvetően azért van szükség, mert a kommunikációhoz két kulcsos SSL hitelesítést használunk, s a publikus kulcsok
+elérhetőségét a regisztrációt követően a www.mayor.hu (a controller node) biztosítja majd.
+
+A frissítés után a program mindenképp azt fogja kiírni halványpiros háttérrel, hogy 
+     "A mayor.hu nem ismeri ezt a szervert (nodeId: 00000000)!"
+
+      * Ha az intézmény korábban regisztrált, akkor elvileg van eltárolt publikus kulcsa nálunk. Ekkor a felirat alatti "Csomópont azonosító lekérdezése" gombra kattintva megkísérelhetjük az azonosító lekérdezését. Ha sikerül, akkor zöldre vált az oldal és a felirat is arról tájékoztat, hogy a mayor.hu ismeri a rendszert.
+      * Ha a fenti próbálkozás nem vezet eredményre, vagy korábban még egyáltalán nem volt regisztrálva a program, akkor az alsó űrlapot kell kitölteni. A fehér mezők kitöltése kötelező.
+
+Az ''OMKod'' megadása nem kötelező ugyan, de ha az adott rendszer egyértelműen valamelyik intézményhez tartozik, akkor célszerű megadni, ugyanis ebből generáljuk a nodeId-t (egy kétjegyű sorszámot elé téve).
+
+A ''Közterület jelleg'' mező kényes - (jobb lenne itt egy legördülő menü - majd egyszer...): nem fogad el rövidítéseket, csak rendesen kiírt szövegeket mint "út", "utca", "tér", "körtér", "lejtő", ... Azok az értékek elfogadottak, amik a napló megfelelő helyein elérhetők - pl. a diák adatok lakcím részénél, vagy az intézmény adatainál...
+ 
+Az ''url'' csak azért nem kötelező, mert a fejlesztői rendszereken, amik dinamikus ip-vel működnek, nem lenne értelme, de amúgy fontos adat, a napló elérhetőségét kell hogy tartalmazza.
+
+A kitöltés után a ''Regisztráció'' gombot kell megnyomni, s sikeres esetben az újratöltés után már a zöld színű oldal fogad minket.
+
+A regisztrációs adatok (a publikus kulcs és a ''nodeId'' kivételével) ugyanitt később módosíthatók.
+
+  * A ''Felhasználók/Szerver regisztráció/Ismert végpontok'' menüpont alatt ezek után fel lehet venni azokat a végpontokat, akikkel a jövőben kommunikálni szeretnénk. Alaphelyzetben a listában csak a MaYoR HU van benne (ezt nem is szabad törölni), nodeId alapján lehet tőle lekérdezni újabb végpontokat (a ''nodeId'' amúgy alap esetben az ''OMKod''-dal egyezik meg, ha csak egy rendszert regisztrálunk egy OMKod alá). A "Lekérdezés" gombra kattintás után a listában megjelenik jó esetben az új intézmény.
+
+Ide lehet majd felvenni például a fenntartói szervert, hogy az bizonyos adatokat lekérdezhessen tőlünk.
+
+A listában szereplő végpontokkal már működik a kommunikáció. Ezt tesztelendő rá lehet kattintani a "ping" gombra, ami kis idő elteltével zöldre vált és kiírja az adott rendszer pillanatnyi verzió (revision) számát. (Olyan intézményt ne pingeljetek, amelyiken még nem volt frissítés...).

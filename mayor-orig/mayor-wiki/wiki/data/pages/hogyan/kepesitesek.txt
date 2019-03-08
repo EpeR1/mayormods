@@ -1,0 +1,75 @@
+====== Képesítések adminisztrációja ======
+
+A képesítések tárolása elsősorban a tantárgyfelosztás elkészítése miatt szükséges, itt is alapvetően azért csak, mert a jogszabály
+szerint a tanárok képesítésének is szerepelnie kell a tantárgyfelosztásban. A képesítések felvételének további haszna lehet a tanárok
+tantűrgyakhoz való hozzárendelésének új lehetősége, ami a naplóban eddig ezt a célt szolgáló munkaközösségeket válthatja ki.
+
+===== A képesítésekről nyilvántartott adatok =====
+
+A képesítések rendszere meglehetősen szerteágazó, ennek következtében többféle jellemzőt kell velük kapcsolatban nyilvántartanunk.
+
+==== Végzettség, fokozat ====
+
+Bizonyos képzések jellemzője, hogy végzettséget adnak. A végzettségek rendszere három fokozatot és további fokozatokat tartalmaz.
+
+  - **alapfokú végzettség** szerezhető az általános iskola nyolc osztályának elvégzésével, vagy a 20 hónapos köznevelési Híd II. program befejeztével
+  - **középfokú végzettség** szakközépiskolában, vagy gimnáziumban lettett sikeres érettségivel nyerhető
+  - **felsőfokú végzettség** szerezhető felsőoktatási intézményekben többnyire a képzést lezárő államvizsga letételével.
+
+Fontos, hogy nem minden képzés ad végzettséget. Például a felsőfokú szakképzés csak szakképesítést, a szakirányú továbbképzések csak szakképzettséget, végzettséget
+nem adnak. Külön kategória a középfokú szakképzés szakmai végzettsége is - tehát a fenti értelemben ez sem ad középfokú végzettséget, csak szakképesítést.
+
+
+A felsőfokú végzettségek további három fokozatba sorolhatok:
+
+  - **alapfokozat** - szokásos jelölése BA, illetve BSc, mely az egyetemi/főiskolai alapképzés keretében szerezhető meg.
+  - **mesterfokozat** - szokásos jelölése MA, illetve MSc, mely az egyetemi/főiskolai alapképzést követő mesterképzésen, vagy az osztatlan mesterképzésen szerezhető meg.
+  - **tudományos fokozat** - szokásos jelölése PhD, illetve DLA, mely a mesterfokozat megszerzése után a doktori képzésben szerezhető meg.
+
+A bolognai rendszer bevezetése előtti felsőfokú végzettségeket az alapján különböztetjük meg, hogy egyetemen, vagy főiskolán szerezték őket. A legtöbb esetben a korbbi
+főiskolai végzettséget megfeleltetik a mai alapfokozatnak, míg az egyetemi végzettséget a mai mesterfokozatnak. Emiatt célszerűnek tűnt a programban a főiskolai/egyetemi 
+jelzőket is a fokozatok körébe sorolni:
+
+  - **főiskolai** fokozat jelöli a bolognai renszer bevezetése előtti főiskolai felsőfokú végzettséget
+  - **egyetemi** fokozat jelöli a bolognai rendszer bevezetése előtti egyetemi felsőfokú végzettséget
+
+==== Specializáció: szakképesítés, szakképzettség ====
+
+Az oktatási jogszabályok megkülönböztetik a végzettség és a szakképzettség, valamint szakképesítés fogalmát. A végzettség egy általános szint, fokozat jelölésére
+szolgál, önmagában nem jelent semmifajta specializációt -  azt a szakképzettség adja meg.
+
+  - **szakképzettség** a felsőfokú végzettséggel együtt, vagy felsőfokú végzettség bitokában szakirányú továbbképzéssel szerezhető.
+
+A szakképzés egyes szintjein szakképesítés szerezhető. A szakképesítések rendszere igen szerteágazó, több fokú, alap, ráépített és rész szakképesítéseket is tartalmaz.
+Az Országos Képzési Jegyzékben szereplő szakképesítés szintjét az OKJ azonosító első két számjegye mutatja.
+
+A programban egy egyszerűsített modellt használunk:
+
+  - **alapfokú szakképesítés** - befejezett iskolai végzettséget nem igénylő, speciális szakiskolai képzésben, Híd II. program keretében, vagy iskolarendszeren kívül megszerezhető szakképesítések. OKJ számuk 2-vel kezdődik.
+  - **középfokú szakképesítés** - alapfokú végzettséghez, esetenként középfokú végzettséghez kötött szakképesítések. OKJ számuk 3, 52, vagy 53 kezdetű.
+  - **emelt szintű szakképesítés** - érettségi végzettséghez kötött, elsősorban iskolai rendszerű szakképzésben szerezhető szakképesítés. OKJ száma 54-gyel kezdődik.
+  - **felsőfokú szakképesítés** a felsőoktatásban szerzett szakképesítés. 55-tel, 6-tal, vagy 7-tel kezdődő OKJ számmal rendelkeznek.
+
+(De lehet, hogy egyszerűen a kezdő 2-es jelenti az alapfokú, 3-as a középfokú, 5-ös az emelt szintű, 6-os a felsőfokú szakképesítést adő képzéseket.)
+
+==== Képesítés neve ====
+
+A jellemzők mellett természetesen meg kell adnunk a képesítés hivatalos nevét is, felsőfokú égzettség esetén például a diplomán szereplő megnevezést.
+
+===== Példák =====
+
+^ vegzettesg ^ fokozat ^ specializacio ^ kepesitesNev ^
+| alapfokú   |         |               | általános iskola |
+| középfokú  |         |               | érettségi        |
+|            |         | alapfokú szakképesítés     | Lakás-textil készítő            |
+|            |         | középfokú szakképesítés    | Számítógép-szerelő, karbantartó |
+|            |         | emelt szintű szakképesítés | Pénzügyi-számviteli ügyintéző   |
+|            |         | felsőfokú szakképesítés    | Rendszerinformatikus            |
+| felsőfokú  | főiskolai | szakképzettség | tanító |
+| felsőfokú  | egyetemi  | szakképzettség | matematika szakos középiskolai tanár |
+| felsőfokú  | alapfokozat | szakképzettség |  |
+| felsőfokú  | mesterfokozat | szakképzettség | földrajz szakos középiskolai tanár |
+| felsőfokú  | tudományos fokozat | szakképzettség |  |
+|            |                    | szakképzettség | közoktatási vezető és pedagógus szakvizsga szakirányú továbbképzés |
+
+

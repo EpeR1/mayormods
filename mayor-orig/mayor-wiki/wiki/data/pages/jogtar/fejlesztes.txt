@@ -1,0 +1,119 @@
+Forrás: [[http://fejlesztok.hu/segedletek/fejlesztesi-terv/330-egyeni-fejlesztesi-terv-keszitesehez-szukseges-adatok.html]]
+
+====== Egyéni fejlesztési terv ======
+
+===== 1. A sajátos nevelési igény meghatározása a közoktatási törvény 121. §-ában =====
+
+
+29. sajátos nevelési igényű gyermek, tanuló: az a gyermek, tanuló, aki a szakértői és rehabilitációs bizottság szakvéleménye alapján
+a) testi, érzékszervi, értelmi, beszédfogyatékos, autista, több fogyatékosság együttes előfordulása esetén halmozottan fogyatékos,
+b) pszichés fejlődés zavarai miatt a nevelési, tanulási folyamatban tartósan és súlyosan akadályozott (pl. dyslexia, dysgraphia, dyscalculia, mutizmus, kóros hyperkinetikus vagy kóros aktivitászavar).
+Nagyon sok esetben az óvodai élet folyamán nem lehet észlelni a problémát, csak később az iskolában derül fény arra, hogy a gyermek nem tudja tartani a tempót a számolás vagy az olvasás, írás elsajátításakor. A szakértői vizsgálat alkalmával részképességzavar, vagyis a pszichés fejlődés zavara diagnosztizálható (pl. diszlexia, diszgráfia, diszkalkulia). A gyermek hátrányai gyakran behozhatatlanná válnak, nem tud teljesíteni értelmi képességeinek megfelelően, pedig ép intellektusú tanuló, mégis SNI.
+Ahhoz, hogy a gyógypedagógus ki tudja dolgozni a tanuló egyéni fejlesztési tervét, ismernie kell a BNO-kódokat, amelyekből egyértelműen kiderül, hogy milyen terápiát kell alkalmaznia (a betegségek és az egészséggel kapcsolatos problémák nemzetközi statisztikai osztályozása).
+
+ 
+===== 2. A pszichés fejlődés zavara =====
+
+Általános és specifikus tanulási zavarok (részképesség zavarok)
+Olvasás-, írászavarok BNO: F.81.0; F.81.1
+(felszíni, fonológiai, kevert diszlexia)
+Aritmetikai készségek zavara BNO: F.81.2
+(grafikus, olvasási, emlékezeti, gondolkodási diszkalkulia)
+Az iskolai készségek kevert zavara BNO: F.81.3
+(aritmetikai, olvasási, íráskészségzavar együttes előfordulása)
+Nem meghatározott zavar BNO: F.81.9
+(tanulási ismeretek elsajátítási nehézsége)
+Kevert specifikus fejlődési zavarok BNO: F.83
+(a beszéd, a nyelv, az iskolai készségek és a motoros funkciók kombinált fejlődési zavara)
+Beszédészlelési és beszédmegértési folyamat elmaradása BNO: F.80.9
+Motoros diszfázia BNO: F.80.1
+Az aktivitásszabályozás és a figyelem zavarai
+szociális készségek éretlensége, zavart viselkedés,
+impulzivitás: BNO: F.90.0, F.90.1
+
+===== 3. Hogyan álljunk neki az egyéni fejlesztési terv készítésének? =====
+
+1. Állapítsuk meg, mi okoz nehézséget a gyereknek. Például egy második nyelv, matematika, tudományos szakszavak, stb.
+2. Derítsük ki, miért vannak ilyen nehézségei. Például auditív rövid távú memória vagy fonológiai feldolgozás terén.
+3. Próbáljuk megállapítani, hogyan tanul. Például jobb-e a vizuális befogadásban vagy inkább auditív típus.
+4. Állapítsuk meg, milyen tanítási módszer segíti jobban a tanulásban.
+5. Mindig kérdezzük meg magunktól, miért úgy közelítettük meg a dolgot, és van-e jobb út.
+6. Állapítsuk meg hogy a terv főbb részeit "Ki fogja elvégezni? Milyen gyakran? Hol?"
+7. Állítsunk a gyermekek elé ösztönző célokat. Minden foglalkozás a gyerek korától és képességeitől függjön.
+8. Folyamatosan ismételjünk, és állapítsuk meg, miért nem sikerült elérni a kitűzött célt, vagy ha sikerült, akkor a gyermek képességeit megfelelően igénybe vette-e.
+9. Gondoljuk végig, hogy vannak-e megvalósítható alternatívák, más lehetőségek, amelyeket jelenleg nem alkalmazunk.
+10. Ne felejtsük el, hogy a gyerek csak úgy tudja kihozni magából a legtöbbet, ha az egész iskola együttműködik. Gondoskodjunk róla, hogy minden tanárt tájékoztassunk a nehézségekről, és arról, hogyan tudnak a helyzeten a legjobban segíteni.
+
+===== 4. Egy lehetséges alternatíva az egyéni fejlesztési terv formai megvalósítására =====
+
+
+A GYERMEK ADATAI:
+Név:
+Szül.hely, idő:
+Anyja:
+Gondviselő:
+Lakcím:
+A szakvéleményt kiadta:
+A szakvélemény kelte, kontroll:
+
+
+A szakértői bizottság / szakvélemény megállapításai:
+
+
+
+
+
+
+Egyéni fejlesztési terv
+Fejlesztendő terület A fejlesztés időtartama
+1. hónap 2. hónap 3. hónap
+Testséma
+Térbeli-, időbeli tájékozódás
+Síkbeli tájékozódás, irányok
+Finommotorika, vizuomotoros koordináció
+Vizuális figyelem
+Vizuális észlelés
+Vizuális emlékezet
+Vizuális differenciálás
+Auditív figyelem
+Auditív észlelés
+Auditív emlékezet
+Auditív differenciálás
+Szerialitás
+Ritmus, beszédritmus
+Alak-háttér differenciálás
+Lényegkiemelés, összefüggések, következtetések
+Beszédértés, szövegértés
+Szókincs, verbális kifejezőkészség
+Betűdifferenciálás
+Betűfelismerés, összeolvasás
+Helyesírás, nyelvi fejlesztés
+Számfogalom, matematikai készségek fejlesztése
+
+
+===== 5. 2007. szeptemberi kiegészítés =====
+
+
+Lényeges tudni, hogy az érintett gyermekek, tanulók helyzete jelenleg nem változott. Minden olyan kedvezményre jogosultak, mint ez idáig. Utánuk a sajátos nevelési igényű gyermekek után járó normatívát lehet igényelni.
+A közoktatásról szóló 1993. évi LXXIX törvény (Kt.) 30.§-a a különleges gondozáshoz, a rehabilitációs célú foglalkoztatáshoz való jogot két csoportra terjeszti ki: a beilleszkedési, magatartási, tanulási nehézséggel küzdő és a sajátos nevelési igényű gyermekekre, tanulókra.
+
+A 2006. évi CXXI. törvénynek a Kt. módosítására vonatkozó rendelkezései - többek között - a pszichés fejlődés zavarai miatt a nevelési, tanulási folyamatban tartósan és súlyosan akadályozott tanulók ellátásában való szakmai együtt- és közreműködési kötelezettségét helyezi át 2008.augusztus 1-jétől a nevelési tanácsadók hatáskörébe.
+
+A szakértői és rehabilitációs bizottságok helyett a - gyógypedagógusokkal, pszichológusokkal, és egyéb szakemberekkel rendelkező, feladatát kisebb körzetben ellátó - nevelési tanácsadók veszik át a rehabilitációs, fejlesztő munka szakmai segítését és koordinálását. Cél a mainál elérhetőbb, hatékonyabb együttműködést, a nevelési, oktatási intézményben nyújtott szolgáltatást biztosító rendszer kialakítása.
+
+A rendszer átalakítására azonban kellő - a még szükséges szakmai és jogszabályi feltételek kialakításához, és az azok alkalmazására történő felkészüléshez megfelelő - időt ad a 2006. évi CXXI törvény. melynek 7. § (4) bekezdése - a 28. § (7) bekezdésben meghatározott, 2008. január 1-jei hatálybaléptetéssel - a Kt. 126. §-ának szövegét az alábbiak szerint állapítja meg:
+
+
+"126. § Ha a pszichés fejlődés zavarai miatt a nevelési, tanulási folyamatban tartósan és súlyosan akadályozott (pl. dyslexia, dysgraphia, dyscalculia, mutizmus, kóros hyperkinetikus vagy kóros aktivitászavar) tanulót 2008. január 1. előtt a szakértői és rehabilitációs bizottság szakvéleménye alapján az igazgató mentesítette egyes tantárgyakból, tantárgyrészekből az értékelés és a minősítés alól, a mentesítést a 2008/2009-2009/2010. tanévekben a tanulmányok során, továbbá az iskolaváltásnál a felvételi eljárásban, valamint az érettségi vizsgán, és a szakmai vizsgán figyelembe kell venni. A szakértői és rehabilitációs bizottság a 2008. január 1. előtt kezdeményezett eljárást, ha a gyermek, tanuló szakértői vizsgálata már befejeződött, 2008. március 31-ig befejezi.
+A szakértői és rehabilitációs bizottság a sajátos nevelési igény megállapítása nélkül arról hoz szakértői véleményt, hogy a gyermek, tanuló pszichés fejlődés zavarai miatt a nevelési, tanulási folyamatban tartósan és súlyosan akadályozott. Ha a gyermek, tanuló szakértői vizsgálata nem fejeződött be, az iratokat - a szülő értesítése mellett - 2008. január 31-éig megküldi a gyermek, tanuló lakóhelye, ennek hiányában tartózkodási helye szerint illetékes nevelési tanácsadónak az eljárás lefolytatása céljából. A szakértői és rehabilitációs bizottság azoknak a gyermekeknek, tanulóknak az iratait, akik tekintetében az eljárást befejezte és szakvéleményt készített - a szülő és a nevelési-oktatási intézmény értesítése mellett - 2008. július 31-ig megküldi a gyermek, tanuló lakóhelye, ennek hiányában tartózkodási helye szerint illetékes nevelési tanácsadónak. A nevelési tanácsadók ettől az időponttól kezdődően ellátják az e gyermekekkel, tanulókkal összefüggő feladatokat."
+
+A Kt. módosítása tehát jelenleg illetve a közeljövőben nem tesz szükségessé semmilyen intézkedést sem az intézményfenntartók, sem az intézmények számára. A nevelő, oktató munka szervezése - beleértve a Kt. 52. § (6) bekezdése alapján biztosítandó rehabilitációs célú tanórai foglalkozásokat - az eddigieknek megfelelően történik, s a normatív állami támogatásra is a szakértői és rehabilitációs bizottságok által kiadott szakvéleményekhez kötött gyógypedagógiai ellátásra vonatkozó finanszírozás szerint kerül sor.
+Stenger Szilvia
+logopédus
+
+----
+
+===== Közoktatási törvény - A különleges gondozáshoz, a rehabilitációs célú foglalkoztatáshoz való jog, a gyógypedagógiai nevelési-oktatási intézmény =====
+
+30. § (9) A sajátos nevelési igényű tanulót, illetve a beilleszkedési, tanulási, magatartási nehézséggel küzdő tanulót - jogszabályban meghatározott munkamegosztás szerint - a szakértői és rehabilitációs bizottság vagy a nevelési tanácsadó szakértői véleménye alapján - a gyakorlati képzés kivételével - az igazgató mentesíti egyes tantárgyakból, tantárgyrészekből az értékelés és a minősítés alól. Ha a tanulót egyes tantárgyakból, tantárgyrészekből mentesítik az értékelés és minősítés alól, az iskola - az e törvény 52. §-ának (7) bekezdésében, valamint (11) bekezdésének c) pontjában meghatározott időkeret terhére - egyéni foglalkozást szervez részére. Az egyéni foglalkozás keretében - egyéni fejlesztési terv alapján - segíti a tanuló felzárkóztatását a többiekhez. Az érettségi vizsgán az érintett tantárgyak helyett a tanuló - a vizsgaszabályzatban meghatározottak szerint - másik tantárgyat választhat. A tanuló részére a felvételi vizsgán, az osztályozó vizsgán, a modulzáró vizsgán, a szintvizsgán, a különbözeti vizsgán, a javítóvizsgán, az érettségi vizsgán, a szakmai vizsgán biztosítani kell a hosszabb felkészülési időt, az írásbeli beszámolón lehetővé kell tenni az iskolai tanulmányok során alkalmazott segédeszköz (írógép, számítógép stb.) alkalmazását, szükség esetén az írásbeli beszámoló szóbeli beszámolóval vagy a szóbeli beszámoló írásbeli beszámolóval történő felváltását.
+

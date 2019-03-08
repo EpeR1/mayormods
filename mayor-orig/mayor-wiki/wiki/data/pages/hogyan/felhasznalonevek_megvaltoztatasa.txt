@@ -1,0 +1,71 @@
+====== Felhasználónevek megváltoztatása ======
+
+Ritkán, de előfordul, hogy a felhasználóneveket meg kell változtatnuk:
+  * túl hosszúra sikerült asszonynevek;
+  * házasság;
+  * válás;
+  * hivatalos névváltozás
+során.
+
+A változtatás módjai:
+  * mayoradmin-ként belépve a Felhasználói adatoknál az account-ot töröljük, majd újat veszünk fel. Fontos, az oktatási azonosító, és a csoporttagság ne változzon!
+  * elegánsabb, de nehezebb MySQL-ben, ezért aki nem biztos benne, hogy mit és hogyan csinál, válassza az a)-t vagy kérjen konkrét segítséget!
+
+Példánkban a **Kiss Virág** tanár nevét cseréljük le **Nagyné Kiss Virág**ra.
+
+Lépjünk be a megfelelő adatbázisba (szülők esetén a //mayor_parent//, mindenki más esetén a// mayor_private// adatbázisba!
+
+  # mysql -p mayor_private
+  Enter password:
+  
+Keressük meg a felhasználónkat az //accounts// táblában!
+
+  mysql> SELECT uId,userAccount,userCn FROM accounts WHERE userCn LIKE '%Virág%';
+  
+(Előfordulhat, hogy több Virág nevű felhasználó is van, válogassunk! :-) )
+
+Valami ehhez hasonlót kell kapni:
+
+  +-----+---------------------+----------------------------+
+  | uId | userAccount         | userCn                     |
+  +-----+---------------------+----------------------------+
+  |  18 | Kovács.Virág        | Kovács Virág               | 
+  |  26 | Virág.István        | Virág István               | 
+  | 468 | Kiss.Virág          | Kiss Virág                 |
+  +-----+---------------------+----------------------------+
+
+Jegyezzük meg az //uId// értéket, ezzel egyszerűbbé válik a munka!
+
+Ellenőrizzük, hogy az új azonosító létezik-e már!
+
+  SELECT uId,userAccount,userCn FROM accounts WHERE userAccount='Nagyné.Kiss.Virág';
+  
+Ha ezt kapjuk:
+
+  Empty set (0.00 sec)
+  
+mehet a változtatás, ellenben ha találat van (egyszerűbb nevek esetén), akkor keressünk másik felhasználónevet (**Nagyné-Kiss-Virág**, **Nné.Kiss.Virág**, stb.)!
+
+Cseréljük le a //userAccount// értéket (belépési név)!
+
+  UPDATE accounts SET userAccount='Nagyné.Kiss.Virág' WHERE uId=468;
+  
+Cseréljük le a //userCn// értéket (megjelenő név)!
+
+  UPDATE accounts SET userCn='Nagyné Kiss Virág' WHERE uId=468;
+  
+Ellenőrizzük!
+
+  mysql> select uId,userAccount,userCn from accounts where userCn like '%Virág%';
+  
+  +-----+---------------------+----------------------------+
+  | uId | userAccount         | userCn                     |
+  +-----+---------------------+----------------------------+
+  |  18 | Kovács.Virág        | Kovács Virág               | 
+  |  26 | Virág.István        | Virág István               | 
+  | 468 | Nagyné.Kiss.Virág   | Nagyné Kiss Virág          |
+  +-----+---------------------+----------------------------+
+  
+Kérjük meg a Felhasználót, hogy lépjen be a saját account-jával!
+
+__Jótanács:__ ne változtassunk nyakra-főre a felhasználóneveken, csakis indokolt esetben! Mindenképpen kerüljük a becenév (Kata, Feri, Jocó), kitalált név (Zorró, A.Nagy.Fekete.Ember, stb), és zagyva karakterhalmaz (krtz, JB007, stb) típusú neveket!

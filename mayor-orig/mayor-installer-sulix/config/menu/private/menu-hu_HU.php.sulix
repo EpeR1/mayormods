@@ -1,0 +1,14 @@
+<?php
+
+    global $AUTH;
+    if (!memberOf(_USERACCOUNT, $AUTH[_POLICY]['adminGroup'])) {
+	unset($MENU['session']);
+    }
+    unset($MENU['logout']);
+    unset($MENU['modules']['naplo']['sub']['admin']['regisztracio']);
+    $MENU['modules']['naplo']['session'] = array(
+	array('txt'=>'Felhasználó kezelés','url'=>'index.php?page=session&sub=&f=createAccount&toPolicy=parent')
+    );
+    if ($page=='naplo') unset($NAV[1][ count($NAV[1])-1 ]); // Kérelmek menüpont leszedése
+
+?>

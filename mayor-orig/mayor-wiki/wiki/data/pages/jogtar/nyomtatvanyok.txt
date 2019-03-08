@@ -1,0 +1,109 @@
+====== A nyomtatványokra vonatkozó szabályozások ======
+
+A  közoktatási  törvény  (Kt.)  72.  §  (2)#(3)  bekezdése  az  alábbi módon  szabályozza  a  közoktatási
+intézményi  nyomtatványok,  illetve  az  azokat  részben  kiváltó informatikai  rendszerek  alkalmazási
+szabályait:
+
+72.  § .  (2)  Az  iskolában  csak  olyan  bizonyítványnyomtatvány, illetve  bizonyítvány  kiállításához
+szükséges nyomtatvány alkalmazható, amelyet az oktatásért  felelős miniszter,  szakképesítést  tanúsító
+bizonyítvány  esetén  a  szakképzésért  és  felnőttképzésért  felelős miniszter  jóváhagyott. A bizonyítványnyomtatvány 
+és  a  bizonyítvány  kiállításának  alapjául szolgáló  nyomtatvány előállításához,  forgalmazásához  az  oktatásért  felelős miniszter,
+szakképesítést  tanúsító  bizonyítvány esetén  a  szakképzésért  és  felnőttképzésért  felelős  miniszter engedélye  szükséges. 
+Az  iskolai nyomtatványok (az  év  végi  bizonyítvány  és  az  állami  vizsga teljesítéséről  kiállított  bizonyítvány
+kivételével (az oktatásért felelős miniszter, szakképesítést tanúsító bizonyítvány esetén a szakképzésért
+és felnőttképzésért felelős  miniszter  által  jóváhagyott  rendszer alkalmazásával,  a  személyiségi,
+adatvédelmi  és  biztonságvédelmi  követelmények megtartásával  elektronikus úton  is  elkészíthetők  és
+tárolhatók. A bizonyítvány kiállításának alapjául szolgáló nyomtatványt azonban nyomtatott formában
+is elő kell állítani, és meg kell őrizni.
+
+72.  § .  (3)  A  kiadott  érettségi  bizonyítványokról  és  a  szakképesítést tanúsító  bizonyítványokról  (a
+vizsgaszabályzatban meghatározottak szerint) központi nyilvántartást kell vezetni.
+
+
+====== 11/1994 MKM rendelet ======
+
+=== A foglalkozási napló ===
+
+5. Az óvodai, a tanórai, a tanórán kívüli, valamint a kollégiumi foglalkozásokról a nevelő munkát végző, illetve a foglalkozást 
+tartó pedagógus foglalkozási naplót (csoportnaplót, osztálynaplót, sportnaplót stb.) vezet. A foglalkozási naplót az óvodai nevelés, 
+iskolai nevelés és oktatás nyelvén kell vezetni.
+
+=== A tanügyi nyilvántartások vezetése ===
+
+10. a) A pedagógus csak a nevelő-oktató munkával összefüggő feladatokhoz nélkülözhetetlen ügyviteli tevékenységet köteles elvégezni.
+
+b) Az osztályfőnök vezeti az osztálynaplót, a törzslapot, és kiállítja a bizonyítványt, vezeti a továbbtanulással összefüggő nyilvántartást. 
+Alapfokú művészetoktatási intézményben a hangszert, illetve a csoportos tantárgyat oktató szaktanár - az intézményvezető megbízása alapján - 
+vezeti az egyéni foglalkozási naplót, a csoportos foglalkozási naplót, a törzslapot és kiállítja a bizonyítványt.
+
+====== 11/1994. (VI. 8.) MKM rendelet a nevelési-oktatási intézmények működéséről ======
+
+===== Az iskola által kötelezően használt nyomtatványok =====
+
+1. 		Alapvizsga bizonyítvány*
+
+2. 		Beírási napló*
+
+3. 		Bizonyítvány (szakmai vizsga alapján)+
+
+4. 		Bizonyítványkönyv*
+
+5.		Diákigazolvány*
+
+6. 		Ellenőrző
+
+7. 		
+
+8. 		Érettségi bizonyítvány*
+
+9. 		Fakultatív záróvizsga-bizonyítványok**
+
+10. 		
+
+11. 		Gyógytestnevelési és könnyített testnevelési napló
+
+12. 		
+
+13. 		Javítóvizsga-jegyzőkönyv
+
+14. 		Jegyzőkönyv a vizsgához
+
+15. 		
+
+16. 		
+
+17. 		Nemzetiségi, etnikai bizonyítványkönyv*
+
+18. 		Nemzetiségi törzslap (volt anyakönyv)*
+
+19. 		Órarend
+
+20. 		Órarendi kimutatás
+
+21. 		Összesítés a vizsgát tett tanulókról
+
+22. 		Osztálynapló (csoportnapló)
+
+23. 		Osztályozóív a vizsgához
+
+24. 		Osztályozóvizsga-jegyzőkönyv
+
+25. 		Sportnapló
+
+26. 		
+
+27. 		Tantárgyfelosztás
+
+28. 		Törzslap külív (volt anyakönyvi külív és törzslap)*
+
+29. 		Törzslap külív, belív, érettségi vizsgához*
+
+30. 		Törzslap külív, belív, szakmai vizsgához+
+
+31. 		Továbbtanulók nyilvántartása
+
+32.		Jegyzőkönyv a tanuló- és gyermekbalesetekről*
+
+33.		Nyilvántartás a tanuló- és gyermekbalesetekről*
+
+34.		Egyéni foglalkozási napló (a zeneművészeti szakközépiskolában)

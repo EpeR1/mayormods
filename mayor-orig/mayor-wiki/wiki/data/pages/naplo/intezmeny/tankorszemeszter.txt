@@ -1,0 +1,22 @@
+====== Tanör óraterve ======
+
+Ezen az oldalon egy tankör "életpályáját" tekinthetjük meg, illetve megfelelő jogosultság birtokában módosíthatjuk is.
+
+Első lépésként válasszunk ki egy kiindulási tanévet. Ennek a tanévnek a tankörei közül választhatjuk ki a megjelnítendő tanköröket az eszközsor további eszközeinek segítségével:
+  * tanát tankörei
+  * munkaközösség tankörei
+  * osztály tankörei
+
+A tankörök a kiválasztott tanévben használt elnevezés szerint lesznek megjelenítve. A kiválasztott tanév oszlopa a többitől eltérő színű, a jobb áttekinthetőség kedvéért.
+
+A táblázat celláiban lévő pipák jelzik, hogy egy tankör az adott szemeszterhez (félévhez) hozzá van-e rendelve. Ha hozzá van rendelve, akkor a pipa alatt a tervezett heti óraszám is megjelenik (ez félévente eltérhet és lehet tört szám is), valamint az egérrel a jelölő négyszögre állva láthatjuk a tanör adott tanévben használt nevét is.
+
+
+
+===== Óraterv módosítása =====
+
+Az óratervet a napló adminisztrátor módosíthatja, de csak a nem lezárt tanévek esetében. Hozzárendelés törlésére egyenlőre nincs lehetőség (kockázatos beavatkozás lenne, nem javasolt eljárás).
+
+A tervezett óraszámokat tetszés szerint változtathatjuk, pillanatnyilag nincs jelentősssége - a későbbiekben az órarend elkészítésében lehet szerepe, illetve ellenőrzési célokat szolgálhat. Új hozzárendelés esetén üresen is hagyhatjuk - ekkor 0 óraszámmal lesz rögzítve a tankör. Már meglevő hozzárendelés óraszámát csak pozitív értékre változtethatjuk.
+
+Új hozzárendelés készítésekor a program a tankör tanárainak megbizatását is kiegészíti az új szemeszterek egészére. Mindig a kiválasztott tanév utolsó napján érvényes tanárok lesznek az új szemeszterekre is megbízva. Ha más tanárt vagy tanárokat szeretnénk megbízni ezekre a szemeszterekre a tankör tanításával, akkor a [[tankorTanar|Tankör tanárok]] menüpontban módosíthatjuk ezt a beállítást.

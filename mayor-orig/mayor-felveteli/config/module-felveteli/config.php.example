@@ -1,0 +1,522 @@
+<?php
+
+    define('__FELVETELI_INSTALLED',true);
+
+    $MYSQL_DATA['felveteli']['user']= 'root';
+    $MYSQL_DATA['felveteli']['pw']= '1212';
+    $MYSQL_DATA['felveteli']['db']= 'mayor_felveteli';
+
+    define('_FELVETELI_EVE',2010);
+
+    define('_IRASBELI_PUBLIKALAS_DT','2010-02-03 00:00:00');
+    define('_IRASBELI_PUBLIKALAS_ENDDT','2010-02-13 00:00:00');
+    define('_SZOBELI_PUBLIKALAS_DT','2010-02-25 10:00:00');
+    define('_SZOBELI_PUBLIKALAS_ENDDT','2010-03-09 19:00:00');
+    define('_FELVETELI_JELENTKEZES_DT','2008-02-16 20:00:00');
+//
+    define('_BEHIVOTTAK_PUBLIKALAS_DT','2008-02-20 17:00:00');    // ez az ideigelens rangsoré is!
+    define('_BEHIVOTTAK_PUBLIKALAS_ENDDT','2008-10-12 20:00:00'); // ez az ideigelens rangsoré is!
+    define('_IDEIGLENES_PUBLIKALAS_DT','2009-03-15 17:00:00');    // ez az ideigelens rangsoré is!
+    define('_IDEIGLENES_PUBLIKALAS_ENDDT','2009-03-20 20:00:00'); // ez az ideigelens rangsoré is!
+    define('_VEGEREDMENY_PUBLIKALAS_DT','2009-04-20 15:00:00');
+    define('_VEGEREDMENY_PUBLIKALAS_ENDDT','2009-05-30 20:00:00');
+
+// Nyomtatáshoz beírandó dátumok
+    define('_ERTESITES_DT','2009. április 23.');
+    define('_SZULOI_ERTEKEZLET_IDOPONTBAN','2009. május 18-án (hétfőn) 17:30-kor');
+    define('_GOLYATABOR_IDOPONT','július 31. - augusztus 3.');
+    define('_EV',date('Y'));
+
+/*
+    $OSZTALY = Array(11=>'7.A osztály (emelt szintű angol)',
+        12=>'7.B osztály (emelt szintű német)',
+        3=>'9.C osztály (emelt szintű ének-zene)',
+        4=>'9.C osztály (emelt szintű humán)',
+        5=>'9.D osztály (emelt szintű matematika)',
+        6=>'9.D osztály (emelt szintű számítástechnika)',
+    );
+*/
+    $OSZTALYABA_2006 = Array(11=>'7.A osztályába (emelt szintű angol)',
+        12=>'7.B osztályába (emelt szintű német)',
+        3=>'9.C osztályába (emelt szintű ének-zene)',
+        4=>'9.C osztályába (emelt szintű humán)',
+        5=>'9.D osztályába (emelt szintű matematika)',
+        6=>'9.D osztályába (emelt szintű számítástechnika)',
+    );
+    $OSZTALYABA_2007 = Array(11=>'7.A osztályába (emelt szintű angol)',
+        12=>'7.B osztályába (emelt szintű német)',
+        3=>'9.C osztályába (emelt szintű ének-zene)',
+        5=>'9.C osztályába (emelt szintű magyar)',
+        7=>'9.D osztályába (emelt szintű matematika)',
+        9=>'9.D osztályába (emelt szintű biológia)',
+        4=>'9.N osztályába (emelt szintű ének-zene, német nyelvi előkészítő évvel)',
+        6=>'9.N osztályába (emelt szintű humán, német nyelvi előkészítő évvel)',
+        8=>'9.N osztályába (emelt szintű matematika, német nyelvi előkészítő évvel)',
+        10=>'9.N osztályába (emelt szintű informatika, német nyelvi előkészítő évvel)',
+    );
+    $OSZTALYABA_2008 = Array(
+	11=>'7.A osztályába (emelt szintű angol)',
+        12=>'7.B osztályába (emelt szintű német)',
+        3=>'9.C osztályába (emelt szintű ének-zene)',
+        5=>'9.C osztályába (emelt szintű humán)',
+        7=>'9.D osztályába (emelt szintű matematika)',
+        9=>'9.D osztályába (emelt szintű informatika)',
+        4=>'9.N osztályába (emelt szintű ének-zene, német nyelvi előkészítő évvel)',
+        6=>'9.N osztályába (emelt szintű magyar, német nyelvi előkészítő évvel)',
+        8=>'9.N osztályába (emelt szintű matematika, német nyelvi előkészítő évvel)',
+        10=>'9.N osztályába (emelt szintű biológia, német nyelvi előkészítő évvel)',
+    );
+    $OSZTALYABA_2009 = Array(
+	11=>'7.A osztályába (emelt szintű angol)',
+        12=>'7.B osztályába (emelt szintű német)',
+        3=>'9.C osztályába (emelt szintű ének-zene)',
+        4=>'9.N osztályába (emelt szintű ének-zene, német nyelvi előkészítő évvel)',
+        5=>'9.C osztályába (emelt szintű magyar)',
+        6=>'9.N osztályába (emelt szintű humán, német nyelvi előkészítő évvel)',
+        7=>'9.D osztályába (tehetséggondozó matematika)',
+        8=>'9.N osztályába (emelt szintű matematika, német nyelvi előkészítő évvel)',
+        9=>'9.D osztályába (emelt szintű biológia)',
+        10=>'9.N osztályába (emelt szintű informatika, német nyelvi előkészítő évvel)',
+    );
+    $OSZTALYABA_2010 = Array(
+	11=>'7.A osztályába (emelt szintű angol)',
+        12=>'7.B osztályába (emelt szintű német)',
+        3=>'9.C osztályába (emelt szintű ének-zene)',
+        4=>'9.N osztályába (emelt szintű ének-zene, német nyelvi előkészítő évvel)',
+        5=>'9.C osztályába (emelt szintű magyar)',
+        6=>'9.N osztályába (emelt szintű humán, német nyelvi előkészítő évvel)',
+        7=>'9.D osztályába (tehetséggondozó matematika)',
+        8=>'9.N osztályába (emelt szintű matematika, német nyelvi előkészítő évvel)',
+        9=>'9.D osztályába (emelt szintű biológia)',
+        10=>'9.N osztályába (emelt szintű informatika, német nyelvi előkészítő évvel)',
+        21=>'9.E osztályába (általános tantervű 12 évfolyamos, spanyol)',
+    );
+
+/*
+    $OSZTALY = Array(
+	11=>'7.A osztályába (emelt szintű angol)',
+        12=>'7.B osztályába (emelt szintű német)',
+        3=>'9.C osztályába (emelt szintű ének-zene)',
+        5=>'9.C osztályába (emelt szintű magyar)',
+        7=>'9.D osztályába (emelt szintű matematika)',
+        9=>'9.D osztályába (emelt szintű biológia)',
+        4=>'9.N osztályába (emelt szintű ének-zene, német)',
+        6=>'9.N osztályába (emelt szintű humán, német)',
+        8=>'9.N osztályába (emelt szintű matematika, német)',
+        10=>'9.N osztályába (emelt szintű informatika, német)',
+    );
+*/
+    $IKTSZ_2006 = Array(
+	'OK'=>'003/58/2006',
+        'Máshová ment' => '003/59/2006',
+        'Helyhiány' => '003/60/2006',
+        'Nem' => '003/61/2006',
+        'igazgatói' => '003/62/2006',
+	3 => '003/58/2006',
+	4 => '003/58/2006',
+	5 => '003/58/2006',
+	6 => '003/58/2006',
+	11 => '003/58/2006',
+	12 => '003/58/2006',
+	0 => '003/61/2006',
+	1 => '003/60/2006',
+	2 => '003/59/2006'
+    );
+
+    $IKTSZ_2007 = Array(
+	'OK'=>'003/32/2007',
+        'Máshová ment' => '003/33/2007',
+        'Helyhiány' => '003/34/2007',
+        'Nem' => '003/35/2007',
+        'igazgatói' => '003/36/2007',
+	3 => '003/32/2007',
+	4 => '003/32/2007',
+	5 => '003/32/2007',
+	6 => '003/32/2007',
+	7 => '003/32/2007',
+	8 => '003/32/2007',
+	9 => '003/32/2007',
+	10 => '003/32/2007',
+	11 => '003/32/2007',
+	12 => '003/32/2007',
+	0 => '003/35/2007',
+	1 => '003/34/2007',
+	2 => '003/33/2007'
+    );
+
+    $IKTSZ_2008 = Array(
+	'OK'=>'003/6/2008',
+        'Máshová ment' => '003/9/2008',
+        'Helyhiány' => '003/8/2008',
+        'Nem' => '003/7/2008',
+        'igazgatói' => '003/10/2008',
+	3 => '003/6/2008',
+	4 => '003/6/2008',
+	5 => '003/6/2008',
+	6 => '003/6/2008',
+	7 => '003/6/2008',
+	8 => '003/6/2008',
+	9 => '003/6/2008',
+	10 => '003/6/2008',
+	11 => '003/6/2008',
+	12 => '003/6/2008',
+	0 => '003/7/2008',
+	1 => '003/8/2008',
+	2 => '003/9/2008'
+    );
+
+    $IKTSZ_2009 = Array(
+	'OK'=>'003/12/2009',
+        'Máshová ment' => '003/13/2009',
+        'Helyhiány' => '003/00/2009',
+        'Nem' => '003/14/2009',
+        'igazgatói' => '003/15/2009',
+	3 => '003/12/2009',
+	4 => '003/12/2009',
+	5 => '003/12/2009',
+	6 => '003/12/2009',
+	7 => '003/12/2009',
+	8 => '003/12/2009',
+	9 => '003/12/2009',
+	10 => '003/12/2009',
+	11 => '003/12/2009',
+	12 => '003/12/2009',
+	0 => '003/14/2009',
+	1 => '003/00/2009',
+	2 => '003/13/2009'
+    );
+
+
+// Az adatbázisok nevei - évtől függően
+    define('_ADATOKDB','adatok_'._FELVETELI_EVE);
+    define('_ISKOLAKLEVELDB','iskolaklevel_'._FELVETELI_EVE);
+
+   $TAGOZATOK_2010 = Array(
+        1=>'angol',
+        2=>'német',
+        3=>'ének-zene',
+        4=>'német + ének-zene',
+        5=>'humán',
+        6=>'német + magyar',
+        7=>'matematika tehetséggondozó',
+        8=>'német + matematika',
+        9=>'informatika',
+        10=>'német + biológia',
+        21=>'általános',
+        // kiegészítő kódok:
+        34=>'ének-zene',
+        56=>'magyar, humán',
+        78=>'matematika (tehetséggondozó és/vagy nulladikos)',
+        12=>'hatévfolyamos angol/német',
+        0=>'hatévfolyamos angol/német');
+
+
+   $TAGOZATOK_2009 = Array(
+        1=>'angol',
+        2=>'német',
+        3=>'ének-zene',
+        4=>'német + ének-zene',
+        5=>'magyar',
+        6=>'német + humán',
+        7=>'matematika tehetséggondozó',
+        8=>'német + matematika',
+        9=>'biológia',
+        10=>'német + informatika',
+        // kiegészítő kódok:
+        34=>'ének-zene',
+        56=>'magyar, humán',
+        78=>'matematika (tehetséggondozó és/vagy nulladikos)',
+        12=>'hatévfolyamos angol/német',
+        0=>'hatévfolyamos angol/német');
+
+
+
+    $TAGOZATOK_2008 = Array(
+	1=>'angol', 
+	2=>'német',
+        3=>'ének-zene',
+        4=>'német + ének-zene',
+	5=>'humán',
+	6=>'német + magyar',
+	7=>'matematika',
+	8=>'német + matematika',
+	9=>'informatika',
+	10=>'német + biológia',
+	// kiegészítő kódok: 
+	34=>'ének-zene',
+	78=>'matematika',
+	12=>'hatévfolyamos angol/német',
+	0=>'hatévfolyamos angol/német');
+
+    $TAGOZATOK_SZOBELI_MEGJEGYZES = array();
+    $TAGOZATOK_SZOBELI_MEGJEGYZES[3] = '
+Közös szakmai írásbeli vizsga 2010. március 1. hétfő 14:00.
+A szóbeli vizsga egyéni része megbeszélés szerint.
+';
+    $TAGOZATOK_SZOBELI_MEGJEGYZES[34] =     $TAGOZATOK_SZOBELI_MEGJEGYZES[3];
+//    $TAGOZATOK_SZOBELI_MEGJEGYZES[9] =     'Gyakorlati feladatok:<br/>2008.II.22. péntek 17:00';
+
+    $TAGOZATOK_SZOBELI_AJANLAT = '
+Írásbeli eredménye és hozott pontjai alapján %1% tagozaton 
+szóbeli felvételi vizsgát már nem kell tennie. Személyes beszélgetésre invitáljuk,
+mely ügyében iskolánk titkársága keresni fogja. (Tel: 214-1554)
+Gratulálunk!
+';
+
+   $JOSLAT_2013 = array(
+'angol' => 'angol',
+'sajnos' => 'sajnos nem',
+'tangol' => 'talán angol',
+'tnémet' => 'talán német',
+'lnémet' => 'lehetséges: német',
+'német' => 'német',
+'vangol' => 'valószínű: angol',
+'langol' => 'lehetséges: angol',
+'vnémet' => 'valószínű: német',
+'ének' => 'ének-zene',
+'info' => 'informatika',
+'spanyol' => 'spanyol',
+'tbiosz' => 'talán biológia',
+'matek' => 'matematika',
+'vbiosz' => 'valószínű: biológia',
+'vinfo' => 'valószínű: informatika',
+'biológia' => 'biológia',
+'tspanyol' => 'talán: spanyol',
+'lbiosz' => 'lehetséges: biológia',
+'tinfo' => 'talán: informatika',
+'vspanyol' => 'valószínű: spanyol',
+'vmatek' => 'valószínű: matematika',
+'linfo' => 'lehetséges: informatika',
+'lspanyol' => 'lehetséges: spanyol',
+'lmatek' => 'lehetséges: matematika',
+'tmatek' => 'talán: matematika',
+);
+
+    $JOSLAT_2009 = array(
+'vnémet' => 'Valószínű: német',
+'vangol' => 'Valószínű: angol',
+'német' => 'Német',
+'lnémet' => 'Lehetséges: német',
+'angol' => 'Angol',
+'langol' => 'Lehetséges: angol',
+
+'sajnos nem' => 'Sajnos nem tudjuk felvenni.',
+'lbio' => 'Lehetséges: Biológia',
+'enek' => 'Ének-zene',
+'vmagyar' => 'Valószínű: Magyar',
+'matek' => 'Matematika',
+'0enek' => 'Német + Ének-zene',
+'vmatek' => 'Valószínű: Matematika',
+'lmagyar' => 'Lehetséges: Magyar',
+'lmatek' => 'Lehetséges: Matematika',
+'l0human' => 'Lehetséges: Német + Humán',
+'0human' => 'Német + Humán',
+'magyar' => 'Magyar',
+'v0matek' => 'Valószínű: Német + Matematika',
+'0info' => 'Német + Informatika',
+'vbiosz' => 'Valószínű: Biológia',
+'biosz' => 'Biológia',
+'v0info' => 'Valószínű: Német + Informatika',
+'v0human' => 'Valószínű: Német + Humán',
+'l0info' => 'Lehetséges: Német + Informatika',
+'0matek' => 'Német + Matematika',
+'venek' => 'Valószínű: Ének-zene',
+'l0matek' => 'Lehetséges: Matematika'
+    );
+
+
+    $JOSLAT_2008 = array(
+'valószínű: 0magyar' => 'Valószínűleg: 0. magyar',
+'nem' => 'nem kerül be',
+'felvéve: informatika' => 'Felvéve: informatika',
+'lehetséges: humán' => 'Lehetséges: humán',
+'talán: 0biológia' => 'Talán: 0. biológia',
+'felvéve: 0magyar' => 'Felvéve: 0. magyar(6)',
+'felvéve: matematika' => 'Felvéve: matematika(7)',
+'lehetséges: 0magyar' => 'Lehetséges: 0. magyar(6)',
+'talán: matematika' => 'Talán: matematika(7)',
+'felvéve: ének' => 'Felvéve: ének-zene(3)',
+'felvéve: humán' => 'Felvéve: humán(5)',
+'valószínű: humán' => 'Valószínűleg: humán(5)',
+'felvéve: 0ének' => 'Felvéve: 0. ének-zene(4)',
+'felvéve: 0matematika' => 'Felvéve: 0. matematika (8)',
+'valószínű: 0biológia' => 'Felvéve: 0. biológia (10)',
+'lehetséges: ének' => 'Lehetséges: ének-zene(3)',
+'talán: informatika' => 'Talán: informatika',
+'lehetséges: 0biológia' => ' Lehetséges: 0. biológia (10)',
+'talán: 0magyar' => 'Talán: 0. magyar (6)',
+'lehetséges: informatika' => 'Lehetséges: informatika',
+'felvéve: 0biológia' => 'Felvéve: 0. biológia',
+'lehetséges: 0matematika' => 'Lehetséges: 0. matematika (8)',
+'valószínű: 0matematika' => 'Valószínűleg: 0. matematika (8)',
+'valószínű: matematika' => 'Valószínűleg: matematika (7)',
+'valószínű: ének' => 'Valószínűleg: ének-zene (3)',
+'lehetséges: matematika' => 'Lehetséges: matematika (7)',
+'valószínű: informatika' => 'Valószínűleg: informatika',
+'angol' => 'Felvéve: angol',
+'lnémet' => 'Lehetséges: német',
+'vangol' => 'Valószínűleg: angol',
+'tnémet' => 'Talán: német',
+'német' => 'Felvéve: német',
+'langol' => 'Lehetséges: angol',
+'tangol' => 'Talán: angol',
+'vnémet' => 'Valószínűleg: német'
+);
+
+    $JOSLAT_2007 = Array( 
+'0. ének'=>'Felvételt nyer: német+ének',
+'0. humán'=>'Felvételt nyer: német+humán',
+'0. matek'=>'Felvételt nyer: német+matematika',
+'0. számt.'=>'Felvételt nyer: német+informatika',
+'Angol'=>'Felvételt nyer: angol',
+'Biológia'=>'Felvételt nyer: biológia',
+'Ének'=>'Felvételt nyer: ének-zene',
+'Magyar'=>'Felvételt nyer: magyar',
+'Matek'=>'Felvételt nyer: matematika',
+'Német'=>'Felvételt nyer: német',
+
+'Nem'=>'Sajnos nem valószínű, hogy fel tudjuk venni',
+
+'Lehetséges: 0. számt.'=>'Lehetséges: német+informatika',
+'Lehetséges: Angol'=>'Lehetséges: angol',
+'Lehetséges: Biológia'=>'Lehetséges:',
+'Lehetséges: Magyar'=>'Lehetséges: magyar',
+'Lehetséges: Matek'=>'Lehetséges: matematika',
+'Lehetséges: Német'=>'Lehetséges: német',
+'Szinte biztos: Angol'=>'Szinte biztos: angol',
+'Szinte biztos: Biológia'=>'Szinte biztos: biológia',
+'Szinte biztos: Magyar'=>'Szinte biztos: magyar',
+'Szinte biztos: Matek'=>'Szinte biztos: matematika',
+'Szinte biztos: Német'=>'Szinte biztos: német',
+'Valószínű: Angol'=>'Valószínű: angol',
+'Valószínű: Biológia'=>'Valószínű: biológia',
+'Valószínű: Magyar'=>'Valószínű: magyar',
+'Valószínű: Matek'=>'Valószínű: matematika',
+'Valószínű: Német'=>'Valószínű: német');
+
+/*
+    $VEGEKOD2STR = array( 
+	//0 => 'Feldolgozás alatt...',
+	//1 => 'Feldolgozás alatt...',
+	//2 => 'Feldolgozás alatt...',
+	0 => 'Nem tudjuk felvenni',
+	1 => 'Sajnos helyhiány miatt nem tudjuk felvenni',
+	2 => 'Máshová vették fel',
+	4 => 'Felvéve: ének-zene + nulladikos német nyelvi előkészítő',
+	6 => 'Felvéve: humán + nulladikos német nyelvi előkészítő',
+	8 => 'Felvéve: matematika + nulladikos német nyelvi előkészítő',
+	10 => 'Felvéve: informatika + nulladikos német nyelvi előkészítő',
+	9 => 'Felvéve: biológia tagozatra',
+	5 => 'Felvéve: magyar tagozatra',
+	7 => 'Felvéve: négyévfolyamos matematika tagozatra',
+	3 => 'Felvéve: négyévfolyamos ének-zene tagozatra',
+	11 => 'Felvéve: hatévfolyamos angol tagozatra',
+	12 => 'Felvéve: hatévfolyamos német tagozatra',
+    );
+*/
+
+    $VEGEKOD2STR_2007 = array(
+
+'0biológia' 	=> 'Felvéve: biológia + nulladikos német nyelvi előkészítő',
+'0ének' 	=> 'Felvéve: ének-zene + nulladikos német nyelvi előkészítő',
+'0magyar' 	=> 'Felvéve: biológia + nulladikos német nyelvi előkészítő',
+'0matek'	=> 'Felvéve: biológia + nulladikos német nyelvi előkészítő',
+'ének'		=> 'Felvéve: ének-zene',
+'humán'		=> 'Felvéve: humán',
+'informatika'	=> 'Felvéve: informatika',
+'matek'		=> 'Felvéve: matematika',
+'angol'		=> 'Felvéve: hatévfolyamos angol tagozatra',
+'német'		=> 'Felvéve: hatévfolyamos német tagozatra',
+'helyhiány'	=> 'Sajnos helyhiány miatt nem tudjuk felvenni',
+'egyéb iskola'	=> 'Máshová vették fel',
+'nem tudjuk felvenni' => 'Nem tudjuk felvenni'
+
+);
+
+   $VEGEKOD2STR_2008 = array(
+
+'0biológia'     => 'Felvéve: biológia + nulladikos német nyelvi előkészítő',
+'0ének'         => 'Felvéve: ének-zene + nulladikos német nyelvi előkészítő',
+'0magyar'       => 'Felvéve: biológia + nulladikos német nyelvi előkészítő',
+'0matek'        => 'Felvéve: biológia + nulladikos német nyelvi előkészítő',
+'ének'          => 'Felvéve: ének-zene',
+'humán'         => 'Felvéve: humán',
+'informatika'   => 'Felvéve: informatika',
+'matek'         => 'Felvéve: matematika',
+'angol'         => 'Felvéve: hatévfolyamos angol tagozatra',
+'német'         => 'Felvéve: hatévfolyamos német tagozatra',
+'helyhiány'     => 'Sajnos helyhiány miatt nem tudjuk felvenni',
+'egyéb iskola'  => 'Máshová vették fel',
+'nem tudjuk felvenni' => 'Nem tudjuk felvenni'
+
+);
+
+   $V2L_2008 = array(
+
+'0biológia'     => 10,
+'0ének'         => 4,
+'0magyar'       => 6,
+'0matek'        => 8,
+'ének'          => 3,
+'humán'         => 5,
+'informatika'   => 9,
+'matek'         => 7,
+'angol'         => 11,
+'német'         => 12,
+'helyhiány'     => 1,
+'egyéb iskola'  => 2,
+'nem tudjuk felvenni' => 0
+
+);
+
+   $V2L_2009 = array(
+
+'biosz'         => 9,
+'0ének'         => 4,
+'magyar'        => 5,
+'0mat'          => 8,
+'ének'          => 3,
+'0hum'          => 6,
+'0info'         => 10,
+'matematika'    => 7,
+'angol'         => 11,
+'német'         => 12,
+'sajnos'        => 0,
+'sajnos nem'    => 0,
+'egyéb iskola'  => 2,
+'nem tudjuk felvenni' => 0,
+'máshová ment' => 2,
+'más' => 2
+
+);
+
+    $VEGEREDMENY_2009 = array(
+'biosz'         => 'Felvéve: biológia',
+'0ének'         => 'Felvéve: ének-zene + nulladikos német nyelvi előkészítő',
+'magyar'        => 'Felvéve: magyar',
+'0mat'          => 'Felvéve: matematika + nulladikos német nyelvi előkészítő',
+'ének'          => 'Felvéve: ének-zene',
+'0hum'          => 'Felvéve: humán + nulladikos német nyelvi előkészítő',
+'0info'         => 'Felvéve: informatika + nulladikos német nyelvi előkészítő',
+'matematika'    => 'Felvéve: matematika (tehetséggondozó)',
+'angol'         => 'Felvéve: hatévfolyamos angol tagozatra',
+'német'         => 'Felvéve: hatévfolyamos német tagozatra',
+'sajnos'        => 'Sajnos nem tudjuk felvenni',
+'egyéb iskola'  => 'Máshová vették fel',
+'nem tudjuk felvenni' => 'Nem tudjuk felvenni',
+'máshová ment' => 'Más iskolába vették fel',
+'más' => 'Más iskolába vették fel'
+);
+
+
+    $VEGEKOD2STR = $VEGEKOD2STR_2008;
+    $V2L = $V2L_2008;
+
+    $TAGOZATOK 	= $TAGOZATOK_2010;
+  $VEGEREDMENY 	= $VEGEREDMENY_2010;
+    $JOSLAT 	= $JOSLAT_2010;
+    $IKTSZ 	= $IKTSZ_2010;
+    $OSZTALYABA = $OSZTALYABA_2010;
+
+
+?>

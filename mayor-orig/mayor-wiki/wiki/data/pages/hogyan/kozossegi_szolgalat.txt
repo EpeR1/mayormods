@@ -1,0 +1,35 @@
+
+====== Közösségi szolgálat adminisztrálása ======
+
+===== Jogi háttér =====
+
+**20/2012 EMMI**
+
+1. § Az iskola által használt nyomtatvány
+w) a közösségi szolgálati jelentkezési lap,
+
+2. § (3) Az egyéni törzslap tartalmazza
+g) a közösségi szolgálat teljesítésével kapcsolatos adatokat,
+
+101. § (6) Az értékelő naplórész
+ ...
+d) a közösségi szolgálat teljesítésével kapcsolatos adatokat
+tartalmazza.
+
+===== Megvalósítás =====
+
+A 101. § d) pont könyvelését a tárgy/tankör struktúrában oldottuk meg (rev >= 2972). 
+(A köszi-vel való összehangolás egyelőre függőben van).
+
+  * új munkaközösséget kell felvenni, majd beállítani a megfelelő új követelmény típust
+    * tárgy neve: tetszőleges (pl. szociális gyakorlat)
+    * tárgy jellege: közösségi szolgálat
+    * záró követelmény: teljesített óra
+{{http://content.screencast.com/users/konczy/folders/Jing/media/46e0d0bb-42ef-4af4-b07c-51f3cb1b7b8d/00000486.png?600}}
+  * új tankört kell felvenni a következő szerint:
+    * Tankörtípus: közösségi szolgálat
+    * Évközi követelmény: teljesített óra (opcionális - év közben nem szükséges folymatosan jegyezni a rész óraszámokat...)
+{{http://content.screencast.com/users/konczy/folders/Jing/media/c94d1803-3d7c-4fa7-bfcc-86b69d359f96/00000487.png?600}}
+  * célszerű a tárgysorrendet úgy állítani, hogy a "közösségi szolgálat" típusú tárgyak a nyomtatványok sorrendjében a végén legyenek. (opcionális)
+
+

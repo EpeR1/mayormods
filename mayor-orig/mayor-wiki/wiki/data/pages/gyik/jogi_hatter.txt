@@ -1,0 +1,157 @@
+====== Az elektronikus napló használatának törvényi háttere ======
+
+Az intézmények rendszeres ellenőrzései kapcsán visszatérő kérdés: engedélyezte-e valaki a szoftver használatát.
+
+Az alábbiakban megpróbáltuk összeszedni a témával kapcsolatos hozzánk eddig eljutott információkat.
+
+==== Informális állásfoglalás 2003 ====
+
+2003 júniusában - mikor az elektronikus adattárolás lehetősége a törvény szövegében megjelent - az Oktatási Minisztériumhoz fordultunk:
+készíthetünk-e ezek szerint saját elektronikus naplót. A Minisztérium álláspontja az volt, hogy ehhez nincs szükség az ő hozzájárulásukra.
+Épp ezért erről hivatalos, felmutatható állásfogalalás nem készült, az egyeztetés telefonon, illetve email-en zajlott.
+
+==== OM honlapon közzétett állásfoglalás - 2005 ====
+
+(Gy.I.K. - Iskolai adminisztrációs- és ügyviteli szoftverek 3/2005. (III.1.) OM rendelet - 2005. július 6.)
+
+Az Minisztérium honlapján sokáig elérhető volt egy írásos állásfoglalás is a témában.
+
+Az eredeti hivatkozás azóta sajnos már nem él:
+[[http://www.okm.gov.hu/main.php?folderID=949&articleID=5825&ctag=articlelist&iid=1]]
+
+de megtalálható az archívumban:
+[[http://www.okm.gov.hu/kozoktatas/archivum/gy-iskolai]]
+
+11. pont
+
+"A nevelési-oktatási intézmények működéséről szóló 11/1994.(VI. 8.)
+MKM rendelet az iskolák számára kötelezően használatos nyomtatványként
+nevezi meg, írja elő az osztálynapló (csoportnapló) használatát. A
+jogszabály a nyomtatvány kivitelével, formájával, tartalmával
+kapcsolatos előírást nem tartalmaz, nincs tehát közoktatási
+jogszabályi akadálya annak, hogy elektronikus osztálynapló,
+csoportnapló bevezetésére kerüljön sor. Az elektronikus
+napló-nyomtatvány az OM hozzájárulása nélkül is előállítható és
+forgalmazható.
+A naplók használata során érvényesíteni kell a személyes adatok
+védelméről szóló jogszabályi előírásokat is. Az osztálynapló pénzügyi
+dokumentum is, ezért a szoftverfejlesztés során figyelemmel kell lenni
+az intézményfenntartók vele szemben megfogalmazódó igényeire is."
+
+A fenti cikkre hivatkozik a Tanulmányinfo portál is:
+[[http://shop.tanulmanyi.info/index.php?option=com_content&view=article&id=69:111994vi-8-mkm-rendelet-elektronikus-naplo-hasznalatarol&catid=1:friss-hirek&Itemid=50]]
+
+==== ADAFOR-on közzétett vélemény ====
+
+Nagy port kavart fel a témában megjelent, az ADAFOR-on közzé tett __vélemény__:
+
+[[http://adafor.oh.gov.hu/doku/kozepfoku0809/taninfo.pdf]]
+
+A link sajnos már szintén nem él...
+
+Ebben megkérdőjelezték az eletronikus naplók üzemeltetésének jogszerűségét. De hangsúlyozzuk: ez csak egy __vélemény__ volt, bár
+az ADAFOR-on érkezett, így kicsit nagyobb súlyt kapott.
+
+==== A tanulmanyi.info közlemény ====
+
+A tanulmany.info portal - mely ingyenes elektronikus napló szolgáltatást nyújt több száz intézmény számára - az ADAFOR-on megjelent
+véleményre reagált, többek között így:
+
+"...
+Az Oktatási Hivatal állásfoglalása alapján bárki használhat elektronikus naplót, mert a törvény szerint naplót vezetni kötelező, de a jogszabály 
+nem szabályozza azok adattartalmát és szerkezetét - így mind a kézírásos, mind az elektronikus adattartalmú naplók elkészíthetőek helyileg. 
+Az elektronikus naplóba gondosan bevitt tartalmakat továbbra is ki kell nyomtatni, és őrizni kell őket legalább öt éven át (papíron, mappákban, 
+a tanárok kézjegyével ellátva).
+..."
+
+[[http://www.diakkapu.hu/component/content/article/577-uj-elektronikus-ellenorzo?start=1]]
+
+==== Minisztáriumi állásfoglalás a tanulmany.info kérésére ====
+
+A tanulmany.info minisztériumi állásfoglalást kért:
+
+"Megkeresésünket követően az Oktatási és Kulturális Minisztérium Közoktatás-igazgatási osztály részünkre megküldött levelében tájékoztatta a tanulmanyi.info 
+üzemeltetőjét arról, hogy a tanulmanyi.info szolgáltatást, mint elektronikus napló megoldást engedélyeztetni nem szükséges, annak felhasználásáról az 
+intézményvezető vagy fenntartó szabadon dönthet. Dr. Szüdi János Közoktatási Szakállamtitkár levelében kitért többek között arra is, hogy a naplóvezetés 
+mind papír mind elektronikus úton megtörténhet, viszont mindkettőt esetében papír alapon kell irattároznia a naplókat (napló lapokat) az intézménynek. 
+A papír alapú irattározás tekintetében a személyiségi, adatvédelmi és biztonságvédelmi követelmények megtartásáért az intézményvezető felel, valamint a 
+hitelesítésről az intézményvezetőnek kell gondoskodnia.
+
+Az oktatási intézmények a fentiekkel kapcsolatos kérdéseik tekintetében fordulhatnak az Oktatási és Kulturális Minisztérium, Közoktatás-igazgatási osztályához."
+
+[[http://shop.tanulmanyi.info/index.php?option=com_content&view=article&id=79:szakmai-velemeny-az-okm-reszerl&catid=1:friss-hirek&Itemid=50]]
+
+==== Egy szál a sulinetes TechNet listáról ====
+
+A levél a TechNet listán is vitát kavart:
+
+[[http://lista.sulinet.hu/pipermail/techinfo/2009-January/042003.html]]
+
+==== Elektronikus naplókat évek óta használnak szerte az országban ====
+
+  - [[http://www.dinaplo.hu/referenciak.html]]
+  - [[http://www.elektronikusnaplo.hu/]]
+  - [[http://www.mayor.hu/index.php?f=ref]]
+  - ...
+
+==== A MaYoR rendszert használó intézmények többször átestek már különféle ellenőrzéseken ====
+
+A Városmajori Gimnáziumban 2003 óta használunk elektronikus naplót. Azóta több törvényességi vizsgálat is folyt az intézményben, melyek egyike sem
+emelt kifogást az elektronikus napló használata ellen. Hozzánk hasonlóan a programot használó többi intézményben is volt már (tán nem mindenhol)
+ilyen-olyan ellenőrzés, vizsgálat - melyek legfeljebb formai hiányosságokra hívták fel a figyelmet - melyeket igyekeztünk és a jövőben is igekszünk
+minél hamarabb javítani, rendben tartani.
+
+===== A nyomtatványokra vonatkozó szabályozások ======
+
+A  közoktatási  törvény  (Kt.)  72.  §  (2)  bekezdése  az  alábbi módon  szabályozza  a  közoktatási
+intézményi  nyomtatványok,  illetve  az  azokat  részben  kiváltó informatikai  rendszerek  alkalmazási
+szabályait:
+
+72. § . (2) Az iskolában csak olyan bizonyítványnyomtatvány, illetve bizonyítvány kiállításához 
+szükséges nyomtatvány alkalmazható, amelyet az oktatásért felelős miniszter, szakképesítést tanúsító bizonyítvány 
+esetén a szakképzésért és felnőttképzésért felelős miniszter jóváhagyott. A bizonyítványnyomtatvány és a bizonyítvány 
+kiállításának alapjául szolgáló nyomtatvány előállításához, forgalmazásához az oktatásért felelős miniszter, szakképesítést 
+tanúsító bizonyítvány esetén a szakképzésért és felnőttképzésért felelős miniszter engedélye szükséges. Az iskolai 
+nyomtatványok - az év végi bizonyítvány és az állami vizsga teljesítéséről kiállított bizonyítvány kivételével - 
+az oktatásért felelős miniszter, szakképesítést tanúsító bizonyítvány esetén a szakképzésért és felnőttképzésért 
+felelős miniszter által jóváhagyott rendszer alkalmazásával, a személyiségi, adatvédelmi és biztonságvédelmi követelmények 
+megtartásával elektronikus úton is elkészíthetők és tárolhatók. A bizonyítvány kiállításának alapjául szolgáló nyomtatványt 
+azonban nyomtatott formában is elő kell állítani, és meg kell őrizni.
+
+====== 2011. évi CXC. törvény A nemzeti köznevelésrõl ======
+
+Az időközben megjelent új "Köznevelési törvény" szinte változtatás nélkül tartalmazza a korábbi szöveget:
+
+57. § (6) Az iskolai nyomtatványok – az év végi bizonyítvány és az állami vizsga teljesítésérõl kiállított bizonyítvány kivételével –
+az oktatásért felelõs miniszter, szakképesítést tanúsító bizonyítvány esetén a szakképzésért és felnõttképzésért felelõs
+miniszter által jóváhagyott rendszer alkalmazásával, a személyiségi, adatvédelmi és biztonságvédelmi követelmények
+megtartásával elektronikus úton is elkészíthetõk és tárolhatók. A bizonyítvány kiállításának alapjául szolgáló
+nyomtatványt ebben az esetben is elõ kell állítani nyomtatott formában, és meg kell õrizni.
+
+====== 11/1994 MKM rendelet ======
+
+=== A foglalkozási napló ===
+
+5. Az óvodai, a tanórai, a tanórán kívüli, valamint a kollégiumi foglalkozásokról a nevelő munkát végző, illetve a foglalkozást 
+tartó pedagógus foglalkozási naplót (csoportnaplót, osztálynaplót, sportnaplót stb.) vezet. A foglalkozási naplót az óvodai nevelés, 
+iskolai nevelés és oktatás nyelvén kell vezetni.
+
+=== A tanügyi nyilvántartások vezetése ===
+
+10. a) A pedagógus csak a nevelő-oktató munkával összefüggő feladatokhoz nélkülözhetetlen ügyviteli tevékenységet köteles elvégezni.
+
+b) Az osztályfőnök vezeti az osztálynaplót, a törzslapot, és kiállítja a bizonyítványt, vezeti a továbbtanulással összefüggő nyilvántartást. 
+Alapfokú művészetoktatási intézményben a hangszert, illetve a csoportos tantárgyat oktató szaktanár - az intézményvezető megbízása alapján - 
+vezeti az egyéni foglalkozási naplót, a csoportos foglalkozási naplót, a törzslapot és kiállítja a bizonyítványt.
+
+=== Irattári terv  ===
+
+16.	 	 Naplók	 	 5 (év)
+
+=== Az iskola által kötelezően használt nyomtatványok ===
+
+22. 	 	 Osztálynapló (csoportnapló) 
+
+(Nincs "megcsillagozva", ami azt jelentené:
+
+A * jelölt nyomtatványok csak az oktatásért felelős miniszter által vezetett minisztérium engedélyével gyárthatók és forgalmazhatók,)

@@ -1,0 +1,58 @@
+
+====== Tanmenet módosítása ======
+
+A tanmenet módosítás alapvetően két dologot takar:
+  * bizonyos alapadatok módosíthatók
+  * módosíthatók a témakörök és az ezekre szánt óraszám
+
+===== Alapadatok módosítása =====
+
+Módosítható a tanmenet évfolama, éves óraszáma és neve, illetve a vezetőség és admin számára itt van lehetőség a tanmenet jóváhagyására is.
+Nem módosítható ugyanakkor a tanmenet tárgya, a készítő tanár neve, a készítés dátuma és persze a tanmenet azonosító száma sem.
+
+Fontos: az óraszám csökkentésével előállhat olyan eset, hogy a tanmenet témaköreinek össz óraszáma nagyobb lesz, mint az előírt összóraszám.
+Ilyen esetben a program a már "kilógó" témakörök óraszámát pirossal kiemeli, hogy ezzel is figyelmeztessen a hibára. A proram mást nem tesz, nem tehet - 
+rajtunk múlik, hogy a hibát javítjuk-e.
+
+===== Témakörök kezelése =====
+
+Itt látjuk a már felvett témakörök listűját - ha vannak ilyenek -, és egy új témakör felévtelét szolgáló üres sort (drapp).
+
+==== Új témakör felvéte ====
+
+Új témakör felvételéhez először válasszuk ki a témakörre szánt óraszámot, majd írjuk le röviden a témakört. Ezek után, ha a fókusz elkerül a beviteli mezőről
+(pl. megnyomjuk a ''Tab'' gombot, vagy elkattintunk az egérrel valahova máshova), akkor a prorgram felveszi ezt az új sort a felette levő listába, beilleszti
+az óraszámok sorába - de fontos tudnunk, hogy az új támakör ekkor még az adatbázisban nem rödgzült. **A módosítások rögzítéséhez minden esetben a lista alján 
+található "OK" gombot kell megnyomni!**
+
+Út témakört mindaddig tudunk a fentiek szerint felvenni, ameddig el nem fogy a teljes tanmenethez rendelt óraszám. A legördülő menüben minden esetben csak
+annyi óra kijelölésére van lehetőség, amennyi még szabadon maradt. Ha a szabad órák száma 0-ra csökkent, akkor vagy valamelyik témakör óraszámának csökkentésével,
+vagy valamely témakör teljes törlésével szabadíthatunk fel órákat az új témakör számára.
+
+==== Témakörök sorrendje ====
+
+A felvett témakörök sorrendje egyszerűen egérrel, "húzd és ejtsd" módon változtatható. A sorok a bal szélső színes téglalapnál gofhatók meg, majd "vonszolhatók"
+a megfelelő helyre. A program minden módosítás után újraszámozza az órákat.
+
+Fontos megjegyezni, hogy a sorrend változtatás sem rögzül automatikusan az adatbűzisban! **A módosítások rögzítéséhez minden esetben a lista alján 
+található "OK" gombot kell megnyomni!**
+
+==== Témakör módosírása ====
+
+Egy-egy témakörrel kapcsolatban két dolgot lehet módsítani: a hozzárendelt óraszámot, illetve a témakör leírását.
+
+Fontos: ha a témakör leírását töröljük, vagy az óraszámot 0-ra állítjuk, akkor a következő adatrögzítéskor a témakör törlődik!
+
+Az óraszám beállításakor csak akkorára növelhetjük az óraszámot, hogy az még beférjen a tanmenet össz óraszámába.
+
+**A módosítások rögzítéséhez - mint minden esetben - most is a lista alján található "OK" gombot kell megnyomni!**
+
+==== Témakör törlés ====
+
+Témakör törlésére használjuk a sorok jobb oldalán található X jelű, piros hátterű, kerek gombot.
+
+A tényleges törlés csak a lista alján található "OK" gomb megnyomásakor történik!
+
+Témakört törölhetünk úgy is, hogy óraszámát 0-ra állítjuk és/vagy a témakör leírását töröljük, üresre állítjuk.
+
+

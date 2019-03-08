@@ -1,0 +1,7 @@
+<?php
+
+    // Engedélyezzü a MaYoR IFRAME-be ágyazását - !! Biztonsági kockázat !!
+    define('_ENABLE_IFRAME_EMBEDDING',true);
+    define('_SULIX_DESIGN',true);
+
+?>

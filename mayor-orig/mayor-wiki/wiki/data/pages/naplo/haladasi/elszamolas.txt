@@ -1,0 +1,47 @@
+====== Elszámolás ======
+
+A //vezetőség// tagjai a **Napló/Haladási napló/Elszámolás** menüt használhatják a különféle havi-, kéthavi- túlóra- és egyéb elszámolásokhoz.
+
+A dátum mezőket értelemszerűen kitöltve a táblázatban az adott időintervallumra vonatkozóan látszik a tanárok által beírt, azaz adminisztrált 
+(tehát minden szempontból letudott :-D) óra, helyettesítés, összevonás, stb.
+
+A táblázat oszlopai a következő adatokat tartalmazzák:
+
+Lekötött / normál: A tanár órarendben szereplő saját (megtartott) tanórái.
+
+Lekötött / normál máskor: A tanár saját tanórái, amiket nem az órarend szerinti szokásos időben tartott meg. (áthelyezett órák)
+
+Lekötött + fennmaradó / helyettesítés: Azok az órák, amikor a tanár "szakszerű" helyettesítést végzett. (Tehát olyan tárgyú órát tartott, amihez van diplomája.)
+
+Fennmaradó / felügyelet: Azok az órák, amikor a tanár felügyelet jellegű helyettesítést végzett. (Tehát olyan tárgyú órát tartott, amihez nincs diplomája.)
+
+Fennmaradó / egyéb: A "rózsaszínű" elfoglaltságok, amiket a tanár maga írt be.
+
+Σ: Az eddigiek összege.
+
+Nem számolt / összevonás: Azok az órák, amikor a tanár összevonás jellegű helyettesítést végzett. (Összevont csoportnak tartott "szakszerű" tanórát.)
+
+Az összevonások esetén a tanár saját órája normál óraként jelenik meg a listában - így ha  a megtartott órák számát akarjuk megtudni, akkor az összevonást nem kell beleszámítani. Az adat csak azért kerül megjelenítésre, hátha ezért a többlet teherért valamilyen plusz bért számol el a fenntartó. ;-)
+
+Heti óraszám órarend alapján: Ez a szám állandónak tekinthető, az elmaradó és plusz órák nem befolyásolják. (Csak az órarend megváltoztatása.)
+
+Előírt heti munkaóra N napra vetítve: Az oldal tetején beállított két dátum közötti intervallumban lévő tanítási napok száma (N) és az ennyi tanítási napra kiszámított, jogszabály szerinti határ-óraszámok. Ezek a számok különféle színű hátteret kaphatnak:
+
+Kék háttér: Az előírt minimális lekötött munkaideje sincs meg. (55% alatt - az első színezett oszlopban lévő szám alatt van az óraszáma.)
+
+Zöld háttér: A lekötött óraszáma megvan, de még nyugodtan terhelhető. (55%-65% között, tehát a második színezett oszlopban szereplő óraszámot nem haladja meg.)
+
+Sárga háttér: A lekötött órák felett még a kötött munkaidőből is adminisztrált órákat - ez lenne a normál eset. (De 80%-ot, azaz a harmadik színezett oszlopban lévő értéket nem haladja meg az óraszáma).
+
+Piros háttér: Túlterhelt, a törvényileg megengedett óraterhelésnél többet adminisztrált (80% feletti óraszám). Ebből persze lehet, hogy több órát nem a vezetőség írt elő a kollégának, tehát nem feltétlen jelent ez szabálytalan foglalkoztatást - benne lehet a maradék 20%, a
+kötetlen munkaidő egy része vagy egésze is.
+
+De azért a piros az egy komoly figyelmeztetés kellene legyen. Ha meg valakinél a 100%-ot meghaladó érték látszik, akkor kétség kívül túl van foglalkoztatva (feltéve, hogy az adminisztrációt a valóságnak megfelelően vezeti az illető).
+
+Az ideális állapot tehát, ha sárga színt lát a vezetőség és az összóraszám a harmadik, 80%-os óraszámmal egyezik meg.
+
+A táblázat a felületről nem exportálható, de egyszerű kijelöléssel, majd másolással ízlés szerint választott táblázatkezelőbe 
+(pl. [[http://hu.openoffice.org/about-downloads.html|OpenOffice.org Calc]])
+szépen beilleszthető, és abban képletekkel, függvényekkel, diagramokkal további használatra alkalmassá tehető.
+
+Fontos, hogy a táblázat egészét jelöljük ki a másolás előtt.

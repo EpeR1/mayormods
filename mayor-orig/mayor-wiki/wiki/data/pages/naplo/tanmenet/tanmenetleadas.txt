@@ -1,0 +1,12 @@
+
+====== Tanátok eddig leadott/nem leadott tanmeneteinek száma ======
+
+A vezetőség ezen az oldalon tájékozódhat az tanmenet leadás pillanatnyi helyzetéről, pontosabban
+kap egy listát, melyben minden tanárral kapcsolatban láthatja, hogy
+
+  * hány tanköréhez nem rendelt még tanmenetet ("hiányzó")
+  * hány tanköréhez rendelt már jóváhagyott tanmenetet ("jóváhagyott")
+  * hány tanköréhez rendelt még jóváhagyatlan tanmenetet ("ellenőrizetlen")
+
+A tanár nevére kattintva eljuthatunk a [[tanmenetTankor|Tanmenetek tankörhöz rendelése]] oldalra, ahol részletesen is tájékozódhatunk
+az adott tanár tanköreiről, illetve hozzárendelt tanmeneteiről.

@@ -1,0 +1,18 @@
+<?php
+	define('_SZAKTANARI_DICSERET','件名先生の表彰');
+	define('_OSZTALYFONOKI_DICSERET','先生のフォームを称賛');
+	define('_IGAZGATOI_DICSERET','校長の推薦');
+	define('_NEVELOTESTULETI_DICSERET','称賛のティーチングスタッフ');
+	define('_SEMMI','界ません');
+	define('_SZAKTANARI_FIGYELMEZTETES','件名先生の譴責');
+	define('_SZOBELI_OSZTALYFONOKI_FIGYELMEZTETES','口頭による叱責フォームから教師');
+	define('_OSZTALYFONOKI_FIGYELMEZTETES','フォームの最初の教師の叱責');
+	define('_OSZTALYFONOKI_INTO','先生の2つ目のフォームを譴責');
+	define('_OSZTALYFONOKI_ROVO','フォーム先生の第三譴責');
+	define('_IGAZGATOI_FIGYELMEZTETO','校長の最初の叱責');
+	define('_IGAZGATOI_INTO','2つ目の校長の叱責');
+	define('_IGAZGATOI_ROVO','第三校長の叱責');
+	define('_NEVELOTESTULETI_FIGYELMEZTETES','ティーチングスタッフの最初の叱責');
+	define('_NEVELOTESTULETI_INTES','ティーチングスタッフの第2譴責');
+	define('_NEVELOTESTULETI_MEGROVAS','ティーチングスタッフの第3叱責');
+?>

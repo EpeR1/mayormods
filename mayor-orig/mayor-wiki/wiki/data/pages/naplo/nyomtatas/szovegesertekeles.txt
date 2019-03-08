@@ -1,0 +1,71 @@
+====== Szöveges értékelés nyomtatása ======
+
+A szöveges értékelés nyomtatása sablon fájl alapján történik. A sablon tartalmaz speciális azonosítókat, amik helyére a program a megfelelő értékeket fogja behelyettesíteni.
+
+A ''/var/mayor/print/module-naplo/templates'' könyvtárba találhatók a sablonok, illetve nekünk is ide kell elhelyezni a sajátunkat az intézmény rövid nevének megfelelő nevű alkönyvtárba. Ha ilyen alkönyvtár nincs, vagy nincs benne megfelelő sablon, akkor a ''default'' alkönyvtárban található sablonokat használja a rendszer. Találunk még egy ''draft'' alkönyvtárat is, amibe a lecsupaszított sablonok találhatók - ezek mutatják meg a lehetséges használható sablonelemeket.
+
+A szöveges értékelés nyomtatásakor a rendszer egy ''szovegesErtekeles.tmpl'' nevű sablon állományt keres - előbb az intézmény mappájában, majd ha ott nem talált ilyet, akkor a ''default'' mappában.
+
+A sablonban a következő speciális jelöléseket használjuk:
+
+  %!függvény kiterjesztés
+
+Ez a vezérlősor csak a file első sora lehet, különben a program figyelmen kívül hagyja. Arra szolgál, hogy megmondjuk a sablon alapján generált szöveges állományt feldolgozó függvény nevét és a keletkező állomány kiterjesztését. Például:
+
+  %!pdfLaTeXA5 pdf
+
+Ha nincs ilyen sor, akkor a program egyszerű szöveges állományt készít.
+
+----
+
+  %$paraméterNév
+
+Egyszerű lecserélendő, behelyettesítendő változót takar.
+
+  %{blokkNév
+  ...
+  %}blokkNév
+
+A blokk nyitó, illetve csukó jelekkel egy szövegrészt foghatunk közre. Fontos, hogy a nyitó és csukó szimbólumok külön-külön, önálló sorokat alkossanak. Egy-egy ilyen blokk többször, többféle paraméterezéssel lesz bemásolva a végső szövegbe. Körlevél szerű megoldásról van szó, azzal a különbséggel, hogy itt lehetnek egymásba ágyazott blokkok is. Például a szöveges értékelések esetén minden diák számára el kell készíteni egy-egy értékelést (ez egy diák blokk-kal írható le), ezeken belül tárgyanként lesznek értékelések, a tárgyak blokkjain belül az egyes tárgyakra vonatkozó szempontok jelennek meg, azon belül a szempontokra vonatkozó minősítések jelennek meg. Ez így adjuk meg:
+
+  %{diak
+   ...
+  %{targy
+   ...
+  %{szempont
+   ...
+  %{minosites
+   ...
+  %}minosites
+   ...
+  %}szempont
+   ...
+  %}targy
+   ...
+  %}diak
+
+----
+
+Az utolsó a feltételes szövegrészek jelölése:
+
+  %?paraméterNév|igazSzöveg|hamisSzöveg%?
+
+A program ilyen esetben a szöveg kifejtésekor az adott helyen megvizsgálja a megadott paraméter logikai értékét (csak valódi logikai értéket vesz figyelembe!), és igaz esetén az ''igazSzöveg''-et, hamis logikai érték esetén a ''hamisSzöveget'', minden egyéb esetben üres sztringet fog helyettesíteni a kifejezés helyére. Például:
+
+  %?valasztott|X|O%? %$minosites
+
+A fenti sor kifejtése során, ha olyan minősítéshez jutunk, ami az adott tanuló esetén ki lett választva, meg lett jelölve, akkor a file-ba ''X'' kerül a minősítés szövege elé, míg egyéb esetben a minősítés magában áll, vagy ''O'' előzi meg.
+
+  %?elsoValasztott|%$minosites||?%?%tobbedikValasztott|, %$minosites||%?
+
+A fenti sor két elágazást tartalmaz: az első kiválasztott minősítést kiírjuk (vessző nélkül), a többedik - szintén kiválasztott - minősítéseket bevezető vesszővel írjuk ki. Így tulajdonképpen a kiválasztott minősítések listáját kapjuk meg.
+
+  %>utolsó<%>nem utolsó%>
+
+Kísérleti opció! A blokk utolsó, illetve nem utolsó elemére vonatkozó elágazás. Lehet bele ágyazva %? szerkezet.
+
+Ha a forrásszövegbe valódi % jelet kívánunk elhelyezni (pl. TeX komment), akkor használjuk a 
+
+  %%
+  
+jelölést!

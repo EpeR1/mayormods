@@ -1,0 +1,3 @@
+====== parent hozzáférési szint ======
+
+A szülők számára fenttertott hozzáférési szint, gyengébb azonosítással és jogosultsági rendszerrel védve.

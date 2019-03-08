@@ -1,0 +1,10 @@
+====== Tankör blokkok ======
+
+Két tankör abban az esetben kerülhet egy tankörblokkba, ha egyszerre, egy időben lehet órájuk. Ennek feltétele, hogy
+  * Nincs olyan diák, aki mind a két tankörben benne lenne
+  * A tankörök tanára sem közös (ezt a program még nem ellenőrzi!!)
+
+
+==== Hol használjuk a tankör blokkokat? ====
+
+A tankörblokkokra alapvetően órarend készítéskor lesz szükség (ld. [[naplo:tanev:ascexport|ascExport]]), de használjuk a választható tankörökre való jelentkezések kezelésekor is. A tankörblokkokra tekintettel van az összes tankörnévsort változtató művelet is.

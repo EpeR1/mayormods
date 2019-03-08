@@ -1,0 +1,94 @@
+====== Felhasználói azonosítók generálása ======
+
+** Figyelem **
+
+A rev2009-es számú kiadásban (2010. március végén) a MySQL adattábla szerkezete változott. Megszüntettük a `type` mezőt és átnevezésre
+került a groupId-->groupCn és groupName-->groupDesc . A továbbiakban ezt a formát részletezzük...
+
+** Megjegyzés: **
+
+Az alább leírt módszer némi gyakorlattal hatékonyabb és gyorsabb lehet, mint a web-es kezelőfelület használata, de nyilván több buktatóval is jár. Ha valaki nem biztos benne, hogy az alább leírtak szerint meg tudja oldani az azonosítók generálását, akkor inkább maradjon a felület nyújtotta lehetőségeknél:
+  * [[naplo:admin:azonositok|diák azonosítók generálása]]
+  * [[session:createAccount|új azonosító létrehozása]]
+
+----
+
+A tanárok és diákok számára generálhatunk felhasználói azonosítókat az intézmény ''tanar'' és ''diak'' adattáblájának adataiból - amennyiben MySQL háttéradatbázist használunk. Egy lehetséges megoldást mutatunk itt be.
+
+Lépjünk be az intézmény adatbázisába (''intezmeny_[intézmény rövid neve]''), majd ideiglenesen módosítsuk a ''tanar'' táblát egy új mező hozzáadaásával, majd töltsük is fel adatokkal:
+
+  alter table tanar add column userAccount varchar(32);
+  update tanar set userAccount=concat(viseltCsaladinev,'.',substring_index(viseltUtonev,' ',1));
+
+Amint látható Családinév.Utónév alakú azonosítókat készítettünk. A következő lépés, hogy ellenőrizzük, van-e ütközés:
+
+  select userAccount,count(*) as db from tanar group by userAccount having db>1;
+
+Ha van, akkor az azonosítót egy megfelelő ''update'' paranccsal módosítsuk (pl. Utónév.Családinév alakra). Az ütközések kiküszöbölése után hasonlóan készítsük el a diákok azonosítóit is:
+
+  alter table diak add column userAccount varchar(32);
+  update diak set userAccount=concat(viseltCsaladinev,'.',substring_index(viseltUtonev,' ',1));
+  select userAccount,count(*) as db from diak group by userAccount having db>1;
+  +--------------------+----+
+  | userAccount        | db |
+  +--------------------+----+
+  | Kovács.János       |  2 |
+  +--------------------+----+
+
+
+Itt nagyobb eséllyel fogunk ütközésre lelni, de az ütköző ''userAccount''-ok megváltoztatásával ezek könnyen kiküszöbölhetőek. A fenti példában azt látjuk, hogy két Kovács.János azonosító is szerepel a listában. Kérdezzük le ezek többi adatát is:
+
+  select diakId,viseltCsaladinev,viseltUtonev from diak where userAccount='Kovács.János';
+  +--------+------------------+--------------+
+  | diakId | viseltCsaladinev | viseltUtonev |
+  +--------+------------------+--------------+
+  |      5 | Kovács           | János        |
+  |    303 | Kovács           | János        |
+  +--------+------------------+--------------+
+
+Majd az egyik érintett diák azonosítóját változtassuk meg (pl. diákId alapján):
+
+  update diak set userAccount='János.Kovács' where diakId=303;
+
+A módosítások után ismét ellenőrizzük az ütközéseket. Ha nincs több ütközés, akkor meg kell még vizsgálnunk, hogy a tanári és diák azonosítók között nincs-e egyforma:
+
+  select * from tanar left join diak using (userAccount) where diakId is not null;
+
+Ha találunk ütköző azonosítókat, akkor azokat a fentiek alapján ismét módosíthatjuk. Ha úgy tűnik, hogy az azonosítók rendben vannak, akkor vegyük fel őket, először például a tanárokat:
+
+  insert into mayor_private.accounts (policy,userAccount,userCn,userPassword,studyId)
+    select 'private',userAccount,concat_ws(' ',viseltNevElotag,viseltCsaladinev,viseltUtonev) as userCn,
+    sha('kezdetiJelszó') as userPassword,oId as studyId from tanar;
+
+Érdemes a tanári azonosítókat rögrön berakni a tanár csoportba is:
+
+  set @gid = (select gid from mayor_private.groups where groupCn='tanar');
+  insert into mayor_private.members (uid,gid) select uid,@gid from mayor_private.accounts
+    where userAccount in (select userAccount from tanar);
+
+Majd betöltjük a diákok azonosítóit is.
+
+  insert into mayor_private.accounts (policy,userAccount,userCn,userPassword,studyId)
+    select 'private',userAccount,concat_ws(' ',viseltNevElotag,viseltCsaladinev,viseltUtonev) as userCn,
+    sha(crc32(viseltCsaladinev)) as userPassword,oId as studyId from diak;
+
+Az előző betöltéshez képest egy különbséget figyelhetünk meg: a kezdeti jelszónak most nem egy konstans értéket állítunk be, hanem a tanuló vezetéknevének CRC32-es kódját. 
+Ez könnyen reprodukálható, megfelelő induló jelszó lehet. 
+
+Rakjuk be az új azonosítókat a diák csoportba:
+
+  set @gid = (select gid from mayor_private.groups where groupCn='diak');
+  insert into mayor_private.members (uid,gid) select uid,@gid as gid from mayor_private.accounts
+    where userAccount in (select userAccount from diak);
+
+Már csak az van hátra, hogy az ideiglenes változtatásokat helyreállítsuk:
+
+  * A ''tanar'' és ''diak'' tábla userAccount mezőjének törlése
+
+  alter table tanar drop column userAccount;
+  alter table diak drop column userAccount;
+
+Utolsó lépésként állítsuk be a shadow attribútumokat (ezek befojásolják, hogy a jelszó mennyi ideig érvényes, mikor kell megváltoztatni, stb...)
+
+  update mayor_private.accounts set shadowMin=1,shadowMax=90,shadowWarning=10,shadowInactive=10;
+

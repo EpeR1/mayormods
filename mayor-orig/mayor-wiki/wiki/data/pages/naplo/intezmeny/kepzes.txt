@@ -1,0 +1,31 @@
+====== Képzések ======
+
+===== Rögzítés lépései =====
+
+1. Képzés felvétele
+2. Képzés osztályhoz rendelése
+3. Képzés óratervének beállítása
+4. Diákok képzéshez rendelése
+
+
+==== Képzés felvétele ====
+
+Képzések menüpontban egy új képzés felvételénél írjunk be egy képzésre jellemző, de ne túl hosszú nevet (pl. hatévfolyamos angol), és adjuk meg a bevezetés évét, ami
+tulajdon képpen csak egy verziószám. A rögzítés után lehetőségünk van megadni a kezdő és záró évfolyamot (ezt mindenképp tegyük meg), illetve a résztvevő
+osztályokat az aktuális tanévben aktív osztályok betűjelei közül.
+
+==== Képzés óratervének beállítása ====
+
+A képzések óratervénél megjelenik a képzéseknél beállított kezdő és záróévfolyamok közötti kötelező és maximális HETI óraszámok, valamint az egyes tárgyakohoz tartozó 
+HETI óraszámok rögzítési lehetősége. Az egyes tárgyaknál a félévi és évvégi osztályzatok típusát is be kell állítanunk.
+
+Az itt beállított követelmények lesznek érvényesek egy diák minden ahhoz a tárgyhoz tartozó tankörénél - természetesen
+évfolyamtól függően. (A képzés erősebb, mint a tárgyhoz beállított alapértelmezés.)
+
+==== Diákok képzéshez rendelése ====
+
+A diákokat a képzéshez az osztályon keresztül tudjuk rendelni. Az osztálynévsorban (osztály menüpont) ikszeljük be a megfelelő képzésneveket.
+A képzésekhez nem tartozik egyelőre dátumintervallum! Osztályváltáskor képzést is vált a diák.
+
+Bár egy diák tartozhat több osztályba és ezen keresztül több képzésbe is, ugyanakkor ha különböző évfolyamokra jár egyszerre és a képzéseihez ugyanazon tárgyhoz különböző
+zárókövetelmény is tartozik, az hibajelzéshez vezet. Ilyen szituáció azonban bár elvileg lehetséges, a gyakorlatban nem fordulhat elő!

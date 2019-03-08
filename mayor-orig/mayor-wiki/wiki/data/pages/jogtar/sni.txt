@@ -1,0 +1,265 @@
+====== Sajátos nevelési igény ======
+
+pontosabban //különleges oktatási-nevelési szükséglet//
+
+>> 1993. évi LXXIX. törvény a közoktatásról - Értelmező rendelkezések 
+>> **121. §** (1)
+>> 29. sajátos nevelési igényű gyermek, tanuló: az a gyermek, tanuló, aki a szakértői és rehabilitációs bizottság szakvéleménye alapján
+>> a) testi, érzékszervi, értelmi, beszédfogyatékos, autista, több fogyatékosság együttes előfordulása esetén halmozottan fogyatékos, a megismerő funkciók vagy a viselkedés fejlődésének organikus okra visszavezethető tartós és súlyos rendellenességével küzd,
+>> b) a megismerő funkciók vagy a viselkedés fejlődésének organikus okra vissza nem vezethető tartós és súlyos rendellenességével küzd;
+
+Tehát a törvény két kategóriát különböztet meg. Az elsőt nevezhetjük **fogyatékos**nak, vagy fogyatékkal élőnek, míg a második a **pszichés/kognitív zavar**ral küzdő.
+
+===== SNI főcsoportok =====
+
+Az SNI ma Magyarországon  a vegyes szakterminológia, a jogi szabályozás, a finanszírozási modell és a statisztikai célú felhasználás hibrid fogalomegyüttese.
+
+A magyar jogi szövegekben az SNI meghatározásában mindenekelőtt az ellátás és finanszírozás, nem pedig a szakmai szempontok domináltak (és dominálnak), jóllehet magyarra átültetésében a gyógypedagógia hazai terminológiája a volt a főként meghatározó. A sérülés, fogyatékosság, zavar, nehézség és számos más kifejezés az angol szakterminológia (az angolszász hagyományokban igen erős neuropszichológia jól definiált szakkifejezései) tükörfordításából, sokszor félreértelmezéséből egy sajátos szakmai fogalomzavar alakult ki.
+
+A magyar törvényi szabályozás és ennek következményeként (bár a gyakorlat tapasztalatait tekintve inkább előzményeként) az ellátás jellegzetesen hibrid, esetenként szakmailag pontatlan kategóriákat használ. Megtölti tehát az SNI egyes alcsoportjait a diagnosztika korszerű és elavult címkéinek sora, miközben a kategóriái részben követik (vagy követni szeretnék) az OECD finanszírozási modelljeit. Mindezek alapján elmondható tehát, hogy az SNI nem szakmai, hanem finanszírozási kategória, azaz az SNI-be való bekerülés ( a konkrét diagnosztikai kategória szerint megnevezve) fenntartói és nem hátránycsökkentési érdek
+
+A gyakran félreértett SNI besorolások tehát nem szakmai (diagnosztikai, fejlesztési) szempontokat tükröznek elsősorban, hanem statisztikai összemérhetőséget. Az SNI miatt kiemelten támogatott diákokról készült statisztikák tehát az oktatáspolitika informálását és nem az érintettek szakmai ellátásának rendszerét szolgálják első helyen. A magyarországi SNI adatok azonban más célokra is felhasználásra kerülnek, a statisztikai kategóriák pedig az atipikus fejlődés és a fejlődésben akadályozott gyerekek diagnosztikai elnevezéseivel telnek meg.
+
+A hazai SNI-szabályozásba jelenleg nem fér bele a beteg gyerekek különleges oktatáshoz való jogának kérdése (Finnországban ez SNI-kategória). Ez igen kritikus olyan estekben, amikor a gyermek tartósan kórházban (pl. leukémia), vagy gyerekközösségtől elszakadva (közösségben nem oktathatónak minősített), otthon van.
+A jelenlegi törvényben tehát a tartósan beteg gyerekek különleges oktatáshoz való joga alig érvényesül.
+
+A fentiek tükrében a lehetetlen vállalkozásba fogunk: SNI kategóriákat próbálunk kialakítani:
+
+  - Fogyatékosság, akadályozottság
+    - tanulási akadályozottság
+      - **enyhe mértékű értelmi fogyatékosság** (BNO: F70)
+    - értelmi akadályozottság
+      - **közepes (középsúlyos) értelmi fogyatékosság** (BNO: F71)
+      - súlyos értelmi fogyatékosság (BNO: F72)
+      - mélyen súlyos értelmi fogyatékosság (BNO: F73)
+    - **autizmus**1;1D (BNO: F84.0 , F84.1, F84.5, F84.9)
+    - **mozgáskorlátozottság**
+    - **hallássérült**
+    - **látássérült**
+    - **beszédfogyatékos**
+    - több fogyatékosság együttes előfordulása esetén **halmozottan fogyatékos**
+  - Pszichés/Kognitív fejlődés zavara
+    - a beszéd és a nyelv specifikus fejlődési zavarai (BNO: F80)
+    - részképesség zavarok
+      - **diszlexia** (BNO: F81.0)
+      - **diszgráfia** (BNO: F81.1)
+      - **diszkalkulia** (BNO: F81.2)
+      - **iskolai készségek kevert zavara** (BNO: F81.3)
+      - az iskolai képességek nem meghatározott fejlődési zavara (BNO: F81.9)
+        - **tanulási nehézség**
+        - **tanulási zavar**
+      - **kevert specifikus fejlődési zavarok** (BNO: F83)
+    - motoros funkció specifikus fejlődési zavarai, dyspraxia ("ügyetlen gyerek") (BNO: F82)
+    - egyéb zavarok
+      - **elektív mutizmus** (BNO: F94.0)
+      - egyéb pszichológiai fejlődési zavar, agnózia (BNO: F88)
+      - nem meghatározott pszichológiai fejlődési zavar (BNO: F89)
+    - aktivitás szabályozás és figyelem zavar / figyelemhiányos és diszruptív viselkedési zavar
+      - **hiperaktivitás**, ADHD (BNO: F90)
+      - **magatartászavar**, viselkedészavar (BNO: F91)
+  - **Tartósan beteg**
+
+(BNO: Betegségek nemzetközi osztályozása - magyar fordítás 1996.)
+
+==== OECD kategóriák ====
+
+Az OECD (Organisation for Economic Co-operation and Development) az egyes országok SNI gyakorlatát elemezve olyan négy nagy ellátási, a közoktatás számára egyben igencsak eltérő feladatot jelentő, kategóriát sorol fel, amelyek országonként tovább differenciálódnak, azaz a használt kategóriák száma általában 1 és 14 között változik. A legalább 4 kategóriát használó országok főbb kategóriacsoportjai
+
+1) Fizikai képességek zavara
+
+2.) Érzékszervi zavarok, károsodások
+
+3.) Súlyos tanulási zavarok
+
+4.) Az érzelemszabályozás zavarai
+
+==== OECD statisztikai célú kategóriák ====
+
+Az OECD statisztikai célú (az egyes országokban a finanszírozás kereteinek súlyozásához használt) kategóriái:
+
+OECD-A : súlyos képességzavarok (disabilities – a magyar kategória erre a fogyatékosságot használja, ezzel kívánva jelezni a tipikus fejlődéstől való súlyos eltérés organikus eredetét, ennek finanszírozsáa körül nincs a jogalkotók részéről nézetkülönbség)
+
+OECD-B: nehézségek (difficulties – a magyarban nehézség kifejezés szerepel, azaz olyab súlyos fejlődési eltérések, amelyeknek megjelenését ismert szervi vagy környezeti ártalmak nem valószínűsítik).
+
+OECD-C: hátrányok (disadvantages – a magyarban a hátrányos helyzet szerepel, amely általában a szociális és kulturális hátrányokra szűkíti a fogalmat, ennél azonban tágabb a kategória)
+
+Az OECD finanszírozási modellek az utóbbi években egy negyedik kategória bevezetését szorgalmazzák (OECD-D), ez pedig a tehetséggondozás, a kiemelkedő tehetségek emelt finanszírozásának és oktatási feltételeinek megteremtése (Németországban a Bajor Szövetségi Állam a közelmúltban vezette be ezt a rendszert). Magyarországon a finanszírozási modellnek ez a fajta bővítése eddig nem került napirendre.
+
+**Az OECD statisztikai kategóriái finanszírozási modellek kialakítását szolgálják, éppen ezért nem diagnosztikai kategóriák.**
+----
+
+===== Törvényi szbályozók =====
+
+    * Közoktatási törvény (1993. évi LXXIX.törvény a közoktatásról)
+    * 11/1994. (VI.8.) MKM rendelet a nevelési-oktatási intézmények működéséről
+    * 14/1994. (VI.24.) MKM rendelet a képzési kötelezettségről és a pedagógiai szakszolgálatokról
+    * 100/1997. (VI.13.) Korm. rendelet az érettségi vizsga vizsgaszabályzatának kiadásáról
+    * 20/2007. (V.21.) SZMM rendelet a szakmai vizsgáztatás általános szabályairól és eljárási rendjéről
+    * 2/2005. (III. 1.) OM rendelet a Sajátos nevelési igényű gyermekek óvodai nevelésének irányelve és a Sajátos nevelési igényű tanulók iskolai oktatásának irányelve kiadásáról
+    * 26 (2001. VII. 27.) OM rendelet a szakmai vizsgáztatás általános szabályairól és eljárási rendjérõl
+    * 29/2002. (V.17.) OM rendelet A fogyatékossággal élõ hallgatók tanulmányainak folytatásához szükséges esélyegyenlõséget biztosító feltételekrõl
+
+[[http://www.szakertoibizottsag4.hu/jogszabalyok.html]]
+
+===== A közoktatási törvény vonatkozó rendelkezései =====
+
+>> 1993. évi LXXIX. törvény a közoktatásról **6. §** 
+>> (3) A tankötelezettség annak a tanévnek a végéig tart, amelyben a tanuló tizennyolcadik életévét betölti. A sajátos nevelési igényű tanuló tankötelezettsége meghosszabbítható legfeljebb annak a tanévnek a végéig, amelyben a huszadik életévét betölti.
+>> (4) Az iskola igazgatója dönt
+>>
+>> a) a tankötelezettség kezdetéről az óvoda véleménye alapján, illetőleg ha a gyermek nem járt óvodába, vagy az óvoda kezdeményezi a nevelési tanácsadó véleménye alapján; a sajátos nevelési igényű gyermek esetén a tanulási képességet vizsgáló szakértői és rehabilitációs bizottság vagy az országos szakértői és rehabilitációs tevékenységet végző szakértői és rehabilitációs bizottság szakértői véleménye alapján;
+>>
+>> b) a tankötelezettség meghosszabbításáról a tanulási képességet vizsgáló szakértői és rehabilitációs bizottság vagy az országos szakértői és rehabilitációs tevékenységet végző szakértői és rehabilitációs bizottság szakértői véleménye alapján.
+>>
+>> **8. §** (12) A Nemzeti alaptanterv tartalmazza
+>>
+>> a) a nemzeti és etnikai kisebbségi iskolai nevelés-oktatás,
+>>
+>> b) a sajátos nevelési igényű tanulók iskolai nevelése-oktatása sajátos tantervi követelményeinek alapelveit.
+>> **8/B. §** (3) A sajátos nevelési igényű gyermekek, tanulók nevelését biztosító óvoda, valamint nevelését és oktatását végző iskola a 8. § (2)-(9) bekezdésében és a 8/A. § (1)-(4) bekezdésében foglaltakat azzal az eltéréssel alkalmazza, hogy az óvodai nevelési program, illetve az iskolai helyi tanterv elkészítésénél figyelembe veszi a Sajátos nevelési igényű gyermekek óvodai nevelésének irányelvét, illetve a Sajátos nevelési igényű tanulók iskolai oktatásának tantervi irányelvét is. A Sajátos nevelési igényű gyermekek óvodai nevelésének irányelvében, illetve a Sajátos nevelési igényű tanulók iskolai oktatásának tantervi irányelvében meghatározottak szerint a siket gyermek óvodai nevelése, iskolai nevelése és oktatása jelnyelven is folyhat.
+
+>> **13. §** (5) A szülő joga, hogy gyermeke lakóhelyén, ennek hiányában tartózkodási helyén a polgármester segítségét kérje ahhoz, hogy gyermeke különbözeti vizsga vagy évfolyamismétlés nélkül folytathassa tanulmányait, ha a településen nem működik olyan iskola, amelyik a tankötelezettség végéig biztosítja az iskolai nevelést és oktatást. A sajátos nevelési igényű gyermek lakóhelyén, ennek hiányában tartózkodási helyén a polgármester segítségét kérheti ahhoz, hogy gyermeke óvodai neveléséhez, iskolai neveléséhez-oktatásához szükséges feltételeket a településen megteremtsék.
+
+>> **19. §** (7) A pedagógus alapvető feladata a rábízott gyermekek, tanulók nevelése, tanítása. Ezzel összefüggésben kötelessége különösen, hogy
+>> ...
+>> b) nevelő és oktató tevékenysége során figyelembe vegye a gyermek, tanuló egyéni képességét, tehetségét, fejlődésének ütemét, szociokulturális helyzetét és fejlettségét, sajátos nevelési igényét, segítse a gyermek, tanuló képességének, tehetségének kibontakozását, illetve bármilyen oknál fogva hátrányos helyzetben lévő gyermek, tanuló felzárkózását tanulótársaihoz,
+
+
+>> **30. §** (1) A sajátos nevelési igényű gyermeknek, tanulónak joga, hogy különleges gondozás keretében állapotának megfelelő pedagógiai, gyógypedagógiai, konduktív pedagógiai ellátásban részesüljön attól kezdődően, hogy igényjogosultságát megállapították. A különleges gondozást - a gyermek, tanuló életkorától és állapotától függően, a 35. § (2) bekezdésében meghatározott szakértői és rehabilitációs bizottságok szakértői véleményében foglaltak szerint - a korai fejlesztés és gondozás, az óvodai nevelés, az iskolai nevelés és oktatás, a fejlesztő felkészítés keretében kell biztosítani. A korai fejlesztés és gondozás megvalósítható otthoni ellátás, bölcsődei gondozás, fogyatékosok ápoló, gondozó otthonában nyújtott gondozás, gyermekotthonban nyújtott gondozás, gyógypedagógiai tanácsadás, korai fejlesztés és gondozás keretében biztosított fejlesztés és gondozás, konduktív pedagógiai ellátás keretében.
+>>
+>> (2) A sajátos nevelési igényű gyermek óvodai nevelése, tanuló iskolai nevelése és oktatása, továbbá kollégiumi nevelése az e célra létrehozott gyógypedagógiai nevelési-oktatási intézményben, konduktív pedagógiai intézményben, óvodai csoportban, óvodai tagozaton, iskolai tagozaton, osztályban, csoportban vagy a többi gyermekkel, tanulóval együtt, azonos óvodai csoportban, óvodai tagozaton, illetve iskolai osztályban (a továbbiakban: a sajátos nevelési igényű gyermekek, tanulók - külön vagy közös - nevelésében és oktatásában részt vevő óvoda és iskola, illetve kollégium együtt: gyógypedagógiai nevelésben-oktatásban részt vevő nevelési-oktatási intézmény) történhet. A gyermek külön óvodai nevelését végző óvodai csoportot, óvodai tagozatot, illetve a tanulók külön iskolai nevelését és oktatását végző iskolai tagozatot, osztályt, csoportot - a gyógypedagógiai nevelési-oktatási intézménnyel [20. § (2) bek.] egyezően - a fogyatékosság típusának megfelelően kell létrehozni. A gyógypedagógiai nevelésben-oktatásban részt vevő nevelési-oktatási intézményben a gyermek, tanuló egészségügyi és pedagógiai célú habilitációs és rehabilitációs ellátásban is részesül.
+>>
+>> (3) A gyógypedagógiai nevelésben-oktatásban, a konduktív nevelésben-oktatásban részt vevő nevelési-oktatási intézménynek rendelkeznie kell azokkal a személyi és tárgyi feltételekkel, amelyek a sajátos nevelési igényű gyermek, tanuló egészségügyi és pedagógiai célú habilitációs és rehabilitációs ellátáshoz szükségesek. A nevelési-oktatási intézményt a szülő választja ki a tanulási képességet vizsgáló szakértői és rehabilitációs bizottság, illetve az országos szakértői és rehabilitációs tevékenységet végző bizottság szakértői véleménye alapján.
+>>
+>> (4) A gyermek, tanuló érdekében a jegyző kötelezheti a szülőt, hogy gyermekével jelenjen meg szakértői vizsgálaton, illetve a szakértői vélemény alapján gyermekét a megfelelő nevelési-oktatási intézménybe írassa be [a továbbiakban a (3) bekezdés szerint kiválasztott, illetve a (4) bekezdés szerint a jegyző által kijelölt nevelési-oktatási intézmény: kijelölt nevelési-oktatási intézmény, kijelölt óvoda, kijelölt iskola].
+>>
+>> (5) Ha a gyermeket a kijelölt nevelési-oktatási intézmény nem tudja felvenni, a szakértői véleményt adó intézmény megkísérel másik, a sajátos neveléshez és oktatáshoz szükséges személyi és tárgyi feltételekkel rendelkező nevelési-oktatási intézményt találni. Ha így sem oldható meg a gyermek, a tanuló elhelyezése, a szakértői véleményt adó intézmény meghatározza, hogy a gyermek, a tanuló milyen módon kapcsolódhat be a nevelésbe és az oktatásba, és a gyermeket, a tanulót előjegyzésbe veszi mindaddig, ameddig felvételét nem sikerül megoldani.
+>>
+>> (6) Ha a sajátos nevelési igényű gyermek súlyos és halmozottan fogyatékos, attól az évtől kezdve, amelyben az ötödik életévét betölti, az óvodai nevelési év első napjától kezdődően fejlesztő felkészítésben vesz részt. A fejlesztő felkészítés megvalósítható a fogyatékosok ápoló, gondozó otthonában nyújtott gondozás, a fogyatékosok rehabilitációs intézményében, a fogyatékosok nappali intézményében nyújtott gondozás, a gyógypedagógiai tanácsadás, korai fejlesztés és gondozás keretében biztosított fejlesztés és gondozás, a konduktív pedagógiai ellátás, a gyógypedagógiai nevelésben és oktatásban részt vevő iskolában nyújtott fejlesztés keretében, illetőleg annak a nevelési évnek a végéig, amelyben a gyermek hatodik életévét betölti bölcsődei gondozás keretében. A jegyző a (4) bekezdésben meghatározottak szerint kötelezheti a szülőt, hogy gyermekével jelenjen meg a szakértői vizsgálaton, illetőleg, hogy gyermeke részére a szakértői véleményben meghatározottak szerint biztosítsa a fejlesztő felkészítésben való részvételt.
+>>
+>> (7) Ha a gyermek, a tanuló beilleszkedési, tanulási, magatartási nehézséggel küzd (a továbbiakban együtt: beilleszkedési, tanulási, magatartási nehézséggel küzdő gyermek, tanuló), illetve a megismerő funkciók vagy a viselkedés fejlődésének organikus okra vissza nem vezethető tartós és súlyos rendellenességével küzd, fejlesztő foglalkoztatásra jogosult. A fejlesztő foglalkoztatás a nevelési tanácsadás, az óvodai nevelés, az iskolai nevelés és oktatás, a kollégiumi nevelés és oktatás keretében valósítható meg.
+>>
+>> (8) Abban a kérdésben, hogy a gyermek, tanuló beilleszkedési, tanulási, magatartási nehézséggel küzdő, vagy sajátos nevelési igényű, a nevelési tanácsadó megkeresésére a szakértői és rehabilitációs bizottság dönt.
+>>
+>> (9) A sajátos nevelési igényű tanulót, illetve a beilleszkedési, tanulási, magatartási nehézséggel küzdő tanulót - jogszabályban meghatározott munkamegosztás szerint - a szakértői és rehabilitációs bizottság vagy a nevelési tanácsadó szakértői véleménye alapján - a gyakorlati képzés kivételével - az igazgató mentesíti egyes tantárgyakból, tantárgyrészekből az értékelés és a minősítés alól. Ha a tanulót egyes tantárgyakból, tantárgyrészekből mentesítik az értékelés és minősítés alól, az iskola - az e törvény 52. §-ának (7) bekezdésében, valamint (11) bekezdésének c) pontjában meghatározott időkeret terhére - egyéni foglalkozást szervez részére. Az egyéni foglalkozás keretében - egyéni fejlesztési terv alapján - segíti a tanuló felzárkóztatását a többiekhez. Az érettségi vizsgán az érintett tantárgyak helyett a tanuló - a vizsgaszabályzatban meghatározottak szerint - másik tantárgyat választhat. A tanuló részére a felvételi vizsgán, az osztályozó vizsgán, a modulzáró vizsgán, a szintvizsgán, a különbözeti vizsgán, a javítóvizsgán, az érettségi vizsgán, a szakmai vizsgán biztosítani kell a hosszabb felkészülési időt, az írásbeli beszámolón lehetővé kell tenni az iskolai tanulmányok során alkalmazott segédeszköz (írógép, számítógép stb.) alkalmazását, szükség esetén az írásbeli beszámoló szóbeli beszámolóval vagy a szóbeli beszámoló írásbeli beszámolóval történő felváltását.
+>>
+>> (10) A korai fejlesztés és gondozás, továbbá a fejlesztő felkészítés feladatait pedagógus-munkakörben gyógypedagógus (terapeuta) konduktor vagy gyógypedagógus (terapeuta), illetve konduktor irányításával, szükség esetén közreműködésével szociálpedagógus, óvodapedagógus, tanító, tanár; nem pedagógus-munkakörben gyógypedagógus (terapeuta) vagy konduktor irányításával szociális munkás, gyógytornász, ápoló, gyermekfelügyelő, pedagógiai asszisztens, gyógypedagógiai asszisztens, bölcsődei gondozó láthatja el.
+>>
+>> (11) A gyógypedagógiai nevelésben-oktatásban részt vevő nevelési-oktatási intézményben a pedagógus-munkakör betöltéséhez szükséges felsőfokú iskolai végzettségek és szakképzettségek a következők:
+>>
+>> a) ha az óvodai foglalkozás, a tanórai foglalkozás elsődleges célja a sajátos nevelési igényből eredő hátrány csökkentése, továbbá az egészségügyi és pedagógiai célú habilitációs, rehabilitációs óvodai foglalkozásokhoz, tanórai foglalkozásokhoz; valamint, ha az értelmi fogyatékos tanuló iskolai nevelése, oktatása külön - az e célra létrehozott gyógypedagógiai nevelési-oktatási intézményben, óvodai csoportban, óvodai tagozaton, iskolai tagozaton, osztályban, csoportban - történik, a fogyatékosság típusának megfelelő gyógypedagógiai tanári, konduktori, konduktor-tanítói, terapeuta szakképzettség,
+>>
+>> b) ha az óvodai foglalkozás, a tanórai foglalkozás elsődlegesen nem a sajátos nevelési igényből eredő hátrány csökkentését, a tanuló egészségügyi és pedagógiai célú habilitációját, rehabilitációját szolgálja, továbbá a tanórán kívüli foglalkozáshoz, a kollégiumi foglalkozáshoz az a) pontban meghatározott vagy a 17. § (1) bekezdésében meghatározott végzettség és szakképzettség.
+>>
+>> (12) Ha a (11) bekezdés b) pontja alapján a pedagógus-munkakört a 17. § (1) bekezdésében meghatározott végzettséggel és szakképzettséggel rendelkezővel töltik be, biztosítani kell, hogy a fogyatékosság típusának megfelelő végzettséggel és szakképzettséggel rendelkező gyógypedagógus (terapeuta) vagy konduktor segítse a többi pedagógus munkáját.
+>>
+>> (13) A gyógypedagógiai nevelésben-oktatásban részt vevő nevelési-oktatási intézményben - az e törvény 18. § (1) bekezdésének a) pontjában a középiskolákra vonatkozó rendelkezések megtartásával - intézményi vezetői megbízást kaphat az is, aki a fogyatékosság típusának megfelelő gyógypedagógiai tanári, konduktori, konduktor-tanítói, terapeuta felsőfokú iskolai végzettséggel és szakképzettséggel rendelkezik.
+>>
+>> **30/A.** § (1) A súlyos és halmozottan fogyatékos gyermek annak a tanítási évnek az első napjától, amelyben a hatodik életévét betölti, a fejlesztő felkészítés keretei között a tankötelezettségét teljesíti (a továbbiakban: fejlesztő iskolai oktatás). A fejlesztő iskolai oktatás az e törvény 30. §-ának (6) bekezdésében meghatározott intézményekben szervezhető meg (a továbbiakban: fejlesztő iskolai oktatás). A fejlesztő iskolai oktatást a tanév rendjéhez igazodóan kell megszervezni. A fejlesztő iskolai oktatást a Súlyos és halmozottan fogyatékos tanulók fejlesztő oktatása irányelvének alkalmazásával kell megszervezni, oly módon, hogy a heti fejlesztő foglalkozások száma elérje a húsz órát. Megszervezésekor az e törvény 6. §-ában, 8-9. §-ában, 25-29. §-ában, 31. §-ában, 46. §-ában, 48. §-ában, 50. §-ában, 52-53. §-ában, 66-67. §-ában, 69-73. §-ában, 78. §-ában foglaltakat nem lehet alkalmazni. A fejlesztő iskolai oktatásban rehabilitációs pedagógiai programot és annak alapján egyéni fejlesztési terveket készítenek. A rehabilitációs pedagógiai program bevezetésére a pedagógiai program elfogadására és jóváhagyására vonatkozó rendelkezéseket kell alkalmazni.
+>>
+>> (2) A fejlesztő iskolai oktatásban a tanuló annak a tanítási évnek az utolsó napjáig köteles részt venni, amelyben betölti a tizennyolcadik életévét. A fejlesztő iskolai oktatásban a tanuló annak a tanévnek a végéig vehet részt, amelyben betölti a huszonharmadik életévét. A fejlesztő iskolai oktatásban a tanulókat a fogyatékosságuk, fejlettségük és életkoruk alapján osztják be fejlesztő csoportokba.
+>>
+>> (3) Ha a tanuló - a szakértői és rehabilitációs bizottság szakvéleményében foglaltak szerint - nem tud részt venni a fejlesztő iskolai oktatásban, a tankötelezettségét egyéni fejlesztő felkészítés keretében teljesíti. Az egyéni fejlesztő felkészítés megszervezhető otthoni ellátás keretében, illetve a fogyatékosok ápoló, gondozó otthonában, a fogyatékosok rehabilitációs intézményében, a fogyatékosok nappali intézményében, a gyógypedagógiai tanácsadó korai fejlesztő gondozó központban, illetve a konduktív pedagógiai intézményben.
+
+>> **50. §** A sajátos nevelési igényű gyermekek, tanulók
+>> ...
+>> b) iskolai nevelése és oktatása esetén a helyi tanterv tartalmazza a fogyatékosság típusához és fokához igazodó fejlesztő programot is. A helyi tanterv, a szakmai program az egyes évfolyamok követelményeinek teljesítéséhez egy tanítási évnél hosszabb időt is megjelölhet.
+
+>> **52. §** ... Nappali rendszerű iskolai oktatásban a tanuló abban az évben kezdhet utoljára tanévet, amelyben betölti
+>>
+>> a) nyolc évfolyamos általános iskola esetén a tizenhatodik,
+>>
+>> b)
+>>
+>> c) középiskola és szakiskola esetén a huszonkettedik
+>>
+>> életévét. ... A sajátos nevelési igényű tanuló esetén, valamint a súlyos beilleszkedési, tanulási, magatartási nehézséggel küzdő tanuló esetén, továbbá, ha a tanulmányi követelményeket azért nem tudták teljesíteni, mert a tanuló tartós gyógykezelés alatt állt, az a)-c) pontban meghatározott életkorhoz három évet hozzá kell számítani.
+>> ...
+>> (6) A gyógypedagógiai nevelésben-oktatásban részt vevő nevelési-oktatási intézményben a sajátos nevelési igényű tanulók részére a (3) bekezdésben meghatározott tanórai foglalkozásokon túl kötelező egészségügyi és pedagógiai célú habilitációs, rehabilitációs tanórai foglalkozásokat kell szervezni. A tanuló annyi egészségügyi és pedagógiai célú habilitációs, rehabilitációs tanórai foglalkozáson vesz részt, amennyi a sajátos nevelési igényéből eredő hátránya csökkentéséhez szükséges. A kötelező egészségügyi és pedagógiai célú habilitációs, rehabilitációs tanórai foglalkozások megszervezésének heti időkerete a (3) bekezdésben az évfolyamra meghatározott heti tanítási óra
+>>
+>> a) tizenöt százaléka értelmi fogyatékos tanuló,
+>>
+>> b) tizenöt százaléka - az autista kivételével - többi fel nem sorolt fogyatékos tanuló,
+>>
+>> c) harmincöt százaléka a gyengénlátó tanuló,
+>>
+>> d) negyven százaléka a mozgásfogyatékos, a vak, a nagyothalló, a beszédfogyatékos tanuló,
+>>
+>> e) ötven százaléka a siket és az autista tanuló
+>>
+>> esetén. A heti időkeretet abban az esetben, ha a tanulót külön osztályban tanítják, osztályonként kell megállapítani. Ha a tanulót a többi, nem fogyatékos tanulóval közösen - egy osztályban tanítják -, a heti órakeretet nyolc fős csoportokra kell meghatározni oly módon, hogy az azonos ellátásra jogosult tanulók számát elosztják nyolccal. A csoportra jutó időkeret akkor is felhasználható, ha az osztás alapján a csoportban nincs nyolc tanuló. Ennél a számításnál a tanulói létszámot a tényleges létszám alapján kell számításba venni. Ha az iskolában az osztályt több különböző évfolyamra járó tanulóból szervezik meg (a továbbiakban: összevont osztály), és az egyes évfolyamokra a (3) bekezdés eltérő mértékű heti kötelező tanórai foglalkozást állapít meg, a habilitációs, rehabilitációs tanórai foglalkozás heti időkeretét a magasabb évfolyamra megállapított heti kötelező tanórai foglalkozás mértéke alapján kell meghatározni. A heti időkeret az egyes évfolyamok, osztályok, tanítási év közben a tanítási hetek között átcsoportosítható. A középsúlyos értelmi fogyatékos tanuló részére az iskola a nevelési-oktatási feladatokat egészségügyi és pedagógiai habilitációs, rehabilitációs célú tanórai foglalkozás keretében szervezi meg a (3) bekezdésben és e bekezdés a) pontjában meghatározott időkeretben [a továbbiakban a (3)-(6) bekezdés alatti foglalkozások: kötelező tanórai foglalkozások].
+
+>> **58. §** (1) Szakmai munkaközösség hozható létre a gyermek- és ifjúságvédelmi feladatok, a szabadidő hasznos eltöltésével összefüggő feladatok, a sajátos nevelési igényű és a halmozottan hátrányos helyzetű tanulók integrációját szolgáló feladatok segítéséhez is. 
+
+>> **66. §** (5) ... A halmozottan hátrányos helyzetű tanulók felvételi, átvételi kérelmének teljesítése után sorsolás nélkül is felvehető a sajátos nevelési igényű tanuló, továbbá az a tanuló, akinek ezt sajátos helyzete indokolja. A sajátos helyzetet a helyi önkormányzat rendeletben állapítja meg. 
+
+>> **69. §** (2) Az igazgató - a gyakorlati képzés kivételével - a tanulót kérelmére - részben vagy egészben - felmentheti az iskolai kötelező tanórai foglalkozásokon való részvétel alól, ha a tanuló egyéni adottságai, sajátos nevelési igénye, továbbá sajátos helyzete ezt indokolttá teszi. Az igazgató a tanulót kérelmére mentesítheti a készségtárgyak tanulása alól, ha azt egyéni adottsága vagy sajátos helyzete indokolttá teszi.
+
+>> **78. §** (2) Az iskolai tanulmányok attól az évtől kezdődően, amelyben a tanuló
+>>
+>> a) nyolc évfolyamos általános iskola esetén tizenhetedik,
+>>
+>> c) középiskola és szakiskola esetén huszonharmadik
+>>
+>> életévét betölti, kizárólag felnőttoktatás keretében folytatható. A c) pontban meghatározott határidő egy évvel meghosszabbítható abban az esetben, ha a tanuló az általános iskola első évfolyamán a tanulmányait a hetedik életévében kezdte meg, továbbá, ha olyan szakképzésben vesz részt, amelyben a szakképzési évfolyamok száma meghaladja a kettőt. Sajátos nevelési igényű tanuló esetén, valamint a súlyos beilleszkedési zavarral, tanulási nehézséggel, magatartási rendellenességgel küzdő tanuló esetén, továbbá, ha a tanulmányi követelményeket azért nem tudták teljesíteni, mert a tanuló tartós gyógykezelés alatt állt, az a)-c) pontban meghatározott életkorhoz három évet hozzá kell számítani.
+
+>> **91. §** (1) A főjegyző
+>> ...
+>> e) tájékoztatja az illetékes szakértői és rehabilitációs bizottságot arról, hogy melyik az az - e törvény 30. §-ának (1)-(2) bekezdésében felsorolt - intézmény, amelyik rendelkezik a sajátos nevelési igényű gyermek, tanuló különleges gondozásának ellátásához szükséges feltételekkel;
+
+>> **120. §** (1) Ha a sajátos nevelési igényű tanuló, illetve a beilleszkedési, tanulási nehézséggel, magatartási rendellenességgel küzdő tanuló szakértői vélemény alapján
+>>
+>> - tanulmányait magántanulóként folytatja, illetve
+>>
+>> - a szülő otthoni ellátás keretében tesz eleget a fejlesztő felkészítésben való részvételi kötelezettségének,
+>>
+>> az önkormányzati feladatellátás keretében, a szakértői véleményben megjelölt szakember biztosításáról - külön jogszabályban meghatározottak szerint - az iskolának, a fejlesztő felkészítést nyújtó, illetve a szakértői véleményt készítő intézménynek kell gondoskodnia.
+>>
+>> (2) Meg kell téríteni
+>>
+>> a) a korai fejlesztést és gondozást nyújtó, a sajátos nevelési igényű gyermekek nevelését és oktatását végző, valamint a fejlesztő felkészítést biztosító intézmény eléréséhez szükséges helyközi utazás költségeit, a gyermeknek, tanulónak és kísérőjének, továbbá
+>>
+>> b) az a) pontban felsorolt gyermek, tanuló szülője részére szervezett gondozói tanfolyam költségét;
+
+>> 1993. évi LXXIX. törvény a közoktatásról - Értelmező rendelkezések 
+>> **121. §** (1)
+>> ...
+>> 28. sajátos nevelési igényű neveléshez és oktatáshoz szükséges feltételek: a gyermek, tanuló külön óvodai neveléséhez, illetve iskolai neveléséhez és oktatásához, a sajátos nevelési igény típusának és súlyosságának megfelelő gyógypedagógus, konduktor foglalkoztatása, a neveléshez és oktatáshoz szükséges speciális tanterv, tankönyv és más segédletek; magánoktatáshoz, integrált óvodai neveléshez, iskolai neveléshez és oktatáshoz, a fejlesztő felkészítéshez, az illetékes szakértői bizottság által meghatározottak szerinti foglalkozáshoz szükséges szakirányú végzettségű gyógypedagógus foglalkoztatása; a foglalkozásokhoz szükséges speciális tanterv, tankönyv, valamint speciális gyógyászati és technikai eszközök; a gyermek, tanuló részére a szakértői és rehabilitációs bizottság által meghatározott szakmai szolgáltatások biztosítása;
+>> ...
+>> (9) Ha jogszabály az óvodai nevelésben részt vevő, a tanulói jogviszonyban, kollégiumi tagsági viszonyban álló vagy a képzési kötelezettséget teljesítő fogyatékos gyermek részére kedvezményt, juttatást, jogosultságot, kötelezettséget állapít meg, a fogyatékos gyermek, tanuló fogalom alatt a sajátos nevelési igényű gyermeket, tanulót kell érteni.
+
+>> 1. számú melléklet az 1993. évi LXXIX. t
+>> 6. A technikai létszámhoz egy létszámot indokolt hozzá számítani, ha a nevelési-oktatási intézményben a gyermekek, tanulók legalább húsz százaléka hátrányos helyzetű, vagy beilleszkedési, tanulási nehézséggel, magatartási rendellenességgel küzd, illetve, ha a sajátos nevelési igényű gyermekeket, tanulókat a többiekkel egy csoportban, osztályban nevelik, tanítják. A különböző csoportba tartozó gyermekek, tanulók létszámát együttesen is figyelembe lehet venni a húsz százalék megállapításához. A technikai létszámhoz tagintézményenként további egy-egy létszámot indokolt hozzá számítani.
+
+>> 2. számú melléklet az 1993. évi LXXIX. törvényhez / A gyermekek, tanulók adatai
+>> 1. E törvény alapján nyilvántartott adatok:
+>> d) a tanulói jogviszonnyal kapcsolatos adatok
+>> ...
+>> - a sajátos nevelési igényre vonatkozó adatok,
+>>
+>> 2. Az adatok - az e törvényben meghatározott célból, a személyes adatok védelmére vonatkozó célhoz kötöttség megtartásával - továbbíthatók
+>> - sajátos nevelési igényre, a beilleszkedési zavarra, tanulási nehézségre, magatartási rendellenességre vonatkozó adatok a pedagógiai szakszolgálat intézményeitől a nevelési-oktatási intézménynek, illetve vissza,
+
+>> 3. számú melléklet az 1993. évi LXXIX. törvényhez
+>> Az osztályok, csoportok szervezése
+>> 3. Azt a gyermeket, tanulót, aki beszédfogyatékos, enyhe értelmi fogyatékos, a megismerő funkciók vagy a viselkedés fejlődésének tartós és súlyos rendellenessége miatt sajátos nevelési igényű vagy beilleszkedési, tanulási, magatartási nehézséggel küzd, az óvodai csoport, iskolai osztály, kollégiumi csoport létszámának számításánál kettő, azt a gyermeket, tanulót pedig, aki testi, érzékszervi, középsúlyos értelmi fogyatékos, autista, halmozottan fogyatékos három gyermekként, tanulóként kell számításba venni, függetlenül attól, hogy a többi gyermekkel, tanulóval együtt vagy külön vesz részt óvodai nevelésben, iskolai nevelésben és oktatásban, kollégiumi nevelésben és oktatásban. Két tanulóként kell számításba venni a felzárkóztató oktatásban részt vevő tanulót. Az e pontban foglaltak az alapfokú művészetoktatásban nem alkalmazhatók.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

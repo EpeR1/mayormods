@@ -1,0 +1,12 @@
+
+    div.egyszam {  width:140px; margin-left: auto; margin-right: auto; margin-bottom: 50px;}
+    h1.egyszam { text-align: center }
+
+    table.egyszam {
+	background-color: #dddddd;
+	width:200px;
+    }
+    table.egyszam thead th { background-color: magenta; border-bottom: solid 2px lightblue; height:2em; }
+    table.egyszam tfoot th { background-color: lightblue; border-bottom: solid 1px white; }
+    table.egyszam td { background-color: #eeeeee; text-align:right; padding-right:4px; }
+

@@ -1,0 +1,55 @@
+===== Dobozok a portálon =====
+
+
+A portál modul bal- és jobboldalán megjelenő kis dobozokhoz (szótár, születésnaposok, stb.) hasonlóakat tudunk létrehozni, saját tartalommal.
+(Vigyázat: a túl sok információ sem jó, elvesznek benne a fontos dolgok...)
+
+Három szinten hozhatunk létre ilyet:
+  * public - bejelentkezés nélkül is látszik a kezdőoldalon;
+  * private - tanári és diákoldalak;
+  * parent - szülői oldalak.
+
+==== Elsőként... ====
+ ...tisztában kell lennünk vele, melyik skint használjuk.
+  * classic - nem változtattunk semmit, "gyári" kinézet;
+  * oldschool - a hagyományos, régi Mayor-felület;
+  * valami egyéni - de akkor házi készítés, és nyilvánvaló... :-)
+//(A classic változatot mutatom be...)//
+==== Második lépés =====
+Szerkesszük /var/mayor/config/module-portal/config.php állományt - a demo helyett írjuk be az iskola rövid nevét, pl. 'pod'!
+Ez volt:
+  define('__PORTAL_CODE','demo');
+Ez kell:
+  define('__PORTAL_CODE','pod');
+Majd másoljuk át a kívánt hozzáférési szinteken a módosítandó állományokat az iskola nevével:
+  # cp /var/mayor/www/policy/public/portal/portal/portal_demo.classic.php /var/mayor/www/policy/public/portal/portal/portal_pod.classic.php
+  # cp /var/mayor/www/policy/private/portal/portal/portal_demo.classic.php /var/mayor/www/policy/private/portal/portal/portal_pod.classic.php
+  # cp /var/mayor/www/policy/parent/portal/portal/portal_demo.classic.php /var/mayor/www/policy/parent/portal/portal/portal_pod.classic.php
+//(Javasolt mindhármat másolni - ha nem változtatunk, sem lesz baj belőle...)//
+
+==== Most jön az érdemi munka! ====
+A választott állományba be kell szúrni az új dobozhoz tartozó kódot. Nyissuk meg az állományt valamilyen szerkesztővel (pl. nano):
+  # nano /var/mayor/www/policy/parent/portal/portal/portal_pod.classic.php
+Majd keressük meg a 'putDoboz'-zal kezdődő sorokat!
+
+Alapesetben a 'parent' szinten a bal oldalon 3 doboz van:
+  * putDoboz('Védett modulok',...
+  * putDoboz('Születésnaposok :)',...
+  * putDoboz('Bejegyzések',...
+Ez alá lehet felvenni a következőt.
+Egy példa:
+  putDoboz('Iskolánk','Pod Iskola, Budapest', array('header-color'=>'#f7d722'));
+Ekkor a szülők oldalán megjelenik egy negyedik doboz, #f7d722 (sárga) színű "Iskolánk" fejléccel, "Pod Iskola" tartalommal.
+
+Egy egyszerű, de jól használható színkódos oldal:
+[[http://www.hungarotips.com/grafika/szinek/]]
+
+A tartalmat lehet formázni, pl. a következő kód már középre igazítja a félkövér szöveget:
+  putDoboz('Iskolánk','<center>'.'<b>'.'Pod Iskola, Budapest', array('header-color'=>'#f7d722'));
+Ha képet szeretnénk elhelyezni a dobozban, akkor a képet másoljuk be a /var/mayor/www könyvtárba, és adjunk neki megfelelő jogosultságot:
+  # chmod 644 /var/mayor/www/kep.png
+És a beszúrandó:
+  putDoboz('Iskolánk','<center>'.'<img src="kep.png" width="60">', array('header-color'=>'#f7d722'));
+A lehetőségek végtelenek...! :-)
+
+(Köszönet az ötletekért Bencének és Józsa Viktornak!)

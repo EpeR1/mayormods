@@ -1,0 +1,41 @@
+====== Dolgozatok kezelése ======
+
+===== Dolgozat kiválasztása =====
+
+Az eszközsor segítségével válasszuk ki azt a tanárt, vagy osztályt, esetleg diákot, akinek a dolgozatai közül szeretnénk választani. A megjelenő listát tovább szűkíthetjük egy tankör kiválasztáaával.
+
+A listában felsorolt dolgozatok közül válasszuk ki, amelyik részleteire kíváncsiak vagyunk. Ezt a dolgozat nevére való kattintással tehetjük meg.
+
+
+===== Dolgozat adatainak megtekintése =====
+
+A kiválasztott dolgozat adatai a következők:
+  * Megnevezés
+  * Bejelentés dátuma
+  * A számonkérés tervezett dátuma
+  * A dolgozathoz rendelt tankörök
+  * A dolgozathoz tartozó jegyek - tankörönként
+
+A jegyekre állva leolvashatjuk azok naplóbakerülésének dátumát és az esetleges hozzáfűzött megjegyzéseket is. A jegyre kattintva megtekinthetjük a jegy további adatait ([[jegy|Jegy módosítása]]).
+
+===== Dolgozat adatainak módosítása =====
+
+Egy dolgozat adatait aktív tanév esetén az adminisztrátor módosíthatja, illetve az épp folyó tanévben a dolgozat tanköreinek tanárai.
+
+==== Egyszerű adatok módosítása ====
+
+Az első űrlapon a dolgozat alapadatai láthatóak. Ezek közül a dolgozat megnevezését és tervezett időpontját változtathatjuk meg.
+
+==== Tankörhozzárendelés módosítása ====
+
+A második űrlapon láthatjuk a dolgozathoz rendelt tankörök listáját, pontosabban a dolgozat tantárgyához tartozó tankörök listáját, köztük kijelölve a már hozzárendelteket.
+
+A kijelölt tankörök listáját bővíteni a Ctrl gomb nyomvatartása mellett lehet az egér kattintásával. Ha a Ctrl gombot nem tartjuk nyomva, akkor a korábbi kijelölés eltűnik és csak a kiválasztott tankör lesz megjelölve. A kijelöltek listáját szűkíteni hasonló módon, szintén a Ctrl gomb nyomvatartása mellett lehet.
+
+A tankormódosításnál fontos, hogy
+  * legalább egy tankört meg kell jelölnünk
+  * olyan tankört nem törölhetünk a listából, amelyikhez tartoznak jegyek - a dolgozat jegyei közül.
+
+==== Jegyek törlése (tervezett funkció) ====
+
+Jegyek törlésére pillanatnyilag csak egyesével van lehetőség, de a későbbiekben itt is lesz rá mód.

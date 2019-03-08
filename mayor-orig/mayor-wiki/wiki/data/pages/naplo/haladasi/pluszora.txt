@@ -1,0 +1,21 @@
+====== Plusz óra felvétele ======
+
+Ez a programrész arra használható, hogy az órarendben nem szereplő, plusz órákat vegyünk fel.
+
+Egy óra felvételéhez négy dolgot kell mindenképp megadni:
+  * dátum
+  * óra
+  * tanár
+  * tankör
+Ezen kívül még megadhatjuk az óra helyszínét (terem) és típusát (órarendi óra/plusz óra).
+
+Első lépésként dátumot kell választanunk az eszköztár segítségével.
+Ez után újabb eszközök jelennek meg. Javasolt második lépésként tanárt, vagy osztályt választani - ekkor ugyanis az választható órák listája szűkül, a már foglalt órákat nem tudjuk kiválasztani.
+
+Tanár vagy osztály választás után egy tankör lista, és a választott tanár vagy osztály napi óráit tartalmazó táblázat is megjelenik.
+
+Tankör választásakor a tankör tanárainak listája váltja fel a korábbi osztály vagy tanár választó eszközt. Ha a tankörnek egy tanára van (leggyakrabban ez az eset fordul elő), akkor a program ki is választja ezt a tanárt.
+
+Ha kiválasztjuk az órát is, akkor újabb lehetőségek nyílnak meg: választhatunk a szabad termek közül, végül kiválaszthatjuk a beszúrandó óra típusát és rögzíthetjük az órát.
+
+Az óra típusának a helyettesítések kezelésekor van jelentőssége. Az órarendi órák helyettesítései, óracseréi, mozgatásai visszaállíthatóak, míg plusz óra esetén erre nincs lehetőség (ld. [[helyettesítés]]).

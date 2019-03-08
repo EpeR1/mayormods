@@ -1,0 +1,9 @@
+
+    dl { margin: 20px;}
+    dt { font-style:italic;;}
+    dd { padding: 14px; line-height:1.5; }
+
+    dt span { font-size: x-small; color: #ee0d78; padding-right:4px;}
+    dl dd a { color: #ee0d78; text-decoration: none;}
+    dl dd a:hover { text-decoration: underline;}
+

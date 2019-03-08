@@ -1,0 +1,11 @@
+<?php
+	define('__PAGETITLE','学生の1日の欠席');
+	define('_IGAZOLATLAN','公称');
+	define('_TANKOR','研究会');
+	define('_J','');
+	define('_K','');
+	define('_H','');
+	define('_F','');
+	define('_FM','');
+	define('_IGAZOLT','公認');
+?>

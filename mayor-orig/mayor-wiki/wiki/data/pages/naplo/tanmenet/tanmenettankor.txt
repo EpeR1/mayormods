@@ -1,0 +1,44 @@
+
+====== Tanmenetek tankörhözrendelése ======
+
+Ezen az oldalon a megfelelő időszakban a szaktanár, vagy a vezetőségi tag hozzárendelhet egy-egy már meglévő tanmenetet a tankörökhöz, 
+a szaktanár ezen kívül létrehozhat új tanmenetet is - akár egy már létező tanmenet másolataként, hogy azt módosítsa. Az adminisztrátornak 
+időszakon kívül is van joga hozzárendelni, de újat nem tud létrehozni.
+
+A táblázat egy-egy sorában egy-egy tankörrel kapcsolatban tudunk tájékozódni, illetve módosításokat végrehajtani.
+
+Az első cellában találjuk a tankör nevét és azonosító számát. Ez után következik a hozzárendelhető tanmeneteket tartalmazó legördülő menü.
+Hozzárendelhetőnek tekintünk minden a tankörrel azonos tárgyhoz tartozó tanmenetet - mást nem ellenőriz a program.
+A legördülő menüben a már hozzárendelt tanmenet van alaphelyzetben kiválasztva - ha van ilyen.
+
+==== Módosítás / Részletek ====
+
+A következő gomb kétféle felirattal szrepelhet: módosítás, illetve részletek. Az előbbi akkor szerepel, ha a legördülő menüben kiválasztott
+tanmenet a felhasználó jogosultságaival módosítható (szaktanár számára akkor, ha ő írta a tanmenetet és az még nincs jóváhagyva), egyéb
+esetben a második felirat szerepel.
+
+Az egeret a gomb fölé vive megjelennek az épp kiválasztott tanmenet részletei (lényegében a "Tanmenet részletei" menüponttal megegyező tartalom).
+
+A gombon kattintva "módosítás" felirat esetén a [[tanmenetModositas|Tanmenet módosítása]], míg "részletek" felirat esetén a [[tanmenetInfo|Tanmenet részletei]]
+oldalra jutunk.
+
+==== Hozzárendelés ====
+
+Megelelő jogosultság esetén a következő gomb a "hozzárendelés" felirattal jelenik meg. A gomb megnyomásával a legördülőmenűben
+kiválasztott tanmenet tankörhöz való hozzárendelését rögzíthetjük.
+
+==== Új tanmenet létrehozása a kiválasztott alapján ====
+
+Az adott tankör tanára egy már létező tanmenet alapján készíthet új tanmenetet a tanköre számára. Ezt akkor is megteheti, ha a kiválasztott tanmenetet
+másik kolléga készítette. A gomb megnyomásával készül egy másolat a kiválasztott tanmenetről (amit mellesleg rögtön hozzá is rendel a rendszer a tankörhöz),
+majd a [[tanmenetModositas|Tanmenet módosítása]] oldalra navigál a program, ahol rögtön módosíthatjuk is a tanmenet adatait, témaköreit, óraszámait.
+
+==== Új tanmenet létrehozása ====
+
+Az adott tankör tanára létrehozhat egy teljesen új tanmenetet is. A gomb megnyomásával az [[ujTanmenet|Új tanmenet létrehozása]] oldalra jutunk, ahol első lépésként
+a tanmenet alapvető adatait megadva létrehozzuk a tanmenetet, amit a rendszer rögtön ez után hozzá is rendel a tankörhöz, majd továbblép a 
+[[tanmenetModositas|Tanmenet módosítása]] oldalra, ahol felvehetjük a tanmenet lényegi részét, a témaköröket, óraszámokat.
+
+
+
+

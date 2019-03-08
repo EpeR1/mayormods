@@ -1,0 +1,102 @@
+====== Adatok exportálása az aSc Timetables számára ======
+
+Az [[http://www.asctimetables.com/|aSc Timetables]] órarendkészítő program számára az adatokat egy egyszerű szerkezetű XML formátumban tudjuk átadni. Ennek legenerálását végezhetjük itt. A két program belső felépítése lényegesen eltér egymástól, ami teljesen természetes, hiszen két különböző funkcióra készültek. Ugyanakkor az adatok átadásakor ez korlátozza a lehetőségeket.
+
+
+====== Mit tudunk átadni az aSc számára ======
+
+  * Alap adatok
+    * Tanárok
+    * Osztályok
+    * Diákok
+    * Tárgyak
+    * Termek
+  * Az órák (lessons)
+    * tankörök
+    * tankör blokkok
+    * és ezek különböző órabontásai (dulpa/tripla órák)
+  * Adott dátum szerinti órarend (card)
+
+Alapvetően három féle export készíthető:
+  - Alapadatok órarend nélkül + tankörök/blokkok szemináriumként + órabontások
+  - Alapadatok órarend nélkül + tankörök/blokkok egész osztályos órakén + órabontások
+  - Alapadatok adott dátum szerinti órarenddel (egy hét órarendje!) + tankörök/blokkok szemináriumként - órabontások nélkül
+
+===== Alapadatok =====
+
+Az alap adatok átadása a későbbi visszatölthetőség miatt fontos, ugyanis ilyenkor a MaYoR programból kapják az egyes objektumok az azonosítóikat.
+
+A diákok exportálása elsőre talán furcsának tűnhet, hiszen általában az órarend elkészítéséhez ezekre az adatokra nem szokott szükség lenni, inkább az osztályok különböző csoport bontásaival dolgozunk. Sajnos azonban ilyen jellegű adat a MaYoR naplóban nincsen, így a tényleges csoportnévsorokra építünk inkább, az órák tehát - az aSc szóhasználata szerint - szemináriumokként jelennek meg majd a programban.
+
+Ha ettől el kívánunk térni, akkor az a lehetőségünk marad csak, hogy az órákat mind egész osztályos órákként exportáljuk, majd az aSc-ben állítjuk be a csoportbontásokat.
+
+
+
+
+
+===== Az órák - lessons =====
+
+Az aSc óra fogalma nagyjából a naplóban használt tankörnek felel meg, de nem teljesen fedi egymást a két fogalom. Az aSc-ben külön óraként kell felvenni egy tankör szimpla, dupla, tripla, stb órás változatait - mert másfajta leteendő kártya lesz belőlük - a naplóban ilyen megkülönböztetésre nincs szükség. Másrészt az együtt mozgatandó tanköröket is külön óraként kell megjeleníteni az aSc-ben - erre szolgálnak a naplóban a tankör blokkok, amiket szintén exportálhatunk.
+
+==== Az exportálandó blokkok és óraszámaik megadása ====
+
+A program felsorolja a már definiált blokkokat. Ha a blokkok listáján szeretnénk változtatni, akkor azt a [[naplo:tanev:tankorBlokk|Tanév adatok/Tankörblokkok]] menüpont alatt tehetjük meg (vigyázzunk a megfelelő tanév kiválasztására!).
+
+A blokkoknál megadhatjuk, hogy melyik blokk, heti hány órával kerüljön exportálásra - ezen óraszámokat természetesen az érintett tankörök óraszámából levonjuk majd. A blokk exportálandó óraszáma ennek értelmében nem lehet nagyobb a blokkot alkotó tankörök óraszámainak legkisebbikénél. Ha a blokk export-óraszáma 0, akkor a blokk nem kerül exportálásra.
+A blokk óraszámánál megengedünk tört értéket is. A tankör óraszámából ilyenkor a megadott tört értéket vonjuk le, exportálásra viszont mindig a felfele kerekített érték kerül.
+
+==== Órabontás megadása ====
+
+Ha az órarendben dupla, tripla, vagy esetleg más többszörös óraként szeretnénk megjeleníteni valamely tankör bizonyos óráit, akkor
+  * válasszuk ki az érintett tankört a legördülő menüből.
+  * írjuk be a bontást, az óraszámokat + jelekkel összefűzve.
+  * nyomjuk meg az ''Ok'' gombot.
+
+Ha például egy 5 órás nyelvi csoport óráit két dupla és egy szimpla óraként akarjuk felvenni, akkor a tankör kiválasztása után az ''Órabontás'' mezőbe írjuk a ''2+2+1'' sztringet (elég a 2+2-t beírni, a szimpla órákkal való kitöltést a program elvégzi). Ha ugyanebben az esetben ''3+2+2''-t adunk meg, akkor a program hibaüzenetet ad és nem rögzíti az órabontást.
+
+Többszörös órákat nem csak tankrök esetén adhatunk meg, kiválaszthatunk blokkokat is, teljesen hasonló módon.
+
+Ha egy órabontást meg akarunk változtatni, akkor vegyük fel újra úgy, mintha most vennénk fel először - ez felülírja a korábbi beállítást.
+
+Órabontást (illetve órabontásokat) törölni a ''Törlendő bontás'' cimkéjű listából való kiválasztással, majd az ''Ok'' gomb megnyomásával lehet. Több tankör/blokk kijelöléséhez használjuk a ''Ctrl'' és ''Shift'' módosító gombokat.
+
+
+===== Az órarend =====
+
+Lehetőség van az órarend átadására is. Ez különösen apróbb módosítások elvégzésekor jöhet jól.
+
+Korlátai:
+  * Csak egy hét órarendjét exportálhatjuk. Ha több hetes az órarend, akkor a hetekről külön-külön készítsünk exportot.
+  * Az órarend exportálásakor nincs lehetőség a dupla, tripla és más többszötös órák exportálására - ezek amúgy is akkor hasznosak inkább, ha épp új órarendet készítünk.
+  * Órarend exportáláskor az órák csak szemináriumként exportálhatók, tehát az tankörök diáknévsorokkal együtt lesznek exportálva
+
+Következmény:
+  * Ha a tankörnévsorok ütközéseket tartalmaznak (egy diáknak egyszerre, egy időben több órán kellene jelen lennie), akkor az aSc-ben az érintett kártyák nem lesznek lerakva. Ez persze tekinthető egyfajta ellenőrzésnek is.
+
+===== Egyéb lehetőségek =====
+
+Az exportálás előtt további három paramétert adhatunk meg.
+
+==== Szakköri órák exportálása ====
+
+Alapértelmezés szerint a program csak a azokat a tanköröket exportálja, melyeknek ''jelenlet'' attribútuma ''kötelező'' értékű. Ha ettől eltérve a ''nem kötelező'' jelenlét attribútumú tanköröket is exportálni akarjuk (ilyenek tipikusan a szakkörök), akkor válasszuk ki ezt alehetőséget.
+
+==== Exportálás blokkok nélkül ====
+
+Ha nem akarjuk elveszíteni és nullára állítani a tankörblokkok export óraszámát, de valamilyen okból blokkok nélkül szeretnénk exportálni az órarendet, akkor válasszuk ki ezt az opciót.
+
+==== Tárgyak típusokra bontása ====
+
+Ezzel az opcióval a naplóban szereplő tárgyak mellett ezek "variánsait" is exportálhatjuk. 
+
+Ha van például ''8.a angol nyelv Cs1'' nevű, és ''8.a angol nyelv Pr1'' nevű tankörünk (melyek az ''angol nyelv'' tárgyhoz vannak tehát rendelve) és szeretnénk ezeket az aSc-ben is megkülönböztethető módon felvenni, akkor ezt az opciót kiválasztva az első az aSc-ben ''angol nyelv Cs1'', a második ''angol nyelv Pr1'' tárgyhoz (subject) lesz rendelve.
+
+Fontos ez azért is, mert az aSc-ben egy diák egy tárgyból csak egy szemináriumnak lehet tagja, így például az előbbi példa két tankörében hiába lenne közös tag, az aSc az egyik tagságot "lenyelné".
+
+Hátránya, hogy a tárgyakra vonatkozó megszorításokat minden altípusra is rögzíteni kell az aSc-ben.
+
+Előfordulhat, hogy ezt a felbontást csak bizonyos tankörökre adjuk meg. Ekkor elég az ''__ASC_BONTANDO_TARGYAK'' konstansban megadni a bontandó tárgyak azonosítóinak vesszővel tagolt listáját a ''/var/mayor/config/module-naplo/config-[intézmény].php'' állományban:
+
+define('_ _ASC_BONTANDO_TARGYAK','1,12');
+
+Ha csak az 1 és 12 ''targyId''-vel rendelkező tárgyakat bontsuk.

@@ -1,0 +1,30 @@
+
+====== Kéthavi elszámolás ======
+
+Közoktatási tv. Harmadik rész II.
+
+6. A pedagógus kötelező óráját az óvodában a gyermekekkel való közvetlen, a teljes óvodai életet magában foglaló foglalkozásra (óvodai foglalkozások), az iskolában és a kollégiumban a tanulókkal való közvetlen foglalkozásra (kötelező és nem kötelező tanórai foglalkozás, egyéni foglalkozás), kollégiumi foglalkozásra, napközis és tanulószobai foglalkozásra kell fordítani. A gyakorlati oktatásvezető és a gyakorlati oktatásvezető-helyettes a kötelező órája keretében ellátja a tanulók gyakorlati és elméleti képzését. A tanulókkal való közvetlen foglalkozás körébe tartozik az osztály közösségi programjainak és a tanulókkal való egyéni törődés feladatainak [52. § (7) bekezdés] megtartása, azoknak a szakköröknek, érdeklődési köröknek, önképző köröknek, tanulmányi, szakmai és kulturális versenyeknek, házi bajnokságoknak, iskolák közötti versenyeknek, továbbá más tanórán kívüli foglalkozásoknak [53. § (2) bekezdés b)-d) pontja] megtartása, amelyeket az iskolai nem kötelező tanórai foglalkozás időkeretének terhére szerveznek, kollégiumban a szabadidő eltöltését szolgáló és az egyéni törődést biztosító foglalkozások [53. § (7) bekezdés] megtartása. A pedagógus-munkakörben foglalkoztatottak munkáját – a munkaidőkeretre vonatkozó rendelkezések [Mt. 118/A. §] alapulvételével – oly módon kell megszervezni, hogy a pedagógus a heti kötelező óraszáma egy tanítási évre jutó időkeretét teljesíteni tudja. Ehhez a munkáltató a pedagógus-munkakörben foglalkoztatottak munkáját legalább kéthavi tanítási időkeret kialakításával szervezi meg. A tanítási időkeretet a következők szerint kell megállapítani: a két hónapra jutó tanítási napok számát meg kell szorozni a pedagógus-munkakörre megállapított heti kötelező óraszám egy ötödével. A tanítási időkeretet az adott tanítási napra a pedagógus kötelező órájának terhére tervezett órák számának megfelelően csökkenteni kell minden olyan kieső tanítási nap után, amely az Mt. 151. §-ának (2) bekezdésében megjelölt távollét napjaira, a keresőképtelenség időtartamára esik. A nevelési-oktatási intézmény vezetője a fenntartó egyetértésével meghatározhatja azokat a távolléteket, amelyekkel a tanítási időkeretet csökkenteni lehet. A tanítási időkeret teljesítésénél a ténylegesen megtartott, továbbá a pedagógus heti kötelező órájának teljesítésébe beszámítható órák vehetők figyelembe. A rendes munkaidőn belül végzett tanításért óradíj a tanítási időkereten felül teljesített többlettanításért állapítható meg.
+
+----
+
+tm = (tto+tkf+ef+kno+eo)-tik
+tkf: tanórán kívüli foglalkozás
+tanítási időkeret  	= tik
+ténylegesen teljesített tanítási óra 	= tto
+tanórán kívüli foglalkozás 	= tkf
+egyéni foglalkozás 	= ef
+kieső napok miatt levonható órák 	= kno
+egyéni órakedvezmény 	= eo
+teljesítménymutató 	= tm
+
+
+----
+
+Munka Törvénykönyvéről szóló 1992. évi XXII. törvény (Mt.)
+a 117/B. § (1) bekezdésében foglaltak szerint a teljes munkaidő mértéke napi nyolc, heti negyven óra,
+140/A. §-a előírja a rendes és rendkívüli munkaidő nyilvántartását.
+
+----
+
+Miután megállapították a tanítási időkeret teljesítését, át kell térni a heti teljes munkaidő teljesítésének vizsgálatához: meg kell nézni, túllépte-e a pedagógus a napi nyolc, heti 40 órát. A napi tizenkettő, heti negyvennyolc órás munkaidő-korlátozás semmilyen indokkal nem léphető túl! A heti teljes munkaidő túllépése esetén a Munka Törvénykönyve rendkívüli munka díjazásának szabályait tartalmazó 147. §-ának rendelkezései lépnek életbe (lásd még: Kt. 1. sz. melléklet Harmadik rész II/18. pont).
+

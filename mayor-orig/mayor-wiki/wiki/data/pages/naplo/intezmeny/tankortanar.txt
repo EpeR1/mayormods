@@ -1,0 +1,8 @@
+====== Tankör tanárai ======
+
+Itt nézhetjük meg, illetve módosíthatjuk, hogy a tanköröknek a kiválaszott tanévben ki a tanára.
+Megfelelő jogosultság mellett módosíthatjuk is a beállításokat - de csak teljes tanévekre vonatkozóan.
+
+** Fontos **
+
+A tanár megbizatása mindig határozott időre szól, nem lehet "nyílt végű" (kiDt is NULL).

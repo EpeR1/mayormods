@@ -1,0 +1,82 @@
+====== Tanévek kezelése ======
+
+===== Új tanév felvétele =====
+
+Új tanév felvételéhez először a tanév jelét kell felvenni. Ez a tanév első tanítási napjának éve legyen.
+
+A második lépés a tanév szemesztereinek (féléveinek) felvétele. Egy szemesztert a szemeszter első és utolsó tanítási napjának megadásával definiálhatunk (tehát zárt intervallumként adjuk meg 
+a szemeszter időszakát). Egy szemeszter három féle státuszban lehet:
+
+  - tervezett - Azt jelenti, hogy hivatkozhatunk erre a tanévre, de még nem tartozik hozzá adatbázis.
+  - aktív - épp használatban lévő, saját adatbázissal rendelkező tanév (a saját adatbázisban tároljuk például a konkrét hiányzások adatait, vagy az év közben szerzett jegyeket és még sok egyéb, csak az adott tanévhez kapcsolódó adatot).
+  - lezárt - egy adatbázissal rendelkező, de már nem módosítható tanév.
+
+A szemeszterek új tanév létrehozásakor tervezett státuszúak lesznek. A tanév megnyitásával, illetve lezárásával kerülnek ''aktív'', illetve ''lezárt'' állapotba.
+
+===== Tanév szemeszterei =====
+
+Ha egy konkrét, már létező tanévet választunk ki, akkor lehetőségünk van a tanév szemesztereinek módosítására (pontosabban kezdő és záró dátumainak módosítására) és törlésére. 
+**Vigyázzat!** Ez a funkció nem változtatja meg a [[naplo:tanev:munkaterv|éves munkaterv]]et, így az első és utolsó tanítási nap megváltoztatása esetén a munkaterv is hibás lesz.
+Jobb tehát ezzel a lehetőséggel csak ''tervezett'' státuszú tanév esetén élni.
+
+===== Tanév megnyitása =====
+
+Úgy is mondhatnánk: a tanév aktívvá tétele. Két esetben használhatjuk:
+
+  - Ha a tanév még csak tervezett státuszban van, akkor (a megfelelő MySQL felhasználói azonosító és jelszó ismeretében) aktívvá tehetjük, létrehozva a szükséges tanév adatbázist.
+  - Ha egy tanévet korábban lezártunk, de valamilyen módosítást mégis el kell végeznünk rajta, akkor újra megnyithatjuk - ekkor nincs szükség MySQL azonosítóra és jelszóra.
+
+===== Tanév lezárása =====
+
+Egy aktív tanévet akkor zárhatunk le, ha
+  - A tanév utolsó tanítási napján már túl vagyunk
+  - Az általunk megadott "tanév lezárás dátum" is a tanév utolsó tanítási napja utánra esik. Alaphelyzetben a program ezt a dátumot az utolsó tanítási nap után 7 nappal határozza meg, de szabadon változtathatunk a dátumon.
+
+A tanév lezárásához szorosan kapcsolódik néhány - innen közvetlenül nem elérhető - feladat, funkció:
+  * A befejezett tanév [[naplo:nyomtatas:haladasinaplo|haladási-]] és [[naplo:nyomtatas:osztalyozonaplo|osztályozónaplóit]] nyomtassuk ki minél hamarabb!
+  * Még fontosabb az adatok mentése és archiválása
+  * A következő év indításához érdemes a felmenő [[naplo:intezmeny:tankor|tankörök]] következő évi óraszámait rögzíteni!
+  * A már tudható osztály váltásokat végezzük el a lezárás előtt.
+
+A tanév lezárás több lépésből áll. Ezeket a lépéseket külön-külön is végrehajthatjuk egészen addig, amíg a tanév státuszát ''lezárt''-ra nem állítjuk (utolsó pont). Ezek után már csak akkor férhetünk a tanév lezárás lépéseihez, ha újra megnyitjuk a tanévet.
+
+==== Végzős tanulók jogviszonyának lezárása ====
+
+Végzősnek tekintünk egy tanulót, ha az osztályai közül a legkésőbb lezárulónak végző tanéve épp a kiválasztott tanév.
+ a tanulói az in
+Előfordulhat, hogy egy diák épp végez egy osztályban, de tovább fog menni egy másik osztályba. Ha az új osztályba előre felvesszük, akkor a program nem fogja végzősnek tekinteni.
+
+Az is megtörténhet, hogy egy intézményben egy teljes osztályról tudható, hogy a tanulói mind jogviszonyban maradnak az iskolával (egy másik osztályban) - ilyen lehet például egy nyelvi előkészítőt végző osztály. Ilyen esetek miatt van lehetőség arra, hogy megjelöljük azokat az osztályokat melyek diákjai valóban elhagyják az intézményt.
+
+A tanulói jogviszony lezárása maga után vonja a következőket is:
+
+  * A tanulót a megadott dátummal kiléptetjük a tanköreiből
+  * A tanulót a megadott dátummal kiléptetjük az osztályaiból
+
+(Ha év közben [[naplo:intezmeny:diak|szüntetjük meg egy diák jogviszonyát]], akkor a megadott dátum utáni hiányzások és jegyek törlését is elvégzi a program, de jelen esetben csak a tanév vége utáni dátummal lehet lezárni a tanévet.)
+
+
+==== Végzős osztályok lezárása (tagok és osztályfőnökök kiléptetése) ====
+
+Tanév lezárásakor a végzős osztályokat le kell zárni. Ennek lépései:
+
+  * Az osztály tagjainak kiléptetése az adott dátummal (függetlenül attól, hogy végzősek-e a diákok)
+  * Az osztály osztályfőnöki megbizatásainka lezárása az adott dátummal.
+  * Az érintett osztályfőnökök osztályfőnöki munkaközösségből történő kiléptetése, ha más osztályban nem osztályfőnökök
+
+==== A megszűnt jogviszonyú tanulók és szüleik felhasználói azonosítóinak törlése ====
+
+A program lekérdezi a megszűnt jogviszonyú tanulókat (nem csak a most lezártakat!) és ezek szüleit, majd törli a hozzájuk tartozó felhasználói azonosítókat.
+**Vigyázat!** Az egyéb ilyenkor szükséges tennivalókat (pl. home könyvtárak mentése, törlése) a program nem végzi el!
+
+A szülők esetén a program nem törli azokat a szülői azonosítókat, mely hozzá vannak rendelve valamely jogviszonyban lévő, vagy felfüggesztett jogviszonyú
+tanulóhoz (egész pontosan: statusz in ('jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve')). Az accountok törlése mellett a program
+a ''szulo'' tábla ''userAccount'' mezőjét is ''NULL'' értékre állítja.
+
+==== Tanév lezárása ====
+
+Ezt a lépést akkor érdemes megtenni, ha a többi lépéssel már elkészültünk. Két funkciója van:
+
+  * A tanév adatbázisból lekérdezi a diákok hiányzási adatait (összes igazolt/igazolatlan hiányzások száma, késések száma, összesített hossza percben szemeszterenként) és eltárolja az intézményi adatbázisba.
+  * A tanév státuszát ''lezárt''-ra módosítja.
+

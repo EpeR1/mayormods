@@ -1,0 +1,28 @@
+====== Hibajegykezelés (vezetőség, mayoradmin) ======
+
+Amikor egy //felhasználó//  ([[naplo:hibabejelento:hibabejelento|hibajegyet/kérelmet ír]]), a //vezetőség// és a //naploadmin// **Kezdőlap**ján jobb oldalon a 
+**Hangya** fül alatt megjelenik a friss hibajegy (portál modulos naplónál, egyébként a **Napló/Kérelmek** menü alá kell navigálni). 
+A tartalmától függően a //vezetőség// és/vagy a //naploadmin// reagálhat rá.
+
+A működéssel kapcsolatos hibabejelentés mellett (ami egyértelműen a //naploadmin//-nak szól) itt van lehetősége a //felhasználóknak// - 
+vagy inkább itt célszerű - a naplóval kapcsolatos hivatalos, a vezetőségnek szóló kérelmeik beadására. Iskolája válogatja, hogy ide mit vesznek be: 
+tévesen beírt jegyek, bejegyzések, hiányzások, tankörmódosítás, órarendi módosítás, stb.
+Az idealisztikus elképzelés szerint a //naploadmin// az ilyen típusú kérelmeket csak a vezetőség utasítására, a vezetőség jóváhagyásával végzi/végezheti el.
+
+A kérelem tárgyától függően az illetékes (a **Napló/Kérelmek** menüben):
+  * kategorizálhatja (sürgős, névsor, jogviszony, stb), illetve telephelyhez rendelheti a kérelmeket (már ha van több telephely)
+  * írhat megjegyzést (további kérdés, kérés a //felhasználó// felé, vagy az intézkedő személy felé - __vigyázat, a hibajegyet író is lát mindent!__) a kérelemhez;
+  * jóváhagyhatja azt (ez jelzi a kérelem elfogadását, de még elintézetlen mivoltát);
+  * lezárhatja azt (a kérelem elfogadva, elintézve).
+
+
+A //vezetőség// és a //naploadmin// felületéről a lezárt kérelmek eltűnnek, további matatásuk csak SQL-szinten lehetséges, 
+a //felhasználóknál// viszont a lezárást követő 5 napig megmarad "hangya".
+
+A Kérelem statisztika három száma a következő (classic skin-nél):
+  * kék alapon: összes kérelmek száma;
+  * zöld alapon: lezárt kérelmek száma;
+  * ciklámen alapon: a kérelmek átlagos elintézési ideje (nap).
+
+A "hangya" alatt/felett a színes téglalapokban a feladás, a megjegyzés, a jóváhagyás és a lezárás dátuma látszik, a feladó és az intézkedő 
+(felhasználó)névhez köthető, tehát nyugodtan használhatjuk a napló ezen funkcióját a **szolgálati utat igénylő ügyek** intézésére... 

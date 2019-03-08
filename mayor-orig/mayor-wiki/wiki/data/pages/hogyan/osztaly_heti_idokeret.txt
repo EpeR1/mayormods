@@ -1,0 +1,53 @@
+
+====== Osztály heti időkeretének számítása ======
+
+A tantárgyfelosztás egyik fontos eleme, hogy tisztában legyünk azzal, mekkora időkerettel, óratömeggel dolgozhatunk.
+A tantárgyfelosztás statsztikai oldala éppen ezért erről is ad információt. Fontos azonban tudnunk, hogy hogyan és mi alapján számol a program.
+
+A legfontosabb jogforrás ezen a téren a NKT. 6. melléklete, illetve az NKT. pár további paragrafusa is figyelembe veendő.
+
+===== Engedélyezet időkeret =====
+
+A NKT. 6. melléklete tartalmazza évfolyamonkénti lebontásban az osztályok engedélyezett időkeretét. Ez általában lényegesen több, mint a szintén ebben
+a mellékletben megállapított heti maximális óraszám az adott évfolyamon, hiszen az órakeretbe bele kell férjenek a tanórán kívüli foglalkozások is (pl.
+napközi, tanulószoba), illetve a csoportbontásokból adódó óratöbblet.
+
+===== Tehetséggondozás, felzárkóztatás =====
+
+A NKT. 27. § (5) értelmében heti 2 órát kell számolni osztályonként tehetséggondozásra és felzárkóztatásra.
+
+===== Egyházi fenntartású intézmények hitoktatásra fordítható többlet óraszáma =====
+
+A 6. melléklet szerint az egyházi intézmények számára többlet órakeretet kell bizosítani a hittan tanítására, melynek óraszámát a táblázat tartalmazza.
+
+===== 6 és 8 évfolyamos gimnáziumok többlet óraszáma =====
+
+A 6 és 8 évfolyamos gimnáziumok számára is évfolyamonként előírt többlet órakeretet tartalmaz a 6. melléklet.
+
+===== Nemzetiségi oktatás-nevelés többlet órakerete =====
+
+A nemzetiségi oktatás-nevelésre fordítható többlet órakeret évfolyamonkénti óraszámát szintén a 6. melléklet tartalmazza.
+
+===== SNI habilitációs és rehabilitációs foglalkozások többlet órakerete =====
+
+Bár a 6. melléklet külön tartalmaz órakeretet értelmi fogyatékosok; gyengénlátok; nagyothallók, mozgás- és beszédfogyatékosok; siketek és autisták; valamint egyéb SNI-sek
+számára (személyenként, évfolyamonként 2-15 között), ezeket a program jelenleg még **nem számolja bele** az össz óratömegbe.
+
+===== SNI magántanuló egyéni foglalkozás keretében történő felkészítés ötbblet órakerete =====
+
+A NKT. 27. § (7) szerint:
+A beilleszkedési, tanulási, magatartási nehézség vagy a sajátos nevelési igény miatt a szakértői bizottság véleménye alapján, vagy súlyos betegség miatt 
+magántanulóként tanulmányokat folytatók egyéni foglalkozás keretében történő felkészítésére az iskolának tanulónként az osztályok heti időkeretén felül 
+átlag heti tíz óra áll a rendelkezésre.
+
+A program jelenleg ezzel sem számol.
+
+===== Összefoglalva =====
+
+A program a fentiek alapján tehát egy alsó közelítést ad az osztályok heti időkeretéről, hisz sok időkeretet növelő tényezővel nem számol.
+A képlet:
+
+    [osztály időkerete] = [engedélyezett időkeret] + [tehetséggondozás, felzárkóztatás] + [egyházi iskola hittan] + [gimnáziumi óratöbblet]
+
+A nemzetiségi és SNI többlet óraszámokkal a program jelenleg nem számol.
+

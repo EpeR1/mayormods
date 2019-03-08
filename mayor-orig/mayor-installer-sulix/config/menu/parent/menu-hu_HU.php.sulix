@@ -1,0 +1,7 @@
+<?php
+
+    // Az utolsó két menüpont kiszedése - Kilépés és Jelszóváltoztatás
+//    unset($NAV[1][ count($NAV[1])-1 ]);
+//    unset($NAV[1][ count($NAV[1])-1 ]);
+
+?>

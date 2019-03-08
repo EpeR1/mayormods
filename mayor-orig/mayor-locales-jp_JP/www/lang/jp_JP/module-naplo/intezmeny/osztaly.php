@@ -1,0 +1,21 @@
+<?php
+	define('__PAGETITLE','管理クラス');
+	define('_KEPZES','訓練');
+	define('_KEZDOTANEV','1年のスタート');
+	define('_VEGZOSTANEV','1年間の卒業式');
+	define('_KEZDOEVFOLYAM','始動等級');
+	define('_JEL','マークのクラス');
+	define('_UJOSZTALY','新しいクラス');
+	define('_FILESELECTTITLE','クラスのメンバーはリフレッシュ');
+	define('_OSZTALY_ADATAI','クラスの詳細');
+	define('_FIELDSELECTMESSAGE','新入生を追加するときは、記入して、始動する必要があります。仕上げ年とし、また、 2学期に入って、その日のクラス（ beDt ）ボックスをオンにします。');
+	define('_OSZTALYFONOKOK','ヘッドの授業');
+	define('_TANARNEVE','先生の名前');
+	define('_BEDT','から');
+	define('_KIDT','を');
+	define('_TOROL','削除');
+	define('_OSZTALY_TORLESE','クラスを削除する');
+	define('_OSZTALY_TORLES_TITLE','願いを削除してもよろしいですクラスとそのすべての接続ですか？');
+	define('_UJ_TAG','メンバーを追加');
+	define('_OSZTALYNEVSOR','リスト');
+?>

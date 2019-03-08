@@ -1,0 +1,36 @@
+===== Wiki saját gépre =====
+
+Telepítés lépései:
+
+1. A ''main.conf'' állítsuk be a ''mayor-wiki'' csomag letöltését:
+
+  MODULES="mayor-base mayor-naplo mayor-portal mayor-wiki"
+ 
+2. A ''http://www.dokuwiki.org/dokuwiki'' oldalról töltsük le a [[http://www.dokuwiki.org/dokuwiki|dokuWiki]-t és csomagoljuk ki a ''/var/mayor/www/wiki'' könyvtárba.
+
+3. Ideiglenesen adjuk meg az írás jogokat a webszerver felhasználójának a conf és data  könyvárakra:
+
+Például:
+
+  chown 777 -R /var/mayor/www/wiki/conf
+  chown 777 -R /var/mayor/www/wiki/data
+
+4. A böngészőbe gépeljük be a ''http://sajat_url/wiki/install.php'' címet és saját belátásunk szerint telepítsük a dokuWiki-t
+
+5. Vegyük vissza a ''conf'' és a ''data'' könyvtárakról a jogokat.
+
+Például:
+  chown 755 -R /var/mayor/www/wiki/conf
+  chown 755 -R /var/mayor/www/wiki/data
+
+6. Készítsünk szimbolikus linkeket a ''mayor-wiki'' fájlaira:
+  ln -s /var/mayor/wiki/dok.php  /var/mayor/www/wiki/dok.php
+  ln -s /var/mayor/wiki/data/pages /var/mayor/www/wiki/data/pages
+  ln -s /var/mayor/wiki/lib/plugins/bbcode /var/mayor/www/wiki/lib/plugins/bbcode
+  ln -s /var/mayor/wiki/lib/tpl/mayor /var/mayor/www/wiki/lib/tpl/mayor
+
+7. Ha kedvünk tartja. akkor a ''/var/mayor/www/wiki/conf/dokuwiki.php'' fájlban állítsuk be a ''mayor'' skint:
+
+  $conf['template'] ='mayor';
+
+Ezt követően a ''http://sajat_url/wiki'' címen (illteve a digitális naplóból) bejön a wiki saját gépről.

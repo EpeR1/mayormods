@@ -1,0 +1,67 @@
+====== Tanárok adminisztrálása ======
+
+===== Tanárok felvétele adatállományból =====
+
+Új rendszer telepítéskor a leggyorsabb megoldás, ha valamilyen adatforrásból megfelelő adatállományt készítünk, majd ezt betöltjük a programba. Ez a módszer arra is alkalmas lehet, hogy a már betöltött tanáradatokat frissítsük, módosítsuk.
+
+Készítsünk tehát egy tabulátorokkal tagolt, UTF8 kódolású, szöveghatárolók nélküli szöveges állományt, melyben a fejléc sort az egyes tanárok adatait tartalmazó sorok követik. A fejlécsorban érdemes a ''tanar'' adatbázistábla mezőneveit használni, így a program automatikusan felismeri ezeket. A mezők:
+
+  mysql> DESC tanar;
+  +------------------------+---------------------+------+-----+---------+----------------+
+  | Field                  | Type                | Null | Key | Default | Extra          |
+  +------------------------+---------------------+------+-----+---------+----------------+
+  | tanarId                | int(10) unsigned    | NO   | PRI | NULL    | auto_increment |
+  | oId                    | bigint(20) unsigned | YES  | UNI | NULL    |                |
+  | beDt                   | date                | YES  |     | NULL    |                |
+  | kiDt                   | date                | YES  |     | NULL    |                |
+  | viseltNevElotag        | varchar(8)          | NO   |     |         |                |
+  | viseltCsaladinev       | varchar(64)         | NO   |     |         |                |
+  | viseltUtonev           | varchar(64)         | YES  |     |         |                |
+  | szuletesiHely          | varchar(16)         | YES  |     | NULL    |                |
+  | szuletesiIdo           | date                | YES  |     | NULL    |                |
+  | szuleteskoriUtonev     | varchar(64)         | YES  |     |         |                |
+  | szuleteskoriCsaladinev | varchar(64)         | NO   |     |         |                |
+  | szuleteskoriNevElotag  | varchar(8)          | NO   |     |         |                |
+  | dn                     | varchar(128)        | YES  |     | NULL    |                |
+  | hetiMunkaora           | decimal(3,1)        | YES  |     | 0.0     |                |
+  | NEKAzonosito           | varchar(16)         | YES  |     | NULL    |                |
+  | userAccount            | varchar(32)         | YES  |     | NULL    |                |
+  | statusz                | enum('határozatlan  | YES  |     | határozatlan idejű       |
+                             idejű','határozott 
+                             idejű','tartósan 
+                             távol','jogviszonya 
+                             lezárva','külső 
+                             óraadó')
+  | hetiKotelezoOraszam    | decimal(3,1)        | YES  |     | 0.0     |                |
+  | megjegyzes             | varchar(255)        | YES  |     | NULL    |                |
+  | besorolas              | enum('Gyakornok',   | YES  |     | Pedagógus I.             |
+                             'Pedagógus I.',
+                             'Pedagógus II.',
+                             'Mesterpedagógus',
+                             'Kutatótanár')
+   +------------------------+---------------------+------+-----+---------+----------------+
+
+A ''tanarId'' mezőt nem kell megadni, hiszen az automatikusan növekvő sorszám, ugyanakkor az ''oId'' (oktatási azonosító), ''beDt'' (jogviszony kezdete) és a neveket tároló attribútumok (''viseltCsaladinev'', ''viseltUtonev'') megadása erősen javallott.
+További kötelezőnek tekinthető mezők a besorolás (ha nem adjuk meg, Pedagógus I. lesz), a hetiKotelezoOraszam (ha nem adjuk meg, 0 lesz) és a statusz (ha nem adjuk meg, határozatlan idejű lesz).
+
+Célszerű az új naplóban minden adatot (lehetőség szerint) a valóságnak megfelelően megadni, a régi naplók adatait pedig aktualizáni. Később mindenképpen szükség lehet rájuk.
+ 
+**Amennyiben nem adunk meg ''beDt'' paramétert (vagy az aktuális dátumnál nagyobbat adunk meg),** úgy a felvett tanár bekerül ugyan az adatbázisba, de nem jelenik meg a felületen - mert a program úgy tekinti, mint aki már/még nincs jogviszonyban. Ha nem ismerjük, adjuk meg az aktuális dátumot - később lehet módosítani.
+
+**Ha nem ismert a tanár oktatási azonosítója,** ideiglenes megoldásnak megfelel a dátum+sorszám, 11 jegyben megadva, pl. 20150810001.
+
+**Amikor új tanárt várunk az iskolába, de még nem tudjuk ki lesz** (pl. többen pályáztak, de még nincs döntés), a viselt nevekhez vegyük fel a **Testnevelés** (családi név) **Tanár** (utónév) formát. Utólag ezt is lehet a valódi névre cserélni.
+
+**A ''kiDt'' mezőt csak akkor kell megadni,** ha a tanár jogviszonya megszűnt, azaz nyugdíjba ment, másik iskolába ment, ne' adj 'sten, elhunyt.
+A GYES-es, fizetés nélküli szabadságon, hosszabb ideig külföldön tartozkodóknál használjuk a ''statusz'' mező **tartósan távol** elemét!
+
+Az állományt másoljuk fel a szerverre, például annak ''/tmp'' könyvtárába - ennek az állományak a teljes elérési útját kell megadnunk ezen az oldalon: Napló/Admin/Import, ''tanar'' tábla - majd az ''Adatállomány elérési útja'' mező, pl. /tmp/tanarok.csv.
+
+Jóváhagyás után a program beolvassa a file első öt sorát, ha megfelelőek a fejlécsor mezőnevei, akkor ezeket automatikusan felismeri, egyéb esetben nekünk kell beállítani, hogy van-e fejléc sor, és melyik oszlop melyik mezőnek felel meg.
+
+Ezek után mindenképp meg kell adnunk egy kulcs mezőt - célszerűen az oktatási azonosítót, ez biztos, hogy egyedi... Ennek szerepe, hogy ha az import az adatbázisban talál az adott kulcsmezőnek megfelelő rekordot, akkor módosítja annak megadott adatait. Ha pedig nem talál egyező oktatási azonosítójú rekordot, akkor újként felveszi.
+
+Ezzel a módszerrel lehet egyébként tömeges adatmódosítást végezni a ''tanar'' táblában: aktualizált ''beDt''-k, besorolások, kiderített születéskori nevek, születési idők és helyek...
+
+
+

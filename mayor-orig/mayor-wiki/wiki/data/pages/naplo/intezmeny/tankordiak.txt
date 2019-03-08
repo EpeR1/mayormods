@@ -1,0 +1,37 @@
+====== Tankör tagjainak kezelése ======
+
+A tankörök tagjait általában az adminisztrátor változtathatja. Kivétel ez alól a tanév eleje, a tanulócsoportok kialakulásának időszaka. Ekkor a vezetőség tagjai és az egyes tankörök tanárai is módosíthatják a tankörnévsorokat. 
+Ezt az időszakot az '[[naplo:admin:szemeszterek|Admin/Szemeszterek]]' menüpont alatt vehetjük fel (tankörnévsor módosítás).
+
+A módosítást lehetővé tevő űrlap tehát csak akkor jelenik meg, ha a fentiek értelmében jogunk van a névsor módosítására.
+
+A munkaközösség, illetve tárgy megadásával szűkíthetjük a tankörök listáját. A tanév megváltoztatásával megpróbálhatunk hozzáférni az előző évek tanköreihez is - erre azonban csak 'aktív' tanévek esetén és csak az adminisztrátornak van lehetősége.
+
+
+===== Tankör adatainak megjelenítése =====
+
+A tankörök névsora a tanév folyamán változhat.
+Ezért első lépésként ki kell választanunk a dátumot (referencia dátum), amelyik napon érvényes névsort szeretnénk látni.
+
+A megjelenő űrlap tetején a tankör tanárának nevét olvashatjuk, alatta a tagok adott napon érvényes névsora szerepel.
+Az egyes nevek mellett rádiógombok segítségével állíthatjuka tag jellemzőit:
+  * jelenlét (kötelező/nem kötelező): a tanulónak meg kell-e jelennie a tankör óráin, vagy esetleg felmentést kapott ez alól (magántanuló, felmentett...)
+  * követelmény (aláírás, jegy, vizsga): a tankörben milyen követelményt kell teljesítenie a diáknak (aláírás - pl szakkör esetén, jegy a legtöbb esetben, vagy vizsga - pl. a magántanulók esetén)
+  * engedélyezés (igen/nem) - felvehető tárgyak esetén lesz jelentőssége: a tanulók jelentkezhetnek egy-egy tankörbe, majd ezt engedélyezi, vagy elutasítja a vezetőség.
+A módosítások a referencia dátumtól lesznek érvényesek. Megadhatjuk azt is, hogy a módosítás meddig legyen érvényes, de bármilyen értéket is adunk meg az érvényesség megszakad, ha a diák tankörbeli tagságában szakadás van.
+
+Például, ha a diák szeptember 1-től október 1-ig, majd október 2-től november 1-ig, végü november 5-től július 30-ig tagja egy tankörnek és referencia dátumként egy szeptemberi időpontot választunk, akkor módosításaink csak legfeljebb november 1-ig érvényesíthetők. Ha a fennmaradó időszakban is módosítani szeretnénk, akkor azt külön lépésben tehetjük meg azután, hogy a referencia dátumot november 5-re állítottuk.
+
+----
+
+A tanulók melletti jelölőnégyzetben jelölhetjük a kiléptetésre szánt tanulókat. A tankörből való kilépés dátuma a referencia dátum, ami azt jelenti, hogy jóváhagyás után már nem fog a listán szerepelni a törölt tanuló, de ha egy nappal korábbi névsort nézünk ott még szerepel(het). Szükség esetén a kiléptetésnél is megadhatunk egy dátumot, így a törlés adott időszakra szűkíthető.
+
+A törlés mindíg egész tankörcsoportokra vonatkozik, azaz ha törlünk egy tanulót egy tankörből, akkor a vele egy csoportba tartozó tankörökből is törli a program a diákot.
+
+Visszamenőleges kiléptetéskor a program ellenőrzi, hogy érint-e hiányzást, illetve beírt jegyet a módosítás. Amennyiben érint, úgy a kiléptetés nem történik meg, és hibaüzenetet kapunk.
+
+----
+
+Egy-egy új tanulót felvehetük a második űrlap segítségével. Itt a be- és kilépés dátumát is megadhatjuk (a kilépés nem kötelező).
+
+A harmadik űrlapon több új tanulót vehetünk fel a tankörhöz rendelt osztályokból. A névsorban benne vannak a már felvett tanulók is, de nem okoz semmilyen problémát, ha véletlenül ismét felvételre jelölünk egy diákot. Itt is megadható a be- és kikerülés dátuma.

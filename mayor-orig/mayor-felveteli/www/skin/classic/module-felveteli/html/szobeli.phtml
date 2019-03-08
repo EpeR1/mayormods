@@ -1,0 +1,504 @@
+<?php
+
+
+    function putEredmenyKereso($nev,$diak,$oktid) {
+
+	if (!_LEKERDEZHETO) {
+	    echo '<div align="center" style="margin:100px;border: solid 2px #aabbc0; background-color:darkcyan; padding:12px;">
+		A lekérdezés ebben az időszakban nem aktív, kérjük látogasson vissza ';
+		echo 'később!';
+		//echo date('Y. M. d. H:i:s',strtotime(_IRASBELI_PUBLIKALAS_DT));
+		//echo '-kor.';
+	    echo '</div>';
+	}
+
+	if (_LEKERDEZHETO===false) $_DIS = 'disabled="disabled" readonly="readonly"';
+	//echo '<form id="fform" name="fform" method="post" action="" onsubmit="xt=document.fform.gomb;xt.value=\''._PLEASE_WAIT.'\';xt.disabled=true">'."\n";
+	echo formBegin(array('id'=>'fform', 'name'=>'fform'));
+	echo '<input type="hidden" name="action" id="action" value="lekerdezes" />';
+	echo '<table align="center" class="lekerdezes">';
+	    echo '<thead><tr><th colspan="2">';
+		echo _LEKERDEZES;
+	    echo '</th></tr></thead>'."\n";
+	    echo '<tfoot>';
+	    echo '<tr><th colspan="2">';
+		    echo '<input type="submit" id="gomb" value="'._LEKERDEZ.'" '.$_DIS.' />';
+	    echo '</th></tr>';
+	    echo '<tr><th colspan="2">';
+		    //echo _BEHIVOTTAK.': '.date('Y. M. d. H:i:s',strtotime(_BEHIVOTTAK_PUBLIKALAS_DT));
+	    echo '</th></tr>';
+	    echo '</tfoot>'."\n";
+	    echo '<tbody>';
+	    echo '<tr>';
+		echo '<th><label for="nev">'._NEV.'</label></th>'."\n";
+		echo '<td>';
+	    	    echo '<input type="text" name="nev" id="nev" value="'.$nev.'" '.$_DIS.' />';
+		echo '</td>'."\n";
+	    echo '</tr><tr>';
+		echo '<th><label for="oktid">'._OKTID.'</label></th>'."\n";
+		echo '<td>';
+		    echo '<input type="password" name="oktid" size="11" id="oktid" value="' . $oktid .'" '.$_DIS.' />';
+		echo '</td>'."\n";
+	    echo '</tr>';
+	    echo '</tbody>';
+	echo '</table>';
+	formEnd();
+    }
+
+    function putFelvetelizoAdatok($DATA) {
+
+	global $JOSLAT;
+
+	    echo '<table align="center" class="felveteliAdatok" cellspacing="1" cellpadding="1" style="width:600px">';
+	    echo '<thead><tr><th colspan="3">'._ADATOK.'</th></tr></thead>'."\n";
+	    echo '<tfoot><tr><th colspan="3">';
+		echo date('Y.m.d. H:i:s');
+	    echo '</th></tr></tfoot>'."\n";
+	    echo '<tbody>';
+
+	    echo '<tr>';
+		echo '<th>'._NEV.'</th>'."\n";
+		echo '<td colspan="2">'.$DATA['nev'].'</td>'."\n";
+	    echo '</tr>';
+
+
+	    echo '<tr>';
+		echo '<th>'._SZULETETT.'</th>'."\n";
+		echo '<td colspan="2">'.$DATA['szuldt'].'</td>'."\n";
+	    echo '</tr>';
+
+	    echo '<tr>';
+		echo '<th>'._AN.'</th>'."\n";
+		echo '<td colspan="2">'.$DATA['an'].'</td>'."\n";
+	    echo '</tr>';
+if ($DATA['lvaros']!='') {
+	    echo '<tr>';
+		echo '<th>'._CIM.'</th>'."\n";
+		echo '<td colspan="2">'.$DATA['lirsz'].' '.$DATA['lvaros'].', '.$DATA['lutca'].'</td>'."\n";
+	    echo '</tr>';
+}
+if ($DATA['varos']!='') {
+	    echo '<tr>';
+		echo '<th>'._ERTESITESI_CIM.'</th>'."\n";
+		echo '<td colspan="2">'.$DATA['irsz'].' '.$DATA['varos'].', '.$DATA['utca'].'</td>'."\n";
+	    echo '</tr>';
+}
+	    echo '<tr>';
+		echo '<th>Szülő/diák:</th>'."\n";
+		echo '<td colspan="2">'.$DATA['level1'].' levélben</td>'."\n";
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>Iskola OM kódja:</th>'."\n";
+		if (is_array($DATA['iskolaAdat'])) {
+		    echo '<td colspan="2">'.$DATA['OM'].'</td>'."\n";
+		} else {
+		    echo '<td colspan="2" style="background-color: red; color:white">'.$DATA['OM'].' ('._HIBAS.')</td>'."\n";
+		}
+	    echo '</tr>';
+	    if (is_array($DATA['iskolaAdat'])) {
+		echo '<tr>';
+		echo '<th>Iskola adatai:</th>'."\n";
+		echo '<td colspan="2">'.$DATA['iskolaAdat']['nev'].', '.$DATA['iskolaAdat']['telepules'].'</td>'."\n";
+		echo '</tr>';
+		echo '<tr>';
+		echo '<th>Iskola:</th>'."\n";
+		echo '<td colspan="2">'.$DATA['level2'].' levélben</td>'."\n";
+		echo '</tr>';
+	    }
+
+
+	    echo '<tr>';
+		echo '<th>'._ATLAG.'</th>'."\n";
+		echo '<td colspan="2">'.$DATA['atlag'].'</td>'."\n";
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>'._IRASBELI.' eredmény (magyar):</th>'."\n";
+		echo '<td>'.$DATA['magyar'].'/50</td>'."\n";
+		echo '<td>'.(($DATA['magyar2']!=0)?($DATA['magyar2'].'/50'):'').'</td>'."\n";
+		//echo '<td>'.'</td>'."\n";
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>'._IRASBELI.' eredmény (matematika):</th>'."\n";
+		echo '<td>'.$DATA['matek'].'/50</td>'."\n";
+		echo '<td>'.(($DATA['matek2']!=0)?($DATA['matek2'].'/50'):'').'</td>'."\n";
+	    echo '</tr>';
+
+// Ez már értelmetlen, mert minden tagozaton más-más pontszám van...
+//if ($DATA['pont']!=$DATA['hozottpont']) {
+//	    echo '<tr style="background-color:red;">';
+//		echo '<th>Hozott pont (!!hibás adat!!)</th>'."\n";
+//		echo '<td colspan="2">'.$DATA['pont'].'/100</td>'."\n";
+//	    echo '</tr>';
+//}
+//if ($DATA['hozottpont']>0) {
+//	    echo '<tr>';
+//		echo '<th>Hozott pont (általános) kalkuláció</th>'."\n";
+//		echo '<td colspan="2">'.$DATA['hozottpont'].'/100</td>'."\n";
+//	    echo '</tr>';
+//}
+/*
+if ($DATA['pont_mat']!=$DATA['hozottpont_mat']) {
+	    echo '<tr style="background-color:red;">';
+		echo '<th>Hozott pont (!!hibás adat - matematika!!)</th>'."\n";
+		echo '<td colspan="2">'.$DATA['pont_mat'].'/100</td>'."\n";
+	    echo '</tr>';
+}
+if ($DATA['hozottpont-mat']>0) {
+	    echo '<tr>';
+		echo '<th>Hozott pont (matematika tagozat) kalkuláció</th>'."\n";
+		echo '<td colspan="2">'.$DATA['hozottpont_mat'].'/100</td>'."\n";
+	    echo '</tr>';
+}
+*/
+if ($DATA['pont_mat']>0) {
+	    echo '<tr>';
+		echo '<th>Hozott pont (matematika tagozat) kalkuláció</th>'."\n";
+		echo '<td colspan="2">'.$DATA['pont_mat'].'/100</td>'."\n";
+	    echo '</tr>';
+}
+/*if ($DATA['pont_magy']!=$DATA['hozottpont_magy']) {
+	    echo '<tr style="background-color:red;">';
+		echo '<th>Hozott pont (!!hibás adat - magyar!!)</th>'."\n";
+		echo '<td colspan="2">'.$DATA['pont_magy'].'/100'.'</td>'."\n";
+	    echo '</tr>';
+}
+if ($DATA['hozottpont_magy']>0) {
+	    echo '<tr>';
+		echo '<th>Hozott pont (magyar tagozat) kalkuláció</th>'."\n";
+		echo '<td colspan="2">'.$DATA['hozottpont_magy'].'/100</td>'."\n";
+	    echo '</tr>';
+}
+*/
+if ($DATA['pont_magy']>0) {
+	    echo '<tr>';
+		echo '<th>Hozott pont (magyar tagozat) kalkuláció</th>'."\n";
+		echo '<td colspan="2">'.$DATA['pont_magy'].'/100</td>'."\n";
+	    echo '</tr>';
+}
+
+/*
+$hozottpont = ($DATA['atlag']-4)*20;
+	    echo '<tr>';
+		echo '<th>Hozott pont:</th>'."\n";
+		echo '<td>'.$hozottpont.'/20</td>'."\n";
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>'._IRASBELI.' eredmény:</th>'."\n";
+		echo '<td>'.$DATA['pont'].'/100</td>'."\n";
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>Írásbeli eredményre kapott pont:</th>'."\n";
+		echo '<td>'.($DATA['pontsum']-$hozottpont).'/80</td>'."\n";
+	    echo '</tr>';
+*/
+
+if ($DATA['pontsum']!='' && $DATA['pontsum']!=0) {
+	    echo '<tr>';
+		echo '<th>Eddig elért pontszám:</th>'."\n";
+		echo '<td>'.($DATA['pontsum']).'/100</td>'."\n";
+	    echo '</tr>';
+}
+
+
+	if ($DATA['jelenleg']!='') {
+	    echo '<tr>';
+		echo '<th>Jelenleg:</th>'."\n";
+		echo '<td>'.$DATA['jelenleg'].'</td>'."\n";
+	    echo '</tr>';
+	}
+	if ($DATA['joslat']!='' && $DATA['vegeredmeny']=='') {
+	    echo '<tr style="background-color:#668899; height:2em;">';
+		echo '<th>Jóslat:</th>'."\n";
+		echo '<td colspan="2">'.$DATA['joslat'].'</td>'."\n";
+	    echo '</tr>';
+	}
+
+/*
+__MÉG VÉLETLENÜL SE KERÜLJÖN ILYEN ADAT
+
+	if ($DATA['vegeredmeny']!='') {
+	   global $VEGEKOD2STR ;
+	    $VEGE = $VEGEKOD2STR;
+	    echo '<tr style="background-color:#448877; height:2em;">';
+		echo '<th>Végeredmény:</th>'."\n";
+		echo '<td>'.ucfirst($VEGE[$DATA['vegeredmeny']]).'</td>'."\n";
+	    echo '</tr>';
+	}
+
+*/
+
+	    echo '</tbody>';
+	    echo '</table>';
+
+
+
+    }
+
+    function putSzobeliEredmeny($DATA,$DATA2) {
+
+	global $TAGOZATOK;
+	global $TAGOZATOK_SZOBELI_MEGJEGYZES;
+	global $TAGOZATOK_SZOBELI_AJANLAT;
+
+	$hozottpont = ($DATA2['atlag']-4)*20;
+
+	if ($DATA===false) {
+	    echo '<div align="center" id="felvierr">';
+		echo _HIBAS_HIANYOS_ADAT;
+	    echo '</div>';
+	} elseif ($DATA == 'multi') {
+	    echo '<div align="center" id="felvierr">';
+		echo _MULTI_USER;
+	    echo '</div>';
+	} elseif (is_array($DATA)) {
+	    echo '<table align="center" class="irasbeliEredmeny" style="width:600px">';
+	    echo '<thead><tr><th colspan="3">Szóbeli tagozatonként</th></tr></thead>'."\n";
+	    echo '<tfoot><tr><th colspan="3">';
+	    echo '</th></tr></tfoot>'."\n";
+	    echo '<tbody>';
+
+	    if (!is_array($DATA) || count($DATA)==0) {
+		echo '<tr>';
+		echo '<td colspan="2">';
+			//echo _NINCS_BEHIVVA;
+		    echo 'Nincs behívva - vagy - Nem kell szóbeliznie';
+		echo '</td></tr>';
+	    }
+
+	    for($i=0; $i<count($DATA); $i++) {
+	    $D = $DATA[$i];
+	    //if ($D['bizottsag']==0) $_class='nincsbehivva';
+	    //else $_class='behivva';
+	    echo '<tr>';
+		echo '<th class="'.$_class.'">'.$TAGOZATOK[$D['tagozat']].':</th>'."\n";
+		echo '<td>';
+//echo $D['pont'].' pont';
+//echo '<br />'.$D['rangsor'].'. hely';
+		echo '</td>';
+		echo '<td>';
+		if ($D['eredmeny']=='') {
+		    if ($D['bizottsag']==0 && stristr($D['szoveg'],'Felajánl')===false) {
+			echo $D['szoveg'];
+			//echo _NINCS_BEHIVVA;
+		    } else {
+
+			if (stristr($D['szoveg'],'Felajánl')!==false || stristr($D['nap'],'felaj')!==false) {
+			    echo '<p style="text-align: justify; font-style:italic">';
+			    //$__tag = substr($D['szoveg'],strpos($D['szoveg'],':')+2);
+			    $__tag = 'a';
+	    		    echo str_replace('%1%','<span style="text-decoration:underline">'.$__tag.'</span>',$TAGOZATOK_SZOBELI_AJANLAT);
+			    echo '</p>';
+			} else {
+
+			echo $D['bizottsag'].'. '._BIZOTTSAG.' ('.$D['szoveg'].')<br/>';
+			echo $D['napdt'].' ('.$D['nap'].') ';
+			echo substr($D['ido'],0,-3);
+
+			    if ($TAGOZATOK_SZOBELI_MEGJEGYZES[$D['tagozat']]!='') {
+				echo '<p style="border-top:dotted 1px #ffffff; margin:0px; width:100%; text-align: justify; font-style:italic; font-size:x-small">'.$TAGOZATOK_SZOBELI_MEGJEGYZES[$D['tagozat']].'</p>';
+			    }
+			}
+
+		    }
+		} else {
+		    if ($D['rangsor']!=0) echo $D['rangsor'].'. hely';
+		    //if ($D['eredmeny']!=0) echo $D['eredmeny'].'. hely';
+		    //if ($D['tagozat'] == 12) echo ' (egyesített rangsor)';
+
+		    if (intval($D['pont'])>0) echo '; '.$D['pont'].'%';
+		    if (intval($D['szobeli'])>0) {
+			if (in_array($D['tagozat'],Array(4,5,6))) {
+			    //$D['szobeli'] = number_format((($D['szobeli'])*2/3),2);
+			    //$D['szobeli'] = number_format((($D['szobeli'])*2/3),2);
+			    $max=20;
+			} elseif (in_array($D['tagozat'],Array(0,1,2))) {
+			    $max=30;
+			} else {
+			    $max=40;
+			}
+//			echo '<br />Szóbeli: '.$D['szobeli'].'/'.$max.' pont';
+			echo '<br />A szóbeli bizottság pontszáma: '.$D['szobeli'].' pont';
+		    }
+
+		}
+		echo '</td>'."\n";
+	    echo '</tr>';
+	    }
+	    echo '</tbody>';
+	    echo '</table>';
+	} else {}
+    
+    }
+
+
+//2013
+    function putJelentkezes($DATA,$DATA2) {
+
+	global $TAGOZATOK;
+	global $TAGOZATOK_SZOBELI_MEGJEGYZES;
+	global $TAGOZATOK_SZOBELI_AJANLAT;
+
+	if ($DATA===false) {
+	    echo '<div align="center" id="felvierr">';
+		echo _HIBAS_HIANYOS_ADAT;
+	    echo '</div>';
+	} elseif ($DATA == 'multi') {
+	    echo '<div align="center" id="felvierr">';
+		echo _MULTI_USER;
+	    echo '</div>';
+	} elseif (is_array($DATA)) {
+	    echo '<table align="center" class="irasbeliEredmeny" style="width:600px">';
+	    echo '<thead><tr><th colspan="3">Tagozatonként</th></tr></thead>'."\n";
+	    echo '<tfoot><tr><th colspan="3">';
+	    echo '</th></tr></tfoot>'."\n";
+	    echo '<tbody>';
+
+	    if (!is_array($DATA) || count($DATA)==0) {
+		echo '<tr>';
+		echo '<td colspan="2">';
+		echo '</td></tr>';
+	    }
+
+	    for($i=0; $i<count($DATA); $i++) {
+	    $D = $DATA[$i];
+	    echo '<tr>';
+		echo '<th class="'.$_class.'">'.$TAGOZATOK[$D['kod']].':</th>'."\n";
+		echo '<td>';
+//		    echo $D['rangsor'].'. hely';
+		echo '</td>';
+		echo '<td>';
+		    echo $D['eredmeny'];
+		echo '</td>'."\n";
+	    echo '</tr>';
+	    }
+	    echo '</tbody>';
+	    echo '</table>';
+	} else {}
+    
+    }
+
+
+
+
+
+    function putFelveteliError() {
+	    echo '<div align="center" id="felvierr">';
+		echo _HIBAS_HIANYOS_ADAT;
+	    echo '</div>';
+    }
+
+    // ** 2009
+    function putIrasbeliEredmeny($DATA) {
+
+	    echo '<table align="center" class="felveteliAdatok">';
+	    echo '<thead><tr><th colspan="3">'._EREDMENY.' ('._EVFOLYAM.': '.$DATA['evfolyam'].')</th></tr></thead>'."\n";
+	    echo '<tfoot><tr><th colspan="3">';
+		echo date('Y.m.d. H:i:s');
+	    echo '</th></tr></tfoot>'."\n";
+	    echo '<tbody>';
+
+	    echo '<tr>';
+		echo '<th>'._MAGYAR.'</th>'."\n";
+		echo '<td>'.$DATA['flap1'].'</td>'."\n";
+		echo '<td>'.$DATA['magyar'].' '._PONT.'</td>'."\n";
+	    echo '</tr>';
+
+	    echo '<tr>';
+		echo '<th>'._MATEK.'</th>'."\n";
+		echo '<td>'.$DATA['flap2'].'</td>'."\n";
+		echo '<td>'.$DATA['matek'].' '._PONT.'</td>'."\n";
+	    echo '</tr>';
+	if ($DATA['magyar2']>0) {
+	    echo '<tr>';
+		echo '<th>'._MAGYARPLUSZ.'</th>'."\n";
+		echo '<td>'.'</td>'."\n";
+		echo '<td>'.$DATA['magyar2'].' '._PONT.'</td>'."\n";
+	    echo '</tr>';
+	}
+	if ($DATA['matek2']>0) {
+	    echo '<tr>';
+		echo '<th>'._MATEKPLUSZ.'</th>'."\n";
+		echo '<td>'.'</td>'."\n";
+		echo '<td>'.$DATA['matek2'].' '._PONT.'</td>'."\n";
+	    echo '</tr>';
+	}
+	echo '</tbody></table>';
+    }
+
+    function putIdeiglenesEredmeny($DATA,$DATA2,$OLDDATA) {
+	    global $TAGOZATOK,$JOSLAT;
+
+	    echo '<table align="center" class="felveteliAdatok">';
+	    echo '<thead><tr><th colspan="4">'._EREDMENY.'</th></tr></thead>'."\n";
+	if ($DATA2['joslat']!='') {
+	    echo '<tfoot><tr><th>Jóslat:</th><th colspan="3">';
+	    echo $DATA2['joslat'];
+	    echo '</th></tr></tfoot>'."\n";
+	}
+	    echo '<tbody>';
+
+	    for ($i=0; $i<count($OLDDATA); $i++) {
+	        $TAG[$OLDDATA[$i]['kod']]=$OLDDATA[$i]['rangsor'];  
+	    }
+
+	    for ($i=0; $i<count($DATA); $i++) {
+
+		echo '<tr>';
+		echo '<th>'.$TAGOZATOK[$DATA[$i]['tagozat']].'</th>'."\n";
+		if ($DATA[$i]['rangsor']<500) {
+		    //echo '<td style="text-align: right">'.$DATA[$i]['pont'].' pont</td>'."\n";
+		    echo '<td style="text-align: right">';
+/* eredeti 2018
+			if (intval($DATA[$i]['pont'])>0)
+			    echo $DATA[$i]['pont'].' pont (szóbeli pontszám)';
+			else
+			    echo 'nem szóbelizett';
+*/
+			if ($DATA[$i]['pont'] > 0) echo $DATA[$i]['pont'].' pont (';
+			if (intval($DATA[$i]['szobeli'])>0)
+			    echo 'szóbeli: '.$DATA[$i]['szobeli'].' pont';
+			else
+			    echo 'nem szóbelizett';
+			if ($DATA[$i]['pont'] > 0) echo ')';
+		    echo '</td>'."\n";
+		    echo '<td style="text-align: right">';
+/*			if (
+			    $DATA[$i]['szobeli']==0 && 
+			    ($DATA[$i]['rangsor'] - $TAG[$DATA[$i]['tagozat']])<4
+			)
+			    echo $TAG[$DATA[$i]['tagozat']];
+			else
+*/
+			    if ($DATA[$i]['rangsor'] == 0) echo 'sajnos nem';
+			    else {
+				if ($DATA[$i]['rangsor'] <= 150) echo $DATA[$i]['rangsor'];
+				else echo '>150';
+				echo '. <span title="'.$DATA[$i]['rangsor'].$TAG[$DATA[$i]['tagozat']].'">hely</span>';
+			    }
+		    echo '</td>'."\n";
+		} else {
+		    echo '<td colspan="2" style="text-align: right">nem tudjuk felvenni</td>'."\n";
+		}
+		echo '</tr>';
+
+	    }
+	    
+	echo '</tbody></table>';
+
+    }
+
+    function putVegeredmeny($DATA) {
+	    global $VEGEREDMENY;
+
+	    echo '<table align="center" class="felveteliAdatok vegeredmeny">';
+	    echo '<thead><tr><th>'._EREDMENY.'</th></tr></thead>'."\n";
+	    echo '<tfoot><tr><th>'.date('Y-m-d H:i:s').'</th></tr></thead>'."\n";
+	    echo '<tbody>';
+		echo '<tr>';
+		    echo '<td>'.$VEGEREDMENY[$DATA['vegeredmeny']].'</td>'."\n";
+		echo '</tr>';
+	    echo '</tbody></table>';
+    }
+
+
+?>

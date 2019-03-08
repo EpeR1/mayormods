@@ -1,0 +1,232 @@
+/**
+ * Tableless Layout for default template
+ *
+ * @author Andreas Gohr <andi@splitbrain.org>
+ * @author moraes <moraes@tipos.com.br>
+ * @author Riccardo Govoni <battlehorse@gmail.com>
+ */
+
+/* -------------- top row --------------- */
+div.dokuwiki .header {
+  border-style : solid;
+  border-width: 1px 1px 1px 1px;
+  border-color: __border__ ;
+  margin-top : 5px;
+  background-image: url(__rg_logo_gradient__);
+  background-repeat: repeat-x;
+  height: 57px;
+  overflow: hidden;
+}
+
+// used for pagename in the top left of the page. Unused in rg template 
+div.dokuwiki .pagename {
+  float: left;
+  font-size: 200%;
+  font-weight: bolder;
+  color: __background_alt__;
+  text-align: left;
+  vertical-align: middle;
+}
+
+div.dokuwiki .pagename a:link, div.dokuwiki .pagename a:visited, div.dokuwiki .pagename a:hover, div.dokuwiki .pagename a:active {
+  color: __extern__;
+  text-decoration:none;
+}
+
+div.dokuwiki .logo {
+  background-image: url(__rg_wiki_logo__);
+  background-image: url(/skin/classic/base/img/mayor_small_ssl.gif);
+  background-repeat: no-repeat;	
+  background-position : 5px 5px ; 
+  height: 57px;
+  overflow: hidden;
+  font-size:15px; 
+  padding: 15px 50px ; 
+  font-weight:bolder;
+  text-align:left;
+  vertical-align:middle;
+}
+
+div.dokuwiki .logo a:link, div.dokuwiki .logo a:visited, div.dokuwiki .logo a:hover, div.dokuwiki .logo a:active {
+  color: __rg_logo_color__;
+  text-decoration:none;
+/*  font-family: cursive,Arial,sans-serif,sans;*/
+/*  font-variant:small-caps;*/
+  letter-spacing:2pt;
+}
+
+/* ---------------  sidebar and content  ---------------- */
+
+/* the document */
+div.dokuwiki div.page {
+  text-align: justify;
+
+  border-style : solid;
+  border-width: 1px 1px 1px 1px;
+  border-color: __border__ ;
+  background-color: __background__ ; 
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-bottom: 30px;
+
+  background-image: url(__rg_faded_background__);
+  background-repeat: no-repeat;
+  background-position: 98% 98%;
+
+}
+
+/* the sidebar */
+div.dokuwiki div.sidebar {
+  background-color: __rg_sidebar__ ;
+  border-style : solid;
+  border-width: 1px 1px 1px 1px;
+  border-color: __border__ ;
+  padding-top: 2px;
+  padding-bottom: 5px;
+
+  overflow: hidden; 
+  font-size : 80% ;
+}
+
+/* the sidebar box */
+div.dokuwiki div.sidebarandshadows {
+  width: 100% ;
+  overflow: hidden; 
+}
+
+/* the search box */
+div.dokuwiki div.searchbarandshadows {
+  margin-top: 4px ;
+}
+
+div.dokuwiki div.searchbar {
+  background-color: __rg_search__ ;
+  border-style : solid;
+  border-width: 1px 1px 1px 1px;
+  border-color: __rg_search_border__ ;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  text-align : left ; 
+
+  font-size : 80% ;
+}
+
+/* the actions box */
+div.dokuwiki div.userbarandshadows {
+  margin-top: 4px ;
+}
+
+div.dokuwiki div.userbar {
+  background-color: __rg_userbar__ ;
+  border-style : solid;
+  border-width: 1px 1px 1px 1px;
+  border-color: __rg_userbar_border__ ;
+  padding-top: 4px;
+
+  font-size: 80% ; 
+}
+
+div.dokuwiki div.userbarstrip {
+  background-color: __rg_userbar__ ;
+  border-style : solid;
+  border-width: 0px 0px 1px 0px;
+  border-color: __rg_userbar_border__ ;
+  padding-top: 4px; 
+  
+  font-variant:small-caps;
+  font-weight: bolder;
+  font-size: 100% ; 
+  cursor: pointer; 
+}
+
+div.dokuwiki div.userbarstrip:hover {
+  background-color: __rg_sidebar__ ; 
+}
+
+/* the left column ( sidebar,  search box, action box) */
+div.dokuwiki div.sideleft {
+  margin-top: 4px;
+  float: left;
+  clear: left ; 
+  width: 18%;
+}
+
+div.dokuwiki div.sideright {
+  margin-top: 4px;
+  float: right;
+  clear: right ; 
+  width: 18%;
+}
+
+
+/* the right column (main content) */
+div.dokuwiki div.mainright {
+  margin-top: 4px;
+  float: right; 
+  clear: right; 
+  width: 80% ; 
+}
+
+div.dokuwiki div.mainleft {
+  margin-top: 4px;
+  float: left; 
+  clear: left; 
+  width: 80% ; 
+}
+
+/* hack needed to avoid some unwanted extra space between boxes and their shadows */
+div.dokuwiki div.searchbarandshadows table,
+div.dokuwiki div.userbarandshadows table,
+div.dokuwiki div.sidebarandshadows table {
+  margin : 0;
+  padding: 0;
+}
+
+
+/* ---------------  status bar ---------------- */
+div.dokuwiki .bar {
+  border-style : solid;
+  border-width: 1px 1px 1px 1px;
+  border-color: __rg_status_border__ ;
+  background-color: __rg_status_background__ ;
+  background-image: url(__rg_status_gradient__);
+  background-repeat: repeat-x;
+  margin-top: 2px; 
+  height: 24px;
+  padding-top: 10px ; 
+  width: 100%;
+  font-size : 80%;
+  clear: both;
+  overflow: hidden;
+  height: 34px;
+}
+
+div.dokuwiki .bar-left {
+  float: left;
+}
+
+div.dokuwiki .bar-right {
+  float: right;
+  text-align: right;
+}
+
+div.dokuwiki #bar__bottom {
+  margin-bottom:3px;
+}
+
+/* ------------- File Metadata ----------------------- */
+
+div.dokuwiki div.meta {
+  clear: both;
+  margin-top: 1em;
+  color: __text_alt__;
+  font-size: 70%;
+}
+
+div.dokuwiki div.meta div.user {
+  float: left;
+}
+
+div.dokuwiki div.meta div.doc {
+  text-align: right;
+}

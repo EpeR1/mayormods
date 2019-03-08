@@ -1,0 +1,22 @@
+====== Fogadóórák kezelése ======
+
+Az oldal fő funkciója, hogy a szülők számára lehetőséget adjon a fogadóórákra való előzetes jelentkezésre.
+
+===== Előzetes adminisztrátori teendők =====
+
+Először az include/modules/naplo/config-{iskola rövid neve}.php állományban kell beállítani, hogy egy fogadóóra látogatás tervezett hossza hány perc (_VIZITHOSSZ). A megadott érték 60 valamely pozitív osztója kell legyen, ajánlott érték 10-15 perc.
+
+Az adminisztátor vagy egy vezetőségi tag állíthatja be ezek után a következő fogadóóra tervezett időpontját (mettől-meddig).
+
+Ezen az oldalon egy áttekintő táblázat is megjelenik az egyes tanárok fogadoóráinak időpontjairól, valamint a kijelölt termekről. A tanárok nevére kattintva egy-egy tanár adatainak részleteit is megtekinthetjük. Az így elért oldalon, ha egy tanár a megadottól eltérő időpontban tudja csak megtartani a fogadoóráját, akkor lehetőség van az időpont egyedi megváltoztatására, illetve megadhatjuk tanáronként a fogadóóra helyszínét is.
+Időpontként akár múltbéli időpontot is megadhatunk - ezzel lényegében töröljük az adott tanár fogadóóráját.
+
+Fontos adminisztrátori teendő még a "Fogadóóra jelentkezés" időszak létrehozása a Napló/Admin/Szemeszterek menüpontban. Ez az az időszak, amikor a szülőknek lehetőségük van az időpontfoglalásra. Az időszak végének meghatározását jól fontoljuk meg, mivel az időszak lejárta után a szülő nem tudja megnézni, hogy kihez mikorra jelentkezett!
+
+===== Szülői jelentkezés fogadóórára =====
+
+Szülőként bejelentkezve egy egyszerű táblázatot látunk, melyben rádiógombok segítségével jelölhetjük meg, hogy melyik időpontban melyik tanárhoz szeretnénk menni. A program az esetleges ütközéseket ellenőrzi.
+
+===== Tanár nézet =====
+
+A jelentkezésekről a tanárok is képet kaphatnak saját oldalukon. Itt a már betöltött és a még szabad helyek listáját láthatjuk, már rögzített jelentkezés esetén a szülő és gyermeke/gyermekei nevével.

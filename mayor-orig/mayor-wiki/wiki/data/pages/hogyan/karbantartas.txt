@@ -1,0 +1,78 @@
+====== Karbantartás ======
+
+A karbantartás főbb lépéseit próbáljuk itt összeszedni.
+
+===== A karbantartási feladatok előkészítése =====
+
+A MaYoR rendszer két fő karbantartási feladatát (mentés és frissítés) egy egyszerű szkript segítségével végezhetjük. Ez a szkript a ''/var/mayor/bin/mayor'' elérési 
+úttal rendelkezik. Érdemes erre a parancsállományra szimbolikus linket készíteni egy olyan könyvtárból, ami benne van a rendszergazda keresési útvonalainak 
+listájában (tipikusan erre való az ''/usr/local/sbin/''), illetve futtatási jogot kell rá adnunk - ha még nem lenne (a telepítő normál esetben ezt megteszi):
+
+  # chmod +x /var/mayor/bin/mayor
+  # ln -s /var/mayor/bin/mayor /usr/local/sbin/
+
+A telepítés tartalmaz egy egyszerű cron szkriptet is (''/var/mayor/bin/etc/cron.daily/mayor''). Ezt testreszabhatjuk és átmásolhatjuk az ''/etc/cron.daily'' kövtárba, 
+vagy készíthetünk rá szimbolikus linket is, ha az alapbeállítások megfelelnek nekünk (napi mentés és heti frissítés).
+
+A karbantartó script bash (GNU Bourne-Again SHell) - ben íródott és fixen a ''/bin/bash'' útvonalon keresi a futtató programot. Amennyiben más (locate bash) elérési
+úton található rendszerünk bash programja:
+
+  # ln -s [ahol valójában van] /bin/bash
+
+===== Mentés =====
+
+Az egyik legfontosabb dolog a rendszeres, lehetőleg napi mentés biztosítása. Valódi biztonságot csak ez adhat. Akár program hibából, akár egy meggondolatlan kattintás 
+következményeként, vagy egy rosszul kiadott SQL utasítás nyomán elveszhetnek, sérülhetnek adatok, az illetéktelen hozzáférés veszélyéről nem is beszélve. A napi mentés 
+ilyen esetben rengeteg munkától és kellemetlenségtől kímélhet meg minket.
+
+A mentés elvégzésére a rendszer biztosít megfelelő szkriptet, de ennek használata csak megfelelő kitöltött konfigurációs állomány esetén működhet.
+A beállításokat a ''/var/mayor/config/main.conf'' állományba kell beírnunk, mintát találunk ugyanitt ''main.conf.example'' néven.
+
+A ''SAVELDAP'' opció a legtöbb telepítés esetén 0 értékű és az utána következő három bejegyzés így nem lesz figyelembe véve, hiszen a legtöbb helyen MySQL 
+háttéradatbázist használunk.
+
+A mentés ezek után parancssorból indítható:
+
+  # mayor backup
+
+Természetesen, abban az esetben, ha a fent említett cron szkriptet bemásoltuk a megfelelő helyre, akkor ez a parancs minden reggel automatikusan le fog futni - 
+ilyenkor nem, vagy csak speciális esetekben kell külön futtatni.
+
+===== Frissítés =====
+
+A frissítéshez szintén ugyanez a konfigurációs állomány tartozik: ''/var/mayor/config/main.conf''.
+
+Fontos, hogy az update folyamat hozzáférjen az adatbázisokhoz - hiszen esetenként ezeket is módosíthatja. 
+A MODULES paraméterben adjuk meg, hogy mely modulokat szeretnénk frissíteni. 
+ 
+Az update folyamat HTTP alapú (a wget programot használja).
+
+A ''parentDeny'' illetve ''publicDeny'' változók szorulnak magyarázatra. A legtöbb funkciót megvalósító oldal a private hozzáférési szinten van definiálva. Ha ezekre
+a public vagy parent szinten hivatkozunk, az update folyamat linkeket hoz létre. Ha az alapértelmezetten linkelt oldalakat le akarjuk tiltani valamelyik 
+hozzáférési szinten, akkor ehhez az oldalt a rövid elérési útjával be kell írnunk pl a ''publicDeny'' változóba. Így
+
+  # publicDeny="naplo/tanev/orarend"
+
+(( Figyelem! A régebbi verziókban (1943-ig) használt ''parentSymlink'' és ''publicSymlink'' változókat a továbbiakban nem használjuk!))
+
+A frissítő szkriptnek valahonnan tudnia kell, hogy mi a program jelenlegi verzió-száma, hogy el tudja dönteni, szükség van-e frissítésre, és ha igen, 
+akkor mely módosítások elvégzését jelenti a frissítés. A program aktuális verziószámát a ''/var/mayor/log/revision'' fájl tartalmazza. Ha ez az állomány valamiért 
+hiányzik, megsérül, hibás adatot tartalmaz, akkor hozzuk létre és javítsuk ki a megfelelő revision beírásával.
+
+A frissítés ezek után parancssorból történhet:
+
+  # mayor update
+
+Feltéve, hogy korábban valamilyen módon elértük, hogy a /var/mayor/bin/mayor script futtatható legyen és benne legyen a PATH-ba. Például:
+
+  # ln -s /var/mayor/bin/mayor /usr/local/sbin
+  # chmod +x /var/mayor/bin/mayor
+
+===== A beállítások felügyelete =====
+
+A MaYoR rendszer összes beállítása a ''/var/mayor/config'' könyvtár alatt végezhető, beleértve a [[hogyan:menu_testreszabas|menük testreszabását]] az egyes skin-ek 
+apróbb beállításait, a modulok konfigurációját és az egyes hozzáférési szintek beállításait. A konfigurációs állományokhoz mindig találunk ''.example'' kiterjesztésű 
+mintát. Mivel a konfigurációs lehetőségek időnként változnak, ezért érdemes időszakonként átnézni őket, hogy lássuk, nincs-e szükség saját állományaink szerkesztésére.
+
+A ''/var/mayor/log/'' könyvtárban található az aktuális revision file valamint az update process logjai.
+

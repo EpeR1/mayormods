@@ -1,0 +1,21 @@
+====== Munkaközösségek ======
+
+A MaYoR rendszerben a munkaközösség fogalma nem felel meg a hétköznapi értelemben vett munkaközösségnek. Valahol a munkaközösség és a szak, végzettség között van. Arra szolgál, hogy eldönthesse a program, hogy egy-egy tárgyat ki taníthat szakszerűen.
+
+  * Egy valódi munkaközösségbe sokszor több tárgy tanárai is bekerülhetnek (pl. "kisebb" nyelvek munkaközössége: francia, spanyol, olasz tanárokkal). A naplóban ilyen összevonás nem szerencsés, mert ez azt eredményezné, hogy például szakszerű helyettesítésre kiírhatnánk egy francia szakos tanárt spanyol órára.
+  * A szaknál, végzettségnél viszont általánosabb a mi munkaközösségünk, hisz előfordulhat, hogy egy tárgyat több különböző végzettséggel is taníthatunk.
+
+===== Új munkaközösség =====
+
+Új munkaközösség felvételéhez lényegében csak egy nevet kell adnunk a munkaközösségnek, illetve opcionálisan megjelölhetjük a munkaközösség vezető személyét (ennek pillanatnyilag (még) nincs semmilyen lényeges következménye a program működését illetően, de később lehetnek ilyen irányú fejlesztések).
+
+===== Munkaközösség módosítása =====
+
+Módosíthatjuk a munkaközösség nevét, kiválaszthatjuk a munkaközösségvezetőt, felvehetünk tagokat a munkaközösségbe (a Ctrl gomb segítségével egyszerre több felveendő tagot is kijelölhetünk), törölhetünk tagokat a munkaközösségből (a Ctrl gomb itt is működik).
+
+A munkaközösség tagjain kívül fontos még megadnunk az adott munkaközösséghez tartozó tárgyakat is. Itt ismét csak egy nevet kell adnunk a tárgynak. A felvett tárgy nevét felületről már nem módosíthatjuk, lehetőség van viszont tárgy törlésére (ez magaután vonhat egyéb következményeket, kezdve az adott tárgyhoz tartozó tankörök törlésén...
+
+===== Munkaközösség törlése =====
+
+Szükség esetén akár egész munkaközösséget is törölhetünk. Ez persze magaután vonja a hozzá tartozó tárgyak törlését is, ez meg csak a tárgyhoztartozó tankörök törlésével oldható meg, egy tankörhöz viszont rengeteg egyéb adat kapcsolódhat (jegyek, órák, hiányzások, stb). Gondoljuk tehát meg, mielőtt törlésre szánjuk magunkat.
+

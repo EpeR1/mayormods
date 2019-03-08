@@ -1,0 +1,28 @@
+===== Belépés Facebook-fiókkal =====
+A beállítás időigényes, többlépcsős, úgyhogy nyugodt körülmények közt érdemes végezni!
+
+==== Valid cert létrehozása ====
+Első lépésként - ha még nincs - hozzunk létre és állítsunk be érvényes, a böngészők által elfogadott tanúsítványt, pl. a Let'Encript-félét!
+
+Részletek [[hogyan:tanusitvany|itt]]!
+
+==== Facebook-fiókos azonosítás beállítása ====
+
+Egy működő (célszerűen saját) Facebook-fiókban lépjünk az [[https://developers.facebook.com/apps|alábbi]] oldalra!
+
+Csináljuk végig a gyors regisztrálást (register), majd kattintsunk az **Add a new app**-ra és válasszuk a **Facebook login WWW**-t! Lépegessünk végig a pontokon (a **Set up - Web - Site URL** mezőbe írjuk a https-es naplóelérést!), és végezzük el a következő beállításokat:
+
+Settings -> valid oauth redirect -> a https-es URL (https://yeti.szag.hu) -> Save
+Products/Basics -> app domains -> a napló teljes neve (yeti.szag.hu) -> Save
+Products/Basics -> namespace -> (szagyeti) -> Save
+
+Ezután a dashboard-ból másoljuk ki az App Id-t és a Secret-et, és a /etc/mayor/main-config.php fáljba a következő módon illesszük be:
+
+  define('__FBCONNECT_ENABLED', true);
+  define('__FB_APP_ID', 'IDE_IRJUK_AZ_APP_ID-T');
+  define('__FB_APP_SECRET', 'IDE_IRJUK_A_SECRET-ET');
+
+Ezután a normál jelszóval belépés után a lakat alatt megjelenik egy F jelre lépve, vagy a menüben a „facebook azonosítás” menüben lehet összekötni a beléptetett usert a saját fiókjával.
+
+Érdemes fokozottan felhívni a figyelmet a kényelem okozta esetleges hátrányokra - különösen a publikusan használt gépeken!
+

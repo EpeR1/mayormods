@@ -1,0 +1,23 @@
+<?php
+
+$DEFAULT_PSF['parent']  = array('page'=>'naplo', 'sub'=>'osztalyozo', 'f'=>'diak');
+//$DEFAULT_PSF['parent']  = array('page'=>'naplo', 'f' => 'diakValaszto');
+//$DEFAULT_PSF['parent']  = array('page'=>'portal', 'f' => 'start');
+$AUTH['parent'] = array(
+    'skin' => 'sulix',
+    'backend' => 'mysql',
+    'authentication' => 'required',
+    'onExpired' => 'warning',
+    'onDisabled' => 'none',
+    'enableSelfPasswordChange' => true,
+#    'createAccount' => 'byRegistration',
+    'createAccount' => 'byAdmin',
+    'accountAttrs' => array('mail','telephoneNumber'),
+
+    'mysql host' => 'localhost',
+    'mysql db' => 'mayor_parent',
+    'mysql user' => 'mayor_parent',
+    'mysql pw' => '%SQLPW%',
+);
+
+?>

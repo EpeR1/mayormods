@@ -1,0 +1,68 @@
+<?php
+
+#
+# MaYoR keretrendszer - konfigurációs file
+#
+
+define('_SITE','SuliXerver - Napló');
+
+//define('__TESTERRORREPORTER',true);
+//define('__TESTERRORREPORTERWARN',true);
+
+define('_MAYOR_DIR','%MAYORDIR%');
+define('_BASEDIR',_MAYOR_DIR.'/www');
+define('_CONFIGDIR',_MAYOR_DIR.'/config');
+define('_LOGDIR',_MAYOR_DIR.'/log');
+define('_LOCKFILE','/var/run/mayor.lock');
+define('_DATADIR',_MAYOR_DIR.'/data');
+define('_DOWNLOADDIR',_MAYOR_DIR.'/download');
+
+define('_MYSQL_ENCODE_STR','aaaa');
+
+//$MYSQL_DATA['login']['host']  ='localhost';
+$MYSQL_DATA['login']['db']  ='mayor_login';
+$MYSQL_DATA['login']['user']='mayor_login';
+$MYSQL_DATA['login']['pw']  ='%SQLPW%';
+
+$POLICIES                = array('private','parent','public');
+$LANGUAGES		 = array('hu_HU');
+$SKINS			 = array('sulix','classic','pda','vakbarat');
+$SKINSSHOW		 = array('sulix','classic','pda','vakbarat');
+
+define('_SECURECOOKIE',true);
+define('_ALLOW_SULIX_SSO',true);
+define('_ALLOWPDAIDENTIFICATION',true);
+define('_DEFAULT_POLICY','public');
+define('_DEFAULT_LANG','hu_HU');
+define('_DEFAULT_SKIN','classic');
+define('_DEFAULT_JS_LEVEL',2);
+
+// Egy session maximális időtartama órában. Korlátlan: 0
+define('_SESSION_MAX_TIME', 24);
+// Egy session maximális inaktiv időtartama órában. Korlátlan: 0
+define('_SESSION_MAX_IDLE_TIME', 1);
+// Javascript figyelmeztető üzenet ennyi perccel a session lejárta előtt:
+define('_SESSION_ALERT_TIME', 5);
+
+// Ezt a tömböt hasznűlhatjuk a modulok közti kapcsolatra!
+// pl: $INCLUDES['deleteUser'][0] = 'include/modules/naplo/incDeleteUser.php';
+$INCLUDES = array(
+    'html_mayor_head' => array(),
+    'startColumn' => array(),
+    'startMain' => array(),
+    'startToolBar' => array(),
+    'html_head' => array()
+);
+
+// A telepített modulok
+$INSTALLED_MODULES = array();
+/*
+if ($dh = opendir('include/config/')) {
+    while (($file = readdir($dh)) !== false) {
+        if (substr($file,0,6)=='module') require('include/config/'.$file);
+    }
+    closedir($dh);
+}
+*/
+	
+?>

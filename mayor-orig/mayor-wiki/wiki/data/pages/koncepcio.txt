@@ -1,0 +1,31 @@
+
+====== A MaYoR rendszer áttekintése ======
+
+===== Avagy: mi az amit érdemes tudni a rendszer belső felépítéséről =====
+
+A MaYoR alapját egy keretrendszer képezi. Ennek a keretrendszernek a fő feladata a felhasználói azonosítás, no meg az oldalak megjelenítéséhez szükséges háttér biztosítása, beleértve a többnyelvűség és a különböző skin-ek kezelését.
+
+A keretrendszer önállóan is működő rendszer, a napló nélkül is életképes, bár alapvetően azért készült, hogy a naplót rá lehessen építeni (általános célú portál motorból van rengeteg, minden bizonnyal jobbak és szebbek is mint a mi rendszerünk).
+A keretrendszer háromféle hozzáférési szintet kezel: a nyilvános (public) oldalak azonosítás nélkül elérhetők (bár van lehetőség itt is azonosításra, ha valamiért szükséges), külön azönosítási folyamaton esnek át a szülők (parent),
+illetve az iskolával jogviszonyban levő diákok, tanárok (private).
+
+Az egyes hozzáférési szinteken külön szabályozhatjuk, hogy milyen felhasználói azonosítást követelünk meg, illetve azt, hogy az azonosítókat milyen háttér adatbázisban tároljuk. Jelenleg kétféle
+háttéradatbázist használhatunk: MySQL-t és OpenLDAP-ot. Az előbbi kezelése jóval egyszerűbb, könyen lekérdezhetők, módosíthatók benne az adatok, az utóbbi pedig - mivel a posixAccount séma kiterjeszéseként
+felépülő azonosítókat használ - felhasználható más szolgáltatások azonosítási folyamataiban (levelezés, ssh, ftp...)
+
+----
+
+A keretrendszerre épülő napló modulban eltárolunk sokféle adatot. Többek között a diákok, tanárok adatait is. Alaphelyzetben ezen adatok és a felhasznái adatok között nincs semmilyen kapcsolat. A gyakorlatban
+persze szeretnénk a tanároknak, diákoknak, szülőknek, titkársági dolgozóknak saját azonosítót adni, mellyel képesek a saját adataikhoz hozzáférni. A felhasználói adatok és a naplóbeli személyek közötti
+kapcsolat a következők szerint alakul ki:
+
+  * A privete hozzáférési szinten "titkárság" kategóriába tartozó felhasználók hozzáférnek a titkárság számára engedélyezett oldalakhoz
+  * A private hozzáférési szinten "tanár" kategóriába tertozó felhasználók esetén a rendszer a oktatási azonosító alapján próbál kapcsolatot találni a naplóban szereplő tanárok és a felhasználói 
+azonosító tulajdonosa között. Ha az azonosítóhoz tartozó oktatási azonosító (studyId) attribútum megegyezik valamely tanát oktatási azonosító attribútumával (oId), akkor a rendszer őket azonosnak 
+tekinti. Így elvileg nem kizárt, hogy egyes tanárokhoz ne legyen felhasználói azonosító (pl. már megszűnt a jogviszonya), az is lehet, hogy valamiért több azonosítót készítünk hozzá (no erre nem 
+tudnék értelmes példát mondani, hogy mire lenne jó), és az is elődordulhat, hogy egy tanár kategóriájú azonosítóhoz nincs megfelelő tanár a naplóban (ez azért többnyire hiba, hacsak nem abból 
+adódik, hogy több intézmény adatait kezeljük egy rendszerben).
+  * A private hozzáférési szinten "diák" kategóriába tartozó felhasznlók esetén a rendszer (a tanárokhoz hasonlóan) az oktatási azonosítót használja a naplóbeli diákoknak való megfeleltetéshez.
+  * A parent hozzáférési szinten bejelentkezett felhasználót a program a userAccount attripútum alapján próbálja megfeleltetni a naplóban eltárolt szülők valamelyikével. Itt tehát közvetlenebb 
+a kapcsolat, direkt módon a felhasználói azonosítót rendeljük hozzá a szülőhöz.
+

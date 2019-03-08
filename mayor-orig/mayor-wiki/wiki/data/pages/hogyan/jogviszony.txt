@@ -1,0 +1,49 @@
+
+====== Diákok jogviszonya ======
+
+Az alábbiakban összefoglaljuk a diákok jogviszony-kezelésének föbb tudnivalóit
+
+===== Jogviszony állapok áttekintése =====
+
+==== Felvételt nyert ====
+
+Ez az állapot valójában a jogviszonyba lépés előtti állapotot jelenti. Azért vezettük be, hogy lehetőség legyen a felvett diákok adatainak betöltésére már a beiratkozás előtt.
+Ez az állapot a beiratkozáskor "jogviszonyban van" állapotra változik - más jogviszonyváltásra ebből az állapotból nincs lehetőség.
+
+A "felvételt nyert" státuszú diákot besorolhatjuk oszályokba, de nem lehet tagja tanköröknek, nem vehet részt a tanulmányokban, így nem lehet se hiányzása, se jegye, stb.
+
+==== Jogviszonyban van ====
+
+Ez a státusz jelöli a normál tanulói jogviszonyt. A jogviszony a beiratkozással veszi kezdetét, átválthat magántanulói jogviszonyra (magántanuló), időszakosan szünetelhet 
+(jogviszonya felfüggesztve), illetve lezárulhat. 
+
+A jogviszonyban lévő tanulót osztályokba, tankörökbe soroljuk, munkáját értékeljük, hiányzásait adminisztráljuk, stb
+
+==== Magántanuló ====
+
+A már beiratkozott diák tanulmányait magántanulóként is folytathatja. A magántanuló tanulmányait önállóan végzi, egyénileg készül fel, az intézmény feladata a tanuló 
+értékelése. Magántanulói státuszból a tanuló visszakerülhet normál jogviszonyba, kérheti jogviszonyának felfüggesztését, illetve jogviszonya le is zárulhat
+(pl. ha tanulmányait elvégezte, vagy más intézményban folytatja).
+
+A magántanuló tagja lehet valamely osztálynak, de nem tagja egyik tankörnek sem, nem kap évközi érdemjegyeket, a tanórai foglalkozásokon nem vesz részt, félévi és év végi
+osztályzatait osztályozóvizsgán szerti meg.
+
+==== Jogviszonya felfüggesztve ====
+
+Ez az állapot azt jelenti, hogy a tanuló időszakosan megszakítja tanulmányait, semmiéyen módon nem vesz részt a tanításban, értékelésben. A felfüggesztett jogviszonyból
+a tanuló visszatérhet normál tanulói jogviszonyba, magántanulói jogviszonyba, de akár le is zárulhat jogviszonya.
+
+A felfüggesztett jogviszonyú tanuló nem tagja se osztálynak, se tankörnek, újbóli jogviszonybalépéséig csak adatait tároljuk.
+
+==== Jogviszonya lezárva ====
+
+Ezt a státuszt használjuk, ha a diák jogviszonya véglegesen lezárult - a tanulmányok végeztével, más iskolába való átvétel esetén, tankötelezettség lejártával, ha 
+tanulmányait nem kívánja folytatni, stb. Szükség esetén - újabb beiratkozással - lezárt jogviszonyból új jogviszony nyitható.
+
+A lezárt jogviszonyú tanuló nem tartozik se osztályba, se tankörbe, nem vesz részt a tanításban, értékelést sem kap, stb...
+
+==== Vendégtanuló ====
+
+A vendégtanuló sajátos tanulói jogviszony, mely akkor létesül, ha a tanuló nem az intézményben folytatott valamely képzés egészében vesz részt, csak egyes tárgyak tanulására
+szorítkozik. A vendégtanuló nem tagja egyik osztálynak sem, de tanulmányait valamely tankörökben végzi, ezekben évközi értékelést is kap. A vendégtanulói jogviszony csak
+lezárulhat, más státuszba nem váltható.

@@ -1,0 +1,48 @@
+====== Osztály hiányzásainak összesítése ======
+
+Az oldal elsősorban az osztályfőnökök munkáját segíti, összesítést adva a diákok hiányzásairól.
+
+
+===== Megjelenítési beállítások =====
+
+Az eszközsor alatti sávban egyszerűen kiválaszthatjuk, hogy mely adatok megjelenítését kérjük a programtól:
+  * Lezárt - A már nem módosítható hiányzási adatok megjelenítése.
+  * Igazolható - A még igazolható/törölhető hiányzások, késések megjelenítése
+  * Összes - Összesítés a hiányzások, késések, felszerelés hiányok és felmentések adataiból.
+  * Fegyelmi utáni - Az igazolatlan hiányzások és késések miatt legutóbb beírt fegyelmi fokozat referencia dátuma utáni bejegyzések (hiányzás, késés, felszerelés hiány) összesítése.
+  * Fegyelmi fokozat - Az igazolatlan hiányzások és késések miatt adott legutóbbi fegyelmi fokozat megjelenítése, valamint új fegyelmi fokozat beírásának lehetősége.
+
+
+Az utolsó lehetőség, hogy beállítsunk egy viszonyítási dátumot (referencia dátum), mely előtti bejegyzéseket lezártnak tekintjük. Ezzel a lehetőséggel szigoríthatjuk a feltételt, tehát olyan hiányzásokat is lezártként jeleníthetünk meg, lezártként kezelhetünk, melyek valójában még igazolhatóak.
+
+A referencia dátum kerül be a fegyelmik beírásakor a naplo referenciaDt mezőjébe.
+
+===== A hiányzási adatok megjelenítése =====
+
+A hiányzások és késések többnyire három-három oszlopban jelennek meg: igazolatlan, igazolt és összes hiányzás, illetve késés száma. Kivétel ez alól a "fegyelmi utáni" kategória, ahol csak az igazolatlan késés, hiányzás és a felszerelés hiány adatok jelennek meg (ezek befolyásolják a fegyelmi fokozatot).
+
+Az igazolatlan késésekre állítva az egér kurzort a böngésző kiírja a késések összesített időtartamát.
+
+===== Fegyelmi fokozatok rögzítése =====
+
+A funkció még nem működik!
+
+A legördülő listából válasszuk ki a megfelelő fegyelmi fokozatot, majd nyomjuk meg a "rögzít" gombot. Ekkor a program rögzíti a bejegyzést. A bejegyzéshez tartozik egy úgynevezett "viszonyítási dátum", vagy referencia dátum. A program úgy tekinti, hogy az e dátum előtt beírt hiányzásokre vonatkozik a fegyelmi bejegyzés, így követhető, hogy a legutóbbi fegyelmi bejegyzés óta hány újabb keletkezett.
+
+===== Határidők kezelése =====
+
+A határidőket az alábbi konstansok értéke határozza meg:
+  * _HIANYZAS_HATARIDO - A szaktanár az itt megadott időpontig visszamenőleg beírhat hiányzást. Értékét nem érdemes túl nagynak választani, mert a késői beírás nagyban megnehezíti az osztályfőnök dolgát. Javasolt érték: 1-2 nap
+  * _OFO_HIANYZAS_BEIRAS - Az osztályfőnök számára ennyi tanítási napig lehet visszamenőleg hiányzásokat beírni. Kicsit lehet hosszabb határidő, mint a szaktanáré, hiszen saját munkáját nem zavarja, ha később írja be a hiányzást. Javasolt érték: 5 nap
+  * _OFO_HIANYZAS_HATARIDO - Az előző érték alapján kiszámított dátum.
+  * _IGAZOLAS_BEIRAS - Az osztályfőnök számára legfeljebb ennyi tanítási napig lehet visszamenőleg igazolásokat rögzíteni az után, hogy a diák leadta az igazolást. A pontosabb magyarázatot lásd alább. Javasolt érték: 5-8 nap.
+  * _IGAZOLAS_BEIRAS_HATARIDO - Az előző értékből számított dátum.
+  * _IGAZOLAS_LEADAS - A tanulónak a hiányzást követően legfeljebb ennyi tanítási nap áll rendelkezésre, hogy leadja igazolását. Ha az adott időszakban van osztályfőnöki órája, akkor nem ezzel az értékkel, hanem az osztályfőnöki óra dátumával számol a program.
+  * _IGAZOLAS_LEADAS_HATARIDO - _IGAZOLAS_LEADAS+_IGAZOLAS_BEIRAS tanítási nappal ez előtti dátum. E dátum előtt befejeződő hiányzások igazolásárá már nincs lehetősége a diáknak. A program konkrét tanuló esetén ezt az időszakot tovább szűkítheti, ha a megfelelő időszakban volt osztályfőnöki óra. Ilyen esetben az osztályfőnöki óra dátuma+_IGAZOLAS_BEIRAS tanítási nap eltelte után már nem igazolható a hiányzás.
+
+===== Fegyelmi fokozatok kezelése =====
+
+Az igazolatlan hiányzások összesítésének módját három konstans segítségével szabályozhatjuk:
+  * _HANY_KESES_IGAZOLATLAN - Ha ez az érték nem 0, akkor az itt megadott számú igazolatlan késést, mint fegyelmi vétséget átváltjuk igazolatlan hiányzássá.
+  * _HANY_FSZ_IGAZOLATLAN - Ha ez az érték nem 0, akkor az itt megadott számú felszerelés hiányt egy igazolatlan hiányzásnak megfelelő fegyelmi vétségként kezeljük.
+  * _KESESI_IDOK_OSSZEADODNAK - Ez a logikai érték dönti el, hogy élünk-e azzal a törvény adta lehetőséggel, hogy a hiányzásokat percek szerint rögzítjük és 45 percenként egy-egy igazolatlan hiányzásként könyveljük el. Az előző két opció csak ennek hamis értéke esetén lesz érvényes.

@@ -1,0 +1,20 @@
+====== aSc Timetables import modul - tankörök hozzárendelése nélkül ======
+
+Amennyiben az órarendet az aSc programmal készítettük, de nem a MaYoR-ból átadott adatokból, akkor használhatjuk ezt a beviteli módot.
+
+Használata előtt az aSc-ben fel kell vennünk a tanárok és termek mezői közé ''MaYoR ID'' néven a MaYoR rendszerben használt azonosítókat. 
+Ezt a "Megadás" menüpont alatt, a megfelelő kategória (Tanárok, Termek), majd objektum (egy tanár vagy terem) kiválasztása után tehetjük meg, 
+a "Módosítás" opció alatti "Szokásos mezők" lehetőség kiválasztásával.
+
+Ha az alapadatokat (tanárok, termek, osztályok, stb.) már felvettük a MaYoR rendszerbe, akkor az Órarend/ascExport segítségével könnyen 
+megtudhatjuk a MaYoR ID-ket.
+
+Ha ezzel megvagyunk, akkor a szokásos export sablonnal készítsünk XML exportot az aSc-ből (Fájl/Export/aSc Timetables XML). 
+Ehhez elõször le kell tölteni a MaYoR-ból az aSc export állományt. Az aSc-ben a fent megadott helyen a mentés során ezt a letöltött export XML 
+fájlt kell felülírni. Utána az elkészült XML fájlból az elsõ sor(ok)ban lévõ <?xml version="1.0" encoding="windows-1250"?> sort törölni kell
+(bár az újabb verziók már automatikusan kihagyják ezeket a sorokat). Az így módosított file-t másoljuik fel a szerverre, mondjuk a ''/tmp'' könyvtárba, 
+majd kezdhetjük a betöltést.
+
+A modul ellenőrzi a tanárazonosítók megfelelését és betölti az orarendiOra táblába a rekordokat. Az orarendiOraTankor táblát nem módosítja. 
+Ez azt jelenti, hogy az órarend betöltése után még tanáronként végigmenve el kell végeznünk az órarendi órák tankörökhöz való hozzárendelését. 
+A program azokat a kártyákat, melyek több tanárhoz vannak hozzárendelve külön bejegyzésekként veszi fel, illetve kezeli a dupla és tripla órákat is.

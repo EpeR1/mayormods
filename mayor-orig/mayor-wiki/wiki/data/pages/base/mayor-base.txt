@@ -1,0 +1,16 @@
+====== A keretrendszer ======
+===== mayor-base =====
+
+A keretrendszer fő szolgáltatásai:
+  * több hozzáférési szint ([[base:policy:private]], [[base:policy:parent]], [[base:policy:public]])
+  * felhasználó [[azonosítás]]
+  * felhasználói adatok kezelése, többféle háttéradatbázissal ([[backend]]-el)
+  * több [[nyelv]] támogatása
+  * többféle kinézet ([[skin]]) támogatása
+  * [[oldalszerkezet]] kialakítása (fájlok csatolási sorrendje)
+  * [[modulok]] beépítésének lehetősége
+  * három szintű, nyelv és modul függő [[menü]]
+  * nyelv és modul függő [[hibakezelés]]
+
+A modulok ezen szolgáltatásokra épülve bővítik a rendszer szolgáltatásait.
+

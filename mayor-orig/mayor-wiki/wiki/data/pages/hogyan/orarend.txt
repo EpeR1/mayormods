@@ -1,0 +1,97 @@
+
+====== Az órarend ======
+
+===== Koncepció =====
+
+Az órarend alapvetően két táblát jelent a tanév adatbázisban: ''orarendiOra'' és ''orarendiOraTankor''.
+
+Az előbbi tartalmazza tulajdonképpen a lényeget, azt, hogy kinek mikor, kivel, hol van órája.
+De annak érdekében, hogy a rendszer kellőképpen rugalmas legyen külön táblában rögzítjük, hogy melyik óra melyik tankörhöz tartozik.
+
+Ez a szerkezet lehetővé teszi például azt, hogy az órarendet betöltsük úgy, hogy a tankörök listája még nem teljes. Majd az órarendi
+bejegyzések tankörökhöz való hozzárendelése során derül ki az, hogy esetleg hiányzik egy-két tankör - amit felvéve rendeződik minden.
+
+Praktikus lehet olyan esetben is ez a szerkezet, amikor az órarend készítése során egy tankör óráit különböző jelölésekkel látjuk el.
+Például a RoPaSoft órarend késtítő programban is kellett ilyen trükköket használni, ha adott esetben egy 5 órás matematika órái úgy álltak elő, hogy 3 órát egy
+fakultációs sávból vettünk, a másik kettőt meg külön.
+
+
+===== Az adattáblák =====
+
+A mese után akkor a táblák:
+
+==== orarendiOra ====
+
+  orarendiOra(het, nap, ora, tanarId, osztalyJel, targyJel, teremId, tolDt, igDt)
+
+Egy rekord egy órarendi órának az adatait tartalmazza. A hét mező akkor érdekes, ha több hetes az órarend, mondjuk van A-hét és B-hét. A
+táblában persze nem  A és B, hanem egy sorszám, 1 és 2 fogja ilyenkor jelölni, hogy a bejegyzés melyik héthez tartozik.
+Egyhetes órarend esetén a ''het'' mező értéke konstans 1 lesz.
+
+A ''nap'' a hét napját jelöli: hétfő 1, ..., péntek 5, esetleg szombat 6.
+
+Az ''ora'' azt hiszem nem igényel magyarázatot - az adott napon hanyadik tanítási óra.
+
+A ''tanarId'' a tanár azonosítója a MaYoR rendszerben. Ez a szám sok helyen megjelenik a tanár neve mellett zárójelek között a felületen, illetve
+kiolvasható az intézményi adatbázis ''tanar'' táblájából. Akármilyen formában töltjük be az adatokat, mindenképp szükséges, hogy ezt az
+azonosító számot betöltés közben, vagy betöltés előtt kiderítsük, hisz a mező értéke csak létező szonosító lehet (külső kulcs a ''tanar'' tábla megfelelő mezőjére).
+
+''osztalyJel'' és ''targyJel'':
+Ezek a mezők lényegében kötetlen tartalmúak. Az adott órarendkészítő program sajátosságai szerint tölthetők ki, bár szerencsés, ha a
+tartalmukból könnyen lehet következtetni a jelölt tanulócsoportra. Ami fontos velük kapcsolatban: a (''tanarId'', ''osztalyJel'', ''targyJel'')
+hármas lesz az a kulcs, amihez egy-egy tankört hozzá lehet rendelni. Ez akkor lehet esetleg gond, ha egy tanár ugyanabban az osztályban két
+csoportra bontva tanít egy tárgyat, mert ilyenkor figyelni kell, hogy a jelölésben valahogy megkülönböztessük a két csoportot. Pl a
+''targyJel''-hez egy sorszámot illesztünk: ''mt1'', ''mt2''.
+
+Az nem okoz gondot, ha egy tankör óráit többféle jelöléssel is illetjük. Például a fakultációs sáv órái ''mtFakt'', az alapóra ''mt'' jelölést kap. 
+Két különböző (''tanarId'', ''osztalyJel'', ''targyJel'') hármashoz rendelhetjük ugyanazt a tankört.
+
+''teremId'': értelemszerűen a terem azonosítója a MaYoR rendszeren belül - kiolvasható az intézményi adatbázis terem táblájából. Ha nem akarunk
+termet megadni, akkor ''NULL'' értékkel kell felvenni... (külső kulcs - csak létező id, vagy null lehet)
+
+''tolDt''-''igDt''.
+Az órarend a tanév során változhat, változik. Ezért az egyes órarendi bejegyzések érvényességét kell tudnunk szabályozni. Erre szolgál ez a
+két dátum. Ha például egy bejegyzés csak az első félében érvényes, akkor 2009-09-01-es ''tolDt''-t és 2010-01-19-es ''igDt'' kap 
+
+Órarendváltoztatáskor tehát a korábbi bejegyzéseket nem töröljük, csak az érvényeségüket "zárjuk le", majd felvesszük az új bejegyzéseket.
+A gyakorlatban általában az órarendet kezdetben egész évre szoktuk betölteni, és év közben mikor szükséges, akkor módosítjuk.
+
+==== orarendiOraTankor ====
+
+A másik tábla az ''orarendiOra'' rekordjaihoz rendeli hozzá a tanköröket a már emlegetett (''tanarId'', ''osztalyJel'', ''targyJel'') hármas alapján. A tábla
+mezői ennek megfelelően:
+
+  orarendiOraTankor(tanarId, osztalyJel, targyJel, tankorId)
+
+Ahol a ''tankorId'' a tankör azonosítója a MaYoR rendszeren belül, a legtöbb helyen a tankör neve után zárójelben fel is tüntetjük, de
+kiolvasható az intézményi adatbázis tankor táblájából is. Pontosabban a ''tankorSzemeszter'' táblából - mert itt tárolódnak a tankörök nevei -
+amik ugye évente változnak az évfolyam jelölés miatt...
+
+Ezt a táblát nem kell feltölteni. Ennek a kitöltését a felületen az [[naplo:orarend:orarendTankor|Órarend/Órarend-tankör összerendező]] menüpontban lehet elvégezni -
+tanáronként.
+
+
+===== Órarendbetöltés =====
+
+==== CSV (TSV) állományból ====
+
+Az "Admin/Import" menüpont alatt közvetlenül tudunk adatokat betölteni az ''orarendiOra'' táblába.
+
+Néhány sor egy fiktív csv-ből (ami igaziból inkább tsv, mert tabulátorokkal tagolt szöveges állomány....)
+
+  1   1   1   12  8.a   mt1   201    2009-09-01   2010-06-20
+  1   1   2   12  11.b   fiz   225    2009-09-01   2010-06-20
+  1   1   5   12  8.a   mt2   201    2009-09-01   2010-06-20
+  1   1   6   12  12.c   mtFakt   131    2009-09-01   2010-06-20
+  1   1   7   12  12.c   mtFakt   131    2009-09-01   2010-06-20
+
+A fenti pár sor a 12-es id-jű tanár első heti hétfői óráit írja le. Látszik, hogy a 8.a-ban két csoportban tanít matematikát, 11.b-ben
+fizikát és 12.c-ben egy duplaórás matematika fakultációt.
+
+==== Óra felvétel a felületen ====
+
+Ha csak kevés órát kell felvennünk, akkor a legjobb megoldás az "Órarend/Órarend módosítás" menüpont használata. Itt lehetőség van új órák felvételére és korábbi bejegyzések lezárására is. Ezt a lehetőséget használva a bejegyzések rögtön tankörhöz rendelődnek és a program ellenőrzi az esetleges ütközéseket is (egy diáknak egy időben ne legyen több kötelező órája).
+
+==== Órarend betöltő ====
+
+A programnak van egy külön órarend-betöltő menüpontja (Órarend/Órarend betöltés). Itt különböző szöveges (CSV, TSV, XML) formátumokból lehet órarendi bejegyzéseket felvenni, szükség esetén a korább bejegyzések lezárásával.

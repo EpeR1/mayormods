@@ -1,0 +1,33 @@
+====== Vizsgák kezelése ======
+
+Az oldal arra szolgál, hogy listázzuk, illetve kezeljük a különböző (záró) vizsgákat: osztályozó vizsgák, különbözeti vizsgák, javítóvizsgák, illetve beszámoltató vizsgák.
+
+===== Vizsgák listázása =====
+
+Ha az eszköztáron kiválasztunk egy diákot, vagy tárgyat, esetleg évfolyamot, akkor az ezekhez tartozó vizsgák listája jelenik meg.
+
+===== Vizsgajelentkezés =====
+
+Új vizsgát bejegyezni akkor lehet, ha kiválasztjuk az érintett diákot, a vizsga tárgyát és évfolyamát.
+
+A fentiek kiválasztása után megjelenő ''Vizsgajelentkezés'' űrlapban megadhatjuk a jelentkezés dátumát és kiválaszthatjuk a vizsga típusát (osztályozó vizsga, különbözeti vizsga, javítóvizsga, vagy beszámoltató vizsga). Végül az ''OK'' gomb megnyomásával vehetjük fel a vizsgát a listába.
+
+===== Vizsgaidőpont megadása =====
+
+Vizsgajelentkezés után a vizsgalistában megjelenő vizsga időpontját a lista ''vizsga'' oszlopában adhatjuk meg. A módosítást ezúttal is jóvá kell hagyni. Egyszerre több vizsga időpontját is megadhatjuk...
+
+===== Vizsga halasztása =====
+
+A vizsga halasztására akkor kerülhet sor, ha már ki van jelölve a vizsga, de még nem értékeltük. Ha a vizsga kijelölt időpontja még nem érezett el, akkor ez az alapértelmezett funkció, a vizsga időpontjától kezdve viszont az értékelésre van alaphelyzetben lehetőségünk, a halasztott vizsgaidőpont megadásához a jobb oldalon megjelenő ''halasztás'' feliratú gombra kattintva juthatunk el.
+
+Ha a halasztott vizsga időpontját megadtuk, akkor a rendszer megfelelő záradékkal látja el a vizsgát, majd felveszi az új időpontra kiírt vizsgát.
+
+===== Vizsga értékelése =====
+
+Vizsgát értékelni (jegyet adni) csak akkor lehet, ha már megadtuk a vizsga időpontját és a vizsga még nem lett se elhalasztva, se értékelve.
+
+Ha a vizsga időpontja már elmúlt, akkor vizsga értékelésre van alapértelmezetten lehetőségünk, egyéb esetben a jobb szélen megjelenő ''értékelés'' feliratú gombra kattintva juthatunk a megfelelő űrlapelemekhez.
+
+A vizsga értékeléshez meg kell adnunk a követelmény típusát (jegy, aláírás, stb) és a konkrét értékelést. Amennyiben nem választunk követelmény típust, úgy az összes értékelési forma lehetséges értéke megjelenik a legördülő listában. A módosításokat itt is jóvá kell hagyni az ''OK'' gomb megnyomásával.
+
+Több módosítás (vizsgaidőpont megadás, halasztás, értékelés) együtt is jóváhagyható, nem kell külön-külön végezni a módosításokat.

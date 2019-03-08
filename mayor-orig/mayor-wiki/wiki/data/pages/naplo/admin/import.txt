@@ -1,0 +1,23 @@
+====== Adatok közvetlen betöltése az SQL adattáblákba ======
+
+Néha szükségünk lehet arra, hogy közvetlenül vigyünk be adatokat az egyes SQL táblákba. Természetesen ez a tevékenység veszélyeket is hordoz, hiszen mindenféle ellenőrzés nélkül, a logikai kapcsolatok, feltételek vizsgálata nélkül módosítjuk ilyenkor az adatbázist, ezért nagy körültekintéssel járjunk el, ha erre a lépésre szánjuk el magunkat. Fontos, hogy ismerjük a táblák szerkezetét (''/var/mayor/install/...'') és szerepét.
+
+Az import modul alkalmas új adatok felvitelére, illetve a már bent lévő rekordok egyes mezőinek frissítésére is.
+
+  - Töltsük fel a szerver ''/tmp'' könyvtárába az adatokat tartalmazó állományt. Fontos, hogy ez az állomány UTF-8 kódolású, tabulátorokkal tagolt szöveges állomány legyen. Előnyt jelent, ha a fájl első sorában a megfelelő mezőnevek szereplnek (rovatfej).
+  - Válasszuk ki a legördülő listából a táblát, melybe adatokat akarunk felvinni. A listában az intézményi adatbázis és az épp aktuális tanév adatbázisának táblái látszanak.
+  - A megjelenő input mezőbe adjuk meg az állomány elérési útját és nyomjuk meg az ''OK'' gombot. Ennek hatására a program beolvassa az input fájl első néhány sorát. Amennyiben a fájl első sorában a kiválasztott tábla mezőnevei találja, akkor ezeket kiválasztja és bejelöli a "van rovatfej" opciót.
+  - Ha a program nem ismeri fel az oszlopokat (hiányzó, vagy hibás fejléc miatt), akkor magunk választhatjuk ki oszloponként az egyes attribútumokat. Ha azt akarjuk, hogy a program valamelyik oszlop tartalmát figyelmen kívül hagyja a betöltés során, akkor ott ne válasszunk ki mezőt.
+  - Ellenőrizzük és szükség esetén javítsuk a "van rovatfej" opció tartalmát!
+  - A következő lépés a kulcs mező, illetve mezők megadása, erre szolgálnak az oszlopok tetején lévő jelölőnégyzetek. A kulcs a sorok egyedi azonosítására szolgál. A kulcsmezők alapján dől el, hogy egy importálandó adatsor új elemként kerül beszúrásra, vagy egy már meglévő rekord adatait frissítjük vele. Kulcsmezőt megadni kötelező.
+  - A beállítások után az ''OK'' gomb megnyomásával kezdetét veszi az importálás.
+
+Jó esetben egy információs üzentet kapunk a sikeres betöltésről. Rosszabb esetben csúnya hibaüzenetekbe botolhatunk. Ezek egyik oka az lehet, hogy a betöltendő adatok nem felelnek meg az adatbázis mezőkre vonatkozó megszorításoknak (külső kulcsok).
+
+
+==== Speciális import lehetőségek ====
+
+[[naplo:intezmeny:osztaly|Diákok adatainak betöltése osztályonként, osztályba sorolással]]
+
+[[naplo:intezmeny:tanar#tanarok_felvetele_adatallomanybol|Tanárok felvétele adatállományból]]
+

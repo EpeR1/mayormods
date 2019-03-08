@@ -1,0 +1,19 @@
+<?php
+	define('__MUNKAKOZOSSEGSELECTTITLE','department');
+	define('__TARGYSELECTTITLE','subject');
+	define('__INTEZMENYSELECTTITLE','school');
+	define('__TANEVSELECTTITLE','school year');
+	define('__TABLESELECTTITLE','sql-table');
+	define('__OSZTALYSELECTTITLE','class');
+	define('__TANARSELECTTITLE','teacher');
+	define('__DIAKSELECTTITLE','student');
+	define('__TANKORSELECTTITLE','studygroup');
+	define('__DATUMSELECTTITLE','date');
+	define('__DATUMTOLIGSELECTTITLE','date');
+	define('__ORASELECTTITLE','lesson');
+	define('__TEREMSELECTTITLE','room');
+	define('__ORARENDIHETSELECTTITLE','week');
+	define('_OK','ok');
+	define('_DELETE','delete');
+	define('_ORA','lesson');
+?>

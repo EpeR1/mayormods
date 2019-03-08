@@ -1,0 +1,92 @@
+
+====== Éves munkaterv ======
+
+Az éves munkaterv határozza meg, hogy a tanév szorgalmi időszakában (ld. [[naplo:admin:tanevek|Admin/Tanévek]]) mely napok lesznek tanítási napok,
+tanítási szünetek, tanítás nélküli munkanapok, illetve speciális tanítási napok.
+
+===== Nap típusok =====
+
+==== Tanítási nap ====
+
+A tanátási nap számozott nap, melyen az tanítás alapvetően a betöltött órarend szerint zajlik. A tanítási nap fontos jellemzője, hogy melyik heti
+órarend szerint folyik aznap a tanítás - ha többhetes órarendet használunk. A program az órarendi heteket számozva jelöli, így ha egy intézményben
+kéthetes órarend szerint zajlik a munka, azaz van egy "A" és egy "B" hét, akkor az a programban "1. órarendi hét", illetve "2. órarendi hét" néven
+fog szerepelni.
+
+==== Speciális tanítási nap ====
+
+A speciális tanítási nap számozott nap, melyben a tanítás nem az órarend szerint zajlik, hanem valamilyen egyedi rend szerint. Ilyen egyedi tanítási rendet összeállíthatunk [[naplo:haladasi:pluszora|plusz óra]] felvétellel, vagy a [[naplo:haladasi:specialis|Haladási napló/Speciális nap]] menüpont alatt. Ilyen napokon az órarendi hét paraméternek nincs szerepe, ezért az automatikusan 0 értékre változik.
+
+==== Tanítás nélküli munkanap ====
+
+Minden tanévben az iskolák jogszabályban rögzített számú tanítás nélküli munkanapot szervezhetnek. Ilyen lehet egy konferenciákra szánt nap, 
+egy egésznapos nevelési értekezlet, vagy továbbképzés, középiskolákban egyes érettségi napok, stb. Ezeken a napokon tehát nincs tanítás, így
+az órarendi hét paraméternek sincs szerepe (automatikusan 0 értéket vesz fel), a nap viszont beleszámít a munkanapok közé.
+
+==== Tanítási szünet ====
+
+A tanítási szünetek nem számítanak be a munkanapok közé. Ezen napok esetén sincs jelentése az órarendi hét paraméternek, ezért az ebben az esetben is
+automatikusan 0-ra változik.
+
+===== Párhuzamos munkatervek használata =====
+
+Egyes intézményekben szükség lehet arra, hogy több különböző munkaterv fusson egymással párhuzamosan. Például abban az esetben, ha az intézményben
+általános iskolai és gimnáziumi képzés is folyik, akkor a kétféle képzésnek különböző munkarendje kell legyen, hiszen eltér a tanítási napok előírt
+száma a kétféle képzésben.
+
+Az ilyen és ehhez hasonló esetek kezelésének érdekében lehetőség van arra, hogy több munkatervet hozzunk létre. A munkaterveket osztályokhoz
+rendelhetjük, a napok típusát, a napokhoz fűzött megjegyzéseket külön-külön állíthatjuk a párhuzamos munkatervekben. **Az egyes napokhoz rendelt 
+órarendi hetek azonban nem térhetnek el a különböző munkatervekben!** Az óranrend tehát mindig az egész intézményre vonatkozik, együtt kezelendő.
+
+===== Munkaterv inicializálása =====
+
+Ezt a műveletet a tanév megnyitása után végezzük általában, eredménye egy egxetlen munkatervből álló alapállapot elérése. Az inicializáláshoz négy fontos
+paramétert kell megadnunk:
+
+  * Órarendi hetek száma: hány hetes lesz az órarend, tehát minden hét azonos órarenddel zajlik, vagy kétféle hét, "A" és "B" hét váltogatja egymást, stb
+  * Tanítási napok száma: jogszabályban szabályozott számérték
+  * Tanyítás nélküli munkanapok száma: jogszabályban megadott számérték
+  * Végzősök utolsó tanítási napja: a "tanév rendje" rendeletben megadott dátum
+
+**Fontos:** A munkaterv inicializálása törli az esetleg már felvett munkaterveket!
+
+===== Napok száma =====
+
+A napok száma fülön rövid összefoglalót kapunk arról, hogy az épp kiválasztott munkatervben az egyes típusú napokból mennyi van. Ennek segítségével
+ellenőrizhetjük, hogy megfelel-e munkatervünk a jogszabály előírásainak.
+
+===== Órarendi hetek hozzárendelése =====
+
+Adott dátumhatárok között frissíthetjük az órarendi hetek napokhoz rendelését. A hozzárendelés mindig az 1. héttel indul és a paraméterként megadott 
+hetek váltják majd egymást ciklikusan. **Az órarendi hetek hozzárendelése mindig az összes munkatervre együtt vonatkozik!**
+
+===== Munkaterv-osztály összerendezés =====
+
+A munkatreveket osztályokhoz rendelhetjük, mindegyik osztályt pontosan egy munkatervhez.
+
+===== Csengetési rend =====
+
+Új feature-ként megjelent a __normáltól eltérő csengetési rendek__ használata.
+
+A munkatervben az alapértelmezett beállítások:
+  * minden tanítási napon 'normál' csengetési rend;
+  * minden speciális napon, tanítás nélküli napon,  szorgalmi időszakon kívüli munkanapon és a tanítási szünet napjain nincs csengetés;
+
+Ötféle (4+1) csengetési rend használható: 'normál', 'rövidített', 'speciális', 'rendhagyó' és a 'nincs'... Ezekhez az elnevezésekhez a helyi szokásoknak, hagyományoknak megfelelően beállítható a csengetési rend az alábbiak szerint:
+
+A csengetesiRend (intezmeny_[iskolarovidneve]/csengetesiRend tábla) kell az alábbiak szerint feltölteni a (UTF8 kódolású, tabulátorokkal tagolt, szöveghatároló nélküli) csv fájlt:
+
+Fejléc (mezőnevek):
+
+  nap | ora | tolTime | igTime | telephelyId | csengetesiRendTipus
+
+  * A //nap// 1-5 közti szám, hétfő=1, stb. (ha nem visszük fel, akkor az adott csengetés minden napra érvényes lesz);
+  * Az //ora// a napi tanítási órát jelöli;
+  * A //tolTime// a becsengetés ideje óó:pp:ss formátumban;
+  * Az //igTime// a kicsengetés ideje óó:pp:ss formátumban;
+  * A //telephelyId// a telephely naplóbeli száma;
+  * A //csengetesiRendTipus// lehet 'normál', 'rövidített', 'speciális', 'rendhagyó', 'nincs'.
+
+A kész állományt töltsük fel a szerverre és az **Admin/Import** menüben töltsük be a //csengetesiRend// táblába! Kulcsmezők: ora, telephelyId, csengetesiRendTipus.
+
+A csengetési rend az **Órarend**ben jelenik meg, egyéb szerepe (pl. csengetőóra vezérlése... :-) ) nincs.

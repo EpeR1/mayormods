@@ -1,0 +1,189 @@
+
+====== Tantárgyfelosztás ======
+
+===== A tantárgyfelosztás előkészítése =====
+
+Ahhoz, hogy elkezdhessük a tantárgyfelosztást elkészíteni előzetesen fel kell vinnünk az ehhez szükséges alapvető adatokat:
+
+  * Legyen felvéve minden osztály
+  * Legyen felvéve minden tanár
+  * Legyenek felvéve a munkaközösségek (amik valójában inkább végzettség szerinti tanárcsoportok)
+  * Legyenek felvéve a munkaközösségek alá a tárgyak
+  * Legyenek felvéve a képzések
+  * Legyenek felvéve a képzések óratervei
+  * Legyenek egymáshoz rendelve a megfelelő képzések és osztályok
+
+===== A bontások =====
+
+A tantárgyfelosztás első lépése a tárgyi bontások megadása. A **bontás** tehát az adott képzési évfolyam adott tantárgyához rendelt
+tanulócsoportot jelöli konkrét névsor és egyéb jellemzők nélkül.
+A tankör kicsit más fogalom: egy adott tárgyat tanuló diákok csoportja konkrét névsorral, tanárral, és egyéb jellemzőkkel megadva.
+
+Fontos különbség, hogy a bontás egy tanévhez kapcsolódó fogalom, minden évben újra meghatározandó, míg a tankör több éven át használatban lesz.
+
+Sok esetben egy bontásnak egy tankör felel majd meg egy adott évben. Ilyenek lesznek pl. az egész osztályt érintő tárgyak (osztályfőnöki, földrajz...), vagy az egyszerű
+csoportbontások, amikor két-három kisebb csoportban tanulnak egy tárgyat a tanulók (pl. informatikát a gépterem befogadóképessége miatt két csoportban tanulnak a diákok).
+
+Lehetnek ugyanakkor olyan esetek is, amikor egy bontást több tankör fed le. Ha például egy nyelvi előkészítő évfolyamon a heti 15 órát négy tanár tanítja a
+csoportnak, akkor a négy tankör együtt fedi le az egy bontást.
+
+Előfordulhat olyan is, hogy egy tankör több bontást is lefed. Ha például a kémiát egy egész osztályos elméleti óra mellett két kisebb csoportban folyó labor óra keretében
+tanulják a tanulók, akkor ez egy két bontott csoportot és három tankört jelent: az elméleti óra tanköre mindkét bontáshoz hozzá lesz rendelve, mígy a labor órák tankörei
+csak a megfelelő bontáshoz.
+
+Az is előfordulhat, hogy egy tankör két különböző tárgy bontásához lesz hozzárendelve. Ebben az esetben persze a //tárgy// tágan értendő: a képzés óratervében szereplő
+lehetséges tárgyakra, sávokra gondolunk, beleértve olyan speciális tárgyakat, mint "első idegen nyelv", "második idegen nyelv" vagy "kötelezően választott tárgy".
+Ha például az emelt szintű  matematika érettségi előkészítőt úgy szervezzük, hogy az adott csoport együtt van alapórán és fakultációs órán is, tehát lényegében a csoport
+megnövelt óraszámban (pl. 4+2, azaz 6 órában) tanulja a matematikát, nem különül el a kétféle órájuk, akkor ehhez nyilván egy tankört fogunk felvenni, amit hozzárendelünk
+a matematika tárgy bontásához és a "kötelezően választott tárgy" bontásához is.
+
+===== Adatbázis =====
+
+A ''kepzesOraterv'' tábla minden évfolyam esetén félévenként tartalmazza az adott tárgy/típus óraszámát. A folyamat másik végén a tankör esetében is hasonló a 
+helyzet: a ''tankorSzemeszter'' tábla félévenként tartalmazza a tankör óraszámát.
+
+A kettő között helyezkedik el a ''kepzesTargyBontas'', ami ebből adódóan szintén félévenként rögzíti a bontásokat és azok tárgyait (pl. első idegen nyelv esetén), pontosabban a bontások szerkezetét, s a 
+''kepzesOratervId'' mezővel kapcsolódik a ''kepzesOraterv'' táblához.
+
+A bontások tankörökhöz rendelése a ''bontasTankor'' táblával történik, ami a két azonosító mellett egy-egy óraszám adatot is tartalmaz. Az óraszámokat bontásonként
+összegezve képzés óraterv megfelelő óraszámát kell megkapnunk. Tankörönként nehezebb az óraszámok ellenőrzése, mert egy tankör egy tárgy különböző bontásait is lefedheti,
+de ezeket az óraszámokat csak egyszer kell számolni. Viszont ha különböző tárgyakat/típusokat fed le a tankör, akkor össze kell adni az óraszámokat. (Ez megoldható
+a MAX() értékek SUM()-jával.)
+
+===== Lépések =====
+
+  - Inicializálás - a program az előző év adatai alapján automatikusan átveszi az átvehető bontásokat a tankörhozzárendelésekkel együtt, a fennmaradó konkrét tárgyhoz
+tartozó bejegyzésekhez pedig egy-egy bontást vesz fel
+  - Bontás megadás
+  - Bontás-tankör hozzárendelés
+  - tankör tanár hozzárendelés
+  - óraszámok ellenőrzése (tanár, bontások, tankörök, intézmény...)
+
+===== Bontások, tankör-hozzárendelés =====
+
+A funkció a ''Tanév adatok/Tantárgyfelosztás, bontás-tankör'' menüpont alatt érhető el.
+
+==== Szűrés ====
+
+A szűrés során először évfolyamot (pontosabban évfolyam jelet) kell választanunk, utána szűkíthetjük a megjelenő osztályok körét, s a kiválasztott osztályok képzéseinek
+körét.
+
+Ha már megjelentek a kiválasztott osztályok, képzések óratervi bejegyzései, akkor a jobb felső sarokban lehetőségünk van ezek közül eltűntetni azokat, melyek
+már kész vannak, tehát minden bontásuk teljes óraszáma tankörökkel lekötött.
+
+==== Bontások felvétele - törlése ====
+
+Ha kiválasztottunk osztályt és képzést (legalább egyet-egyet), akkor megjelennek a hozzájuk tartozó (az osztály aktuális évfolyamára vonatkozó) óratervi bejegyzések.
+
+Ezek mindegyikéhez a rendszer az oldal betöltéskor hozzárendel legalább egy bontást (csoportot) - ha még nincs hozzá rendelve egy sem -, kivéve azokat az 
+óratervi bejegyzéseket, melyek tárgy típust tartalmaznak csak, tárgyat nem (pl: első idegen nyelv, kötelezően választható...).
+
+A program alaphelyzetben az egymásnak megfeleltethető bejegyzéseket egymás alá csúsztatva jeleníti meg. Az így egybefogott bejegyzések együtt kezelhetők: egy lépésben
+vehető fel hozzájuk új bontás, vagy törölhető korábbi. A csoportosítás bármikor felbontható, a baloldali lefele mutató nyílra kattintva. Lenyitott állapotból az egyes
+sorok elején levő felfele mutató nyílra kattintva a sorok ismét öszevonhatók.
+
+Új bontást a sorok jobb oldalán található plusz jelre kattintva vehetünk fel. Ha tárgy típushoz tartozó sorról van szó, akkor egy megjelenő listából tárgyat is kell 
+választanunk a bontás rögzítéséhez.
+
+Bontás törlése a bontást szimbolizáló világos színű mező jobb szélén található X ikonra kattintva történhet. Fontos, hogy a törlés is minden összevont sorra
+vonatkozik.
+
+Mivel a képzési óraterv félévekre lebontva tartalmazza az óraszámokat, így a bontások megadása is mindkét félévre szükséges - ezt a csoportosíthatóság segíti.
+
+==== Tankör hozzárendelés ====
+
+Egy bontásra kattintva jobbról beúszva megjelennek az adott bontás tantárgyának megfelelő tankörök, elől, külön csoportban a megadott osztályok valamelyikéhez 
+hozzárendeltek. A tankör bontáshoz rendelése - amennyiben lehetséges - egyszerűen a tankör nevére való kattintással történik.
+
+Előfordulhat azonban, hogy egy-egy tankör nem rendelhető az adott bontáshoz - ezt piros "❌" és szürke betűszín jelöli. E letiltás okozhatja például, ha a tankör
+összes óraszámát felhasználtuk már más típusú bontásokban. Ha például egy matematika tankör összes óráját hozzárendeltük egy matematika bontáshoz, akkor a
+"kötelezően választott" tárgy típusú bontáshoz már nem fogjuk tudni hozzárendelni.
+
+Akkor is egyfajta letiltott állapotba kerül a tankör, ha azonos típusú bontásban használtuk fel az óráit. Ezt narancssárga "▚" szimbólum és szürke betűszín jelöli. 
+Az ilyen állapotú egyet tankörre kattintva annak állapota megváltozik, sárga "▐" jelölést kap, ami azt jelzi, hogy a tankör most már hozzárendelhető a kijelölt
+bontáshoz. Így lehet tehát egy tankört két azonos tárgyhoz tartozó bontáshoz is hozzárendelni. Szükség lehet erre olyan esetben, ha egy tárgyat bontott és
+összevont csoportban is tanulnak a tanulók, például az osztálynak van egy közös elméleti kémia órája, s emellett két csoportban kémia labor foglalkozáson is részt vesznek.
+Ebben az esetben a kémia tárgy kétfele bomlik, s a közös óra tankörét mindkét bontáshoz hozzá kell rendelnünk.
+
+Letiltott állapotban van az a tankör is, amit már hozzárendeltünk a kiválasztott bontásokhoz. Ezt zöld pipa (✔) és szürke betűszín jelöli.
+
+A program alap helyzetben a tankört a lehető legnagyobb óraszámmal rendeli a bontáshoz. Ha ezen változtatni szeretnénk, akkor az egeret a tankör neve mellett jobb oldalon 
+elhelyezkedő óraszám fölé pozícionálva a megjelenő módosító gombokkal csökkenthetjük az óraszámot.
+
+Ha a listában szereplő egyik tankör sem felel meg, akkor lehetőségünk van arra, hogy új tankört vegyün fel a bontáshoz. Ehhez csak rá kell kattintanunk az erre szolgáló
+"Új tankör" feliratra. Ekkor a program létrehozza és a rendelkezésre álló adatok alapján beállítja az új tankört, de a beállításokon a megnyíló módosító felületen rögtön 
+változtathatunk is.
+
+==== Tankör adatok módosítása ====
+
+Egy új tankör létrehozásakor, vagy egy hozzárendelt tankör nevére kattintva jobbról beúszva megjelennek a tankör legfontosabb adatai, melyeken lehetőségünk van változtatni 
+is. Ha valamit módosítunk, megjelenik a fejléc alatt egy sárga "Módosít" felirat - erre kattintva véglegesíthetjük a módosításainkat.
+
+A felületen a tankör név jelölésére kattintva módosíthatjuk a tankör nevét, az hozzárendelt osztályokra kattintva az hozzárendeléseken váltztathatunk, s módosíthatjuk a
+az egyes félévekben tervezett óraszámokat is.
+
+A többi módosítás elvégzésére használjuk az Intézményi adatok/Tankörök oldalt.
+
+===== Tankör-tanár hozzárendelés =====
+
+A funkció az ''Intézményi adadatok/Tantárgyfelosztás, tankör-tanár'' menüpont alatt érhető el.
+
+==== Szűrés ====
+
+A ''Szűrés'' feliratra kattintva állíthatjuk be a szűrési feltételeket. A szűrési paraméterek határozzák meg, hogy mely tankörök és tanárok jelennek meg a tankör-tanár táblázatban.
+
+Alapvetően négyféle szűrési szempont adható meg:
+  - Osztályok
+  - Munkaközösségek
+  - Tárgyak
+  - Tanárok
+
+=== Tankörök szűrése ===
+
+A kiválasztott tanárok összes tanköre minden esetben megjelenik a lekérdezett tankörök között. A másik három szűrési paraméter a következő képpen működik:
+
+Amennyiben osztályokat kiválasztunk, de tárgyat és munkaközösséget egyet sem, akkor a program az adott osztály össszes tankörét le fogja kérdezni. Ha van munkaközösség vagy
+tárgy is megadva, akkor az ezek által meghatározott tárgyak szerint leszűkül a megjelenő tankörök köre. Ha nincs osztály megadva, akkor az összes érintett tárgyhoz tartozó
+tankör meg fog jelenni.
+
+=== Tanárok szűrése ===
+
+A kiválaszott tanárok minden esetben meg fognak jelenni a lekérdezett tanárok között. Ha ezen kívül csak osztály van kiválasztva, akkor az összes tanár megjelenik a 
+táblázatban, adott tárgy vagy munkaközösség esetén viszont csak az érintett tárgyakat tanító tanárok fognak megjelenni a kiválasztottakon kívül.
+
+==== Tankör-tanár hozzárendelés ====
+
+A tankör-tanár hozzárendelést megjelenő táblázat egy-egy cellájára, vagy a cellában megjelenő jelölőnégyzetre kattintva végezhetjük el. A hozzárendelés minden esetben az
+adott év szorgalmi időszakára fog csak vonatkozni. Egy hozzárendelés rögzítésekor vagy megszűntetésekor a program újra számolja az érintett tanár lekötött óraszámát, így 
+folyamatosan nyomonkövetjetjük az óraszámok alakulását.
+
+=== A tankörök állapota ===
+
+Egy tankör háromnféle állapotban lehet, s ezt a nevét tartalmazó cella alsó szegélyének színe jelzi:
+  - a **piros** jelzi, ha a tankörnek még nincs kijelölt tanára
+  - a **zöld** jelzi, ha a tankörhöz //pontosan egy// tanár van hozzárendelve
+  - végül **sárga** jelzést kap az a tankör, amelyhez több tanárt is hozzárendeltünk.
+
+A program megengedi, hogy egy tankörnek több tanára is legyen, ez tehát nem hiba, hanem lehetőség, amit gyakorlatban csak igen ritkán célszerű használni.
+Ilyen esetben a program a tankör óraszámát elosztja a megjelölt tanárok között. Több tanáros tankör felvételére kizárólag olyan esetben lehet szükség, ha a tanév
+során az órarendbe előre nem rögzíthető időpontokban váltják egymást a tanárok - pl. egy ha egy nyelvi lektor több csoportot látogat, hol egyikbe, hol másikba megy be 
+órát tartani az igényeknek megfelelően.
+
+=== A tanár állapota ===
+
+A tanárok a lekötött és kötelező óraszámuk viszonányt tekintve szintén háromféle állapotban lehetnek, melyet ez esetben is különbözű színű és elhelyezkedésű szegélyek
+jelölnek. A program egy állítható (alapértelmezetten 2-2 óra) - a kötelező óraszámtól számított - "türelmi sávban" zölddel jelöli a tanárt, a megadott alsó határ alatt
+kékkel, felette pirossal szegélyezi az óraszám celláját.
+
+A sávhatárokat a státusz soron lehet állítani. 
+
+
+====== TODO ======
+
+T-T hozzárendelés
+  - előző éviek felvétele (init) ~ ok
+  - szűrés - több mk/osztály... 
+  - szűrés - ami már kész eltűnik (tanár/tankör)
+  - látszódjon, hogy hány/hány van meg (óraszám tankör/tanár)
+  - th-k rögzítése
+

@@ -1,0 +1,111 @@
+
+====== Microsoft Active Directory backend ======
+
+A MaYoR keretrendszer az azonosítók és csoportok adatait képes AD-ből is venni. Mi szükséges ehhez?
+
+===== Módosítások az AD-ben =====
+
+Néhány egyszerű módosítást, bővítést el kell végeznünk az AD címtárban.
+
+==== mayor szervezeti egység létrehozása ====
+
+Nem kötelező, de célszerű lehet külön szervezeti egységet (OU) felvenni a mayor-hoz kapcsolódó csoportok, esetleg az admin felhasználó tárolására.
+
+  OU=mayor,DC=your,DC=domain
+
+==== A keretrendszer működtetéséhez szükséges felhasználói fiókok létrehozása ====
+
+Egyes műveletekhez szükséges, hogy a keretrendszer egy emelt jogosultságú felhasználóval tudjon csatlakozni az AD-hoz. Ehhet hozzunk létre külön azonosítót:
+
+  CN=MaYoROperator,OU=mayor,DC=your,DC=domain
+
+Majd tegyük be az **Account Operators** (Fiókfelelősök) csoportba.
+
+A biztonságot fokozhatja, ha létrehozunk a keretrendszer számára egy olyan azonosítót is, amelyik csak normál olvasási joggal rendelkezik a címtárban.
+Ekkor a program azokhoz a feladatokhoz, melyekhez elegendő az olvasási jog, ezt az azonosítót fogja használni.
+
+  CN=MaYoRUser,OU=mayor,DC=your,DC=domain
+
+==== Csoportok létrehozása =====
+
+A MaYoR rendszer igényel néhány felhasználói csoportot. Ezeket létrehozhatjuk a ''mayor'' tároló alatt:
+
+  CN=diak,OU=mayor,DC=your,DC=domain
+  CN=tanar,OU=mayor,DC=your,DC=domain
+  CN=titkarsag,OU=mayor,DC=your,DC=domain
+  CN=diakadmin,OU=mayor,DC=your,DC=domain
+  CN=uzenoadmin,OU=mayor,DC=your,DC=domain
+  CN=vezetoseg,OU=mayor,DC=your,DC=domain
+  CN=naploadmin,OU=mayor,DC=your,DC=domain
+  ...
+
+==== Az oktatási azonosító tárolása ====
+
+A MaYoR keretrendszer az oktatási azonosítót használja arra a célra, hogy a felhasználói azonosítókat és a naplóban szereplő diákokat, tanárokat 
+megfeleltesse egymással. Ezért szükséges, hogy a felhasználói fiókok egy attribútumát az oktatási azonosító tárolására használjuk. Hogy melyik
+attribútumot használjuk erre a célra, az szabadon megválasztható, a konfigurációs file-ban megadható (''adsStudyIdAttr''). 
+A javasolt, alapértelmezett mező erre a célra a ''serialnumber''.
+
+===== Ellenőrzés 1: LDAP lekérdezés =====
+
+Ellenőrzés képpen aa MaYoR szerverről próbáljunk lekérdezni AD adatokat parancssorból, valahogy így:
+  ldapsearch -H ldap://ad.your.domain -u -x -D "CN=MaYoRUser,OU=mayor,DC=your,DC=domain" -b DC=your,DC=domain '(&(objectclass=person)(cn=MaYoRUser))' -w jelszó
+
+Ha a lekérdezés eredményes, akkor továbbléphetünk. A fenti lekérdezés kódolatlan LDAP kapcsolatot használt, jelszavunk tehát titkosítatlanul utazott a hálózaton.
+Ezen mindenképp változtatni kell, a módosításokhoz a Microsoft AD - nagyon helyesen - meg is követeli a biztonságos kapcsolatot.
+
+===== Tanűsítvány telepítése =====
+
+Első körben tehát biztosítani kell, hogy LDAPS protokollal elérhető legyen az AD. Ehhez készítenünk/vásárolnuk és telepítenünk kell egy tanúsítványt a címtárba.
+Egy leírás erről: [[http://support.microsoft.com/kb/321051]]
+
+Ha saját (pl. MaYoR Hungary által hitelesített) tanúsítványt használtunk, akkor a hitelesítőt is el kell fogadtatnunk, fel kell vennünk a Windows szerveren.
+
+===== Kliens oldali beállítások =====
+
+/etc/ldap/ldap.conf
+  BASE    dc=your,dc=domain
+  URI     ldaps://ad.your.domain:636
+  TLS_CACERTDIR /etc/ssl/certs
+
+Ha saját (pl. MaYoR Hungary által hitelesített) tanúsítványt használtunk, akkor a hitelesítőt is el kell fogadtatnunk, fel kell vennünk a kliensen is. Ehhez másoljuk a hitelesítő
+tanúsítványát a ''/usr/share/ca-certificates/'' alá új alkönyvtárba (pl. ''mayor.hu''), majd készítsünk szimbolikus linket az elhelyezett file-ra a 
+''/etc/ssl/certs'' alá (pl. ''MaYoR.pem.crt'' néven), és egészítsük ki a ''/etc/ldap/ldap.conf'' állományt:
+
+  TLS_CACERT /etc/ssl/certs/MaYoR.pem.crt
+
+===== Ellenőrzés 2: Lekérdezés LDAPS-sel =====
+
+A korábbihoz hasonlóan ellenőrizzük, hogy a telepített tanúsítványokkal megy-e LDAPS-sel a lekérdezés:
+  ldapsearch -H ldaps://ad.your.domain:636 -u -x -D "CN=MaYoRUser,OU=mayor,dc=your,dc=domain" -b dc=your,dc=domain '(&(objectclass=person)(cn=MaYoRUser))' -w jelszó
+
+===== MaYoR konfigurálás =====
+
+Az utolsó lépés, hogy a ''/var/mayor/config/private-conf.php'' állományban az erre vonatkozó konfigurációs beállításokat felvegyük, kitöltsük:
+
+        #Active Directory Backend példa konfig
+        'backend'          => 'ads',
+        'adsHostname'      => 'ldaps://your.domain:636',                      // Jelszóváltoztatáshoz kötelező az ldaps
+        'adsBaseDn'        => 'DC=your,DC=domain',
+        'adsUser'          => 'CN=MaYoRUser,OU=mayor,DC=your,DC=domain',      // Olvasási jog az AD-ben - Normál user
+        'adsPw'            => 'jelszó',
+        'adsAccountOperatorUser' => 'CN=Operator,OU=mayor,DC=your,DC=domain', // Account Operators (Fiókfelelősök) csoport tag pl (jelszóváltoztatás)
+        'adsAccountOperatorPw'   => 'jelszó',
+        'adsUserObjectClass'     => 'person',                            // Userek objectum osztálya
+        'adsGroupObjectClass'    => 'group',                             // Csoportok objectum osztálya
+        'adsStudyIdAttr'   => 'serialnumber',                            // Az oktatási azonosítót tároló attribútum (studyId)
+        'adsContainers'        => array(
+            'ou=diak,dc=your,dc=domain'        // Azok a tárolók, amikebe kerülhetnek a létrehozandó csoportok és felhasználói azonosítók
+            'ou=tanar,dc=your,dc=domain'       // - már ha a MaYoR-ból szeretnénk azonosítókat felvenni - 
+            'ou=titkarsag,dc=your,dc=domain'
+        ),
+        'adminGroup'       => 'Fiókfelelősök', // A felhasználói azonosítókat kezelők köre a MaYoR-ban - lehet szűkebb csoport is
+        'cacheable'        => true, // bizonyos lekérdezések eredményét egy ideig eltárolja a MaYoR ...
+
+===== Korlátok, kérdések =====
+
+  * A jelszavakra vonatkozó szabályok az AD és a MaYoR együttes szabályozásából adódnak, konkurens szabályok esetén a szigorúbb érvényesül.
+  * A ''diakadmin'' csoport tagjainak arra kell jogot adni, hogy a diákok jelszavait tudja változtatni, erre a funkcióra lett kitalálva ez a csoport. De hogy ezt hogy kell, azt valaki MS guru megírhatná :) ...
+  * Tapasztalataink szerint a Fiókfelelősök jelszavát nem engedi LDAP-n keresztül megváltoztatni az AD. Tud ilyen korlátozásról valaki valamit?
+  * Az Napló/Admin/Azonosító generálás oldal valamiért nagyon lassú. De legalább működik. :-)
+

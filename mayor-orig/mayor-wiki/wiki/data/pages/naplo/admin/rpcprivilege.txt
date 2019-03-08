@@ -1,0 +1,35 @@
+
+====== RPC Jogosultságok beállítása ======
+
+Ezen az oldalon adhatunk meghatalmazást más MaYoR végpontoknak arra, hogy tőlünk - biztonságos, hitelesített csatornán keresztül - különféle adatokat kérdezzenek le.
+
+Az első ilyen éles szolgáltatásunk a Tantárgyfelosztás statisztikai összesítésének lekérdezhetősége, amire a fenntartónak lehet szüksége.
+
+===== Új végpont (node) hozzáadása =====
+
+A jogosultságokat adott végpont (node) adott felhasználójának (userAccount) adjuk. Új jogosultsági rekord felvételéhez tehát ezt a kettőt kell megadnunk:
+
+  - A végpontot a keretrendszer által ismert végpontok közül választhatjuk ki (Felhasználók/Szerver regisztráció/Ismert végpontok).
+  - A (távoli) felhasználó azonosítóját (userAccount) szövegként kell begépelnünk.
+
+A ''Felvesz'' gombra kattintva az új rekord megjelenik a listában. Alapértelmezés szerint két jogosultság beállításra kerül (''OMKod'', ''Jogosultság''), míg a harmadik tiltva van (''Tantárgyfelosztás'').
+
+===== Jogosultságok =====
+
+A jelenleg elérhető jogosultságok:
+
+==== OMKod ====
+
+Valójában nincs mögötte semmi... Mondjuk úgy: teszt - nyugodtan lehet kapcsolgatni, nem változtat semmit...
+
+==== Jogosultság ====
+
+A távoli felhasználónak engedélyezzük, hogy lekérdezze, mihez van nálunk joga.
+
+==== Tantárgyfelosztás ====
+
+A távoli felhasználónak engedélyezzük, hogy lekérdezze a mi rendszerünk naplójának Tantárgyfelosztás statisztikáját.
+
+===== További tervek =====
+
+A későbbiekben további szolgáltatások is megjelenhetnek, melyek engedélyezésére, illetve tiltására szintén itt lesz lehetőség

@@ -1,0 +1,105 @@
+====== Telepítés ======
+
+===== Hardver =====
+
+A rendszernek nincs különösebben nagy hardverigénye, inkább azt érdemes szem előtt tartani, hogy stabil, megbízható gépet válasszunk. 
+Mindenképp javasoljuk, hogy a MaYoR elektronikus adminisztrációs rendszert külön szerverre kerüljön - így könnyebb biztosítani az 
+adatok védelmét. (A megfelelően védett host operációs rendszeren tetszőleges virtualizált környezet nagyrészén is teljesítmény gond nélkül
+futtatható.)
+
+===== Operációs rendszer telepítése =====
+
+Operációs rendszerként elsősorban Debian Linux rendszert javaslunk - már többször bevált. De telepítettük a rendszert Ubuntura is és 
+minden bizonnyal más Linux terjesztésekkel is működésre bírható a rendszer, mi még ugyan nem próbálkoztunk ezekkel, de 
+Kiss Antal Gábor (Felsőbüki Nagy Pál Gimnázium - Kapuvár) például telepítette SuSE alá - az ő erre vonatkozó megjegyzéseivel 
+ki is egészítettük a leírást (mástól is szívesen veszünk hasonlót!). Az extrém sportokat kedvelők megpróbálhatják a rendszert 
+Windows alá is telepíteni, hiszen a szükséges szoftverek legnagyobb része (MySQL, Apache, PHP, stb) erre az operációs rendszerre is 
+fellelhető (talán a TeX, LaTeX környezet okozná a legnagyobb gondot).
+
+A továbbiakban a Debian rendszerre való telepítés lépéseit követjük.
+(Az alap Debian telepítéséhez [[hogyan:telepites-debian|egy kis segítség]]).
+
+==== MaYoR Installer (ß) használata ====
+
+Ha megfelelnek számunkra az alapbeállítások, a szokásos telepítés, akkor használjuk a mayor-installer-t. Ez egy telepítő szkript "csokor", ami lényegében
+az alább részletezett lépéseket hajtja végre minimális felhasználói közbeavatkozással. A folyamat végén egy működő rendszert kapunk egy intézménnyel, melyhez
+meg kell nyitnunk egy tanévet és fel kell vennünk az alapadatokat (tanárok, diákok, osztályok, tárgyak, termek, tankörök, órarend, stb).
+
+Használatához szedjük le a csomagot:
+
+  cd /tmp && mkdir mayorinstall && cd mayorinstall
+  wget http://www.mayor.hu/download/current/mayor-installer-current.tgz
+
+Majd csomagoljuk ki:
+
+  tar xfz mayor-installer-current.tgz
+
+Végül futtassuk a setup szkriptet:
+
+  ./setup
+
+Aki nem bízik a shell-scriptek erejében, kézzel is nekivághat a korántsem rövid folyamatnak:
+[[hogyan:telepites-man|manuális telepítés]]
+
+===== Belépés a MaYoR rendszerbe =====
+
+Ezek után kedvenc böngészőnkkel beléphetünk a rendszerbe a korábban létrehozott ''mayoradmin'' azonosítóval. A rendszer kötelező jelszóváltoztatást ír elő. 
+Írjuk be a régi, majd kétszer az új jelszót. A sikeres jelszóváltoztatás után végre valóban beléphetünk.
+
+===== Adatok felvitele =====
+
+Az adatok betöltése a munka legnagyobb része. Fontos, hogy az adatfelvitelnek van egy logikus sorrendje, hiszen az egyes adatok egymásra épülhetnek. Órarendet betölteni például csak akkor van értelme, csak akkor lehet, ha már fent van az összes tanár adata, munkaközösségekbe sorolva, renden vannak a tárgyak, a termek, és ki vannak alakítva a tankörök is.
+
+==== Tanárok felvétele ====
+
+A tanárokat [[naplo:intezmeny:tanar#Tanárok felvétele adatállományból|adatállományból érdemes betölteni]], bár felvehetjük őket egyesével is a felületről.
+
+==== Osztályok felvétele ====
+
+Az új osztályokat (esetleg osztályfőnökkel, de tagok nélkül egyelőre) a felületről vehetjük fel legkönnyebben: [[naplo:intezmeny:osztaly|Napló/Intézményi adatok/Osztályok]].
+
+==== Diákok felvétele ====
+
+A diákokat rögtön osztályokba sorolva vehetjük fel adatállományból: [[naplo:intezmeny:osztaly#Osztály tagjainak felvétele/frissítése adatállományból|Napló/Intézményi adatok/Osztályok]]
+
+==== Munkaközösségek/Tárgyak felvétele ====
+
+A munkaközösség elnevezés kissé félrevezető. Valójában inkább a tanárok végzettségéről van szó, ez határozza meg, hogy ki milyen tárgyat taníthat, milyen órát helyettesíthet szakszerűen. Egy tanár természetesen több munkaközösségbe is beletartozhat.
+
+Az új tárgyakat a felületről vehetjük legkönnyebben: [[naplo:intezmeny:munkakozosseg|Napló/Intézményi adatok/Munkaközösségek]] (munkaközösség vezetőkkel,tagokkal, tárgyakkal).
+
+==== Éves munkaterv betöltése ====
+
+Az éves munkaterv lényege, hogy rögzítse a tanév tanítási napjainak, speciális tanítási napjainak, tanításnélküli munkanapjainak és tanítási szünetek dátumát, valamint több hetes órarend esetén ezek beosztását.
+
+Az éves munkaterv felvétele a [[naplo:tanev:munkaterv|Tanév adatok/Éves munkaterv]] menüpont alatt történhet.
+
+==== Termek adatainak felvétele ====
+
+A temek adatait közvetlenül az intézményi adatbázis ''terem'' táblájába tölthetjük SQL szinten, vagy az [[naplo:admin:import|Admin/Import]] menüpont alatt. A tábla mezői:
+
+  teremId  | smallint(5) unsigned                                                                                                                                                               
+  leiras   | varchar(64)                                                                                                                                                                        
+  ferohely | tinyint(3) unsigned                                                                                                                                                                
+  tipus    | set('tanterem','szaktanterem','osztályterem','labor','gépterem','tornaterem','tornaszoba','fejlesztőszoba','tanműhely','előadó','könyvtár','díszterem','tanári','templom','egyéb') 
+
+==== Tankörök felvétele ====
+
+Az egyik legnagyobb feladat - különösen egy épp induló intézmény esetén - a [naplo:intezmeny:tankor|tankörök felvétele]]. Ugyanakkor a tankörök alkotják a rendszer alapját, így ezek felvétele és karbantartása kiemelten fontos feladat.
+
+==== Órarend betöltése ====
+
+Az órarend betöltés talán a másik egnehezebb feladat. Külön nehézsége, hogy általában nem lehet vele előre elkészülni, viszonylag szűk határidő van a betöltésre.
+Az órarendet nem a MaYoR rendszerben készyítjük, hanem valamilyen erre a célra készült szoftverrel. A további lépések nagyban függenek a használt programtól.
+
+Alapvetően két lehetőségünk van:
+  * Betöltjük az adatokat közvetlenül az ''orarendiOra'' táblába az [[naplo:admin:import|Admin/Import]] menüpont alatt, majd elvégezzük az [[naplo:orarend:orarendTankor|órarend-tankör összerendelést]]
+  * Használjuk a prgram által biztosított [[naplo:orarend:orarendbetolto|órarend betöltő]] funkciót, valamelyik import modullal.
+
+==== Tanári és diák azonosítók generálása ====
+
+Szükség esetén a ''tanar'' és ''diak'' tábla adatait felhasználva generálhatunk felhasználói azonosítókat: [[hogyan:Felhasználói azonosítók generálása]]
+
+==== Szülői adatok felvétele ====
+
+A szülők adatait általában a diákok adatival együtt kapjuk meg, egy táblázatban. A MaYoR rendszerben viszont a szülők adatai külön adattáblába kerülnek. Ez az használat során előnyös (pl. testvér gyerekek szülői adatai csak egy helyen lesznek eltárolva), de a betöltéskor nehézségeket okoz: [[hogyan:Szülői adatok betöltése]].

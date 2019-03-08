@@ -1,0 +1,61 @@
+====== Beiratkozás ======
+
+A **beiratkozás** az egyik legfontosabb adminisztratív esemény (:-)) egy iskola életében. A napló használatával egyszerűsíthető, legalábbis kevesebb lépcsőben valósítható meg ez az adafelvétel miatt kényes lépés.
+Az iskola hagyományait és lehetőségeit figyelembevéve rengeteg változat képzelhető el erre, egy lehetséges megoldást vázolok.
+
+=====Előkészítés=====
+
+====Ki végzi az adatrögzítést?====
+A beiratkozás általában nem egyemberes feladat. Azokat a géphasználatban jártas Kollégákat, akik segédkeznek, célszerű ideiglenesen a //titkarsag// csoportba felvenni (Felhasználói adatok - Csoportok keresése). Ezzel a diákok adatainak módosításához, felvételéhez jogot kapnak.
+
+====Új tanév nyitása====
+A beiratkozó diákok csak a következő tanévtől kerülnek be ténylegesen a naplóba, ezért meg kell nyitni a következő tanévet (Admin - Tanévek)
+
+====Előzetes adatfelvitel====
+
+A felvételt nyert tanulók adataiból készítsünk egy tabulátorokkal tagolt, UTF8 kódolású csv állományt a következő fejlécekkel:
+ 
+  oId	viseltCsaladinev	viseltUtonev	nem kezdoTanev	kezdoSzemeszter statusz
+  
+  * oId =oktatási azonosító 
+  * kezdoTanev = 2011
+  * kezdoSzemeszter = 1
+  * statusz = felvételt nyert
+
+A kész állományt töltsük fel valamilyen módon a naplót futtató szerverre, majd az Admin menüpontban emeljük be a //diak// táblába.
+
+=====Adatrögzítés a beiratkozás alkalmával=====
+
+Az Intézményi adatok menüben kiválasztjuk a következő tanévet, majd a Diákok menüben a „Felvételt nyert” csoportban jelennek meg az újoncok. Az oldal háttere zöld, ezzel is kiemelve a státuszt.
+Az adatokat értelemszerűen kitöltjük, majd a  megfelelő dátummal a jogviszonyát rendezzük.
+
+Ez a módszer biztonságosan előkészített, egyes intézményekben speciális okok miatt az osztályba sorolás később valósul meg.
+
+A naplóból a későbbiek során tetszőleges adatokat lehet kinyerni – beiratkozási naplóhoz, statisztikához, egyéb nyilvántartáshoz.
+
+A beiratkozás után ne maradjon el a jogviszony váltás, egyeztetett
+dátum szerint!
+
+=====További ötletek, lehetőségek - ezt is olvassuk el...!=====
+
+Lehetőség van arra is, hogy előzetes adatfeltöltés nélkül vegyük fel az új diákokat. Ilyenkor a Diák lapon (a tanév és az osztály kiválasztása után) a //Bekerülés módja// mezőnél a **Felvétel osztályba** sort választva azonnal az osztályába is léptethető a diák.
+
+Érdemes egyeztetni a vezetőséggel, gazdasági irodával, titkársággal, könyvtárral, stb., hogy milyen adatokra van szükség az egyéb nyilvántartásokhoz. A napló rengeteg adatot kezel, ezek egy része kötelezően megadandó, más részükkel azonban óvatosan, megfelelő diszkrécióval kell bánni (elvált szülők, fogyatékosság, szociális helyzet, stb.).
+
+Feltétlenül javasolt ellenőrizni (eredeti dokumentumok alapján):
+
+  * diák neve, születéskori neve, második (harmadik) utónév, külföldi diákoknál melyik a vezeték- és melyik az utónév;
+  * jár-e testvére az iskolába, hiszen ilyenkor a szülői hozzárendelés egyszerűsödik;
+  * édesanyja neve, különös tekintettel a második (harmadik) utónévre;
+  * állandó lakcím vs. tartózkodási cím (a Fenntartók az állandó lakcím szerint adják-veszik a normatívát, ez mindenképp kell, de pl. értesítési cím miatt szükség lehet a "tényleges" címre is);
+  * email címeket érdemes a szülőktől begyűjteni (ha hozzájárul), hogy az azonosítók kiküldéséhez fel lehessen használni;
+
+Ha van rá szabad erőforrás és használja az iskola a [[naplo:small_faces|Képek a naplóban]] funkciót, el lehet készíteni a diákokról a fotókat - bár a tapasztalat szerint nem mindig a diák jelenik meg a beiratkozáson, így ezt talán érdemes az első szeptemberi napokra hagyni...
+
+=====Utólagos tennivalók=====
+
+Az ideiglenesen a //titkarsag// csoportba felvett Kollégákat vegyük ki a csoportból!
+
+Az új diákok osztályba sorolásáról ne feledkezzünk meg (ha nem közvetlenül osztályba vettük fel őket)!
+
+Ha előzetes adatfeltöltéssel dolgoztunk, nézzük át a listát, nem maradt-e benne olyan diák, aki __nem iratkozott be__! Ha találunk ilyet, járjunk utána, mi az oka az elmaradásnak: elfeledte az időpontot, esetleg mégis másik iskolába ment, vagy egyéb okok miatt nem jelent meg. Ha nem az iskolába fog járni, töröljük az adatbázisból!

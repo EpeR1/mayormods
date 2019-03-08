@@ -1,0 +1,11 @@
+====== Háttéradatbázisok (backend-ek) ======
+
+A keretrendszer a felhasználói azonosításhoz többféle backend-et használhat. A különböző [[policy|hozzáférési szintek]]en lehet különböző backend-et használni.
+
+Tervezett backend-ek:
+  * [[base:backend:mysql]] - MySQL alapú, az LDAP-nál könnyebben kezelhető háttéradatbázis típus - ez az alapértelmezett backend
+  * [[base:backend:ldap]] - OpenLDAP alapú háttéradatbázis, mely használható Unix/Linux rendszerek felhasználói adatbázisaként is működni (libpam-ldap, libnss-ldap)
+  * [[base:backend:ad]] - Microsoft Active Directory alapú háttéradatbázis
+  * [[base:backend:file]] - Inkább csak tesztelésre használatos backend típus
+
+A keretrendszer több függvényt backendtől függő módon valósít meg. Az ezeket megvalósító programrészek az ''include/backend///backend_nev//'' könyvtár alatt találhatók.

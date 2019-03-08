@@ -1,0 +1,76 @@
+<?php
+
+//    $DEFAULT_PSF['private'] = array('page'=>'portal', 'sub' => 'portal', 'f' => 'portal');
+    $DEFAULT_PSF['private'] = array('page'=>'naplo', 'sub' => '', 'f' => 'naplo');
+
+/*
+    'onExpired = 'none' | 'warning' | 'force update'
+    Ha lejár a jelszó érvényessége (de még nincs letiltva), akkor
+	none         - ne történjen semmi, azaz nem vesszük figyelembe, beengedjük 
+	warning      - beengedjük figyelmeztető üzenettel
+	force update - jelszóváltoztatásra kényszerítjük => enableSelfPasswordChange
+    'onDisabled = 'none' | 'refuse'
+	none         - nem vesszük figyelembe, azaz beengedjük
+	refuse       - visszautasítjuk
+    'enableSelfPasswordChange' = true | false
+    'accountCreateMode' => 'registration' | 'create by admin' => admingroup
+
+*/
+
+
+    $AUTH['private'] = array(
+
+	'skin' => 'sulix',
+	'authentication' => 'required',
+	'onExpired' => 'force update',
+	'onDisabled' => 'none',
+	'enableSelfPasswordChange' => true,
+        'createAccount' => 'byAdmin',
+	'adminGroup' => 'useradmin',
+	'categories' => array('tanár','diák','titkárság','egyéb'),
+	'categoryMap' => array(
+		'tanar' => 'cn=teachers,ou=group,%BASEDN%',
+		'diak' => 'cn=students,ou=group,%BASEDN%',
+		'titkarsag' => 'cn=administration,ou=group,%BASEDN%',
+		'egyeb' => 'cn=other,ou=group,%BASEDN%',
+
+		'useradmin' => 'cn=useradmins,ou=group,%BASEDN%',
+		'naploadmin' => 'cn=diaryadmins,ou=group,%BASEDN%',
+		'diakadmin' => 'cn=studentadmins,ou=group,%BASEDN%',
+		'uzenoadmin' => 'cn=msgadmins,ou=group,%BASEDN%',
+		'hirekadmin' => 'cn=newsadmins,ou=group,%BASEDN%',
+		'vezetoseg' => 'cn=management,ou=group,%BASEDN%',
+
+	),
+	'accountAttrs' => array('studyId','mail','telephoneNumber'),
+	'unixStyleAccounts' => false,
+
+	'shadowLastChange' => intval(time()/(60*60*24)),
+	'shadowMin' => 2,
+	'shadowMax' => 80,
+	'shadowWarning' => 10,
+	'shadowInactive' => 0,
+	
+	# LDAPNG
+        'backend'          => 'ldapng',
+        'ldapHostname'      => 'ldap://localhost',
+        'ldapBaseDn'        => '%BASEDN%',
+        #'ldapUser'          => 'CN=User,OU=Users,%BASEDN%',      // Olvasási jog az LDAP-ben - Normál user
+        #'ldapPw'            => 'jelszó',
+        #'ldapAccountOperatorUser' => 'CN=Op,OU=Users,%BASEDN%',  // Account Operators (Fiókfelelősök) csoport tag pl (jelszóváltoztatás)
+        #'ldapAccountOperatorPw'   => 'jelszó',
+        'ldapUserObjectClass'     => 'person',                            // Userek objectum osztálya (volt posixAccount)
+        'ldapStudyIdAttr'   => 'employeenumber',                            // Az oktatási azonosítót tároló attribútum (studyId)
+        'ldapUserAccountAttr' => 'uid',			  		  // A felhasználói azonosítót tároló attribútum (uid)
+        'ldapCnAttr' => 'cn',			  			  // A felhasználói teljes neve (cn)
+        'ldapGroupObjectClass'    => 'posixgroup', 			  // volt: 'groupofnames' (bár ebben memberUid lenne, de feltesszük, hogy van member is..,// Csoportok objectum osztálya (volt nayorGroup)
+        'ldapGroupCnAttr' => 'cn',			  		  // A csoport teljes neve (cn)
+        
+	'ldapContainers'	=> array(
+	    'ou=People,%BASEDN%',
+	    'ou=group,%BASEDN%'
+	),
+        'cacheable'        => true,
+    );
+
+?>

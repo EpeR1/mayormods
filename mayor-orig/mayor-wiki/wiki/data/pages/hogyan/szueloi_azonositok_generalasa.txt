@@ -1,0 +1,149 @@
+
+====== Szülői azonosítók generálása ======
+
+A meglévő szülői adatokból (intézményi adatbázis ''szulo'' tábla) SQL utasításokkal könnyen generálhatunk azonosítókat a szülők számára.
+
+Az első lépés, hogy kiválogassuk azon szulők körét, akiknek azonosítót kívánunk generálni. Célszerű ehhez az osztályok felöl közelíteni.
+Válasszuk ki az osztályt, vagy osztűlyokat, majd kérdezzük le az osztály(ok) tagjait. Ezek után szelektáljuk az adott diákok szuleit.
+Az így kiválasztott szülők számára generálunk azonosítókat (persze közben ellenőrizzük, hogy ne legyen azonosító ütközés).
+
+===== A kiindulási állapot ellenőrzése =====
+
+Mielőtt még nekikezdenénk a szülői azonosítók generálásának érdemes ellenőrizni, hogy a kiindulási adatok rendben vannak-e.
+Pár dolog amit érdemes ellenőrizni, szükség esetén javítani:
+
+==== Bevezető/lezáró szóközök törlése a név mezőkből ====
+
+Az adatbevitelkor sajnos gyakori, hogy szóközök tapadnak az egyes név mezőkhöz, különösen akkor, ha a neveket programmal, vagy "kézzel" mi
+vágtuk szét családi- és utónévre. Ilyenkor gyakran az utónév végén ott marad a két nevet elválasztó szóköz. Ellenőrizzük, van-e ilyen rekordunk:
+
+  select count(*) from szulo where (csaladinev<>trim(csaladinev) or utonev<>trim(utonev));
+
+Ha van, rögtön javíthatjuk:
+
+  update szulo set csaladinev = trim(csaladinev), utonev = trim(utonev);
+
+==== Ütköző azonosítók kiszűrése ====
+
+Az ütközéseket fogjuk szűrni és javítani az új azonosítók generálása kapcsán is. Épp ezért érdemes az azonosító generálás előtt is
+megnézni, hogy van-e ütközés:
+
+  select userAccount,count(*) as db from szulo group by userAccount having db>1;
+
+Ha van ütközés, javítsuk a hibát (lásd alább).
+
+==== Szóközök az azonosítóban ====
+
+A hibás, szóközökkel határolt nevek miatt előfordulhat, hogy keletkeztek hibás, szóközöket is tartalmazó azonosítók is. Szűrjük ki ezeket:
+
+  select * from szulo where userAccount is not null and locate(' ',userAccount) <> 0;
+
+A hibás account-okat javítsuk (a ''szulo'' és a ''mayor_parent.accounts'' táblában is!).
+
+===== Az osztály azonosítójának lekérdezése =====
+
+Ha egy osztály szülői azonosítóit szeretnénk megtudni, akkor először meg kell tudnunk az osztály azonosítóját (''osztalyId'').
+
+Példánkban a Városmajori Gimnázium (vmg) 2011-es 7.a osztályának azonosítóját kérdezzük le:
+
+  select * from naplo_vmg_2011.osztalyNaplo where osztalyJel='7.a';
+  +-----------+------------+
+  | osztalyId | osztalyJel |
+  +-----------+------------+
+  |        64 | 7.a        | 
+
+Ellenőrizhetjük az ''osztaly'' táblában is, hogy helyes adatokat kaptunk-e:
+
+  select * from osztaly where osztalyId=64;
+  +-----------+--------+------------+------------+------+---------------+-------------+
+  | osztalyId | leiras | kezdoTanev | vegzoTanev | jel  | kezdoEvfolyam | telephelyId |
+  +-----------+--------+------------+------------+------+---------------+-------------+
+  |        64 | angol  |       2011 |       2016 | a    |             7 |           1 | 
+
+
+===== Az osztály(ok) tagjainak lekérdezése =====
+
+Először töröljük az esetleg már létező segédtáblát:
+
+  drop table if exists _diakIds;
+
+Majd kérdezzük le a kiválasztott osztály jelenlegi tagjait:
+  create temporary table _diakIds 
+      select diakId from osztalyDiak where osztalyId = 64 and beDt <= curdate() and (kiDt is null or kiDt >= curdate());
+
+De lekérdezhetjük egy lépésben az összes 2011-ben érvéenyes osztály tagjait is:
+  create temporary table _diakIds 
+      select distinct diakId from osztalyDiak 
+      where beDt <= curdate() and (kiDt is null or kiDt >= curdate()) and 
+      osztalyId in (select osztalyId from naplo_vmg_2011.osztalyNaplo);
+
+
+===== A diákok szüleinek lekérdezése =====
+
+A diák azonosítók alapján most a szülők azonosítóit kérdezzük le. Először az anya, majd az apa adatokat rakjuk be az ideiglenes táblába.
+
+==== Anya ====
+
+  drop table if exists _szuloIds;
+  create temporary table _szuloIds
+      select distinct anyaId as szuloId from diak where anyaId is not null 
+      and diakId in (select diakId from _diakIds);
+
+==== Apa ====
+
+  insert into _szuloIds 
+      select distinct apaId as szuloId from diak where apaId is not null 
+      and diakId in (select diakId from _diakIds);
+
+===== userAccount-ok generálása a szulo táblában =====
+
+A kiválasztott szülők számára generáljunk ''userAccount''-okat. Vigyázzunk, hogy a keletkező ''userAccount'' ne tartalmazzon szóközt.
+Az alábbi frissítő lekérdezés "Dr. Alsóné Felső Anett Beáta" számára a "Felső.Beáta" azonosítót fogja beállítani. Vigyázunk arra is
+hogy csak azoknak módosítsuk a felhasználói azonosítóját, akiknek még nincs beállítva (''userAccount is null''):
+
+  update szulo set userAccount=concat(substring_index(csaladinev,' ',-1),'.',substring_index(utonev,' ',1))
+      where userAccount is null and szuloId in (select szuloId from _szuloIds);
+
+A gond az, hogy a fenti művelettel előidézhettünk account ütközést. Lássuk, mi a helyzet ezen a téren!
+
+  select userAccount,count(*) as db from szulo group by userAccount having db>1;
+  +-------------------+------+
+  | userAccount       | db   |
+  +-------------------+------+
+  | Székely.László    |    2 | 
+
+Példánkban a "Székely.László" azonosító két szülőhöz is hozzá lett rendelve. Találjunk ki egy új azonosítót - legyen ez esetünkben "László.Székely" -,
+és ellenőrizzük, hogy használatban van-e már:
+
+  select * from szulo where userAccount = 'László.Székely';
+  Empty set (0.01 sec)
+
+Amennyiben sikerült olyan azonosítót kitalálnunk, ami még nincs használatban (ahogy az a fenti példában is látszik), akkor módosítsuk az általunk felvett
+"Székely.László" azonosítót:
+
+  update szulo set userAccount='László.Székely' 
+      where userAccount = 'Székely.László' and szuloId in (select szuloId from _szuloIds);
+
+===== Account-ok létrehozása =====
+
+Ha nincs már ütközés, akkor egy ideiglenes táblába hozzuk létre az account-okat:
+
+  drop table if exists _accounts;
+  create temporary table _accounts 
+      select 'parent' as policy, szulo.userAccount, 
+      trim(concat_ws(' ',nevElotag,csaladinev,utonev)) as userCn,sha(crc32(csaladinev)) as userPassword 
+      from szulo left join mayor_parent.accounts using (userAccount) 
+      where accounts.userAccount is null and szuloId in (select szuloId from _szuloIds);
+
+===== Account-ok felvétele =====
+
+Ha minden rendbenlévőnek tűnik, akkor átmásolhatjuk az ideiglenes táblából az új account-okat a helyükre:
+
+  insert into mayor_parent.accounts (policy,userAccount,userCn,userPassword) select * from _accounts;
+
+===== Új account adatok eltárolása =====
+
+Az ideiglenes táblák (''_diakIds'',''_szuloIds'', ''_accounts'') automatikusan törlődnek, ha kilépünk az SQL parancssorból. Ha valamiért szükségünk van a generált account-okra,
+akkor másoljuk át őket egy rendes táblába (vagy az ''_accounts'' táblát eleve a ''temporary'' módosító nálkül hozzuk létre):
+
+  create table _ujSzuloAccount select * from _accounts;

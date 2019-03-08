@@ -1,0 +1,11 @@
+<?php
+	define('__TITLE','投稿ニュース');
+	define('_CIM','タイトル');
+	define('_SZOVEG','テキスト');
+	define('_ROGZIT','保存');
+	define('_KULSO_HIR','パブリックニュース');
+	define('_KIS_HIR','小さなニュース');
+	define('_CSAK_BELSO','私的ニュース');
+	define('_NEM_LATSZIK','目に見えない');
+	define('_LATSZIK','目に見える');
+?>

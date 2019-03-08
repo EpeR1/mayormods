@@ -1,0 +1,34 @@
+====== elektronikus napló ======
+===== mayor-naplo =====
+
+A mayor-naplo egy teljesértékű elektronikus naplót megvalósító modul, mely képes kiváltani a hagyományos papír alapú naplót, könnyen használható és kellőképpen rugalmas ahhoz, hogy képes legyen kielégíteni a legtöbb középiskola igényeit.
+
+célkitűzések:
+  * tanárok és diákok adatainak kezelése
+  * órarend kezelése
+  * osztályokon és évfolyamokon átívelő tankörök kezelése, fakultatív tárgyak esetén jelentkeztetéssel
+  * több tanév adatainak kezelése
+  * éves munkaterv kezelése
+  * haladási napló
+  * helyettesítések, óracserék, elmaradások, speciális tanítási napok kezelése
+  * hiányzások, igazolások kezelése
+  * osztályzatok kezelése
+  * szaktanári bejegyzések (dicséretek, figyelmeztetők) kezelése
+  * nyomtatás (PostScript és PDF formátumok támogatása)
+
+----
+==== Adatbázis-szerkezet ====
+
+A rendszer [[http://www.mysql.com|MySQL]] alapú adatbázisra épül. Az adatbázis-szerkezet három szintű.
+
+=== naplo-base ===
+
+Itt tároljuk a naplóval kapcsolatos [[kérelmek]] adatait, az aktuális [[session]] adatait és az elektronikus napló által kezelt [[intézmények]] adatait.
+
+=== naplo-intezmeny ===
+
+Itt tároljuk azokat az adatokat, amik egy intézményhez kapcsolódnak és több évre meg kell őriznünk őket. Ide tartoznak a tanárok és diákok adatai, a tanított tárgyak, sőtt a tankörök adatai is.
+
+=== naplo-tanev ===
+
+Itt tároljuk az adott tanév adatait, melyeket nem várható, hogy több év múlva is elő kívánunk venni. Ide tartoznak az év közbeni osztályzatok, hiányzások, igazolások, az órarend, a haladási napló, a helyettesítések, dicséretek és figyelmeztetések...

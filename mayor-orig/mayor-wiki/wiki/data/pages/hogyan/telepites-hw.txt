@@ -1,0 +1,15 @@
+====== Telepítés ======
+
+===== Hardver =====
+
+A rendszernek nincs különösebben nagy hardverigénye, inkább azt érdemes szem előtt tartani, hogy stabil, megbízható gépet válasszunk. Mindenképp javasoljuk, hogy a MaYoR elektronikus adminisztrációs rendszert külön szerverre kerüljön - így könnyebb biztosítani az adatok védelmét.
+
+Példaként néhány már telepített konfiguráció:
+
+  * HP Proliant ML110, Pentium 4 (3.2GHz), 2 GB RAM, 2x80 GB SATA HDD, Intel Gbit + Realtek Gbit ethernet\\
+Partíciók: swap/2x1GB, / 1GB/single, /tmp 1 GB/single, /usr 10GB/1, /var 10GB/1, /home/58GB/1
+  * HP Proliant ML115, Dual-Core AMD Opteron (1800MHz), 1 GB RAM, 160 GB HDD\\
+Partíciók:  / 265MB, /home/143GB, /tmp 400MB, /usr 5GB, /var 3 GB
+  * DELL PowerEdge SC440, Intel Core2 Duo (2.2GHz), 2x160GB HDD, 1 GB, Gbit ethernet\\
+Partíciók: 40MB DELL utility, 2GB swap, 1GB /boot, 2GB /, 2GB /tmp, 10 GB /usr, 20GB /var, 123GB /home
+

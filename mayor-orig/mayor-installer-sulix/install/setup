@@ -1,0 +1,38 @@
+#!/bin/bash
+clear
+echo "-------------------------------------------"
+echo "             MaYoR Setup               "
+echo "-------------------------------------------"
+
+MAYORDIR="/srv/mayor"
+TMPDIR="/tmp"
+TGZDIR="/root/mayor/tgz"
+MYSQLROOTPW=$(tdbdump /var/lib/samba/private/secrets.tdb | grep -A 2 LDAP_BIND_PW | grep data | sed -e 's/\\00"//' -e 's/^.*"//')
+VERSION="current"
+SCHOOLSERVERCONF="/etc/sysconfig/schoolserver"
+export SCHOOLSERVERCONF
+export MAYORDIR
+export TMPDIR
+export TGZDIR
+export MYSQLROOTPW
+export VERSION
+
+# --------- Ez a main.conf-ban bent van - jobb lenne itt nem megadni...
+
+BACKUPDIR=/backup/mayor/
+export BACKUPDIR
+BASEDN=$(grep LDAPBASE $SCHOOLSERVERCONF | sed -e 's/LDAPBASE="//' -e 's/"//')
+export BASEDN
+
+function mypwgen() { eval 'head /dev/urandom | tr -dc A-Za-z0-9_ | head -c8'; }
+export -f mypwgen
+
+echo -e "A MaYoR keretrendszer és elektronikus napló telepítője...\n"
+
+for f in install.d/*
+do
+    echo -e "\n----------------------------------------------\n$f\n----------------------------------------------\n"
+    ./$f $@
+done
+
+echo -e "MaYoR (c) setup 2012.\n"

@@ -1,0 +1,37 @@
+<?php
+	define('__PAGETITLE','Details of the student\'s parents');
+	define('_DIAK_SZULO','Parents');
+	define('_NEV','Name');
+	define('_NEVELOTAG','Name prefix');
+	define('_CSALADINEV','Family name');
+	define('_UTONEV','Last name');
+	define('_NEM','Sex');
+	define('_ALLAMPOLGARSAG','Nationality');
+	define('_SZULOACCOUNT','Parent\'s username');
+	define('_SZULETESKORINEV','Childhood name');
+	define('_SZULETESKORINEVELOTAG','Childhood name prefix');
+	define('_SZULETESKORICSALADINEV','Childhood family name');
+	define('_SZULETESKORIUTONEV','Childhood last name');
+	define('_SZULETESIHELY','Place of birth');
+	define('_SZULETESIIDO','Time of birth');
+	define('_LAKHELY','Residence');
+	define('_ORSZAG','Country');
+	define('_HELYSEG','City');
+	define('_KOZTERULETNEV','District');
+	define('_HAZSZAM','Number');
+	define('_IRSZ','ZIP code');
+	define('_EMELET','Floor');
+	define('_AJTO','Door');
+	define('_EMAIL','E-mail address');
+	define('_TELEFON','Telephone');
+	define('_MOBIL','Mobile / Cellphone');
+	define('_ANYA','Mother');
+	define('_APA','Father');
+	define('_GONDVISELO','Legal guardian');
+	define('_MODOSITAS','Modify');
+	define('_SZULO_HOZZARENDELESE','Attach parent');
+	define('_UJ_SZULO','Add parent');
+	define('_SZULO_ADAT_MODOSITAS','Modify parents\' details');
+	define('_SZULO_HOZZARENDELES_TORLESE','Delete parent attachment');
+	define('_FELVESZ','Add');
+?>

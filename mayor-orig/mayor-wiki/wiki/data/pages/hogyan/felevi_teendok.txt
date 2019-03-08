@@ -1,0 +1,49 @@
+====== Félévi teendők  ======
+===== Adminisztrátorok =====
+
+Admin menüpont >> Szemeszterek almenü
+
+Két új időszakot kell felvenni a félévzárási teendőkhöz:
+
+  * **zárás** - amely intervallumban a szaktanárok az osztályozó naplóban zárójegyet írhatnak be
+  * **bizonyítvány írás** - amely intervallumban az osztályfőnökök a magatartás és szorgalom jegyeket rögzíthetik. (Ez tipikusan bővebb, mint a zárási időszak. A zárási és a bizonyítvány írási időszak kezdetének szigorúan meg kell egyeznie!)
+
+__Megjegyzés:__ Amennyiben a félév végéig a zárójegyeket el szeretnénk rejteni a diákok és szülők elől, tegyük meg az alábbi lépéseket:
+
+  * **config fájl módosítása** - a /var/mayor/config/module-naplo/config-iskolaneve.php állományban módosítsuk (vegyük fel) az alábbi bejegyzést:
+
+  // Félévi és év végi osztályzatok elrejtése a diákok elől a szemeszter végéig
+    define('_OSZTALYZATOK_ELREJTESE', true);
+
+  * **menü módosítása** - az előző változtatás eredménye (sajnos) kikerülhető, ha a diák/szülő a bizonyítvány menüt választja, amit viszont eltüntethetünk ideiglenesen (!) a /var/mayor/config/menu/private **és** a /var/mayor/config/menu/parent könyvtárakban található //menu-hu_HU.php// fájl szerkesztésével (ha nincs, másoljuk be és nevezzük át a mintaállományt), amibe illesszük be az alábbi sorokat:
+
+      // Bizonyítvány menüpont eltüntetése
+    unset($MENU['modules']['naplo']['sub']['osztalyozo']['bizonyitvany']);
+
+A félév lezártával ne feledjük az előbbi sorokat mindkét állományban kikommentelni!
+
+===== Szaktanárok =====
+
+Osztályozó napló menüpont
+
+Az osztályozó napló menüpontban a saját tankörének kiválasztása után a Bizonyítvány oszlopban megjelennek
+az adható zárójegyek.
+
+A "zárás" időszakában ezek a jegyek tetszőlegesen módosíthatók. Vegyük figyelembe, hogy a beírás pillanatától
+az arra jogosultak (diákok és szüleik) egyből látják saját zárójegyeiket.
+
+===== Osztályfőnökök =====
+
+Osztályozó napló menüpont, Zárási statisztika almenü
+
+A saját osztály kiválasztásakor tetszőleges tárgysorrendet állítva látszódnak az osztály diákjainak zárójegyei, ebből képzett
+egyszerű átlaga, valamint az igazolt és igazolatlan hiányzásai. Ez alapján a jobb oldali oszlopban adható magatartás
+és szorgalom értékelések. Ne felejtsük a lap alján a beír gombbal rögzíteni.
+
+A "bizonyítvány írás" időszak végéig ezek a bejegyzések módosíthatók.
+
+===== Vezetőség =====
+
+Ellenőrzik a beírt jegyeket és hiányosságokat. Szükség esetén - a határidők lejárta után - javítják a téves adatrögzítésből
+adódó hibás bejegyzéseket.
+

@@ -1,0 +1,96 @@
+====== A menü ======
+
+A keretrendszer egy az aktuális modultól és kiválasztott nyelvtől függő, legfeljebb három szintű menüt generál.
+
+===== A menü felépítése =====
+
+
+==== A fájlok csatolási sorrendje ====
+
+A menüt felépítő állományok az ''include/menu'' könyvtár alatt helyezkednek el.
+elsőként a ''include/menu/base.php'' töltődik be. Ennek feladata, hogy a többi állományt kiválassza és betöltse.
+Elsőként az ''include/menu/$policy/$lang/base.php'', ennek hiányában az ''include/menu/$policy/_DEFAULT_LANG/base.php'' kerül betöltésre. A következő lépés a ''include/menu/$policy/$lang/module-*.php'' állományok csatolása. Az utolsó lépés az [[hogyan:menu_testreszabas|egyedi menü beállítások]] beolvasása.
+
+Az oldal megjelenítésekor a ''skin/$skin/base/html/base.phtml'' állomány ''mayor_menu()'' függvénye írja ki a menü-t a ''$MENU'' tömb alapján. A tömben benne van az egész menürendszer, de a függvény nem feltétlenül építi rakja ki az összes menüpontot, a "classic" skin például az almenűket csak az aktuális ''$page'', ''$sub'' és ''$f'' szerint rakja ki.
+
+
+==== A menü tárolására szolgáló adatszerkezet - a $MENU tömb ====
+
+=== Egy menüpont (item, tétel) felépítése ===
+  * txt - a megjelenő szöveg
+  * [url] 
+        - ha nincs: a $MENU alapján kiolvasható PSF-re mutat
+        - ha &-tel kezdődik: az lőzőhöz fúzzük
+        - ha http-vel kezdődik: a megadott URL-t vesszük egy az egyben (sessionID, lang, skin stb nélkül)
+        - egyéb esetben: az adott linket használjuk átadva a fontos paramétereket (sessionID, policy, lang, skin)
+  * [get] - az utolsó esetben az átadandó paraméterek listája (pl. sessionID, lang, skin)
+
+
+
+=== A $MENU tömb felépítése ===
+<code php>
+    $MENU = array(
+        $page1 => array(                        // Az első szinten a modulok menüpontjai
+            array('txt1'[,'url1']),
+            [array('txt2'[,'url2']), ...]
+        ),
+        [$page2 => array( ... ), ...]
+        $item1 => array(                        // Az elsp szinten nem modulhoz tartozó tételek
+            array('txt1'[,'url1']),
+            [array('txt2'[,'url2']), ...]
+        ),
+        [$item2 => array( ... ), ...]
+        'modules' => array(                     // 'modules'-en belul csak page-ek vannak
+            $page1 => array(
+                'sub' => array(                 // 'sub'-on belül csak sub-ok vannak
+                    $sub1 => array(
+                        $f1 => array(
+                            array('txt1'[,'url1']),
+                            [array('txt2'[,'url2']), ...]
+                        ),
+                        [$f2 => array(
+                            array('txt1'[,'url1']),
+                            [array('txt2'[,'url2']), ...]
+                        ), ...]
+                    ),
+                    [$sub2 => arrray( ... ), ...]
+                ),
+                [$f1 => array(
+                    array('txt1'[,'url1']),
+                    [array('txt2'[,'url2']), ...]
+                ), ...]
+            ),
+            [$page2 => array( ... ), ...]
+        )
+    )
+</code>
+
+Kirajzolva:
+<code php>
+  $M[$page1][0] | $M[$page1][1] ... | $M[$page2][0] | ... | $M[$item1][0] | $M[$item1][1] ...
+  $M['modules'][$page][$f1][0] | $M['modules'][$page][$f1][1] ... | $M['modules'][$page][$f2][0] | ...
+  $M['modules'][$page]['sub'][$sub][$f1][0] ... $M['modules'][$page]['sub'][$sub][$f2][0]
+</code>
+
+Például:
+<code php>
+    $MENU['modules']['login'] = array(
+        'sub' => array(
+            'sub1' => array(
+                'f11' => array(
+                    array('txt' => 'Kakukk'),
+                    array('txt' => 'Tojás', 'url'=>'http://')
+                )
+            ),
+            'sub2' => array(
+                'f21' => array(
+                    array('txt' => 'Cica'),
+                )
+            )
+        ),
+        'login' => array(
+            array('txt' => 'Szülői bejelentkezés','url' => '&toPolicy=parent'),
+            array('txt' => 'Bejelentkezés','url' => '&toPolicy=private'),
+        )
+    );
+</code>

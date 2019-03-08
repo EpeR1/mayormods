@@ -1,0 +1,19 @@
+<?php
+	define('__MUNKAKOZOSSEGSELECTTITLE','Arbeitsgemeinschaft');
+	define('__TARGYSELECTTITLE','Fach');
+	define('__INTEZMENYSELECTTITLE','Institut');
+	define('__TANEVSELECTTITLE','Lehrjahr');
+	define('__TABLESELECTTITLE','Sql Tabelle');
+	define('__OSZTALYSELECTTITLE','Klasse');
+	define('__TANARSELECTTITLE','Lehrer');
+	define('__DIAKSELECTTITLE','Schüler');
+	define('__TANKORSELECTTITLE','Studiengruppe');
+	define('__DATUMSELECTTITLE','Datum');
+	define('__DATUMTOLIGSELECTTITLE','Datum');
+	define('__ORASELECTTITLE','Stunde');
+	define('__TEREMSELECTTITLE','Saal');
+	define('__ORARENDIHETSELECTTITLE','Woche');
+	define('_OK','ok');
+	define('_DELETE','Löschen');
+	define('_ORA','Stunde');
+?>

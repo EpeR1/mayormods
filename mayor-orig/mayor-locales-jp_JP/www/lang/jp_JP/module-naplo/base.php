@@ -1,0 +1,19 @@
+<?php
+	define('__MUNKAKOZOSSEGSELECTTITLE','部');
+	define('__TARGYSELECTTITLE','件名');
+	define('__INTEZMENYSELECTTITLE','学校');
+	define('__TANEVSELECTTITLE','学年');
+	define('__TABLESELECTTITLE','SQL の表');
+	define('__OSZTALYSELECTTITLE','クラス');
+	define('__TANARSELECTTITLE','先生');
+	define('__DIAKSELECTTITLE','学生');
+	define('__TANKORSELECTTITLE','研究会');
+	define('__DATUMSELECTTITLE','日付');
+	define('__DATUMTOLIGSELECTTITLE','日付');
+	define('__ORASELECTTITLE','レッスン');
+	define('__TEREMSELECTTITLE','部屋');
+	define('__ORARENDIHETSELECTTITLE','週');
+	define('_OK','オッコ');
+	define('_DELETE','削除');
+	define('_ORA','レッスン');
+?>

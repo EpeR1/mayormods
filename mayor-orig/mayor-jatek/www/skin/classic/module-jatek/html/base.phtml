@@ -1,0 +1,51 @@
+<?php
+
+    function putEgyszamForm($ADAT) {
+
+	echo '<h1 class="egyszam">'._EGYSZAMJATEK.'</h1>';
+
+	    echo '<div class="egyszam">';
+
+	echo _EDDIG.': '.$ADAT['db'].' '._SZAVAZAT.'<br/>';
+	echo _NYERTES.': '.$ADAT['elozoNyertes']['szam'].' ('.$ADAT['elozoNyertes']['userAccount'].')<br/>';
+
+	if ($ADAT['szavazott']==false) {
+
+		//echo '<form method="post">';
+	    formBegin();
+	    echo '<input type="hidden" name="action" value="szavaz" />';
+	    echo '<select name="szam" id="szam">';
+	    for ($i=1; $i<200; $i++) {
+		echo '<option value="'.$i.'">'.$i.'</option>';
+	    }
+	    echo '</select>';
+	    echo '<input type="submit" value="'._OK.'" />';
+	    formEnd();
+	    
+	} else {
+	    echo _MARSZAVAZOTT;
+	}
+
+	    echo '</div>';
+
+    }
+
+    function putEgyszamTablazat($ADAT) {
+	
+	foreach($ADAT as $het => $D) {
+	    echo '<table align="center" class="egyszam">';
+	    echo '<thead><tr><th colspan="2">'.$het.'. '._JATEKHET.'</th></tr></thead>'."\n";
+	    echo '<tfoot><tr><th>'._SZAM.'</th><th>'._DB.'</th></tr></tfoot>'."\n";
+	    echo '<tbody>';
+	    foreach ($D as $szam => $T) {
+		echo '<tr>';
+		echo '<td>'.$szam.'</td>';
+		echo '<td>'.$T['db'].'</td>';
+		echo '</tr>';
+	    }
+	    echo '</tbody>';
+	}
+	echo '</table>';
+    }
+
+?>

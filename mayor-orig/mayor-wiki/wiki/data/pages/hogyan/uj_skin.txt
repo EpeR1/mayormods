@@ -1,0 +1,43 @@
+===== Hogyan telepítsünk új skin-t? =====
+
+A MaYoR rendszerhez könnyen készíthetünk saját skin-eket, kisebb-nagyobb mértékben testreszabhatjuk az oldalak kinézetét. Ezáltal saját 
+intézményünk arculatához vagy valamilyen alkalomhoz igazíthatjuk a program kinézetét. Ezt a lehetőséget használjuk ki a PDA-k számára készített
+megjelenés megvalósításához is.
+
+==== Hogy lehet elérhetővé tenni egy skin-t? ====
+
+Szerkesszük a /var/mayor/config/main-config.php-t! Ebben találunk két sort, melybe fel kell vennünk az új elemet:
+
+  $SKINS                   = array('classic','ajax','xml','pda','rpc','blue','vakbarat');
+  $SKINSSHOW               = array('classic','blue','vakbarat');
+
+Az előbbi a mayor rendszer által elérhető, elfogadott skin-ek listája, az utóbbi - a classic skinben - az oldal bal felső sarkában megjelenő, kiválasztható skin-ek listája.
+
+==== Hogyan tehetünk alapértelmezetté egy skin-t? ====
+
+A skin-ek hozzáférési szintenként (policy) állíthatók be. Ha például a publikus oldalak megjelenését szeretnénk a blue nevű skin-re változtatni, 
+akkor ehhez a /var/mayor/config/public-conf.php-t kell szerkesztenünk:
+
+  $AUTH['public'] = array(
+  
+      'skin' => 'blue',
+      ...
+  
+  );
+
+==== Hogyan készíthetünk saját skin-t? ====
+
+Lehetőség szerint ne csináljunk ilyet :)
+
+Először is adjuk egy egyszerű nevet az új skin-nek. Példánkban ez a név: winter.
+A skinhez tartozó file-ok ezek után a /var/mayor/www/skin/winter alá fognak kerülni, illetve még egy konfigurációs állomány tartozhat hozzá a 
+/var/mayor/config/skin-winter könyvtár alatt. 
+
+Fontos tudnunk, hogy a program egy skin használata során, ha nem talál az adott skin könyvtára alatt egy (css vagy phtml) állományt, akkor a
+hiányzó fájlt az alapértelmezett classic skin-ből veszi. Ez a mechanizmus nagyon hasznos, mert így elegendő a classic skin-től való eltéréseket
+megadnunk.
+
+A legtöbb esetben egy új skin nem több néhány képnél és css állománynál. Érdemes is ezen a szinten megmeradni, hisz a html kód módosítása
+a működésre is befolyással lehet.
+
+

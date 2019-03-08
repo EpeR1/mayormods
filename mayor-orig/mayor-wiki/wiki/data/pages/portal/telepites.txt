@@ -1,0 +1,75 @@
+
+====== Portál modul telepítése ======
+
+  * Hozzunk létre egy ''hirekadmin'' csoportot és értelemszerűen vegyünk fel bele tagokat! (Felhasználói adatok/Új csoport)
+
+  * Szerkesszük a ''/var/mayor/config/main.conf'' állományt! vegyük fel a frissítendő modulok közé (ne a végére) a portál modult is.
+
+  MODULES="mayor-base mayor-portal mayor-naplo"
+
+  * Frissítsük a rendszert. Ezzel letöltődnek a portál modul állományai is.
+
+  # mayor update
+
+  * Hozzuk létre a portál modul adatbázisát (előtte írjuk be a file-ba a ''%MYSQL_PORTAL_DB%'', ''%MYSQL_PORTAL_USER%'' és ''%MYSQL_PORTAL_PW%'' helyére a mysql 
+  adatbázist (''mayor_portal''), usert (''mayor_portal'') és a user jelszavát):
+
+  # cp /var/mayor/install/mayor-portal/mysql/mayor-portal.sql /tmp/mayor-portal.sql
+  # editor /tmp/mayor-portal.sql
+  # cat /tmp/mayor-portal.sql | mysql -p
+
+  * Most a portál modul konfigurációs állományának létrehozása...
+
+  cp /var/mayor/config/module-portal/config.php.example /var/mayor/config/module-portal/config.php
+
+  * ... és szerkesztése következik (különös tekintettel a jelszóra - amit az előbb is használtunk)
+
+  # mcedit /var/mayor/config/module-portal/config.php
+  
+  ---------------------------
+    $MYSQL_DATA['portal']['user']= 'mayor_portal_adm';
+    $MYSQL_DATA['portal']['pw']= '**jelszó**';
+    $MYSQL_DATA['portal']['db']= 'mayor_portal';
+
+    define('__PORTAL_CODE','demo');
+  ---------------------------
+
+  * A hozzáférési szintenkénti kezdőlapok beállítása
+
+  # mcedit /var/mayor/config/private-conf.php
+  ---------------------------
+  $DEFAULT_PSF['private']  = array('page'=>'portal', 'sub' => 'portal', 'f' => 'portal');
+  ---------------------------
+
+  # mcedit /var/mayor/config/parent-conf.php
+  ---------------------------
+  $DEFAULT_PSF['parent']  = array('page'=>'portal', 'sub' => 'portal', 'f' => 'portal');
+  ---------------------------
+
+  # mcedit /var/mayor/config/public-conf.php
+  ---------------------------
+  $DEFAULT_PSF['public']  = array('page'=>'portal', 'sub' => 'portal', 'f' => 'portal');
+  ---------------------------
+
+  * Testreszabás\\
+Lehetőségünk van arra, hogy az alapértelmezettől eltérő szerkezetű kezdőlapot készítsünk és ebbe építsük be a portál szolgáltatásait.
+
+    * Szerkesszük a portál konfigurációs állományát - adjunk meg saját portál kódot (lehet ez pl. az intézmény rövid neve is)
+
+    # mcedit /var/mayor/config/module-portal/config.php
+  
+    ---------------------------
+      define('__PORTAL_CODE','sajat');
+    ---------------------------
+
+    * Hozzuk létre a demo oldalak alapján a saját kezdőlapjainkat:
+
+    # cp /var/mayor/www/policy/private/portal/portal/portal_demo.classic.php /var/mayor/www/policy/private/portal/portal/portal_sajat.classic.php
+    # cp /var/mayor/www/policy/private/portal/portal/portal_demo.pda.php /var/mayor/www/policy/private/portal/portal/portal_sajat.pda.php
+    # cp /var/mayor/www/policy/parent/portal/portal/portal_demo.classic.php /var/mayor/www/policy/parent/portal/portal/portal_sajat.classic.php
+    # cp /var/mayor/www/policy/parent/portal/portal/portal_demo.pda.php /var/mayor/www/policy/parent/portal/portal/portal_sajat.pda.php
+    # cp /var/mayor/www/policy/public/portal/portal/portal_demo.classic.php /var/mayor/www/policy/public/portal/portal/portal_sajat.classic.php
+    # cp /var/mayor/www/policy/public/portal/portal/portal_demo.pda.php /var/mayor/www/policy/public/portal/portal/portal_sajat.pda.php
+
+    * Majd szerkesszük ezeket az oldalakat saját elképzelésünk szerint.
+

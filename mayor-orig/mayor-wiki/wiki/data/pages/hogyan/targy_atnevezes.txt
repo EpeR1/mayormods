@@ -1,0 +1,102 @@
+
+====== Tárgyak átnevezése ======
+
+Előfordul néha, hogy az év során kiderül, hogy az eredetileg felvett tárgynevek nem jók, módosítani kell őket. Például nyomtatáskor kiderül, hogy
+túl hosszúra sikerültek és nem férnek be a megfelelő cellákba, vagy az adott tárgy hivatalos megnevezése más, mint amit mi felvettünk.
+
+Erre a feladatra a felületen nincs lehetőség - nem támogatjuk a tárgyak utólagos átnevezését. Ha mindenképp szükség van rá, akkor SQL szinten kell
+megoldanunk a feladatot.
+
+**Figyelem!**
+Már kinyomtatott, hitelesített napló esetén nem szabad visszamenőleg módosítani a tankörök neveit! A tárgy átnevezése sem szerencsés, helyette felvehetünk új
+tárgyat és módosíthatjuk az érintett tankörök tárgyhoz rendelését. Mindenesetre gondoljuk meg mit csinálunk, mielőtt nekiesünk.
+
+===== Tárgy átnevezés =====
+
+Az intézményi adatbázisban található tárgy táblában vannak a tárgyak adatai. Ha például a ''számítástechnika'' tárgyat ''informatika'' névre szeretnénk cserélni,
+a következő SQL utasítást használhatjuk:
+
+  mysql> UPDATE targy SET targyNev = 'informatika' WHERE targyNev = 'számítástechnika';
+
+Ezzel azonban nem vagyunk kész, hisz a tárgyhoz tartozó tankörök nevei ettől még nem változnak meg.
+
+===== Tankörök átnevezése =====
+
+A tankörök átnevezésének egyik módja, ha a felületen a ''Napló/Intézményi adatok/Tankörök'' menüpont alatt kiválasztjuk az imént módosított tárgyat, majd
+végigmegyünk a hozzá tartozó tankörökön és módosítás nélkül megnyomjuk az ''OK'' gombot. Ekkor a tankör adatai, paraméterei nem változnak meg, de a nevét
+újragenerálja a redszer - immár az új tárgynevet használja.
+
+Másik lehetőség, hogy SQL szinten oldjuk meg a feladatot - jóval hatékonyabb módszer, de könnyebb hibázni is vele. Az előző példát folytatva szeretnénk tehát
+átnevezni a számítástechnika tanköröket informatikára, de csak a 2008-as tanévhez tartozókat (visszamenőleg nem módosítunk). Ehhez a megfelelő tanév
+adatbázisában a következő SQL parancsot adjuk ki:
+
+  mysql> UPDATE tankorSzemeszter SET targyNev = REPLACE(targyNev,'számítástechnika','informatika') WHERE tanev = 2008;
+
+Így egy lépésben végeztünk is a módosítással.
+
+====== Egy összetettebb példa ======
+
+Az életből merített példa szerin év elején túl hosszú tárgyneveket adtunk meg, amik nyomtatáskor nem férnek el rendesen. Például:
+
+  - ''Tehetséggondozás - Szakkör - Környezetvédelmi és természetjáró'', vagy
+  - ''Egyéni fejlesztés - Felzárkóztatás - Tantárgyi alapkészség fejlesztés - Digitális informatikai alapismeretek '', stb.
+
+Úgy szeretnénk rövidíteni a neveken, hogy bizonyos ismétlődő részeket (pl. Tehetséggondozás, vagy 
+Egyéni fejlesztés - Felzárkóztatás - Tantárgyi alapkészség fejlesztés) megfelelő rövidítésekre szeretnénk cserélni (pl. TG, illetve EF-F-TAF).
+Lássuk ennek egy lehetséges módját:
+
+1. Létrehozok egy ideiglenes táblát, amibe előkészítem, hogy melyik tárgynevet mire fogom javítani:
+
+  CREATE TABLE _atnevez (targyId SMALLINT UNSIGNED, targyNev VARCHAR(128), ujNev VARCHAR(128)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_hungarian_ci;
+
+2. Feltöltöm ezt a táblát. 
+
+2.a Ennek sok módja lehet. 
+
+Lekérdezhetem az összes targyId, targyNev párost a targy táblából
+
+  SELECT targyId,targyNev FROM targy INTO OUTFILE '/tmp/atnevez.txt';
+
+majd szövegszerkesztőben/táblázatkezelőben mellé írhatom az ujNev oszlopot, végül betölthetem a táblába az elkészült állományt:
+
+  LOAD DATA INFILE '/tmp/atnevez.txt' INTO TABLE _atnevez;
+
+Az adatbetöltéshez használhatom a ''Napló/Admin/Import'' menüpontot is.
+
+2.b Közvetlenül a ''targy'' táblából is lehet lekérdezéssel feltölteni lépésenként a táblát. Például, ha a ''Tehetséggondozás''-t ''TG''-re akarom minden érintett 
+névben cserélni, akkor:
+
+  INSERT INTO _atnevez SELECT targyId,targyNev,replace(targyNev,'Tehetséggondozás','TG') AS ujNev FROM targy WHERE targyNev LIKE 'Tehetséggondozás%';
+
+illetve az ''Egyéni fejlesztés - Felzárkóztatás - Tantárgyi alapkészség fejlesztés'' lecserélendő ''EF-F-TAF''-re:
+
+  INSERT INTO _atnevez SELECT targyId,targyNev,replace(targyNev,'Egyéni fejlesztés - Felzárkóztatás - Tantárgyi alapkészség fejlesztés','EF-F-TAF') AS ujNev FROM targy 
+     WHERE targyNev LIKE 'Egyéni fejlesztés - Felzárkóztatás - Tantárgyi alapkészség fejlesztés%';
+
+És így tovább, ha van több módosítandó név. Ilyen módszerrel akkor lehet gond, ha egy névre két átalakítás is vonatkozik.
+
+3. Ellenőrzöm, hogy minden hosszú targyNev-hez van-e ujNev beírva a táblába. Ha például 50 karakter feletti tárgyneveket nem akarok meghagyni, akkor így listázhatom ki, hogy miknek __nincs__ még új neve:
+
+  SELECT * FROM targy LEFT JOIN _atnevez USING (targyId) WHERE ujNev IS NULL AND LENGTH(targy.targyNev) > 50;
+
+4. Konvertáljuk először a tankörök neveitT Első körben lekérdezhetem, hogy mi lesz az új név - nem lehet elégszer ellenőrizni:
+
+  SELECT tankorId,tankorNev,REPLACE(tankorNev,targyNev,ujNev) AS ujTankorNev FROM tankor LEFT JOIN tankorSzemeszter USING (tankorId) LEFT JOIN _atnevez USING (targyId) WHERE ujNev IS NOT NULL;
+
+Ha jónak tűnik, akkor mehet a módosítás:
+
+  UPDATE tankor LEFT JOIN tankorSzemeszter USING (tankorId) LEFT JOIN _atnevez USING (targyId) SET tankorNev = REPLACE(tankorNev,targyNev,ujNev) WHERE ujNev IS NOT NULL;
+
+5. Ez után jöhet a tantárgy nevek konvertálása. Itt is először lekérdezzük a tervezett módosításokat:
+
+  SELECT * FROM targy LEFT JOIN _atnevez USING (targyId) WHERE ujNev IS NOT NULL;
+
+Ha jónak tűnik, mehet a módosítás:
+
+  UPDATE targy LEFT JOIN _atnevez USING (targyId) SET targy.targyNev = ujNev WHERE ujNev IS NOT NULL;
+
+6. Ha minden jó, akkor az ideiglenesen létrehozott táblát törölhetjük:
+
+  DROP TABLE _atnevez;
+
+

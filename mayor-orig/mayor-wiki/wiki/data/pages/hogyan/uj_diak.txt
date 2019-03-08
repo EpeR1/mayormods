@@ -1,0 +1,27 @@
+
+===== Új diák felvétele =====
+
+Így járjunk el a tanév közben érkezett diák(ok) manuális felvételekor.
+
+==== Diák, szülők adatai, azonosítók ====
+
+A **Napló/Intézményi adatok/Diákok** menüben értelemszerűen vegyük fel a diák és a szülők, gondviselő adatait, annyira részletesen (szociális helyzet, fogyatékosság, stb.), amennyire az intézményi adattárolás előírja. Az oktatási azonosítót jegyezzük fel, másoljuk ki, erre még szükség lesz!
+A **Bekerülés módja** legördülő menüből válasszuk ki a belépés okát! Ha itt először osztályt választunk ki, a "Bekerülés módja"-ként pedig a "felvétel osztályba" lehetőséget, akkor rögtön osztályba is sorolhatjuk az új diákot.
+
+Ha használjuk a napló [[naplo:small_faces|Arcok a naplóban]] lehetőségét, ne halasztgassuk, készítsünk fotót az új diákról, később nehéz lesz előkeríteni...! :-o
+
+A felvétel tényéről készül egy záradék-bejegyzés is (ezt ellenőrizhetjük a **Napló/Intézményi adatok/Záradékok** menüben, a diák nevére keresve).
+
+Célszerű azonnal felvenni az accountokat is a **Felhasználói adatok/Új felhasználó** menüben. A mezők értelemszerűen töltődnek, itt lesz szükség az oktatási azonosítóra. Diákot a //private// szintre, szükőket, gondviselőket a //parent// szintre vegyük fel!
+
+==== Osztálybaléptetés ====
+
+Az új diák immár az iskola tagja, de hontalan... :-) (már, ha az előző lépsében nem soroltuk rögtön osztályba)
+
+Lépjünk a **Napló/Intézményi adatok/Osztályok** menübe, keressük ki az új diák osztályát, majd az **Új tag felvétele** résznél keressük ki a diákot a névsorból, állítsuk be a dátumot, és kattintsunk az **OK**-ra! Az osztály listájában immár szerepelni fog. 
+
+==== Tankörbeléptetés ====
+
+Már csak annyi van hátra, hogy az új diákot tankörökbe soroljuk. Ehhez válasszuk a **Napló/Intézményi adatok/Diák tankörei** menüjét! A dátumot és a diákot kiválasztva láthatóvá válnak azok a tankörök, amelyek az osztály által érintettek. A nevek előtti checkbox-ba pipát téve lép be a diák az adott dátummal a tankörbe. Az **OK** gomb megnyomása után zöld hátterűre változnak a választott tankörök (ezt egyébként külön kigyűjtve meg is tekinthetjük a lap alján), kék hátterűek maradnak a ki nem választott tankörök.
+
+A diák és/vagy a szülő saját account-jával belépve ezek után látja a diák haladási naplóját, osztályzó naplóját, órarendjét, stb.

@@ -1,0 +1,8 @@
+====== Modulok ======
+
+A modulok bővítik ki a rendszer szolgáltatásait. A tervezett modulok:
+  * [[mayor-naplo]] - teljesértékű elektronikus napló
+  * [[mayor-portal]] - iskolai portál, statikus részekkel, hírbeküldéssel, kiírással
+
+A sor ízlés, igény és energia függvényében bővíthető (játékok, naptár, képtár, stb).
+

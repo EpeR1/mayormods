@@ -1,0 +1,5 @@
+====== Nyelvek kezelése ======
+
+A nyelvek kezelésére a keretrendszer biztosít egy ''$lang'' nevű paramétert. A választható nyelvek listáját az ''include/config/main-config.php'' állomány tartalmazza. A teljes nyelvi támogatáshoz el kell készíteni a nyelvi fájlok adott nyelvű változatát - ezek a ''lang/$lang'' könyvtár alatt vannak -, valamint a [[menü]] és a [[hibakezelés]] adott nyelvű állományait.
+
+Amennyiben egy nyelvi álomány hiányzik, akkor a keretrendszer automatikusan az alapértelmezett nyelv megfelelő állományával helyettesíti. Ez a helyettesítés nem igaz a [[menü]] állományokra, mert előfordulhat, hogy a nyelvtől függően a menürendszer is változik.

@@ -1,0 +1,11 @@
+
+====== MaYoR elektronikus napló ======
+
+Teljes értékű, web-felületű elektronikus napló.
+
+===== Mit tud? =====
+
+  * Több tanév párhuzamos kezelése
+  * Csoportbontások teljeskörű kezelése
+  * stb
+

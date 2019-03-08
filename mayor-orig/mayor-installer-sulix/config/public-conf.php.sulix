@@ -1,0 +1,21 @@
+<?php
+
+// A kezdőlap beállítása
+// Ha a portál modult telepítjük:
+//    $DEFAULT_PSF['public']  = array('page'=>'portal', 'sub'=>'portal', 'f' => 'portal');
+// Illetve nélküle, csak napló modullal:
+    $DEFAULT_PSF['public']  = array('page'=>'auth', 'sub'=>'', 'f' => 'login');
+
+$AUTH['public'] = array(
+    'skin' => 'sulix',
+    'backend' => 'file',
+    'authentication' => 'optional',
+    'onExpired' => 'force update',
+    'onDisabled' => 'refuse',
+    'accountAttrs' => array('mail'),
+
+    'file account file' => '/tmp/passwd',
+    'file group file' => '/tmp/group',
+);
+
+?>

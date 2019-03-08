@@ -1,0 +1,512 @@
+<?php
+     ## /texmf/fonts/tfm/jknappen/ec
+    function putTeXLapdobas() {
+        $return ='\\vfil\\eject';
+	return $return;
+    }
+    function TeX2($szoveg) {
+	/*o3=®u3=¶O3=ŽU3=–*/
+	$trans = array(
+			'õ' => "®",'Õ' => "Ž",
+			'û' => "¶",'Û' => "–");
+	return strtr($szoveg,$trans);
+    }
+
+
+    function putTeXTESZT() {
+	$return	 = '\font\kiskapitalis=eccc1000\nopagenumbers'."\n";
+	$return	 = '\font\jegy=ecrm0500';
+	$return	.= '\font\monot=ectt0600'."\n"; ##bx cc rm ss sx ti tt
+	$return .= '\hsize=21truecm\vsize=29.7truecm'."\n";    ## default 6.5 x 8.5in
+	$return .= '\hoffset=-2.54cm\voffset=-1in%'."\n"; ## default 1in, 2.54cm
+	$return .= '\pretolerance=10000%'."\n";
+	$return .= '\parindent=0pt\headline{}\footline{}%'."\n";
+
+	$T = Array(1,2,3,4,5,'2/3','3/4','4/5');
+	$return .= '\halign{';
+	
+	    $return .= '\hbox to 4cm{#}&\hbox to 1.5cm{#}&#&#&#&#&#&#&#&#&#&#&#&#\cr%'."\n";
+	for($j=1; $j<30; $j++) {
+	    $return .= $j.'számítástechnika\ &';
+	    for ($i=1; $i<=10; $i++) {
+		$return .= '\vbox{';
+		for ($k=1; $k<=3; $k++) {
+		    $dex = rand(0,7);
+		    $return .= '\hbox{\jegy\hfil\ ';
+		    $return .= $T[$dex].' ';
+		    $dex = rand(0,7);
+		    $return .= $T[$dex].' ';
+		    $dex = rand(0,7);
+		    $return .= $T[$dex];
+		    $return .= '\ \hfil}\hrule height0pt';
+		}
+		$return .= '\hrule}';
+		$return .= '\vrule&';
+	    }
+	    $return .= '\cr';
+	}
+	$return .= '}%'."\n";
+	$return .= 'HELLO --- ...';
+	return $return;    
+    }
+
+    function putTeXEtikett($ADATOK) {
+	$return	 = '\font\kiskapitalis=eccc1000\nopagenumbers'."\n";
+	$return	.= '\font\monot=ectt0800'."\n"; ##bx cc rm ss sx ti tt
+	$return .= '\hsize=21truecm\vsize=29.7truecm'."\n";    ## default 6.5 x 8.5in
+	$return .= '\hoffset=-2.54truecm\voffset=-3.4truecm%'."\n"; ## default 1in, 2.54cm
+	$return .= '\pretolerance=10000%'."\n";
+	$return .= '\parindent=0pt\headline{}\footline{}%'."\n";
+
+	for ($j=0; $j<ceil(count($ADATOK) / 16); $j++) {
+	$return .= '\halign{\hbox to 105mm{#}&\hbox to 105mm{#}\cr%'."\n";
+	$return .= '\noalign{\hrule}%'."\n";
+	    for($i=0;$i<16;$i++) {
+		$index = $j*16 + $i;
+		$return .= '\vbox to 37mm{\vfill';
+		    $return .= '\hbox to 105mm{{\monot\ \ '.$ADATOK[$index]['OM'].'-'.$ADATOK[$index]['id'].'}}';
+		    $return .= '\hbox to 105mm{\hfill{\bf '.$ADATOK[$index]['nev'];
+		    if ($ADATOK[$index]['nev']!='') $return .= ' és Szülei'.'}\hfill}';
+		    else $return .= '}\hfill}';
+		    $return .= '\vskip3mm';
+			#$return .= '\hbox to 85mm{\hbox to 10mm{}{\monot'.$ADATOK[$index]['OM'].'}\hfill{'.$ADATOK[$index]['varos'].'}}';
+			$return .= '\hbox to 85mm{\hfill{'.$ADATOK[$index]['varos']  .'}}';
+			$return .= '\hbox to 85mm{\hfill{'.$ADATOK[$index]['utca']  .'}}';
+			$return .= '\hbox to 85mm{\hfill{'.$ADATOK[$index]['irsz'] .'}}';
+		    #$return .= '\vskip4mm';
+		$return .= '\vfill}';
+		if ($i%2==1) $return .= '\cr%'."\n" . '\noalign{\hrule height0pt}%'."\n";
+		else $return .= '&';
+	    }
+	$return .= '}';
+	$return .= '\vfill\eject%'."\n"; ## ezt kell kiszedni hogy ne legyen lapdobás
+	}
+
+	return $return;    
+    }
+    function putTeXEtikettIG($ADATOK) {
+	$return	 = '\font\kiskapitalis=eccc1000\nopagenumbers'."\n";
+	$return	.= '\font\monot=ectt0800'."\n"; ##bx cc rm ss sx ti tt
+	$return .= '\hsize=21truecm\vsize=29.7truecm'."\n";    ## default 6.5 x 8.5in
+	$return .= '\hoffset=-2.54truecm\voffset=-3.4truecm%'."\n"; ## default 1in, 2.54cm
+	$return .= '\pretolerance=10000%'."\n";
+	$return .= '\parindent=0pt\headline{}\footline{}%'."\n";
+
+	for ($j=0; $j<ceil(count($ADATOK) / 16); $j++) {
+	$return .= '\halign{\hbox to 105mm{#}&\hbox to 105mm{#}\cr%'."\n";
+	$return .= '\noalign{\hrule}%'."\n";
+	    for($i=0;$i<16;$i++) {
+		$index = $j*16 + $i;
+		$return .= '\vbox to 37mm{\vfill';
+		    ###$return .= '\hbox to 105mm{{\monot\ \ '.$ADATOK[$index]['OM'].' '.$ADATOK[$index]['id'].'}}';
+		    ###$return .= '\hbox to 105mm{\hfill{\bf '.$ADATOK[$index]['nev'];
+		    ###if ($ADATOK[$index]['nev']!='') $return .= ' és Szülei'.'}\hfill}';
+		    $return .= '\hbox to 105mm{\hbox to 10mm{}\vbox{\hsize=85mm\noindent{{\bf ';
+		    if (substr($ADATOK[$index]['nev'],-2)=='ja') $return .= substr($ADATOK[$index]['nev'],0,-2).'jának';
+		    elseif (substr($ADATOK[$index]['nev'],-2)=='ma') $return .= substr($ADATOK[$index]['nev'],0,-2).'mának';
+		    else $return .= $ADATOK[$index]['nev'];
+		    if ($ADATOK[$index]['nev']!='') $return .= ' Igazgatója'.'}}}}';
+		    else $return .= '}}}}';
+		    $return .= '\vskip3mm';
+			$return .= '\hbox to 85mm{\hbox to 10mm{}{\monot'.$ADATOK[$index]['OM'].'}\hfill{'.$ADATOK[$index]['varos'].'}}';
+			$return .= '\hbox to 85mm{\hfill{'.$ADATOK[$index]['utca']  .'}}';
+			$return .= '\hbox to 85mm{\hfill{'.$ADATOK[$index]['irsz'] .'}}';
+		    #$return .= '\vskip4mm';
+		$return .= '\vfill}';
+		if ($i%2==1) $return .= '\cr%'."\n" . '\noalign{\hrule height0pt}%'."\n";
+		else $return .= '&';
+	    }
+	$return .= '}';
+	$return .= '\vfill\eject%'."\n"; ## ezt kell kiszedni hogy ne legyen lapdobás
+	}
+
+	return $return;    
+    }
+
+    
+    function putTeXLevel($ADATOK) {
+
+	$return	 = '\font\kover=ecbx1200\font\alap=ecrm1200\font\kisebb=ecrm1000\font\kiskapitalis=eccc1200\nopagenumbers%'."\n";
+	####$return	.= '\font\kover=ectt1000%'."\n"; ##bx cc rm ss sx ti tt
+	$return .= '\hsize=6.5in\vsize=29.7truecm%'."\n";    ## default 6.5 x 8.5in
+	$return .= '\hoffset=-0in\voffset=-0.6in%'."\n";
+	$return .= '\pretolerance=10000'."\n";
+	$return .= '\parindent=0pt'."\n";
+	$return .= '\input epsf%'."\n";
+#	$return .= '\def\vmglogo{\epsfxsize=150pt\epsffile{/var/www-ssl-devel/img/ps/iskola.eps}}%'."\n";
+	$return .= '\def\tasai{\epsfxsize=100pt\epsffile{/var/www-ssl-devel/img/ps/tasaismall.eps}}%'."\n";
+
+	for($i=0;$i<count($ADATOK);$i++) {
+	    $cim_str = $ADATOK[$i]['varos'].' '.$ADATOK[$i]['irsz'].', '.$ADATOK[$i]['utca'];
+	    $return .= putTeXLevelFejlec($ADATOK[$i]['nev'], $ADATOK[$i]['an'], $ADATOK[$i]['szuldt'],$cim_str, $ADATOK[$i]['eredmeny'],$ADATOK[$i]['id']);
+	    $return .= putTeXLevelTorzs($ADATOK[$i]['nev'],$ADATOK[$i]['eredmeny'],$ADATOK[$i]['tagozatId']);
+	    $return .= putTexLapdobas();
+	}
+	return $return;	
+    }
+
+
+    function putTeXIGlevel($ADATOK,$TANULOK) {
+    
+	$return	 = '\font\kover=ecbx1200\font\alap=ecrm1200\font\kisebb=ecrm1000\font\kiskapitalis=eccc1200\nopagenumbers%'."\n";
+	####$return	.= '\font\kover=ectt1000%'."\n"; ##bx cc rm ss sx ti tt
+	$return .= '\hsize=6.5in\vsize=29.7truecm%'."\n";    ## default 6.5 x 8.5in
+	$return .= '\hoffset=0in\voffset=-0.6in%'."\n";
+	$return .= '\pretolerance=10000'."\n";
+	$return .= '\parindent=0pt'."\n";
+	$return .= '\input epsf%'."\n";
+	$return .= '\def\tasai{\epsfxsize=100pt\epsffile{/var/www-ssl-devel/img/ps/tasaismall.eps}}%'."\n";
+
+	for($i=0;$i<count($ADATOK);$i++) {
+	    $cim_str = $ADATOK[$i]['varos'].' '.$ADATOK[$i]['irsz'].', '.$ADATOK[$i]['utca'];
+	    $db = $TANULOK[$ADATOK[$i]['OM']][0]['count']+$TANULOK[$ADATOK[$i]['OM']][1]['count'];
+if ($db == 0) {
+    echo 'Hiba: '.$ADATOK[$i]['OM'].'<hr>';
+    flush();
+    continue;
+}
+echo $ADATOK[$i]['OM'].'<hr>'; flush();
+	    $return .= putTeXIGLevelFejlec($ADATOK[$i]['nev'],$cim_str,$ADATOK[$i]['OM'],$db);
+	    $return .= putTeXIGLevelTorzs($TANULOK[$ADATOK[$i]['OM']],$db);
+	    $return .= putTexLapdobas();
+	}
+	return $return;	
+		
+
+    }
+
+    function putTeXIGLevelFejlec($nev,$cim,$iskola_kod,$db) {
+
+	global $IKTSZ;
+    
+	$return .= '\centerline{\epsfxsize=150pt\epsffile{/var/www-ssl-devel/img/ps/iskola.eps}}%'."\n";
+#	$return .= '\centerline{\vmglogo}}%'."\n";
+
+	$return .= '\centerline{\kiskapitalis Városmajori Gimnázium Budapest 1122, Városmajor u. 71.}%'."\n";
+	$return .= '\centerline{\kisebb Tel.: 214-1554, Fax: 214-1479, http://www.vmg.sulinet.hu/ e-mail: titkarsag@vmg.sulinet.hu}%'."\n";
+	$return .= '\hrule%'."\n";
+	
+	$return .= '%'."\n";
+
+	if ($db>10) $return .= '\vskip0.8cm';
+	else $return .= '\vskip2cm';
+	$return .= '\alap';
+
+	$return .= '\item{}Címzett: '.$nev.' Igazgatója';
+	$return .= '\item{}Postai cím: '.$cim;
+	$return .= '\item{}Iktatószám: '.$IKTSZ['igazgatói'].' ('.$iskola_kod.')%'."\n";
+	$return .= '\vskip0.8cm';
+	$return .= '{{\kover Tárgy}: {\sl Értesítés '.$db.' tanuló felvételi eredményérõl}}';
+
+	$return .= '%'."\n";
+    
+	return $return;
+    
+    }
+
+    function putTeXIGLevelTorzs($TANULOK,$db) {
+    
+	global $OSZTALY;
+    
+	if ($TANULOK[1]['count']>0) {
+	    $ok=true;
+	    if ($TANULOK[1]['count']>1) {$ok_str='k nyertek';} else {$ok_str=' nyert';}
+	} else { $ok= false; }
+	if ($TANULOK[0]['count']>0) {
+	    $nem=true;
+	    if ($TANULOK[0]['count']>1) {$nem_str='k nem nyertek';} else {$nem_str=' nem nyert';}
+	} else { $nem= false; }
+    
+	if ($db>10) { 	$return	= '\vskip0cm';
+			$return	.= '{\parskip=20pt%'."\n"; 
+	} else {
+	 	$return	= '\vskip1cm';
+		$return	.= '{\parskip=30pt%'."\n"; 
+	}
+	$return	.= '\baselineskip=16pt%'."\n";
+
+	$return .= '\par '.'Kedves Igazgató Kolléga!\par%'."\n";
+
+	if ($ok) {
+	    $return .= 'Értesítem, hogy az Önök iskolájából az alábbi tanuló'.$ok_str.' felvételt gimnáziumunkba:\par%'."\n";
+
+	    ########## Felvettek:
+		$return .= '\vskip0.5cm';
+		$return .= '\halign{\hbox to 2cm{\hfill#}&{\kisebb\ #\hfil}&{\ #\hfill}&{\ #\hfill}\cr';
+		for($i=0; $i<$TANULOK[1]['count']; $i++) {
+		    $return .= '&';
+		    $return .= $TANULOK[1][$i]['nev'].'&';
+		    $return .= '{\tt ('.str_replace('-','.',$TANULOK[1][$i]['szul']).'.)}&';
+		    $return .= '{\sl '.$OSZTALY[$TANULOK[1][$i]['tagozatId']].'}';
+		    $return .= '\cr%'."\n";
+		}
+		$return .= '}';
+	    
+	    ### Ennél bonyolultabban már nehezen lehettett volna csinálni...
+	    if ($nem) $return .= 'Egyúttal s';
+	} elseif ($nem) {
+	    $return .= 'S';
+	}
+	
+	if ($nem) {
+	    $return .= 'ajnálattal tájékoztatom, hogy az alábbi tanuló'.$nem_str.' felvételt:\par%'."\n";
+	    ########### Fel nem vettek:
+		$return .= '\vskip0.5cm';
+		$return .= '\halign{\hbox to 2cm{\hfill#}&{\kisebb\ #\hfil}&{\ #\hfill}\cr';
+		for($i=0; $i<$TANULOK[0]['count']; $i++) {
+		    $return .= '&';
+		    $return .= $TANULOK[0][$i]['nev'].'&';
+		    $return .= '({\tt '.str_replace('-','.',$TANULOK[0][$i]['szul']).'.})';
+		    $return .= '\cr%'."\n";
+		}
+		$return .= '}';
+	    
+	    ##------------------------
+	}
+
+	    $return .= 'Budapest, '._ERTESITES_DT.'}\par%'."\n";
+
+	    if ($db>10) $return .= '\vskip0.8cm';
+	    else $return .= '\vskip1.5cm';
+	    $return .= '\vbox{\hfill\hbox{\vbox{';
+		$return .= '\halign to 4cm{\hbox to 4cm{\hfil#\hfil}\cr';
+		    $return .= '\noalign{\hrule}\cr Szebedy Tas\cr{\kisebb\sl igazgató}\cr';
+		    #BP# $return .= '\noalign{\hrule}\cr Bärnkopf Péter\cr{\kisebb\sl igazgatóhelyettes}\cr';
+		$return .= '}';
+	    $return .= '}\hbox to 2cm{}}}';
+
+	    $return .= '%'."\n";
+
+	    return $return;
+    
+    }
+
+    function putTeXLevelFejlec($nev,$an,$szul_dt,$cim,$eredmeny,$id) {
+    
+	// config-ból
+	global $IKTSZ;
+    
+	$return .= '\centerline{\epsfxsize=150pt\epsffile{/var/www-ssl-devel/img/ps/iskola.eps}}%'."\n";
+#	$return .= '\centerline{\vmglogo}}%'."\n";
+
+	$return .= '\centerline{\kiskapitalis Városmajori Gimnázium Budapest 1122, Városmajor u. 71.}%'."\n";
+	$return .= '\centerline{\kisebb Tel.: 214-1554, Fax: 214-1479, http://www.vmg.sulinet.hu/ e-mail: titkarsag@vmg.sulinet.hu}%'."\n";
+	$return .= '\hrule%'."\n";
+	
+	$return .= '%'."\n";
+
+	$return .= '\vskip2cm\alap';
+
+	$return .= '\item{}Címzett: '.$nev.' és Szülei';
+	$return .= '\item{}Postai cím: '.$cim;
+	$return .= '\item{}Iktatószám: '.$IKTSZ[$eredmeny].' ('.$id.')%'."\n";
+	$return .= '\vskip0.8cm';
+	$return .= '{{\kover Tárgy}: {\sl Értesítés '.$nev.' (';
+	    if ($an!="") $return .= 'a.n.: '.$an.', ';
+	$return .= 'szül.: '.str_replace('-','.',$szul_dt).'.) felvételi eredményérõl}}';
+
+	$return .= '%'."\n";
+    
+	return $return;
+    
+    }
+
+
+    function putTeXLevelTorzs($nev,$eredmeny,$tagozatId) {
+    
+	global $OSZTALYABA;
+
+	list($veznev,$kernev,$kernev2) = explode(' ',$nev);
+
+	$return	= '\vskip1cm';
+	$return	.= '{\parskip=30pt%'."\n"; 
+	$return	.= '\baselineskip=16pt%'."\n";
+
+
+	$return .= '\par '.'Kedves Kisdiák! Tisztelt Szülõ!\par%'."\n";
+
+	if ($eredmeny>=3) {
+	    $return .= '%
+
+\par Örömmel értesítem, hogy '.$nev.' tanuló az általános iskolai eredménye és a felvételi vizsgán mutatott teljesítménye alapján (az OKÉV által megküldött végleges listák szerint)
+\par \hfil {felvételt nyert}\hfill%
+\par a Városmajori Gimnázium {\kover '.$OSZTALYABA[$tagozatId].'}.
+\par Tájékoztatom, hogy az elsõ szülõi értekezlet '._SZULOI_ERTEKEZLET_IDOPONBAN.' lesz, amelyre ezúton hívom meg a Szülõket.
+\par Hogy a család számára a nyári programtervezést megkönnyítsük, elõre jelezzük, hogy a gólyatábor várható idõpontja '._GOLYATABOR_IDOPONT.' lesz.
+\par Remélem, az iskolánkban eltöltött évek hasznosak és eredményesek lesznek.\par%'."\n";
+
+	} elseif ($eredmeny==2) {
+
+	    $return .= 'Sajnálattal vettük tudomásul, hogy '.$kernev.' másik iskolát választott, ezért nem vehettük fel %
+a Városmajori Gimnáziumba.\par%'."\n";
+	    $return .= 'Remélem, hogy a választása jó döntésnek fog bizonyulni. Sikeres tanulmányi éveket és minden jót kívánok! \par%'."\n";
+
+	} elseif ($eredmeny==1) {
+
+	    $return .= 'Sajnálattal értesítem, hogy '.$nev.' tanuló a felvételi vizsgán megfelelt, de helyhiány miatt nem nyert felvételt gimnáziumunkba.\par%'."\n";
+	    $return .= 'A Szülõ e döntés ellen jogorvoslati lehetõséggel (a kézhezvételtõl számított 15 napon belül) akkor élhet, ha az utolsó helyen megjelölt iskola elutasító értesítése megérkezett. Jogorvoslati kérelmét az általános iskola igazgatójának kell benyújtani. Felhívom figyelmét arra, hogy ebben az esetben célszerû elhelyezési kérelmet benyújtani a Fõvárosi Önkormányzat Oktatási Ügyosztályán a Beiskolázási Irodában. (Budapest, V. Városház u. 9-11.)\par%'."\n";
+
+	} elseif ($eredmeny==0) {
+	
+	    $return .= 'Sajnálattal értesítem, hogy '.$nev.' tanuló az általános iskolai eredménye és a felvételi vizsgán mutatott teljesítménye alapján (az OKÉV által megküldött végleges listák szerint) nem nyert felvételt gimnáziumunkba.\par%'."\n";
+	    $return .= 'A Szülõ e döntés ellen jogorvoslati lehetõséggel (a kézhezvételtõl számított 15 napon belül) akkor élhet, ha az utolsó helyen megjelölt iskola elutasító értesítése megérkezett. Jogorvoslati kérelmét az általános iskola igazgatójának kell benyújtani. Felhívom figyelmét arra, hogy ebben az esetben célszerû elhelyezési kérelmet benyújtani a Fõvárosi Önkormányzat Oktatási Ügyosztályán a Beiskolázási Irodában. (Budapest, V. Városház u. 9-11.)\par%'."\n";
+
+	} else {
+
+	}
+
+	    $return .= 'Budapest, '._ERTESITES_DT.'}\par%'."\n";
+
+	    $return .= '\vskip1.5cm\vbox{\hfill\hbox{\vbox{';
+		$return .= '\halign to 4cm{\hbox to 4cm{\hfil#\hfil}\cr';
+		if ($eredmeny<3) {
+		    $return .= '\tasai\cr';
+		    $return .= '\noalign{\hrule}\cr Szebedy Tas\cr{\kisebb\sl igazgató}\cr';
+		} else {
+		    ###$return .= '\noalign{\hrule}\cr Bärnkopf Péter\cr{\kisebb\sl igazgatóhelyettes}\cr';
+		    $return .= '\noalign{\hrule}\cr Szebedy Tas\cr{\kisebb\sl igazgató}\cr';
+		}
+		$return .= '}';
+	    $return .= '}\hbox to 2cm{}}}';
+
+	    $return .= '%'."\n";
+
+	    return $return;
+    }
+
+
+
+
+
+
+
+
+
+    function putTeXIGiktatas($ADATOK,$TANULOK) {
+    
+	$return	 = '\font\kover=ecbx1200\font\alap=ecrm1200\font\kisebb=ecrm1000\font\kiskapitalis=eccc1200\nopagenumbers%'."\n";
+	####$return	.= '\font\kover=ectt1000%'."\n"; ##bx cc rm ss sx ti tt
+	$return .= '\hsize=6.5in\vsize=29.0truecm%'."\n";    ## default 6.5 x 8.5in
+	$return .= '\hoffset=-0.8in\voffset=-0.8in%'."\n"; ## -0.6
+	$return .= '\pretolerance=10000'."\n";
+	$return .= '\parindent=0pt'."\n";
+	$return .= '\input epsf%'."\n";
+
+	$return .= '\kover{Igazgatói levelek '._FELVETELI_EVE.'.}\bigskip'."\n";
+
+	$return .= '\kisebb\halign{{#\ }&#\ \hfil&#\hfil&#\hfil\cr%'."\n";
+	$return .= '\kover OM-kód&\kover Megnevezés&\kover Cím&\cr%'."\n";
+	
+	for($i=0;$i<count($ADATOK);$i++) {
+	    $cim_str = $ADATOK[$i]['varos'].' '.$ADATOK[$i]['irsz'].', '.$ADATOK[$i]['utca'];
+	    $db = $TANULOK[$ADATOK[$i]['OM']][0]['count']+$TANULOK[$ADATOK[$i]['OM']][1]['count'];
+	    
+	    #$return .= putTeXIGLevelFejlec($ADATOK[$i]['nev'],$cim_str,$ADATOK[$i]['OM'],$db);
+	    $return .= $ADATOK[$i]['OM'];
+	    $return .='&';
+	    $return .= substr($ADATOK[$i]['nev'],0,50);
+	    $return .='&';
+	    $return .= $cim_str;
+	    $return .='&';
+	    $return .='\cr%'."\n";
+	}
+	$return .='}';
+	
+	return $return;	
+		
+
+    }
+
+
+
+    function putTeXiktatas($ADATOK) {
+
+	$KODOK = Array(11=>'+A+angol',
+	    12=>'+B+német',
+	    3=>'+C+ének-zene',
+	    4=>'+C+magyar',
+	    5=>'+D+matematika',
+	    6=>'+D+szt/bio',
+	    0=>'-NEM',
+	    1=>'-HH-NEM',
+	    2=>'*más'
+	);
+    
+	$return	 = '\font\kover=ecbx1200\font\alap=ecrm1200\font\kisebb=ecrm1000\font\kiskapitalis=eccc1200\nopagenumbers%'."\n";
+	####$return	.= '\font\kover=ectt1000%'."\n"; ##bx cc rm ss sx ti tt
+	#$return .= '\hsize=6.5in\vsize=29.7truecm%'."\n";    ## default 6.5 x 8.5in
+	$return .= '\hsize=6.5in\vsize=29.0truecm%'."\n";    ## default 6.5 x 8.5in
+	$return .= '\hoffset=-0.8in\voffset=-0.8in%'."\n"; ## -0.6
+	$return .= '\pretolerance=10000'."\n";
+	$return .= '\parindent=0pt'."\n";
+	$return .= '\input epsf%'."\n";
+
+	$return .= '\kisebb\halign{{#\ }&\ #\ &#\ \hfil&#\hfil&#\ &#\hfil\cr%'."\n";
+
+	for($i=0;$i<count($ADATOK);$i++) {
+	    $cim_str = $ADATOK[$i]['varos'].' '.$ADATOK[$i]['irsz'].', '.$ADATOK[$i]['utca'];
+	    $db = $TANULOK[$ADATOK[$i]['OM']][0]['count']+$TANULOK[$ADATOK[$i]['OM']][1]['count'];
+	    
+	    $return .= $KODOK[$ADATOK[$i]['vegeredmeny']];
+	    $return .='&';
+	    $return .= $ADATOK[$i]['evfolyam'];
+	    $return .='&';
+	    $return .= $ADATOK[$i]['nev'];
+	    $return .='&';
+	    $return .= $ADATOK[$i]['an'];
+	    $return .='&';
+	    $return .= $ADATOK[$i]['OM'];
+	    $return .='&';
+	    $return .= $cim_str;
+	    $return .='\cr%'."\n";
+	}
+	$return .='}';
+	
+	return $return;	
+		
+
+    }
+
+
+
+
+
+
+
+
+
+
+/*
+
+Budapest, 2003. május 6.
+
+Kedves Kisdiák! Tisztelt Szülõ!
+
+*/
+
+	/* MANUAL
+	TeX bekezdések:
+	    \par vagy legalább egy üres sor	új bekezdést kreál
+	    \parindent=<dimen>			új bekezdés elsõ sorának behúzása a szedéstükörtõl
+	    \noindent
+	    \parindent=0pt			egész dokumentumra nincs behúzás
+	    \baselineskip=12pt plus<> minus<>	bekezdésen belüli sorok baseline távolsága
+	    \lineskiplimit=0pt			ha ennél kisebb a távolság, akkor \lineskip méretû ragasztó lesz beszúrva
+	    \lineskip=1pt			minimális két sor közti távolság
+	    
+	    \parskip=0pt plus1pt minus<>	minden bekezdés közti sortávolság a \baselineskip-hez képest
+						mennyivel legyen nagyobb (baselineok távolsága)
+	    \leftskip=<>			egy bekezdést húz beljebb
+	    === \narrower pl {\narrower Ez egy bekezdés\par}
+	    \item{<jel>}<szöveg>		\parindenttel lesz beljebb
+	    \itemitem{<jel>}<szöveg>
+	    
+	    \centerline{}, \rightline{}		
+
+	    \input epsf 
+	    \epsfxsize=<dimen>
+	    \epsffile{filename.ps}
+	*/    
+
+
+?>

@@ -1,0 +1,77 @@
+====== MaYoR Hungary - Tanúsítvány hitelesítő ======
+
+Saját gyakorlatunkból jól ismerjük a self-signed tanúsítványokkal járó kellemetlenségeket. A böngészőket rá kell beszélni az általuk borzasztóan veszélyesnek ítélt oldalhoz való csatlakozásra, ráadásul ezt a lépéssort a felhasználóink számára is - ha nem is érthetővé - legalább elfogadhatóvá kell tennünk, miközben a böngészők - amúgy teljesen jogosan - egyre drasztikusabb figyelmeztetéseket küldenek feléjük.
+
+
+===== Megoldási lehetőségek =====
+
+Az igazán jó megoldás nyilván egy tisztességes tanúsítvány beszerzése lenne, hazánkban talán a [[http://www.netlock.net/|NetLock]] által hitelesített tanúsítványok beszerzése a legegyszerűbb, de nem jellemző, hogy a magyar középiskolák tömegével szereznének be ilyet, ha találhatnak más - bár kétség kívül kevésbé biztonságos - megoldást is.
+
+Köztes megoldás lehet, ha csatlakozunk a [[http://www.cacert.org/|CAcert.org]]-hoz - de mi nem ismerjük részleteiben ezt a kezdeményezést, nem vettük a fáradságot, hogy megismerjük, így ajánlani nem tudjuk - ha valaki tud róla bővebbet, írjon róla nekünk - lehet, hogy jó megoldás.
+
+A mi alternatívánk egy általunk (MaYoR Hungary) hitelesített tanúsítvány kiadása.
+
+===== MaYoR Hungary CA =====
+
+<del>Igény esetén az elküldött adatok alapján készítünk MaYoR Hungary által aláírt tanúsítványt.</del>
+
+[color=red]** >> Ezt a szolgáltatást megszüntettük. << **[/color]
+
+[color=#bbbbbb]
+==== Mi előnye van? ====
+Ez a megoldás nem sokban tér el a ''self-signed'' tanúsítvány alkalmazásától. Kicsivel talán növeli a hitelességet, hogy nem az adott szerveren generált kulcsot használunk - a szerver egy tőlünk kapott tanúsítványt mutat fel, ami annyit jelent, hogy legalábbis fel kellett vegye velünk a kapcsolatot a szerver telepítője, ennek vannak nyomai, legalább egy email cím, vagy telefonszám. A hitelesítést ennél mélyebben nem tudjuk biztosítani (nem megyünk el "családlátogatásra", nem kérünk hivatalos iratokat a bejegyzéshez, mint a komoly tanúsítvány hitelesítő cégek).
+
+A másik, hogy elegendő a MaYoR Hungary "szervezetet" elfogadtatni a böngészővel, mint megbízható hitelesítő szerv - ez kevésbé ijesztő folyamat és [[http://www.mayor.hu/installca.php|néhány kattintást igényel csak]], viszont nyilvánvalóan bizalmi kérdés. Akik elfogadnak minket megbízható hitelesítőként, azoknak a továbbiakban semmilyen gondot nem fog okozni a MaYoR rendszerhez való csatlakozás, sem most, sem a jövőben kiállított újabb tanúsítványok esetén. Aki túl kockázatosnak tartja ezt a bizalmi lépést, az továbbra is úgy járhat el, mint ahogy azt a ''self-signed'' tanúsítványokkal tette.
+
+==== Milyen adatokra van szükség a tanúsítvány kiállításához? ====
+
+A következő adatokat kell eljuttatni hozzánk (mondjuk a support(a)mayor.hu címre) tanúsítvány igényléséhez:
+
+  * Megye, régió
+  * Város
+  * Intézmény név
+  * Szervezeti egység
+  * Web szerver neve
+  * Email cím
+
+Az elküldött adatok alapján három állományt generálunk: jelszóval védett kulcsot, jelszó
+nélküli kulcsot és tanúsítványt. Ha az intézmény rövid neve pl ''rovidnev'', akkor:
+
+       rovidnev.key.pem
+       rovidnev.key.pem.unsecure
+       mayor.rovidnev.sulinet.hu.cert.pem
+
+A két kulcs közül csak az egyiket kell használni. A különbség, hogy a
+jelszóval védett kulcs használata esetén a web-szerver indításakor
+mindig be kell írni a jelszót. Ez kényelmetlen, de a kulcs így nagyobb
+biztonságban van. Ha ezzel nem akarunk minden indításkor foglalkozni,
+akkor használjuk bátran a *.unsecure kulcsot (eddig is ilyet használt
+mindegyikünk).
+
+A három állományt valamilyen egyeztetett úton-módon eljuttatjuk a szerverre (nem email-ben,
+inkább scp-vel).
+
+
+==== A tanúsítvány telepítése ====
+
+A három állományt másoljuk be a /etc/apache2/ssl köyvtárba (ha nincs ilyen könyvtár, akkor hozzuk létre)!
+
+Szerkesszük a /etc/apache2/sites-enabled/mayor állományt:
+
+       SSLCertificateFile /etc/apache2/ssl/mayor.rovidnev.sulinet.hu.cert.pem
+       SSLCertificateKeyFile /etc/apache2/ssl/rovidnev.key.pem.unsecure
+
+A régi bejegyzéseket # jellel kommentezzük ki, vagy a korábbi állományt mentsük el - hátha valami miatt vissza akarunk térni a korábbi változatra...
+
+Indítsuk újra a web-szervert
+
+       /etc/init.d/apache2 restart
+
+==== A böngésző beállítása ====
+
+Ha fel szeretnénk venni a MaYoR Hungary "szervezetet" a megbízható tanúsítvány hitelesítők közé, akkor a böngészőnkkel látogassunk el a [[http://www.mayor.hu/installca.php]] oldalra és nyomjuk meg az Install gombot. Elegendő a web-helyek hitelesítését engedélyezni a megjelnő ablakban.
+
+Ha ezt a lépést nem kívánjuk megtenni, akkor a webszerverhez való következő csatlakozáskor fogadhatjuk el ideiglenesen, vagy hosszútávra az új tanúsítványt - ahogy azt az ön-aláírt tanúsítványokkal tettük.
+
+Ezzel el is készültünk.
+[/color]

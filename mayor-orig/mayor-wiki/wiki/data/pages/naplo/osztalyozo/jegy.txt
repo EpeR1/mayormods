@@ -1,0 +1,29 @@
+====== Jegy módosítása ======
+
+Ezen a lapon tekinthetjük egy-egy osztályzat részletes adatait:
+  * ki kapta a jegyet
+  * melyik tankörben
+  * milyen osztályzatot kapott
+  * milyen típusú számonkérésen
+  * mikor
+  * milyen megjegyzést fűztek a jegyhez
+  * melyik órához lett hozzárendelve a számonkérés
+  * mely dolgozathoz tartozik a jegy - amennyiben csoportos jegyről van szó
+
+
+
+
+===== Jegy és adatainak módosítása =====
+
+Jegyet módosíthat az adminisztrátor, ha a tanév nincs lezárve, illetve a jegy tanköréhez tartozó szaktanár - az épp folyó tanév során.
+
+Amennyiben van jogosultságunk a jegy módosítására (adminisztrátorok, vagy az adott tankör tanárai vagyunk), akkor az adatokat megváltoztathatjuk. A módosítások után a "Rögzít" gomb megnyomásával véglegesíthetjük a módosításokat.
+
+A diák nevére kattintva megnézhetjük az ő osztályzatainak összesítését ([[diak|Diák osztályzatai]]).
+
+Csoportos jegy esetén a "dolgozat" feliratva kattintva eljuthatunk a dolgozat adatainak kezeléséhez ([[naplo:osztalyozo:dolgozat|Dolgozatok kezelése]]).
+
+
+===== Jegy törlése =====
+
+Jegyet törölni a "Töröl" gomb megnyomásával, vagy a jegy típusának "törölt"-re állításával lehet.

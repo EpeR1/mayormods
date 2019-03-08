@@ -1,0 +1,7 @@
+====== Intézmény és tanév választás ======
+
+A MaYoR elektronikus napló képes több intézmény több tanévének egyidejű kezelésére. A gyakorlatban persze általában egy intézmény épp aktuális tanévének adataival dolgozunk, de néha szükség lehet korábbi évek adataira is.
+
+A válthatóság feltétele, hogy a tanév státusza 'aktív', vagy 'lezárt' legyen, a 'tervezett' státuszú tanév adatbázisa még nem áll rendelkezésre, így ilyet nem választhatunk ki.
+
+A 'lezárt' státuszú tanév adatai nem módosíthatók, míg az 'aktív' státusz esetén a felhasználó besorolása (diák, tanár, vezetőségi tag, adminisztrátor, titkársági dolgozó) és a módosítási határidők szabják meg, hogy az adatok változtathatók-e.

@@ -1,0 +1,10 @@
+<?php
+	define('_ORVOSI','診断書');
+	define('_SZULOI','親の証明書');
+	define('_TANULMANYI_VERSENY','学校での競争');
+	define('_NYELVVIZSGA','試験言語');
+	define('_OSZTALYFONOKI','フォームの教師の証明書');
+	define('_IGAZGATOI','校長の証明書');
+	define('_IGAZOLATLAN','公称不在');
+	define('_TOROLT','削除された');
+?>

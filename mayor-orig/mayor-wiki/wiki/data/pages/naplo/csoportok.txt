@@ -1,0 +1,27 @@
+====== Csoportok áttekintése ======
+
+A felhasználók jogosultságai a csoporttagságuktól függnek. A telepítés során alapértelmezett csoporttagságok jönnek létre. Ha valakinek több/kevesebb jogot akarsz, be/ki kell rakni egy új csoprotba/ból.
+
+  * legkevesebb joggal a **diák** rendelkezik. Csak és kizárólag a saját dolgait látja, még a testvért se, de anonim statisztikát (tantárgyi- és osztályátlagok, hiányzott órák száma, kitűnők, jelesek, bukások száma) láthat az egész iskoláról. Csak olvashat mindent, az Üzenőbe és a Hangyába írhat, kérdőívet tölthet ki (ha van), hírt küldhet be.
+
+  * kicsivel tágabb joggal rendelkezik a **szülő**. Csak a saját gyerekét/eit látja, és anonim statisztikát (tantárgyi- és osztályátlagok, hiányzott órák száma, kitűnők, jelesek, bukások száma) láthat az egész iskoláról. Csak olvashat mindent, az Üzenőbe és a Hangyába írhat, kérdőívet tölthet ki (ha van), hírt küldhet be, valamint jelentkezhet online fogadóórára.
+
+  * **tanár** (szaktanár): Csak a saját óráit (és a helyettesített órákat) írhatja be, csak ott tud hiányzókat, későket beírni, csak a saját tanköreiben adhat osztályzatot, csak a saját tanköreiben adhat bizonyítványjegyet, de mindent diák minden dolgát látja, névre szólóan. Az Üzenőbe és a Hangyába írhat, kérdőívet tölthet ki (ha van), hírt küldhet be.
+
+  * **osztályfőnök**: Ugyanaz a jog, mint a (szak)tanáré, de a saját osztályában a megadott határidőkig hiányzásokat egészíthet ki, igazolhat, félévi és év végi magatartás-szorgalomjegyet adhat. Nem módosíthatja a diákok adatait, az a titkárság feladata.
+
+  * **vezetőség**: Szinte mindenhez hozzáfér, a megadott határidőig (ZARASI_HATARIDO). Természetesen mindent lát, más menük is megjelennek, mint a többi felhasználónak, pl. Haladási elmaradások, Elszámolás, stb. Adhat igazgatói / nevelőtestületi dicséretet, intőt rovót, igazolhat igazgatói igazolással (de pl. osztályfőnökivel nem).
+
+  * **hírekadmin**: a beküldött híreket szerkesztheti, nyilvánossá teheti ([[portal:hirek:hirekadmin|Hírek]]).
+
+  * **üzenőadmin**: látja az összes üzenetet, törölheti őket.
+
+  * **naplóadmin**: a naplóban a legmagasabb jogosultsággal bíró felhasználói csoport. Vehet fel intézményt, tanévet, időszakokat, adhat a tanulóknak azonosítót, importálhat adatokat közvetlenül az egyes táblákba, betölthet órarendet,a félévi/év végi jegyeket módosíthatja, stb... Egyes tevékenységek az ő esetében is határidőhöz kötöttek azért...
+
+  * **diákadmin**: a diákok jelszavának cseréjhez van jussa. Megkönnyítendő szegény admin életét, pl. az infótanároknak meg lehet adni ezt a jogot... :-)
+
+  * **titkárság**: módosíthatja a diákok adatait, tanév közben érkező, távozó dákok be-kiléptetése, jogviszonyok módosítása a feladata.
+
+  * **mayoradmin**: az alapértelmezett naploadmin csoportban is benne lévő felhasználó.
+
+A jogosultságokkal csínján bánjunk! Ha indokolatlanul a kelleténél nagyobbra nyitjuk a hozzáférést, csak több gubanc lesz... (pl. az osztályfőnökök szeretnék a diákok adatait (lakcím, telefonszám, stb.) módosítani, megoldható, de ezzel nemcsak ezekhez fognak hozzáférni, hanem pl. jogviszonyokhoz, szülői hozzárendelésekhez... Óhatatlanul is, de hibalehetőségek tárházát nyitjuk meg - a végén úgyis a mayoradmin-nak kell mindent rendbetenni... :-D

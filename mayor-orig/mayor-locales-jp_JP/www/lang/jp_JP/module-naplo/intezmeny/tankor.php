@@ -1,0 +1,24 @@
+<?php
+	define('__PAGETITLE','研究グループ');
+	define('_MEGJELOLTIDOSZAKBANTANAR','先生は、期間');
+	define('_TANKOR','研究会');
+	define('_ELNEVEZES','名前');
+	define('_TIPUS','タイプ');
+	define('_VALASZTHATO','選択可能な');
+	define('_IGEN','はい');
+	define('_NEM','いいえ');
+	define('_KOVETELMENY','要件');
+	define('_JELENLET','プレゼンス');
+	define('_JEGY','グレード');
+	define('_ALAIRAS','署名');
+	define('_KOTELEZO','必須');
+	define('_NEMKOTELEZO','強制しない');
+	define('_SZEMESZTEREK','学期');
+	define('_SZEMESZTER','学期');
+	define('_HETI_ORASZAM','1週間あたりのレッスン');
+	define('_OSZTALYJELE','マークのクラス');
+	define('_LEIRAS','説明');
+	define('_VEGLEGES_TORLES','恒久的な公開');
+	define('_RESZTVEVO_OSZTALYOK','授業に出席');
+	define('_TANKORDIAK','研究グループのメンバーは');
+?>

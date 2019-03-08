@@ -1,0 +1,22 @@
+====== Fogadóóra ======
+
+Gyakori probléma az iskolákban, hogy a szaktanárok fogadóóráján káosz alakul ki: egyes tanárok ajtaja előtt kígyózó sorok várnak, mások viszont "üresjáratban" vannak. Az is előfordul, hogy egy-egy beszédesebb szülő vagy tanár elcsúszik a rá kiszabott idővel, így a többi szülő kénytelenek várakozni.
+
+Ezt a helyzetet (is) igyekszik a napló humánusabbá tenni: a szülőknek lehetőségük van a gyermeküket tanító tanárokhoz __előre megadott dátumra__, __előre megadott időpontra__ időpontot foglalni (akárcsak a különféle "nagy" hivatalokban...)
+
+Első lépés, hogy meg kell állapítani, mennyi is legyen a fogadóórán egy vizit hossza (alapértelmezésben 10 perc). A megadott érték 60 valamely pozitív osztója kell legyen! Módosítani a ///var/mayor/config/module-naplo/config_[iskolarovidneve]// állományban lehet.
+
+Ezek után a //mayoradmin// vagy a //vezetőség// a **Napló/Fogadóóra** menüpontban kijelöli a soron következő fogadóóra időpontját, időtartamát (tanáronként állítható) és helyszíneit.
+
+Fontos adminisztrátori teendő még a „Fogadóóra jelentkezés” időszak létrehozása a Napló/Admin/Szemeszterek menüpontban. Ez az az időszak, amikor a szülőknek lehetőségük van az időpontfoglalásra. Az időszak végének meghatározását jól fontoljuk meg, mivel az időszak lejárta után a szülő nem tudja megnézni, hogy kihez mikorra jelentkezett!
+
+A "Fogadóóra jelentkezés" időszakban a szülők a saját felületükön a **Napló/Fogadóóra** menüben választhatják ki, hogy mely időpontra, melyik (gyereküket tanító) tanárhoz foglalnak maguknak időpontot. A már lefoglalt vizitek passzívak, így a keveredés kizárva.
+
+A tanárok a saját felületükön a **Napló/Fogadóóra** menüpontban már láthatják, ki jelentkezett be hozzájuk (és természetesen mely időpontra). A szülők neve mögött szerepel a gyerek neve is, a könnyebb azonosíthatóság kedvéért.
+
+A fogadóóra tényleges időpontját elérve a lista nyomtatható:
+  * a tanár és a szülő a saját felületén a saját beosztását;
+  * a mayoradmin vagy a vezetőség az összes tanár fogadóóra-rendjét közvetlenül vagy PDF-be
+tudja nyomtatni (utóbbit pl. a terem ajtókra ki lehet függeszteni).
+
+A fenti módszert követve gyorsabb, követhetőbb a fogadóórák rendje és lezajlása, jobban szabályozhatók az elhúzódó, késő estékbe nyúló megbeszélések, a tanárok "lyukas", be nem táblázott időpontjaikban pedig fogadhatják a be nem jelentkezett szülőket.  

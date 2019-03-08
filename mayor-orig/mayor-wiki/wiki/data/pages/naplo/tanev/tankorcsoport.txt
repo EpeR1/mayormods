@@ -1,0 +1,26 @@
+====== Tankör csoportok ======
+
+Két tankör akkor kerülhet egy tankörcsoportba, ha azonos a névsoruk.
+
+
+==== Hol használjuk a tankör csoportokat? ====
+
+  * A tankörnévsorok módosításakor elég egy tankörcsoport egyik tankörében elvégezni a szükséges módosításokat (tanuló felvétele, illetve kiléptetése), a tankörcsoport többi tankörében a módosításokat a program automatikusan elvégzi.
+
+  * A haladási naplóban az azonos tanár által tanított, egy tankörcsoportba tartozó tankörök között lehet váltania a szaktanárnak. Például egy magyartanár választhat, hogy irodalom, vagy nyelvtanórát tart-e, ha a két tankör egy csoportba tartozik. Vagy egy osztályfőnök, aki egész osztályos csoportban történelemtanára is az osztályának, akkor választhat, hogy történelem, vagy osztályfőnöki órát tart egy adott időpontban.
+
+===== Új tankörcsoport =====
+
+Új tankörcsoport felvételéhez adjunk egy (lehetőleg egyedi) nevet a csoportnak és jelöljük meg a csoporthoz tartozó tanköröket. A rendszer csak akkor veszi fel az új csoportot, ha a megjelölt tankörök névsorai megegyeznek. Épp ezért - ha elsőre nem sikerül a csoport felvétele - érdemes először egy tankörrel felvenni a csoportot, majd újabb tanköröket hozzávenni - így kiszűrhető a hiba.
+
+===== Tankörcsoport módosítás =====
+
+Módosíthatjuk a tankörcsoport nevét, és a tankörcsoportba tartozó tankörök listáját. A lista bővítésekor szokás szerint a Ctrl gombot nyomva tartva kattinthatunk a hozzáadandó (vagy épp eltávolítandó) tankörök nevére.
+
+Ha az új lista ütköző tanköröket tartalmaz, akkor a korábbi tankörlista áll vissza.
+
+A ''Tankörök'' felirat mellett, a jobb felső sarokban található ''x''-re kattintva törölhetjük a tankörcsoportot (a benne szereplő tankörök természetesen sértetlenül megmaradnak, csak a csoportosítást töröljük ilyenkor).
+
+===== Tankörcsoportok keresése =====
+
+Ez a funkciót akkor használhatjuk, ha a tankörök névsora már adott és e névsorok alapján szeretnénk tankörcsoportokat kialakítani. A legtöbb esetben erre nincs szükség, hisz épp azért vesszük fel a tankörcsoportokat, hogy a tagok felvételét megkönnyítsük, meggyorsítsuk.

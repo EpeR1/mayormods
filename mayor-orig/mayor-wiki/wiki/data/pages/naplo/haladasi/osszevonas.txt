@@ -1,0 +1,31 @@
+====== Összevonás ======
+
+Bizonyos esetekben a [[helyettesítés]] oldalon nehéz kiírni az összevonásokat. Ezek kezelésére született ez az oldal.
+
+===== A probléma bemutatása - Példa =====
+
+Tegyük fel, hogy a 10.a osztályban Gipsz Jakab tanár úr tartja a matematika órákat csoportbontásban: 10.a matematika A1 és 10.a matematika A2 csoportok számára. Amikor az egyik csoportnak ő matematikát tart, addig a másik csoport más órán vesz részt, egyik nap például informatikán.
+
+Ha most hiányzik az informatika tanár, akkor előfordulhat, hogy szeretnénk egy összevont, egész osztályos matematika órát kiírni, másképp fogalmazva a második csoportnak informatika helyett egy - az első csoporttal összevont - matematika órát szeretnénk felvenni.
+
+Ezt a szituációt a következő módon kellett eddig kezelni:
+  * az informatika órát állítsuk 'elmarad' státuszúra
+  * a matematika órát is állítsuk 'elmarad' státuszúra (hogy fel tudjuk venni a másik matematika órát)
+  * a 'Plusz óra' menüpontban vegyünk fel a második matematika tankörnek egy órát
+  * az első matematika tankör státuszát 'elmarad'-ról állítsuk át 'összevonás'-ra
+
+Ez a meglehetősen nehézkes lépéssor abból adódik, hogy a program az órák módosításakor próbál minden lehetséges ütközést kiszűrni, így például egy tanár számára nem vehetünk fel olyan időpontra plusz órát, amikor már van órája.
+
+===== Az új oldal használata =====
+
+Az 'Összevonás' menüpont alatt lehetőségünk van olyan összevonás egyszerű felvételére, melyben egy tanár két tankörének óráit vonjuk össze: egyik egy már bejegyzett óra, ami mellé most szeretnénk felvenni egy új órát.
+
+Az új óra felvétele magával vonja, hogy az abba tartozó diákok tanköreinek nem lehet az adott idópontban órája - így ezeket a program - figyelmeztetés után - 'elmarad' státuszúvá teszi.
+
+Első lépésként az eszközsoron válasszuk ki a kívánt dátumot, majd a megjelenó legördülő listából az órát is.
+Ezek után választhatjuk ki a tanárt - azon tanárok közül, akiknek a megjelölt időpontban már van órája.
+
+A tanár kiválasztása után megjelennek a tanár adott napi órái, és egy újabb legördülő listában a tanár tankörei.
+Válasszuk ki a felveendő óra tenkörét (ne a már bejegyzett óra tanköre legyen!).
+
+A tankör kiválasztása után a program lekérdezi azokat a tanköröket melyekkel ütközne a felveendő új óra - ezeket kilistázza a képernyőre. Ha ezután az 'Óra felvétele' gombra kattintunk, akkor a kilistázott tankörök státusza 'elmarad'-ra változik és bejegyzésre kerül az új óra.

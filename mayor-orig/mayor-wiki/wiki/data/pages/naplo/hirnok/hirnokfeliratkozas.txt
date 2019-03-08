@@ -1,0 +1,68 @@
+====== Hírnök beállítások, feliratkozás ======
+
+A Hírnök képes arra, hogy bizonyos naplóbeli eseményekről (jelenleg - 2018. február 18. - csak tanárnak és diáknak) email-es értesítőt küldjön.
+
+===== Azok a bizonyos naplóbeli események... =====
+
+  * ... évközi értékelés (féljegy, jegy, százalékos, stb.
+  * ... félévi és évvégi zárójegy / -értékelés
+  * ... óra elmaradás, helyettesítés, összevonás, stb.
+  * ... dolgozatbejelentés
+  * ... hiányzás
+
+===== Levelezés beállítása =====
+
+
+Értelemszerűen szükség van valamiféle levélküldő szerverre. Ehhez [[hogyan:jelszoemlekezteto#levelkueldes_beallitasa|itt]] egy leírás - de persze ahány ház, annyi szokás...
+
+===== Config állomány szerkesztése =====
+
+Itt előfordulhatnak átfedések a szülői jelszó-emlékeztetővel kapcsolatos beállításoknál - figyelmesen járjunk el!
+
+Szerkesszük a main-config.php-t!
+
+  // Hirnok
+  define('__EMAIL_ENABLED', true);
+  define('__SUPPORT_EMAIL_ADDRESS','naplo@iskola.hu');
+  define('__SUPPORT_EMAIL_NAME',_SITE.' (Iskolai e-napló Support)');
+
+===== Időzítő - azaz cron =====
+
+Ahhoz, hogy a megfelelő időközönként kimenjenek a levelek, létre kell hozni az időzítőállományt, pl.:
+
+  nano /etc/cron.d/mayor
+
+És írjuk bele (aposztróf nélkül...!):
+
+  '*/10     *       * * * root      cd /var/mayor/www && php index.php naplo hirnok cronFutar >> /var/log/mayor.cron.log'
+
+Ez esetben a MaYoR **10 percenként** végignézi a feliratkozottak listáját (//intezmeny_iskola// adatbázis //hirokFeliratkozas// tábla), majd az abban szereplő utolsó email időpontjához viszonyítva kikeresi a táblákban, miről kit kell értesíteni.
+
+Első alkalommal a feliratkozott a __tanévbeli teljes történetét__ megkapja... :-)
+
+Más időzítéshez tanulmányozzuk a //cron// szintaktikáját, pl. [[https://www.pantz.org/software/cron/croninfo.html|itt]]!
+
+===== Beállítás =====
+
+A diák felületén csak az aktuálisan használt email-címe(ke)t kell megadnia, és legfeljebb 10 percet várnia...
+Jelenleg (r4371) a szülői email-címeket is itt kell felvenni.
+
+Figyelmeztessük a felhasználókat, hogy a levelek könnyen a SPAM mappában landolhatnak - keressék ott is, és állítsanak be rá szabályt!
+
+
+===== A Hírnök korlátozása =====
+
+Előfordul, hogy hibás működés miatt (vagy éppen szándékosan) nem szeretnénk a folyamatos tájékoztatást.
+Ilyenkor az alábbiak segíthetnek:
+
+  * Állítsuk le a levélküldő szolgáltatást!
+
+  # service postfix stop
+
+  * A //main-config.php// állományban ne engedélyezzük (bár ez az újabb feliratkozókat korlátozza csak...):
+
+  define('__EMAIL_ENABLED', false);
+
+  * Távolítsuk el a // /etc/cron.d/mayor// állományt, vagy kommenteljük ki a sor eljén egy #-gel...
+
+A napló elejére ilyenkor illik mindenképpen egy hírt kirakni, hogy miért is áll ez a szolgáltatás... :-)

@@ -1,0 +1,408 @@
+
+====== Gyakran Ismételt Kérdések - MaYoR Napló ======
+
+===== Minden határidő lejárt, segítség! =====
+
+**Kérdés:**
+Mit tegyek, ha már adminisztrátrként sem tudok jegyet módosítani, igazolást beírni, órát beírni, stb...? Nyúljak bele a naplóba adatbázis szinten?
+
+**Válasz:**
+Ne. Inkább ideiglenesen, egy munkamenet erejéig módosítsd a határidőt. Egy lehetséges mód a következő:
+
+Az intézmény konfigurációs állományában
+(''config/module-naplo/config-[azintezmenyrovidneve].php'') van
+egy ilyen sor (az elején):
+
+<code php>
+define('_ZARAS_HATARIDO',date('Y-m-01 00:00:00',strtotime('-1month -10days')));
+</code>
+
+Ezt ki lehet egészíteni valahogy így:
+
+<code php>
+     if (_SESSIONID=='ad3dabd520fecfcd306a7fd39') 
+  	define('_ZARAS_HATARIDO','2008-09-01 00:00:00');
+     else
+        define('_ZARAS_HATARIDO',date('Y-m-01 00:00:00',strtotime('-1month -10days')));
+</code>
+
+Ha a _SESSIONID
+értékéhez bemásolod az épp aktuális session azonosítódat az url-ből,
+akkor amíg ki nem lépsz, addig a _ZARAS_HATARIDO 2008. szeptember 1. lesz
+számodra - és tudsz pótlólag igazolni, órát beírni.
+
+===== Hogy tudok az előző hónapra jegyet beírni? =====
+
+**Kérdés:**
+Hogy tudok az előző hónapra jegyet beírni? Hiszen még nem járt le a határidő...
+
+**Válasz:**
+Sehogy. A jegy mindig a beírás dátumával kerül rögzítésre - hiszen a beírással válik hivatalossá, addig csak "mese". Ha utalni akarsz arra, hogy a jegy
+mikor, milyen körülmények között keletkezett, akkor több lehetőséged is van erre:
+
+  * Hozzárendelheted a jegyet egy órához
+  * Szöveges megjegyzést fűzhetsz a jegyhez
+  * Csoportos jegy esetén a dolgozat elnevezése is utalhat a körülményekre
+
+A határidő csak arra vonatkozik, hogy a már beírt jegyeket meddig lehet változtatni, törölni.
+
+===== Egy diák egy tárgyat több tankörben is tanul, hogy kap majd évvégi jegyet? =====
+
+**Kérdés:**
+Vannak olyan tanulók, akik egy tárgyat két különböző órán is tanulnak, de végül egy jegyet kapnak majd a kettőre félévkor/évvégén. Hogy oldjam ezt meg?
+
+**Válasz:**
+A zárójegyek nem tankörökhöz, hanem tárgyakhoz kapcsolódnak. Ha két tankör ugyanahhoz a tárgyhoz tartozik, akkor a közös diákok adott tárgyi zárójegyi mindkét
+tankörnél módosíthatók - a tankörök tanárainak meg kell egyezni bennük. Az év közben kapott jegyek is megjelennek mindkét tankörnél, de megkülönböztethetőek,
+tehát megállapítható, hogy melyik jegy melyik tankörben született.
+
+===== Nálunk nincs 2F zárójegy, hogyan tűntethetem el? =====
+
+**Kérdés:**
+A mi intézményünk nem ad elégséges F (figyelmeztető) bejegyzést se félévkor se évvégén. Hogyan lehet eltűntetni ezt a fokozatot?
+
+**Válasz:**
+A napló modul intézményi konfigurációs filejában (''config/module-naplo/config-[intezmeny_rovid_neve].php'') a $KOVETELMENY tömb
+'jegy' típusának* bejegyzéseit kell felüldefiniálni:
+<code php>
+    // Osztályzatok testreszabása - például: 5 fokú skála, F nélkül, de Dicsérettel:
+    global $KOVETELMENY;
+    $KOVETELMENY['jegy']= array(
+        'értékek' => array('1.0','2.0','3.0','4.0','5.0'),
+        '1.0' => array('rovid' => '1',   'hivatalos' => 'ELEGTELEN'),
+        '2.0' => array('rovid' => '2',   'hivatalos' => 'ELEGSEGES'),
+        '3.0' => array('rovid' => '3',   'hivatalos' => 'KOZEPES'),
+        '4.0' => array('rovid' => '4',   'hivatalos' => 'JO',),
+        '5.0' => array('rovid' => '5',   'hivatalos' => 'JELES', 'megjegyzes'=>'dicséret'),
+    );
+</code>
+
+*Amennyiben jegy típusra van állítva a tárgy zárójegy követelménye.
+
+===== Hogyan használhatok egyéni értékelést? =====
+
+**Kérdés:**
+Mi egyedi értékelést használunk évközben jegyek helyett. Lehetséges ez?
+
+**Válasz:**
+A napló modul intézményi konfigurációs file-jában (''config/module-naplo/config-[intezmeny_rovid_neve].php'') a $KOVETELMENY tömb
+'egyedi felsorolás' típusának bejegyzéseit kell (felül)definiálni:
+<code php>
+    global $KOVETELMENY;
+    $KOVETELMENY['egyedi felsorolás']= array(
+        'értékek' => array('1.0','2.0','3.0'),
+        '1.0' => array('rovid' => 'szorgalmas', 'hivatalos' => 'SZORGALMAS'),
+        '2.0' => array('rovid' => 'ügyes',      'hivatalos' => 'UGYES', 'megjegyzes' => 'dicseret'),
+        '3.0' => array('rovid' => 'aranyos',    'hivatalos' => 'ARANYOS'),
+    );
+
+</code>
+
+Megjegyzés: a hivatalos értékeléshez a megfelelő nyelvi konstansokat is létre kell hozni. [--HOGYAN]
+
+===== Késések összeadása =====
+
+**Kérdés:**
+A késések idejét annak rendje és módja szerint adminisztráljuk. Hogyan állítható be, hogy ezek az összesítő táblázatokban
+az összeadott értéknek megfelelően igazolatlan órára váltassanak át?
+
+**Válasz:**
+A napló modul intézményi konfigurációs filejában (''config/module-naplo/config-[intezmeny_rovid_neve].php'')
+erre a következő beállítás lehetőségek vannak:
+
+<code php>
+# Összeadjuk-e a késések perceit, hogy átváltsuk
+    define('_KESESI_IDOK_OSSZEADODNAK', false);
+# Hány késés felel meg egy igazolatlan órának - ha 0 vagy _KERESESI_IDOK_OSSZEADODNAK, akkor nem váltjuk át
+    define('_HANY_KESES_IGAZOLATLAN', 3);
+# Hány felszerelés hiány felel meg egy igazolatlan órának - ha 0 vagy _KERESESI_IDOK_OSSZEADODNAK, akkor nem váltjuk át
+    define('_HANY_FSZ_IGAZOLATLAN', 3);
+</code>
+
+
+===== Órarend betöltés szövegfile-ból =====
+
+**Kérdés:**
+Hogyan tudom betölteni egy szövegfile-ból az órarendet?
+
+**Válasz:**
+Először a tanárok és termek adatait kell betöltenünk, illetve át kell gondolnunk hány hetes az órarend és ennek megfelelően inicializálhatjuk a tanévet. A termeket közvetlenül tudjuk csak betölteni (admin/import -- terem). Ezek után hetenként lehet betölteni órarendet.
+
+  1. a beépített órarendibetöltő sémákat használva ([[naplo:tanev:orarendbetolto|Órarend/Órarend betöltés]])
+  2. közvetlenül az orarendiOra táblába importálva (admin/import)
+
+==== közvetlen órarendbetöltés az orarendiOra táblába ====
+
+Ha kézzel kell "digitalizálni" az órarendet, akkor az a legjobb, ha az
+''orarendiOra'' táblának megfelelő tabulátorokkal tagolt szöveges
+állományt készítesz. Mezői (ezt a /var/mayor/install/module-naplo/mysql/tanev.sql-ben
+is megtalálod):
+
+  het, nap, ora, tanarId, osztalyJel, targyJel, teremId, tolDt, igDt
+
+Az első három gondolom egyértelmű. A ''tanarId'' a tanár naplóbeli
+azonosítója (a tanárok kiválasztására használt legördülő listákban is
+megjelenítjük), az ''osztályJel'', ''targyJel'' szöveges mezők, amik utalnak
+arra hogy melyik osztály, mely tárgyáról van szó, de alapvetősen csak
+az egyedi azonosíthatóság fontos (''tanarId'', ''osztalyJel'', ''targyJel'' mindig
+meghatároz egy tankört), ''teremId'' megint csak a naplóbeli terem
+azonosító (ez is külső kulcs), ''tolDt'', ''igDt'' meg a bejegyzés
+érvényességi ideje (pl csak az első félévben lévő óra...)
+
+Ha ezt betöltöd, akkor el kell végezned az [[naplo:orarend:orarendTankor|Órarend-Tankör
+összerendezés]]t (Órarend menüpont alatt) - ez az ''orarendiOraTankor''
+táblába vesz fel bejegyzéseket, amikkel a fent emlegetett
+(''tanarId'',''osztalyJel'',''targyJel'') --> ''tankorId'' hozzárendelés megvalósul.
+Egy tankört többféle hármas is jelölhet az órarendben (pl egy
+tanárváltáskor a tanarId legalább megváltozik), de fordítva mindig
+egyértelmű a kapcsolat.
+
+===== Nem tudok bejelentkezni. A böngésző "Tanúsítvány probléma" miatt nem enged tovább... =====
+
+**Kérdés:**
+Többször is próbáltam a bejelentkezéssel, de mindig azt kapom, hogy „tanusítvány probléma” miatt nem léphetek be. Mi történt?
+
+**Válasz:**
+A MaYoR rendszer a biztonságos böngészés érdekében [[http://http://wiki.hup.hu/index.php/SSL|SSL]] kapcsolatot épít ki a böngésző és a szerver között. E kapcsolat kiépítésekor a szerver egy tanúsítvánnyal próbálja igazolni, hogy valóban ő az a szolgáltató, akinek mondja magát. Egy ilyen tanúsítvány akkor megbízható, ha egy harmadik fél - egy hitelesítő szervezet - aláírta azt, jelezve ezzel, hogy meggyőződött annak valódiságáról.
+
+Ilyen tanúsítvány beszerzése költséges, erre szakosodott cégek végzik a hitelesítést (NetLock, VeriSign...). Egy a MaYoR-hoz hasonló, iskolai keretek közt működő szoftver számára az intézmények nem vásárolnak komoly tanúsítványokat, helyette inkább saját maguk, vagy az általunk kreált [[gyik:mayorca|MaYoR Hungary]] által aláírt tanúsítványokat használnak. Ezeket a tanúsítványokat a böngészők meglehetősen nagy előítélettel kezelik, és jelzik a felhasználó fele, hogy ismeretlen hitelesítő szerv írta őket alá.
+
+Az első esetben (ha az intézmény saját aláírású tanúsítványt használ), annyit tehetünk, hogy kivételként felvesszük a tanúsítványt az elfogadottak közé. Ez mindegyik böngésző típusnál megtehető, de számítanunk kell rá, hogy a böngésző folyamatosan le akar beszélni minket erről a lépésről.
+
+A második esetben (ha MaYoR Hungary által aláírt tanúsítványt használ az intézmény) az előzőekben tárgyalt módszer mellett megtehetjük azt is, hogy [[http://www.mayor.hu/installca.php|felvesszük a MaYoR Hungary-t a megbízható hitelesítők közé]] néhány kattintással.
+
+===== Le lehet cserélni a képeket a "Köszönjük, hogy minden órádat beírtad!" szöveg mellett? =====
+
+**Kérdés:**
+Letöltöttem pár jópofa képet! Le lehet cserélni ezekre a "Köszönjük, hogy minden órádat beírtad!" szöveg mellett megjelenőket?
+
+**Válasz:**
+Igen. A képeket (''*.gif'') be kell másolni a  ''/var/mayor/www/skin/classic/module-naplo/img/anim/'' könyvtárba, és fel kell venni egy bejegyzést 
+a napló konfigurációs állományába (''/var/mayor/config/module-naplo/config.php''):
+
+  // A "Köszönjük, hogy minden órádat beírtad!" felirat mellett megjelenő GIF képek
+  $UdvozloKep = array('pingvin','kutyus','vonat');
+
+A tömbbe a megjelenítendő állományok neveit kell felsorolni, a ''.gif'' kiterjesztés nélkül.
+
+Két kis gyűjtemény, szabad felhasználásra: [[http://www.szag.hu/gif.zip|Egyik]] és [[http://www.szag.hu/gif2.zip|Másik]]...
+
+===== Felvettem új tanárokat, de nem jelennek meg a felületen =====
+
+**Kérdés:**
+Felvettem új tanárokat tabulátorokkal tagolt szöveges állományból, látszólag minden rendben ment, de az új tanárok nem jelentek meg a nevek között. Mit lehet a hiba?
+
+**Válasz:**
+Az adatok valószínűleg bekerültek az adatbázisba, de a jogviszony kezdetét, illetve végét jelző ''beDt'' és ''kiDt'' attribútumok nem lettek jól beállítva,
+ezért a program úgy tekinti, hogy a felvett tanárok nincsenek jogviszonyban - ezért nem jeleníti meg őket. Egészítsük ki az adatállományt a megfelelő dátum
+adatokkal (legalább a ''beDt'' értéket állítsuk be) és töltsük be újra az adatokat!
+
+===== Hiba: Lejárt a munkamenet vagy nem engedélyezett a sütik használata. =====
+
+**Kérdés:**
+Belépésnél az adat bázisban látszik, hogy beléptem, a logolban bent van a megfelelő bejegyzés, viszont a következőket írja ki a program:
+
+  Hiba: Lejárt a munkamenet vagy nem engedélyezett a sütik használata.
+  Hiba: Azonosítatlan felhasználó! Az adott hozzáférési szinten nem hitelesítetted magad! 
+    (A bejelentkezés kötelező.)
+
+Természetesen a gépen a sütik vannak engedélyezve. Mi lehet a baj?
+
+**Válasz:**
+Részlet a /var/mayor/config/main-config.php.example állományból:
+
+  // A paraméter mindenképpen legyen true, ha ssl kapcsolatod van.
+  // Ha nem ssl-en használod, akkor úgyis mindennek vége...
+  define('_SECURECOOKIE',true);
+
+Tehát a gond az lehet, hogy HTTP protokolt használsz (ne használj kódolatlan protokolt ott, ahol jelszavak vándorolnak a neten) és a fenti paraméter true értékű, vagy
+épp fordítva, HTTPS-t használsz, de a fenti beállítás false értékű.
+
+===== Haladási napló nyomtatásakor a Hiba: Hibás/rossz adat! (Első oldal tárgyak száma,7) hibaüzenetet kapom =====
+
+**Kérdés:**
+A haladási napló nyomtatásakor ''Hiba: Hibás/rossz adat! (Első oldal tárgyak száma,7)'' hibaüzenetet kapok. A nyomtatvány persze nem készül el. Mi a hiba?
+
+**Válasz:**
+A haladási naplóban az egy oldalon megjeleníthető tárgyak, illetve tankörök száma korlátozott. A legszigorúbb korlát az adott időszak (három nap) adatait 
+tartalmazó első lapot érinti, ahol az egyes napok órarendje és hiányzási adatai is megjelennek. Ezeken az oldalakon 6 tankör órái jelenhetnek meg, ha ennél 
+több jutna ide, akkor a program a fenti hibaüzenetet adja. Azért fordulhat elő ilyen eset, mert a program az azonos tárgyhoz tartozó tankörök óráit 
+tankörönként külön oszlopban, de egy egységként kezeli. Ha például a tárgyak sorrendje magyar, matematika, történelem, angol, stb és a matematikát kettő, az
+angolt három csoportban tanulják az osztály tanulói, akkor előáll a fenti hiba, hiszen a történelem kerül a 4. oszlopba, majd az angol tankörök 3 oszlopa 
+jönne, ami már nem fér ki.
+
+A probléma a tárgysorrend helyes megválasztásával oldható fel. A [[naplo:osztalyozo:targysorrend|Napló/Osztályozó/Tárgysorrend]] menüpont alatt módosítsuk a
+''napló'' nevű sorrendet.
+
+===== Nem tudok tárgysorrendet változtatni =====
+
+**Kérdés:**
+Az ''Osztályozó napló/Tárgysorrend'' menüpont alatt látszólag minden rendben, megjelennek a tárgyak, bal szélük sárga, de nem tudom a sorrendet változtatni.
+Mi a hiba?
+
+**Válasz:**
+Röviden:
+  cp /var/mayor/config/skin-classic/naplo-config.php.example /var/mayor/config/skin-classic/naplo-config.php
+
+Hosszabban: a hiányzó konfigurációs állomány miatt nem töltődik be a megelelő javascript rutin-gyűjtemény, ezért nem lesznek "vonszolhatók" a felsorolás elemei.
+
+===== A haladási napló nyomtatásakor csak üres oldalt kapok a generált pdf helyett =====
+
+**Kérdés:**
+A haladási napló nyomtatásakor az osztály kiválasztása után csak egy üres, fehér lapot kapok a böngészőben. Se hibaüzenet, se generált PDF állomány.
+Mi a hiba?
+
+**Válasz:**
+A problémát az okozza, hogy a nyomtatási kép generálása nagy memóriaigényű feladat, így minden bizonnyal túllépte a limitet a folyamat. Növeljük meg
+a felhasználható megória méretét a ''/etc/php5/apache/php.ini'' file-ban:
+
+  memory_limit = 128M      ; Maximum amount of memory a script may consume (16MB)
+
+Ez után újra kell olvastatni az apache beállításait:
+
+  # /etc/init.d/apache2 reload
+
+===== Felhasználók jogosultságai =====
+
+**Kérdés:**
+Hogyan lehet a felhasználók jogosultságait módosítani?
+
+**Válasz:**
+Nem lehet. A jogosultságok áttekintéséhez, ill. szabályozásához használd a [[naplo:csoportok|Csoportok]]at!
+
+===== Felhasználónevek változtatása =====
+**Kérdés:**
+Meg tudom-e utólag változtatni a felhasználói neveket (a generáláskor túl hosszú -> asszonynevek; névváltozás (házasság, válás, vagy csak egyszerű hivatalos névváltoztatás))?
+
+**Válasz:**
+A felületen változtatni nem lehet, csak törölni és újat felvenni, de MySQL-ben lehet változtatni is. Részletek [[hogyan:felhasznalonevek_megvaltoztatasa|itt]]!
+
+===== Hogyan tudok visszamenőleg bejegyzéseket felvenni a Haladási naplóba?  =====
+
+**Kérdés:**
+Hogyan tudok visszamenőleg bejegyzéseket felvenni a Haladási naplóba?
+
+**Válasz:**
+Egy-egy óra a [[naplo:haladasi:pluszora|Napló/Haladási napló/Plusz óra]] menüpontban vehető fel.
+Teljes napok feltöltésére a [[naplo:admin:fillhaladasi|Napló/Admin/Haladási napló feltöltése]] menüpont használható.
+
+Lehetőség szerint persze kerüljük az utólagos módosításokat! [[hogyan:haladasi_utolag|Bővebben...]]
+
+===== Vissza lehet-e tölteni régebbi adatbázist új teleptésű MaYoR-ra? =====
+**Kérdés:**
+Vissza lehet-e tölteni régebbi adatbázist új teleptésű MaYoR-ra?
+
+**Válasz:**
+A részletes leírás a [[hogyan:visszatoltes_mentesbol#vissza_lehet-e_toelteni_regebbi_adatbazist_ujabb_revision-szamu_mayor-ra|itt]] található.
+ 
+
+===== Üzenetek megjelenése =====
+**Kérdés**
+Hogyan tudom szabályozni a kezdőlapon megjelenő üzenetek számát, illetve az üzenetek lapozását?
+
+**Válasz**
+A ///var/mayor/config/module-naplo/config.php// állományban keressük meg az alábbi sorokat:
+
+  define('__UZENO_AJAXLIMIT',3);
+  define('__UZENO_DEFAULTLIMIT',20);
+
+Az első sorban a '3' a kezdőlapon megjelenő üzenetek számát jelenti.
+A második sor '20' értéke a **Minden üzenetemet mutasd!** utáni, egy oldalon olvasható üzeneteket (és így a lapozást is) befolyásolja.
+
+
+===== Nem töltődtek be a haladási naplóba a mai órák... - Mit tegyek? =====
+**Kérdés**
+A haladási naplóban nem jelnnek meg az órák. A Kollégák nem tudják beírni a tananyagot... hiányzókat... stb.
+
+**Válasz**
+A haladási naplóba (//naplo_[iskola]_[tanev]// adatbázis //ora// táblája) akkor kerülnek be az órák, ha:
+
+  * van érvényes //tolDt,igDt// értékekkel feltoltott orarendiOra tábla; és elkészült a órarend-tankör összerendezés;
+  * elérjük az adott nap dátumát, és valaki először lép a napló felületére (próbáljuk ki 0:00:01-kor... 8-), és még nincs az //ora// táblában az adott napra bejegyzés;
+  * vagy az adott napra valamilyen "esemény" (helyettesítés-kiírás, óracsere, stb.) történik.
+
+Előfordul, hogy - főleg a II. félévi órarendváltoztatásnál - hibás a tolDt érték az órarendiOra táblában. Ellenőrizzük!
+
+Szintén jellemző II. félévi hibajelenség, hogy az új órarend elkészülte és feltöltése után nem megfelelő az órarend-tankör összerendezés (változó óraszámú tárgyak, csoportcserék, stb. miatt). A **Napló-Órarend-Órarend ellenőrzés** menü pont erre szolgál: az aktuális dátum kiválasztása után itt találjuk azokat a tanköröket, amiknél nem megfelelő valamilyen okból az összerendezés. A lista alapján ellenőrizzük az **Órarend-tankör összerendezés** menüben a tanárok óráit!
+
+A(z egyéb, évközbeni) be-nem töltődésnek a leggyakoribb okai, illetve ellenőrzésük (óvatosan járjunk el, mert nem mindegy, hogy csak 1-2 óra van-e bent, vagy csak annyi hiányzik... :-). Most az előbbit taglaljuk.):
+
+Az éves munkatervben ellenőrizzük, hogy az adott nap megfelelően van-e rögzítve (tanítási nap);
+
+Ha nem, javítsuk, majd a **Helyettesítés** menüben az adott napra - tanár kiválasztása nélkül - nyomjunk egy **OK**-t. Ilyenkor be kell töltődni a haladási naplóba az óráknak.)
+
+Az egyes osztályok órarendjében ellenőrizzük, hogy az adott napra valamely óra mellett megjelent-e a jobb felső sarokban egy kis kör (ez jelzi, hogy az óra már a haladási naplóban is benn van).
+
+Ha csak néhány óránál találunk ilyet, meg is van az ok: egyetlen bejegyzés is elég, hogy a többi óra ne töltődjön be.
+
+SQL-szinten (//naplo_[iskola]_[tanev]// adatbázis):
+
+  mysql> SELECT * FROM ora WHERE dt=curdate();
+
+Ez a parancs listázza az aktuális napi haladási naplóbeli órákat. Ha nem nulla (hanem 1-2-3 rekord) az eredmény, derítsük ki, hogy melyik tanár, melyik csoportjai ezek. Járjunk utána, hogy kerültek be (plusz óra, admin-kolléga keze nyoma...). Ha biztosak vagyunk a dolgunkban, szüntessük meg ezeket az órákat!
+
+  mysql> DELETE FROM ora WHERE dt=curdate();
+
+**Figyelem!** Ez a parancs törli az aktuális napli órákat.
+
+Egy napi haladási naplót "kézzel" a **Helyettesítés** menüben az adott napra - tanár kiválasztása nélkül - az **OK** gombra történő kattintással tölthetünk be. Ilyenkor be kell kerülnie a haladási naplóba az óráknak.
+
+Amennyiben a kóbor, a hibát okozó órák valós állapotot tükröztek, kézzel, a **Plusz órá**knál, vagy a **Helyettesítés**nél újból rögzítenünk kell őket.
+
+Célszerű a műveletek előtt egy kézi //mayor backup//-pal elmenteni az aktuális állapotot...
+
+===== Az osztályozónapló és/vagy haladási napló és/vagy záradékok és/vagy törzslapok nyomtatásakor a keletkező PDF-állomány nem a teljes anyagot tartalmazza... - Mit tegyek? =====
+**Kérdés**
+Az osztályozónapló és/vagy haladási napló és/vagy záradékok és/vagy törzslapok nyomtatásakor a keletkező PDF-állomány nem a teljes anyagot tartalmazza, valahol "elakad" (Pl. 30 fős osztály osztályozónaplója a 23. diák után egyszerűen nincs... Vagy a haladási napló október 2. után egyszerűen nincs... Vagy a záradék elakad Balogh-nál...).
+
+**Válasz**
+A hiba oka a különleges karakterek jelenléte a napló idevágó részében. A PDF-generálás során a program nem tud mit kezdeni az ilyen karakterekkel, így a PDF-készítési folyamat leáll.
+
+__A megoldás lépései:__
+
+  * Nézzük meg, melyik az utolsó meglévő PDF-oldal!
+  * A **következő oldal** (példánkban a 24. diák vagy  október 3. vagy a Balogh utáni diák(ok)) adatait alaposan nézzük végig! (Néha előfordul, hogy a felületen minden rendben levőnek látszik, azonban az adatbázisban hibás a karakter.)
+  * Ha nem találunk semmilyen rendellenességet, alaposan nézzük meg a ///var/mayor/download/private/nyomtatas/haladasi// vagy //osztalyozo// vagy a //...private/naplo/nyomtatas/zaradekok// vagy a //...private/naplo/nyomtatas/torzslap// könyvtárban az adott osztályhoz tartozó log és u8.tex állományokat! A log állományban konkrétan ott kell szerepelnie,  hogy a TeX forrás hanyadik soránál akadt el a fordítás - ez elég sokat segíthet. Ezt a részt tanulmányozzuk át roppant figyelmesen!
+  * A hibás(nak ítélt) karakterek (felületen vagy adatbázisban történő) javítása után próbáljuk meg a napló újbóli nyomtatását! Javasoljuk, hogy mindig csak egy-egy változtatást hajtsunk végre, ha rosszul tippeltünk, azonnal állítsuk vissza az eredeti állapotot és folytassuk a kutatást!
+
+__Ami eddig előfordult:__
+
+  * Az apa telefonszám mezőjébe az e-mail-címe került, a **@** karakter nem tetszett...
+  * A gondviselő nevében hibásan rögzült egy **a** karakter (ez például a felületen nem látszott, csak az adatbázisban - okát nem tudjuk...)
+  * Itt-ott bekerült **görög** betű miatt lett nagy skandalum...
+  * **Nem szabványos szóköz** - észrevehetetlen!
+  * A haladási napló tananyag részébe ilyenformán került be az x-négyzet: **x^2**... Nem bírt vele mit kezdeni a generáló... 
+  * Záradékok között  **2013_14** formában volt a tanév megadva - az alsóvonás döntötte romba a generálást...
+  * Lelkes Kolléganő az orosz nyelv tanárgy Tananyag mezőjét **cirill** betűkkel írta... (Ez egy régebbi bukta volt, azóta ha a sima tex helyett XeTeX-et használunk, és a config opciók közt engedélyezzük is (így a cirill betűkkel nem lesz többet gond...):
+
+  define('__NYOMTATAS_XETEX',true);
+
+  * Az alsósok szöveges értékelésében, a szabadon kitölthető mezőbe %-jel került.
+  * Alsósok szöveges értékelésénél amolyan szabadszöveg helyeként csupa alsóvonást írtak be... 
+
+Ha nem boldogulnuk, kérjünk segítséget a **support**tól vagy a **levelezőlistán** a tapasztaltabb üzemeltetőktől!
+
+
+
+
+===== A haladási napló teljes ugyan, de hiányoznak tantárgyak, tankörök =====
+**Kérdés**
+A haladási napló minden napja megvan, de hiányos vagy üres, pedig a Kollégák minden órát beírtak. Mit tegyek?
+
+**Válasz**
+A //Napló-Nyomtatás-Tankör naplóhozrendelése// oldalon a vegyes tanköröket egyenlő számban szét kell osztani az érintett osztályok haladási naplójai között.
+
+Például a 7.ab testnevelés (lány) tankör órái a 7.a, míg a 7.ab testnevelés (fiú) tankör órái a 7.b haladási naplójában kerülnek adminisztrálásra.
+
+===== Az egyes tárgyak éves óraszáma nem megfelelő =====
+**Kérdés**
+A Bizonyítványban/Statisztikában megjelenő éves tárgyóraszám nem egyezik az előírttal. Miért?
+
+**Válasz**
+Az éves óraszámot a napló a tanítási napok száma / 5 egészrészével számolja, ami általában 37-re jön ki. Ettől eltérő éves óraszámot a /var/mayor/config/module-naplo/config-[iskola].php állományba írt sorokkal tudjuk kikényszeríteni:
+
+  define('__TANITASI_HETEK_OVERRIDE', true);
+  if (defined('__TANEV') && __TANEV==2017) {
+          define('___TANITASI_HETEK_SZAMA', 36);
+          define('___VEGZOS_TANITASI_HETEK_SZAMA', 30);
+  }

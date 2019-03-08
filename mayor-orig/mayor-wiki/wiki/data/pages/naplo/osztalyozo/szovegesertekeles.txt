@@ -1,0 +1,11 @@
+====== Szöveges értékelés ======
+
+A tanulókat [[szempontRendszer#előre rögzített szempontrendszer]] alapján tárgyanként értékelhetjük.
+
+Értékeléshez az adott tárgyat tanító tanároknak, valamint az adminisztrátornak van joga. Az értékelés mindig az aktuális dátummal kerül rögzítésre. Ha egy nap folyamán többször értékelünk egy tanulót ugyanabból a tárgyból, akkor a korábbi (adott napi) értékelés elvész. Másképp fogalmazva egy tanuló egy tárgyból napi rendszerességgel értékelhető, sűrűbben nem.
+
+Az oldalon diákokat és tanköröket választunk ki, de az értékelés - ahogy az osztályzatok esetén - tárgyra vonatkozik. Azaz, ha egy diák egy tárgyat két tankörben is tanul, akkor e két tankörhöz ugyanaz az értékelés tartozik, így mindkét tankör tanára változtathatja azt.
+
+Ha egy diák több évfolyamra/képzésre is jár, akkor előfordulhat, hogy ki kell választanunk az értékelendő évfolyamot, illetve képzést is.
+
+Ha kiválasztunk egy dátumot, akkor a program a kiválasztott dátum napján, vagy korábban keletkezett értékelések között keresi meg a legkésőbbi keltezésűt és annak tartalmát mutatja meg (ha van ilyen). Ha van jogosultságunk az értékeléshez, akkor egy ilyen korábbi értékelésből kiindulva készíthetjük el az új értékelést. Ilyenkor tehát nem a korábbi értékelést módosítjuk - erre nincs lehetőség - hanem a korábbi értékelés módosításával készítjük el a mai nap értékelését.

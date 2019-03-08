@@ -1,0 +1,13 @@
+====== Új felhasználói azonosító létrehozása ======
+
+Új azonosító készítése egyszerű, magától értetődő feladat. Töltsük ki az ürlapot értelemszerűen: név, azonosító, jelszó, a jelszó mégegyszer, kategória, oktatási azonosító (ha van), E-mail cím, telefonszám (nem kötelező).
+
+A program ellenőrzi, hogy ütközik-e a megadott felhasználói azonosító valamely már felvettel.
+
+===== Adatállományból =====
+
+Ha több azonosítót akarunk felvenni, akkor tabulátorokkal tagolt szöveges állományba is írhatjuk az adatokat. A fájlnak ne legyen fejléce, egy sorba egy azonosító adatai kerüljenek és a jelszót ebben az esetben csak egyszer kell megadni:
+
+  Gipsz Jakab    gipszj    titok    diák    74864826801    gipsz@mail.com   123-4567
+
+Az adatállományt a helyi gépről tölthetjük fel. A állománynak UTF-8 kódolásúnak kell lennie!

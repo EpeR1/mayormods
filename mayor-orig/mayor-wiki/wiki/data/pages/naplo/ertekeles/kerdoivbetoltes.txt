@@ -1,0 +1,146 @@
+====== Értékelő kérdőívek betöltése ======
+
+A kérdőív felvétele két lépésben történik. Az első lépésben adjunk címet a kérdőívnek, jelöljük ki kezdő- év végdátummal, hogy mely időszakban lehet majd kitölteni a kérdőíveket. Meg kell adni ezek után azt, hogy kiknek kell majd kitöltenie a kérdőívet (címzettek). Végül egyszerű szöveges formában adjuk meg a kérédseket a rájuk vonatkozó válaszokkal a következő formában:
+
+  Kérdés 1.
+  Válasz 1/1.
+  Válasz 1/2.
+  ...
+  Válasz 1/n.
+  
+  Kérdés 2.
+  Válasz 2/1.
+  Válasz 2/2.
+  ...
+  Válasz 2/n.
+    
+  ...
+
+
+====== Hogy néz ki belülről ======
+
+A kérdőív kezeléshez több táblát is használunk. Ezek a tanév adatbázisában vannak:
+
+  mysql> use naplo_fasori_2008;
+  mysql> show tables like 'kerdoiv%';
+  +-------------------------------------+
+  | Tables_in_naplo_vmg_2008 (kerdoiv%) |
+  +-------------------------------------+
+  | kerdoiv                             |
+  | kerdoivCimzett                      |
+  | kerdoivKerdes                       |
+  | kerdoivMegvalaszoltKerdes           |
+  | kerdoivValasz                       |
+  | kerdoivValaszSzam                   |
+  +-------------------------------------+
+  6 rows in set (0.00 sec)
+
+Nézzük, hogy melyik tábla mire való:
+
+===== kerdoiv =====
+
+Ez fogja össze egy egységgé a kérdések sorát. Alapvetően egy szöveges cím és a kérdőív kitöltésére szánt időszak kezdő és végdátuma szerepel itt.
+
+  mysql> explain kerdoiv;
+  +-----------+------------------+------+-----+---------+----------------+
+  | Field     | Type             | Null | Key | Default | Extra          |
+  +-----------+------------------+------+-----+---------+----------------+
+  | kerdoivId | int(10) unsigned | NO   | PRI | NULL    | auto_increment |
+  | cim       | varchar(64)      | NO   |     |         |                |
+  | tolDt     | datetime         | NO   |     |         |                |
+  | igDt      | datetime         | NO   |     |         |                |
+  +-----------+------------------+------+-----+---------+----------------+
+
+
+===== kerdoivCimzett =====
+
+Ebben a táblában mondjuk meg, hogy egy adott kérdőív kinek szól, kiknek kell kitöltenie. Mivel többféle címzett lehet (tanár, diák, szülő, tankör, stb), ezért eltároljuk a címzett típusát is az azonosítója mellett (pl 135-ös azonosítójú diák). A 0 azonosítóval jelöljük, ha az adott típus összes azonosítójának címezzük a kérdőívet. Mivel egy kérdőívhez így több címzettet adhatunk meg, lehetségessé válik, hogy ugyanazt a kérdőívet kitöltessük tanárokkal, diákokkal, szülőkkel is akár.
+
+A speciális címzett típusok (tankor, munkakozosseg, osztalySzulo, stb) arra utalnak, hogy az adott "csoport" tagjai töltik ki a kérdőívet, ami az adott csoportra vonatkozik. Az első például a tankör tanárának értékelése lehetm a második a munkaközösségvezetői munkát értékelő kérdőív, a harmadik példa lehet a szülők véleménye az osztályról, osztályfőnökről. Áttételesen a címzettek ilyenkor is szülők, diákok, vagy tanárok, de lehet, hogy egy-egy személy több példányban tölti ki az adott kérdőívet - más-más célcsoportra vonatkoztatva (több tankör értékelése).
+
+  mysql> explain kerdoivCimzett;
+  +--------------+-------------------------------------------+------+-----+---------+-------+
+  | Field        | Type                                      | Null | Key | Default | Extra |
+  +--------------+-------------------------------------------+------+-----+---------+-------+
+  | kerdoivId    | int(10) unsigned                          | NO   | PRI |         |       |
+  | cimzettId    | int(10) unsigned                          | NO   | PRI |         |       |
+  | cimzettTipus | enum('diak','szulo','tanar','tankor','tankorSzulo','munkakozosseg','osztaly','osztalySzulo')
+                                                             | NO   | PRI | diak    |       |
+  +--------------+-------------------------------------------+------+-----+---------+-------+
+  3 rows in set (0.00 sec)
+
+===== kerdoivKerdes =====
+
+Ez tényleg egyszerű - az adott kérdőívhez tartozó kérdések.
+
+  mysql> explain kerdoivKerdes;
+  +-----------+------------------+------+-----+---------+----------------+
+  | Field     | Type             | Null | Key | Default | Extra          |
+  +-----------+------------------+------+-----+---------+----------------+
+  | kerdesId  | int(10) unsigned | NO   | PRI | NULL    | auto_increment |
+  | kerdoivId | int(10) unsigned | NO   | MUL |         |                |
+  | kerdes    | varchar(255)     | NO   |     |         |                |
+  +-----------+------------------+------+-----+---------+----------------+
+  3 rows in set (0.00 sec)
+
+===== kerdoivValasz =====
+
+Ez is elég egyértelmű - egy adott kérdésre adható válaszok.
+
+  mysql> explain kerdoivValasz;
+  +----------+------------------+------+-----+---------+----------------+
+  | Field    | Type             | Null | Key | Default | Extra          |
+  +----------+------------------+------+-----+---------+----------------+
+  | valaszId | int(10) unsigned | NO   | PRI | NULL    | auto_increment |
+  | kerdesId | int(10) unsigned | NO   | MUL |         |                |
+  | valasz   | varchar(255)     | NO   |     |         |                |
+  +----------+------------------+------+-----+---------+----------------+
+  3 rows in set (0.00 sec)
+
+
+===== kerdoivValaszSzam =====
+
+Ez a végeredmény. Az adott címzettre vonatkozóan melyik válaszra hány szavazat érkezett. A címzett adja meg tehát, hogy egy szavazatszám melyik tanár, vagy osztály, vagy akármi értékelésére vonatkozik.
+
+  mysql> explain kerdoivValaszSzam;
+  +--------------+---------------------------------------+------+-----+---------+----------------+
+  | Field        | Type                                  | Null | Key | Default | Extra          |
+  +--------------+---------------------------------------+------+-----+---------+----------------+
+  | valaszId     | int(10) unsigned                      | NO   | PRI | NULL    | auto_increment |
+  | cimzettId    | int(10) unsigned                      | NO   | PRI |         |                |
+  | cimzettTipus | enum('diak','szulo','tanar','tankor','tankorSzulo','munkakozosseg','osztaly','osztalySzulo')
+                                                         | NO   | PRI | diak    |                |
+  | szavazat     | int(10) unsigned                      | NO   |     | 0       |                |
+  +--------------+---------------------------------------+------+-----+---------+----------------+
+  4 rows in set (0.00 sec)
+
+
+===== kerdoivMegvalaszoltKerdes =====
+
+Ez a tábla szolgál arra, hogy ne lehessen egy embernek egy kérdésre többször szavaznia. Itt tároljuk el, hogy ki (felado), melyik kérdésre (kerdesId), mire vonatkozóan (cimzett) adott már le szavazatot.
+
+  mysql> explain kerdoivMegvalaszoltKerdes;
+  +--------------+---------------------------------------------+------+-----+---------+-------+
+  | Field        | Type                                        | Null | Key | Default | Extra |
+  +--------------+---------------------------------------------+------+-----+---------+-------+
+  | feladoId     | int(10) unsigned                            | NO   | PRI |         |       |
+  | feladoTipus  | enum('diak','szulo','tanar')                | NO   | PRI | diak    |       |
+  | kerdesId     | int(10) unsigned                            | NO   | PRI |         |       |
+  | cimzettId    | int(10) unsigned                            | NO   | PRI |         |       |
+  | cimzettTipus | enum('diak','szulo','tanar','tankor','tankorSzulo','munkakozosseg','osztaly','osztalySzulo')
+                                                               | NO   | PRI | diak    |       |
+  +------------------------------------------------------------+------+-----+---------+-------+
+  5 rows in set (0.00 sec)
+
+Ami már működik:
+Fel lehet venni kérdőívet egyszerű szöveges formában, megadva, hogy
+kik a címzettjei, és mettől meddig érvényes. Ez azt jeleni tehát, hogy
+kitöltjük a kerdoiv, kerdoivCimzett, kerdoivKerdes, kerdoivValasz
+táblákat.
+Ha valaki belép a Értékelés menüpontba és van rá vonatkozó, érbényes
+kérdőív, akkor az megjelenik, kitölthető (változik a kerdoivValaszSzam
+és kerdoivMegvalaszoltKerdes tartalma).
+
+Tehát a rendszer arra alkalmas, hogy begyűjtse az adatokat, de nem
+csinál belőle semmilyen összesítést, azt a fenti szerkezet szerint
+kézzel kell végezni.

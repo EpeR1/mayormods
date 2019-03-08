@@ -1,0 +1,16 @@
+====== Haladási napló ======
+
+A haladási naplóban egy tanár, osztály vagy diák, esetleg egy tankör óráinak adatait tekinthetjük meg. A táblázat általában egy-egy hét napjait sorolja fel (kivéve ha egy tankör óráit nézzük meg - ilyenkor a tankör összes óráját megjeleníti a rendszer), ezeken belül láthatjuk az aznapi órák adatait:
+  * az adott napon hanyadik óra
+  * melyik tankör számára
+  * az óra típusa (normál, helyettesített, felügyelt, ...)
+  * az órát tartó tanár
+  * az adott óra óraszáma
+  * az óra anyaga
+  * továbblépési lehetőség a hiányzók beírására
+
+===== Óra beírása =====
+
+Az óra anyagát a megfelelő határidő lejártáig az órát tartó tanár írhatja be. Ha egy tankörhöz több tanár is tartozik, akkor a tanár átváltható. Ha egy tankör beletartozik egy tankör csoportba, akkor a tankörcsoport tagjai között is válthatunk (pl. magyar irodalom, vagy magyar nyelv óra közt szeretnénk váltani).
+
+Az órák anyagának beírása után valamelyik gomb megnyomásával rögzíthetjük az adatokat. Ezt a lépést ne hagyjuk ki :).

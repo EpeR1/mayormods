@@ -1,0 +1,25 @@
+====== A menü testreszabása ======
+
+A menü testreszabása a ''/var/mayor/config/menu'' könyvtár alatt történhet. Itt hozzáférési szintenként, azon belül nyelvenként módosíthatjuk a menü tartalmát.
+
+Ha például a magyar nyelvű publikus oldalak menürendszerét akarjuk állítani, akkor ezt a ''/var/mayor/config/menu/public/menu-hu_HU.php'' állomány létrehozásával és szerkesztésével tehetjük meg. A módosításhoz ismernünk kel a [[base:menue#a_menue_felepitese|menürendszert tároló adatszerkezetet]].
+
+A ''public'' könyvtárban egy egyszerű minta állományt találunk (''menu-hu_HU.php.example''). Ebben megtalálható, hogy hogyan kell egy-két menüpontot kiszedni a menüből, illetve külső hivatkozást új menüpontként hozzáadni.
+
+Több olyan menüpont is van amelyek megtekintéséhez bizonyos felhasználóknak joga van, de nem tudják megtenni, (alapértelmezettként) nem jelenik meg nekik a menüpont.
+
+A teljes menü felépítését a ''/var/mayor/www/include/menu/'' könyvtárban lévő könyvtárszerkezetben lehet fellelni. (pl. a magyar nyelvű szülőknek szóló menü: ''/var/mayor/www/include/menu/parent/hu_HU/*'' könyvtár) Innen kell kipuskázni a nekünk szükséges menüket.
+
+Példa: - a diákoknak szeretnénk megjeleníteni a "Felhasználói adatok" menüben három almenüt: "Felhasználó keresése", "Adataim", "Jelszóváltoztatás". A "Felhasználó keresése", és a "Jelszóváltoztatás" menük eleve ott vannak, az "Adataim" menü pedig a diáknak sehol sem jelenik meg. Ekkor a fent említett ''menu-hu_HU.php'' állományba a következő sorokat kell beírnunk:
+
+  if (__DIAK){
+      $MENU['modules']['session'] = array(
+          'searchAccount' => array(array('txt' => 'Felhasználó keresése','url' => 'index.php?page=session&sub=search&f=searchAccount')),
+          'diak' => array(array('txt' => 'Adataim', 'url' => 'index.php?page=naplo&sub=intezmeny&f=diak')),
+          'changeMyPassword' => array(array('txt' => 'Jelszóváltoztatás','url' => 'index.php?page=password&sub=&f=changeMyPassword&userAccount='._USERACCOUNT.'&policy=public&toPolicy=private','get' => array('skin','lang','sessionID'))),
+      )
+  }
+
+Ha egy meglévő menüben szeretnénk új almenüket megjeleníteni/létrehozni, a régiek megtartása mellett, akkor nem csak az új sort kell hozzáadnunk a menühöz, a meglévőket is át kell másolnunk. (ezért van a fenti példában a ''searchAccount'' és a ''changeMyPassword'' kezdetű sor) Ha csak a ''diak'' kezdetű sort tettük volna bele, akkor a "Felhasználói adatok" menünek csak egyetlen almenüje lenne.
+
+Apró szépséghiba, hogy ha a diák az "Adataim" menüre kattint akkor ezek megjelenése után a Napló menüben találja magát.

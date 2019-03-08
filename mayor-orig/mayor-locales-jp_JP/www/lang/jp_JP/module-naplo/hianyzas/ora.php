@@ -1,0 +1,12 @@
+<?php
+	define('__PAGETITLE','行方不明からクラス');
+	define('_IGAZOLATLAN','公称');
+	define('_ADOTT_NAP','1日');
+	define('_NEV_OSZTALY','名前は、クラス');
+	define('_J','');
+	define('_K','');
+	define('_H','');
+	define('_F','');
+	define('_FM','');
+	define('_IGAZOLT','公認');
+?>

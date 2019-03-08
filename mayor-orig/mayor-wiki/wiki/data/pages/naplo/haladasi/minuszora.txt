@@ -1,0 +1,16 @@
+====== Óra elmaradás ======
+
+Az oldal arra való, hogy egy adott napon tanár, vagy osztály szerint kiválasztott órákat állíthassunk elmaradó státuszba.
+
+Az előbbi akkor lehet hasznos, ha a tanár nem hiányzik egész nap, akár még helyettesítésre is ki van írva más órában, de az egyik órája valamilyen okból elmarad. Ha ezt a ''Helyettesítés'' alatt akarjuk állítani, akkor először a tanárt hiányzóként kell jelölnünk, ezzel az összes óráját ''elmarad'' státuszúvá tesszük elveszítve az esetleges korábbi helyettesítési kiírásait.
+
+Az osztály szerinti óra elmaradás akkor jön jól, ha egy osztály valamilyen program miatt nem vesz részt a tanításon, vagy annak egy részén (osztálykirándulás, színház látogatás, orvosi vizsgálat, stb).
+
+===== Az elmaradó óra kiválasztása =====
+
+  * válasszunk ki egy dátumot
+  * majd egy tanárt, vagy osztályt
+  * megjelenik a tanár, vagy osztály adott dátum szerinti órarendje (pontosabban haladási naplója)
+  * az az óra tankörének neve előtti jelölőnégyzettel jelölhetjük meg az elmaradó órát, vagy órákat
+  * az ''OK'' gombbal jóváhagyhatjuk a változásokat
+

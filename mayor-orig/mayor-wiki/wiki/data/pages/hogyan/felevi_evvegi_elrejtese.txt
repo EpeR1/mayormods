@@ -1,0 +1,33 @@
+A napló lehetőséget ad arra, hogy a diák- és szülői oldalakon a **félévi** ill. az **évvégi zárójegyet elrejtsük** a szemeszter végéig. A feladat több lépésből áll.
+
+**FIGYELEM! Azoknál a naplóknál, ahol fut a Hírnök és/vagy az email-es értesítő, az alábbi lépések nem elégségesek!**
+
+==== Config állomány szerkesztése ====
+
+
+Lépjünk be a ///var/mayor/config/module-naplo/config-[iskola].php// állományba és keressük meg a
+
+        // Félévi és év végi osztályzatok elrejtése a diákok elől a szemeszter végéig
+        define('_OSZTALYZATOK_ELREJTESE', true);
+
+sorokat. Így, ebben a formában a zárójegyek rejtése élesített.
+
+==== Menü szerkesztése ====
+
+A fenti megoldás az osztályozónapló nézetben működik, viszont leleményes diákok rájöttek, hogy a bizonyítvány nézetben simán ott virítanak a zárójegyek.
+Ennek kiküszöbölésére tüntessük el ideiglenesen a menükből a bizonyítvány menüpontot!
+
+Szerkesszük a ///var/mayor/config/menu/parent/menu-hu_HU.php// és a ///var/mayor/config/menu/private/menu-hu_HU.php// állományokat! Így kell kinézniük (vagy ennek is bennük kell lenni):
+
+        <?php
+        // Bizonyítvány menü eltüntetése
+        unset($MENU['modules']['naplo']['sub']['osztalyozo']['bizonyitvany']);
+        ?>
+
+Ezzel a szülői- és a diákoldalakon eltűnik a Bizonyítvány menüpont.
+A dolog szépséghibája, hogy a tanári oldalakról is eltűnik, de valamit valamiért... :-)
+
+(Ne felejtsük el visszatenni a menüpontot, ha már úgysem aktuális a rejtegetés...)
+
+**Figyelem!** A zárójegyek az Osztályozó napló oldalain a __szemeszter zárónapján éjfélig__ lesznek rejtettek!
+

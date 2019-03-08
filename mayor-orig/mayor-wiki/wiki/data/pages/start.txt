@@ -1,0 +1,7 @@
+====== MaYoR Wiki ======
+
+===== Mi a MaYoR =====
+
+A közösség erejével fejlesztett és karbantartott MaYoR elektornikus napló szoftver a mindannepi adminisztrációs feladatok hatékony szervezésére, terhének elosztására és a bonyolult központi szabályrendszerek egyszerű betartására terveztük, figyelembe véve az iskolák szereplőinek (diákok, tanárok, vezetés és szülők) együttes igényeit és a helyi/egyedi szokásoknak megfelelhető konfigurálhatóságot is.
+
+Részletekért olvassa a wiki-t vagy keressen minket a http://www.mayor.hu oldalon.

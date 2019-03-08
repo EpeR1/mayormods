@@ -1,0 +1,24 @@
+====== Hibabejelentés, kérelem - "Hangya" ======
+
+A //felhasználók// (tanár, diák, szülő) saját felületükön a **Napló/Kérelmek** menüben, az **Új kérelem** alatt küldhetnek hibajegyet, amit a 
+//vezetőség// és a //naploadmin// lát, illetve tud rá reagálni (vagy ezzel kapcsolatban intézkedni). Ugyanez a funkció elérhető a felület jobb oldalán, 
+a kis hangyafejre kattintva.
+
+A működéssel kapcsolatos hibabejelentés mellett (ami egyértelműen a //naploadmin//-nak szól) itt van lehetőség - vagy inkább itt célszerű - 
+a naplóval kapcsolatos hivatalos, a vezetőségnek szóló kérelmek beadására. Iskolája válogatja, hogy ide mit vesznek be: tévesen beírt jegyek, bejegyzések, 
+hiányzások, elmaradt igazolások, tankörmódosítás, órarendi módosítás, stb.
+
+A //felhasználóknak// nincs más dolga, mint az etikettet betartva (köszönés, illedelmes, egyértelmű fogalmazás, elköszönés) megírni a "hangyát", majd az 
+OK gombra kattintva elküldeni. Igyekezzünk pontos és elégséges információt megadni az esetleges javításhoz (melyik osztály/tankör/diák/óra érintett, igazolás
+esetén milyen típusú igazolásra volna szükség, stb).
+Amennyiben a //vezetőség// vagy a //naploadmin// további kérdéseket, kérések tesz fel megjegyzésként, ezek ugyanebben a 
+hibajegyben/kérelemben a //felhasználó// által írt szöveg alatt egy külön mezőben jelennek majd meg.
+
+A feladott hibajegy/kérelem sorsát portál modullal ellátott napló esetén a **Kezdőlapon** középen színes keretben és jobb oldalon, a **Hangya** fül alatt, portál hiányában a **Napló/Kérelmek** menüpont alatt lehet figyelemmel kísérni.
+
+  * A még **feldolgozatlan** "hangya" a jobb oldali menüben fekete szövegű, a **Napló/Kérelmek** menüben háttere szürke, a bal alsó téglalapban megjelenő dátum a feladás idejét jelzi.
+  * A **megjegyzéssel** elátott "hangya" megjelenik a **Kezdőlapon** rozsdaszínű megjegyzés-mezővel, a jobb oldalon félkövér szöveget kap, a **Napló/Kérelmek** alatt háttere továbbra is szürke, alatta olvasható a megjegyzés.
+  * A **jóváhagyott**, tehát elfogadott, de még elintézetlen kérelem a **Kezdőlapon** és a jobb **Hangyában** zöld hátterűvé válik, a **Napló/Kérelmek**-ben a zöld háttér mellett megjelenik egy újabb téglalapban a jóváhagyás dátuma.
+  * A **lezárt**, tehát elintézett hibajegy a **Kezdőlapon** újra zöld hátterű, jobb oldalon visszáll szürkére, **Napló/Kérelmek** menüben szintén marad a zöld háttér, és felbukkan a harmadik dátumos téglalap a lezárás dátumával.
+
+A kérelmet/hibajegyet törölni nem lehet!

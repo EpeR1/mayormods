@@ -1,0 +1,179 @@
+<?php
+
+        // Napló zárás: következő hónap 10-e
+        define('_ZARAS_HATARIDO',date('Y-m-01 00:00:00',strtotime('10 days ago')));
+        // Helyttesített óra beírása (szaktanár): következő nap 8:00
+        define('_HELYETTESITES_HATARIDO',date('Y-m-d',strtotime('8 hours ago'))); // Csak dárum lehet, mert az órák időpontját nem tudjuk
+        // Jegyek beírása, módosítása, törlése (szaktanár): zárásig (zárt időintervallum!)
+        define('_OSZTALYOZO_HATARIDO',_ZARAS_HATARIDO);
+
+        // Saját óra beírása (szaktanár)
+        // A mai nap+8 óra előtti tanatási nap utáni napot megelőző hétfő
+	// Azaz egy óra a következő hétfői tanítási nap 16:00-ig írható be.
+        define('_HALADASI_HATARIDO',
+            date('Y-m-d H:i:s',
+                strtotime('last Monday',
+                    strtotime('next day',
+                        strtotime(
+                            getTanitasiNapVissza(1,date('Y-m-d H:i:s',strtotime('+8hours')))
+                        )
+                    )
+                )
+            )
+        );
+
+    // Bontandó tárgyak targyId-i (ld. ascExport Súgó)
+    // define('__ASC_BONTANDO_TARGYAK','1,12');
+
+    // A nevek rendezése a helyettesítés kiíráskor: súly szerint (súly) vagy névsorban (ABC)
+    define('__HELYETTESITES_RENDEZES','súly');
+
+    // Haladási statisztikához
+    define('__TANITASI_HETEK_SZAMA',37);
+    define('__VEGZOS_TANITASI_HETEK_SZAMA',31);
+
+    // Fogadóórán egy vizit tervezett hossza
+    define('_VIZITHOSSZ',10);
+
+    // Jegyek default súlyozása
+    define('__DEFAULT_SULYOZAS','1:1:1:2:2');
+    // Jegymódosításkor a jegy típus modosítható-e (pl: féljegy --> százalékos)
+    define('__JEGYTIPUS_VALTHATO',false);
+
+    // Ha az osztályozónaplóban az alapértelmezett havi bontás helyett féléves bontást szeretnénk
+    // define('__OSZTALYOZONAPLO_JEGYEK_FELEVENTE', true);    
+
+    // Félévi és év végi osztályzatok elrejtése a diákok elől a szemeszter végéig
+    // define('_OSZTALYZATOK_ELREJTESE', true);
+
+    // Tanév függő beállítások!
+    if (defined('__TANEV')) {
+
+	if (__TANEV == 2006) {
+	} elseif (__TANEV == 2007) {
+	} elseif (__TANEV == 2008) {
+	    // Ha azt akarjuk, hogy a tanárok módosíthassák a tanköreik névsorát... bátor vállalkozás :o)
+	    // define('_TANKOR_MODOSITAS_HATARIDO','2008-09-30');
+	}
+
+        // Szülői igazolások száma: félévenként legfeljebb 5 nap
+        define('__SZULOI_IGAZOLAS_FELEVRE',5);
+        define('__SZULOI_IGAZOLAS_EVRE',0);
+        // Szülő által igazolható órák maximális száma: félévenként legfeljebb 14 óra
+        define('__SZULOI_ORA_IGAZOLAS_FELEVRE',14);
+        define('__SZULOI_ORA_IGAZOLAS_EVRE',0);
+        // Osztályfőnöki igazolások száma: évi 3 nap
+        // Csak ha < 5 igazolatlanja van
+        define('__OSZTALYFONOKI_IGAZOLAS_FELEVRE',0);
+        define('__OSZTALYFONOKI_IGAZOLAS_EVRE',5);
+        define('__OSZTALYFONOKI_ORA_IGAZOLAS_FELEVRE',0);
+        define('__OSZTALYFONOKI_ORA_IGAZOLAS_EVRE',21);
+
+        // Összeadjuk-e a késések perceit, hogy átváltsuk
+        define('_KESESI_IDOK_OSSZEADODNAK', false);
+        // Hány késés felel meg egy igazolatlan órának - ha 0 vagy _KERESESI_IDOK_OSSZEADODNAK, akkor nem váltjuk át
+        define('_HANY_KESES_IGAZOLATLAN', 3);
+        // Hány felszerelés hiány felel meg egy igazolatlan órának - ha 0 vagy _KERESESI_IDOK_OSSZEADODNAK, akkor nem váltjuk át
+        define('_HANY_FSZ_IGAZOLATLAN', 3);
+
+        // Hiányzás, késés, felszerelés hiány beírása (szaktanár): következő nap 16:00
+        define('_HIANYZAS_HATARIDO',date('Y-m-d 00:00:00',strtotime('16 hours ago')));
+        // Hiányzás, késés beírása osztályfőnöknek: 5 tanítási nap
+        define('_OFO_HIANYZAS_BEIRAS',5);
+        define('_OFO_HIANYZAS_HATARIDO',getTanitasiNapVissza(_OFO_HIANYZAS_BEIRAS,'curdate()'));
+        // Igazolás beírásának határideje: 5 tanítási nap
+        define('_IGAZOLAS_BEIRAS',6);
+        define('_IGAZOLAS_BEIRAS_HATARIDO',getTanitasiNapVissza(_IGAZOLAS_BEIRAS,'curdate()'));
+        // Igazolás leadás határideje - ha nincs közben osztályfőnöki óra: 8 tanítási nap
+        define('_IGAZOLAS_LEADAS',8);
+        define('_LEGKORABBI_IGAZOLHATO_HIANYZAS',getTanitasiNapVissza(_IGAZOLAS_BEIRAS+_IGAZOLAS_LEADAS,'curdate()'));
+
+    }
+
+/*
+
+    // Legalább hány óra jelenjen meg az órarend-módosító oldalon? (default: 8)
+    define('__MAXORA_MINIMUMA',8);
+    // Legalább hány nap jelenjen meg az órarend-módosító oldalon? (default: 5)
+    define('__HETIMAXNAP_MINIMUMA',5);
+
+    // Súlyozás
+    global $SULYOZAS;
+    $SULYOZAS = array('1:2:3:4:5','0.2:1:1:1:1','1:1:2:2:2');
+
+
+    // A dicséret fokozatok testreszabása
+    global $DICSERET_FOKOZATOK;
+    $DICSERET_FOKOZATOK = array(
+        'SEMMI',
+        'SZAKTANARI_DICSERET',
+        'OSZTALYFONOKI_DICSERET',
+        'IGAZGATOI_DICSERET',
+        'NEVELOTESTULETI_DICSERET'
+    );
+
+    // A fegyelmi fokozatok testreszabása - például: rovók kiiktatása !! A hiányzási fokozatokat is érinti!! (a példában nincs átjavítva)
+    // Ha egyszer változtattad, csak hozzáfűzni szabad (átalakítás alatt)
+    global $FEGYELMI_FOKOZATOK;
+    $FEGYELMI_FOKOZATOK = array(
+        'SEMMI',
+        'SZAKTANARI_FIGYELMEZTETES',
+//        'SZAKTANARI_INTO',
+//        'SZAKTANARI_ROVO',
+        'SZOBELI_OSZTALYFONOKI_FIGYELMEZTETES',
+        'OSZTALYFONOKI_FIGYELMEZTETES',
+        'OSZTALYFONOKI_INTO',
+//        'OSZTALYFONOKI_ROVO',
+        'IGAZGATOI_FIGYELMEZTETO',
+        'IGAZGATOI_INTO',
+//        'IGAZGATOI_ROVO',
+        'NEVELOTESTULETI_FIGYELMEZTETES',
+        'NEVELOTESTULETI_INTES',
+//        'NEVELOTESTULETI_MEGROVAS'
+    );
+
+    // Igazolatlan hiányzások fegyelmi fokozatai
+    global $HIANYZASI_FOKOZATOK;
+    $HIANYZASI_FOKOZATOK = array(
+        0 => 0,  // semmi
+        1 => 2,  // szóbeli osztályfőnöki figyelmeztetés
+        2 => 3,  // osztályfőnöki figyelmeztetés
+        3 => 4,  // osztályfőnöki intő
+        4 => 5,  // osztályfőnöki rovó
+        5 => 6,  // igazgatói figyelmeztető (szülő értesítése)
+        6 => 0,  // semmi
+        7 => 7,  // igazgatói intő
+        8 => 0,  // semmi
+        9 => 8,  // igazgatói rovó
+        10 => 0, // igazgatói rovó
+        11 => 9  // fegyelmi eljárás
+    );
+
+    global $KOVETELMENY;
+    // Osztályzatok testreszabása - egyedi felsorolás (RADYX)
+    $KOVETELMENY['egyedi felsorolás']= array(
+        'értékek' => array('1.0','2.0','3.0'),
+        '1.0' => array('rovid' => 'szorgalmas',   'hivatalos' => 'SZORGALMAS'),
+        '2.0' => array('rovid' => 'ügyes',   	'hivatalos' => 'UGYES', 'megjegyzes' => 'dicseret'),
+        '3.0' => array('rovid' => 'aranyos',    'hivatalos' => 'ARANYOS'),
+    );
+    // Osztályzatok testreszabása - például: 6 fokú skála (RADYX)
+    $KOVETELMENY['jegy']= array(
+        'értékek' => array('1.0','2.0','3.0','4.0','5.0','6.0'),
+        '1.0' => array('rovid' => '1',   'hivatalos' => 'ELEGTELEN'),
+        '2.0' => array('rovid' => '2',   'hivatalos' => 'ELEGSEGES', 'megjegyzes' => 'figyelmeztető'),
+        '3.0' => array('rovid' => '3',   'hivatalos' => 'KOZEPES'),
+        '4.0' => array('rovid' => '4',   'hivatalos' => 'JO',),
+        '5.0' => array('rovid' => '5',   'hivatalos' => 'JELES'),
+        '6.0' => array('rovid' => '6',   'hivatalos' => 'SZUPER', 'megjegyzes' => 'dicséret'),
+    );
+
+    // A kitűnő megállapításához csak az átlagot vesszük figyelembe
+    define('_KITUNO_ATLAG', 5.0);
+    // jelesrendű, aki a megadott átlag fölött van és nincs a megadott jegynél gyengébb eredménye egyik tárgyból sem
+    define('_JELES_ATLAG', 4.75);
+    define('_JELES_LEGGYENGEBB_JEGY', 3);
+
+*/
+
+?>

@@ -1,0 +1,110 @@
+====== Szülői adatok betöltése ======
+
+A szülői adatok felvétele normál esetben - a diák többi adatával együtt - a beiratkozáskor történhet. De az is előfordulhat, hogy a szülői adatokat utólag, tömegesen szeretnénk betölteni valamilyen adatállományból - tipikusan ilyen eset a telepítés utáni első adatfeltöltés. Erről - illetve a szülők felhasználói azonosítóinak adatbázis szinten történő létrehozásáról (MySQL backend-et feltételezve) - szól ez a leírás.
+
+===== Szülők adatainak betöltése adatállományból a naplóba =====
+
+A szülők adatait általában a diákok adatival együtt kapjuk meg, egy táblázatban. A MaYoR rendszerben viszont a szülők adatai külön adattáblába kerülnek. Ez a használat során előnyös (pl. testvér gyerekek szülői adatai csak egy helyen lesznek eltárolva), de a betöltéskor nehézségeket okoz.
+
+Első lépésként a rendelkezésre álló adatokból olyan tabulátorokkal tagolt szöveges állományokat kell készítenünk, melyekben a diák oktatási azonosítója mellett szerepelnek a betöltendő szülői adatok. Ennek menete nagyban függ a rendelkezésre álló adatok formátumától, de használhatunk táblázatkezelőt, vagy ügyes parancssori alkalmazásokat (''cut'', ''grep'', ''awk'', ''sed'', stb). Külön állományba kerüljenek az anya, apa és más gondviselő adatai. Az állomány fejlécében érdemes az intézményi adatbázis ''szulo'' táblájának mezőneveit használni:
+
+  oId	nem	nevElotag	csaladinev	utonev	cimOrszag	cimHelyseg	cimIrsz	cimKozteruletNev	cimKozteruletJelleg	cimHazszam	cimEmelet	cimAjto
+
+
+A kész állományokat másoljuk a szerver ''/tmp'' könyvtárába.
+
+Majd módosítsuk a ''szulo'' táblát ideiglenesen egy ''oId'' mező hozzáadásával:
+
+    alter table szulo add column oId bigint(11) unsigned;
+
+Ezt a mezőt két dologra fogjuk használni: egyrészt ez alapján tudjuk majd megkülönböztetni az épp betöltött rekordokat a már korábban bekerültektől (azoknál ez a mező ''NULL'' értékű lesz), másrészt ez a mező lesz a kapcsolat a diák tábla fele. A betöltési folyamat végére ez a kapcsolat épp ellenkező irányú lesz: a ''diak'' tábla ''anyaId'', ''apaId'', ''gondviseloId'', illetve ''neveloId'' mezői fognak a megfelelő szülő ''szuliId'' attribútumára mutatni.
+
+Az adatokat betölthetjük MySQL parancssorból (LOAD DATA INFILE ...), vagy a felületről az "Admin/Import" menüpontban. Itt a ''szulo'' tábla kiválasztása után az adatállomány elérési útját kell megadnunk. Ezek után a program beolvassa az állomány első öt sorát és ha megfelelő mezőneveket használtunk, akkor elvégzi az oszlopok mezőkhöz rendelését is (egyébként et nekünk kell megtenni). A betöltés előtt még mindenképp meg kell adnunk egy (vagy több) kulcs mezőt - jelen esetben a diák oktatási azonosítója és a név megfelelő lehet.
+
+A felvett szülőket az oktatási azonosító alapján rendeljük a megfelelő diák megfelelő atribútumához. Például az ''anya'' adatok esetén az ''anyaId'' atribútumhoz:
+
+  update szulo left join diak using (oid) set anyaId=szuloId where szulo.oId is not null;
+
+(Csak a most betöltött adatok esetén lehet a szulo oId mezője nem null értékű)
+Hasonlóan járunk el az ''apa'', a ''gondviselo'', illletve a ''nevelo'' esetén is.
+
+A hozzárendeltek oId-jét NULL-ra állítjuk (hogy a következő betöltésnél megint csak az új rekordok esetén legyen ennek a mezőnek értéke):
+
+  update szulo set oId=null where oId is not null;
+
+===== Duplán adminisztrált szülők kiszűrése =====
+
+Most jön a neheze! Ki kell szűrjük a többszörös neveket - ezek lehet hogy testvérek miatti adat-többszöröződések. Hogy tényleg azok-e, az csak az egyéb adatok vizsgálatával, illetve utánajárással deríthető ki:
+
+  select concat_ws(' ',csaladinev,utonev) as nev, count(*) as db from szulo group by nev having db>1 order by nev;
+
+Ha például Vincs Eszter szerepel a többszörös nevek listájában, akkor lekérdezzük az adataikat:
+
+  select * from szulo where concat_ws(' ',csaladinev,utonev)='Vincs Eszter';
+
+A cím és egyéb adatok alapján már sejthetjük, hogy egy személyt reprezentáló két rekordról van-e szó, vagy két különböző, csak épp azonos nevű személyt találtunk.
+
+A szuloid-k alapján lekérdezhetjük a hozzájuk tartozó diákok adatait is (a szuloId-k pl. 28 és 293):
+
+  select * from diak where anyaId in (28,293);
+
+Ha úgy ítéljük meg, hogy a két rekord ugyanazt a szülőt jelöli, akkor módosítjuk a hozzárendelést és töröljük a felesleges szülőt:
+
+  update diak set anyaId=28 where anyaId=293;
+  delete from szulo where szuloId in (293);
+
+Valódi névütközés esetén a továbbiakban különböző ''userAccount''-okat kell beállítani a két rekordban...
+
+===== A szülők felhasználói azonosítói ======
+
+A naplóban szereplő szülők számára készíthetünk felhasználói azonosítókat, de lehetnek olyan szülő objektumaink is, melyekhez nem tartozik azonosító. Ilyenek az elballagott diákok szülei - adataik továbbra is szerepelnek a naplóban, de a rendszerhez már nem kell hozzáférniük, ezért felhasználói azonosítót nem kapnak.
+
+A szülői azonosítók létrehozása két adattáblát érint: egyrészt létre kell hoznunk magát az azonosítót a ''mayor_parent.accounts'' táblában, másrészt meg kell mondanunk, hogy ez a felhasználói azonosító mely naplóban szereplő szülőhöz tartozik - ezt a ''szulo'' tábla ''userAccount'' mezőjében adjuk meg.
+
+Első lépésként tehát a ''szulo'' táblában generáljunk ''userAccount''-ot a nevek alapján:
+
+  update szulo set userAccount=concat(substring_index(csaladinev,' ',-1),'.',substring_index(utonev,' ',1)) where userAccount is null;
+
+A fenti utasítás minden olyan rekordban kitölti a userAccount mezőt, amelyben az eddig üres volt. Ez egy első adatfeltöltés esetén megfelelő lehet, később azonban már nem, hiszen ezzel például az elballagott diákok szüleinek is újra azonosítót generálnánk. A problémára többféle megoldás is kínálkozik. Egyik lehetőség, hogy a felhasználói azonosítókat is az adatállományból töltjük be a többi szülői adattal együtt. A másik lehetőség, hogy a ''szulo'' táblát összekapcsoljuk a ''diak'' táblával, hogy csak a jogviszonyban lévő tanulók szüleinek adjunk ''userAccount''-ot:
+
+  update szulo left join diak 
+  on szuloId in (anyaId, apaId, gondviseloId, neveloId) 
+  and diak.statusz in ('jogviszonyban van','magántanuló','vendégtanuló') 
+  set userAccount=concat(substring_index(csaladinev,' ',-1),'.',substring_index(utonev,' ',1)) where userAccount is null;
+
+Ezek után ellenőrizzük, hogy vannak-e ütköző felhasználói azonosítók:
+
+  select userAccount,count(*) as db from szulo group by userAccount having db>1;
+
+Sajnos előfordulhat, hogy újabb szülőket találunk, akik többször szerepelnek az adatbázisban, de az is lehet, hogy csak egyszerű név egyezés keseríti a dolgunkat. A javítás a korábbiakban leírt módon történik egészen addig, amíg sikerül elérni, hogy minden szülőnek egyedi azonosítója legyen.
+
+==== Szülői azonosítók felvétele (MySQL backend) ====
+
+Ha az összes ütközést kiküszöböltük, akkor felvehetjük a szülői azonosítókat a ''mayor_parent.accounts'' táblába.
+
+Ha kezdeti adatfelvitelről van szó, tehát az összes azonosítót most hozzuk létre, akkor a parancs a következő lehet:
+
+  insert into mayor_parent.accounts (policy,userAccount,userCn,userPassword)
+    select 'parent',userAccount,trim(concat_ws(' ',nevElotag,csaladinev,utonev)) as userCn,sha(crc32(csaladinev)) as userPassword from szulo;
+
+Ha vannak már azonosítók a ''mayor_parent.accounts'' táblában, akkor csak azokat az azonosítókat kell és lehet létrehozni, amelyek még nem szerepelnek a táblában:
+
+  insert into mayor_parent.accounts (policy,userAccount,userCn,userPassword)
+    select 'parent',userAccount,trim(concat_ws(' ',nevElotag,csaladinev,utonev)) as userCn,
+      sha(crc32(csaladinev)) as userPassword 
+    from intezmeny_vmg.szulo left join mayor_parent.accounts using (userAccount)
+    where szulo.userAccount is not null and accounts.userCn is NULL;
+    
+Ha még precízebbek akarunk lenni, akkor a ''diak'' táblával is össze kell kapcsolnunk a ''szulo'' táblát, hogy csak a jogviszonyban lévő diákok szüleinek adjunk azonosítót:
+
+  insert into mayor_parent.accounts (policy,userAccount,userCn,userPassword)
+    select distinct 'parent',userAccount,
+      trim(concat_ws(' ',nevElotag,csaladinev,utonev)) as userCn,
+      sha(crc32(csaladinev)) as userPassword 
+    from intezmeny_vmg.szulo 
+    left join mayor_parent.accounts using (userAccount) 
+    left join intezmeny_vmg.diak 
+      on szuloId in (anyaId, apaId, gondviseloId, neveloId) 
+      and diak.statusz in ('jogviszonyban van','magántanuló','vendégtanuló') 
+    where szulo.userAccount is not null and accounts.userCn is NULL;
+    

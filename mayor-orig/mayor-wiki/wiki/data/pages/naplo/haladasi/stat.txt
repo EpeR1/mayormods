@@ -1,0 +1,46 @@
+
+====== Haladási statisztika ======
+
+A haladási statisztika arra szolgál, hogy gyors képet kapjunk az egyes tankörök eddig megtartott és várható óraszámairól. Fontos ez, 
+hiszen törvényi kötelezettség az előírt óraszámok legalább 90%-ának megtartása, ennek hiányában az órákat plusz órák beiktatásával pótolni kell.
+(Ha tud valaki pontos törvényi hivatkozást, szöveget, az írja meg nekünk :o) )
+
+
+A tanköröket listázhatjuk a tanár, az osztály, vagy akár egy konkrét diák alapján.
+
+A táblázatban több oszlop szerepel. Az első a tankör neve, a második az eddig megtartott órák száma (az aktuális óraszám),
+utána követezik a becsült hátralávő órák száma, majd az elöbbi kettő összegeként a becsült összes óra száma, végül a tervezett óraszám.
+
+Az utolsó, a tervezett óraszám a végzős
+tanítási hetek számát (_VEGZOS_TANITASI_HETEK_SZAMA) és a tankör adott tanévre megadott óraszámait
+(Intézményi adatok/Tankörök) alapul véve számolja ki az óraszámot. 
+Ez nem mindig jó, lehet ugyanis olyan osztály (például egy éves nyelvi előkészítő képzés), amelyik végzős, 
+abban az értelemben, hogy következő tanévben már jelenlegi a formájában nem lesz,
+de nem vonatkozik rá a rövidebb tanulmányi időszak (ami tipikusan az érettségiző osztályokra jellemző).
+
+A becsült hátralévő órák oszlopa a betöltött órarendet
+és munkatervet veszi alapul és abból számol óraszámot. Ez azt jelenti, hogy ha nem változik a munkaterv és az órarend év végéig,
+és nem lenne egy elmaradó óra sem a hátralévő időszakban, akkor pontosan ennyi lenne a hátralévő órák száma. Többnyire sajnos
+inkább kevesebb lesz ez a szám a gyakorlatban, hiszen órák el-elmaradnak, viszont ritkán kerülnek be plusz órák.
+
+A végzősök esetén vigyázni kell arra, hogy a rájuk vonatkozó órarendi bejegyzések csak a megfelelő dátumig legyenek érvényesek.
+Amikor ugyanis azórarendet év elején, vagy félévkor betöltjük, akkor általában egész évre töltünk be minden bejegyzést. 
+Ez valójában hibás, mert a végzősök óráinak érvényességi ideje, az ő szorgalmi időszakuk hamarabb véget ér.
+Ennek helyrerakására szolgál a [[naplo:orarend:vegzosorarendlezaras|Napló/Tanév adatok/Végzős órarend lezárása]]
+menüpont.
+
+A __diákok__ és a __szülők/gondviselők__ csak a saját érintett tanköreiket látják, míg a __tanárok__ a teljes intézményét.
+
+Külön érdekesség, hogy diákot választva láthatóvá válik a diák adott tankör óráiról történt hiányzásának száma és aránya is. 
+A **Hiányzás arány (megtartott|tervezett)** oszlopban a zárójelben az aktuális időpontig megtartott órákról történt hiányzása 
+látszik százalékosan (első érték), míg a második az egész évi (tervezett) órákra vetítve mutatja a hiányzás arányát. 
+Utóbbi akkor lehet érdekes, ha a diák hiányzása az adott tárgyból az órák 30%-át meghaladja (vagy valószínűleg meg fogja haladni). 
+Lásd: [[jogtar:hianyzas|11/1994. (VI. 8.) MKM rendelet - a nevelési-oktatási intézmények működéséről]] (6) d) pont. 
+
+Ilyenkor figyelemfelkeltő **piros** színnel jelenik meg az adott hiányzás.
+
+Diákot választva még egy plusz oszlop jelenik meg: az **Érdemjegyek száma**. Itt
+
+  Érdemjegyek száma / Tankörlétszám / Heti óraszám = Egy főre jutó érdemjegyek átlagos száma / Heti óraszám = Átlagos jegy szám
+
+értékeket láthatunk. Ez a statisztika a "Van-e elég jegy a tankörben?" kérdésre próbál választ adni...

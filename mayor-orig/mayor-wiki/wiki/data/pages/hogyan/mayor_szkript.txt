@@ -1,0 +1,40 @@
+====== mayor update ======
+
+A frissítésért felelős.
+
+Alapbeállításként minden vasárnap hajnalban fut le, a (Debian rendszeren) /var/mayor/config/main.conf állományban a HTTP_SERVER-ként megadott helyről tölti le (és telepíti) a frissítéseket.
+
+A frissítés idejére lock-olja a naplót, a beléptetett felhasználókat "kidobja".
+
+Futtatható kézzel is, root joggal.
+
+   # mayor update
+
+Sikertelen frissítés esetén:
+  * a /var/mayor/config/main.conf fájlban megadott HTTP_SERVER nem elérhető;
+  * a /etc/resolv.conf-ban helytelen a DNS-megadás, emiatt nem megy a névfeloldás;
+  * a /etc/network/interfaces-ben a dns-nameservers-ben beállított értékek rosszak / szerverek elérhetetlenek.
+
+Félbeszakadt frissítés esetén hiba jelenik meg a napló webes felületén, ilyenkor a /var/run/mayor_lock állományt kell tötölni.
+ 
+====== mayor backup ======
+
+A mentésért felelős.
+
+Alapbeállításként minden nap hajnalban fut le, a (Debian rendszeren) /var/mayor/config/main.conf állományban a BACKUPDIR-ként megadott helyre tömörítve (tar.gz) menti az adatbázisokat, konfigurációs beállításokat.
+
+Célszerű a fenti állományban a "Backup paraméterek" részben a DATE elől kiszedni a kommentet, így a keletkező backupfile kiegészül az aktuális dátummal (2013.03.27 06:25):
+
+   201303270625.tgz
+
+Futtatható kézzel is, root joggal.
+
+   # mayor backup
+
+**Erősen javallott, hogy sql használata előtt feltétlen készítsünk mentést!**
+
+====== mayor restore ======
+
+Megfelelően paraméterezve a backupfile-ból visszaállítja a teljes adatbázist és a konfigurációs állományokat.
+
+Folyt. köv.

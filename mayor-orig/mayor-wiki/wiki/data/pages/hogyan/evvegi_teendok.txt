@@ -1,0 +1,63 @@
+====== Évvégi teendők  ======
+
+===== Időszakok felvétele =====
+
+Az [[naplo:admin:szemeszterek|Admin/Szemeszterek]] menüpont alatt vehetjük fel a zárás/bizonyítvány írás időszakokat - hogy a kollégák le tudják zárni a tanulókat.
+
+Két új időszakot kell felvenni a félévzárási teendőkhöz:
+
+  * **zárás** - amely intervallumban a _szaktanár_ az osztályozó naplóban zárójegyet írhat be
+  * **bizonyítvány írás** - amely intervallunban az _osztályfőnök_ a magatartás és szorgalom jegyeket rögzíthetik. (Ez tipikusan bővebb, mint a zárási időszak)
+
+===== Bizonyítvány írás =====
+
+A konferenciák után a bizonyítvány írás következik. A konferencián történt módosításokat kell először átvezetni (esetleg elmaradt lezárások pótlása, hibás 
+jegyek javítása, magatartás/szorgalom jegyek véglegesítése). Ez után foghatnak az osztályfőnökök a bizonyítványok írásához. Ehhez célszerű az 
+[[naplo:osztalyozo:targysorrend|Osztályozó napló/Tárgysorrend]] alatt a megfelelő tárgysorrendeket kialakítani (''bizonyítvány'' nevű sorrend). Az 
+[[naplo:osztalyozo:bizonyitvany|Osztályozónapló/Bizonyítvány]] nézetben diákonként látjuk a jegyeket és az éves óraszámot - ez talán a legjobban használható oldal 
+a bizonyítványok kitöltéséhez. 
+
+Vigyázzunk a hiányzási adatokkal - az utolsó napokban is változhat - kellemetlen, ha a bizonyítványban kell javítani...
+
+===== Ellenőrzés =====
+
+Jegyek beírása után összeolvasással (bizonyítvány, anyakönyv, elektronikus napló) ellenőrizzük az adatok helyességét! 
+Fontos lépés, ne hagyjuk ki! Igen kellemetlen, ha a kinyomtatott, illetve az elektronikus napló 
+adatai eltérnek a kitöltött bizonyítvány adataitól.
+
+===== Nyomtatás ===== 
+
+Csak akkor fogjunk hozzá a nyomtatáshoz, ha az adatokat ellenőriztük! Nagymennyiségű papírhulladéktól kímélhetjük meg magunkat ezzel...
+
+Két fö dokumentumot nyomtathatunk ki: a haladási naplót és az osztályozó naplót.
+
+A haladási naplóhoz szét kell osztanunk a több osztályt is érintő tanköröket, hogy melyik osztály naplójában jelenjenek meg az óráik 
+([[naplo:nyomtatas:tankornaplohozrendeles|Nyomtatás/Tankör naplóhoz rendelése]]). 
+
+Fontos a helyes [[naplo:osztalyozo:targysorrend|Osztályozó napló/tárgysorrend]] beállítása is, mert az első  oldalakon csak 6 oszlopnak van hely 
+(ld: [[gyik:naplo#haladasi_naplo_nyomtatasakor_a_hibahibas_rossz_adat_elso_oldal_targyak_szama_7_hibauezenetet_kapom|GYIK]]).
+
+===== Tanév lezárása =====
+
+A tanév lezárása ([[naplo:admin:tanevek|Admin/Tanévek/Tanév lezárása]]) több külön-külön is elvégezhető lépést takar: 
+
+  - Végzős tanulók jogviszonyának lezárása
+  - Végzős tanulók osztályokból való kiléptetése
+  - Végzős tanulók tankörökből való kiléptetése
+  - Végzős tanulók azonosítóinak törlése
+  - A tanév adatbázisának lezárása (csak olvasható lesz).
+
+Ez utóbbi lépés után a többi már nem végezhető el, csak ha újra megnyitjuk a tanévet. 
+
+====== A következő tanév előkészítése ======
+
+A tanév lázárásával párhuzamosan mindenképp fontos, hogy előkészítsük a következő tanévet. Minden, ami előre tudható, jó ha minél hamarabb rögzítésre kerül a naplóba:
+
+  - Új tanév felvétele, dátumok pontosítása a tanév rendje rendelet szerint
+  - Éves munkaterv inicializálása (ehhez a helyes nyitó és záródátumok, valamint annak ismerete kell, hogy hány hetes órarenddel fog működni az intézmény (A-hét, B-hét pl.). A munkarendbe a központilag előírt szünetek előre felvehetők, valamint a mozgó ünnepek (húsvét, pünkösd...). A többi gondolom az év elei értekezleteken fog eldőlni.
+  - Új osztályok felvétele, osztályfőnökök kinevezése
+  - Új diákok felvétele (osztályonként) - akár a  beiratkozás előtt, a beíratkozáskor pontosítva az adatokat - a néhány kimaradót utólag könnyen törölhetjük
+  - Felmenő tankörök óraszámainak ellenőrzése, tanárváltások adminisztrálása
+  - Új tankörök felvétele, óraszámokkal, tanárokkal, esetleg névsorral (ha már tudható)
+  - Tankörcsoportok, tankörblokkok létrehozása (tanév függő!)
+

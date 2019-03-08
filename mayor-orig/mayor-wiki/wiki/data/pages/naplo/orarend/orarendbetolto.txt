@@ -1,0 +1,31 @@
+====== Órarend betöltés ======
+
+Az órarend betöltésének lépései:
+
+  * Válasszuk ki az érintett tanévet (új tanév órarendjének betöltésekor könnyen lehet, hogy nem az aktuális tanév amire a betöltendő órarend vonatkozik)
+  * Válasszuk ki, hogy melyik órarendi hét órarendjét töltjük be (nincs lehetőség többhetes órarend betöltésére, csak hetenként külön!). Kiválaszthatunk fiktív órarendi hetet is - az ezekhez rendelt órarendeket speciális tanítási napokon használhatjuk.
+  * Válasszuk ki az órarend érvényességének dátum határait (legtágabb intervallum: első tanítási naptól az utolsó tanítási napig)
+  * Adjuk meg a betöltendő file elérési útját (előzetesen fel kell másolni a szerverre)
+  * Válasszuk ki a betöltendő állománynak megfelelő import modult. Az import lehetőségek:
+    * Microsoft Excel XML
+    * [[aSc Timetables XML]]
+    * [[aSc Timetables XML (tankörök nélkül)]]
+    * csv
+    * default
+
+Ha mindent beállítottunk, akkor megnyomhatjuk az ''OK'' gombot. Ha valamit kifelejtettünk, akkor a program hibaüzenetet küld.
+
+A betöltés közben keletkezhetnek egyéb hibaüzenetek, de ezek az import modultól függőek - a modulok leírásában tájékozódhatunk felőlük (ha an leírásuk egyáltalán). Ha a betöltés sikeres volt, erről informál minket a rendszer. Ha nem volt sikeres, de lehetőség van az adatok részleges betöltésére, akkor a rendszer kirak egy ''kényszerítve'' opciót. Mielőtt ezt a lehetőséget használjuk alaposan olvassuk el az import modul hibaüzeneteit, illetve leírását!
+
+===== Az adatok betöltésének folyamata =====
+
+Ha az adatok betöltésének nincs akadálya, akkor az a következő lépések során valósul meg:
+
+  * A korábbi orarendi bejegyzések törlése:
+    * A megadott időintervallumba eső, adott órarendi héthez tartozó bejegyzéseket töröljük.
+    * A megadott időintervallumot lefedő, adott órarendi héthez tartozó bejegyzések hatályát érvénytelenítjük a megadott intervallumon (tehát a megelőző és az azt követő időszakokra korlátozzuk).
+    * A megadott időintervallumba belenyúló, adott órarendi héthez tartozó bejegyzések hatályát szintén szűkítjük, hogy az megadott intervallumon érvényüket veszítsék.
+  * Az új órarendi bejegyzések felvétele, a megadott dátumhatárokkal és órarendi héttel.
+  * A hiányzó 'órarendi óra - tankör' hozzárendelések felvétel - ha ezekről van információ az adott import formátumban.
+
+Sikeres betöltés után - import modultól, import formátumtól függően - szükség lehet még az órarendi órák tankörökhöz rendelésére is.

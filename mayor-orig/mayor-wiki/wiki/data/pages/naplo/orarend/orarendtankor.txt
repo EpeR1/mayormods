@@ -1,0 +1,9 @@
+====== Órarendi óra - tankör összerendelés ======
+
+Az [[hogyan:orarend|órarend]] alapvetően két táblából áll. Az ''orarendiOra'' tartalmazza az órarendi bejegyzéseket, az ''orarendiOraTankor'' pedig ezekhez a bejegyzésekhez rendel hozzá egy-egy tankört.
+
+Ezt a hozzárendelést végezhetjük el ezen az oldalon.
+
+Ehhez először válasszunk ki egy dátumot - hogy az órarendnek melyik változatát akarjuk épp megjeleníteni (érvényesség, illetve többhetes órarend, A-hét, B-hét, stb)
+
+Ezután válasszunk tanárt. Ha minden jól megy, akkor megjelenik a tanár adott dátum szerinti órarendje, az egyes bejegyzésekben a választható tankörök egy-egy legördülő menüben jelennek meg. A hozzárendeléskor a (''tanarId'', ''osztalyJel'', ''targyJel'') hármas lesz a kulcs, ami meghatároz egy tankört. Tehát olyan bejegyzésekhez, melyekben ez a három paraméter megegyezik nem lehet különböző tankört rendelni.

@@ -1,0 +1,65 @@
+====== Szülői jelszócsere email-ben ======
+2016. nyarán új funkcióként megjelent az szülői elfelejtett / lejárt jelszavak önálló cserejének lehetősége.
+
+Az egész beállítást célszerű kevésbé terhelt időszakban (késő este, hétvége, piros betűs ünnep) elvégezni... :-)
+
+==== Előzetes tevékenységek ====
+  - Ellenőriz(tess)ük a szülői email-címek meglétét!
+  - Ha kell, aktualizáljuk! (Jelenleg (2016. szept.; rev3988)) a diák adatlapján, a szülői részben felvett/átírt email-cím NEM frissül a felhasználói adatoknál! Tehát változtatás esetén 2 helyen kell módosítani: Intézményi adatok/Diákok és Felhasználók/Felhasználó keresése-parent...)
+  - A régi, hagyományos (email-telen) jelszócsere lehetőségét hagyjuk meg, biztos lesz olyan szülő, aki nem használ email-t!
+  - Járjunk utána, hogy milyen módon lehet a kimenő leveleket ténylegesen kiküldeni (melyik szerverünk alkalmas erre, portnyitások a Közhálón, stb.)
+
+==== Hagyományos jelszócsere ====
+Mivel a szülőkkel ritkán van személyes kapcsolattartás, célszerű a jelszócsere-igényre egy nyomtatványt készíteni, pl. [[http://www.szag.hu/szuloijelszo.php|ilyet]]...
+
+==== Jelszóemlékeztető kérés lehetőségének beállítása ====
+A ///var/mayor/config/parent-conf.php// állományban engedélyezzük ezt a lehetőséget!
+  'enablePasswordReset' => true,
+Ezzel a publikus kezdőlapon, a **Bejelentkezés**-re kattintva aktivizálódik a kék színű **Jelszóemlékeztető** gomb.
+
+A szülőknek lehetőségük van __email-cím__ vagy __felhasználói azonosító__ alapján kérni a cserét.
+
+==== Levélküldés beállítása ====
+
+Jelenleg a MaYoR csak úgy tud küldeni levelet, ha a szerveren levő smtp szerver tud levelet küldeni. Közvetlenül nem kapcsolódik külső smtp szerverhez a php kliens, ezt inkább más programokra bízza, pl. postfix. Ezért a MaYoR-t futtató gépen telepíteni kell a postfix (levélküldő) csomagot, minden rendes tárolóban fenn van.
+
+**FIGYELEM! SuliXerver alatt futó naplónál ezt a lépést KI KELL HAGYNI! Ugorj az [[hogyan:jelszoemlekezteto#egyeb_beallitasok|Egyéb beállítások]]ra!**
+  # apt-get install postfix
+vagy
+  $ sudo apt-get install postfix
+És innen kérdéses a dolog, mert ahány ház, annyi szokás... Melyik szerver küldi a levelet, milyen hozzáféréssel, melyik porton, stb... Az alábbiakat csak a helyi viszonyok pontos ismeretében lehet folytatni!
+Célszerű a tényleges levélküldést másik szerverre bízni, így egy rakás beállítástól megmenekülünk és az a veszély sem fenyeget, hogy a csak kifele levelező MaYoR-t spam-szervernek minősítik... :-o
+
+**Egyik mód: (MaYoR külön szerveren, mellette komplett funkcionalitású SuliXerver)**
+
+Meg kell adni, hogy a MaYoR ténylegesen kivel küldje el a levelet.
+
+A postfix beállításait a ///etc/postfix/main.cf// állomáynban szerkeszthetjük, de óvatosan...!
+
+Itt kell megadni a levéltovábbító szerver IP-jét, nálam ez a 172.16.0.3 lett. (Meghagytam jó szokás szerint az eredtei sort is, kommentezve...)
+  # relayhost =
+  relayhost = 172.16.0.3
+A változtatások után a postfix-et újra kell indítani:
+  # service postfix restart
+
+Azon a bizonyos szerveren, ami továbbítja a MaYoR által küldött levelet, be kell állítani, hogy a MaYoR-tól fogadja el a levéltovábbítást. Nálam SuliXerver fut, vele kell ezt megértetni.
+
+**Másik mód: nincs levelezőszerver, gmail-es címet használunk**
+
+Először is létre kell hozni egy értelmes nevű, biztonságos jelszóval ellátott gmail-postafiókot.
+
+Majd rá kell venni a napló postfix-jét, hogy ezen postafiókkal küldje a leveleket az érintetteknek. Ehhez szükség van a napló irányában a szolgáltatónál (pl. NIIF/KIFÜ/Közháló/SuliNet - ki hogy ismeri) az **587**-es TCP-portot kinyit(tat)ni.
+
+Még nincs kész, folyt.köv.
+
+==== Egyéb beállítások ====
+
+A /var/mayor/config/main-config.php végére még be kell szúrnunk ezt a két sort, értelemszerűen átírva:
+  define('__SUPPORT_EMAIL_ADDRESS','support@iskola.hu');
+  define('__SUPPORT_EMAIL_NAME',_SITE.' Support');
+
+Ha egy családon belül több hozzátartozó is ugyanazt az email-címet adta meg, értelemszerűen az első kapja meg a levelet.
+
+Hívjuk fel a szülők figyelmét, hogy a levelek gyakran a SPAM mappában landolnak, azt is ellenőrizzék!
+
+Még nincs kész, folyt.köv.

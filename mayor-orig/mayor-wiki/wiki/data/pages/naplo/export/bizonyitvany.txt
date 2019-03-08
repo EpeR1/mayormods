@@ -1,0 +1,12 @@
+
+====== Bizonyítvány adatok exportálása ======
+
+Válasszuk ki először a szemesztert, majd az osztályt!
+
+A program ezek után lekérdezi az osztály tagjainak adatait és adott szemeszterhez tartozó zárójegyeit, melyeket egy
+tabulátorokkal tagolt szöveges állományba rak, soronként egy-egy diák adatát.
+
+A telepítési könyvtár ''export/module-naplo/'' alkönyvtárában szabálozható, hogy mely diákattribútumok kerüljenek a file-ba.
+A teljes attribútum lista nagyon hosszú, megtalálható az ''export/module-naplo/draft/bizonyitvany.php'' állományban. Az alapértelmezett
+attribútum lista az ''export/module-naplo/default/bizonyitvany.php'' állományban található. Saját beállításainkat az
+''export/module-naplo/<intézmény rövid neve>/bizonyitvany.php'' állományba helyezhetjük el.

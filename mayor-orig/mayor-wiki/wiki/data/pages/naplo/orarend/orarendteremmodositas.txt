@@ -1,0 +1,9 @@
+====== Teremmódosítás ======
+
+Ebben a menüpontban az órarendi órák terembeosztását tudjuk változtatni, méghozzá az __órarendbelit__ (vagyis az //orarendiOra// táblát). A változtatások **nem vonatkoznak** a Haladási napló óráira (vagyis az //ora// táblára).
+
+A tanév és a referenciadátum kiválasztása után a teremmódosítást tanárok szerint végezhetjük el. Válasszuk ki a tanárt, a hetet, a napot, az órát és megjelenik az aktuális órához rendelt terem.
+
+A teremlistában értelemszerűen a zölddel jelölt termek az üresek, a pirosak foglaltak.
+
+Amennyiben egy másik tanár, másik csoport által foglalt termet választunk, a változás létrejön és a mezők automatikusan a "kitúrt" tanár órájára állnak, hogy el ne felejtsünk az elfoglalt terme helyett másikat adni szegénynek... :-)

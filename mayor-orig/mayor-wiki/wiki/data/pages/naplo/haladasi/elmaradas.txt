@@ -1,0 +1,16 @@
+====== Haladási elmaradások ======
+
+A //vezetőség// által a tanárok adminisztratív fegyelmének ellenőrzését hivatott szolgálni a **Napló/Haladási napló/Haladási elmaradások** menüje.
+
+Ebben a //vezetőség// tagjai figyelemmel tudják kísérni a Haladási napló elmaradásait (csak az óra témáját, illetve a beírás megtörténtét, de a hiányzások bejegyzését nem!).
+A napló  a \\
+''/var/mayor/config/module-naplo/config-[iskola_rovid_neve].php'' állományban definiált ''_HALADASI_HATARIDO'' alapján különbözteti meg (szín szerint is) a
+  * **beírandó** és a 
+  * **lezárt**
+státuszokat.
+
+A **beírandó** órák azok, amik bár elmúlt napokhoz tartoznak, még beírhatók, míg a **lezárt**ak már 
+csak a //vezetőség// (vagy a //naploadmin//) nevében belépve pótolhatók - némi ejnye-bejnye után... :-)!
+
+
+A program barna színnel jelöli azokat, akinek van **lezárt** státuszú órája, zöldel pedig azokat, akiknek csak beírt és **beírandó** órája van.

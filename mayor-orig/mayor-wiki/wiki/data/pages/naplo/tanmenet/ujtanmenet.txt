@@ -1,0 +1,7 @@
+
+====== Új tanmenet felvétele ======
+
+Új tanmenetet a szaktanárok vehetnek fel - természetesen saját tantárgyaikhoz.
+
+A tanmenet létrehozásához válasszuk ki a tárgyat, évfolyamot (ha még nincs kiválasztva), majd adjuk meg a tanmenet éves óraszámát, nevét.
+Az űrlap kitöltése és jóváhagyása után a program a [[tanmenetModositas|Tanmenet módosítása]] oldalra visz, ahol felvehetjük a tanmenet témaköreit.

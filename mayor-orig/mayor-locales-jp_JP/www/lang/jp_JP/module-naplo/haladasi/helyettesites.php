@@ -1,0 +1,18 @@
+<?php
+	define('_HELYETTESITES','置換');
+	define('__PAGETITLE','置換');
+	define('_DATUM_VALASZTAS','日付の選択');
+	define('_HIANYZO_TANAROK','行方不明の教師');
+	define('_ORA','レッスン');
+	define('_VISSZAALLIT','復元する');
+	define('_KEZI_BEALLITAS','マニュアル修正');
+	define('_ORA_MOZGATAS','動きのレッスン');
+	define('_MOZGATANDO','レッスンに動かさなければならない');
+	define('_UJ_IDOPONT','新規公開');
+	define('_CSERELENDO','レッスンに交換');
+	define('_ORA_CSERE','レッスン交換');
+	define('_CSERE_ATTEKINTES','交流の概要/動き');
+	define('_MIT','引っ越しのレッスン');
+	define('_HONNAN','から');
+	define('_HOVA','を');
+?>

@@ -1,0 +1,24 @@
+====== Szemeszterek adatai ======
+
+Itt vehetjük fel a szemeszterekhez tartozó időszakokat. Az időszakok típusai a következők:
+
+  * zárás - Ebben az időszakban zárhatják le a szaktanárok a diákokat (tipikusan a konferenciát megelőző napok);
+  * bizonyítvány írás - Ebben az időszakban adhatnak magatartás/szorgalom jegyet az osztályfőnökök, illetve módosíthatnak zárójegyeket a vezetőség tagjai (tipikusan a konferencia után is tart néhány napig. A zárási és a bizonyítvány írási időszak kezdetének szigorúan meg kell egyeznie!);
+  * vizsga - ;
+  * előzetes tárgyválasztás - Ebben az időszakban jelentkezhetnek a tanulók a választható tankörökre - ilyenkor (még) nincs létszám minimum korlát;
+  * tárgyválasztás - Ebben az időszakban módosíthatják jelentkezésüket a diákok - de csak a maximális és minimális létszámkorlátok erejéig;
+  * tankörnévsor módosítás - Ebben az időszakban a tanárok módosíthatják saját tanköreik névsorát (tipikusan a tanév eleje);
+  * tankörnévsor módosítás - Ebben az időszakban van lehetőségük a szaktanároknak, hogy a saját tanköreikbe felvegyék a hozzájuk járó diákokat. Érdemes felhívni a szaktanárok figyelmét arra, hogy a felvétel során fokozottan ügyeljenek a tagok tankörhöz tartozó kezdő- és végdátumaira! Jellemzően tanév (és/vagy II. félév) elején használjuk.
+  * fogadóóra jelentkezés - Ebben az időszakban jelentkezhetnek online a szülők fogadóórára.
+  * tanmenet leadás - Ebben az időszakban lehet tanmeneteket rendelni az egyes tankörökhöz. Egy lehetséges időszak a szeptember hónap erre a célra.
+
+===== Új időszak felvétele =====
+
+Első lépésként válasszuk ki az érintett szemesztert!
+Ez után új időszak felvételéhez válasszuk ki az időszak kezdő és záródátumát (zárt intervallumként!), majd az időszak típusát, végül nyomjuk meg az ''OK'' gombot!
+
+===== Időszak törlése =====
+
+Jelöljük meg a törlendő időszakokat a típus előtti jelölőnyégyszögek segítségével, majd nyomjuk meg az ''Törlés'' gombot!
+
+

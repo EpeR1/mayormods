@@ -1,0 +1,159 @@
+===== SQL szintű módosítások hasznos gyűjteménye =====
+
+==== Egy évfolyam tanulóinak adott tárgyból szerzett osztályzatai ====
+
+**Példa:**
+A kompetencia méréshez szükségünk van az előző év (példánkban 2012) végi 7. évfolyamosok matematika osztályzataira.
+
+  SELECT CONCAT_WS(' ', viseltCsaladinev, viseltUtonev) AS diakNev, targyNev, jegy 
+	INTO OUTFILE '/tmp/2012matematika7.txt' FROM zaroJegy LEFT JOIN diak USING (diakId) LEFT JOIN targy USING (targyId) 
+	WHERE targyNev='matematika' AND evfolyam=7 AND felev=2 
+	AND hivatalosDt = (SELECT zarasDt FROM szemeszter WHERE tanev=2012 AND szemeszter=2);
+
+==== Hiányzás beírás elmulasztása ====
+
+**Példa:**
+Szeretnénk megtudni, hogy hányszor fordult elő egy-egy kollégával, hogy az ő órájára utólag valaki más írt be hiányzót. Ez tipikusan olyankor fordul
+elő, mikor a kolléga nem ír be hiányzót, majd az osztályfőnök ezt pótolja helyette.
+
+Az adatbázisban a ''hianyzas.rogzitoTanarId'' tárolja, hogy ki írta be a hiányzást, a ''rogzitesIdoben'' mező 1 értéke pedig azt jelzi, ha a beírás
+még a szaktanárra vonatkozó határidő lezárta előtt megtörtént (ekkor lehet teljesen vétlen a tanár, hisz ha az ofő reggele előre beírja a hiányzót,
+akkor a szaktanárnak már nincs erre módja).
+
+  select ki, viseltCsaladinev, viseltUtonev, count(rogzitoTanarId) 
+    from hianyzas left join ora using (oraId) left join intezmeny_vmg.tankorTanar using (tankorId) 
+    left join intezmeny_vmg.tanar on ki=tanar.tanarId 
+    where ki<>rogzitoTanarId and rogzitesIdoben<>1 group by ki, viseltCsaladinev, viseltUtonev;
+
+
+==== Egy munkaterv óráinak betöltésre adott napra ====
+
+**Példa szituáció:**
+Az intézményben általános iskola és gimnázium is működik - eltérő munkatervvel. Egy adminisztrációs hiba miatt egyik napra csak a gimnázium órái töltődtek be
+(az általános iskola munkaterve eredetileg tanítás nélküli napként jelölte az adott dátumot), de utólag be kell töltenünk az általános iskola óráit is. Nem törölhetjük
+a már betöltött órákat, hisz vannak már beírt órák, hiányzások.
+
+**Megoldás:**
+  * Legyen az adott dátum: 2013-02-27
+  * Az adott napi órarendi hét: 1
+  * Az általános iskola munkatervId-je: 2
+  * A tanév adatbázisa: naplo_vmg_2012
+  * Az intézéményi adatbázis: intezmeny_vmg
+
+Ekkor az SQL utasítás:
+
+  INSERT INTO naplo_vmg_2012.ora (dt,ora,ki,tankorId,teremId,tipus,eredet)
+    SELECT '2013-02-27',ora,orarendiOra.tanarId AS tanarId, orarendiOraTankor.tankorId AS tankorId,teremId, 'normál','órarend'
+      FROM naplo_vmg_2012.orarendiOra LEFT JOIN naplo_vmg_2012.orarendiOraTankor USING (tanarId,osztalyJel,targyJel)
+      WHERE orarendiOraTankor.tankorId IS NOT NULL AND tankorId IN  (
+        SELECT DISTINCT tankorId FROM intezmeny_vmg.tankorOsztaly 
+          WHERE osztalyId IN (SELECT distinct osztalyId FROM naplo_vmg_2012.munkatervOsztaly WHERE munkatervId=2)
+      )
+      AND het=1 AND nap=3 AND tolDt<='2013-02-27' AND igDt>='2013-02-27'
+
+==== Be nem lépett szülők ====
+
+(Átnézetlen lekérdezés)
+
+Kik azok a szülők akik január elseje óta nem léptek be.
+
+A megoldásom az alábbi sql utasítás lenne:
+
+  SELECT  `userAccount`
+    FROM mayor_parent.accounts
+      WHERE userAccount NOT
+      IN (
+        SELECT  `userAccount`
+          FROM mayor_login.loginLog
+          GROUP BY mayor_login.loginLog.`userAccount` , mayor_login.loginLog.`policy`
+          HAVING MAX( mayor_login.loginLog.`dt` ) >=  '2013-01-01 00:00:00'
+            AND mayor_login.loginLog.`policy` =  'parent'
+      )
+
+==== Két tankör egyesítése visszamenőleg ====
+
+**Példaszituáció**
+Félévkor az egyik tanulócsoportban tanárváltás történt, de ezt - helytelenül - úgy oldottuk meg, hogy új tankört is felvettünk az új tanárnak. Utóbb szeretnénk 
+rendezni a helyzetet, hogy pl. az óraszámok folyamatosan számozódjanak.
+
+**Megoldás**
+  * Legyen az új tanár azonosítója: 49
+  * A korábbi tankör azonosítója: 462
+  * Az újabb tankör azonosítója: 613
+  * Az intézményi adatbázis neve: intezmeny_eventus
+  * Feltesszük továbbá, hogy a megefelő tanév adatbázisában állunk
+
+Ekkor:
+
+  set @tanarId=49;
+  set @new=613, @old=462;
+  
+  START TRANSACTION;
+  
+  -- A tankorId-k cseréje a megfelelő táblákban
+  update ora set tankorId=@old where tankorId=@new;
+  update jegy set tankorId=@old where tankorId=@new;
+  update tankorDolgozat set tankorId=@old where tankorId=@new;
+  update orarendiOraTankor set tankorId=@old where tankorId=@new;
+  update intezmeny_eventus.tankorTanar set tankorId=@old where tankorId=@new;
+  
+  -- A tankorTanar táblában kiiktatjuk az átfedéseket - ez nem biztos, hogy szükséges!
+  -- Elöbb kiírjuk a módoítás előtti állapotot
+  select * from intezmeny_eventus.tankorTanar where tankorId in (@old, @new);
+  set @kiDt=(SELECT beDt from intezmeny_eventus.tankorTanar where tankorId=@old and tanarId=@tanarId);
+  update intezmeny_eventus.tankorTanar set kiDt=@kiDt - interval 1 day where tankorId=@old and tanarId<>@tanarId;
+  -- Utána is kiírjuk, hogy mi lett az eredmény
+  select * from intezmeny_eventus.tankorTanar where tankorId in (@old, @new);
+  
+  -- Ellenőrizzük azt is, hogy azonos tárgyhoz tartozó tankörök-e
+  select targyId from intezmeny_eventus.tankor where tankorId in (@old, @new);
+  
+  -- Végül töröljük az immár felesleges tankört
+  delete from intezmeny_eventus.tankor where tankorId=@new;
+  
+  -- Itt még meggondolhatjuk magunkat! De ha minden ok, akkor mehet a commit...
+  COMMIT;
+
+**Megjegyzések:**
+Feltételezzük, hogy a megadott két tankörnek azonos a névsora, tehát a tankorDiak táblát nem bántjuk. Nem nyúltunk a tankorCsoport és tankorBlokk
+táblákhoz sem, ezekből egyszerűen törlődnek az új tankör adatai.
+
+
+==== Teremhozzárendelések átmásolása ====
+
+=== első hétről a második heti órarendbe ===
+
+Többhetes óraren készítésekor gyakori, hogy az órák jelentős része megegyezik a két hét órarendjében. Ilyenkor nagy segítség, ha a teremhozzárendelést az első hétre
+megcsinálva a megfelelő msodik heti órákra is ki lehet terjeszteni:
+
+  UPDATE orarendiOra AS o1 left join orarendiOra AS o2 USING (nap, ora, tanarId, osztalyJel, targyJel) 
+    SET o1.teremId=o2.teremId WHERE o1.het=2 AND o2.het=1 AND o2.teremId IS NOT NULL AND (o1.teremId IS NULL OR o1.teremId!=o2.teremId);
+
+=== korábbi változatból újabb változatba ===
+
+Ha órared módosításkor új órarendet töltöttünk be (ennek érvényességi ideje példánkban 2015-01-18-ával kezdődik), és szeretnénk a két változatban egyező órák 
+teremhozzárendeléseit átmenteni:
+
+  UPDATE orarendiOra AS o1 left join orarendiOra AS o2 USING (het, nap, ora, tanarId, osztalyJel, targyJel)
+    SET o1.teremId=o2.teremId WHERE o1.tolDt='2015-01-18' and o2.tolDt<=curdate() and curdate()<=o2.igDt;
+
+=== Órarendből haladási naplóba ===
+
+Órarend módosításkor előfordulhat, hogy az órák még az előtt bekerülnek a haladási naplóba (''ora'' tábla), mielőtt a teremhozzárendelések véglegesülnek, így eltérő
+teremId-k leszenk a két táblában. A felületen annyit látunk, hogy az órarend szerinti termek áthúzva jelennek meg a haladási naplóban lévőek mellett. Szeretnénk, hogy
+a haladásinapló mégis az áthúzott teremId-ket tartalmazza...
+
+Kérdezzük le az érintett órákat:
+
+  select orarendiOra.*,ora.tankorId,ora.teremId 
+    from ora left join orarendiOra on het=1 and tolDt='2015-01-18' and orarendiOra.tanarId=ora.ki and dayofweek(dt)-1=nap and ora.ora=orarendiOra.ora 
+    where ora.dt='2015-01-21' and ora.teremId<>orarendiOra.teremId;
+
+A példában a 2015-01-21-i órákat akarjuk javítani, ahol tudjuk, hogy 1. heti órarend van, s az érvényes órarend bejegyzései 2015-01-18-án kerültek be. A két tábla
+közt a kapcsolatot ezen kívül a tanár, a nap és az óra adja.
+
+Ha a lekérdezés eredménye alapján úgy látjuk, hogy valóban a javítandó bejegyzések jelentek meg, akkor módosítsunk:
+
+  update ora left join orarendiOra on het=1 and tolDt='2015-01-18' and orarendiOra.tanarId=ora.ki and dayofweek(dt)-1=nap and ora.ora=orarendiOra.ora 
+    set ora.teremId=orarendiOra.teremId where ora.dt='2015-01-21' and ora.teremId<>orarendiOra.teremId;
+

@@ -1,0 +1,23 @@
+====== Haladási napló visszamenőleges feltöltése ======
+
+Elsősorban tesztüzemben, a napló kipróbálási időszakában, vagy késedelmesen elkészült órarend esetén használhatjuk a visszamanőleges feltöltést. Ilyenkor az //orarendiOra// tábla szerint kerülnek a bejegyzések az //ora// táblába, az éves munkatervben beállított tanítási napokra.
+
+Használata egyszerű: a dátumok beállítása és az **OK** gomb után egy hosszabb-rövidebb listában jelzi, hogy mely napokra volt sikeres a betöltés.
+
+**__Tesztüzem:__**
+
+Általában a tanévek második féléve alkalmas a naplóval történő büntetlen ismerkedésre, próbálkozásra. Ebben az esetben - ha szeptemberig visszamenőleg feltöltjük a naplót, minden Kolléga töméntelen beíratlan órával fog rendelkezni. Ez a működést nem befolyásolja, de negatívan hathat a sok figyelmeztetés. Jó hír viszont, hogy az óraszámok - nagyjából - passzolni fognak.
+
+__Megoldás:__
+
+Egy ügyes SQL-paranccsal (a //naplo_[iskola]_[tanev]// adatbázisban) megszüntethetjük ezt az állapotot:
+
+  mysql> UPDATE ora SET leiras='Tesztüzem' WHERE dt<curdate();
+  
+Így minden régi (mai nap előtti) órára tananyagként a 'Tesztüzem' került, a Kollégák nem kapnak beíratlan óra üzeneteket.
+
+**__Késedelmes órarend:__**
+
+Előfordul, hogy valamilyen ok miatt szeptember 1-jére (vagy a II. félév kezdetére) nem készül el az órarend. Ilyenkor "üresen" megy a napló, ám a bejegyzéseket pótolni kell. A gyakorlat szerint ez az időszak pár nap, legfeljebb egy hét. Elszámolások, illetve a korrekt naplóvezetés végett a Vezetőségnek ilyenkor **utólag** kell a helyettesítéseket, óraelmaradásokat, plusz órákat, stb. felvenni, ill. a speciális napokat rendezni.
+
+A késői betöltés éles üzemben azonnal szül egy újabb problémát: az órabeírás, hiányzásbeírási határidők lejár(hat)nak, így a Kollégák indokolatlan figyelmeztetéseket kaphatnak. Ebben az esetben a ///var/mayor/config/module-naplo/config_[iskola].php// állományban a szükséges határidőket ideiglenesen hosszabbítsuk meg, hogy minden Kolléga be tudja írni a hiányosságatit.

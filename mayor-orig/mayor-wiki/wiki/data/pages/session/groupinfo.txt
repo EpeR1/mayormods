@@ -1,0 +1,6 @@
+====== Felhasználói csoportok kezelése ======
+
+Ezen az oldalon egy adott csoportba tudunk új felhasználókat felvenni, illetve eltávolítani.
+
+  * Felvenni az "Új" rovatban lévő legördülő listából választva tudunk. (Figyelem! Itt tanárok és diákok vegyesen jelennek meg!)
+  * Törléskor a csoporttagok listájában jelöljük ki az illetőt, majd kattintsunk az OK gombra!

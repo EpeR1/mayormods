@@ -1,0 +1,33 @@
+====== Telepítés ======
+
+A továbbiakban a Debian rendszerre való telepítés lépéseit követjük.
+
+==== Telepítőkészlet ====
+
+Ha olyan helyen telepítjük a rendszert, ahol lehetőségünk van a hálózat elérésére, akkor a rendszerünknek megfelelő Debian 
+netinst-* telepítőt válasszuk. 
+
+Ez letölthető, majd CD-re írás után indíthatjuk is róla a rendszert. Más linux terjesztések esetén is hasonló lehetőségeink 
+vannak a telepítő készletek beszerzésére.
+
+==== Partíciók ====
+
+A nyelv és billentyűzet beállítása után az első igazán komoly - talán legfontosabb - lépés a partíciók kialakítása. A partíciók kialakításához pár szempont:
+  * A ''swap'' terület legyen legalább a fizikai memóriával megegyező méretű
+  * A ''/usr'' számára nem kell túl sok hely, hisz igyekszünk majd csak a ténylegesen szükséges csomagokat telepíteni.
+  * A ''/var'' tartalmazza majd a MaYoR rendszer állományait. Ez nem túl nagy, de hosszabb távon például a generált PDF állomáőnyok, illetve az egyre növekvő adatbázisok számára kell hely.
+  * Valamelyik partíción (pl. ''/home'', vagy külön erre a célra létrehozott ''/backup'') legyen elég hely a rendszeres (lehetőleg napi) menések tárolására. A biztonságot növelhetjük azzal, ha egy másik helyi meghajtóra is mentjük az állományokat, vagy egy másik munkaállomásra is átmásoljuk őket.
+
+
+==== Az alaprendszer telepítése ====
+
+Mikor a telepítő eljut a telepítendő szoftver-komponensek kiválasztásához, akkor AZ ÖSSZES KIJELÖLÉST SZÜNTESSÜK MEG! Csak az alaprendszerre lesz szükség, meg arra a néhány csomagra, amit alább felsorolunk. Minden további csomag felesleges, csak egy esetleges biztonsági rés lehetőségét hordozza magában.
+
+==== A /etc/apt/sources.list kiegészítése ====
+
+A szükséges csomagok telepítéséhez fel kell vennünk a ''contrib'' és ''non-free'' tárolókat is a ''/etc/apt/sources.list'' állományba:
+
+  deb http://ftp.debian.org/debian/ wheezy main contrib non-free
+  deb-src http://ftp.debian.org/debian/ wheezy main contrib non-free
+
+Ezek után indulhat a telepítés.

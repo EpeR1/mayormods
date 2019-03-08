@@ -1,0 +1,56 @@
+
+====== Együtműködés SuliXerver-rel ======
+
+===== Integráció SuliXerver-rel =====
+
+Az integráció lényegében annyit tesz, hogy a két rendszer közös felhasználói adatbázist használ a továbbiakban. Ehhez
+a SuliXerver LDAP alapú rendszere lesz a háttér-adatbázis. A korábbi MaYoR (tanár és diák) felhasználói adatokat - amennyiben eddig
+MySQL backend-et használtunk - importálhatjuk a SuliXerver alá.
+
+==== Exportálás a MaYoR rendszerből ====
+
+Ez a lépés egyszerű: válasszuk ki a Napló/Export/SuliX menüpontot, majd nyomjuk meg az 'Adatok exportálása" gombot, végül a
+letöltött tgz kiterjesztésű állományt másoljuk egy hordozható háttértárra (pl. pendrive).
+
+==== Importálás SuliXerverbe ====
+
+Adminisztrátorként lépjünk be és válasszuk a Segédeszközök/SuliX Napló/Külső MaYoR napló használata lehetőséget, majd kövessük az ott leírtakat...
+
+==== MaYoR beállítások módosítása ====
+
+Utolsó lépésként módosítsuk a ''config/private-conf.php'' állomány tartalmát (előtte készítsünk mentést róla!) az alábbiak szerint
+(a példánkban a SuliXerver LDAP base DN "dc=suli,dc=hu", a szerver host neve "sulix.suli.hu"):
+
+    $AUTH['private'] = array(
+	...
+	'categoryMap' => array(
+                'tanar' => 'cn=teachers,ou=group,dc=suli,dc=hu',
+                'diak' => 'cn=students,ou=group,dc=suli,dc=hu',
+                'titkarsag' => 'cn=administration,ou=group,dc=suli,dc=hu',
+                'egyeb' => 'cn=other,ou=group,dc=suli,dc=hu',
+
+                'useradmin' => 'cn=useradmins,ou=group,dc=suli,dc=hu',
+                'naploadmin' => 'cn=diaryadmins,ou=group,dc=suli,dc=hu',
+                'diakadmin' => 'cn=studentadmins,ou=group,dc=suli,dc=hu',
+                'uzenoadmin' => 'cn=msgadmins,ou=group,dc=suli,dc=hu',
+                'hirekadmin' => 'cn=newsadmins,ou=group,dc=suli,dc=hu',
+                'vezetoseg' => 'cn=management,ou=group,dc=suli,dc=hu',
+
+        ),
+        'backend'          => 'ldapng',
+        'ldapHostname'      => 'ldap://sulix.suli.hu',
+        'ldapBaseDn'        => 'dc=suli,dc=hu',
+        'ldapUserObjectClass'     => 'person',         // Userek objectum osztálya (volt posixAccount)
+        'ldapStudyIdAttr'   => 'employeenumber',       // Az oktatási azonosítót tároló attribútum (studyId)
+        'ldapUserAccountAttr' => 'uid',                // A felhasználói azonosítót tároló attribútum (uid)
+        'ldapCnAttr' => 'cn',                          // A felhasználói teljes neve (cn)
+        'ldapGroupObjectClass'    => 'groupofnames',   // Csoportok objectum osztálya (volt nayorGroup)
+        'ldapGroupCnAttr' => 'cn',                     // A csoport teljes neve (cn)
+        'ldapContainers'        => array(
+            'ou=People,dc=suli,dc=hu',
+            'ou=group,dc=suli,dc=hu'
+        ),
+        'cacheable'        => true,
+	...
+    )
+

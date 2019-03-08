@@ -1,0 +1,13 @@
+<?php
+	define('__PAGETITLE','成績登録-等級を修正する');
+	define('_JEGY_ADATAI','グレードの詳細は');
+	define('_MEGJEGYZES','コメント');
+	define('_MEGJ','コメント');
+	define('_HOZZARENDELT_ORA','添付の教訓');
+	define('_DOLGOZAT','テスト');
+	define('_ORA','レッスン');
+	define('_NINCS','なし');
+	define('_ROGZIT','提出する');
+	define('_TOROL','削除');
+	define('_BIZTOSE','ご希望してもよろしいですグレードを削除するか？');
+?>

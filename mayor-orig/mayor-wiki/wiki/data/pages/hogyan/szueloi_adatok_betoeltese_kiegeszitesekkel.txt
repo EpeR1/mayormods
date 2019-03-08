@@ -1,0 +1,92 @@
+====== Szülői adatok betöltése - kiegészítésekkel(!) ======
+
+A szülők adatait általában a diákok adatival együtt kapjuk meg, egy táblázatban. A MaYoR rendszerben viszont a szülők adatai külön adattáblába kerülnek. Ez a használat során előnyös (pl. testvér gyerekek szülői adatai csak egy helyen lesznek eltárolva), de a betöltéskor nehézségeket okoz.
+
+Első lépésként a rendelkezésre álló adatokból olyan tabulátorokkal tagolt szöveges állományokat kell készítenünk, melyekben a diák oktatási azonosítója mellett szerepelnek a betöltendő szülői adatok. Ennek menete nagyban függ a rendelkezésre álló adatok formátumától, de használhatunk táblázatkezelőt, vagy ügyes parancssori alkalmazásokat (''cut'', ''grep'', ''awk'', ''sed'', stb). Külön állományba kerüljenek az anya, apa és más gondviselő adatai.
+
+Módosítsuk a ''szulo'' táblát ideiglenesen egy ''oId'' (diák oktatási azonosítója) mező hozzáadásával (ezt csak a __legelső__ alkalommal kell elvégezni!):
+
+    ALTER TABLE szulo ADD COLUMN oId bigint(11) unsigned;
+
+Az szülői adatok fájl fejlécében érdemes az intézményi adatbázis ''szulo'' táblájának mezőneveit használni:
+
+  oId	nem	nevElotag	csaladinev	utonev	cimOrszag	cimHelyseg	cimIrsz	cimKozteruletNev	cimKozteruletJelleg	cimHazszam	cimEmelet	cimAjto		telefon
+
+A kész állományokat másoljuk a szerver ''/tmp'' könyvtárába.
+
+
+A sokadik osztály után, sőt, a második tanévtől kezdve biztosan lesznek egyező nevű szülők. A kezdeti (vagyis az új adatok feltöltése __előtti__) állapotot listázzuk ki, később nagyon nehéz lesz kiszűrni, kik is az új, egyező nevű szülők!
+
+  SELECT concat_ws(' ',csaladinev,utonev) as nev, count(*) as db FROM szulo GROUP BY nev having db>1 ORDER BY nev;
+
+Ezt a listát mentsük/másoljuk - hasznos lesz később!
+
+Az adatokat betölthetjük MySQL parancssorból (LOAD DATA INFILE ...), vagy a felületről az "Admin/Import" menüpontban. Itt a ''szulo'' tábla kiválasztása után az adatállomány elérési útját kell megadnunk. Ezek után a program beolvassa az állomány első öt sorát és ha megfelelő mezőneveket használtunk, akkor elvégzi az oszlopok mezőkhöz rendelését is (egyébként et nekünk kell megtenni). A betöltés előtt még mindenképp meg kell adnunk egy (vagy több) kulcs mezőt - jelen esetben a diák oktatási azonosítója és a név megfelelő lehet.
+
+A felvett szülőket az oktatási azonosító alapján rendeljük a megfelelő diák megfelelő atribútumához. Például az ''anya'' adatok esetén az //anyaId// atribútumhoz:
+
+  UPDATE szulo LEFT JOIN diak using (oid) SET anyaId=szuloId WHERE szulo.oId IS NOT NULL;
+
+(Csak a most betöltött adatok esetén lehet a ''szulo'' //oId// mezője nem null értékű)
+
+Most jön a neheze! Ki kell szűrjük a többszörös neveket - ezek lehet, hogy testvérek miatti adat-többszöröződések. Hogy tényleg azok-e, az csak az egyéb adatok vizsgálatával, illetve utánajárással deríthető ki (itt lesz szerepe az elején mentett lekérdezésnek - hasonlítsuk össze ezt a listát a "nulladik" változattal!):
+
+  SELECT concat_ws(' ',csaladinev,utonev) as nev, count(*) as db FROM szulo GROUP BY nev having db>1 ORDER BY nev;
+
+Ha például Vincs Eszter szerepel a többszörös nevek listájában, akkor lekérdezzük az adataikat:
+
+  SELECT * FROM szulo WHERE concat_ws(' ',csaladinev,utonev)='Vincs Eszter';
+
+A cím és egyéb adatok alapján már sejthetjük, hogy egy személy két azonosítójáról, vagy két különböző, de azonos nevű személy azonosítóiról van-e szó.
+A szuloid-k alapján lekérdezhetjük a hozzájuk tartozó diákok adatait is (a szuloId-k pl. 28 és 293):
+
+  SELECT * FROM diak WHERE anyaId in (28,293);
+
+Ha úgy ítéljük meg, hogy a két rekord ugyanazt a szülőt jelöli, akkor módosítjuk a hozzárendelést és töröljük a felesleges szülőt:
+
+  UPDATE diak SET anyaId=28 WHERE anyaId=293;
+  DELETE FROM szulo WHERE szuloId in (293);
+
+Valódi névütközés esetén különböző //userAccount//-okat kell beállítani a két rekordban.
+
+A már távozott diákok (elballagottak) szülői adatai még szerepelnek a táblában, ezeknek a rekordoknak is üres a userAccont-ja, ezért  a többi //userAccount//-ot a nevek és az //oId//-k alapján generáljuk:
+
+  UPDATE szulo SET userAccount=concat(csaladinev,'.',substring_index(utonev,' ',1)) WHERE userAccount IS NULL AND oId IS NOT NULL;
+
+Majd újabb ütközés ellenőrzés következik:
+
+  SELECT userAccount,count(*) as db FROM szulo GROUP BY userAccount having db>1;
+
+Sajnos előfordulhat, hogy újabb szülőket találunk, akik többször szerepelnek az adatbázisban. A javítás a korábbiakban leírt módon történhet.
+Ha az összes ütközést kiküszöböltük, akkor felvehetjük a szulői azonosítókat, ehhez vegyünk fel ideiglenesen egy táblát:
+
+    CREATE TEMPORARY TABLE _szulo SELECT * FROM szulo LEFT JOIN
+       mayor_parent.accounts USING (userAccount) WHERE userCn IS NULL AND szulo.oId IS NOT NULL;
+
+majd a továbbiakban dolgozzunk ezzel!
+
+    INSERT INTO mayor_parent.accounts (policy,userAccount,userCn,userPassword)
+       SELECT 'parent',userAccount,trim(concat_ws(' ',nevElotag,csaladinev,utonev))
+       as userCn,sha(crc32(csaladinev)) as userPassword FROM _szulo;
+
+Ha kész vagyunk, az ideiglenes táblát eldobhatjuk:
+
+  DROP TABLE _szulo;
+
+Végül a hozzárendeltek //oId//-jét a ''szulo'' táblában NULL-ra állítjuk:
+
+  UPDATE szulo SET oId=null WHERE oId IS NOT NULL;
+ 
+Végezzük el ezeket a lépéseket az apa, és esetleg a más gondviselő adataival is!
+
+A szülői account-ok lekérdezéséhez válasszuk ki az osztály táblából a keresett osztály //osztályId//-jét (pl.24), majd:
+
+    SELECT szuloId,csaladinev,utonev,useraccount,crc32(csaladinev) FROM intezmeny_szag.osztalyDiak
+       LEFT JOIN intezmeny_szag.diak using (diakId) LEFT JOIN intezmeny_szag.szulo on szuloId in
+       (anyaId,apaId,gondviseloId,neveloId) WHERE osztalyId=24 AND beDt<=curdate() AND (kiDt is null or kiDt>=curdate());
+
+Az //osztályId//-t az osztaly táblából leshetjük ki, vagy kikeresünk egy ebbe az osztályba járó diákot (Intézményi adatok/Diákok), feljegyezzük a //diakId//-jét (pl. 134), és az osztalyDiak táblából kikeressük:
+
+  SELECT * FROM osztalyDiak WHERE diakId=134;
+
+__Megjegyzés:__ a beDt<=curdate() helyett az aktuális tanév kezdődátumát írhatjuk, ha pl. az osztálybakerülés dátuma szeptember 1., és az account-okat még e dátum előtt szeretnénk elkészíteni!

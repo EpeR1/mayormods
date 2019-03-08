@@ -1,0 +1,41 @@
+====== Bejegyzés a Haladási naplóba - utólag ======
+
+Miért lehet erre szükség?
+
+  * nem lett kész a napló tanévkezdésre, így az első napokra nem töltődött be a Haladási napló;
+  * leállt a szerver, ilyen-olyan okok miatt nem lehetett néhány napig visszakapcsolni;
+  * elindult egy plusz tankör, szakkör, előkészítő, stb., de az adminisztráció lekéste a valódi, naptárbeli kezdést;
+  * ...
+
+Lehetőség szerint kerüljük az utólagos módosításokat (technikailag lehetséges minden, de az elszámolásoknál, hiányzásoknál, statisztikáknál galibát okozhat!).
+
+Az **Órarend**ben az órák jobb felső sarkában megjelenő kis kör jelzi, hogy az adott óra már a Haladási naplóban van.
+
+Fontos tudni, hogy a Haladási naplóba akkor kerül be az óra, ha
+
+  * elértük az adott nap dátumát (0:00:00) és valaki belépett a naplóba (várjuk meg az éjfélt és próbáljuk ki... :-D);
+  * az adott napra valamilyen helyettesítéssel kapcsolatos esemény (tanár hiányzása, máskor megtartott óra, stb.) rögzítésre kerül.
+
+===== Egy-egy óra beírása, vagy sok óra beírása lassan... =====
+
+A //mayoradmin// és a //vezetőség// tagjai a **Napló/Haladási napló/Plusz óra** menüben vehetnek fel visszamenőlegesen órákat.
+
+Értelemszerűen a dátum kiválasztása az első, majd **tanár**, **osztály**, **tankör** szerint szűkíthetjük a lehetőségeket. Megjelenik az adott napra a kiválasztott személy/csoport órája. A MaYoR figyeli a tanárt és az osztályt/tankört is, tehát, adott tanárnak adott tankörrel csak akkor enged órát felvenni, ha mindketten "lyukasak".
+
+A megjelenő táblázat alapján választhatjuk ki a legördülő listából a még szabad órákat. Ezek után csak a terem megadása következik, valamint az óra típusának beállítása:
+  * plusz óra (egyedi alkalom);
+  * órarendi óra (utólagos, "normál" órarendbeli óra pótlása a Haladási naplóban).
+
+Ez a módszer ugyan lassacska egy egész iskola elmaradt napjának pótlására, de rendkívül hasznos, mert semmilyen bakit nem hagy elkövetnünk! :-D
+
+===== Teljes elmaradt nap egyszerű(bb) pótlása =====
+
+Ha valamilyen ok miatt nem töltődött be a Haladási naplóba az aktuális nap (ld. fent, szerver-leállás, stb.), akkor a legegyszerűbb azokat a
+[[naplo:admin:fillhaladasi|Napló/Admin/Haladási napló feltöltése]] menüpont alatt feltölteni.
+
+A //mayoradmin// és a //vezetőség// a **Helyettesítés** menüben is eljárhat.
+A **Napló/Haladási napló/Helyettesítés** menüben ha egy napra szeretnénk betölteni a Haladási naplóba az egész intézmény óráit, akkor a legördülő menüben kiválasztjuk a keresett napot, majd anélkül, hogy helyettesítésre kijelölt tanárt választanánk, nyomjuk meg az **OK** gombot.
+Ezzel az adott napra, az **orarendiOra** tábla alapján, betöltődnek az órák a Haladási naplóba.
+
+Ha nincs kézzelfogahtó magyarázat a Haladási napló hiányára, feltétlenül járjunk utána, mi okozhatta a hibát (egy kósza SQL-bejegyzés az **ora** táblában, **orarendiOra** táblában rossz dátum, az **Éves munkatervben** rosszul felvett nap, stb.) Ha nem boldogolunk, keressük meg a **Support**ot!
+

@@ -1,0 +1,26 @@
+===== Belépés Google-fiókkal =====
+A beállítás időigényes, többlépcsős, úgyhogy nyugodt körülmények közt érdemes végezni!
+==== Valid cert létrehozása ====
+Első lépésként - ha még nincs - hozzunk létre és állítsunk be érvényes, a böngészők által elfogadott tanúsítványt, pl. a Let'Encript-félét!
+
+Részletek [[hogyan:tanusitvany|itt]]!
+
+==== Google-fiókos azonosítás beállítása ====
+
+Egy működő (célszerűen saját) Google-fiókba belépve  lépjünk az [[https://console.developers.google.com/apis/credentials|API]]-oldalra!
+
+A **Create Credentials** válasszuk a **Create Oauth client id** lehetőséget, majd a **Web application**-t! A **Name** mezőbe adhatunk valami értelmes nevet (ami alapján később is tudjuk azonosítani), majd a **Authorized JavaScript origins** mezőjébe a **https-es URL**-t kell beírni!
+
+A létrehozott kliens adatai közül kimásolandók: **Client ID** és a **Client secret**
+(A Client secret sok betű-szám, míg a Client ID sok szám-sok betű és apps.googleusercontent.com a vége - ez is kell...)
+
+
+Ezek után a naplóban a ///etc/mayor/main-config.php// fájban végezzük el a követekező módosításokat:
+
+  define('__GOOGLEAPI_ENABLED', true);
+  define('__GOOGLEAPI_CLIENT_ID','IDE_IRJUK_A_CLIENT_ID-T');
+  define('__GOOGLEAPI_CLIENT_SECRET','IDE_IRJUK_A_CLIENT SECRET-ET');
+
+Ezután a normál jelszóval belépés után a lakat alatt megjelenik egy **G+** jelre lépve, vagy a menüben a "google azonosítás" menüben lehet összekötni a beléptetett usert a saját fiókjával.
+
+Érdemes fokozottan felhívni a figyelmet a kényelem okozta esetleges hátrányokra - különösen a publikusan használt gépeken!

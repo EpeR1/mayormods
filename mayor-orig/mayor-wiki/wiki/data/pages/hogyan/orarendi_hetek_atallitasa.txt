@@ -1,0 +1,10 @@
+====== Hogyan állítsuk át az órarendi heteket ======
+
+Előfordul, hogy az év elején beállított órarendi hetek sorát egy adott dátumtól kezdve át kell állítani. Ezt a felületen elvégezhetjük, havi bontásban, minden nap órarendi hetének átállításával, de ez esetenként lehet túl fárasztó, hoszadalmas. Ilyenkor jöhet jól, ha közvetlenül SQL utasításokkal át tudjuk állítani az órarendi heteket
+
+Pl:
+Ha szeretnént 2008 január elsejétől a kéthetes órarendben az órarendi heteket megcserélni, akkor az adott tanév adatbázisában adjuk ki a következő parancsot:
+
+  UPDATE nap SET orarendiHet=IF(orarendiHet=0, 0, (orarendiHet MOD 2)+1) WHERE dt>'2008-01-01';
+
+És kész is vagyunk!

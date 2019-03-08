@@ -1,0 +1,20 @@
+====== Hibakezelés (alert) ======
+
+A keretrendszer a ''$alert[]'' paraméteren keresztül képes a hiba- és egyéb figyelmeztető-üzenetek kezelésére.
+Az $alert[$i] felépítése: típus:hiba[:param1[:param2[:param3]]]
+
+típus:
+  * alert   : javaScript alert
+  * message : hibaüzenet után az oldal betöltődik
+  * page    : hibaüzenet után az oldal nem töltődik be
+  * info    : információs üzenet
+
+hiba:
+A lehetséges hiba típusok policy (hozzáférési szint) és nyelv (lang) függően épülnek fel és a ''$ALERT_MSG'' tömbben tárolódnak. A tömböt az ''include/alert/$lang/base.php''-ben hozza létre a rendszer, majd bővíti az ''include/alert/$lang/base.php'', ''include/alert/$lang/$backend.php'' és ''include/alert/$lang/module-$page.php'' állományok csatolásával.
+
+Ismeretlen hiba string esetén a megjelenítő függvény az ''default'' hibaüzenetet írja ki, hozzáfűve az ismeretlen hiba stringet, paraméter listát.
+
+A hibaüzenetet a ''skin/$skin/base/html/alert.phtml'' állomány ''html_alert()'' függvénye írja ki. Ennek visszatérési érték dönti el, hogy megjelenjen a lap további része (''true''), vagy ne (''false'').
+
+A hibaüzenethez csatolt paramétereket a függvény behelyettesíti a ''%0'', ''%1%'' illetve ''%2%'' stringek helyére a hibaüzenet szövegébe, vagy ezek hiányában a hibaüzenet után írja ki - zárójeles megjegyzésként - őket.
+
