@@ -163,6 +163,7 @@
 
 	    $diakId = $ADAT['diakId'];
 	    $dt = $NAPADAT['dt'];
+	    $KRETAHIANYZAS = $ADAT['hianyzasKreta'][$ADAT['diakId']][$dt];
 	    echo '<table class="tanuloEgyNapja hianyzasNaptar" cellspacing="1" cellpadding="1" border="0">';
 		echo '<tr>';
 		    if (defined('__STATUS_HATARIDO') && (__OFO || __VEZETOSEG || __NAPLOADMIN)	&& strtotime(__STATUS_HATARIDO) < strtotime($dt) && !$future) {
@@ -214,7 +215,8 @@
 			    if (!$future) _putHianyzasKistabla(
 				$ADAT['hianyzasok'][$ADAT['diakId']],
 				array('dt' => $dt),
-				array('href' => $href, 'allowed' => $allowed, 'napiMinOra' => $napiMinOra, 'napiMaxOra' => $napiMaxOra)
+				array('href' => $href, 'allowed' => $allowed, 'napiMinOra' => $napiMinOra, 'napiMaxOra' => $napiMaxOra),
+				$KRETAHIANYZAS
 			    );
 
 		    echo '</td>';

@@ -81,6 +81,15 @@
 	text-align: center;
     }
 
+    table.hianyzas tbody td.kreta {
+	width: 18px;
+	background-color:cornflowerblue;
+	text-align: center;
+    }
+    table.hianyzas tbody td.kreta.keses {
+	background-color: ;
+    }
+
     table.hianyzas tbody td.ufegyelmi {
 	width: 18px;
 	background-color: rgb(220,230,240);
@@ -159,9 +168,9 @@
         border-color: #aabbc0;
     }
     table.navi input {
+	margin-left: 16px;
         background-color: #778890;
         border: solid 1px #aabbc0;
-        width:30px;
     }
     table.navi input.aktiv {
         color: #aabbc0;

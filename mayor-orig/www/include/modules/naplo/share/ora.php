@@ -607,4 +607,19 @@
 	return $R;
     }
 
+    function getDiakOra($diakId,$dt,$ora,$olr_intezmeny = '',$olr_naplo) { // jelenlét mezőt nem vesszük figyelembe!!!
+
+	// diakId->tankor->ora
+
+	$TANKOR = getTankorByDiakId($diakId, __TANEV, array('csakId' => true, 'tolDt' => $dt, 'igDt' => $dt, 'override' => false, 'result'=>'indexed'),$olr_intezmeny); // jelenlét!!!
+	// --TODO!!! minden jelenlét számít, még az is ami nem kötelező :(
+	if (count($TANKOR)>0 ) {
+	    $q = "SELECT *,getNev(tankorId,'tankor') AS tankorNev FROM ora WHERE dt='%s' AND ora=%u AND tankorId IN (".implode(',',$TANKOR).")";
+	    $v = array($dt,$ora);
+	    $R = db_query($q,array('debug'=>false,'fv'=>'getDiakOra','modul'=>'naplo','values'=>$v,'result'=>'indexed'),$olr_naplo);
+	    if (count($R)==1) return $R[0];
+	}
+	return false;
+    }
+
 ?>

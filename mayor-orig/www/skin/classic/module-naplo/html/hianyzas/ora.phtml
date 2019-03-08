@@ -95,7 +95,7 @@
 	    $felmentett_class = (in_array($ADAT['tankorAdat']['tankorId'], $ADAT['felmentes'][$_diakId])) ? ' felmentett':'';
 	    echo '<tr class="'.$jogviszony.$felmentett_class.'">';
 		echo '<td>';
-		    _putHianyzasKistabla($ADAT['napiHianyzasok'][$_diakId], $ORAADAT, array('napiMinOra' => $napiMinOra, 'napiMaxOra' => $napiMaxOra));
+		    _putHianyzasKistabla($ADAT['napiHianyzasok'][$_diakId], $ORAADAT, array('napiMinOra' => $napiMinOra, 'napiMaxOra' => $napiMaxOra), $ADAT['hianyzasKreta'][$_diakId][$ORAADAT['dt']]);
 		echo '</td>';
 		echo '<td>';
 		    putFace($DA['diakId'],'diak','30');

@@ -8,6 +8,7 @@
     define('__TARGYSORRENDSELECTTITLE','tárgysorrend');
     define('__TABLESELECTTITLE','sql-táblák');
     define('__OSZTALYSELECTTITLE','osztály');
+    define('__FORRASSELECTTITLE','forrás');
     define('__TANMENETSELECTTITLE','tanmenet');
     define('__TANARSELECTTITLE','tanár');
     define('__DIAKSELECTTITLE','diák');
@@ -59,4 +60,6 @@
     if (!defined('_TOROLT'))    define('_TOROLT','törölt');
 
     define('_NEV','Név');
+
+    define('_KRETA','Kréta');
 ?>

@@ -8,7 +8,7 @@
 */
 
 define('_MAIN_TITLE','MaYoR');
-define('_MAIN_FOOTER','<a href="http://www.mayor.hu./">MaYoR</a> - 2002-2018 &copy; <a href="LICENSE.txt">GPL</a>');
+define('_MAIN_FOOTER','<a href="http://www.mayor.hu./">MaYoR</a> - 2002-2019 &copy; <a href="LICENSE.txt">GPL</a>');
 
 define('_TANAR','tanár');
 define('_DIAK','diák');

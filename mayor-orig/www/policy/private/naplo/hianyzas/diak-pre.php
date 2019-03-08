@@ -183,6 +183,7 @@ if (isset($diakId) && $diakId != '') {
 	$ADAT['hianyzasok'] = getHianyzasByDt(array($diakId),$_NAPOK);
 	$ADAT['diak']['kepzes'] = getKepzesByDiakId($diakId, array('result'=>'assoc','dt'=>$_NAPOK[count($_NAPOK)-1])); // dátum nélkül ez a korábbi összes képzését adná. Vegyük a hónap utolsó napján...
 
+	$ADAT['hianyzasKreta'] = getDiakKretaHianyzas($diakId,array('preprocess'=>'naptar'));
 } // ha van nem üres diakId
 
 	if (!__DIAK) {

@@ -68,6 +68,7 @@
 	    for ($i=0; $i<count($ADAT['nevsor']['idk']); $i++) {
 		$_diakId = ($ADAT['nevsor']['idk'][$i]);
 		$ADAT['felmentes'][$_diakId] = getTankorDiakFelmentes($_diakId,__TANEV,array('csakId'=>true,'tolDt'=>$tolDt, 'igDt'=>$igDt, 'nap'=>$nap, 'ora'=>$ora));
+		$ADAT['hianyzasKreta'][$_diakId] = array_pop(getDiakKretaHianyzas($_diakId,array('preprocess'=>'naptar', 'tolDt'=>$tolDt, 'igDt'=>$igDt)));
 	    }
 	    $ADAT['diakJogviszony'] = getDiakJogviszonyByDts($ADAT['nevsor']['idk'], array($ORAADAT['dt']));
 //dump($ADAT['nevsor']['idk']);

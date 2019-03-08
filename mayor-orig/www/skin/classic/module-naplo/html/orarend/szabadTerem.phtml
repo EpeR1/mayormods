@@ -18,16 +18,25 @@
 		}
 		echo '<h2 class="toPrint">'.$ADAT['toPrint'].'</h2>';
 
-		echo '<table class="orarend" align="center">'."\n";
+		formBegin(array('class'=>'teremKereso'));
+
+		    echo '<span class="xsmall" data-c="xsmall">-10</span>';
+		    echo '<span class="small"  data-c="small">10-19</span>';
+		    echo '<span class="normal" data-c="normal">20-29</span>';
+		    echo '<span class="large"  data-c="large">30-39</span>';
+		    echo '<span class="xlarge" data-c="xlarge">40+</span>';
+
+		formEnd();
+
+		echo '<table class="orarend" align="center" cellpadding="0" cellspacing="1">'."\n";
 		echo '<thead>';
 		echo '<tr><th></th>';
-			foreach ($NAPOK as $dt) { // FIXME (getMaxNap)
+			foreach ($NAPOK as $dt) {
 			    $nap = date('w',strtotime($dt));
 			    $_th_class = ($ADAT['orarend']['napok'][$nap]['megjegyzes']=='') ? '': 'spec';
 			    echo '<th class="'.$_th_class.'">';
-				//echo '<span title="'.$ADAT['orarend']['napok'][$nap]['dt'].'/'.$ADAT['orarend']['napok'][$nap]['het'].'">';
 				echo $aHetNapjai[($nap-1)];
-				echo ' '.$dt;
+				echo '<br/>'.$dt;
 			    echo '</th>';
 			}		
     		echo '</tr>';
@@ -38,14 +47,20 @@
 		    echo '<tr>';
 			echo '<th>'.$ora.'</th>';
 			foreach ($NAPOK as $dt) {
-			    echo '<td>';    
+			    echo '<td>';
 				for($i=0; $i<count($X[$ora][$dt]); $i++) {
 				    $_teremId = $X[$ora][$dt][$i];
+				    $ferohely = $ADAT['termek'][$_teremId]['ferohely'];
+				    if ($ferohely>=40) $_class='xlarge';
+				    elseif ($ferohely>=30) $_class='large';
+				    elseif ($ferohely>=20) $_class='normal';
+				    elseif ($ferohely>=10) $_class='small';
+				    else $_class = 'xsmall';
 					if ($_teremId!='') {
-					    echo '<span title="'.$_targyJel.' '.$_osztalyJel.' ('.$ADAT['tankorok'][$_T['tankorId']][0]['tankorId'].')" >';
+					    $_title = 'Férőhely: '.($ADAT['termek'][$_teremId]['ferohely']); // ferohely, telephelyId, tipus
+					    echo '<span class="teremAdat '.$_class.'" data-teremid="'.$_teremId.'" data-ferohely="'.$ferohely.'" title="'.$_title.'">';
 					    echo $ADAT['termek'][$_teremId]['leiras'];
-					    echo '</span>';
-					    if ($i<count($X[$ora][$dt])-1) echo ', ';
+					    echo '</span> ';
 					}
 				}
 			    echo '</td>'."\n";

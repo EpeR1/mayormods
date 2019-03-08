@@ -1,6 +1,6 @@
 <?php
 
-    function _putHianyzasKistabla($napiHianyzasok, $oraAdat, $SET = array('allowed' => false, 'href' => '', 'napiMinOra' => null, 'napiMaxOra' => null)) {
+    function _putHianyzasKistabla($napiHianyzasok, $oraAdat, $SET = array('allowed' => false, 'href' => '', 'napiMinOra' => null, 'napiMaxOra' => null), $KRETAHIANYZAS) {
 
 	if (is_null($SET['napiMinOra'])) return false;
 	// a meghívó függvénynek kell gondoskodnia az ALLOWED beállításról. Mi már csak ezt használjuk global egy napra!
@@ -17,6 +17,7 @@
 		    $__kiir='';
 		    $__hrefClass = '';
 		    $igazolhatoHianyzasId='';
+		    $__DK = $KRETAHIANYZAS[$__ora];
 		    if (count($__D)>0) {
 			$__tipus='';
 			/* A több óra támogatást támogatását módosítani kellene... */
@@ -66,6 +67,71 @@
                 }
                 echo '</tr><tr>'.$_SOR;
                 echo '</tr></table>';
+
+
+		if (is_array($KRETAHIANYZAS)) {
+
+                echo '<table class="hianyzasNaptar kreta" cellspacing="0" cellpadding="1" align="center"><tr>';
+                $_SOR = '';
+                for ($__ora = $SET['napiMinOra'];$__ora <= $SET['napiMaxOra']; $__ora++) {
+//		    $__D = $napiHianyzasok[$oraAdat['dt']][$__ora];
+		    $__classES = array();
+		    $__kiir='';
+		    $__hrefClass = '';
+		    $igazolhatoHianyzasId='';
+		    $__D = $KRETAHIANYZAS[$__ora];
+		    if (count($__D)>0) {
+			$__tipus='';
+			/* A több óra támogatást támogatását módosítani kellene... */
+			for ( $i=0; $i<count($__D); $i++) {
+			    $__perc = $__D[$i]['perc'];
+                	    $__statusz = ($__D[$i]['kretaStatusz']=='igen'?'igazolt':'igazolatlan');
+                	    $__tipus =  $__D[$i]['tipus'];
+                	    $__hid =  $__D[$i]['kretaHianyzasId'];
+                	    // $__oraId =  $__D[$i]['oraId'];
+                 	    // $__rogzitoTanarId =  $__D[$i]['rogzitoTanarId'];
+                 	     $__kiir2beg=$__kiir2end='';
+                	    if ($__statusz != '') {
+				$__classES[] = str_replace(' ','_',ekezettelen($__tipus));
+				if ($__tipus=='felmentés') $__kiir.='f';
+				elseif( $__tipus=='felszerelés hiány') $__kiir.='F';
+				elseif( $__tipus=='egyenruha hiány') $__kiir.='e';
+				else {
+				    if(is_numeric($__perc) && $__perc>0) {
+					$__kiir2beg = '<span title="'.$__perc.'\'">';
+					$__kiir2end = '</span>';
+				    }
+				}
+                	    } else {
+                    		$__kiir .= '&nbsp;';
+                	    }
+			    if ($__hrefClass=='' && !in_array($__tipus,array('felmentés','felszerelés hiány','egyenruha hiány'))) {
+				$__hrefClass=$__statusz;
+				$igazolhatoHianyzasId = $__hid;
+			    }
+			}
+			if ($__rogzitoTanarId == __USERTANARID) $__kiir .= '×';
+			if ($__kiir=='') $__kiir = '-';
+		    } else {
+			$__statusz=$__tipus=$__hid=$__oraId='';
+			$__kiir = '&nbsp;';
+		    }
+		    $__class = ' class="hianyzasNaptar '.implode(' ',$__classES).'"';
+
+                    echo '<th class="hianyzasNaptar" style="color: #666;">';
+			if ($OK === true) {
+			     $_href = href($href.'&hianyzasId='.$igazolhatoHianyzasId.'&dt='.$oraAdat['dt'].'&ora='.$__ora);
+			     echo '<a href="'.$_href.'" class="'.$__hrefClass.'">'.$__ora.'</a>';
+			 } else
+                    	    echo '<span class="'.$__hrefClass.'">'.$__ora.'</span>';
+                    echo '</th>';
+		    $_SOR .= '<td'.$__class.'>'.$__kiir2beg.$__kiir.$__kiir2end.'</td>';
+                }
+                echo '</tr><tr>'.$_SOR;
+                echo '</tr></table>';
+
+		}
+
     }
 
 ?>

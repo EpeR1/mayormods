@@ -87,17 +87,16 @@
 	// --------------------------------
 
 	    //$osztalyAdat = getOsztalyAdat($osztalyId);
-
 	    if ($tolDt != $_TANEV['kezdesDt'] || $igDt != date('Y-m-d')) {
-		$OPT = array('hozott','lezárt','igazolható','összes');
+		$OPT = array('hozott','lezárt','igazolható','kreta','összes');
 		$View = readVariable($_POST['View'], 'enum', array('összes'), $OPT);
 	    } else {
-		$OPT = array('hozott','lezárt','igazolható','összes','fegyelmi utáni','fegyelmi fokozatok');
+		$OPT = array('hozott','lezárt','igazolható','kreta','összes','fegyelmi utáni','fegyelmi fokozatok');
 		$View = readVariable($_POST['View'], 'enum', ($skin != 'pda')?array('összes','fegyelmi fokozatok'):array('összes'), $OPT);
 	    }
-
-//	    elseif ($skin != 'pda') $View = array('összes','fegyelmi fokozatok');
-//	    else $View = array('összes');
+	    $q = "SELECT count(*) AS db FROM hianyzasKreta";
+	    $hkr = db_query($q, array('modul'=>'naplo','result'=>'value')); 
+	    if ($hkr>0) $View[] = 'kreta';
 
 	    if ($nevsor=='aktualis') {
 		$ADAT['stat'] = getHianyzok($ADAT,array('dt'=>date("Y-m-d")));
@@ -108,6 +107,7 @@
 
 	    foreach($ADAT['stat']['névsor'] as $_diakId => $_D) {
 		$ADAT['hozottHianyzas'][$_diakId] = getDiakHozottHianyzas($_diakId);
+		$ADAT['hianyzasKreta'][$_diakId]  = getDiakKretaHianyzas($_diakId,array('preprocess'=>'stat','tolDt'=>$tolDt,'igDt'=>$igDt));
 	    }
 
     } // isset(osztalyId)

@@ -22,6 +22,9 @@
 	echo '<input id="osszes" type="checkbox" name="View[]" value="összes" ';
 	    if (in_array('összes',$View)) echo 'checked="checked" ';
 	    echo '/><label for="osszes">'._OSSZES.'</label>';
+	echo '<input id="kreta" type="checkbox" name="View[]" value="kreta" ';
+	    if (in_array('kreta',$View)) echo 'checked="checked" ';
+	    echo '/><label for="kreta">'._KRETA.'</label>';
 	echo '<input id="fegyu" type="checkbox" name="View[]" value="fegyelmi utáni" ';
 	    if (in_array('fegyelmi utáni',$View)) echo 'checked="checked" ';
 	    echo '/><label for="fegyu">'._FEGYELMI_UTANI.'</label>';
@@ -81,9 +84,15 @@
 			$_cols+=6;
 		    }
 
+
 		    if (in_array('összes',$View)) {
 			echo '<th colspan="9">'._OSSZES.'</th>';
 			$_cols+=7;
+		    }
+
+		    if (in_array('kreta',$View)) {
+			echo '<th colspan="6">'._KRETA.'</th>';
+			$_cols+=6;
 		    }
 
 		    if (in_array('fegyelmi utáni',$View)) {
@@ -112,12 +121,17 @@
 			echo '<th colspan="3" class="alcim">'._KESES.'</th>';
 		    }
 
+
 		    if (in_array('összes',$View)) {
 			echo '<th colspan="3" class="alcim">'._HIANYZAS.'</th>';
 			echo '<th colspan="3" class="alcim">'._KESES.'</th>';
 			echo '<th rowspan="2" class="alcim" title="'._FELSZERELES_HIANY.'">'._FSZ.'</th>';
 			echo '<th rowspan="2" class="alcim" title="'._FELMENTES.'">'._FM.'</th>';
 			echo '<th rowspan="2" class="alcim" title="'._EGYENRUHA_HIANY.'">'._EH.'</th>';
+		    }
+		    if (in_array('kreta',$View)) {
+			echo '<th colspan="3" class="alcim">'._HIANYZAS.'</th>';
+			echo '<th colspan="3" class="alcim">'._KESES.'</th>';
 		    }
 
 		    if (in_array('fegyelmi utáni',$View)) {
@@ -162,7 +176,17 @@
 			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/sum.gif" alt="'._OSSZES.'" title="'._OSSZES.'" /></th>';
 		    }
 
+
 		    if (in_array('összes',$View)) {
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/h.gif" alt="'._IGAZOLATLAN.'" title="'._IGAZOLATLAN.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/i.gif" alt="'._IGAZOLT.'" title="'._IGAZOLT.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/sum.gif" alt="'._OSSZES.'" title="'._OSSZES.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/h.gif" alt="'._IGAZOLATLAN.'" title="'._IGAZOLATLAN.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/i.gif" alt="'._IGAZOLT.'" title="'._IGAZOLT.'" /></th>';
+			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/sum.gif" alt="'._OSSZES.'" title="'._OSSZES.'" /></th>';
+		    }
+
+		    if (in_array('kreta',$View)) {
 			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/h.gif" alt="'._IGAZOLATLAN.'" title="'._IGAZOLATLAN.'" /></th>';
 			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/i.gif" alt="'._IGAZOLT.'" title="'._IGAZOLT.'" /></th>';
 			echo '<th class="alcim"><img src="skin/classic/module-naplo/img/hianyzas/sum.gif" alt="'._OSSZES.'" title="'._OSSZES.'" /></th>';
@@ -208,6 +232,10 @@
 			echo '<td class="felmentes">'.$ADAT['stat']['összes']['felmentés']['igazolatlan'].'</td>';
 			echo '<td class="egyenruha">'.$ADAT['stat']['összes']['egyenruha hiány']['igazolatlan'].'</td>';
 		    }
+		    if (in_array('kreta',$View)) {
+			echo '<td colspan="6"></td>';
+		    }
+
 		    if (in_array('fegyelmi utáni',$View)) {
 			echo '<td class="igazolatlan hianyzas">'.$ADAT['stat']['összes']['fegyelmi']['hiányzás']['igazolatlan'].'</td>';
 			echo '<td class="igazolatlan keses">'.$ADAT['stat']['összes']['fegyelmi']['késés']['igazolatlan'].'</td>';
@@ -270,7 +298,6 @@
 			echo '</a>';
 		    echo '</td>';
 		
-
 
 		if (in_array('hozott',$View)) {
 		# Hozott
@@ -402,6 +429,7 @@
 		## ------
 		}
 
+
 		if (in_array('összes',$View)) {
 		## Összes
 
@@ -461,6 +489,28 @@
 		    echo '<td class="'.$class.'">'.$oegyenruha.'</td>';
 		## ------
 		}
+
+
+		if (in_array('kreta',$View)) { // Kréta
+		    $_KRETAADAT = $ADAT['hianyzasKreta'][$diakId];
+		    echo '<td class="kreta hianyzas igazolatlan">'.$_KRETAADAT['hiányzás']['igazolatlan']['db'].'</td>';
+		    echo '<td class="kreta hianyzas igazolt">'.$_KRETAADAT['hiányzás']['igazolt']['db'].'</td>';
+		    echo '<td class="kreta hianyzas osszes">'.(($_KRETAADAT['hiányzás']['igazolatlan']['db'])+($_KRETAADAT['hiányzás']['igazolt']['db'])).'</td>';
+		    echo '<td class="kreta keses igazolatlan">';
+			_kiir(intval($_KRETAADAT['késés']['igazolatlan']['db']).'/'.intval($_KRETAADAT['késés']['igazolatlan']['perc'])."'");
+		    echo '</td>';
+		    echo '<td class="kreta keses igazolt">';
+			_kiir(intval($_KRETAADAT['késés']['igazolt']['db']).'/'.intval($_KRETAADAT['késés']['igazolt']['perc'])."'");
+		    echo '</td>';
+		    echo '<td class="kreta keses osszes">';
+			if (($_KRETAADAT['késés']['igazolatlan']['db'])+($_KRETAADAT['késés']['igazolt']['db']) >0) {
+			    echo (($_KRETAADAT['késés']['igazolatlan']['db'])+($_KRETAADAT['késés']['igazolt']['db']));
+			    echo '/';
+			    echo (($_KRETAADAT['késés']['igazolatlan']['perc'])+($_KRETAADAT['késés']['igazolt']['perc']));
+			    echo '\'';
+			}
+		    echo '</td>';
+		} // Kréta
 
 		if (in_array('fegyelmi utáni',$View)) {
 		## Fegyelmi után
@@ -608,6 +658,10 @@
 	
 	echo '</table>';
     
+    }
+
+    function _kiir($val) {
+	if ($val>0) echo $val;
     }
 
 ?>

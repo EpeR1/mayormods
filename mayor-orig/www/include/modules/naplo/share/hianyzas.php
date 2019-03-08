@@ -475,4 +475,67 @@
 	return $RESULT;
     }
 
+    function getDiakKretaHianyzas($diakId, $SET = array('preprocess'=>'stat','tanev'=>__TANEV, 'igDt'=>null, 'tolDt'=>null)) {
+	$RESULT = false;
+	if (isset($diakId) && is_numeric($diakId))
+	{
+	    $tanev = (isset($SET['tanev']) && $SET['tanev']!=__TANEV) ? $SET['tanev'] : __TANEV;
+	    $tanevDbNev = tanevDbNev(__INTEZMENY, $tanev);
+
+	    $v = array($diakId);
+	    $W = '';
+	    if (isset($SET['tolDt'])) {
+		$W .= " AND dt>='%s'";
+		$v[] = $SET['tolDt'];
+	    }
+	    if (isset($SET['igDt'])) {
+		$W .= " AND dt<='%s'";
+		$v[] = $SET['igDt'];
+	    }
+
+	    $q = "SELECT * FROM `$tanevDbNev`.`hianyzasKreta` WHERE diakId=%u".$W."";
+	    $R = db_query($q, array('debug'=>false,'fv'=>'getDiakKretaHianyzas','modul'=>'naplo','result'=>'indexed','values'=>$v));
+	    /* ReIndex */
+	    if ($SET['preprocess'] == 'stat') {	
+		for ($i=0; $i<count($R); $i++) {
+		//if ($R[$i]['dbHianyzas']>0) { // igen, SQL - ben is lehetne összeadni, a továbbfejlesztés miatt van így.
+		    $_igazoltStr = $R[$i]['kretaStatusz'] == 'igen' ? 'igazolt':'igazolatlan';
+		    $RESULT[$R[$i]['tipus']][$_igazoltStr]['db']++;
+		    if ($R[$i]['tipus']=='késés') $RESULT[$R[$i]['tipus']][$_igazoltStr]['perc']+=$R[$i]['perc'];
+		//}
+		}
+	    } elseif ($SET['preprocess']=='naptar') {
+		for ($i=0; $i<count($R); $i++) {
+		    $RESULT[$R[$i]['diakId']][$R[$i]['dt']][$R[$i]['ora']][] = $R[$i];
+		}
+	    } else {
+		$RESULT = $R;
+	    }
+	}
+	return $RESULT;
+
+    }
+
+    function kretaIgazolas2mayor($key) { // -- TODO
+	$KRETA2MAYOR= array(
+		'Szülői igazolás'=>'szülői',
+		'Orvosi igazolás'=>'orvosi',
+		'Egyéb'=>'egyéb',
+		'Iskolai engedély'=>'igazgatói',
+		'Iskolaérdekű távollét'=>'igazgatói',
+		'Kikérő' => 'igazgatói',
+		'Pályaválasztási célú igazolás'=>'pályaválasztás',
+		'Szolgáltatói igazolás' => 'hatósági',
+		'Hivatalos távollét' => 'egyéb',
+		'Táppénz' => 'egyéb');
+	return $KRETA2MAYOR[$key]!='' ? $KRETA2MAYOR[$key] : 'egyéb';
+    }
+
+    function getKretaIgazolasOsszegzo($diakId) { // -- TODO
+	$q = "SELECT tipus, kretaIgazolas, count(distinct dt) AS db, count(*) AS dbBejegyzes FROM hianyzasKreta WHERE diakId=%u AND kretaStatusz='igen' GROUP BY tipus,kretaIgazolas ORDER BY tipus, kretaIgazolas";
+	$v = array($diakId);
+	$R = db_query($q, array('fv'=>'getKretaIgazolasOsszegzo','modul'=>'naplo','result'=>'indexed','values'=>$v));
+	return reindex($R,array(kretaIgazolas,tipus));
+    }
+
 ?>

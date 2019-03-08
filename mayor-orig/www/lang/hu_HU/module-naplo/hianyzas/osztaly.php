@@ -43,4 +43,5 @@
     define('_HOZOTT','Hozott');
     define('_AKTUALIS_NEVSOR','Aktuális névsor');
     define('_TELJES_NEVSOR','Teljes névsor');
+
 ?>

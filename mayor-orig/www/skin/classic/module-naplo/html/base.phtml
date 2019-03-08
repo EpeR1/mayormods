@@ -258,6 +258,21 @@
 
     }
 
+    function putForrasSelect() {
+
+	global $TOOL;
+	putToolFormStart('forrasSelect');
+	    echo '<select name="'.$TOOL['forrasSelect']['paramName'].'" class="onChangeSubmit">';
+		echo '<option value=""> - </option>'."\n";
+		$SEL = array($TOOL['forrasSelect']['paramValue'] => ' selected="selected" ');
+		foreach ($TOOL['forrasSelect']['adatok'] as $_szam => $_nev) {
+		    echo '<option value="'.$_szam.'"'.$SEL[$_szam].'>'.$_nev.'</option>';
+		}
+	    echo '</select>';
+	putToolFormStop();
+
+    }
+
     function putIntezmenySelect() {
 
 	global $TOOL;
@@ -1194,6 +1209,30 @@
 		echo '<td>'.(int)$H['orak']['osszesen']['pályaválasztás'].' '._ORA.'</td>';
 	    echo '</tr>'."\n";
 	echo '</table>'."\n";	
+	// ---
+	if (is_array($TOOL['kretaIgazolasOsszegzo'])) { // az adattömb tartalmazza, de nem jeleníti meg a késéseket is
+	$K = $TOOL['kretaIgazolasOsszegzo'];
+	$IGTIPUSOK = array_keys($K);
+	if (count($IGTIPUSOK)==0) return;
+	echo '<table class="hianyzasOsszegzo" cellpadding="1" cellspacing="1" align="center">';
+	    echo '<tr>';
+	      foreach($IGTIPUSOK as $k => $v)
+		echo '<th style="background-color: cornflowerblue;">'.$v.'</th>';
+	    echo '</tr>'."\n";
+	    echo '<tr>';
+	        foreach($IGTIPUSOK as $k => $v) {
+		    echo '<td style="background-color: #3facc7; color: white;">'.intval($K[$v]['hiányzás'][0]['db']).' '._NAP.'</td>';
+		}
+	    echo '</tr>'."\n";
+	    echo '<tr>';
+	        foreach($IGTIPUSOK as $k => $v) {
+		    echo '<td style="background-color: #3facc7; color: white;">'.intval($K[$v]['hiányzás'][0]['dbBejegyzes']).' '._ORA.'</td>';
+		}
+	    echo '</tr>'."\n";
+	echo '</table>'."\n";	
+
+	}
+
     }
 
     function putKerelemStat() {
@@ -1225,6 +1264,7 @@
 	echo '</ul>';
 	echo '</div>';
     }
+
 
 
     // CONTRIB!

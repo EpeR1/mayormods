@@ -143,6 +143,7 @@
 	}
     $_diakJogviszony=getDiakJogviszonyByDts( array($ADAT['diakId']), array($ADAT['dt']) );
     $ADAT['diakJogviszony'] = $_diakJogviszony[$ADAT['diakId']][$ADAT['dt']]['statusz'];
+    $ADAT['hianyzasKreta'] = getDiakKretaHianyzas($ADAT['diakId'],array('preprocess'=>'naptar','tolDt'=>$ADAT['dt'],'igDt'=>$ADAT['dt']));
     // tanarSelect tul képpen csak readnly
         $TOOL['datumSelect'] = array(
             'tipus' => 'sor', 'post' => array('diakId'),

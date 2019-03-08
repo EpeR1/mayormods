@@ -553,6 +553,7 @@ function getIgazolasOsszegzo() {
 	$TOOL['igazolasOsszegzo']['igazolasok'] = getIgazolasSzam($diakId);
 	$_T = getDiakHianyzasOsszesites(array($diakId),$_TANEV);
 	$TOOL['igazolasOsszegzo']['hianyzasok'] = $_T[$diakId];
+	$TOOL['kretaIgazolasOsszegzo'] =  getKretaIgazolasOsszegzo($diakId);
     }
 
 }

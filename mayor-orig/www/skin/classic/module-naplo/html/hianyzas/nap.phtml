@@ -45,7 +45,7 @@
         	echo '</a>';
 	    }
 	echo '</th><th>';
-	    _putHianyzasKistabla($ADAT['hianyzasok'][$_diakId], array('dt'=>$dt), array('napiMinOra' => $napiMinOra, 'napiMaxOra' => $napiMaxOra));
+	    _putHianyzasKistabla($ADAT['hianyzasok'][$_diakId], array('dt'=>$dt), array('napiMinOra' => $napiMinOra, 'napiMaxOra' => $napiMaxOra), $ADAT['hianyzasKreta'][$diakId][$dt]);
 	echo '</th></tr>';
         echo '<tr><th></th><th colspan="2">'._TANKOR.'</th><th>'._J.'</th><th>'._K.'</th><th>'._H.'</th><th>'.EH.'</th><th>'._F.'</th><th>'._FM.'</th><th>'._IGAZOLT.'</th></tr>';
         echo '</thead>';

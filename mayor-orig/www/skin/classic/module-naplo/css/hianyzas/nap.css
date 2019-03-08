@@ -127,3 +127,5 @@
     table.hianyzasNaptar a:hover { background-color: #667766; }
     table.hianyzasNaptar td.felszerelesHiany { background-color: rgb(100,100,200); }
     table.hianyzasNaptar td.egyenruhaHiany { background-color: orange; }
+   table.hianyzasNaptar.kreta {background-color: #3facc7;}
+    table.hianyzasNaptar.kreta tr th {background-color: cornflowerblue;}
