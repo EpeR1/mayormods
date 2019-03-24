@@ -317,4 +317,30 @@
 	if ($D['bejegyzesAdat']['szoveg'] !='') echo '<q>'.$D['bejegyzesAdat']['szoveg'].'</q>';
 	if ($D['tanarAdat']['tanarNev']!='') echo ' - '.$D['tanarAdat']['tanarNev'];
     }
+
+
+    function putHirnokFeliratkozas_user($ADAT) {
+
+
+	echo '<div class="hirnokDoboz '.$D['hirnokTipus'].'">';
+	    echo '<div class="hirnokBadgeHolder">';
+		echo '<a href="'.href('index.php?page=naplo&sub=hirnok&f=hirnok').'"><span style="background-color: #e91e63" class="material-icons">'.'email</span></a>';
+	    echo '</div>';
+	    echo '<div class="hirnokText">';
+		echo 'A gombra kattintva feliratkozhatsz a MaYoR Hírnök Futár szolgáltatására. Add meg azt az email címedet, amin elérünk! Leiratkozni a hírnök beállítások menüpontban tudsz.';
+        formBegin();
+        echo '<input type="hidden" name="action" value="hirnokFeliratkozas" />';
+        echo '<table align="center">';
+        echo '<tr>';
+            echo '<td><input type="text" style="font-size:normal; min-width:250px;" placeholder="email" name="email" value="'.$ADAT['email'].'"/></td>';
+            echo '<td><input type="submit"></td>';
+        echo '</tr>';
+        echo '</table>';
+        formEnd();
+
+	    echo '</div>';
+	echo '</div>';
+
+    }
+
 ?>

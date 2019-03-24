@@ -11,8 +11,8 @@
 	)
     );
     if (strtotime($tolDt)>strtotime(date('Y-m-d H:i:s'))) $tolDt = date('Y-m-d',strtotime('-10 day'));
-
     $osztalyId = readVariable($_POST['osztalyId'], 'id');
+
     if (__NAPLOADMIN === true) { // csak adminnak engedjük kiválasztani - lásd még include
 	$diakId = readVariable($_POST['diakId'], 'id', readVariable($_GET['diakId'], 'id'));
 	$tanarId = readVariable($_POST['tanarId'], 'id', readVariable($_GET['tanarId'], 'id'));
@@ -20,12 +20,29 @@
 	if ($diakId==0 && count($feliratkozott['diak'])>0) $diakId = $feliratkozott['diak'];
 	if ($tanarId==0 && count($feliratkozott['tanar'])>0) $tanarId = $feliratkozott['tanar'];
 	if ($tanarId==0 && defined('__USERTANARID')) $tanarId = __USERTANARID;
+	define('_ALLOW_SUBSCRIBE',false);
     } else {
         if (__DIAK===true) { // diák nézet
-                $diakId = __USERDIAKID;
+    	    $naploId = $diakId = __USERDIAKID;
+	    $naploTipus='diak';
+	    define('_ALLOW_SUBSCRIBE',true);
         } elseif (__TANAR ===true) { // tanár nézet
-                $tanarId = __USERTANARID;
-        }
+    	    $naploId=$tanarId = __USERTANARID;
+	    $naploTipus='tanar';
+	    define('_ALLOW_SUBSCRIBE',true);
+        } else {
+	    define('_ALLOW_SUBSCRIBE',false);
+	}
+	if ($action=='hirnokFeliratkozas' && _ALLOW_SUBSCRIBE===true) {
+            $S['email'] = readVariable($_POST['email'],'email');
+            $S['naploId'] = $naploId;
+            $S['naploTipus'] = $naploTipus;
+            $S['hirnokFeliratkozasId'] = readVariable($_POST['hirnokFeliratkozasId'],'numeric');
+            if ($S['hirnokFeliratkozasId']>0) delHirnokFeliratkozas($S);
+            elseif ($S['email']!='') addHirnokFeliratkozas($S);
+	    unset($S);
+	}
+	$ADAT['futarEmail'] = getFutarEmail();
     }
 
     $ADAT['hirnokFolyam'] = hirnokWrapper(array('tolDt'=>$tolDt,'diakId'=>$diakId,'tanarId'=>$tanarId));

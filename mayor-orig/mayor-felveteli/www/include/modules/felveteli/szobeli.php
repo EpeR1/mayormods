@@ -69,7 +69,7 @@
 
 	if (!is_numeric($oktid)) return false;
 	if ($olr=='') $lr = db_connect('felveteli'); else $lr=$olr;
-	$q = "SELECT tagozat,rangsor,pont,szobeli FROM eredmenyek_tagozatonkent_"._EV." WHERE oktid='$oktid'";
+	$q = "SELECT tagozat,rangsor,pont,szobeli,joslat FROM eredmenyek_tagozatonkent_"._EV." WHERE oktid='$oktid'";
 	$R = db_query($q,array('result'=>'indexed'),$lr);
 	if ($olr=='') db_close($lr);
 	return $R;

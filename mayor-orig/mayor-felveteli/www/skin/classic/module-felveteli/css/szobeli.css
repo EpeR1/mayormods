@@ -84,7 +84,7 @@
 
     table.felveteliAdatok {
 	margin-top:10px; margin-bottom: 20px;
-	width:430px;
+	width:600px;
 	background-color:#556670;
     }
     table.felveteliAdatok thead th { background-color: #eeeee0;
@@ -131,6 +131,15 @@
     }
     div#felviWait img {
 	vertical-align: baseline;
+    }
+
+    div#tajekoztato {
+	border: solid 2px #ddd;
+	background: #eee;
+	color: black;
+	width: 600px;
+	margin: auto;
+	padding: 20px;
     }
 
 }

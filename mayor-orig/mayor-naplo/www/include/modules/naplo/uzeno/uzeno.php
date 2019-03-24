@@ -44,10 +44,13 @@
 
     function getUzenoUzenetek($SET=array('tanev'=>__TANEV,'count'=>false,'filter'=>array(),'ignoreAdmin'=>false,'filterFlag'=>array(),'limits'=>array(),'order'=>'DESC')) {
 
-	$__SZEREP = __SZEREP; // cronból is szeretnénk használni
-
-	if (__SZEREP=='') return array();
-
+	if (_RUNLEVEL==='cron') {
+	    $__SZEREP = $SET['szerep'];
+	    if ($__SZEREP=='') return array();
+	} else {
+	    $__SZEREP = __SZEREP; // cronból is szeretnénk használni
+	    if (__SZEREP=='') return array();
+	}
 
 	$feladoId = setUzenoFeladoId();
 	$TIPUSOK = initUzenoTipusok(array('csakId'=>true,'result'=>'idonly','tanev'=>$SET['tanev'],'forRead'=>true));

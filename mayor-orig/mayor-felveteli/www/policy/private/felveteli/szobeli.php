@@ -24,7 +24,7 @@ if (_LEKERDEZHETO) {
 	}
     } elseif ($nev!='') {
 	//if (count($EREDMENY)==1 && $nev!='' && (_CATEGORY=='admin' || $oktid!='') ) {
-	//    putIrasbeliEredmeny($EREDMENY[0]);
+	    //putIrasbeliEredmeny($EREDMENY[0]);
 	    //putFelvetelizoAdatok($ADATOK);
 	    //putSzobeliEredmeny($EREDMENY,$ADATOK);
 	//} elseif ($nev!='') {

@@ -309,7 +309,7 @@ global $SZEMESZTER;
         	    $values = array(_USERACCOUNT,_POLICY);
 		}
 	    } else {
-        	$q = "SELECT naploTipus,naploId FROM hirnokFeliratkozas WHERE userAccount='%s' AND policy='%s'";
+        	$q = "SELECT naploTipus,naploId,email FROM hirnokFeliratkozas WHERE userAccount='%s' AND policy='%s'";
         	$values = array(_USERACCOUNT,_POLICY);
 	    }
             $r = db_query($q, array('modul'=>'naplo_intezmeny','result'=>'indexed','values'=>$values));
@@ -323,6 +323,35 @@ global $SZEMESZTER;
 	    }
 	    return $result;
         }
+
+	function getHirnokEmail() {return getFutarEmail;}
+	function getFutarEmail() {
+
+	    if ( _POLICY=='parent' && defined('__PARENTDIAKID') ) {
+		$naploId = __USERDIAKID;
+		$naploTipus='diak';
+		$q = "SELECT email FROM `szulo` WHERE szuloId=%u";
+    		$values = array(__USERSZULOID);
+        	$email = db_query($q, array('modul'=>'naplo_intezmeny','result'=>'record','values'=>$values));
+	    } elseif (__DIAK===true) {
+		$naploId = __USERDIAKID;
+		$naploTipus='diak';
+		$q = "SELECT email FROM `diak` WHERE diakId=%u";
+    		$values = array($naploId);
+        	$email = db_query($q, array('modul'=>'naplo_intezmeny','result'=>'record','values'=>$values));
+    	    } elseif (__TANAR ===true) { // tanár nézet
+                $naploId = __USERTANARID;
+		$naploTipus='tanar';
+		$q = "SELECT email FROM `tanar` WHERE tanarId=%u";
+    		$values = array($naploId);
+        	$email = db_query($q, array('modul'=>'naplo_intezmeny','result'=>'record','values'=>$values));
+    	    } else return false;
+
+    	    $q = "SELECT email FROM `hirnokFeliratkozas` WHERE userAccount='%s' AND policy='%s' AND naploTipus='%s' AND naploId=%u";
+    	    $values = array(_USERACCOUNT,_POLICY,$naploTipus,$naploId);
+            $futarEmail = db_query($q, array('modul'=>'naplo_intezmeny','result'=>'record','values'=>$values));
+	    return array('futar'=>$futarEmail,'hirnok'=>$futarEmail,'naplo'=>$email);
+	}
 
 	function addHirnokFeliratkozas($ADAT) {
 

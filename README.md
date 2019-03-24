@@ -19,6 +19,7 @@ A fenti könyvtárak struktúrája:
 **egyéb/nextcloud**     >       :       Nextcloud felhasználó/csoport betöltő-menedzser script a MaYoR-ból.  
 
 
+.
 
 
 ## Munin Plugin
@@ -26,6 +27,8 @@ A fenti könyvtárak struktúrája:
 (A MaYor-napló aktuális leterheltségének monitorozása munin segítségével.)
 
 ![munin](http://git.bmrg.hu/mayormods.git/pict/mayor_munin-day.png)
+
+.
 
 
 
@@ -35,6 +38,8 @@ A fenti könyvtárak struktúrája:
 (Csoportokat hoz létre a mayor tankörei alapján, majd ezen csoportokba belépteti az adott tankör diákjait, és a tanárait. )
 
 ![munin](http://git.bmrg.hu/mayormods.git/pict/nextcloud.png)
+
+.
 
 ---------------------------------------------------------------------
 

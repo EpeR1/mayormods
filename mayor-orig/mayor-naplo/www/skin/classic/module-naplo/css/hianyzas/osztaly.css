@@ -164,7 +164,7 @@
     table.navi th, table.navi td {
 	text-align: center;
         border-style: solid none solid none;
-        border-width: 1px 0px 2px 0px;
+        border-width: 1px 0px 1px 0px;
         border-color: #aabbc0;
     }
     table.navi input {

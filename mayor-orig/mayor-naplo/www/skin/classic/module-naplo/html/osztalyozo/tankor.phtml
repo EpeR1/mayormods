@@ -212,12 +212,14 @@
 	echo '<tbody>';
 	$db = 0;
 	if (is_array($Diakok['nevek'])) foreach ($Diakok['nevek'] as $diakId => $DIAKADAT) {	
-
 	    $JEGYET_KAP = (
 		in_array($ADAT['diakJogviszony'][$diakId][date('Y-m-d')]['statusz'],array('jogviszonyban van','vendégtanuló'))
 		||
 		($ADAT['diakJogviszony'][$diakId][date('Y-m-d')]['statusz']=='magántanuló' && $tankorJelleg == 'gyakorlat')
+		||
+		($ADAT['diakJogviszony'][$diakId][date('Y-m-d')]['statusz']=='magántanuló' && defined('MAYOR_SOCIAL')=== true && MAYOR_SOCIAL===true)
 	    );
+
 	    $__JEGYEK = array();
 	    //$diakKovetelmeny = $Diakok['adatok'][$diakId][count($Diakok['adatok'][$diakId])-1]['kovetelmeny']; (ezt nem használjuk!!!)
 	    echo '<tr class="'.str_replace(' ', '', ekezettelen($ADAT['diakJogviszony'][$diakId][date('Y-m-d')]['statusz'])).'">';
@@ -361,13 +363,13 @@
 
 		$_szlo=$_sumsuly = 0;
 		for ($i=0; $i<count($__JEGYEK['mase']); $i++) {
-		    $_jegyOsszeg += $_szlo +=  ($__JEGYEK['mase'][$i]['jegy']) * $SULYOK[$__JEGYEK['mase'][$i]['tipus']-1];
+		    $_szlo +=  ($__JEGYEK['mase'][$i]['jegy']) * $SULYOK[$__JEGYEK['mase'][$i]['tipus']-1];
 		    $_sumsuly += $SULYOK[$__JEGYEK['mase'][$i]['tipus']-1];
 		    if ($KOVETELMENY[$__JEGYEK['mase'][$i]['jegyTipus']]['összeadható']===true) $_osszegMutat = true;
 		    if ($KOVETELMENY[$__JEGYEK['mase'][$i]['jegyTipus']]['átlagolható']===true) $_atlagMutat = true;
 		}
 		if ($_sumsuly!=0) $atlag_title .= ' ('.number_format($_szlo/$_sumsuly,2,',','').')';
-		$_jegyOszseg += $_szlo;
+		$_jegyOsszeg += $_szlo;
 
 		// összeget vagy átlagot mutassunk?
 		if ($_atlagMutat === true) echo '<span title="'.$atlag_title.'" data-atlag="'.$diakId.':'.str_replace(',','.',$atlag).'">'.$atlag.'</span>';

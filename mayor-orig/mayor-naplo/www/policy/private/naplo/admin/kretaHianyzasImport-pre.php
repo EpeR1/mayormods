@@ -42,15 +42,17 @@
 /*
 kretaHianyzasImportarray (size=10)
   0 => string 'Bacsó Dániel József' (length=22)
-  1 => string '72437828706' (length=11)
-  2 => string '2018-12-17' (length=10)
-  3 => string '2' (length=1)
-  4 => string '08.A' (length=4)
-  5 => string 'ének-zene' (length=10)
-  6 => string 'Hiányzás' (length=10)
-  7 => string '' (length=0)
-  8 => string 'Igen' (length=4)
-  9 => string 'Orvosi igazolás' (length=16)
+  1 => string '2018-12-17' (length=10)
+  2 => string '2' (length=1)
+  3 => string '08.A' (length=4)
+  4 => string 'ének-zene' (length=10)
+  5 => string 'Hiányzás' (length=10)
+  6 => string '' (length=0)
+  7 => string 'Igen' (length=4)
+  8 => string 'Orvosi igazolás' (length=16)
+
+  ha van: 9 => string '72437828706' (length=11)
+
 */
 	$D = array();
 	$D['diakNev'] = $record[0];
@@ -62,8 +64,9 @@ kretaHianyzasImportarray (size=10)
 	    $D['diakId'] = $DIAKNEV2diakId[$D['diakNev']][0]['diakId'];
 	    $D['oId'] = $DIAKNEV2diakId[$D['diakNev']][0]['oId'];
 	}
-	$_tmp = explode('/',$record[1]);
-	$D['dt'] = $_tmp[2] .'-'. $_tmp[0] .'-'. $_tmp[1];
+	// $_tmp = explode('/',$record[1]);
+	// $D['dt'] = $_tmp[2] .'-'. $_tmp[0] .'-'. $_tmp[1];
+	$D['dt'] = $record[1]; 
 	$D['ora'] = intval($record[2]);
 	$D['kretaTankorNev'] = $record[3];
 	$D['kretaTantargyNev'] = $record[4];

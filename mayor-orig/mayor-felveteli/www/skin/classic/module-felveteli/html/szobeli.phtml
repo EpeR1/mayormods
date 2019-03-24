@@ -83,10 +83,10 @@ if ($DATA['varos']!='') {
 		echo '<td colspan="2">'.$DATA['irsz'].' '.$DATA['varos'].', '.$DATA['utca'].'</td>'."\n";
 	    echo '</tr>';
 }
-	    echo '<tr>';
-		echo '<th>Szülő/diák:</th>'."\n";
-		echo '<td colspan="2">'.$DATA['level1'].' levélben</td>'."\n";
-	    echo '</tr>';
+//	    echo '<tr>';
+//		echo '<th>Szülő/diák:</th>'."\n";
+//		echo '<td colspan="2">'.$DATA['level1'].' levélben</td>'."\n";
+//	    echo '</tr>';
 	    echo '<tr>';
 		echo '<th>Iskola OM kódja:</th>'."\n";
 		if (is_array($DATA['iskolaAdat'])) {
@@ -95,15 +95,15 @@ if ($DATA['varos']!='') {
 		    echo '<td colspan="2" style="background-color: red; color:white">'.$DATA['OM'].' ('._HIBAS.')</td>'."\n";
 		}
 	    echo '</tr>';
-	    if (is_array($DATA['iskolaAdat'])) {
+	    if (is_array($DATA['iskolaAdat']) && $DATA['iskolaAdat']['nev'] != '') {
 		echo '<tr>';
 		echo '<th>Iskola adatai:</th>'."\n";
 		echo '<td colspan="2">'.$DATA['iskolaAdat']['nev'].', '.$DATA['iskolaAdat']['telepules'].'</td>'."\n";
 		echo '</tr>';
-		echo '<tr>';
-		echo '<th>Iskola:</th>'."\n";
-		echo '<td colspan="2">'.$DATA['level2'].' levélben</td>'."\n";
-		echo '</tr>';
+//		echo '<tr>';
+//		echo '<th>Iskola:</th>'."\n";
+//		echo '<td colspan="2">'.$DATA['level2'].' levélben</td>'."\n";
+//		echo '</tr>';
 	    }
 
 
@@ -121,6 +121,10 @@ if ($DATA['varos']!='') {
 		echo '<th>'._IRASBELI.' eredmény (matematika):</th>'."\n";
 		echo '<td>'.$DATA['matek'].'/50</td>'."\n";
 		echo '<td>'.(($DATA['matek2']!=0)?($DATA['matek2'].'/50'):'').'</td>'."\n";
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>Szóbeli előtti pontszám:</th>'."\n";
+		echo '<td colspan="2">'.$DATA['pont'].'</td>'."\n";
 	    echo '</tr>';
 
 // Ez már értelmetlen, mert minden tagozaton más-más pontszám van...
@@ -261,7 +265,8 @@ __MÉG VÉLETLENÜL SE KERÜLJÖN ILYEN ADAT
 		echo '<tr>';
 		echo '<td colspan="2">';
 			//echo _NINCS_BEHIVVA;
-		    echo 'Nincs behívva - vagy - Nem kell szóbeliznie';
+		    //echo 'Nincs behívva - vagy - Nem kell szóbeliznie';
+		    echo 'Nem hívjuk szóbelizni.';
 		echo '</td></tr>';
 	    }
 
@@ -290,7 +295,7 @@ __MÉG VÉLETLENÜL SE KERÜLJÖN ILYEN ADAT
 			    echo '</p>';
 			} else {
 
-			echo $D['bizottsag'].'. '._BIZOTTSAG.' ('.$D['szoveg'].')<br/>';
+			echo $D['bizottsag'].'. bizottság ('.$D['szoveg'].' - '.$D['id'].')<br/>';
 			echo $D['napdt'].' ('.$D['nap'].') ';
 			echo substr($D['ido'],0,-3);
 
@@ -326,6 +331,7 @@ __MÉG VÉLETLENÜL SE KERÜLJÖN ILYEN ADAT
 	    }
 	    echo '</tbody>';
 	    echo '</table>';
+
 	} else {}
     
     }
@@ -445,7 +451,7 @@ __MÉG VÉLETLENÜL SE KERÜLJÖN ILYEN ADAT
 
 		echo '<tr>';
 		echo '<th>'.$TAGOZATOK[$DATA[$i]['tagozat']].'</th>'."\n";
-		if ($DATA[$i]['rangsor']<500) {
+		if ($DATA[$i]['rangsor']<500 && $DATA[$i]['rangsor']>0) {
 		    //echo '<td style="text-align: right">'.$DATA[$i]['pont'].' pont</td>'."\n";
 		    echo '<td style="text-align: right">';
 /* eredeti 2018
@@ -469,21 +475,57 @@ __MÉG VÉLETLENÜL SE KERÜLJÖN ILYEN ADAT
 			    echo $TAG[$DATA[$i]['tagozat']];
 			else
 */
-			    if ($DATA[$i]['rangsor'] == 0) echo 'sajnos nem';
+			    if ($DATA[$i]['rangsor'] == 0) echo '-'; //echo 'sajnos nem';
 			    else {
 				if ($DATA[$i]['rangsor'] <= 150) echo $DATA[$i]['rangsor'];
 				else echo '>150';
 				echo '. <span title="'.$DATA[$i]['rangsor'].$TAG[$DATA[$i]['tagozat']].'">hely</span>';
 			    }
 		    echo '</td>'."\n";
+		    echo '<td>';
+			echo $DATA[$i]['joslat'];
+		    echo '</td>';
 		} else {
-		    echo '<td colspan="2" style="text-align: right">nem tudjuk felvenni</td>'."\n";
+		    echo '<td colspan="3" style="text-align: right">nem tudjuk felvenni</td>'."\n";
 		}
 		echo '</tr>';
 
 	    }
 	    
 	echo '</tbody></table>';
+echo '
+<div id="tajekoztato">
+<p>Tisztelt Szülők! Kedves Jelentkezők!</p>
+<p>
+A többi középiskolához hasonlóan tagozatonként rangsorba állítottuk a jelentkezőket.
+</p><p style="margin-bottom: 0">
+Ugyanakkor fontos megjegyezni, hogy – a többi iskolához hasonlóan – mi sem tudjuk, hogy a fölvételizők
+</p>
+<ul style="margin-top: 0; padding-top: 0;"><li>
+rajtunk kívül mely iskolákat jelölték meg,
+</li><li>
+milyen eredményt értek el a többi iskolában,
+</li><li>
+hányadik helyen állnak a többi iskolában,
+</li><li>
+milyen sorrendet jelöltek meg az iskolák, ezen belül a tanulmányi
+területek között.
+</li></ul>
+<p>
+Ennek megfelelően azt sem tudhatjuk, hogy ki lesz az, aki a rangsorból
+ténylegesen hozzánk fog beiratkozni.
+</p><p>
+A korábbi évek tapasztalatai alapján azonban igyekszünk valamifajta
+támpontot adni: megírjuk, mekkora esélyt látunk a hozzánk való
+bekerülésre. Ennek az információnak egyetlen háttere a meghirdetett
+férőhelyek száma, illetve a rangsorbeli sorszám. Ennek megfelelően ez
+nem jelent ígéretet, nem jelent kötelezettségvállalást: legfőképpen azt
+szeretnénk éreztetni, hogy a behívottak rangsorának második-harmadik
+harmadában szereplők helyzete sem reménytelen. Még olyan eset is
+előfordulhat, hogy a számítógép azonos összpontszám esetén különböző
+becslést ad. (Ha ez ténylegesen megtörténnék, az azonos pontszámúakat
+föl fogjuk venni.)
+</p></div>';
 
     }
 
