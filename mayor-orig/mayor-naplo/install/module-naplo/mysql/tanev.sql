@@ -489,9 +489,9 @@ CREATE TABLE `hianyzasKreta` (
   KEY `hianyzasKreta_oId` (`oId`),
   KEY `hianyzasKreta_diakId` (`diakId`),
   KEY `hianyzasKreta_tankorId` (`tankorId`),
-  CONSTRAINT `hk_ibfk_1` FOREIGN KEY (`oId`) REFERENCES `intezmeny_vmg`.`diak` (`oId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `hk_ibfk_2` FOREIGN KEY (`diakId`) REFERENCES `intezmeny_vmg`.`diak` (`diakId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `hk_ibfk_3` FOREIGN KEY (`tankorId`) REFERENCES `intezmeny_vmg`.`tankor` (`tankorId`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `hk_ibfk_1` FOREIGN KEY (`oId`) REFERENCES `%DB%`.`diak` (`oId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `hk_ibfk_2` FOREIGN KEY (`diakId`) REFERENCES `%DB%`.`diak` (`diakId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `hk_ibfk_3` FOREIGN KEY (`tankorId`) REFERENCES `%DB%`.`tankor` (`tankorId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 CREATE TABLE `koszi` (
