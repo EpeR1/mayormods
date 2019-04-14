@@ -152,4 +152,21 @@
 	return $RESULT;
     }
 
+    function exportTankorHaladasi($file, $ADAT) {
+
+
+	$EXPORT = array(array('Óraszám','Téma'));
+	foreach ($ADAT['haladasi'] as $dt => $nAdat) {
+	    foreach ($nAdat as $index => $oAdat) {
+		if ($oAdat['oraszam'] != '')
+		    $EXPORT[] = array($oAdat['oraszam'], $oAdat['leiras']);
+	    }
+	}
+	if ($ADAT['formatum'] == 'xml') return generateXLS("$file.${ADAT['formatum']}", $EXPORT, 'haladási napló');
+        elseif ($ADAT['formatum'] == 'csv') return generateCSV("$file.${ADAT['formatum']}", $EXPORT, 'haladási napló');
+        elseif ($ADAT['formatum'] == 'ods') return generateODS("$file.${ADAT['formatum']}", $EXPORT, 'haladási naplo');
+        else return false;
+
+    }
+
 ?>

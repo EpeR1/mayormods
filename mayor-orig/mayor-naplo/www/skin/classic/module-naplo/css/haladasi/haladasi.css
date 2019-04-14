@@ -295,6 +295,18 @@
     table.haladasiBejegyzesek tbody tr td.ora a.tankorStat {display:none;}
     table.haladasiBejegyzesek tbody tr:hover td.ora a.tankorStat { display:inline;}
 
+    form.exportForm { text-align: right; width:95%; }
+    form.exportForm input{
+	cursor: pointer;
+	border: solid 1px #888;
+	color: #888;
+	background-color: #eee;
+	border-radius: 4px;
+	padding: 2px 4px;
+	opacity: 0.9;
+    }
+    form.exportForm input:hover { color:black; border-color: black; background-color: white; opacity: 1; }
+    form.exportForm input:active { background-color: cornflowerblue; color:white; }
 }
 @media print {
     table.haladasiBejegyzesek thead tr th { border-bottom: solid 1px black;}

@@ -1,6 +1,17 @@
 <?php
     global $SZLO;
 
+    function putExportForm($ADAT) {
+	$tankorId = $ADAT['tankorId'];
+
+	formBegin(array('action'=>href('index.php?page=naplo&sub=haladasi&f=haladasi'), 'name'=>'haladasiExport', 'class'=>'exportForm'));
+	    echo '<input type="hidden" name="action" value="haladasiExport" />'."\n";
+	    echo '<input type="hidden" name="tankorId" value="'.$tankorId.'" />'."\n";
+	    echo '<input type="hidden" name="formatum" value="xml" />'."\n";
+	    echo '<input type="submit" name="Export" value="Export"/>'."\n";
+	formEnd();
+    }
+
     function putHaladasiBejegyzesek($ADAT) {
 
 	global $_TANEV,$SZLO;
@@ -18,6 +29,8 @@
 	if ($ADAT['title']=='') return;
 
 	if ($tankorId!='') $AKTIV_TH['tankor'] = true;
+
+	if ($tankorId!='') putExportForm($ADAT);
 
 	$FORM = array('action'=>href('index.php?page=naplo&sub=haladasi&f=haladasi'), 'name'=>'haladasiOrabeiras', 'class'=>'onChangeRequest');
 	formBegin($FORM);

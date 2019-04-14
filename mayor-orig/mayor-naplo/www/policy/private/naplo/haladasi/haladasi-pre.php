@@ -17,6 +17,7 @@
     require_once('include/modules/naplo/share/tanmenet.php');
     require_once('include/modules/naplo/share/hetes.php');
     require_once('include/modules/naplo/share/helyettesitesModifier.php');
+    require_once('include/modules/naplo/share/file.php');
     require_once('include/share/date/names.php');
 
 
@@ -247,6 +248,16 @@ if ( $skin == 'ajax'
 //	    for ($i=0; $i<count($_NAPOK); $i++) {
 //		checkNaplo($_NAPOK[$i]);
 //	    }
+	} elseif ($action == 'haladasiExport') {
+	    $ADAT['formatum'] = readVariable($_POST['formatum'], 'enum', 'ods', array('csv','ods','xml'));
+	    $orderBy = array('dt','ora');
+	    if ($ADAT['formatum'] == 'xml') $ADAT['mime'] = 'application/vnd.ms-excel';
+	    $file = $tankorId;
+	    $Tankorok = getTankorById($tankorId, __TANEV); // felül kell írnunk
+    	    $ADAT['haladasi'] = getHaladasi($Tankorok, $ADAT['munkaterv'], $orderBy, $csakUres);
+	    if (exportTankorHaladasi($file, $ADAT))
+        	header('Location: '.location('index.php?page=session&f=download&download=true&dir=naplo/haladasi/haladasi&file='.$file.'.'.$ADAT['formatum'].'&mimetype='.$ADAT['mime']));
+
 	}
     }
 
