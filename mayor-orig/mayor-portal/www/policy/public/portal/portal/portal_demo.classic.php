@@ -16,11 +16,19 @@
 </form>
 <!-- end of MaYoR-じしょ -->';
 
+$TXT['mayorgpl'] = '
+<ul>
+<li><a href="https://www.mayor.hu">mayor.hu</a></li>
+<li><a href="https://facebook.com/mayorgpl">facebook</a></li>
+<li><a href="https://wiki.mayor.hu">wiki</a></li>
+<li><a href="mailto:support@mayor.hu">fejlesztői support</a></li>
+';
 
     echo '<table class="portalMain">';
     echo '<tr><td class="bal">';
 
-	putDoboz('MaYoR-じしょ',$TXT['japszotar'],array('header-color'=>'#bb0088'));
+	//putDoboz('MaYoR-じしょ',$TXT['japszotar'],array('header-color'=>'#bb0088'));
+	putDoboz('MaYoR',$TXT['mayorgpl'],array('header-color'=>'#bb0088'));
 
     echo '</td>';
     echo '<td class="kozep">';
