@@ -32,6 +32,8 @@ if [ "$nrev" -gt "$orev" ]; then
 
 	git add --all
 	git commit -a -m "Rev: $nrev"
+	git tag -a "rev$nrev" -m "Rev: $nrev"
+
 
         
 fi

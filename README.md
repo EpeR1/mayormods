@@ -2,10 +2,11 @@
 
 Ez a tároló, a MaYoR elektornikus napló (© [www.mayor.hu](http://www.mayor.hu)), és a hozzá készített apróbb javítások/módosítások/kiegészítések gyüjteménye.  
 
-**Az eredeti repó elérhető itt: [http://git.bmrg.hu/mayormods.git](http://git.bmrg.hu/mayormods.git/)**   
+**Original: [http://git.bmrg.hu/pub/mayormods.git](http://git.bmrg.hu/pub/mayormods.git/)**   
+**Mirror 2: [https://github.com/eper1/mayormods](https://github.com/EpeR1/mayormods)**   
 
 
-A fenti könyvtárak struktúrája:
+## Struktúra:
 
 
 **mayor-jav**   >               :       Az elvégzett javítások ki/egybegyűjtve. (mysql-utf8, update, texgen hibajavítás)  
@@ -26,7 +27,7 @@ A fenti könyvtárak struktúrája:
 
 (A MaYor-napló aktuális leterheltségének monitorozása munin segítségével.)
 
-![munin](http://git.bmrg.hu/mayormods.git/pict/mayor_munin-day.png)
+![munin](http://git.bmrg.hu/images/mayormods.git/mayor_munin-day.png)
 
 .
 
@@ -37,7 +38,7 @@ A fenti könyvtárak struktúrája:
 (Felhasználókat (tanár, diák), és csoportokat (tankörök) tölthetünk be vele a mayorból, a nextcloudba. )  
 (Csoportokat hoz létre a mayor tankörei alapján, majd ezen csoportokba belépteti az adott tankör diákjait, és a tanárait. )
 
-![munin](http://git.bmrg.hu/mayormods.git/pict/nextcloud.png)
+![munin](http://git.bmrg.hu/images/mayormods.git/nextcloud.png)
 
 .
 
