@@ -10,6 +10,7 @@
 if (__FELVETELIADMIN===true) {
     $MENU['modules']['felveteli'] = array(
         'szobeli' => array(array('txt' => 'Eredmények')),
+        'kozponti' => array(array('txt' => 'Végeredmény')),
 //        'import' => array(array('txt' => 'Import')),
         'level' => array(array('txt' => 'Levelek generálása')),
         'levelIgazgato' => array(array('txt' => 'Levelek (igazgató)')),

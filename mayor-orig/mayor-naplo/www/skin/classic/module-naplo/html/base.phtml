@@ -47,7 +47,7 @@
 
 	echo '<td class="toolBarTitle" id="toolBarTitle" colspan="3">';
 	    if (defined('__PAGETITLE')) echo __PAGETITLE.'<br/>';
-	    else echo 'MaYoR eleketronikus napló'.'<br/>';
+	    else echo 'MaYoR elektronikus napló'.'<br/>';
 	    echo '<a href="'.href('index.php?page=naplo&sub=intezmeny&f=valtas').'">';
 		if (defined('__TELEPHELYID')) echo '<span id="toolBarIntezmeny" title="TelephelyId:".'.__TELEPHELYID.'>'.__INTEZMENY .', ' . __TANEV.'/'.(__TANEV+1).'</span>';
 		else echo '<span id="toolBarIntezmeny">'.__INTEZMENY . '/' . __TANEV.'</span>';

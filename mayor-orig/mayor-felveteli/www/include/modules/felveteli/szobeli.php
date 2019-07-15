@@ -1,5 +1,20 @@
 <?php
 
+    function updateLevelToken($oktid) {
+        if ($oktid=='') return false;
+        $token = bin2hex(openssl_random_pseudo_bytes(20));
+        $ip = _clientIp();
+        $q = "INSERT INTO levelLog_"._FELVETELI_EVE." (oktid,generalasDt,ip,token) VALUES ('%s',NOW(),'%s','%s')";
+        $v = array($oktid,$ip,$token);
+        db_Query($q,array('modul'=>'felveteli','values'=>$v,'debug'=>false),$lr);
+        return $token;
+    }
+
+    function checkLevelToken($token) {
+
+    }
+
+
     function getIrasbeliEredmeny($nev,$oId) {
         $lr = @db_connect('felveteli');
 	    $q = "SELECT * FROM irasbeli_eredmenyek_"._EV." WHERE nev='%s' AND oId='%s'";

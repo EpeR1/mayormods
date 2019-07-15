@@ -476,6 +476,7 @@ $ZaradekIndex = array(
 	'következő évfolyamba léphet' => 20, // %évfolyam betűvel%
 	'tanulmányait befejezte, következő évfolyamon folytathatja' => 21, // %évfolyam%
 	'tanulmányait befejezte' => 102,
+	'érettségi vizsgát tehet' => 61,
 	'szakképző évfolyamba léphet' => 38, // %szakképesítés%
 	// mulasztás - de vizsgázat
 	'mulasztás miatt osztályozóvizsga' => 19,

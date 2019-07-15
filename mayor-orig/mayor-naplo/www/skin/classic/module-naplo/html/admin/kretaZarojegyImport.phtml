@@ -1,0 +1,48 @@
+<?php
+
+    function putKretaZarojegyImport($ADAT) {
+    
+	if ($ADAT['osztalyId']==0) {
+	    echo '<h1 style="text-align: center">Először válassz osztályt!</h1>';
+	    return;
+	} else {
+	    echo '<h1 style="text-align: center">Évfolyamjel: '.$ADAT['osztalyAdat']['evfolyamJel'].'</h1>';
+	}
+
+	$oszlopIndex = 0;
+	if (count($ADAT['targyMatrix'])>0) {
+	    formBegin();
+	    echo '<table style="margin-left:40px;">';
+	    foreach ($ADAT['targyMatrix'] as $targyOszlopNev => $targyAdat) {
+		echo '<tr><td>'.($oszlopIndex).'</td><td>'.$targyOszlopNev.'</td>';
+		echo '<td>';
+		    if (!is_array($targyAdat)) {
+			echo '-';
+		    } elseif (count($targyAdat)==1) {
+			echo $targyAdat[0]['targyNev']; // kovetelmeny, munkakozosseg
+			echo ' ('.$targyAdat[0]['targyId'].')'; // kovetelmeny, munkakozosseg
+			echo '<input type="hidden" name="oszlop_'.intval($oszlopIndex).'" value="'.$targyAdat[0]['targyId'].'" />';
+		    } else {
+			echo '<select name="oszlop_'.$oszlopIndex.'">';
+			echo '<option value="">Válassz!</option>';
+			for ($i=0; $i<count($targyAdat); $i++) {
+			    $_SEL = ($_POST['oszlop_'.($oszlopIndex)] == $targyAdat[$i]['targyId']) ? ' selected="selected" ':'';
+			    echo '<option value="'.$targyAdat[$i]['targyId'].'" '.$_SEL.'>'.$targyAdat[$i]['targyNev'].' - '.$targyAdat[$i]['targyJelleg'].' ('.$targyAdat[$i]['mkNev'].' munkaközösség) '.$targyAdat[$i]['zaroKovetelmeny'].' ('.$targyAdat[$i]['targyId'].')</option>';
+			}
+			echo '</select>';
+		    }
+		echo '</td>';
+		echo '</tr>';
+		$oszlopIndex++;
+	    }
+	    echo '</table>';
+	    echo '<input type="hidden" name="osztalyId" value="'.intval($ADAT['osztalyId']).'" />';
+	    echo '<input type="checkbox" name="MODIFYSQL" value="1" />';
+	    echo '<input type="submit" />';
+	    formEnd();
+	}
+	// dump($ADAT['oszlop2targyId']);
+
+
+    }
+?>

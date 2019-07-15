@@ -716,21 +716,6 @@ CREATE TABLE `kepzesOsztaly` (
   CONSTRAINT `kepzesOsztaly_ibfk_2` FOREIGN KEY (`osztalyId`) REFERENCES `osztaly` (`osztalyId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- DROP in rev. 3562
--- CREATE TABLE `kepzesTargyOraszam` (
---   `kepzesId` smallint(5) unsigned NOT NULL,
---   `evfolyam` tinyint(3) unsigned NOT NULL,
---   `targyId` smallint(5) unsigned NOT NULL,
---   `oraszam` decimal(4,2) unsigned DEFAULT NULL,
---   `kovetelmeny` enum('aláírás','vizsga','jegy') DEFAULT NULL,
---   `jelenlet` enum('kötelező','nem kötelező') DEFAULT NULL,
---   PRIMARY KEY (`kepzesId`,`evfolyam`,`targyId`),
---   KEY `kepzesTargyOraszam_FKIndex1` (`kepzesId`),
---   KEY `kepzesTargyOraszam_FKIndex2` (`targyId`),
---   CONSTRAINT `kepzesTargyOraszam_ibfk_1` FOREIGN KEY (`kepzesId`) REFERENCES `kepzes` (`kepzesId`) ON DELETE CASCADE ON UPDATE CASCADE,
---   CONSTRAINT `kepzesTargyOraszam_ibfk_2` FOREIGN KEY (`targyId`) REFERENCES `targy` (`targyId`) ON DELETE NO ACTION ON UPDATE NO ACTION
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 CREATE TABLE `tanmenet` (
   `tanmenetId` int(10) unsigned NOT NULL auto_increment,
   `targyId` smallint(5) unsigned NOT NULL,
@@ -1033,79 +1018,4 @@ CREATE TABLE `diakNyelvvizsga` (
     return i;                                                                                                                                                                                              
  END; //                                                                                                                                                                                                   
  DELIMITER ; //                                                                                                                                                                                            
-
--- DELIMITER //                                    
--- DROP FUNCTION IF EXISTS diakTorzslapszam //
--- CREATE function diakTorzslapszam ( thisDiakId INT, thisOsztalyId INT ) returns INT                                                                                                         
--- READS SQL DATA                                                                                                                                                                                            
--- BEGIN                                                                                                                                                                                                     
---    DECLARE i,d,n01,n02,n03,n04,n05,n06,n07,n08,n09,n10,n11,n12,n13 INT; -- for loop                                                                                                                                                                           
---    DECLARE error,inKezdoTanev,inVegzoTanev INT;                                                                                                                                                       
---    DECLARE cur1                                                                                                                                                                                           
---        CURSOR FOR
---	SELECT diakId, 
---		ifnull(diakNaploSorszam(diakId,inKezdoTanev,thisOsztalyId),99) as ns01, 
---		ifnull(diakNaploSorszam(diakId,inKezdoTanev+1,thisOsztalyId),99) as ns02, 
---		ifnull(diakNaploSorszam(diakId,inKezdoTanev+2,thisOsztalyId),99) as ns03, 
---		ifnull(diakNaploSorszam(diakId,inKezdoTanev+3,thisOsztalyId),99) as ns04, 
---		ifnull(diakNaploSorszam(diakId,inKezdoTanev+4,thisOsztalyId),99) as ns05, 
---		ifnull(diakNaploSorszam(diakId,inKezdoTanev+5,thisOsztalyId),99) as ns06, 
---		ifnull(diakNaploSorszam(diakId,inKezdoTanev+6,thisOsztalyId),99) as ns07, 
---		ifnull(diakNaploSorszam(diakId,inKezdoTanev+7,thisOsztalyId),99) as ns08, 
---		ifnull(diakNaploSorszam(diakId,inKezdoTanev+8,thisOsztalyId),99) as ns09, 
---		ifnull(diakNaploSorszam(diakId,inKezdoTanev+9,thisOsztalyId),99) as ns10, 
---		ifnull(diakNaploSorszam(diakId,inKezdoTanev+10,thisOsztalyId),99) as ns11, 
---		ifnull(diakNaploSorszam(diakId,inKezdoTanev+11,thisOsztalyId),99) as ns12, 
---		ifnull(diakNaploSorszam(diakId,inKezdoTanev+12,thisOsztalyId),99) as ns13
---	FROM osztalyDiak 
---	WHERE osztalyId=thisOsztalyId
---	ORDER BY ns01, ns02, ns03, ns04, ns05, ns06, ns07, ns08, ns09, ns10, ns11, ns12, ns13;
---    DECLARE CONTINUE HANDLER FOR NOT FOUND SET error := 1; -- Ne csináljon semmit, menjen tovább...
---    SELECT kezdoTanev FROM osztaly WHERE osztalyId=thisOsztalyId INTO inKezdoTanev;
---    SET i := 1;
---    OPEN cur1;
---    lo: LOOP
---        FETCH cur1 INTO d, n01, n02, n03, n04, n05, n06, n07, n08, n09, n10, n11, n12, n13;
---        IF d = thisDiakId THEN
---            LEAVE lo;
---        END IF;
---        SET i := i+1;
---    END LOOP;
---    CLOSE cur1;
---
---    return i;
--- END; //
--- DELIMITER ; //                                                                                                                                                                                            
-
--- -- Egy újabb próbálkozás...
--- DELIMITER //                                    
--- DROP FUNCTION IF EXISTS diakTorzslapszam //
--- CREATE function diakTorzslapszam ( thisDiakId INT, thisOsztalyId INT ) returns INT                                                                                                         
--- READS SQL DATA                                                                                                                                                                                            
--- BEGIN                                                                                                                                                                                                     
--- 
---     DECLARE ret INT;
---     set @oszt=0; 
---     set @sz=0; 
--- --    set @ret = (
--- select sorsz from (
--- select 
---     @sz:=if(@osz=osztalyId,@sz:=@sz+1,1) as sorsz,
---     @oszt:=osztalyId as o, 
---     osztalyId, diakId, sort, diakNev 
---     from (
---         select 
---             osztalyId, diakId,
---             if (month(min(beDt))>8 or month(min(beDt))<6 or (month(min(beDt))=6 and day(min(beDt))<16), min(beDt), date_format(min(beDt),'%Y-09-01')) as sort, 
---             concat_ws(' ',viseltNevElotag, viseltCsaladinev, viseltUtonev) as diakNev 
---         from osztalyDiak left join diak using (diakId) 
---         group by osztalyId, diakId 
---         order by osztalyId, sort, diakNev
--- ) as t
--- ) as k
--- where osztalyId=thisOsztalyId and diakId=thisDiakId into ret;
--- 
---     return ret;
--- END; //
--- DELIMITER ; //                                                                                                                                                                                            
 

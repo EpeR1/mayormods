@@ -14,11 +14,12 @@ if (_LEKERDEZHETO) {
 	//if ($ADATOK['evfolyam']!='hat') 
 //	putJelentkezes($JEL,$ADATOK);
 //	putSzobeliEredmeny($SZOBELI,$ADATOK);
-	putIdeiglenesEredmeny($EREDMENY,$ADATOK,$JEL);
+//	putIdeiglenesEredmeny($EREDMENY,$ADATOK,$JEL);
 	$stamp = time();
 	if (
-	    strtotime(_VEGEREDMENY_PUBLIKALAS_DT)<=$stamp 
-	    && strtotime(_VEGEREDMENY_PUBLIKALAS_ENDDT)>$stamp
+	    __FELVETELIADMIN===true ||
+	    (strtotime(_VEGEREDMENY_PUBLIKALAS_DT)<=$stamp 
+	    && strtotime(_VEGEREDMENY_PUBLIKALAS_ENDDT)>$stamp)
 	) {
 	    putVegeredmeny($ADATOK);
 	}
