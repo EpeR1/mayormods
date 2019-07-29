@@ -237,7 +237,7 @@ function getDiakSelect() {
 		'igDt' => $TOOL['diakSelect']['igDt'],
 	    ));
 	if (!is_array($TOOL['diakSelect']['statusz'])) 
-	    $TOOL['diakSelect']['statusz'] = array('jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva','felvételt nyert');
+	    $TOOL['diakSelect']['statusz'] = array('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva','felvételt nyert');
 	if ( !isset($TOOL['diakSelect']['paramName']) || $TOOL['diakSelect']['paramName']=='' )
 	$TOOL['diakSelect']['paramName'] = 'diakId';
 }
@@ -257,7 +257,7 @@ function getDiakLapozo() {
 		'igDt' => $TOOL['diakLapozo']['igDt'],
 	    ));
 	if (!is_array($TOOL['diakLapozo']['statusz'])) 
-	    $TOOL['diakLapozo']['statusz'] = array('jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva','felvételt nyert');
+	    $TOOL['diakLapozo']['statusz'] = array('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva','felvételt nyert');
 	if ( !isset($TOOL['diakLapozo']['paramName']) || $TOOL['diakLapozo']['paramName']=='' )
 	$TOOL['diakLapozo']['paramName'] = 'diakId';
 

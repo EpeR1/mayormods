@@ -44,7 +44,7 @@ if (!__NAPLOADMIN && !__VEZETOSEG && !__TITKARSAG) {
 	$ADAT['munkatervId'] = getMunkatervByOsztalyId($osztalyId);
 	$ADAT['nevsor'] = getDiakok(array(
 	    'osztalyId' => $osztalyId, 'tanev' => $tanev, 
-	    'statusz' => array('jogviszonyban van','magántanuló','jogviszonya felfüggesztve','jogviszonya lezárva')
+	    'statusz' => array('jogviszonyban van','magántanuló','egyéni munkarend','jogviszonya felfüggesztve','jogviszonya lezárva')
 	));
 	$ADAT['tankorok'] = getTankorByOsztalyId($osztalyId, $ADAT['tanev'], array('csakId' => false, 'tanarral' => true));
 	$ADAT['naploTankor'] = getNaploTankorei($osztalyId);

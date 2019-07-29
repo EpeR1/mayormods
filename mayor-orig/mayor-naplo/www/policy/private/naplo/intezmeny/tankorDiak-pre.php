@@ -115,7 +115,7 @@
 	    // !!! Ez az aktuális státuszt és osztály tagságot nézi csak...
 	    // $ADAT['diakok'] = getDiakokByOsztalyId( $ADAT['tankor']['osztalyai'], array('tanev'=>$tanev,'result'=>'assoc'));
 	    // !!! Így a $ADAT['refDt'] szerinti névsort kérdezzük le, megfelelő jogviszony státusszal!
-	    $ADAT['diakok'] = array(); $statuszLista = array('jogviszonyban van', 'magántanuló');
+	    $ADAT['diakok'] = array(); $statuszLista = array('jogviszonyban van', 'magántanuló', 'egyéni munkarend');
 	    foreach ($ADAT['tankor']['osztalyai'] as $_osztalyId) {
 		$tmp = getDiakokByOsztaly($_osztalyId, array('tolDt' => $ADAT['refDt'], 'igDt' => $ADAT['refDt'], 'statusz' => $statuszLista));
 		foreach ($statuszLista as $statusz)

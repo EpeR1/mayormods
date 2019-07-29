@@ -87,7 +87,7 @@
 	if (in_array('vegzosJogviszonyLezaras', $ADAT['step'])) {
 
 	    // Azoknak a jogviszonyát kell csak lezárni, akik csak végzős osztálynak tagjai - és az osztályaik meg vannak jelölve  (diak tábla)  
-	    $oDiakok = getDiakokByOsztalyId($ADAT['vjlOsztaly'], array('tanev' => $tanev, 'result' => '', 'statusz' => array('jogviszonyban van','magántanuló','jogviszonya felfüggesztve')));
+	    $oDiakok = getDiakokByOsztalyId($ADAT['vjlOsztaly'], array('tanev' => $tanev, 'result' => '', 'statusz' => array('jogviszonyban van','magántanuló','egyéni munkarend','jogviszonya felfüggesztve')));
 	    $vjlDiakIds = array();
 	    for ($i = 0; $i < count($oDiakok); $i++) {
 		$diakId = $oDiakok[$i]['diakId'];
@@ -138,7 +138,7 @@
 	    $q = "SELECT szulo.userAccount
 		    FROM diak LEFT JOIN szulo ON szuloId IN (apaId,anyaId,gondviseloId) 
 		    WHERE szulo.userAccount IS NOT NULL GROUP BY szulo.userAccount 
-		    HAVING SUM(IF(diak.statusz IN ('jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve'), 1, 0)) = 0 
+		    HAVING SUM(IF(diak.statusz IN ('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve'), 1, 0)) = 0 
 		    AND SUM(IF(diak.statusz IN ('jogviszonya lezárva','felvételt nyert'),1,0)) > 0";
 
 	    $userAccounts = db_query($q, array('fv' => 'closeTanev/azonosítók lekérdezése', 'modul' => 'naplo_intezmeny', 'result' => 'idonly'));

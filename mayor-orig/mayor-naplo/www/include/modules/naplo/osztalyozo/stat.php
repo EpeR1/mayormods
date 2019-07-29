@@ -187,7 +187,7 @@
 	}
 	$DIAKIDS = getDiakokByOsztalyId($osztalyIdk, array(
 	    'result' => 'multiassoc', 'tanev' => $tanev, 'tolDt' => $SZA['zarasDt'], 'igDt' => $SZA['zarasDt'], 
-	    'statusz' => array('jogviszonyban van','magántanuló','jogviszonya felfüggesztve','jogviszonya lezárva'))
+	    'statusz' => array('jogviszonyban van','magántanuló','egyéni munkarend','jogviszonya felfüggesztve','jogviszonya lezárva'))
 	);
 	$ret['intezmeny'] = array('kituno' => 0, 'jeles' => 0, 'bukott' => 0, 'bukas' => 0, 'atlag' => 0, 'osztalyDb' => 0);
 	foreach($DIAKIDS as $osztalyId => $DIAKOK) {

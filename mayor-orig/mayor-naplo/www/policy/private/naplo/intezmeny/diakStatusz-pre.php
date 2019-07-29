@@ -22,6 +22,7 @@
 	    $ADAT['statusz2zaradek'] = array(
 		'jogviszonyban van' => array_values($ZaradekIndex['jogviszony megnyitás']),
 		'magántanuló' => array($ZaradekIndex['jogviszony változás']['magántanuló']),
+		'egyéni munkarend' => array($ZaradekIndex['jogviszony változás']['egyéni munkarend']),
 		'vendégtanuló' => array(),
 		'jogviszonya felfüggesztve' => array($ZaradekIndex['jogviszony változás']['felfüggesztés']),
 		'jogviszonya lezárva' => array_values($ZaradekIndex['jogviszony lezárás'])
@@ -29,6 +30,7 @@
 	    $ADAT['jogviszonyZaradekok'] = array_merge(
 		$ADAT['statusz2zaradek']['jogviszonyban van'],
 		$ADAT['statusz2zaradek']['magántanuló'],
+		$ADAT['statusz2zaradek']['egyéni munkarend'],
 		$ADAT['statusz2zaradek']['jogviszonya felfüggesztve'],
 		$ADAT['statusz2zaradek']['jogviszonya lezárva']
 	    );

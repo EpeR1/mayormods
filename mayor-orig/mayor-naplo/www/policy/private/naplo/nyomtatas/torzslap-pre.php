@@ -110,7 +110,7 @@ szétválaszthatatlanul össze kell fűzni, és ilyen módon kell tárolni.
 	    $ADAT['evfolyamJel'] = getEvfolyamJel($osztalyId, $tanev);
 	    $ADAT['file'] = fileNameNormal('torzslap-'.str_replace('.', '', $ADAT['osztalyAdat']['osztalyJel']));
 	    $Diakok = getDiakok(array('osztalyId' => $osztalyId, 'tanev' => $tanev, 'tolDt' => $ADAT['szemeszter']['tanevAdat']['kezdesDt'], 'igDt' => $ADAT['szemeszter']['tanevAdat']['zarasDt'], 
-		'statusz'=>array('jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva'), 
+		'statusz'=>array('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva'), 
 		'extraAttrs'=>'oId as oktatasiAzonosito,torzslapSzam as torzslapszam,allampolgarsag,szuletesiHely,szuletesiIdo,anyaId')
 	    );
 	    osztalyTorzslapszamGeneralas($osztalyId);

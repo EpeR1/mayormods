@@ -57,7 +57,7 @@
 
 	$TOOL['osztalySelect'] = array('tipus' => 'cella','paramName' => 'osztalyId', 'post' => array('dt'));
 	$TOOL['diakSelect'] = array('tipus' => 'cella', 'paramName' => 'diakId', 'post' => array('osztalyId','dt'),
-	    'statusz' => array('jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva')
+	    'statusz' => array('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva')
 	);
 	$TOOL['datumSelect'] = array(
             'tipus'=>'sor', 'post'=>array('tanarId', 'diakId', 'osztalyId', 'tankorId'),

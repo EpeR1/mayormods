@@ -125,7 +125,7 @@
 	$TOOL['tanevSelect'] = array('tipus' => 'cella', 'action' => 'tanevValasztas', 'post' => array('tanev','diakId'));
 	$TOOL['osztalySelect'] = array('tipus' => 'cella', 'tanev' => $tanev, 'post' => array('tanev'));
 	$TOOL['diakSelect'] = array('tipus'=>'cella', 'tanev'=>$tanev, 'osztalyId' => $osztalyId,
-	    'statusz' => array('jogviszonyban van','vendégtanuló','magántanuló','jogviszonya felfüggesztve','jogviszonya lezárva'),
+	    'statusz' => array('jogviszonyban van','vendégtanuló','magántanuló','egyéni munkarend','jogviszonya felfüggesztve','jogviszonya lezárva'),
 	    'post' => array('tanev','osztalyId')
 	);
 	getToolParameters();

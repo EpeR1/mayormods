@@ -96,7 +96,7 @@
     //        'diakok' => $Diakok,
             'tipus'=>'cella','paramName' => 'diakId',
             'osztalyId'=> $osztalyId,'post' => array('osztalyId'),
-            'statusz' => array('jogviszonyban van','magántanuló','jogviszonya felfüggesztve','jogviszonya lezárva')
+            'statusz' => array('jogviszonyban van','magántanuló','egyéni munkarend','jogviszonya felfüggesztve','jogviszonya lezárva')
         );
 
 	getToolParameters();

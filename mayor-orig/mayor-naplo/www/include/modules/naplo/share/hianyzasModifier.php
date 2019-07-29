@@ -99,7 +99,7 @@
             if ($diakId!='' && $oraId!='') {
         	/* Jogviszony ellenőrzés */
         	$diakJogviszony = getDiakJogviszonyByDts(array($diakId),array($dt));
-		if (!in_array($diakJogviszony[$diakId][$dt]['statusz'], array('vendégtanuló','jogviszonyban van','magántanuló'))
+		if (!in_array($diakJogviszony[$diakId][$dt]['statusz'], array('vendégtanuló','jogviszonyban van','magántanuló','egyéni munkarend'))
 		) {
 		    $_SESSION['alert'][] = 'info:diakJogviszony:'.$diakId.':'.$diakJogviszony[$diakId][$dt]['statusz'].':'.$dt;
 		    continue;
@@ -120,6 +120,10 @@
 		    $tankorTipusId=$TANKORADAT['tankorTipusId'];
 		    $tankorJelleg=$TANKORADAT['jelleg'];
 		    if ($tankorJelleg!='gyakorlat' && $diakJogviszony[$diakId][$dt]['statusz'] == 'magántanuló') {
+			$_SESSION['alert'][] = 'info:diakJogviszony:'.$diakId.':'.$diakJogviszony[$diakId][$dt]['statusz'].':'.$dt;
+			continue;
+		    }
+		    if ($tankorJelleg!='gyakorlat' && $diakJogviszony[$diakId][$dt]['statusz'] == 'egyéni munkarend') {
 			$_SESSION['alert'][] = 'info:diakJogviszony:'.$diakId.':'.$diakJogviszony[$diakId][$dt]['statusz'].':'.$dt;
 			continue;
 		    }

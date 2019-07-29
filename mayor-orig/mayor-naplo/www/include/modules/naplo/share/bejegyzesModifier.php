@@ -4,7 +4,7 @@
 
 
 	$dj = getDiakJogviszonyByDt($diakId, date('Y-m-d'));
-	if (!in_array($dj['aktualis'], array('jogviszonyban van', 'magántanuló', 'vendégtanuló'))) {
+	if (!in_array($dj['aktualis'], array('jogviszonyban van', 'magántanuló', 'egyéni munkarend', 'vendégtanuló'))) {
 	    $_SESSION['alert'][] = 'message:wrong_data:ujBejegyzes:Nincs jogviszonyban!';
 	    return false;
 	}

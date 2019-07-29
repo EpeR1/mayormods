@@ -147,12 +147,12 @@
 		    $ADAT['diakok'] = getDiakok(array(
 			'osztalyId' => $osztalyId, 'tanev' => $ADAT['szemeszterAdat']['tanev'],
 			'tolDt' => $ADAT['szemeszterAdat']['tanevAdat']['kezdesDt'], 'igDt' => $ADAT['szemeszterAdat']['zarasDt'], // A tanév kezdetétől a szemeszter végéig
-			'statusz' => array('jogviszonyban van','magántanuló','jogviszonya felfüggesztve','jogviszonya lezárva')
+			'statusz' => array('jogviszonyban van','magántanuló','egyéni munkarend','jogviszonya felfüggesztve','jogviszonya lezárva')
 		    ));
 		    $ADAT['zaraskoriDiakIds'] = getDiakok(array(
 			'osztalyId' => $osztalyId, 'tanev' => $ADAT['szemeszterAdat']['tanev'],
 			'tolDt' => $ADAT['szemeszterAdat']['zarasDt'], 'igDt' => $ADAT['szemeszterAdat']['zarasDt'],
-			'statusz' => array('jogviszonyban van','magántanuló'), 'result' => 'idonly'
+			'statusz' => array('jogviszonyban van','magántanuló','egyéni munkarend'), 'result' => 'idonly'
 //			'statusz' => array('jogviszonyban van','magántanuló','jogviszonya felfüggesztve','jogviszonya lezárva'), 'result' => 'idonly'
 		    ));
 		    for ($i = 0; $i < count($ADAT['diakok']); $i++) $ADAT['diakIds'][] = $ADAT['diakok'][$i]['diakId'];

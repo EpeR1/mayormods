@@ -74,7 +74,7 @@
         	$TOOL['osztalySelect'] = array('tipus'=>'cella','paramName' => 'osztalyId', 'post'=>array('tolDt', 'igDt', 'targySorrend'));
             	$TOOL['diakSelect'] = array('tipus'=>'cella','paramName'=>'diakId', 'post'=>array('osztalyId','tolDt', 'igDt', 'targySorrend'));
             	$TOOL['targySorrendSelect'] = array('tipus'=>'cella','paramName'=>'targySorrend', 'post'=>array('diakId','osztalyId','tolDt', 'igDt', 'targySorrend'));
-            	if (__NAPLOADMIN) $TOOL['diakSelect']['statusz'] = array('jogviszonyban van', 'magántanuló', 'jogviszonya felfüggesztve', 'jogviszonya lezárva', 'vendégtanuló');
+            	if (__NAPLOADMIN) $TOOL['diakSelect']['statusz'] = array('jogviszonyban van', 'magántanuló', 'egyéni munkarend', 'jogviszonya felfüggesztve', 'jogviszonya lezárva', 'vendégtanuló');
             	$TOOL['diakLapozo'] = array('tipus'=>'sor','paramName'=>'diakId', 'post'=>array('osztalyId','tolDt', 'igDt', 'targySorrend'));
 	    }
 /*	    if (isset($diakId)) {

@@ -326,7 +326,7 @@
 	    $jegyek = $ADAT['jegyek'][$diakId];
 	    $hianyzas = $ADAT['hianyzas'][$diakId];
 	    $atlag = $ADAT['atlag'][$diakId];
-            $msz_beirhato = ($D['aktualisStatusz'] != 'magántanuló')
+            $msz_beirhato = ($D['aktualisStatusz'] != 'magántanuló') && ($D['aktualisStatusz'] != 'egyéni munkarend')
                             && (!isset($D['kiDt']) || is_null($D['kiDt']) || (strtotime($D['kiDt'])>=time()));
 
 	    $zaraskoriTag = in_array($diakId, $ADAT['zaraskoriDiakIds']);

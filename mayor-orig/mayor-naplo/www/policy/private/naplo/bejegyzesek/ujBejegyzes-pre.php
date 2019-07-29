@@ -48,7 +48,7 @@
 
         $TOOL['osztalySelect'] = array('tipus'=>'cella','paramName' => 'osztalyId', 'post'=>array('tolDt', 'igDt', 'targySorrend'));
     	$TOOL['diakSelect'] = array('tipus'=>'cella','paramName'=>'diakId', 'post'=>array('osztalyId','tolDt', 'igDt', 'targySorrend'),
-	                	    'statusz' => array('vendégtanuló','jogviszonyban van','magántanuló')
+	                	    'statusz' => array('vendégtanuló','jogviszonyban van','magántanuló','egyéni munkarend')
 	);
         if (isset($diakId))
             $TOOL['oldalFlipper'] = array('tipus' => 'cella', 'url' => array('index.php?page=naplo&sub=bejegyzesek&f=bejegyzesek'),

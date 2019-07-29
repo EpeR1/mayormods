@@ -104,6 +104,7 @@
 			&& !$oraAlolFelmentve
 			&& (in_array($ADAT['diakJogviszony'], array('jogviszonyban van','vendégtanuló'))
 			    || ($ADAT['diakJogviszony']=='magántanuló' && $_TT['jelleg']=='gyakorlat')
+			    || ($ADAT['diakJogviszony']=='egyéni munkarend' && $_TT['jelleg']=='gyakorlat')
 			)
 		  ) {
 		    $_igtipus='';
@@ -185,7 +186,7 @@
 			    _putIgazolasSelect($UJHADAT[$_oraId][$_diakId][$_igtipus], $ITIPUSOK,$JOG,$JOGADAT,array('diakId'=>$_diakId,'oraId'=>$ORAADAT['oraId'],'hianyzasId'=>$_hid));
 		    echo '</td>';
 		  } else { // nem kötelező bejárnia
-		    if ($ADAT['diakJogviszony'] == 'magántanuló') {
+		    if ($ADAT['diakJogviszony'] == 'magántanuló' || $ADAT['diakJogviszony'] == 'egyéni munkarend') {
 			echo '<td class="nemkot" colspan="'.(count($HTIPUSOK2)+count($HTIPUSOK2)+count($ITIPUSOK)).'">';
 			    echo $ADAT['diakJogviszony'];
 			echo '</td>'."\n";

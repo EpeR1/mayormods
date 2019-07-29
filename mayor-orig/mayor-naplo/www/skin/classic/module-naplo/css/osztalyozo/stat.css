@@ -77,6 +77,7 @@
     table.osztalyozo tbody th.jogviszonyalezarva { background-color: rgb(30,40,50); }
     table.osztalyozo tbody th.jogviszonyafelfuggesztve { background-color: rgb(30,140,150); }
     table.osztalyozo tbody th.magantanulo { background-color: rgb(130,40,150); }
+    table.osztalyozo tbody th.egyenimunkarend { background-color: #2196f3; }
     table.osztalyozo tbody th.vendegtanulo { background-color: rgb(130,140,50); }
     table.osztalyozo tbody th a { display: block; }
 

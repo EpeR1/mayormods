@@ -49,15 +49,15 @@
 	// A lekérdezendő diákok státusza
 	if (!is_array($SET['statusz']) || count($SET['statusz']) == 0)	{
 	    if ($tanevAdat['statusz'] == 'aktív') {
-		$Statusz = array('jogviszonyban van','magántanuló','vendégtanuló');
+		$Statusz = array('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló');
 	    } else {
-		$Statusz = array('jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva');
+		$Statusz = array('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva');
 		// ebben az esetben kit érdekel a diák kilépésének ideje???
 		$KIBEDT = ''; $v = array();
 	    }
 	} else {
 	    $Statusz = readVariable($SET['statusz'], 'enum', null, 
-		array('felvételt nyert','jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva')
+		array('felvételt nyert','jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva')
 	    );
 	}
 
@@ -80,7 +80,7 @@
 		    WHERE diak.kezdoTanev <= %u
 		    AND statusz IN ('".implode("','", $Statusz)."')
 		    GROUP BY diakId
-		    HAVING %1\$u <= maxVegzoTanev OR maxVegzoTanev IS NULL OR statusz IN ('jogviszonyban van','magántanuló')
+		    HAVING %1\$u <= maxVegzoTanev OR maxVegzoTanev IS NULL OR statusz IN ('jogviszonyban van','magántanuló','egyéni munkarend')
 		    ORDER BY viseltCsaladiNev,viseltUtonev";
 	    $v = array($tanev, $intezmenyDb);
 	} else {
@@ -125,13 +125,13 @@
 	// A lekérdezendő diákok státusza
 	if (!is_array($SET['statusz']) || count($SET['statusz']) == 0)	{
 	    if ($tanevAdat['statusz'] == 'aktív') {
-		$Statusz = array('jogviszonyban van','magántanuló','vendégtanuló');
+		$Statusz = array('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló');
 	    } else {
-		$Statusz = array('jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva');
+		$Statusz = array('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva');
 	    }
 	} else {
 	    $Statusz = readVariable($SET['statusz'], 'enum', null, 
-		array('felvételt nyert','jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva')
+		array('felvételt nyert','jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva')
 	    );
 	}
 
@@ -184,7 +184,7 @@
 
 
 
-    function getDiakokByOsztalyId($IDs, $SET = array('tanev' => __TANEV, 'tolDt' => null, 'igDt' => null, 'result' => '', 'statusz' => array('jogviszonyban van','magántanuló'))) {
+    function getDiakokByOsztalyId($IDs, $SET = array('tanev' => __TANEV, 'tolDt' => null, 'igDt' => null, 'result' => '', 'statusz' => array('jogviszonyban van','magántanuló','egyéni munkarend'))) {
 	////////////////////////////////////////////////////////////////
 	// !!! Ez a függvény csak a diák aktuális státuszát nézi! !!! //
 	////////////////////////////////////////////////////////////////
@@ -203,8 +203,8 @@
 	$igDt = readVariable($SET['igDt'], 'date', $tanevAdat['zarasDt']);
 
 	if (!is_array($SET['statusz']) || count($SET['statusz']) == 0) 
-	    if ($tanevAdat['statusz'] == 'aktív') $SET['statusz'] = array('jogviszonyban van','magántanuló');
-	    else $SET['statusz'] = array('jogviszonyban van','magántanuló','jogviszonya felfüggesztve','jogviszonya lezárva');
+	    if ($tanevAdat['statusz'] == 'aktív') $SET['statusz'] = array('jogviszonyban van','magántanuló','egyéni munkarend');
+	    else $SET['statusz'] = array('jogviszonyban van','magántanuló','egyéni munkarend','jogviszonya felfüggesztve','jogviszonya lezárva');
 	// Intézményi adatbázis neve
 	$intezmenyDb = intezmenyDbNev(__INTEZMENY);
 	$RESULT = false;
@@ -252,8 +252,8 @@
 	$tolDt = readVariable($SET['tolDt'], 'datetime', $_TA['kezdesDt']);
 	$igDt = readVariable($SET['igDt'], 'datetime', $_TA['zarasDt']);
 	initTolIgDt($tanev, $tolDt, $igDt);
-	$statusz = readVariable($SET['statusz'], 'enum', null, array('jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva'));
-	if (!is_array($statusz) || count($statusz) == 0) $statusz = array('jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva');
+	$statusz = readVariable($SET['statusz'], 'enum', null, array('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva'));
+	if (!is_array($statusz) || count($statusz) == 0) $statusz = array('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva');
 	$statuszonkent = readVariable($SET['statuszonkent'],'bool',true);
 	$felveteltNyertEkkel = readVariable($SET['felveteltNyertEkkel'],'bool',false);
 	$intezmenyDb = intezmenyDbNev(__INTEZMENY);
@@ -270,7 +270,7 @@
 	if (is_array($ret1) && count($ret1)>0) $diakIds = array_keys($ret1);
 	else $diakIds = array();
 
-	if ($statuszonkent) $return = array('jogviszonyban van' => array(), 'magántanuló' => array(), 'vendégtanuló' => array(), 'jogviszonya felfüggesztve' => array(), 'jogviszonya lezárva' => array(), 'felvételt nyert'=>array());
+	if ($statuszonkent) $return = array('jogviszonyban van' => array(), 'magántanuló' => array(), 'egyéni munkarend'=>array(),'vendégtanuló' => array(), 'jogviszonya felfüggesztve' => array(), 'jogviszonya lezárva' => array(), 'felvételt nyert'=>array());
 	else $return = array();
 
 	// Ha nincs tagja az osztálynak még/már

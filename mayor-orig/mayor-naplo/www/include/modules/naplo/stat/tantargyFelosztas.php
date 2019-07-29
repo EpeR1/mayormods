@@ -19,13 +19,13 @@
     function getDiakLetszamByOsztalyId($osztalyIds) {
 	if (is_array($osztalyIds) && count($osztalyIds)>0) {
 	    $q = "select osztalyId, count(*) as letszam from diak left join osztalyDiak using (diakId) 
-		where statusz in ('jogviszonyban van','magántanuló') and osztalyId in (".implode(',', array_fill(0, count($osztalyIds), '%u')).") group by osztalyId";
+		where statusz in ('jogviszonyban van','magántanuló','egyéni munkarend') and osztalyId in (".implode(',', array_fill(0, count($osztalyIds), '%u')).") group by osztalyId";
 	    $ret = db_query($q, array('fv'=>'getDiakLetszamByStatusz','modul'=>'naplo_intezmeny','result'=>'keyvaluepair','values'=>$osztalyIds));
 	    $q = "select osztalyId, count(*) as letszam from diak left join osztalyDiak using (diakId) 
-		where statusz in ('jogviszonyban van','magántanuló') and osztalyId in (".implode(',', array_fill(0, count($osztalyIds), '%u')).") and nem='fiú' group by osztalyId";
+		where statusz in ('jogviszonyban van','magántanuló','egyéni munkarend') and osztalyId in (".implode(',', array_fill(0, count($osztalyIds), '%u')).") and nem='fiú' group by osztalyId";
 	    $ret['fiú'] = db_query($q, array('fv'=>'getDiakLetszamByStatusz/fiú','modul'=>'naplo_intezmeny','result'=>'keyvaluepair','values'=>$osztalyIds));
 	    $q = "select osztalyId, count(*) as letszam from diak left join osztalyDiak using (diakId) 
-		where statusz in ('jogviszonyban van','magántanuló') and osztalyId in (".implode(',', array_fill(0, count($osztalyIds), '%u')).") and nem='lány' group by osztalyId";
+		where statusz in ('jogviszonyban van','magántanuló','egyéni munkarend') and osztalyId in (".implode(',', array_fill(0, count($osztalyIds), '%u')).") and nem='lány' group by osztalyId";
 	    $ret['lány'] = db_query($q, array('fv'=>'getDiakLetszamByStatusz/lány','modul'=>'naplo_intezmeny','result'=>'keyvaluepair','values'=>$osztalyIds));
 
 	    return $ret;

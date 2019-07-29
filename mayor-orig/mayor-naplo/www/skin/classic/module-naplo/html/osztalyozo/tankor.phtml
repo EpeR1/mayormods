@@ -217,7 +217,11 @@
 		||
 		($ADAT['diakJogviszony'][$diakId][date('Y-m-d')]['statusz']=='magántanuló' && $tankorJelleg == 'gyakorlat')
 		||
+		($ADAT['diakJogviszony'][$diakId][date('Y-m-d')]['statusz']=='egyéni munkarend' && $tankorJelleg == 'gyakorlat')
+		||
 		($ADAT['diakJogviszony'][$diakId][date('Y-m-d')]['statusz']=='magántanuló' && defined('MAYOR_SOCIAL')=== true && MAYOR_SOCIAL===true)
+		||
+		($ADAT['diakJogviszony'][$diakId][date('Y-m-d')]['statusz']=='egyéni munkarend' && defined('MAYOR_SOCIAL')=== true && MAYOR_SOCIAL===true)
 	    );
 
 	    $__JEGYEK = array();
@@ -383,6 +387,8 @@
 		    in_array($ADAT['diakJogviszony'][$diakId][$szAdatok['zarasDt']]['statusz'],array('jogviszonyban van','vendégtanuló'))
 		    ||
 		    ($ADAT['diakJogviszony'][$diakId][$szAdatok['zarasDt']]['statusz']=='magántanuló' && $tankorJelleg == 'gyakorlat')
+		    ||
+		    ($ADAT['diakJogviszony'][$diakId][$szAdatok['zarasDt']]['statusz']=='egyéni munkarend' && $tankorJelleg == 'gyakorlat')
 		);
 
 		$felev = $szemeszter;

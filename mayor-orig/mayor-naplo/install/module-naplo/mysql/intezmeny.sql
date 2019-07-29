@@ -171,7 +171,7 @@ CREATE TABLE `diak` (
 
 CREATE TABLE `diakJogviszony` (
   `diakId` int(10) unsigned NOT NULL,
-  `statusz` enum('felvételt nyert','jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva') COLLATE utf8_hungarian_ci NOT NULL,
+  `statusz` enum('felvételt nyert','jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva') COLLATE utf8_hungarian_ci NOT NULL,
   `dt` date NOT NULL,
   PRIMARY KEY (`diakId`,`dt`),
   KEY `diakJogviszony_FKIndex1` (`diakId`),

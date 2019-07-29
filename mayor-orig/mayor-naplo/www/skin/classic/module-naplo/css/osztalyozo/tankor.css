@@ -43,6 +43,7 @@
 	font-weight: normal;
     }
     table.osztalyozo tbody tr.magantanulo th { background-color: purple; } 
+    table.osztalyozo tbody tr.egyenimunkarend th { background-color: #2196f3; } 
 
     table.osztalyozo tbody th.diakNev { text-align:left; padding-left:4px; }
     table.osztalyozo tbody th.diakNevTxt { width:120px;}

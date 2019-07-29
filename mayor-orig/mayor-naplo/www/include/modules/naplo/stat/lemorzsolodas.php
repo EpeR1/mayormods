@@ -206,6 +206,13 @@
 			'diakOsztalya' => ($DIAKADAT[$_diakId]['diakOsztalya'][0]['osztalyJel'])
 		    );
 		}
+		if ($_jogviszonya[$_diakId][$dt]['statusz']=='egyéni munkarend') { // még mindig
+		    $R['magantanuloLett'][] = array(
+			'diakId' => $r[$i]['diakId'],
+			'diakNev' => $DIAKADAT[$_diakId]['diakNev'],
+			'diakOsztalya' => ($DIAKADAT[$_diakId]['diakOsztalya'][0]['osztalyJel'])
+		    );
+		}
 	    }
 	
 	// -- magántanulóvá minősítése folyamatban - ezt nem tudjuk

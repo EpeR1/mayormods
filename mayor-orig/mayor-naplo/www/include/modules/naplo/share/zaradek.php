@@ -467,6 +467,8 @@ $Zaradek = array(
 	    'dokumentum' => 'osztálynapló, törzslap, bizonyítvány'),
 117 => array('sorszam' => '18/A', 'szoveg' => 'A(z) %évfolyam% évfolyam követelményeit nem teljesítette, az évfolyamot megismételheti.', // nem tanköteles diák esetén 
 	    'dokumentum' => 'osztálynapló, törzslap, bizonyítvány'),
+118 => array('sorszam' => '9/A', 'szoveg' => 'Tanulmányait egyéni munkarendben folytatja.', 
+	    'dokumentum' => 'osztálynapló, törzslap'),
 
 );
 
@@ -495,6 +497,7 @@ $ZaradekIndex = array(
     ),
     'jogviszony változás' => array(
 	'magántanuló' => 13, 
+	'egyéni munkarend' => 118,
 	'felfüggesztés' => 39 // %ok%, %igDt%
     ),
     'jogviszony lezárás' => array(

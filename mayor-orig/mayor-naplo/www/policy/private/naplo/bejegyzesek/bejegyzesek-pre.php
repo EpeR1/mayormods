@@ -60,7 +60,7 @@
 		'tipus' => 'cella', 'paramName' => 'diakId', 
 //		'diakok' => $Diakok, 
 		'post'=>array('osztalyId','tolDt', 'igDt', 'targySorrend'),
-		'statusz' => array('vendégtanuló','jogviszonyban van','magántanuló','jogviszonya lezárva','jogviszonya felfüggesztve')		
+		'statusz' => array('vendégtanuló','jogviszonyban van','magántanuló','egyéni munkarend','jogviszonya lezárva','jogviszonya felfüggesztve')		
 	    );
 	    if (isset($diakId))
 		$TOOL['oldalFlipper'] = array('tipus' => 'cella', 'url' => array('index.php?page=naplo&sub=bejegyzesek&f=ujBejegyzes'),

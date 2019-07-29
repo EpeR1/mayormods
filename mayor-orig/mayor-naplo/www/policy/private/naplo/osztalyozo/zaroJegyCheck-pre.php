@@ -34,7 +34,7 @@
                 elseif (isset($szemeszterZarasDt)) $igDt = $szemeszterZarasDt;
                 else $igDt = $_TANEV['zarasDt'];
 	               // a tankör diákjainak lekérdezése
-	$ADAT['diakok'] = getDiakokByOsztalyId(array($osztalyId), $SET = array('tanev' => $tanev, 'tolDt' => null, 'igDt' => null, 'result' => '', 'statusz' => array('jogviszonyban van','magántanuló')));
+	$ADAT['diakok'] = getDiakokByOsztalyId(array($osztalyId), $SET = array('tanev' => $tanev, 'tolDt' => null, 'igDt' => null, 'result' => '', 'statusz' => array('jogviszonyban van','magántanuló','egyéni munkarend')));
 /*	for ($i=0; $i<count($ADAT['diakok']); $i++) {
 	    $DIAKIDS[] = $ADAT['diakok'][$i]['diakId'];
 	}

@@ -78,9 +78,9 @@ if (!__NAPLOADMIN && !__VEZETOSEG && !__TITKARSAG) {
 
 	$ADAT['diakAdat'] = $ADAT['diakIds'] = array();
 	// diákok lekérdezése jogviszony és osztály tagság adatokkal
-	$diakByOsztaly = getDiakokByOsztaly($osztalyId, array('orderBy' => 'naploSorszam', 'tanev' => $tanev, 'statusz' => array('jogviszonyban van','magántanuló','vendégtanuló') ));
+	$diakByOsztaly = getDiakokByOsztaly($osztalyId, array('orderBy' => 'naploSorszam', 'tanev' => $tanev, 'statusz' => array('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló') ));
 	$ADAT['diakIds'] = array_values(
-	    array_diff(array_keys($diakByOsztaly), array('jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva','felvételt nyert'))
+	    array_diff(array_keys($diakByOsztaly), array('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva','felvételt nyert'))
 	);
 	$ret = getDiakAdatById($ADAT['diakIds']);
 	for ($i = 0; $i < count($ret); $i++) {

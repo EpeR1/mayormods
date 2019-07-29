@@ -149,13 +149,13 @@
 	    $TOOL['diakSelect'] = array(
 		'tipus'=>'sor','paramName' => 'diakId',
 		'osztalyId'=> $osztalyId,'post' => array('osztalyId','szemeszterId', 'sorrendNev'),
-		'statusz' => array('vendégtanuló','jogviszonyban van','magántanuló','jogviszonya felfüggesztve','jogviszonya lezárva')
+		'statusz' => array('vendégtanuló','jogviszonyban van','magántanuló','egyéni munkarend','jogviszonya felfüggesztve','jogviszonya lezárva')
 	    );
 	    if (isset($diakId)) {
 		$TOOL['diakLapozo'] = array(
 		'tipus'=>'sor','paramName' => 'diakId',
 		'osztalyId'=> $osztalyId,'post' => array('osztalyId','szemeszterId', 'sorrendNev'),
-		'statusz' => array('vendégtanuló','jogviszonyban van','magántanuló','jogviszonya felfüggesztve','jogviszonya lezárva')
+		'statusz' => array('vendégtanuló','jogviszonyban van','magántanuló','egyéni munkarend','jogviszonya felfüggesztve','jogviszonya lezárva')
 		);
 	    }
 	}

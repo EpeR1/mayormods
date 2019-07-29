@@ -81,17 +81,24 @@
 			<>   intval($iAdat['diakLetszam']['statusz']['fiú']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['fiú']['magántanuló'])
 			    +intval($iAdat['diakLetszam']['statusz']['lány']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['lány']['magántanuló'])
 		) $class=' alert';
+		elseif (
+			intval($iAdat['diakLetszam']['statusz']['egyéni munkarend'])
+			<>   intval($iAdat['diakLetszam']['statusz']['fiú']['egyéni munkarend'])
+			    +intval($iAdat['diakLetszam']['statusz']['lány']['egyéni munkarend'])
+		) $class=' alert';
 		else $class='';
-		echo '<td colspan="2" class="number'.$class.'">'.intval($iAdat['diakLetszam']['statusz']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['magántanuló']).'</td>'
-		    .'<td colspan="2" class="number'.$class.'">'.intval($iAdat['diakLetszam']['statusz']['fiú']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['fiú']['magántanuló']).'</td>'
-		    .'<td colspan="2" class="number'.$class.'">'.intval($iAdat['diakLetszam']['statusz']['lány']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['lány']['magántanuló']).'</td>';
+		echo '<td colspan="2" class="number'.$class.'">'.intval($iAdat['diakLetszam']['statusz']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['magántanuló']+$iAdat['diakLetszam']['statusz']['egyéni munkarend']).'</td>'
+		    .'<td colspan="2" class="number'.$class.'">'.intval($iAdat['diakLetszam']['statusz']['fiú']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['fiú']['magántanuló']+$iAdat['diakLetszam']['statusz']['fiú']['egyéni munkarend']).'</td>'
+		    .'<td colspan="2" class="number'.$class.'">'.intval($iAdat['diakLetszam']['statusz']['lány']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['lány']['magántanuló']+$iAdat['diakLetszam']['statusz']['lány']['egyéni munkarend']).'</td>';
 		//echo '<td class="gap"></td>';
 	}
-	echo '<tr class="hide"><th>jogviszonyban van<br />magántanuló<br />vendégtanuló<br />jogviszonya szünetel</th>';
+	echo '<tr class="hide"><th>jogviszonyban van<br />magántanuló<br/>egyéni munkarend<br />vendégtanuló<br />jogviszonya szünetel</th>';
 	foreach ($ADAT['intezmeny'] as $intezmeny => $iAdat) {
 	    if (intval($iAdat['diakLetszam']['statusz']['jogviszonyban van']) <> intval($iAdat['diakLetszam']['statusz']['fiú']['jogviszonyban van']+$iAdat['diakLetszam']['statusz']['lány']['jogviszonyban van'])) 
 		$jvClass=' class="alert"';
 	    if (intval($iAdat['diakLetszam']['statusz']['magántanuló']) <> intval($iAdat['diakLetszam']['statusz']['fiú']['magántanuló']+$iAdat['diakLetszam']['statusz']['lány']['magántanuló'])) 
+		$mClass=' class="alert"';
+	    if (intval($iAdat['diakLetszam']['statusz']['egyéni munkarend']) <> intval($iAdat['diakLetszam']['statusz']['fiú']['egyéni munkarend']+$iAdat['diakLetszam']['statusz']['lány']['egyéni munkarend'])) 
 		$mClass=' class="alert"';
 	    if (intval($iAdat['diakLetszam']['statusz']['vendégtanuló']) <> intval($iAdat['diakLetszam']['statusz']['fiú']['vendégtanuló']+$iAdat['diakLetszam']['statusz']['lány']['vendégtanuló']))
 		$vClass=' class="alert"';
@@ -100,18 +107,21 @@
 	    echo '<td colspan="2" class="number">'
 		    .'<span'.$jvClass.'>'.$iAdat['diakLetszam']['statusz']['jogviszonyban van'].'</span><br />'
 		    .'<span'.$mClass.'>'.$iAdat['diakLetszam']['statusz']['magántanuló'].'</span><br />'
+		    .'<span'.$mClass.'>'.$iAdat['diakLetszam']['statusz']['egyéni munkarend'].'</span><br />'
 		    .'<span'.$vClass.'>'.$iAdat['diakLetszam']['statusz']['vendégtanuló'].'</span><br />'
 		    .'<span'.$jfClass.'>'.$iAdat['diakLetszam']['statusz']['jogviszonya felfüggesztve'].'</span>'.
 		'</td>';
 	    echo '<td colspan="2" class="number">'
 		    .'<span'.$jvClass.'>'.$iAdat['diakLetszam']['statusz']['fiú']['jogviszonyban van'].'</span><br />'
 		    .'<span'.$mClass.'>'.$iAdat['diakLetszam']['statusz']['fiú']['magántanuló'].'</span><br />'
+		    .'<span'.$mClass.'>'.$iAdat['diakLetszam']['statusz']['fiú']['egyéni munkarend'].'</span><br />'
 		    .'<span'.$vClass.'>'.$iAdat['diakLetszam']['statusz']['fiú']['vendégtanuló'].'</span><br />'
 		    .'<span'.$jfClass.'>'.$iAdat['diakLetszam']['statusz']['fiú']['jogviszonya felfüggesztve'].'</span>'.
 		'</td>';
 	    echo '<td colspan="2" class="number">'
 		    .'<span'.$jvClass.'>'.$iAdat['diakLetszam']['statusz']['lány']['jogviszonyban van'].'</span><br />'
 		    .'<span'.$mClass.'>'.$iAdat['diakLetszam']['statusz']['lány']['magántanuló'].'</span><br />'
+		    .'<span'.$mClass.'>'.$iAdat['diakLetszam']['statusz']['lány']['egyéni munkarend'].'</span><br />'
 		    .'<span'.$vClass.'>'.$iAdat['diakLetszam']['statusz']['lány']['vendégtanuló'].'</span><br />'
 		    .'<span'.$jfClass.'>'.$iAdat['diakLetszam']['statusz']['lány']['jogviszonya felfüggesztve'].'</span>'.
 		'</td>';

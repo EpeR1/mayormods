@@ -13,7 +13,7 @@
 		jogviszonyValtasDt
 		ujStatusz
 		tanev
-		zaradek - felvétel | felvétel osztályba | magántanuló | felfüggesztés
+		zaradek - felvétel | felvétel osztályba | magántanuló | egyéni munkarend | felfüggesztés
 		lezarasZaradekIndex - 40..45
 		--
 		hatarozat
@@ -94,6 +94,9 @@
 	    case 'magántanuló':
 		    $Z = array('zaradekIndex' => $ZaradekIndex['jogviszony változás']['magántanuló']);  
 		break;
+	    case 'egyéni munkarend':
+		    $Z = array('zaradekIndex' => $ZaradekIndex['jogviszony változás']['egyéni munkarend']);  
+		break;
 	    case 'jogviszonya felfüggesztve':
 		    $Z = array(
 //20110610		'zaradekIndex' => $ADAT['zaradek']['felfüggesztés'],
@@ -155,7 +158,7 @@
 	      'diakId' => $ADAT['diakId'], 'utkozes' => 'torles', 'tankorIds' => $tankorIds, 'MIN_CONTROL' => false, 'tolDt' => $ADAT['jogviszonyValtasDt']
 	    ), $lr);
 	    if ($r===false) { db_rollback($lr, 'tankorDiakTorol - fail');db_close($lr);return false; }
-	} elseif ($ADAT['ujStatusz'] == 'magántanuló') {
+	} elseif ($ADAT['ujStatusz'] == 'magántanuló' || $ADAT['ujStatusz'] == 'egyéni munkarend') {
 	    $tolDt = $ADAT['jogviszonyValtasDt'];
 	    //törlés
     		$TH = $TJ = array();                                                                                                                                                                               

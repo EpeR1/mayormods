@@ -73,7 +73,7 @@
         else $Tanev = $_TANEV;
 
 	// Az összes diákra szükség van aktív tanévben is - év végén a végzősök már nincsenek jogviszonyban...
-	$Statusz = array('jogviszonyban van','magántanuló','jogviszonya felfüggesztve','jogviszonya lezárva');
+	$Statusz = array('jogviszonyban van','magántanuló','egyéni munkarend','jogviszonya felfüggesztve','jogviszonya lezárva');
 	$diakIds = array();
         $Diak = getDiakok(array('osztalyId' => $osztalyId, 'tanev' => $tanev, 'statusz' => $Statusz));
         for ($i = 0; $i < count($Diak); $i++) $diakIds[] = $Diak[$i]['diakId'];

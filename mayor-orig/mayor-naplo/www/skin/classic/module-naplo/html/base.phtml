@@ -473,6 +473,7 @@
 		    for ($i = 0; $i < count($TOOL['diakSelect']['diakok']); $i++) {
 			$M = $TOOL['diakSelect']['diakok'][$i];
 			if ($M['aktualisStatusz'] == 'magántanuló') $statuszStr = ' - [m]';
+			elseif ($M['aktualisStatusz'] == 'egyéni munkarend') $statuszStr = ' - [e]';
 			elseif ($M['aktualisStatusz'] == 'jogviszonya lezárva') $statuszStr = ' - [-]';
 			elseif ($M['aktualisStatusz'] == 'jogviszonya felfüggesztve') $statuszStr = ' - [f]';
 			else $statuszStr = '';
@@ -523,6 +524,7 @@
 			for ($i = 0; $i < count($TOOL['diakLapozo']['diakok']); $i++) {
 			    $D = $TOOL['diakLapozo']['diakok'][$i];
 			    if ($D['aktualisStatusz'] == 'magántanuló') $statuszStr = ' - [m]';
+			    elseif ($D['aktualisStatusz'] == 'egyéni munkarend') $statuszStr = ' - [e]';
 			    elseif ($D['aktualisStatusz'] == 'jogviszonya lezárva') $statuszStr = ' - [-]';
 			    elseif ($D['aktualisStatusz'] == 'jogviszonya felfüggesztve') $statuszStr = ' - [f]';
 			    else $statuszStr = '';

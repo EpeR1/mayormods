@@ -16,7 +16,7 @@
 	}
 	$munkatervIds = getMunkatervByOsztalyId($ADAT['osztalyId'], array('result'=>'idonly'));
 	$H['névsor'] = array();
-	foreach (array('jogviszonyban van','magántanuló','vendégtanuló') as $statusz) {
+	foreach (array('jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló') as $statusz) {
 	    foreach ($Diakok[$statusz] as $diakId) {
 		if (!is_array($H['névsdor'][$diakId])) {
 		    $H['névsor'][$diakId] = $Diakok[$diakId];

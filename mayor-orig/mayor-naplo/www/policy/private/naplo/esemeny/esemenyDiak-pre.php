@@ -50,7 +50,7 @@
 		    $i=0;
 		    while ($i < count($ADAT['osztalyok']) && $ADAT['osztalyok'][$i]['osztalyId'] != $_osztalyId) $i++;
 		    if (count($i<$ADAT['osztalyok'])) $ADAT['osztalyId2osztalyJel'][$_osztalyId] = $ADAT['osztalyok'][$i]['osztalyJel'];
-		    $statuszLista = array('jogviszonyban van','magántanuló');
+		    $statuszLista = array('jogviszonyban van','magántanuló','egyéni munkarend');
             	    $tmp = getDiakokByOsztaly($_osztalyId, array('statusz' => $statuszLista));
 		    $ADAT['diakIds'][$_osztalyId] = array();
             	    foreach ($statuszLista as $statusz)
