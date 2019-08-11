@@ -1,8 +1,6 @@
 @media screen {
 
 	table.haladasiBejegyzesek {
-    	    background-color: rgb(50,60,80);
-	    background: linear-gradient( rgb(50,60,80), white);
 	    margin-top: 10px;
 	    /* font-size: 11px; */
 	    width: 98%;
@@ -13,7 +11,7 @@
 	    /*color: orange;*/
 	}
 
-	table.haladasiBejegyzesek tbody tr:first-child th { border-top:solid 16px white; }
+	table.haladasiBejegyzesek tbody tr:first-child th {  border-top: solid 26px white; }
 	table.haladasiBejegyzesek tbody:hover tr:first-child th { background-color: orange; 
 	    transition: all ease 0.1s;
 	}
@@ -66,7 +64,7 @@
     	    background-color: #666688;
 	    color: white;
 	    border: none;
-	    height:1em;
+	    /*height:1em;*/
 	    font-weight: normal;
 	    height:2em;
 	}
@@ -163,11 +161,17 @@
 	input.gomb {
 		font-size: xx-small;
 		border: solid 1px #777777; 
-		padding: 0px 1px; margin: 0px;
+		border-radius: 2px; 
+		padding: 1px 4px; 
+		margin-left: 2px;
+		background-color: rgba(255,255,255,0.1); 
+		color:black;
+		border: solid 1px #999;	    
+	}
+	input.gomb:hover { 
 		background-color: #009900;
 		color: white;
 	}
-	input.gomb:hover { background-color: rgba(255,255,255,0.8); color:black;}
 /*	input.rejtettGomb { border: solid 1px rgb(50,60,80);; background-color: rgb(50,60,80); }
 	input.rejtettGomb:hover { border: solid 1px orange; background-color: rgb(80,60,50); color: white }
 */

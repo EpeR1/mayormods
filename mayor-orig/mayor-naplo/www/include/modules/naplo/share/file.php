@@ -137,7 +137,7 @@
 	$table = '`'.str_replace('.','`.`',$table).'`';
         $q = "SHOW FIELDS FROM %s LIKE '%s'";
 	$v = array($table, $field);
-        $field = db_query($q, array('debug'=>true,'fv' => 'getEnumField', 'modul' => $modul, 'result' => 'record', 'values' => $v));
+        $field = db_query($q, array('debug'=>false,'fv' => 'getEnumField', 'modul' => $modul, 'result' => 'record', 'values' => $v));
         $enum = substr($field['Type'], 6, -2);
         $values = explode("','", $enum);
 
