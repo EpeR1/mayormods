@@ -90,6 +90,9 @@
 	    $megjegyzes = $Megjegyzes[$i]; 
 	    $_csengetesiRendTipus = $csengetesiRendTipus[$i]; 
 	    if ($tipus == 'tanítási nap') {
+		// ????
+		// kellene ellenőrizni, hogy szorgalmi időszakon belül van-e, vagy engedjük meg ezen kívül is a tanítási napot? Pótnap?
+		// ????
 		$orarendiHet = $OrarendiHet[$i];
 		if ($orarendiHet == 0) { // most állítjuk be tanítási napnak, és nem rendelkeztek az órarendi hétről...
 		    // kérdezzük le, hogy van-e másik munkatervben már megadott órarendi hét erre a napra
@@ -106,8 +109,9 @@
 		$orarendiHet = 0;
 	    }
 	    if (
-		($time >= strtotime($_TANEV['kezdesDt']) && $time <= strtotime($_TANEV['zarasDt']))
-		&& ($tipus != 'tanítási nap' || count($Hetek) == 0 || in_array($orarendiHet, $Hetek))
+		// -- lehessen szorgalmi időszakon kívüli napokat is módosítani - ha már eltároljuk...
+		// ($time >= strtotime($_TANEV['kezdesDt']) && $time <= strtotime($_TANEV['zarasDt'])) && 
+		($tipus != 'tanítási nap' || count($Hetek) == 0 || in_array($orarendiHet, $Hetek))
 	    ) {
 		$q = "UPDATE nap SET csengetesiRendTipus='%s',tipus='%s', megjegyzes='%s' WHERE dt='%s' AND munkatervId=%u";
 		$v = array($_csengetesiRendTipus, $tipus, $megjegyzes, $dt, $munkatervId);
