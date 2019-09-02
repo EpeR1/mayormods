@@ -4,6 +4,12 @@
 
     global $ADAT, $fileName, $ADATOK, $MEZO_LISTA, $attrList;
 
+    if ($ADAT['updatedFromFile']===true) {
+
+	echo "KÉSZ!";
+	
+    } else {
+
 	// Osztályhoz rendelés
 	if (isset($ADAT['osztalyId']) && ($ADAT['osztalyAdat']["kezdoTanev"]<=$ADAT['tanev'] && $ADAT['osztalyAdat']["vegzoTanev"]>=$ADAT['tanev'])) {
 		
@@ -34,7 +40,6 @@
 	} elseif (__NAPLOADMIN) {
 		putUjOsztalyForm($ADAT);
 	}
-
-
+    }
 
 ?>

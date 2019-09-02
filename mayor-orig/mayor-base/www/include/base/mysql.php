@@ -104,7 +104,7 @@
 		$_SESSION['alert'][] = "message:sql_warning:db_connect/${SET['fv']}:modul $modul has empty database config value";
 	    }
 	} else {
-	    if (__DEBUG || (defined('__DETAILED') && __DETAILED)) $_SESSION['alert'][] = "message:sql_connect_failure:db_connect/${SET['fv']}:modul - $modul, priv - $priv, username - $username, db - $db";
+	    if (__DEBUG || (defined('__DETAILED') && __DETAILED)) $_SESSION['alert'][] = "message:sql_connect_failure:db_connect/${SET['fv']}:host - $host, modul - $modul, priv - $priv, username - $username, db - $db";
 	    else $_SESSION['alert'][] = "message:sql_connect_failure:db_connect/${SET['fv']}:$modul modul";
 	}
 	return $lr;

@@ -419,4 +419,9 @@
 	return reindex($result,$SET['arraymap']);
     }
 
+    function orarendvane() {
+	$q = "SELECT IF(count(*)>0,1,0) FROM orarendiOra";
+	return db_query($q, array('fv'=>'orarendvane','modul'=>'naplo','result'=>'value'));
+    }
+
 ?>

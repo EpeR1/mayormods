@@ -622,4 +622,16 @@
 	return false;
     }
 
+    function getOraCimkek() {
+	return getCimkek();
+    }
+    function getCimkek() {
+	if (__ORACIMKE_ENABLED === true) {
+	    $q = "SELECT * FROM ".__INTEZMENYDBNEV.".cimke ORDER BY cimkeLeiras";
+	    $R = db_query($q,array('debug'=>false,'fv'=>'getCimkek','modul'=>'naplo','values'=>$v,'result'=>'indexed'),$olr_naplo);
+	    return $R;
+	}
+    }
+
+
 ?>

@@ -40,9 +40,11 @@ if ( $skin == 'ajax'
             	$oraId = $oraIds[$i];
 		$_ki = readVariable($_POST['K_'.$oraId], 'id', '');
 		$_leiras = readVariable($_POST['L_'.$oraId],'string', '');
+		$_cimkeId = intval(readVariable($_POST['C_'.$oraId],'string', ''));
 		$_csoportAdat = readVariable($_POST['M_'.$oraId], 'string', '');
-		if (isset($_POST['L_'.$oraId]))
-            		$_JSON['result'] = $_JSON['result'] && updateHaladasiNaploOra($oraId, $_leiras, $_csoportAdat, $_ki, $lr);
+		if (isset($_POST['L_'.$oraId])) {
+            	    $_JSON['result'] = $_JSON['result'] && updateHaladasiNaploOra($oraId, $_leiras, $_cimkeId, $_csoportAdat, $_ki, $lr);
+		}
 	    }
         }
 	// ez DUPlikátum, a nem ajaxnál is ezt tesszük ám!
@@ -189,11 +191,12 @@ if ( $skin == 'ajax'
 		    //EXPERIMENTAL: $_modTs = readVariable($_POST['T_'.$oraId], 'datetime', '');
 		    $_ki = readVariable($_POST['K_'.$oraId], 'numeric', '');
 		    $_leiras = readVariable($_POST['L_'.$oraId],'string', ''); //htmlspecialchars($_POST['L_'.$oraId])
+		    $_cimkeId = intval(readVariable($_POST['C_'.$oraId],'string', '')); 
 		    $_csoportAdat = readVariable($_POST['M_'.$oraId], 'string', ''); //numeric:numeric ???
 		    // paraméterek: $oraId, $leiras, $csoportAdat = 'csoportId:tankorId', $ki = '', $olr = '')
 		    if (isset($_POST['L_'.$oraId])) // a biztonság kedvéért ellenőrizzük
-            		updateHaladasiNaploOra($oraId, $_leiras, $_csoportAdat, $_ki, $lr);
-            	    //EXPERIMENTAL: updateHaladasiNaploOra($oraId, $_leiras, $_csoportAdat, $_ki, $_modTs, $lr);
+            		updateHaladasiNaploOra($oraId, $_leiras, $_cimkeId, $_csoportAdat, $_ki, $lr);
+            	    //EXPERIMENTAL: updateHaladasiNaploOra($oraId, $_leiras, $_cimke, $_csoportAdat, $_ki, $_modTs, $lr);
 		}
             }
 	    $UJORA = readVariable($_POST['UJORA'],'string');
@@ -215,7 +218,7 @@ if ( $skin == 'ajax'
 	    if (is_array($_POST)) foreach ($_POST as $_key => $_leiras) {
 		if (substr($_key,0,3) === 'LE_' && $_leiras!='' && is_numeric($UJORAIDK[$_dt][$_ora])) {
 		    list($_rest, $_dt,$_ora) = explode('_',$_key);
-		    updateHaladasiNaploOra($UJORAIDK[$_dt][$_ora],$_leiras,'',$tanarId,$lr);
+		    updateHaladasiNaploOra($UJORAIDK[$_dt][$_ora],$_leiras,0,'',$tanarId,$lr);
 		}
 	    }
 	    //***
@@ -371,6 +374,7 @@ if ( $skin == 'ajax'
 	
 	    $ADAT['szabadTermek'] = getSzabadTermekByDtInterval($tolDt,$igDt, null,'ora');
 	    $ADAT['tankorTipusok'] = getTankorTipusok();
+	    if (__ORACIMKE_ENABLED === true) $ADAT['cimkek'] = getCimkek();
     /* ------------------------------------------------- */
         // toolBar
 	$TOOL['datumSelect'] = array(

@@ -66,7 +66,7 @@
 			$SEL = array($RovatfejAttrs[$j] => ' selected="selected" ');
 			echo '<option value="">-</option>'."\n";
 			while(list($a,$txt) = each($attrs)) {
-				echo '<option value="'.$a.'"'.$SEL[$a].'>'.$txt.'</option>'."\n";
+				echo '<option value="'.$a.'"'.$SEL[$a].'>'.$txt.' ('.$a.')</option>'."\n";
 			}
 			echo '</select>'."\n";
 

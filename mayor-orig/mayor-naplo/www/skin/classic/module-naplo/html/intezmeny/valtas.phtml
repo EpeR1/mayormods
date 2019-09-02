@@ -11,10 +11,14 @@ function putTanarLista($ADAT) {
 	echo '</td><td>';
 	    echo '<span class="tanarNev" data-tanarid="'.$T['tanarId'].'">'.$T['tanarNev'].'</span>';
 	    if ($T['titulus']!='') echo '<div class="titulus">'.$T['titulus'].'</div>';
+	    if ($T['statusz']=='külső óraadó') echo '<div class="titulus">'.$T['statusz'].'</div>';
+	    if ($T['besorolas']=='Gyakornok') echo '<div class="titulus">'.kisbetus($T['besorolas']).'</div>';
+//	    if ($T['besorolas']=='Mesterpedagógus') echo '<div class="titulus">'.kisbetus($T['besorolas']).'</div>';
+
 	    $osztalyai = ($ADAT['tanarOsztaly'][$T['tanarId']]);
 	    for ($j=0; $j<count($osztalyai); $j++) {
 		$_osztalyId = $osztalyai[$j];
-		echo '<br/><div class="osztalyfonok" style="color:#aaa; font-size:smaller">osztályfőnök '.$ADAT['osztalyok'][$_osztalyId]['osztalyJel'];
+		echo '<div class="osztalyfonok" style="color:#aaa; font-size:smaller">osztályfőnök '.$ADAT['osztalyok'][$_osztalyId]['osztalyJel'];
 		echo ' ('.$ADAT['osztalyok'][$_osztalyId]['leiras'].')</div>';
 	    }
 	    $munkakozossegei = ($ADAT['tanarMunkakozosseg'][$T['tanarId']]); // vezetett

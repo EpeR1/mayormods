@@ -1,5 +1,9 @@
 <?php
 
+    function putNincsOrarend() {
+	echo '<h2 class="mayorSocialEdition"><span class="icon-th" style="padding-right:8px;"></span>Nincs órarend!</h2>';
+    }
+
     function csengetesiRend($csengetesiRendTipus, $telephelyId, $nap, $ora, $ADAT) {
 	$most = false;
 	if ($ADAT[$csengetesiRendTipus][$telephelyId][$nap][$ora]!='') $n = $nap;

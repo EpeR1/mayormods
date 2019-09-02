@@ -169,9 +169,12 @@
 		border: solid 1px #999;	    
 	}
 	input.gomb:hover { 
-		background-color: #009900;
-		color: white;
+		background-color: rgba(255,255,255,0.9); 
 	}
+	input.gomb.DOA.processing { 
+		border-color:orange;
+	}
+
 /*	input.rejtettGomb { border: solid 1px rgb(50,60,80);; background-color: rgb(50,60,80); }
 	input.rejtettGomb:hover { border: solid 1px orange; background-color: rgb(80,60,50); color: white }
 */
@@ -311,6 +314,9 @@
     }
     form.exportForm input:hover { color:black; border-color: black; background-color: white; opacity: 1; }
     form.exportForm input:active { background-color: cornflowerblue; color:white; }
+
+    td.cimke { text-align:center; white-space: wrap; background-color: rgba(255,255,255,0.3);}
+    td.cimke span.cimke {background-color: orange; color:white; font-size:x-small; padding:0px 2px; border-radius: 2px; margin:2px;}
 }
 @media print {
     table.haladasiBejegyzesek thead tr th { border-bottom: solid 1px black;}

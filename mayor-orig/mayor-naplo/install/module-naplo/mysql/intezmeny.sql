@@ -949,6 +949,12 @@ CREATE TABLE `diakNyelvvizsga` (
   CONSTRAINT `diakNyelvvizsga_ibfk_2` FOREIGN KEY (`targyId`) REFERENCES `targy` (`targyId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
+CREATE TABLE `cimke` (
+  `cimkeId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cimkeLeiras` varchar(16) NOT NULL,
+  PRIMARY KEY (`cimkeId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
  DELIMITER //  
  DROP FUNCTION IF EXISTS diakNaploSorszam //                                                                                                                                                                                            
  CREATE function diakNaploSorszam ( thisDiakId INT, thisTanev INT, thisOsztalyId INT ) returns INT                                                                                                         

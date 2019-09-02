@@ -1,0 +1,49 @@
+<?php
+
+    function putOraCimkeLista($ADAT) {
+
+	formBegin();
+	echo '<input type="hidden" name="action" value="oraCimkez" />';
+	echo '<div class="terem">'."\n";
+
+	    echo '<table cellpassing="1" cellspacing="1">'."\n";
+
+	    echo '<thead><tr>';
+		echo '<th>'._CIMKEID.'</th>';
+		echo '<th>'._LEIRAS.'</th>';
+	    echo '</tr></thead>'."\n";
+	    echo '<tfoot><tr>';
+		echo '<th colspan="2">';
+		    echo '<input type="submit">';
+		echo '</th>';
+	    echo '</tr></tfoot>'."\n";
+	    echo '<tbody>';
+	    foreach ($ADAT['cimkek'] as $i => $D) {
+		echo '<tr>';
+		    echo '<td>'.$D['cimkeId'].'</td>';
+		    echo '<td>';
+			echo '<span class="icon-pencil-alt" style="color:#aaa;"></span> ';
+			echo '<input type="text" name="oraCimkeLeiras[]" data-cimkeid="'.$D['cimkeId'].'" value="'.$D['cimkeLeiras'].'" />';
+			echo '<input type="hidden" name="oraCimkeId[]" value="'.$D['cimkeId'].'" />';
+		    echo '</td>';
+		echo '</tr>'."\n";
+	    }
+	    echo '<tr>';
+		    echo '<td>'._UJCIMKE.'</td>';
+		    echo '<td>';
+			echo '<span class="icon-pencil" style="color:#aaa;"></span> ';
+			echo '<input type="text" name="oraCimkeLeiras[]" value="" />';
+		    echo '</td>';
+	    echo '</tr>'."\n";
+	    echo '</tbody>'."\n";
+
+	    echo '</table>'."\n";
+
+	echo '</div>'."\n";
+
+	formEnd();
+
+    }
+
+
+?>

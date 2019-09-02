@@ -78,7 +78,7 @@
         return $RESULT;
     }
 
-    function updateHaladasiNaploOra($oraId, $leiras, $csoportAdat = '', $ki = '', $olr = '') {
+    function updateHaladasiNaploOra($oraId, $leiras, $cimkeId=0, $csoportAdat = '', $ki = '', $olr = '') {
 
         $RESULT = true;
 
@@ -135,6 +135,17 @@
                 $RESULT = db_query($q, array('fv' => 'updateHaladasiNaploOra', 'modul' => 'naplo', 'values' => $v), $lr);
                 //$_SESSION['alert'][] = $q;
             }
+
+	    if (__ORACIMKE_ENABLED === true) {
+            	$q = "DELETE FROM oraCimke WHERE oraId=%u";
+            	$v = array($oraId);
+        	db_query($q, array('fv' => 'updateHaladasiNaploOra/cimke', 'modul' => 'naplo', 'values' => $v), $lr);
+		if ($cimkeId>0) { // később tömb!
+            	    $q = "INSERT IGNORE INTO oraCimke VALUES (%u,%u)";
+            	    $v = array($oraId,$cimkeId,$oraId);
+        	    db_query($q, array('fv' => 'updateHaladasiNaploOra/cimke', 'modul' => 'naplo', 'values' => $v), $lr);
+		}
+	    }
         } else {
 //          $RESULT = false; // igaziból nincs hiba, hisz nem csináltunk semmit
             $_SESSION['alert'][] = 'message:wrong_data:nem modosithato ora!!!';

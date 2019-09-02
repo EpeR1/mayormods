@@ -21,6 +21,7 @@
 	require_once('include/modules/naplo/share/jegyzet.php');
 	require_once('include/modules/naplo/share/hianyzas.php');
 
+
     // -- TESZT - savePageState()
     define('__PAGE_PRESET', false); // kísérlet vége. no
     $preSetLoad = readVariable($_POST['preSetLoad'],'bool',false);
@@ -264,8 +265,11 @@
 	$ADAT['diakId'] = $diakId;
 	$ADAT['tankorId'] = $tankorId;
 	$ADAT['teremId'] = $teremId;
-	if ($skin=='ajax' && $_REQUEST['httpResponse']=='json') $_JSON['orarend']=$ADAT;
-
+	if ($skin=='ajax' && $_REQUEST['httpResponse']=='json') {
+	    $_JSON['orarend']=$ADAT;
+	} else {
+	    $ADAT['orarendvane'] = orarendvane();
+	}
 //=====================================
 
         $TOOL['datumSelect'] = array(
@@ -308,5 +312,6 @@
 	}
 	if ($stateCounter>0) setcookie($page.'_'.$sub.'_'.$f, implode('+',$SAVESTATE), 0, '', '', TRUE, TRUE);
     }
+
 
 ?>

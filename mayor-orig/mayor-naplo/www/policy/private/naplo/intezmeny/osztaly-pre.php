@@ -60,7 +60,7 @@ if (__NAPLOADMIN && isset($_POST['fileName']) && $_POST['fileName'] != '') {
 			$MEZO_LISTA = $_POST['MEZO_LISTA'];
 			$KULCS_MEZOK = $_POST['KULCS_MEZOK'];
 			updateOsztaly($osztalyId, $fileName, $MEZO_LISTA, $KULCS_MEZOK, $mezo_elvalaszto, readVariable($_POST['rovatfej'], 'bool'));
-
+			$ADAT['updatedFromFile']=true;
 		} // MEZO_LISTA tömb
 	} else {
 		$_SESSION['alert'][] = 'message:file_not_found:'.$fileName;

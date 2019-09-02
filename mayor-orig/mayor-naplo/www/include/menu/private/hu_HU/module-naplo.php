@@ -554,6 +554,7 @@
 	    'zaradek' => array(array('txt' => 'Záradék')),
 	    'terem' => array(array('txt' => 'Terem')),
 	    'verseny' => array(array('txt' => 'Verseny')),
+	    'oraCimke' => array(array('txt' => 'Haladási óra címkék')),
 	);
 	$MENU['modules']['naplo']['sub']['ertekeles'] = array(
 	    'kerdoivBetoltes' => array(array('txt' => 'Kérdőív betöltése')),

@@ -53,7 +53,7 @@
 		    echo ($ADAT['oraTerheles'][$ADAT['tanarId']]['ossz']['heti']);
 	    }
 	echo '</th>';
-	echo '<th colspan="7" class="fejlec8">';
+	echo '<th colspan="8" class="fejlec8">';
     	    if ($tanarId!='') {
         	echo '<span class="tanarNev" data-tanarid="'.$tanarId.'">'.$title.'</span>';
 		if ($ADAT['csakUres']==true) {
@@ -106,7 +106,7 @@
 			echo ($ADAT['oraTerheles'][$ADAT['tanarId']]['ossz']['heti']);
 		    }
 		echo '</th>';
-		echo '<th colspan="7">';
+		echo '<th colspan="8">';
                 //    if (_SHOW_DAYS_FROM > $_TANEV['kezdesDt']) echo '<input class="gomb" type="submit" name="lapoz" value="<<" tabindex="5" />'."\n";
 		    if (_SHOW_DAYS_FROM > $_TANEV['kezdesDt']) 	echo '<button class="gomb" type="submit" name="lapoz1" value="prevWeek" tabindex="7"><span class="icon-chevron-left"></span></button>';
 
@@ -189,7 +189,7 @@
 		if (__PLUSZBEIRHAT===true) echo '<div class="icon-plus-sign rejtMutat"></div>';
 	    echo '</th>'."\n";
 	    // Az első cella a dátum/nap
-	    echo '<th colspan="7" class="nap">';
+	    echo '<th colspan="8" class="nap">';
 		echo str_replace('-','.',$dt) .'. ';
 		echo '<span class="napNev">'.$aHetNapjai[(date('w',$time)+6)%7].'</span>';
 		if ($napInfo2['napszam']!='' || $napInfo['orarendiHet'] != 0) {
@@ -229,7 +229,7 @@
 		if (__PLUSZBEIRHAT===true) putUjOra(array('dt'=>$dt, 'ora'=>$j));
 	    }	    
 	} else {
-	    echo '<tr><th colspan="8" class="nincsOra">'._NINCS_ORAJA.'</th></tr>';
+	    echo '<tr><th colspan="9" class="nincsOra">'._NINCS_ORAJA.'</th></tr>';
 //	    if ($tanitasiNap && strtotime(date('Y-m-d'))>=strtotime($dt)) {
 //	    if ( 
 //		(strtotime(date('Y-m-d'))>=strtotime($dt) 
@@ -272,7 +272,7 @@
 	for ($i=0;$i<count($doga['tervezett'][$dt]);$i++) {
 	    $did = $doga['tervezett'][$dt][$i];
 	    echo '<tr>';
-	    echo '<td colspan="8" class="dolgozat">';
+	    echo '<td colspan="9" class="dolgozat">';
 		$href = href('index.php?page=naplo&sub=osztalyozo&f=dolgozat&dolgozatId='.$did);
 		echo '<a href="'.$href.'">';
 	    	echo _BEJELENTETT_DOLGOZAT . ': '. $doga[$did]['dolgozatNev'];
@@ -484,6 +484,8 @@
 		    echo '<a href="'.href('index.php?page=naplo&sub=tanmenet&f=tanmenetInfo&tanmenetId='.$ADAT['tankorTanmenet'][ $dOra['tankorId'] ]).'" class="onClickUpdateWindow" title="'._TANMENET.'">';
 		    echo $dOra['oraszam'];
 		    echo '</a>';
+
+
 		} else { // itt kiírhatjuk a heti terhelését
 		    //echo '<span style="color: purple;" title="a típusból ezen a héten összesen">eheti:'.($ADAT['oraTerheles'][$dOra['feladatTipusId']]['db']-$SZLO[$dOra['feladatTipusId']])."/".($ADAT['oraTerheles'][$dOra['feladatTipusId']]['db']).'</span>';
 		    //echo '<span style="color: purple;" title="a típusból ezen a héten összesen">eheti:'.($SZLO['sum']-$SZLO['sum_c'])."/".($SZLO['sum']).'</span>';
@@ -492,16 +494,39 @@
 		}
 	    echo '</td>'."\n";
 
+	    echo '<td class="cimke">';
+		if (__ORACIMKE_ENABLED === true) {
+		  if ($modosithatoOra) {
+		    if (count($ADAT['cimkek'])>0) {
+		    echo '<select name="C_'.$dOra['oraId'].'" data-oraid="'.$dOra['oraId'].'" class="data">';
+		    echo '<option value=""></option>';
+		    for ($c = 0; $c<count($ADAT['cimkek']); $c++) {
+			$_SEL = (in_array($ADAT['cimkek'][$c]['cimkeId'], $dOra['cimke'])) ? 'selected="selected"':'';
+			echo '<option value="'.$ADAT['cimkek'][$c]['cimkeId'].'" '.$_SEL.'>'.($ADAT['cimkek'][$c]['cimkeLeiras']).'</option>';
+		    }
+		    echo '</select>';
+		    }
+		  } else {
+		    $_C = array();
+		    for ($c = 0; $c<count($ADAT['cimkek']); $c++) {
+			if (in_array($ADAT['cimkek'][$c]['cimkeId'], $dOra['cimke'])) $_C[] = $ADAT['cimkek'][$c]['cimkeLeiras'];
+		    }		    
+		    if (count($_C)>0) echo '<span class="cimke">'.implode('</span> <span class="cimke">',$_C).'</span>';
+		  }
+		}
+	    echo '</td>';
 	    // ----- Leírás ---------------------------------
 		if ($modosithatoOra) {
 		    echo '<td class="l">';
+
+
 		    if ($dOra['leiras']!='') { // beírva
-			echo '<input type="text" tabindex="1" name="L_'.($dOra['oraId']).'" class="data beirva" size="30" value="'.htmlspecialchars($dOra['leiras']).'" />';
-			echo '<span class="INFO" id="B_'.($dOra['oraId']).'"></span>';
+			echo '<input type="text" tabindex="1" name="L_'.($dOra['oraId']).'" class="data beirva ROA" size="30" value="'.htmlspecialchars($dOra['leiras']).'" />';
+			echo '<span class="INFO" id="B_'.($dOra['oraId']).'"><span class="icon-ok-sign"></span></span>';
 			echo '<input type="submit" class="gomb DOA" value="'._OK.'" tabindex="" />';
 		    } else {
-			echo '<input type="text" tabindex="1" name="L_'.($dOra['oraId']).'" class="data" size="30" value="'.htmlspecialchars($dOra['leiras']).'" />';
-			echo '<span class="INFO" id="B_'.($dOra['oraId']).'">✓</span>';
+			echo '<input type="text" tabindex="1" name="L_'.($dOra['oraId']).'" class="data ROA" size="30" value="'.htmlspecialchars($dOra['leiras']).'" />';
+			echo '<span class="INFO" id="B_'.($dOra['oraId']).'"><span class="icon-ok-sign"></span></span>';
 			echo '<input type="submit" class="gomb DOA" value="'._OK.'" tabindex="" />';
 		    }
 		    echo '<input type="hidden" name="oraId[]" value="'.$dOra['oraId'].'" />';
@@ -513,6 +538,7 @@
 			echo '<td class="nincsBeirva">'._NINCS_BEIRVA;
 		    }
 		}
+
 	    echo '</td>'."\n";
 
 	    // ----- Hiányzók -------------------------------

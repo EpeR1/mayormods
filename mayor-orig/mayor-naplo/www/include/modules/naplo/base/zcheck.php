@@ -80,6 +80,8 @@
     }
     if (!defined('__TANITASINAP_HETENTE')) define('__TANITASINAP_HETENTE',5);
 
+    if (!define('__ORACIMKE_ENABLED')) define('__ORACIMKE_ENABLED',true) ;
+
     /* üzenő szerepkor beallitasa */
 	if (__UZENOADMIN===true) {
     	    $__asWho = readVariable($_POST['asWho'],'strictstring','asIs',array('asAdmin','asIs'));

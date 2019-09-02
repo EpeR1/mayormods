@@ -124,6 +124,12 @@
 		}
 		$sor['csoport'] = $tankorAdat[$sor['tankorId']]['csoport'];
 	    }
+	    if (__ORACIMKE_ENABLED === true) {
+		// Cimkek
+		$q = "SELECT cimkeId from oraCimke where oraId=%u";
+		$v = array($sor['oraId']);
+		$sor['cimke'] = db_query($q, array('fv' => 'getHaladasi/cimkek', 'modul' => 'naplo', 'result' => 'idonly', 'values' => $v), $lr);
+	    }
 	    $ret[$sor['dt']][] = $sor;
 	}
         // Nap információk lekérdezése

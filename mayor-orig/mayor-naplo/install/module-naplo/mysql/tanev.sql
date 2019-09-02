@@ -727,6 +727,14 @@ CREATE TABLE `jegyzetTankor` (
   CONSTRAINT `jegyzetTankor_ibfk_2` FOREIGN KEY (`tankorId`) REFERENCES `%DB%`.`tankor` (`tankorId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
+ CREATE TABLE `oraCimke` (
+  `oraId` int(10) unsigned NOT NULL,
+  `cimkeId` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`oraId`,`cimkeId`),
+  CONSTRAINT `oraCimke_ibfk_1` FOREIGN KEY (`oraId`) REFERENCES `ora` (`oraId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `oraCimke_ibfk_2` FOREIGN KEY (`cimkeId`) REFERENCES `%DB%`.`cimke` (`cimkeId`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
 DROP FUNCTION IF EXISTS getNev;
 DROP FUNCTION IF EXISTS getOraIgTime;
 DROP FUNCTION IF EXISTS getOraTolTime;
