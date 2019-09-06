@@ -1,1 +1,1 @@
--- CALL upgrade_database_4531_2();
+CALL upgrade_database_4531_2();

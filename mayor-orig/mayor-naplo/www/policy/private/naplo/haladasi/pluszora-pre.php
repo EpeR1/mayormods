@@ -17,7 +17,7 @@
 	$tankorId = readVariable($_POST['tankorId'], 'id', null);
 	$blokkId = readVariable($_POST['tankorBlokkId'], 'id', null);
 	$teremId = readVariable($_POST['teremId'], 'id', null);
-	$SzabadOrak = '';
+	$SzabadOrak = array();
 
 	require_once('include/modules/naplo/share/tanar.php');
 	require_once('include/modules/naplo/share/osztaly.php');
@@ -76,12 +76,16 @@
 		// tanar Napi órái
 		$Orak = getTanarNapiOrak($tanarId, $dt);
 		// Szabad Órák
-		for ($i = $napiMinOra; $i <= $napiMaxOra; $i++) if (!is_array($Orak[$i])) $SzabadOrak[] = $i;
+		for ($i = $napiMinOra; $i <= $napiMaxOra; $i++)
+		    if (!is_array($Orak[$i]))
+			array_push($SzabadOrak,$i);
 	    } elseif (isset($osztalyId)) {
 		// osztalyNapiOrai
 		$Orak = getOsztalyNapiOrak($osztalyId, $dt);
 		// Szabad Órák
-		for ($i = $napiMinOra; $i <= $napiMaxOra; $i++) if (!is_array($Orak[$i][0])) $SzabadOrak[] = $i;
+		for ($i = $napiMinOra; $i <= $napiMaxOra; $i++) 
+		    if (!is_array($Orak[$i][0])) 
+			array_push($SzabadOrak[],$i);
 	    }
 	    if (isset($ora)) {
 		$Termek = getSzabadTermek(array('dt' => $dt, 'ora' => $ora));
