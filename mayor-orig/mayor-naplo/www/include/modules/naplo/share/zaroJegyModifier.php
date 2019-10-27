@@ -90,9 +90,15 @@
                             $v = null;
                         } elseif ($J['jegy']!='') { // ha van jegy megadva
 			    // NEM REPLACE, UPDATE, különben a megszorítások miatt cascade törlésre kerülnek a vizsgák!!! HIBA!
-			    $q = "UPDATE zaroJegy SET modositasDt=NOW(),hivatalosDt='%s',diakId=%u,targyId=%u,evfolyam=%u,evfolyamJel='%s',felev=%u,
+			    if ($J['megjegyzes'] != 'dicséret' && $J['megjegyzes'] != 'figyelmeztető') {
+				$q = "UPDATE zaroJegy SET modositasDt=NOW(),hivatalosDt='%s',diakId=%u,targyId=%u,evfolyam=%u,evfolyamJel='%s',felev=%u,
 				    jegy='%s',jegyTipus='%s',megjegyzes='%s' 
 				  WHERE zaroJegyId=%u AND (jegy!='%s' OR jegyTipus!='%s' OR megjegyzes!='%s')";
+			    } else {
+				$q = "UPDATE zaroJegy SET modositasDt=NOW(),hivatalosDt='%s',diakId=%u,targyId=%u,evfolyam=%u,evfolyamJel='%s',felev=%u,
+				    jegy='%s',jegyTipus='%s',megjegyzes='%s' 
+				  WHERE zaroJegyId=%u AND (jegy!='%s' OR jegyTipus!='%s' OR megjegyzes!='%s')";
+			    }
                             $v[] = $J['zaroJegyId'];
                             $v[] = $J['jegy'];
                             $v[] = $J['jegyTipus'];
@@ -101,8 +107,13 @@
 
                     } elseif ($J['jegy']!='') { // nincs megadva zaroJegyId, ámbár probléma lehet, hátha van ilyen jegye mégis (konkurrens kliensek)
 			// ugyanakkor az index létrehozás nem biztos hogy nyomravezető. Megoldás, ha a több bejegyzés megjelenik
-                        $q = "INSERT INTO zaroJegy (modositasDt,hivatalosDt,diakId,targyId,evfolyam,evfolyamJel,felev,jegy,jegyTipus,megjegyzes)
+			if ($J['megjegyzes'] != 'dicséret' && $J['megjegyzes'] != 'figyelmeztető') {
+                    	    $q = "INSERT INTO zaroJegy (modositasDt,hivatalosDt,diakId,targyId,evfolyam,evfolyamJel,felev,jegy,jegyTipus,megjegyzes)
+                              VALUES (NOW(),'%s',%u,%u,%u,'%s',%u,'%s','%s',NULL)";
+			} else {
+                    	    $q = "INSERT INTO zaroJegy (modositasDt,hivatalosDt,diakId,targyId,evfolyam,evfolyamJel,felev,jegy,jegyTipus,megjegyzes)
                               VALUES (NOW(),'%s',%u,%u,%u,'%s',%u,'%s','%s','%s')";
+			}
                     }
 		$results[] = db_query($q, array('modul' => 'naplo_intezmeny','values' => $v, 'fv' => 'zaroJegyBeiras', 'result' => 'insert'), $lr);
 	    }

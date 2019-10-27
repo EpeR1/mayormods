@@ -29,6 +29,12 @@
 	}
     }
 
+    function getTankorBlokkNev($blokkId) {
+	$q = "SELECT blokkNev FROM tankorBlokk LEFT JOIN blokk USING (blokkId) WHERE blokkId = %u";
+	$v = array($blokkId);	
+	return db_query($q, array('fv' => 'getTankorBlokkByTankorId', 'modul' => 'naplo', 'result' => 'value', 'values' => $v));
+    }
+
 
      function getTankorBlokkok($tanev = __TANEV) {
 

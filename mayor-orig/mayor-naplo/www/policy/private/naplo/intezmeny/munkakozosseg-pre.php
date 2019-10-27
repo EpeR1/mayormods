@@ -36,6 +36,7 @@
 		    $_ADAT['evkoziKovetelmeny']=readVariable($_POST['evkoziKovetelmeny'],'string');
 		    $_ADAT['zaroKovetelmeny']=readVariable($_POST['zaroKovetelmeny'],'string');
 		    $_ADAT['kirTargyId'] = readVariable($_POST['kirTargyId'],'id',null, $ADAT['kirTargyak']);
+		    $_ADAT['kretaTargyNev']=readVariable($_POST['kretaTargyNev'],'string');
 		    $_ti=ujTargy($_ADAT);
 		    if ($_ti!==false && is_numeric($_ti)) $targyId=$_ti;
 		    unset($_ti);
@@ -49,6 +50,7 @@
 		$_ADAT['zaroKovetelmeny'] = readVariable($_POST['zaroKovetelmeny'],'sql');
 		$_ADAT['targyRovidNev'] =  readVariable($_POST['targyRovidNev'],'sql');
 		$_ADAT['kirTargyId'] = readVariable($_POST['kirTargyId'],'id',null);
+		$_ADAT['kretaTargyNev']=readVariable($_POST['kretaTargyNev'],'string');
 		targyModosit($_ADAT);
 		break;
 	    case 'targyTorol':

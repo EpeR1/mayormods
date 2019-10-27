@@ -41,8 +41,7 @@
 	    $WHERE = "WHERE ".implode(' AND ',$W);
 	} else $WHERE = '';
 
-	//hack
-	if ($SET['all']===true) $WHERE='';
+	if ($SET['all']===true) $WHERE=' WHERE `owner`="'._USERACCOUNT.'" ';
 	$q = "SELECT * FROM hirek $WHERE ORDER BY kdt DESC,vdt DESC".$L;
 	$HIREK['szovegek'] = db_query($q, array('modul'=>'portal','result'=>'indexed'));
 	return $HIREK;

@@ -119,4 +119,35 @@
 
     }
 
+    function putTankorCsoportAdat($ADAT) {
+
+	formBegin(array('class'=>'csoportKereses'));
+
+	echo '<input type="hidden" name="action" value="tankorCsoportokKeresese" />'."\n";
+	echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
+
+	echo '<table>'."\n";
+	    echo '<tr>';
+		echo '<th colspan="2">'._CSOPORTNEV.'</th>';
+		echo '<th>'._TANKOROK.'</th>';
+	    echo '</tr>'."\n";
+	    foreach ($ADAT['tankorCsoportAdat'] as $csoportId => $TANKORCSOPORT) {
+		echo '<tr>'."\n";
+		    echo '<th>'.$TANKORCSOPORT[0]['csoportNev'].'</th>';
+		    echo '<th>'.$csoportId.'</th>';
+		    echo '<td>';
+		    for ($i=0; $i<count($TANKORCSOPORT); $i++) {
+			$D = $TANKORCSOPORT[$i];
+			echo '<span class="tankorAdat" data-tankorid="'.$D['tankorId'].'" style="padding:4px 2px;">'.$D['tankorNev'].'</span>';
+
+		    }
+		    echo '</td>';
+		echo '</tr>'."\n";
+	    }
+	echo '</table>'."\n";
+
+	formEnd();
+
+    }
+
 ?>

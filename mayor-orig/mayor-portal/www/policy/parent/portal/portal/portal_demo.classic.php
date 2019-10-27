@@ -31,10 +31,10 @@
     echo '</td>';
     echo '<td class="jobb">';
 
-	echo '<script type="text/javascript">includeCSS(\'/skin/ajax/module-naplo/css/tanev/orarend.css\')</script>';
+	echo '<script type="text/javascript">includeCSS(\'/skin/ajax/module-naplo/css/orarend/orarend.css\')</script>';
 	$_refStamp = mktime(date('H')+8,0,0,date('m'), date('d'), date('Y'));
         $dt = date('Y-m-d', $_refStamp);
-	putDoboz('Órarend '.str_replace('-','.',$dt).'.',ajaxUpdaterForm('orarend','index.php?page=naplo&sub=tanev&f=orarend',array('dt' => $dt),'post',true)
+	putDoboz('Órarend '.str_replace('-','.',$dt).'.',ajaxUpdaterForm('orarend','index.php?page=naplo&sub=orarend&f=orarend',array('dt' => $dt),'post',true)
 	,array('header-color'=>'#f06'));
 
 //	putDoboz('Hangya',ajaxUpdaterForm('hangya','index.php?page=naplo&sub=hibabejelento&f=admin',array(),'post',true),

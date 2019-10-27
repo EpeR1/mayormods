@@ -36,6 +36,8 @@ define('_ADSSHADOWINACTICE','shadow inaktív');
 define('_ADSMEMBER', 'tag');
 define('_ADSMEMBERUID', 'tag azonosító');
 
+define('_ADSOTHERPAGER', 'személyhívó');
+
 // A kakukktojások
 /*
 define('_ADS_USERACCOUNT','Azonosító');

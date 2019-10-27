@@ -37,7 +37,7 @@ try {
         array(
             'jpg' => 'image/jpeg',
             'png' => 'image/png',
-            'gif' => 'image/gif',
+            'gif' => 'image/gif'
         ),
         true
     )) {

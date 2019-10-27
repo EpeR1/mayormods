@@ -709,6 +709,15 @@ border: solid 0px #eee;
     div#mayorGlobalLogin form.passwordAuth span {display:none;}
 }
 
+
+
+@media (prefers-color-scheme: dark) {
+    body {
+	// background-color: black;
+	// color: white;
+    }
+}
+
 @keyframes niceMaYoR {
     0% { border-top: rgb(247,197,14) solid 4px; }
     100% { border-top: rgb(147,197,214) solid 4px; }

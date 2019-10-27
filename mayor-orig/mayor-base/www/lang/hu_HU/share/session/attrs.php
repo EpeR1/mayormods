@@ -4,7 +4,7 @@
     Nyelv:	hu_HU (magyar)
 */
 
-define('_ATTR_USERACCOUNT','Felhasználónév (azonosító)');
+define('_ATTR_USERACCOUNT','Felhasználói azonosító');
 define('_ATTR_USERCN','Saját név');
 define('_ATTR_USERPASSWORD','Jelszó');
 define('_ATTR_STUDYID','Oktatási azonosító');

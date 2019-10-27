@@ -46,7 +46,8 @@
 			    if (count(array_diff(array_values($UTKOZO_TANKORIDS),array_values($FELMENTETTTANKORIDS))) === 0) { 
 				// OK
 			    } else {
-        			$_SESSION['alert'][] = '::Sikertelen. Tankörblokk ütközés!:blokkid('.$bId.')';
+				$blokkNev = getTankorBlokkNev($bId);
+        			$_SESSION['alert'][] = '::Sikertelen. Tankörblokk ütközés!:blokkid('.$blokkNev.','.$bId.')';
         			return false;
 			    }
     			} 

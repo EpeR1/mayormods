@@ -1,11 +1,34 @@
 <?php
 
     function putHir($ADAT) {
-	$H = $ADAT['hirek']['szovegek'][0];
+
+	$D = $H = $ADAT['hirek']['szovegek'][0];
 	echo '<div class="hir">';
+
+            if ($D['cim']!='') {
+                echo '<div class="hirCim">';
+                if ($D['class']==6) {
+                    echo '<span title="Védett hír" class="icon-lock-alt" style="padding-right:4px;"></span>';
+                }
+                echo '</div>';
+            }
 	echo '<h1>'.$H['cim'].'</h1>';
 	echo '<p>'.$H['txt'].'</p>';
-	//echo '<div>'.$H['kdt'].'</div>';
+
+                echo '<div class="egyHirmeta" style="color:#aaa; padding:0px 2px 6px 0px; font-size:x-small;">';
+                    echo superdate($D['kdt']);
+                    echo ' · ';
+                    echo $D['owner'];
+                    if ($D['csoport']!='') {
+                        $CSOPORT = explode(',',$D['csoport']);
+                        echo ' · ';
+                        //echo '<span style="margin-top:10px">';
+                        for ($j=0; $j<count($CSOPORT); $j++) echo '<span class="tag">'.$CSOPORT[$j].'</span>';
+                        //echo '</span>';
+                    }
+
+                echo '</div>';
+
 	echo '</div>';
 	if (_OG_ENABLED===true) {
 	    echo '<div class="fb-comments" style="z-index:0" data-href="'._BASE_URL.'/index.php?page=portal&amp;sub=portal&amp;f=hir&amp;hirId='.$H['id'].'"

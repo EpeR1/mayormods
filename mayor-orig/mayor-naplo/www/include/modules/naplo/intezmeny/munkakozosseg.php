@@ -90,11 +90,11 @@
 
     function ujTargy($ADAT) {
 
-
 	$leiras=$ADAT['leiras'];
 	$mkId=$ADAT['mkId'];
 	$targyJelleg=$ADAT['targyJelleg'];	
 	$kirTargyId=$ADAT['kirTargyId'];	
+	$kretaTargyNev=$ADAT['kretaTargyNev'];	
 
 	if ($leiras=='') {
 	    $_SESSION['alert'][] = 'message:UI:empty field';
@@ -103,10 +103,10 @@
 
 	if (is_numeric($kirTargyId)) {
 		$q = "INSERT INTO targy (targyNev,mkId,targyJelleg,kirTargyId) VALUES ('%s',%u,'%s',%u)";
-		$v = array($leiras,$mkId,$targyJelleg,$kirTargyId);
+		$v = array($leiras,$mkId,$targyJelleg,	$kretaTargyNev, $kirTargyId);
 	} else {
 		$q = "INSERT INTO targy (targyNev,mkId,targyJelleg) VALUES ('%s',%u,'%s')";
-		$v = array($leiras,$mkId,$targyJelleg);	
+		$v = array($leiras,$mkId,$targyJelleg,	$kretaTargyNev);	
 	}
 	$result = db_query($q,array('modul'=>'naplo_intezmeny', 'fv'=>'ujTargy','result'=>'insert', 'detailed'=>false, 'debug'=>false, 'values'=>$v));
 
@@ -115,14 +115,21 @@
     }
 
     function targyModosit($ADAT) {
+	$q = "UPDATE targy SET targyJelleg='%s',zaroKovetelmeny='%s',evkoziKovetelmeny='%s',targyRovidNev='%s'";
+	$v = array($ADAT['targyJelleg'],$ADAT['zaroKovetelmeny'],$ADAT['evkoziKovetelmeny'],$ADAT['targyRovidNev']);
 	if (is_numeric($ADAT['kirTargyId'])) {
-	    $q = "UPDATE targy SET targyJelleg='%s',zaroKovetelmeny='%s',evkoziKovetelmeny='%s',targyRovidNev='%s',kirTargyId=%u WHERE targyId=%u";
-	    $v = array($ADAT['targyJelleg'],$ADAT['zaroKovetelmeny'],$ADAT['evkoziKovetelmeny'],$ADAT['targyRovidNev'], $ADAT['kirTargyId'], $ADAT['targyId']);
-	} else {
-	    $q = "UPDATE targy SET targyJelleg='%s',zaroKovetelmeny='%s',evkoziKovetelmeny='%s',targyRovidNev='%s' WHERE targyId=%u";
-	    $v = array($ADAT['targyJelleg'],$ADAT['zaroKovetelmeny'],$ADAT['evkoziKovetelmeny'],$ADAT['targyRovidNev'],$ADAT['targyId']);	
+	    $q .= ",kirTargyId=%u";
+	    array_push($v,$ADAT['kirTargyId']);
 	}
-	return db_query($q,array('modul'=>'naplo_intezmeny', 'fv'=>'targyModosit', 'detailed'=>false, 'debug'=>false, 'values'=>$v));
+	if ($ADAT['kretaTargyNev']!='') {
+	    $q .= ",kretaTargyNev='%s'";
+	    array_push($v,$ADAT['kretaTargyNev']);
+	} else {
+	    $q .= ",kretaTargyNev=NULL";
+	}
+	$q .=" WHERE targyId=%u";
+	array_push($v, $ADAT['targyId']);	
+	return db_query($q,array( 'modul'=>'naplo_intezmeny', 'fv'=>'targyModosit', 'detailed'=>false, 'values'=>$v));
     }
 
     function targyTorol($targyId,$mkId) {

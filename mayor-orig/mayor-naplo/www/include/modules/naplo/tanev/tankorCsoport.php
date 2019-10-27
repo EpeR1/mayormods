@@ -1,5 +1,22 @@
 <?php
 
+    function getTankorCsoportAdat($csoportId=null) {
+
+	if ($csoportId>	0) {
+	    $q = "SELECT csoportId,csoportNev,tankorId,getNev(tankorId,'tankor') AS tankorNev FROM csoport LEFT JOIN tankorCsoport USING (csoportId) WHERE csoportId=%u";
+	    $v = array($csoportId);
+	    $r = db_query($q, array(
+		'fv' => 'tankorCsoport', 'modul' => 'naplo', 'result' => 'multiassoc', 'keyfield' => 'csoportId', 'values' => $v
+	    ));
+	} else {
+	    $q = "SELECT csoportId,csoportNev,tankorId,getNev(tankorId,'tankor') AS tankorNev FROM csoport LEFT JOIN tankorCsoport USING (csoportId)";
+	    $r = db_query($q, array(
+		'fv' => 'tankorCsoport', 'modul' => 'naplo', 'result' => 'multiassoc', 'keyfield' => 'csoportId'
+	    ));
+	}
+	return $r;
+    }
+
     function getTankorCsoportByTankorIds($tankorIds) {
 
             $q = "SELECT csoportId,csoportNev,tankorId FROM csoport LEFT JOIN tankorCsoport USING (csoportId)

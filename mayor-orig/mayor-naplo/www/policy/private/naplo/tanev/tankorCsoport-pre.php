@@ -119,11 +119,10 @@
 
 // ----------------- action --------------------- //
 
-//echo $q;
-//echo '<pre>'; var_dump($ujCsoportok); echo '</pre>';
-
 	}
 
+	$ADAT['tankorCsoport'] = getTankorCsoport(); 
+	$ADAT['tankorCsoportAdat'] = getTankorCsoportAdat();
 
 	$TOOL['osztalySelect'] = array('tipus' => 'cella','paramName' => 'osztalyId', 'post' => array());
 	getToolParameters();

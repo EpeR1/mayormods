@@ -241,7 +241,8 @@ CREATE TABLE `jegy` (
 CREATE TABLE `csoport` (
   `csoportId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `csoportNev` varchar(128) COLLATE utf8_hungarian_ci DEFAULT NULL,
-  PRIMARY KEY (`csoportId`)
+  PRIMARY KEY (`csoportId`),
+  UNIQUE KEY `IDX_U_csoport_csoportNev` (`csoportNev`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 CREATE TABLE `tankorCsoport` (

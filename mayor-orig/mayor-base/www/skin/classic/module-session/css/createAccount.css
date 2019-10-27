@@ -1,6 +1,6 @@
 @media screen,print {
 
-    table.new input { border: solid 1px black; }
+    table.new input { }
 
     table.searchresult { background-color: #aaaaaa; margin-bottom:20px; }
     table.searchresult thead th { background-color: #d6bddb; height:2em; border-bottom: solid 2px purple; }
@@ -9,16 +9,17 @@
     table.searchresult a { color: black; text-decoration: none; }
     table.searchresult a:hover { text-decoration: underline; }
 
-    table.new { background-color: #aaaaaa; margin-bottom:20px; margin-top:30px;}
+    table.new { background-color: #aaaaaa; margin-bottom:20px; margin-top:30px; font-size:16px; }
     table.new thead th { background-color: #ccccee; height:2em; border-bottom: solid 2px purple; }
-    table.new thead td { text-align: center; background-color: #ccccee; height:2em; border-bottom: solid 2px purple; }
-    table.new th { background-color: #ffffff; }
+    table.new thead td { background-color: #ccccee; height:2em; border-bottom: solid 2px purple; text-align:center;  }
+    table.new tfoot th { background-color: #cce;}
+    table.new th { padding:2px 4px; background-color: #ffffff; text-align: center; font-weight: normal; }
     table.new td { background-color: #ffffff; }
-    table.new td input { }
+    table.new input, table.new select  { font-size: 16px; }
 
     .paros { background-color: #eeeeee; }
     .paratlan { background-color: #dddddd; }
 
-    table.new input.hiba { outline: solid 1px red; }
+    table.new input.hiba { outline: solid 2px red; }
 
 }

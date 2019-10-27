@@ -69,7 +69,6 @@
     $ADAT['activity'] = getMyActivity();
 
     if ($toPolicy=='private' && _POLICY ==='private') {
-	$ADAT['eduroamAdat'] = getEduroamSettings($userAccount, $toPolicy);
-	// dump($ADAT);
+	//DISABLED $ADAT['eduroamAdat'] = getEduroamSettings($userAccount, $toPolicy, array());
     }
 ?>

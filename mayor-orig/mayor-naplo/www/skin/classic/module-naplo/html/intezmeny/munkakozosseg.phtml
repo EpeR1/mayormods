@@ -147,6 +147,9 @@
 	echo '</li><li>';
 	echo _KIRTARGY.': ';
 	    putKirTargySelect($ADAT['kirTargyak'],$ADAT['targyAdat']['kirTargyId']);
+	echo '</li><li>';
+	echo _TARGY_KRETA_NEV.': <input type="text" maxlength="64" id="kretaTargyNev" name="kretaTargyNev" value="'.$ADAT['targyAdat']['kretaTargyNev'].'"/>'."\n";
+	echo ' <span class="icon-refresh" data-targynev="'.$ADAT['targyAdat']['targyNev'].'"></span>';
 	echo '</li></ul>';
 	echo '<input type="submit" value="'._OK.'" />';
 	formEnd();

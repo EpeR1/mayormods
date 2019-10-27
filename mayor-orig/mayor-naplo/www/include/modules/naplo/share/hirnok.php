@@ -369,7 +369,7 @@ global $SZEMESZTER;
 		    VALUES (%u,'%s','%s','%s','%s',NOW(),'%s',null)";
 		$v = array(intval($ADAT['naploId']), $ADAT['naploTipus'], _USERACCOUNT, _POLICY, $ADAT['email'], $utolsoEmailDt);
 	    }
-	    return db_query($q, array('debug'=>true,'fv'=>'addHirnokFeliratkozas/set', 'modul'=>'naplo_intezmeny', 'values'=>$v, 'result'=>'insert'));
+	    return db_query($q, array('fv'=>'addHirnokFeliratkozas/set', 'modul'=>'naplo_intezmeny', 'values'=>$v, 'result'=>'insert'));
 
 	}
 
@@ -379,7 +379,7 @@ global $SZEMESZTER;
 	    // if (!is_array($ADAT['hirnokFeliratkozas'])) $X = array($ADAT['hirnokFeliratkozas']);
 	    $q = "DELETE FROM hirnokFeliratkozas WHERE hirnokFeliratkozasId = %u";
 	    $v = array(intval($ADAT['hirnokFeliratkozasId']));
-	    return db_query($q, array('debug'=>true,'fv'=>'delHirnokFeliratkozas', 'modul'=>'naplo_intezmeny', 'values'=>$v, 'result'=>'delete'));
+	    return db_query($q, array('fv'=>'delHirnokFeliratkozas', 'modul'=>'naplo_intezmeny', 'values'=>$v, 'result'=>'delete'));
 	
 	}
 

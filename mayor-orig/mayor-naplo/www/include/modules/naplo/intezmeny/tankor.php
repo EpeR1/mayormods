@@ -1,5 +1,7 @@
 <?php
 
+    require_once('include/modules/naplo/share/szemeszter.php');
+
     function ujTankor($ADAT) {
 
 

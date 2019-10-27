@@ -1,7 +1,7 @@
 
    div.hirCim {
-        font-style: italic;
-        font-size: 14px;
+        /* font-style: italic; */
+        font-size: large;
         color: #000088;
         font-weight: bold;
         margin-top:1em;
@@ -12,7 +12,7 @@
         color: #000088;
 	text-decoration: none;
     }
-    div.hirCim a:hover { color: #1E90FF }
+    div.hirCim a:hover { color: #1E90FF; text-decoration: underline; }
 
     table.portalMain { width: 100%; }
 

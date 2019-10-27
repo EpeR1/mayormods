@@ -32,5 +32,6 @@ visszamenőleg módosíthatja az adatokat!');
     define('_TARGY_ATNEVEZES','Tárgy átnevezése');
     define('_ATNEVEZES_HELP','A tárgy átnevezése a hozzá tartozó tankörök - esetleg visszamenőleges - átnevezésével jár!');
     define('_UJ_TARGY_NEV','új tárgynév');
+    define('_TARGY_KRETA_NEV','A tárgy neve a krétában (opcionális)');
 
 ?>

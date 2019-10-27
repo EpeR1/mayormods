@@ -556,7 +556,7 @@
 
 	// --TODO: továbbgondolásra szorul
 	// jelenlet = tankorJelenlet
-        $q = "SELECT DISTINCT tankor.tankorId,tankorTipusId,tankorNev,targyId,kovetelmeny,jelenlet,felveheto,tanev,zaroKovetelmeny
+        $q = "SELECT DISTINCT tankor.tankorId,tankorTipusId,tankorNev,targyId,kovetelmeny,jelenlet,felveheto,tanev,zaroKovetelmeny, tankorCn
 		     FROM ".__INTEZMENYDBNEV.".tankor 
 			LEFT JOIN ".__INTEZMENYDBNEV.".tankorTipus USING (tankorTipusId)
 			LEFT JOIN ".__INTEZMENYDBNEV.".tankorSzemeszter USING (tankorId) 
@@ -700,8 +700,8 @@
 	$RETURN['idk'] = db_query($q, array(
 	    'fv' => 'getTankorDiakjai/1', 'modul' => 'naplo_intezmeny', 'result' => 'idonly', 'values' => $v
 	), $olr);
-	// jelenlet = diakJelenlet
-	$q = "SELECT diakId,DATE_FORMAT(kiDt,'%%Y-%%m-%%d') AS kiDt, DATE_FORMAT(beDt,'%%Y-%%m-%%d') AS beDt,jelenlet,jelenlet as diakJelenlet,kovetelmeny,jovahagyva
+	// jelenlet = diakJelenlet -- TODO
+	$q = "SELECT diakId,DATE_FORMAT(kiDt,'%%Y-%%m-%%d') AS kiDt, DATE_FORMAT(beDt,'%%Y-%%m-%%d') AS beDt,_jelenlet,_jelenlet as diakJelenlet,_kovetelmeny,jovahagyva
 		FROM ".__INTEZMENYDBNEV.".tankorDiak WHERE tankorId=%u ORDER BY bedt";
 	$RETURN['adatok'] = db_query($q, array(
 	    'fv' => 'getTankorDiakjai/2', 'modul' => 'naplo_intezmeny', 'result' => 'multiassoc', 'keyfield' => 'diakId', 'values' => array($tankorId)
@@ -724,7 +724,7 @@
 	    $v = array($tankorId,$tolDt,$igDt);
 	}
 	$q = "SELECT DISTINCT diakId FROM ".__INTEZMENYDBNEV.".tankorDiak 
-		WHERE $W AND (kiDt>='%s' OR kiDt is null) AND beDt<='%s' ORDER BY diakId";
+		WHERE $W AND (kiDt>='%s' OR kiDt is null) AND beDt<='%s' ORDER BY ".__TANEVDBNEV.".getNev(diakId,'diak'),diakId";
 	$RETURN['idk'] = db_query($q, array('fv' => 'getTankorDiakjaiByInterval', 'modul' => 'naplo_intezmeny', 'result' => 'idonly', 'values' => $v), $olr);
 	/* jelenlet, követelmeny, jóváhagyva mezők MÁR nincsenek */
 	$q = "SELECT diakId,DATE_FORMAT(kiDt,'%%Y-%%m-%%d') AS kiDt, DATE_FORMAT(beDt,'%%Y-%%m-%%d') AS beDt 

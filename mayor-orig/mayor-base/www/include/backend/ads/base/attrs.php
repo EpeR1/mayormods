@@ -55,7 +55,7 @@
 	'shadowmin',
 	'shadowmax',
 	'shadowinactive',
-
+	'otherpager'
 /*
         'gecos',
         'mail',
@@ -132,6 +132,7 @@
 	'shadowmin' => array('desc' => _ADSSHADOWMIN, 'type' => 'text', 'rights' => 'wrr'),
 	'shadowmax' => array('desc' => _ADSSHADOWMAX, 'type' => 'text', 'rights' => 'wrr'),
 	'shadowinactive' => array('desc' => _ADSSHADOWINACTICE, 'type' => 'text', 'rights' => 'wrr'),
+	'otherpager' => array('desc' => _ADSOTHERPAGER, 'type' => 'text', 'rights' => 'wrr'),
 /*
         'gecos' => array('desc' => _ADSGECOS, 'type' => 'text', 'rights' => 'w--'),
         'mail' => array('desc' => _ADSMAIL, 'type' => 'text', 'rights' => 'wwr'),
