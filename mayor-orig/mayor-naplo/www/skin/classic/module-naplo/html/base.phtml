@@ -52,6 +52,7 @@
 		if (defined('__TELEPHELYID')) echo '<span id="toolBarIntezmeny" title="TelephelyId:".'.__TELEPHELYID.'>'.__INTEZMENY .', ' . __TANEV.'/'.(__TANEV+1).'</span>';
 		else echo '<span id="toolBarIntezmeny">'.__INTEZMENY . '/' . __TANEV.'</span>';
 	    echo '</a>';
+	     if (MAYOR_SOCIAL === true) { echo '<span title="MaYoR Social Edition" style="font-size:8px; padding:0px 0px 0px 4px; color: #e91e63;  filter: grayscale(100%);">〽️social</span>';}
 	    if ($showHelp) echo '<span id="toolBarHelpButton" class="onClickHideShow">?</span>';
 	echo '</td>'."\n";
 	reset($TOOL); 
@@ -101,15 +102,15 @@
 	}
 	if ($_diakId>0 && _POLICY=='private') {
 	    echo '<td class="szemely diakNev" data-diakid="'.$_diakId.'">';
-		echo '<span class="icon-child" data-diakid="'.$_diakId.'"></span>'; // itt is kell a data...
+		echo '<span class="icon-child" data-diakid="'.$_diakId.'"></span>';
 	    echo '</td>'."\n";
 	} elseif ($_tanarId>0 && _POLICY=='private') {
 	    echo '<td class="szemely tanarNev" data-tanarid="'.$_tanarId.'">';
-		echo '<span class="icon-adult" data-tanarid="'.$_tanarId.'"></span>'; // itt is kell a data...
+		echo '<span class="icon-adult" data-tanarid="'.$_tanarId.'"></span>';
 	    echo '</td>'."\n";
 	} 
 	if ($_tankorId>0 && _POLICY=='private') { //--TODO css class szemely->csoport
-	    echo '<td class="szemely tankorAdat" data-tankorid="'.$_tankorId.'">';
+	    echo '<td class="csoport tankorAdat" data-tankorid="'.$_tankorId.'">';
 		echo '<span class="icon-group" data-tankorid="'.$_tankorId.'"></span>';
 	    echo '</td>'."\n";
 	}

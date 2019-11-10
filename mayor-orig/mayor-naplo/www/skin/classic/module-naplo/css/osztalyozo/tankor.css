@@ -9,7 +9,7 @@
 
     table.osztalyozo thead th { background-color: rgb(100,120,120); }
     table.osztalyozo thead th select { background-color: rgb(100,120,120); color: white; border: 1px solid rgb(120,140,140); }
-    table.osztalyozo thead th.nev { height:30px }
+    table.osztalyozo thead th.nev { height:30px; font-size:large; font-weight:normal; }
     table.osztalyozo thead th.defaultSulyozas { background-color:lightgreen; }
     table.osztalyozo thead th select.sulyozas { width:44px; }
 

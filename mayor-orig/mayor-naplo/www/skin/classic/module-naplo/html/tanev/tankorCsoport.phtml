@@ -123,7 +123,7 @@
 
 	formBegin(array('class'=>'csoportKereses'));
 
-	echo '<input type="hidden" name="action" value="tankorCsoportokKeresese" />'."\n";
+	echo '<input type="hidden" name="action" value="tankorCsoportHozzarendesTorles" />'."\n";
 	echo '<input type="hidden" name="osztalyId" value="'.$osztalyId.'" />'."\n";
 
 	echo '<table>'."\n";
@@ -133,18 +133,27 @@
 	    echo '</tr>'."\n";
 	    foreach ($ADAT['tankorCsoportAdat'] as $csoportId => $TANKORCSOPORT) {
 		echo '<tr>'."\n";
-		    echo '<th>'.$TANKORCSOPORT[0]['csoportNev'].'</th>';
+		    echo '<th class="tankorCsoportAdat" data-tankorcsoportid="'.$csoportId.'">'.$TANKORCSOPORT[0]['csoportNev'].'</th>';
 		    echo '<th>'.$csoportId.'</th>';
 		    echo '<td>';
 		    for ($i=0; $i<count($TANKORCSOPORT); $i++) {
 			$D = $TANKORCSOPORT[$i];
+			if ($D['tankorId']>0) {
+			echo '<input type="checkbox" name="hozzarendelesMegszuntetes[]" value="'.$csoportId.':'.$D['tankorId'].'" />';
 			echo '<span class="tankorAdat" data-tankorid="'.$D['tankorId'].'" style="padding:4px 2px;">'.$D['tankorNev'].'</span>';
-
+			}
 		    }
 		    echo '</td>';
 		echo '</tr>'."\n";
 	    }
+	    echo '<tr>';
+		echo '<th colspan="3">';
+		    echo '<input type="submit" value="A kijelölt hozzárendelések törlése" />';
+		echo '</th>';
+	    echo '</tr>'."\n";
+
 	echo '</table>'."\n";
+
 
 	formEnd();
 

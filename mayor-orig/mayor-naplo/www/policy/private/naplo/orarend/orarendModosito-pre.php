@@ -198,9 +198,7 @@
 	$ADAT['felvehetoTankorok'] = getTankorByOsztalyId($osztalyId,$tanev, array('csakId'=>false,'tolDt'=>$refTolDt, 'igDt'=>$refIgDt, 'tanarral'=>true));
 //TEST-TODO
 	$TANKORIDK = getTankorByOsztalyId($osztalyId, __TANEV, array('csakId' => true, 'tolDt' => $tolDt, 'igDt' => $igDt, 'result' => 'indexed', 'tanarral' => false));
-//TEST
 	$ADAT['haladasi'] = getOrak($TANKORIDK, array('tolDt'=>$tolDt,'igDt'=>$igDt, 'result'=>'likeOrarend', 'elmaradokNelkul'=>false));
-//TEST
 	$ADAT['vanHaladasi'] = checkHaladasi(array('tolDt'=>$refTolDt,'igDt'=>$refIgDt));
     } elseif ($mkId!='') {
 	$ADAT['orarend'] = getOrarendByMkId($mkId,array('tolDt'=>$tolDt,'igDt'=>$igDt,'telephely'=>$telephely));
@@ -212,11 +210,15 @@
 	$TANKOROK['erintett'] = $ADAT['orarend']['tankorok'];
 	$TANKOROK['mindenByDt'] = $ADAT['orarend']['mindenTankorByDt'];
 
-	$TANKOROK = (is_array($ADAT['orarend']['tankorok']) && is_array($ADAT['haladasi']['tankorok'])) ?
-	    array_unique(array_merge($ADAT['orarend']['tankorok'],$ADAT['haladasi']['tankorok']))
-	    :
-	    $ADAT['orarend']['tankorok'];
+	if (is_array($ADAT['orarend']['tankorok']) && is_array($ADAT['haladasi']['tankorok'])) {
+	    $TANKOROK = array_unique(array_merge($ADAT['orarend']['tankorok'],$ADAT['haladasi']['tankorok']));
+	} elseif (is_array($ADAT['haladasi']['tankorok'])) {
+	    $TANKOROK = $ADAT['haladasi']['tankorok'];
+	} else {
+	    $TANKOROK = $ADAT['orarend']['tankorok'];
+	}
 	$ADAT['tankorok'] = getTankorAdatByIds($TANKOROK);
+
 	/* tankörlétszámok */
 	if (is_array($ADAT['tankorok'])) foreach ($ADAT['tankorok'] as $_tankorId =>$_T) {
 	    $ADAT['tankorLetszamok'][$_tankorId] = getTankorLetszam($_tankorId,array('refDt'=>$tolDt));

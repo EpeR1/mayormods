@@ -6,7 +6,9 @@ if (_RIGHTS_OK !== true) die();
     $hirId = readVariable($_POST['hirId'],'id',null);
     if ($hirId=='') $hirId = readVariable($_GET['hirId'],'id',null);
     $action = readVariable($_POST['action'],'strictstring',array(null,'save',''));
-    if ($hirId>0 && isOwner($hirId)===false) $_SESSION['alert'][] = 'page:not_owner';
+    if (__PORTAL_CODE=='vmg' && $hirId>0 && isOwner($hirId)===false) {
+	$_SESSION['alert'][] = 'page:not_owner';
+    }
 
     if ($action=='save' && (__HIREKADMIN || $hirId=='' || isOwner($hirId))) {
        global $LANGUAGES;
@@ -32,13 +34,11 @@ if (_RIGHTS_OK !== true) die();
 	$r = saveHir($DATA);
 	if ($hirId=='') $hirId=$r;
     }
-    if ($hirId!='' && is_numeric($hirId) && __HIREKADMIN || isOwner($hirId))
+    if ($hirId!='' && is_numeric($hirId) && (__HIREKADMIN===true || isOwner($hirId)===true))
 	$HIREK = getHirek(array('id'=>$hirId));
     elseif ($hirId!='')
 	$_SESSION['alert'][] = 'page:not_owner';
 
     $ADAT['kategoriak'] = getKategoriak();
-
-
 
 ?>

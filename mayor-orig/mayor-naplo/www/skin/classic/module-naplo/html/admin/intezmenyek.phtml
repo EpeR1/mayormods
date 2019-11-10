@@ -10,10 +10,11 @@
 
 	echo '<input type="hidden" name="action" value="intezmenyModositas" />'."\n";
 
-        echo _OMKOD . ': <input type="text" name="OMKod" id="OMKod" value="'.$Intezmeny['OMKod'].'" maxlength="8" />'."\n";
-        echo _ROVIDNEV .': <input type="text" name="rovidNev" id="rovidNev" value="'.$Intezmeny['rovidNev'].'" readonly="readonly" />'."\n";
-        echo _NEV.': <input type="text" name="nev" id="nev" value="'.$Intezmeny['nev'].'" />'."\n";
-	echo _FENNTARTO.': ';
+	echo '<ul>';
+        echo '<li>'._OMKOD . ': <input type="text" name="OMKod" id="OMKod" value="'.$Intezmeny['OMKod'].'" maxlength="8" />'."\n";
+        echo ' '._ROVIDNEV .': <input type="text" name="rovidNev" id="rovidNev" value="'.$Intezmeny['rovidNev'].'" readonly="readonly" style="width: 16em;" />'."</li>\n";
+        echo '<li>'._NEV.': <input type="text" name="nev" id="nev" value="'.$Intezmeny['nev'].'" maxlength="128" style="width:64em" />'."</li>\n";
+	echo '<li>'._FENNTARTO.': ';
 	echo '<select name="fenntarto">';
 	echo '<option value=""> - </option>';
 	foreach ($ADAT['fenntartok'] as $fenntarto) {
@@ -21,10 +22,16 @@
 	    echo '<option value="'.$fenntarto.'"'.$SEL.'>'.$fenntarto.'</option>';
 	}
 	echo '</select>';
+	echo '</li>';
+
+	echo '<li>';
 	if ($Intezmeny['alapertelmezett'])
 	    echo '<input type="checkbox" name="alapertelmezett" value="1" checked="checked" />' . _ALAPERTELMEZETT;
 	else
 	    echo '<input type="checkbox" name="alapertelmezett" value="1" />' . _ALAPERTELMEZETT;
+	echo '</li>';
+	echo '</ul>';
+
         echo '<input type="submit" value="'._OK.'" />'."\n";
 	formEnd();
 

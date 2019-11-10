@@ -37,7 +37,7 @@
 
     function getTankorAdatByIds($tankorIds, $SET = array('tanev' => __TANEV, 'dt' => '')) {
 
-	if (!is_array($tankorIds)) return false;
+	if (!is_array($tankorIds)|| count($tankorIds)==0) return false;
 	if (in_array('',$tankorIds)==true) {
 	    // ez előállhat akkor is, ha valamiért az órarendben NULL tankorId van (speckó óra!)
 	    // $_SESSION['alert'][] = 'message:invalid_array_value_exception:(getTankorAdatByIds:tankorIds:contains empty string)';
@@ -56,8 +56,7 @@
 		$tanev = __TANEV;
 		$felev = 1;
 	    }
-	    $q = "SELECT * FROM tankor 
-			LEFT JOIN tankorSzemeszter ON (tankor.tankorId=tankorSzemeszter.tankorId)
+	    $q = "SELECT * FROM tankor LEFT JOIN tankorSzemeszter ON (tankor.tankorId=tankorSzemeszter.tankorId)
 		WHERE tankor.tankorId IN (".implode(',', array_fill(0, count($tankorIds), '%u')).") AND tanev=%u AND szemeszter=%u";
 
 	    array_push($tankorIds, $tanev, $felev);
@@ -985,9 +984,10 @@
 	// is_resource mysqli esetén nem jó (object)
 	if (!$olr) $lr = db_connect('naplo_intezmeny'); else $lr = $olr;
 
-        // A tankör csoportjának lekérdezése
-        $q = "SELECT tankorId FROM ".__TANEVDBNEV.".tankorCsoport
-		WHERE csoportId=(SELECT csoportId FROM ".__TANEVDBNEV.".tankorCsoport
+        // A tankör csoportjának lekérdezése (egy tankor több csoportban is benne lehet)
+	// Kérdés: akkor nem ugyanaz a két csoport? :)
+        $q = "SELECT DISTINCT tankorId FROM ".__TANEVDBNEV.".tankorCsoport
+		WHERE csoportId IN (SELECT csoportId FROM ".__TANEVDBNEV.".tankorCsoport
             			    WHERE tankorId=%u)";
         $ret = db_query($q, array(
 	    'fv' => 'getTankorCsoportTankoreiByTankorId', 'modul' => 'naplo_intezmeny', 'result' => 'idonly', 'values' => array($tankorId)
@@ -1000,6 +1000,39 @@
 	return $ret;
 
     }    
+
+    function getTankorCsoportTankoreiByCsoportId($csoportId, $olr='') {
+
+	if (!$olr) $lr = db_connect('naplo'); else $lr = $olr;
+
+        $q = "SELECT tankorId FROM ".__TANEVDBNEV.".tankorCsoport WHERE csoportId =%u";
+        $ret = db_query($q, array(
+	    'fv' => 'getTankorCsoportTankoreiByCsoportId', 'modul' => 'naplo', 'result' => 'idonly', 'values' => array($csoportId)
+	), $lr);
+
+	for ($i=0; $i<count($ret); $i++) {
+	      $ret[$i] = array('tankorAdat'=>getTankorAdat($ret[$i]), 'tankorId' => $ret[$i]);
+	}
+	if (!$olr) db_close($lr);
+
+	return $ret;
+
+    }    
+
+    function getTankorCsoportByTankorId($tankorId) {
+
+	if (!$olr) $lr = db_connect('naplo'); else $lr = $olr;
+
+        $q = "SELECT csoportId,csoportNev FROM ".__TANEVDBNEV.".tankorCsoport LEFT JOIN ".__TANEVDBNEV.".csoport USING (csoportId) WHERE tankorId =%u";
+        $ret = db_query($q, array(
+	    'fv' => 'getTankorCsoportTankoreiByCsoportId', 'modul' => 'naplo', 'result' => 'indexed', 'values' => array($tankorId)
+	), $lr);
+	if (!$olr) db_close($lr);
+
+	return $ret;
+
+    }
+
 
     function getTankorLetszam($tankorId,$ADAT=array('refDt'=>'', 'tolDt'=>'', 'igDt'=>''),$olr='') {
 

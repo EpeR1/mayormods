@@ -14,6 +14,21 @@
 
 	if (isset($_POST['osztalyId']) && $_POST['osztalyId'] != '') $osztalyId = $_POST['osztalyId'];
 
+
+	if ($action == 'tankorCsoportHozzarendesTorles') {
+
+		    $HM = readVariable($_POST['hozzarendelesMegszuntetes'],'string');
+		    for ($i=0; $i<count($HM); $i++) {
+		    list($_csoportId,$_tankorId) = explode(':',$HM[$i]);
+		    $_csoportId = readVariable($_csoportId, 'numeric unsigned');
+		    $_tankorId = readVariable($_tankorId, 'numeric unsigned');
+
+		    tankorCsoportHozzarendelesTorles($_csoportId, $_tankorId);
+
+		    }
+	}
+
+
 	if (isset($osztalyId)) {
 
 	    $Tankorok = getTankorByOsztalyId($osztalyId, $tanev);
@@ -103,6 +118,8 @@
 
 	    if ($action != '') {
 
+
+
 		$CsA = getTankorCsoportByTankorIds($tankorIds);
 		$Csoportok = $csTankorIds = array();
 		foreach ($CsA as $csoportId => $csoportAdat) {
@@ -117,9 +134,15 @@
 
 	    }
 
+
+
+
 // ----------------- action --------------------- //
 
 	}
+
+
+
 
 	$ADAT['tankorCsoport'] = getTankorCsoport(); 
 	$ADAT['tankorCsoportAdat'] = getTankorCsoportAdat();

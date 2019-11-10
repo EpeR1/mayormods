@@ -1,26 +1,26 @@
 
-    form.intezmeny { background-color: rgb(40,60,120); color: white; margin: 20px; padding: 5px; }
+    form.intezmeny { background-color: rgb(40,60,120); color: white; margin: 40px; padding: 0px 0px 10px 0px; }
     form.intezmeny h2 {
         background-color: rgb(20,40,80);
         text-align: center;
-        border: white 1px dotted;
+        border: white 1px solid;
         border-width: 1px 0px;
         padding: 3px;
     }
 
-    form.ujTelephely { background-color: rgb(40,120,120); color: white; margin: 20px; padding: 5px; margin: 0px 30px 10px 30px}
+    form.ujTelephely { background-color: rgb(40,120,120); color: white; margin: 20px; padding: 0px 0px 10px 0px; margin: 0px 30px 10px 30px}
     form.ujTelephely:hover { background-color: rgb(80,160,200); }
     form.ujTelephely h2 {
 	color: white; background-color: rgb(20,80,80); text-align: center;
-        border: white 1px dotted; border-width: 1px 0px;
+        border: white 1px solid; border-width: 1px 0px;
         padding: 3px;
     }
-    form.telephely { background-color: rgb(40,120,60); color: white; margin: 20px; padding: 5px; margin: 0px 30px 10px 30px}
+    form.telephely { background-color: rgb(40,120,60); color: white; margin: 20px; padding: 0px 0px 10px 0px; margin: 0px 30px 10px 30px}
     form.telephely:hover { background-color: rgb(120,180,60); }
     form.telephely h2 {
 	color: white; background-color: rgb(20,80,40); text-align: center;
-        border: white 1px dotted; border-width: 1px 0px;
+        border: white 1px solid; border-width: 1px 0px;
         padding: 3px; 
     }
 
-
+    form.intezmeny ul li { padding: 2px; }

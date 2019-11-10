@@ -55,4 +55,5 @@ tagjait kiléptetjük, a tankör óráit a következő szemesztertől töröljü
 
     define('_TANKORCN','Megjegyzés');
 
+    define('_TANKOROK_CSOPORTBAN', 'Kapcsolódó tankörök');
 ?>

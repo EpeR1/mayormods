@@ -309,6 +309,7 @@ CREATE TABLE `tankor` (
   `max` tinyint(3) unsigned NOT NULL,
   `_tankorTipus` enum('tanórai','tanórán kívüli','első nyelv','második nyelv','egyéni foglalkozás','délutáni') COLLATE utf8_hungarian_ci DEFAULT 'tanórai',
   `tankorTipusId` int(10) unsigned DEFAULT NULL,
+  `tankorNevExtra` varchar(16) COLLATE utf8_hungarian_ci DEFAULT NULL,
   PRIMARY KEY (`tankorId`),
   KEY `tankor_FKIndex1` (`targyId`),
   CONSTRAINT `tankor_ibfk_1` FOREIGN KEY (`targyId`) REFERENCES `targy` (`targyId`) ON DELETE NO ACTION ON UPDATE NO ACTION

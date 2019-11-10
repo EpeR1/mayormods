@@ -409,7 +409,7 @@
 
 	$MENU['modules']['naplo']['stat'] = array(array('txt' => 'Látszám statisztika', 'url' => 'index.php?page=naplo&sub=stat&f=letszam'));
 	$MENU['modules']['naplo']['ertekeles'] =  array(array('txt' => 'Értékelés', 'url' => 'index.php?page=naplo&sub=ertekeles', 'rejtett' => true));
-	$MENU['modules']['naplo']['admin'] = array(array('txt' => 'Admin', 'url' => 'index.php?page=naplo&sub=admin'));
+	$MENU['modules']['naplo']['admin'] = array(array('txt' => 'Admin', 'url' => 'index.php?page=naplo&sub=admin&f=tanevek'));
 	$MENU['modules']['naplo']['koszi'] =  array(array('txt' => 'Köszi', 'url' => 'index.php?page=naplo&sub=koszi&f=kosziAdmin'));
 	$MENU['modules']['naplo']['hibabejelento'] =  array(array('txt' => 'Kérelmek', 'url' => 'index.php?page=naplo&sub=hibabejelento&f=admin', 'rejtett' => true));
 	$MENU['modules']['naplo']['hirnok'] =  array(array('txt' => 'Hírnök', 'url' => 'index.php?page=naplo&sub=hirnok&f=hirnok'));
@@ -561,14 +561,15 @@
 	    'osszesites' => array(array('txt' => 'Összesítés')),
 	);
 	$MENU['modules']['naplo']['sub']['admin'] = array(
-		'intezmenyek' => array(array('txt' => 'Intézmények')),
-		'tanevek' => array(array('txt' => 'Tanévek megnyitása, lezárása')),
-		'szemeszterek' => array(array('txt' => 'Szemeszterek')),
+		'intezmenyek' => array(array('txt' => 'Intézmények','icon'=>'icon-home')),
+		'tanevek' => array(array('txt' => 'Tanévek megnyitása, lezárása','icon'=>'icon-wrench')),
+		'szemeszterek' => array(array('txt' => 'Szemeszterek','icon'=>'icon-pencil')),
 		'fillhaladasi' => array(array('txt' => 'Haladási napló feltöltése')),
-		'import' => array(array('txt' => 'Import')),
-		'azonositok' => array(array('txt' => 'Azonosító generálás')),
-		'szuloiAzonositok' => array(array('txt' => 'Szülői azonosítók generálása')),
+		'import' => array(array('txt' => 'Közvetlen import','icon'=>'icon-ban-circle')),
+		'azonositok' => array(array('txt' => 'Azonosító generálás','icon'=>'icon-address-book')),
+		'szuloiAzonositok' => array(array('txt' => 'Szülői azonosítók generálása','icon'=>'icon-adult')),
 		'rpcPrivilege' => array(array('txt' => 'RPC jogosultságok')),
+		'kréta magic' => array(array('txt' => 'Kréta 2 MaYoR', 'icon'=>'icon-asterisk', 'url'=>'index.php?page=naplo&sub=import&f=tantargyFelosztas')),
 	);
 	$MENU['modules']['naplo']['sub']['hirnok'] =  array(
 	    'hirnok' =>array(array('txt' => 'Hírnök', 'icon'=>'icon-bullhorn')),

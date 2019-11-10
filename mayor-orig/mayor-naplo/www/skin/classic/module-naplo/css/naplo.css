@@ -57,6 +57,9 @@
     table.toolBar tr td.szemely { background-color: #5A85B8; color:white; border: solid 1px #558; padding:2px 10px; color: rgba(255,255,255,0.5);}
     table.toolBar tr td.szemely:hover { color: rgba(255,255,255,1);}
 
+    table.toolBar tr td.csoport { background-color: #5A85B8; color:white; border: solid 1px #558; padding:2px 10px; color: rgba(255,255,255,0.5);}
+    table.toolBar tr td.csoport:hover { color: rgba(255,255,255,1);}
+
 
 /* TD */
     table.toolBar td {padding: 0px;}
@@ -177,7 +180,7 @@
     }
     #toolBarHamburgerLista button.hamburgerIkon:hover {background-color: rgba(90,133,184,0.6);border: solid 1px #15477B;}
 
-    .diakNev:hover, .szuloNev:hover, .tankorAdat:hover, .tanarNev:hover, .zaroJegyAdat:hover, .jegyAdat:hover, .oraAdat:hover, .jegyzetAdat:hover, .dolgozatAdat:hover { cursor: pointer; }
+    .diakNev:hover, .szuloNev:hover, .tankorAdat:hover, .tankorCsoportAdat:hover, .tanarNev:hover, .zaroJegyAdat:hover, .jegyAdat:hover, .oraAdat:hover, .jegyzetAdat:hover, .dolgozatAdat:hover, .osztalyAdat:hover { cursor: pointer; }
     .activeElement { outline: solid 2px orange; background-color: rgba(255,255,255,0.9); }
 
     #mayorSearch a.diakNev:before, #mayorSearch a.diakNev:hover:before { content:'\e0ca'; font-family: 'Elusive-Icons'; padding-right:2px; color: rgba(100,149,237,0.4);}

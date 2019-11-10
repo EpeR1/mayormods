@@ -3,7 +3,7 @@
     form.intezmeny h2 {
 	background-color: rgb(20,40,80);
 	text-align: center;
-	border: white 1px dotted;
+	border: white 1px solid;
 	border-width: 1px 0px;
 	padding: 3px;
     }
@@ -14,4 +14,6 @@
 
     form.intezmeny fieldset p { margin-left: 50px; }
     form.intezmeny fieldset label { background-coor: red;  padding: 0px 14px 0px 0px; } 
-    form.intezmeny fieldset h3 { color: rgb(255,255,100); }
+    form.intezmeny fieldset h3 { font-weight: normal; color: #ffeb3b; }
+
+    form.intezmeny.tervezett { background-color: #2E7D32;  }

@@ -8,8 +8,9 @@
 
     /* Általános függvények a tankörbe be és kivételhez */
 
-    function tankorDiakFelvesz($ADAT) {
+    function tankorDiakFelvesz($ADAT, $olr='') {
 
+	$lr = ($olr != '') ? $olr : db_connect('naplo_intezmeny');
 
 	$tankorId = $ADAT['tankorId'];
 	$diakId = $ADAT['diakId'];
@@ -39,7 +40,7 @@
 			    $q = "SELECT  tankorId  FROM tankorDiakFelmentes WHERE tankorId IN (".implode(',',$UTKOZO_TANKORIDS).")  AND diakId=%u AND felmentesTipus='óralátogatás alól' AND nap is null AND ora is null AND
 				beDt<='%s' AND (kiDt IS NULL or kiDt >='%s')";
 			    $values = array($diakId, $tolDt, $tolDt);
-			    $FELMENTETTTANKORIDS = db_query($q, array('fv' => 'tankorDiakFelvesz', 'modul' => 'naplo_intezmeny', 'result' => 'indexed', 'values' => $values));
+			    $FELMENTETTTANKORIDS = db_query($q, array('fv' => 'tankorDiakFelvesz', 'modul' => 'naplo_intezmeny', 'result' => 'indexed', 'values' => $values), $lr);
 			    for ($j=0; $j<count($FELMENTETTTANKORIDS); $j++) {
 				$_tankorId = $FELMENTETTTANKORIDS[$j];
 			    }
@@ -58,18 +59,22 @@
 	//---
 
 	// Ellenőrizzük a tankörlétszámot és maximumot (csak ref dátumra...)
-	if (_checkTankorMinMax($tankorId,array('diff'=>1,'refDt'=>$ADAT['tolDt'])) == 'tankor_max_reached')
-	{
-	    $_SESSION['alert'][] = 'info:tankor_max_reached';
-	    return false;
+	if ($ADAT['NO_MIN_CONTROL'] !== true) {
+	    if (_checkTankorMinMax($tankorId,array('diff'=>1,'refDt'=>$ADAT['tolDt'])) == 'tankor_max_reached')
+	    {
+		$_SESSION['alert'][] = 'info:tankor_max_reached';
+		return false;
+	    }
 	}
 	//--
 
 	// Main()
 	{
-	    tankorDiakTorol( array('tankorIds'=>$TankorIds, 'diakId'=> $diakId, 'tolDt'=> $tolDt,'igDt'=> $igDt, 'utkozes'=>'nemEllenoriz', 'MIN_CONTROL'=>false) );	
+
+	    tankorDiakTorol( array('tankorIds'=>$TankorIds, 'diakId'=> $diakId, 'tolDt'=> $tolDt,'igDt'=> $igDt, 'utkozes'=>'nemEllenoriz', 'MIN_CONTROL'=>false), $lr );
 
 	    $v = array();
+
 	    for ($i = 0; $i < count($TankorIds); $i++) {
 		$_tankorId = $TankorIds[$i];		
 		//$_kovetelmeny = $TankorAdat[$_tankorId]['kovetelmeny']; // vagy nem ez. diák statusatol is függ...
@@ -81,8 +86,10 @@
 		$V[] = "(%u, %u, '%s', NULLIF('%s',''))";
 	    }
 	    $q = "INSERT INTO tankorDiak (tankorId,diakId,beDt,kiDt) VALUES ". implode(',',$V);
-	    db_query($q, array('fv' => 'tankorDiakFelvesz', 'modul' => 'naplo_intezmeny', 'values' => $v) );
+	    db_query($q, array('fv' => 'tankorDiakFelvesz', 'modul' => 'naplo_intezmeny', 'values' => $v), $lr );
     	}
+
+	if ($olr=='') db_close($lr);
 
     }
 
@@ -192,7 +199,6 @@
 		MIN_CONTROL - true/false
 		tolDt, igDt
 	*/
-
 
 	// esetleges külső tranzakciókhoz!
 	$lr = ($olr != '') ? $olr : db_connect('naplo_intezmeny');

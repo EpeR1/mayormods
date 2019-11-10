@@ -92,7 +92,7 @@
 		    }
 		} else {
 		    // insert
-		    $tankorNev = _createName($M, array($M['tanev'].'/'.$M['szemeszter']), $tankorNevek[$M['tankorId']]);
+		    $tankorNev = _createName($M, array($M['tanev'].'/'.$M['szemeszter']), $tankorNevek[$M['tankorId']]); // todo setTankorNev() függvénnyel inkább, tankor.tankorNevExtra
 		    if ($tankorNev != '') {
 			array_push($v, $M['tankorId'], $M['tanev'], $M['szemeszter'], $M['oraszam'], $tankorNev);
 			$Values[] = "(%u, %u, %u, %f, '%s')";

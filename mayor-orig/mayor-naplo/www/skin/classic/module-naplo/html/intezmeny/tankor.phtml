@@ -28,7 +28,12 @@
 
 	global $TANKOR_TIPUS;
 	/* $TOPOST['tankoradat'] */
-    
+
+	$tankorNevExtra = $TOPOST['tankoradat']['tankorNevExtra'];
+	if ($tankorNevExtra!='' && !in_array($tankorNevExtra,array_values($TANKOR_TIPUS))) {
+	    $TANKOR_TIPUS[$tankorNevExtra] = $tankorNevExtra;
+	}
+
 	if (!is_array($TARGY)) return false;
 	    $SZEMCHECK = array();
 	    for ($i=0; $i<count($TOPOST['szemeszterek']); $i++) {
@@ -87,10 +92,10 @@
 		    $_tipus=$TOPOST['tankoradat']['tipus'];
 	    }
 	    echo '<select name="tipus">';
-	    foreach ($TANKOR_TIPUS as $_k=>$_v) {
-		$_SEL = ($_v==$_tipus) ? ' selected="selected"':'';
-		echo '<option value="'.$_v.'"'.$_SEL.'>'.$_k.' - '.$_v.'</option>';
-	    }
+		foreach ($TANKOR_TIPUS as $_k=>$_v) {
+		    $_SEL = ($_v==$_tipus) ? ' selected="selected"':'';
+		    echo '<option value="'.$_v.'"'.$_SEL.'>'.$_k.' - '.$_v.'</option>';
+		}
 	    echo '</select>';
 	    if (defined('__AKG_TANKORNEV') && __AKG_TANKORNEV === true) {
 		echo '<input type="checkbox" name="tankorNevMegorzes" value="true" />';
@@ -133,7 +138,7 @@
 	    echo '</td>';
 if (count($TOPOST['tankorcsoport']['idk'])>1) {
 	    echo '<td rowspan="5" class="tankorCsoportok">';
-	    echo '<div class="header">'._TANKORCSOPORTOK.'</div>';
+	    echo '<div class="header">'._TANKOROK_CSOPORTBAN.'</div>';
 	    echo '<ul>';
 	    for ($i=0; $i<count($TOPOST['tankorcsoport']['idk']); $i++){
 		$_TA = $TOPOST['tankorcsoport']['adat'][$TOPOST['tankorcsoport']['idk'][$i]][0];
@@ -204,22 +209,32 @@ if (count($TOPOST['tankorcsoport']['idk'])>1) {
 */	    echo '</td>';
 
 	echo '</tr>';
-/* REV 2185++ - tól nem kell, nem lehet. A típus determinál 
-	echo '<tr>';
 
-	    echo '<th>'._JELENLET.'</th>';
-	    
+	echo '<tr>';
+	    echo '<th>'._TANKORCSOPORTOK.' '.$ADAT['tanev'];
+	    echo '</th>';
 	    echo '<td>';
-	    if (isset($TOPOST['tankoradat']['jelenlet'])) $_CHK[$TOPOST['tankoradat']['jelenlet']] = ' checked="checked"';
-	    else $_CHK['kötelező'] = ' checked="checked"';
-	    echo '<label for="jelKot">'._KOTELEZO.'</label>';
-	    echo '<input type="radio" id="jelKot" name="jelenlet" value="kötelező" '.$_CHK['kötelező'].' />';
-	    echo '<label for="jelNemKot">'._NEMKOTELEZO.'</label>';
-	    echo '<input type="radio" id="jelNemKot" name="jelenlet" value="nem kötelező" '.$_CHK['nem kötelező'].' />';
+	    if ($ADAT['tanev'] == __TANEV) {
+		echo '<select name="csoportId" style="width:200px;">';
+		    echo '<option>-</option>';
+		    for ($i=0; $i<count($ADAT['tankorCsoportok']); $i++) {
+			$CS = $ADAT['tankorCsoportok'][$i];
+			echo '<option value="'.$CS['csoportId'].'">'.$CS['csoportNev'].'</option>';
+		    }
+		echo '</select>';
+		echo '<input type="submit" />';
+		for ($i=0; $i<count($ADAT['tankorTankorCsoportjai']); $i++) {
+		    $CS = $ADAT['tankorTankorCsoportjai'][$i];
+		    echo '<span class="tankorCsoportAdat" data-tankorcsoportid="'.$CS['csoportId'].'">'.$CS['csoportNev'].'</span>';
+		}
+
+
+	    } else {
+		echo 'Nem módosítható';
+	    }
 	    echo '</td>';
-	    
 	echo '</tr>';
-*/
+
 	echo '</table>';
 	echo '<input type="hidden" id="jelKot" name="jelenlet" value="kötelező" />';
 	
@@ -259,7 +274,7 @@ if (count($TOPOST['tankorcsoport']['idk'])>1) {
 	    echo '</table>'."\n\n";
 
 	    echo '<h2>'._RESZTVEVO_OSZTALYOK.'</h2>';
-	    echo '<table>';
+	    echo '<table class="osztalyok">';
 	    echo '<tr><th>'._OSZTALYJELE.'</th><th></th><th>'._LEIRAS.'</th></tr>'."\n";
 	    for ($i=0; $i<count($OSZTALY); $i++) {
 		if (is_array($ADAT['tankorOsztalyok']) && in_array($OSZTALY[$i]['osztalyId'],$ADAT['tankorOsztalyok'])) $_class="vanTag"; else $_class="";

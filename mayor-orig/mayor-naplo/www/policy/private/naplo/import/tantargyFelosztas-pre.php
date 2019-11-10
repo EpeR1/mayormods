@@ -1,7 +1,61 @@
 <?php
 
-    if (_RIGHTS_OK !== true) die();
+    if (__PORTAL_CODE!=='vmg') die();
 
+    $IMPORT_FILES = array(
+	'csoportba_jaro_tanulok' => _DATADIR.'/'."csoportba_jaro_tanulok.tsv",
+	'osztalyba_jaro_tanulok' => _DATADIR.'/'."osztalyba_jaro_tanulok.tsv",
+	'tantargyfelosztas' => _DATADIR.'/'."ttfimport.tsv",
+	'orarendiOra' => _DATADIR.'/'."orarendiOra.tsv",
+	'helyettesitett_tanorak' => _DATADIR.'/'."helyettesitett_tanorak.tsv",
+//	'elmaradt_tanorak' => _DATADIR.'/'."helyettesitett_tanorak.tsv",
+    );
+
+/*
+
+1. Nyilvántartás, Tanulói Adatok, Csoportok, Exportálás, Csoportba Járó tanulók
+
+    _DATADIR.'/'."csoportba_jaro_tanulok.tsv"
+
+    Csoportba Járó Tanulók:
+    Csoport neve	Név	Oktatási azonosító	Osztály
+    99.9.énekkar-C	Allardyce Lilla Rose	71624405564	12.C
+    99.9.énekkar-C	Andrássy Blanka Éva	71614703894	12.C
+    99.9.énekkar-C	Árva Janka	72463346174	09.C
+
+2. Nyilvántartás, Tanulói Adatok, Osztályok, Exportálás, Osztályba járó tanulók
+
+    _DATADIR.'/'."osztalyba_jaro_tanulok.tsv"
+
+    Osztályba Járó Tanulók:
+    Osztály	Név	Oktatási azonosító
+    07.A	Ambrus Dániel	72644951895
+    07.A	Apjok Balázs	72719658348
+    07.A	Bärnkopf Janka Katalin	72660367200
+
+3. Nyilvántartás, Oktatói Adatok, Tantárgyfelosztás, Export (egyszerű)
+
+    _DATADIR.'/'."ttfimport.tsv"
+
+    Tantárgyfelosztás:
+    Osztály	Csoport	Tantárgy	Óraszám	Tanár	Összevont óra
+    12.C	12.c.m+t	dráma	1,00	Széles Zsuzsanna	Nem
+    10.E		fizika	2,00	Antal Erzsébet	Nem
+    10.2.n.djpr	német nyelv	4,00	Dobrosi-Jelinek Piroska Rita	Nem
+    12.2.n.djpr	német nyelv	3,00	Dobrosi-Jelinek Piroska Rita	Nem
+    11.D		dráma	1,00	Dobrosi-Jelinek Piroska Rita	Nem
+
+4. e-Napló, Tanórák Listája, Excel Export (jobb oldali gomb)
+
+    _DATADIR.'/'."orarendiOra.tsv
+
+    2019.09.02      1       1       Pintér László (mat)             07.B    osztályfőnöki   Tanévnyitó-Margitsziget 2019.09.02
+    2019.09.02      2       2       Pintér László (mat)             07.B    osztályfőnöki   Tanévnyitó-Margitsziget 2019.09.02
+
+*/
+
+
+    if (_RIGHTS_OK !== true) die();
 
     if (!__NAPLOADMIN) {
         $_SESSION['alert'][] = 'page:insufficient_access';
@@ -17,23 +71,15 @@
         require_once('include/modules/naplo/share/osztaly.php');
 
         require_once('include/modules/naplo/intezmeny/tankor.php');
+        require_once('include/modules/naplo/haladasi/helyettesites.php');
+
         require_once('include/modules/naplo/share/tankorModifier.php');
         require_once('include/modules/naplo/share/tankorDiakModifier.php');
-
+        require_once('include/modules/naplo/share/ora.php');
+        require_once('include/modules/naplo/share/oraModifier.php');
 
 	$selectedTargyId = $ADAT['selectedTargyId'] = readVariable($_POST['selectedTargyId'],'id');
 	$selectedTanarId = $ADAT['selectedTanarId'] = readVariable($_POST['selectedTanarId'],'id');
-
-	// dump(get_defined_constants(TRUE));
-
-/*
-        if ($action == 'upload') {
-	    // ez csak képek feltöltésére jó sajnos:
-            // mayorFileUpload(array('subdir'=>_DATADIR.'/','filename'=>'ttfimport.tsv'));
-        } elseif (isset($_POST['fileName']) && $_POST['fileName'] != '') {
-
-	}
-*/
 
 	$q = "SELECT szemeszterId FROM szemeszter WHERE tanev=%u";
 	$v = array(__TANEV);
@@ -80,7 +126,7 @@
 	    '10.B' => 106,
 	    '10.C' => 120,
 	    '10.D' => 121,
-	    '10.E' => 122,
+	    '10.E' => 112,
 	    '11.A' => 95,
 	    '11.B' => 96,
 	    '11.C' => 110,
@@ -94,7 +140,7 @@
 	);
 
 
-	$fn = fopen(_DATADIR.'/'."ttfimport.tsv","r");
+	$fn = fopen($IMPORT_FILES['tantargyfelosztas'],"r");
 	while(! feof($fn))  {
 	    /*
 		0 => string '12.C' (length=4)
@@ -120,7 +166,7 @@
 	#	tankorosztaly kitalálás:
 	#	DIÁK1 -(import)-> kretaOsztalyNev -(osztalyNaplo)-> osztalyId
 
-	$fn = fopen(_DATADIR.'/'."osztalyba_jaro_tanulok.tsv","r");
+	$fn = fopen($IMPORT_FILES['osztalyba_jaro_tanulok'],"r");
 	while(! feof($fn))  {
 	    $line = (fgets($fn));
 	    if (ord($line[0]) == 32) $line = "\t".trim($line);
@@ -156,13 +202,9 @@
 	########################################################£
 
 	#Csoportba Járó Tanulok:
-
-#0 => string '99.9.énekkar-C' (length=15)
-#1 => string 'Andrássy Blanka Éva' (length=21)
-#2 => string '71614703894' (length=11)
-#3 => string '12.C' (length=4)
 	
-	$fn = fopen(_DATADIR.'/'."csoportba_jaro_tanulok.tsv","r");
+	$fn = fopen($IMPORT_FILES['csoportba_jaro_tanulok'],"r");
+
 	while(! feof($fn))  {
 	    $line = (fgets($fn));
 	    if (ord($line[0]) == 32) $line = "\t".trim($line);
@@ -229,6 +271,49 @@
 
 
 	if ($action == 'do') {
+	    $lr_intezmeny = db_connect('naplo_intezmeny');
+
+	    // echo '<input type="checkbox" name="nevsorSzinkronFelulir[]" value="'.$D['csoportId'].':####:'.$D['tankorId'].'" />névsor felülír import alapján';
+	    for ($i=0; $i<count($_POST['nevsorSzinkronFelulir']); $i++) {
+		list($csoportId,$tankorId) = explode(':####:',$_POST['nevsorSzinkronFelulir'][$i]);
+		if ($csoportId>0 && $tankorId>0) {
+		    $csoportNev = $TANKORCSOPORTID2CSOPORTNEV[$csoportId];
+		    $_tankorNevExtra = ($csoportNev!='') ? '('.$csoportNev.')' : '';
+		    ## 1. lezár
+			$_TANKORDIAK = getTankorDiakjai($tankorId, $lr_intezmeny);
+			for ($j=0; $j<count($_TANKORDIAK['idk']); $j++) {
+			    $_diakId = $_TANKORDIAK['idk'][$j];
+			    if ($_diakId>0) {
+				$DIAKLEZAR = array(
+				    'tankorId' => $tankorId,
+				    'diakId' => $_diakId,
+				    'tolDt' => $_TANEV['kezdesDt'],
+				    'igDt' => null,
+				    'utkozes' => 'ellenorzes' // 'nemEllenoriz', 'torles' -- a kilépést nem csináljuk meg, ha van jegye, hiányzása!
+				);
+				tankorDiakTorol($DIAKLEZAR, $lr_intezmeny);
+			    }
+			}
+		    ## 2. felvesz
+			for ($j=0; $j<count($CSOPORTADAT[$csoportNev]['diakIds']); $j++) {
+			    $_diakId = $CSOPORTADAT[$csoportNev]['diakIds'][$j];
+			    if ($_diakId>0) {
+				$UJTANKORDIAK = array(
+					'tankorId'=>intval($tankorId),
+					'tolDt'=>$_TANEV['kezdesDt'],
+					'igDt'=>$_TANEV['zarasDt'],
+					'jovahagyva'=>1,
+					'diakId' => intval($_diakId),
+					'NO_MIN_CONTROL' => true
+				);
+				tankorDiakFelvesz($UJTANKORDIAK, $lr_intezmeny); // -- TODO lr
+			    }
+			}
+			setTankorNev($tankorId, $_tankorNevExtra, $lr_intezmeny);
+			// setTankorNevByDiakok($tankorId, $tankorNevExtra = null, $olr = null);  // ha a nevsorok szinkronban vannak
+		    ##
+		}
+	    }
 	    for ($i=0; $i<count($_POST['ujTankor']); $i++) {
 		list($csoportId,$tanarId,$osztalyIds,$targyId,$szemeszter_oraszam,$csoportNev) = explode(':####:',$_POST['ujTankor'][$i]);
 		$_osztalyIds = explode(',',$osztalyIds);
@@ -237,6 +322,7 @@
 		if ($csoportId>0 && $tanarId>0 && count($_osztalyIds)>0 && $targyId>0) {
 		    // TODO létre kell hozni a tankört majd beléptetni a csoportId - be és a tankortanárba (lásd később)
 		    // 1. új tankör
+			$_tankorNevExtra = ($csoportNev!='') ? '('.$csoportNev.')' : '';
 			$UJTANKOR = array(
 			    'tanev'=>__TANEV,
 			    'targyId'=>$targyId,
@@ -254,8 +340,12 @@
 			    $UJTANKOR[$k] = $v;
 			}
 
-			$tankorId = ujTankor($UJTANKOR);
-			setTankorNev($tankorId, '('.$csoportNev.')', null);
+			$tankorId = ujTankor($UJTANKOR) or die('FATAL ERROR'.serialize($UJTANKOR));
+			if ($tankorId<=0) {
+			    echo '!fatal error';
+			    var_dump($UJTANKOR);
+			}
+			setTankorNev($tankorId, $_tankorNevExtra, null);
 		    // 2. tankorcsoport
 			$q = "insert ignore into tankorCsoport (tankorId,csoportId) VALUES (%u,%u)";
 			$v = array($tankorId,$csoportId);
@@ -265,9 +355,6 @@
 			tankorTanarModosit($tankorId, $tanarId, array('tanev'=>__TANEV,'tanevAdat'=>$_TANEV, 'tolDt'=>$_TANEV['kezdesDt'], 'igDt'=>$_TANEV['zarasDt']));
 		    
 		    // 4. tagok
-			// setTankorNevByDiakok($tankorId, $tankorNevExtra = null, $olr = null);  // ha a nevsorok szinkronban vannak
-			// setTankorNev($tankorId, null, null);
-
 			for ($j=0; $j<count($CSOPORTADAT[$csoportNev]['diakIds']); $j++) {
 			    $_diakId = $CSOPORTADAT[$csoportNev]['diakIds'][$j];
 			    if ($_diakId>0) {
@@ -276,12 +363,14 @@
 					'tolDt'=>$_TANEV['kezdesDt'],
 					'igDt'=>$_TANEV['zarasDt'],
 					'jovahagyva'=>1,
-					'diakId' => intval($_diakId)
+					'diakId' => intval($_diakId),
+					'NO_MIN_CONTROL' => true
 				);
 				tankorDiakFelvesz($UJTANKORDIAK);
 			    }
 			}
-			setTankorNev($tankorId, '('.$csoportNev.')', null);
+			setTankorNev($tankorId, $_tankorNevExtra, $lr_intezmeny);
+			// setTankorNevByDiakok($tankorId, $tankorNevExtra = null, $olr = null);  // ha a nevsorok szinkronban vannak
 		}
 	    }
 	    for ($i=0; $i<count($_POST['tankor2csoport']); $i++) {
@@ -300,7 +389,7 @@
 			// Óraszám update
 			$q = "update tankorSzemeszter set oraszam=%f where tankorId=%u AND tanev=%u";
 			$v = array(floatval($oraszam),intval($tankorId),__TANEV);
-			db_query($q, array('fv' => 'csoportinsert', 'modul' => 'naplo_intezmeny', 'values' => $v));
+			db_query($q, array('fv' => 'csoportinsert', 'modul' => 'naplo_intezmeny', 'values' => $v), $lr_intezmeny);
 			
 			// A csoporttagság frissítése
 			$csoportNev = $TANKORCSOPORTID2CSOPORTNEV[$csoportId];
@@ -317,13 +406,13 @@
 				tankorDiakFelvesz($UJTANKORDIAK);
 			    }
 			}
-			setTankorNev($tankorId, '('.$csoportNev.')', null);
+			setTankorNev($tankorId, '('.$csoportNev.')', $lr_intezmeny);
 
 		    }
 
 	    }
 	
-
+	    db_close($lr_intezmeny);
 	}
 
 
@@ -353,24 +442,6 @@
 //	}
 
 //	dump($ADAT['osztalyDiak']);
-
-## az összegyűjtott adatok alapján az végeredmény
-/*
-array (size=11)
-  0 => string '' (length=0)
-  1 => string '12.6.m.va3' (length=10)
-  2 => string 'matematika' (length=10)
-  3 => string '3,00' (length=4)
-  4 => string 'Volf Annamária' (length=15)
-  5 => string 'Nem' (length=3)
-  'oraszam' => float 3
-  'targyId' => int 6
-  'tankorCsoport' => 
-    array (size=1)
-      0 => string '4368' (length=4)
-  'tanarId' => string '131' (length=3)
-  'tankorCn' => string ':4368&6&131&3' (length=13)
-*/
 
 	for ($i=0; $i<count($ADAT['ttf']); $i++) {
 	    $ADAT['ttf'][$i]['oraszam'] = floatval(str_replace(',','.',$ADAT['ttf'][$i][3]));
@@ -424,23 +495,35 @@ AND csoportNev = '%s'
 GROUP BY tankor.tankorId";
 		$v = array(__TANEV,1,$_D['targyId'],$_D['oraszam'],$_D['tanarId'],$_D['csoportNev']);
 		$r = db_query($q,array('modul'=>'naplo_intezmeny','values'=>$v,'result'=>'indexed'));
+
 		if (count($r) == 1) {
 		    // echo 'OK, a talált tankör';
 		    $_D['tankorId'] = $r[0]['tankorId'];
 		    $_D['action'] = 'done';
 		} elseif (count($r)>1) {
-		    // ha van legalább egy találat, akkor kihagyjuk ezt a sort, esetleg megjegyezhetjuk, hogy neki már ezek a párjai lehetnek/vannak
-		    // echo 'több találat van';
-		    // specifikálni kell tovább (pl. van csoporthozzárendelés?) ugyanolyan?
 		    $_D['action'] = 'tankorHozzarendel';
 		    // ha nincs
 		    for ($j=0; $j<count($r); $j++) {
 			$_D['displayTankor'][] = $r[$j];
 		    }
 		} else {
+
+// Belerakjuk azon tanköröket is, ahol vélhetően csak a csoport hozzárendelés hiányzik
+		$q = "select *,tankorSzemeszter.tankorId AS tankorId from tankorSzemeszter 
+LEFT JOIN tankor USING (tankorId)
+LEFT JOIN tankorTanar ON (tankorTanar.tankorId=tankor.tankorId AND beDt<=NOW() AND (kiDt is null or kiDt>=NOW())) 
+LEFT JOIN ".__TANEVDBNEV.".tankorCsoport ON (tankor.tankorId = tankorCsoport.tankorId)
+LEFT JOIN ".__TANEVDBNEV.".csoport USING (csoportId)
+WHERE tanev=%u AND szemeszter=%u AND targyId=%u AND oraszam=%f AND tanarId=%u
+AND csoportNev IS NULL	
+GROUP BY tankor.tankorId";
+		$v = array(__TANEV,1,$_D['targyId'],$_D['oraszam'],$_D['tanarId']);
+		$rx = db_query($q,array('modul'=>'naplo_intezmeny','values'=>$v,'result'=>'indexed'));
+		    for ($j=0; $j<count($rx); $j++) {
+			$_D['displayTankor'][] = $rx[$j];
+		    }
+
 		    // Ha nincs találat, ezek a tankörök felelhetnek még meg:
-		    //  nincs még tanár hozzárendelve:
-		    // select * from tankorSzemeszter LEFT JOIN tankor USING (tankorId) LEFT JOIN tankorTanar ON (tankorTanar.tankorId=tankor.tankorId AND beDt<=NOW() AND (kiDt is null or kiDt>=NOW())) WHERE tanev=2019 AND szemeszter=1 AND targyId=6 AND oraszam=5 AND tanarId IS NULL GROUP BY tankor.tankorId ;
 		    $_M = array();
 		    if (is_array($ADAT['csoportAdat'][$_D[0]]['osztalyok']) && is_array($ADAT['csoportAdat'][$_D[1]]['osztalyok'])) {
 			$_M = array_merge(
@@ -457,7 +540,7 @@ GROUP BY tankor.tankorId";
 
 		    if (!is_array($_M) || count($_M)==0 || is_null($_M)) {
 			$_M = array(0);
-			$_SESSION['alert'][] = 'info:nincsenek osztályok:'.serialize($_D);
+			// $_SESSION['alert'][] = 'info:import_nincsenek osztályok:'.serialize($_D);
 		    }
 		    $q = "select *,tankorSzemeszter.tankorId AS tankorId from tankorSzemeszter 
 LEFT JOIN tankor USING (tankorId) 
@@ -510,42 +593,153 @@ GROUP BY tankor.tankorId ORDER BY tankorNev";
 	// ami a csoportban levő legbővebb halmazúvá teszi a névsorokat
     }
 
+
+    ////////////////////////////////////////////////////ORA
+
+    // dt, ora, ki, kit, tankorId, teremId, leiras, tipus, eredet, feladatTipusId, munkaido, modositasDt
+
+    // https://klik035242001.e-kreta.hu/Orarend/TanoraKereso --> TanoraTablazat
+    /*
+      0 => string '2019.09.02' (length=10)
+      1 => string '1' (length=1) ora
+      2 => string '1' (length=1) oraszam
+      3 => string 'Pintér László (mat)' (length=22) tanár vagy(!) helyettesítő
+      4 => string '' (length=0)
+      5 => string '07.B' (length=4) csoport
+      6 => string 'osztályfőnöki' (length=16) targy
+      7 => string 'Tanévnyitó-Margitsziget' (length=25) leiras
+      8 => string '2019.09.02' (length=10)
+    */
+
+    // MaYoR: csoportId+targyId+tanarId => tankorId;
+
+    $lr_naplo = db_connect('naplo');
+
+    $q = "select csoportId, targyId, tanarId, tankor.tankorId FROM tankorCsoport LEFT JOIN csoport USING (csoportId) LEFT JOIN intezmeny_vmg.tankor USING (tankorId) LEFT JOIN intezmeny_vmg.tankorTanar ON (tankor.tankorId = tankorTanar.tankorId AND beDt>='2019-09-01' AND (kiDt IS NULL or kiDt>=NOW()))";
+    $r = db_query($q, array('fv' => 'pre', 'modul' => 'naplo', 'values' => $v, 'result'=>'indexed'),$lr_naplo);
+    for ($i=0; $i<count($r); $i++) {
+	$d = $r[$i];
+	$TRIPLE2TANKOR[$d['csoportId']][$d['targyId']][$d['tanarId']] = $d['tankorId'];
+    }
+
+    //  dump($TRIPLE2TANKOR);
+	$fn = fopen($IMPORT_FILES['orarendiOra'],"r");
+
+	while(! feof($fn))  {
+	    $line = (fgets($fn));
+	    if (ord($line[0]) == 32) $line = "\t".trim($line);
+	    else $line = trim($line);
+	    $result = explode("\t",$line);
+	    // $X[] = $result;
+	    if ($TRIPLE2TANKOR[$CSOPORT2ID[$result[5]]][$KRETATARGYNEV2TARGYID[$result[6]]][$TANAR2ID[$result[3]]]>0) {
+		$X = array(
+		'dt'=>str_replace('.','-',$result[0]),
+		'ora' => $result[1],
+		'_csoportId' => $CSOPORT2ID[$result[5]],
+		'_targyId' => $KRETATARGYNEV2TARGYID[$result[6]],
+		'ki' => $TANAR2ID[$result[3]],
+		'tankorId' => $TRIPLE2TANKOR[$CSOPORT2ID[$result[5]]][$KRETATARGYNEV2TARGYID[$result[6]]][$TANAR2ID[$result[3]]],
+		'teremId' => null,
+		'leiras' => $result[7],
+		'tipus' => 'normál',
+		'eredet' => 'órarend',
+		'munkaido'=>'lekötött'
+		);
+		// ora kulcs (dt+ora+ki+tankorId)
+		// ha van bent leiras nelkuli, kitolthetjuk
+		$q = "UPDATE ora SET leiras ='%s' WHERE dt='%s' AND ora=%u AND ki=%u AND tankorId=%u AND (leiras IS NULL or leiras='')";
+		$v = array($X['leiras'],$X['dt'],$X['ora'],$X['ki'],$X['tankorId']);
+		db_query($q, array('fv' => 'pre', 'modul' => 'naplo', 'values' => $v, 'result'=>'insert'), $lr_naplo);
+		// ha van bent leirasos, skippelhetjuk
+
+		$q = "SELECT count(*) AS db FROM ora WHERE dt='%s' AND ora=%u AND ki=%u AND tankorId=%u";
+		$v = array($X['dt'],$X['ora'],$X['ki'],$X['tankorId']);
+		$db = db_query($q, array('fv' => 'pre', 'modul' => 'naplo', 'values' => $v, 'result'=>'value'), $lr_naplo);
+		if ($db!==false && $db==0) {
+		    ujOraFelvesz($X,$lr_naplo);
+		}
+
+	    } // lehet, hogy nincs megfeleltetés, és az is, hogy helyettesített óra volt. Ezt külön file tartalmazza!
+	}
+	fclose($fn);
+
+	$ORATIPUSCONVERT = array(
+	'Nem szakszerű helyettesítés (felügyelet)' => 'felügyelet',
+	'Óraösszevonás' =>'összevonás',
+	'Szakszerű helyettesítés'=>'helyettesítés',
+	);
+
+
+	$fn = fopen($IMPORT_FILES['helyettesitett_tanorak'],"r");
+// --TODO
 /*
-Csoportba Járó Tanulók:
-
-Csoport neve	Név	Oktatási azonosító	Osztály
-99.9.énekkar-C	Allardyce Lilla Rose	71624405564	12.C
-99.9.énekkar-C	Andrássy Blanka Éva	71614703894	12.C
-99.9.énekkar-C	Árva Janka	72463346174	09.C
-
-Osztályba Járó Tanulók:
-
-Osztály	Név	Oktatási azonosító
-07.A	Ambrus Dániel	72644951895
-07.A	Apjok Balázs	72719658348
-07.A	Bärnkopf Janka Katalin	72660367200
-
-Tantárgyfelosztás:
-
-Osztály	Csoport	Tantárgy	Óraszám	Tanár	Összevont óra
-12.C	12.c.m+t	dráma	1,00	Széles Zsuzsanna	Nem
-10.E		fizika	2,00	Antal Erzsébet	Nem
-10.2.n.djpr	német nyelv	4,00	Dobrosi-Jelinek Piroska Rita	Nem
-12.2.n.djpr	német nyelv	3,00	Dobrosi-Jelinek Piroska Rita	Nem
-11.D		dráma	1,00	Dobrosi-Jelinek Piroska Rita	Nem
-
+  0 => string '2019. 09. 04. 10:00' (length=19)
+  1 => string 'Szerda' (length=6)
+  2 => string '3' (length=1)
+  3 => string 'Elmaradt óra' (length=13)
+  4 => string 'Takácsi-Nagyné Past Zsuzsanna' (length=31)
+  5 => string 'Balkayné Kalló Ágnes Zsófia' (length=31)
+  6 => string 'Nem szakszerű helyettesítés (felügyelet)' (length=44)
+  7 => string '07.a.e.tnpzs' (length=12)
+  8 => string 'etika/hit- és erkölcstan' (length=26)
+  9 => string '111' (length=3)
+  10 => string 'Megtartott óra' (length=15)
+  11 => string '-' (length=1)
+  12 => string 'Tanóra' (length=7)
 */
+/*
+	while(! feof($fn))  {
+	    $line = (fgets($fn));
+	    if (ord($line[0]) == 32) $line = "\t".trim($line);
+	    else $line = trim($line);
+	    $result = explode("\t",$line);
+	    // $X[] = $result;
+dump($result);
+	    if (($_tankorId = $TRIPLE2TANKOR[$CSOPORT2ID[$result[7]]][$KRETATARGYNEV2TARGYID[$result[8]]][$TANAR2ID[$result[4]]])>0) { //csoport-targy-tanar
+		$_dt = str_replace('. ','-',substr($result[0],0,12));
+		$_ora = $result[2];
+		$_ki = $TANAR2ID[$result[5]];
+		$_kit = $TANAR2ID[$result[4]];
+		$_leiras = $result[11];
+		$_tipus = $ORATIPUSCONVERT[$result[6]];
+		$_eredet = 'órarend';
 
+		$q = "SELECT * FROM ora WHERE dt='%s' AND ora=%u AND tankorId=%u";
+		$v = array($_dt,$_ora,$_tankorId);
+		$oraId = db_query($q, array('debug'=>true,'fv' => 'pre', 'modul' => 'naplo', 'values' => $v, 'result'=>'value'), $lr_naplo);
+		if ($oraId>0) { // van már óra
 
-//   $TOOL['tanevSelect'] = array('tipus'=>'cella','paramName' => 'tanev',
-//        'tervezett' => true,
-//        'post' => array('mkId','targyId','tankorId'));
-//    $TOOL['munkakozossegSelect'] = array('tipus'=>'cella','paramName' => 'mkId', 'post' => array('tanev'));
+		} else {
+		    $FEL = array('dt'=>$_dt,'ora'=>$_ora,'ki'=>$_kit,'tipus'=>'normál','eredet'=>$_eredet,'tankorId'=>$_tankorId);
+		    $_oraId = ujOraFelvesz($FEL,$lr_naplo);
+		    $_oraAdat = getOraAdatById($_oraId,$lr_naplo);
+		    helyettesitesRogzites($_ki.'/'.$_oraId.'/'.$_tipus);
+		    updateHaladasiNaploOra($_oraId, $_leiras, 0, '', $_ki, $lr_naplo);
+		}
+		// ora kulcs (dt+ora+ki+tankorId)
+		// ha van bent leiras nelkuli, kitolthetjuk
+		$q = "UPDATE ora SET leiras ='%s' WHERE dt='%s' AND ora=%u AND ki=%u AND tankorId=%u AND (leiras IS NULL or leiras='')";
+		$v = array($X['leiras'],$X['dt'],$X['ora'],$X['ki'],$X['tankorId']);
+		db_query($q, array('fv' => 'pre', 'modul' => 'naplo', 'values' => $v, 'result'=>'insert'), $lr_naplo);
+		// ha van bent leirasos, skippelhetjuk
+
+		$q = "SELECT count(*) AS db FROM ora WHERE dt='%s' AND ora=%u AND ki=%u AND tankorId=%u";
+		$v = array($X['dt'],$X['ora'],$X['ki'],$X['tankorId']);
+		$db = db_query($q, array('fv' => 'pre', 'modul' => 'naplo', 'values' => $v, 'result'=>'value'), $lr_naplo);
+		if ($db!==false && $db==0) {
+		    ujOraFelvesz($X,$lr_naplo);
+		}
+
+	    } // lehet, hogy nincs megfeleltetés, és az is, hogy helyettesített óra volt. Ezt külön file tartalmazza!
+	}
+*/
+	fclose($fn);
+    db_close($lr_naplo);
+
+    ##################################################################################
+
     $TOOL['targySelect'] = array('tipus'=>'cella', 'paramName' => 'selectedTargyId');
-//    $TOOL['diakSelect'] = array('tipus'=>'sor','paramName'=>'diakId', 'post'=>array());
     $TOOL['tanarSelect'] = array('tipus'=>'cella','paramName'=>'selectedTanarId');
-//    $TOOL['tankorSelect'] = array('tipus' => 'cella','paramName' => 'tankorId', 'post' => array('tanev', 'mkId', 'targyId'));
-//    $TOOL['tanevLapozo'] = array('tipus' => 'sor', 'paramName' => 'tanev', 'post' => array('mkId', 'targyId', 'tankorId'), 'tanev' => __TANEV);
     getToolParameters();
 
 ?>

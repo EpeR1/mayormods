@@ -113,8 +113,9 @@
     #nav > li > ul { top: 50px; left: -1px; /* background: #1A4B5C; */}
     #nav > li > ul > li > a { margin-left: 10px; }
 
-    #nav li:hover { background: #4fbcd7;
-		    background-color: #3FA79C;
+    #nav li:hover { 
+	background-color: #3FA79C;
+/*	background-color: #f06;*/
     }
     #nav li.active { background: #3facc7; }
 
@@ -143,11 +144,12 @@
     #nav ul ul a:hover { background: #4fbcd7; color: white; border-right: solid 4px orange;} /* mod */
 
     #nav li.start { /* fogó */
-	height: 20px; min-width: 0; padding-right: 0px; padding-left: 6px;
+	height: 20px; min-width: 0; padding-right: 0px; padding-left: 2px;
 	margin-top:20px;
-	background-color:lightgrey;
+	background-color: rgba(200,200,200,0.5);
 	border-radius: 0px 50px 50px 0px; border-bottom: 0px;
 	z-index: 20;
+/*	border-left: solid 1px rgba(250,250,250,0.5);*/
     }
 
     #nav:hover li.start {
@@ -712,10 +714,17 @@ border: solid 0px #eee;
 
 
 @media (prefers-color-scheme: dark) {
-    body {
-	// background-color: black;
-	// color: white;
+/*
+    ul#nav {
+	background-color: #444;
+	color: white;
+	color: hsl(210, 10%, 62%);
     }
+    div#mayorhead, div#mayorGlobalLogin, ul#nav li, #head {
+	background-color:#444;
+    }
+    ul.fmenu { background-color: orange; }
+*/
 }
 
 @keyframes niceMaYoR {

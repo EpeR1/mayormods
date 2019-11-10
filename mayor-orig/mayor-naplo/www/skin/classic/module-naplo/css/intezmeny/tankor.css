@@ -33,14 +33,13 @@ form.tankor label {
 }
 
 
-form.tankor input:hover,
+/*form.tankor input:hover*/
 form.tankor label:hover {
-    text-decoration: underline;
+    background-color: darkorange;
+    color: white;
+    cursor: pointer;
 }
 
-form.tankor input {
-    border: solid 1px blue;
-}
 
 form.tankor input.lezart { background-color: #aaaaaa; border: solid 1px black; }
 
@@ -80,4 +79,12 @@ form.tankor div.sel { background-color: lightgreen; color:black; }
 form.tankor div:hover { background-color: #2799bb; }
 
 form.tankor p { padding: 0em 1em; }
+
+
+form.tankor span.tankorCsoportAdat { background-color: orange; border-radius:4px; padding: 2px 4px; margin: 4px;}
+form.tankor span.tankorCsoportAdat:hover { background-color: darkorange;}
+
+
+table.osztalyok tr:hover td { background-color: cornflowerblue;}
+table.osztalyok tr:hover th { background-color: cornflowerblue;}
 

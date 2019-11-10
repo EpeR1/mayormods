@@ -4,15 +4,16 @@ if (_RIGHTS_OK !== true) die();
 
 require_once('include/modules/naplo/share/file.php');
 
-if (!__NAPLOADMIN) {
+if (__NAPLOADMIN!==true) {
 	$_SESSION['alert'][] = 'message:insufficient_access';
 } else {
 
+    $dbtable = readVariable($_POST['dbtable'],'string');
+    if (isset($dbtable)) { 
+
 	$mezo_elvalaszto = '	';
-	if (isset($_POST['dbtable'])) {
-		$dbtable = $_POST['dbtable'];
-		list($db,$table) = explode(':',$dbtable);
-	}
+	list($db,$table) = explode(':',$dbtable);
+
 	//IDEIGLENESEN if (isset($_POST['fileName'])) $fileName = fileNameNormal($_POST['fileName']);
 	if (isset($_POST['fileName'])) $fileName = ($_POST['fileName']);
 	$ADATOK = array();
@@ -40,6 +41,8 @@ if (!__NAPLOADMIN) {
 
 		} // van file
 	} // van $table ($db)
+
+    }
 
 } // naploadmin
 

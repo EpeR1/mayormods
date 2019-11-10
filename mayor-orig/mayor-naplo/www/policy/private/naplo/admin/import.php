@@ -15,5 +15,6 @@ if (isset($table)) {
 	} else {
 	    echo 'Adatfeldolgozás kész.';
 	}
-} else { echo 'nincs table'; }
+}
+
 ?>

@@ -4,24 +4,30 @@
 
     function ujTankor($ADAT) {
 
-
 	$return = false;
 	$lr = db_connect('naplo_intezmeny', array('fv' => 'ujTankor'));
 	if (!$lr) return false;
 
 	/* pre-check variables */
-	//...
+	if ($ADAT['tipus']!='') {
+	    $ADAT['tankorNevExtra'] = $ADAT['tipus'];
+	} elseif (isset($ADAT['tankorId']) && $ADAT['tankorId']>0) {
+            $q = "SELECT IF(tankorJel IS NOT NULL AND INSTR(tankorNev,tankorJel)!=0,  trim(substring(trim(substring_index(tankorNev,targyNev,-1)),length(tankorJel)+1)),
+trim(substring_index(tankorNev,targyNev,-1)))  AS tankorNevExtra FROM tankorSzemeszter LEFT JOIN tankor USING (tankorId) LEFT JOIN targy USING (targyId)
+LEFT JOIN tankorTipus USING (tankorTipusId) WHERE tankorId=%u AND tanev=%u ORDER BY tanev,szemeszter DESC LIMIT 1";
+            $ADAT['tankorNevExtra'] = db_query($q, array('fv' => 'genTankorNev(ujTankor)', 'modul' => 'naplo_intezmeny', 'result'=>'value', 'values' => array($ADAT['tankorId'],__TANEV), 'debug'=>false), $lr);
+	}
 	/* pre-check */
 	if (isset($ADAT['tankorId']) && $ADAT['tankorId']!='') {
 	    $return = $tankorId = $ADAT['tankorId'];
 	    $_tankorCn = $ADAT['tankorCn'];
-	    $q = "UPDATE tankor SET felveheto=%u, min=%u, max=%u, kovetelmeny='%s', tankorCn='%s' WHERE tankorId=%u";
-	    $v = array($ADAT['felveheto'], $ADAT['min'], $ADAT['max'], $ADAT['kovetelmeny'],$_tankorCn,$tankorId);
+	    $q = "UPDATE tankor SET felveheto=%u, min=%u, max=%u, kovetelmeny='%s', tankorCn='%s', tankorNevExtra='%s' WHERE tankorId=%u";
+	    $v = array($ADAT['felveheto'], $ADAT['min'], $ADAT['max'], $ADAT['kovetelmeny'],$_tankorCn, $ADAT['tankorNevExtra'],  $tankorId);
 	    db_query($q, array('fv' => 'ujTankor', 'modul' => 'naplo_intezmeny', 'values' => $v));
 	    $tanarFelvesz = false;
 	} else {
-	    $q = "INSERT INTO tankor (targyId,felveheto,min,max,kovetelmeny) VALUES (%u, '%s', %u, %u,'%s')"; 
-	    $v = array($ADAT['targyId'], $ADAT['felveheto'], $ADAT['min'], $ADAT['max'], $ADAT['kovetelmeny']);
+	    $q = "INSERT INTO tankor (targyId,felveheto,min,max,kovetelmeny,tankorNevExtra) VALUES (%u, '%s', %u, %u,'%s','%s')"; 
+	    $v = array($ADAT['targyId'], $ADAT['felveheto'], $ADAT['min'], $ADAT['max'], $ADAT['kovetelmeny'], $ADAT['tankorNevExtra']);
 	    $return = $tankorId = db_query($q, array('fv' => 'ujTankor', 'modul' => 'naplo_intezmeny', 'result' => 'insert', 'values' => $v), $lr);
 	    $tanarFelvesz = true;
 	}
@@ -120,7 +126,7 @@
 		    $nev = $K[0].'-'.$K[count($K)-1].'.';
 		} else { // ekkorra már elballagott minden osztaly...
 		    $nev = false;
-		    $_SESSION['alert'][] = '::Minden osztály elballagott';
+		    $_SESSION['alert'][] = '::Minden osztály elballagott:'.serialize($OSZTALYOK).serialize($TMP);
 		}
 	      } else {
 		$nev = false; // adott szemeszterbe nem jár osztály
@@ -133,8 +139,8 @@
 
 		$q = "SELECT tankorJel FROM tankor LEFT JOIN tankorTipus USING (tankorTipusId) WHERE tankorId=%u";
 		$tankorJel = db_query($q, array('fv' => 'genTankorNev', 'modul' => 'naplo_intezmeny', 'result'=>'value', 'values' => array($tankorId), 'debug'=>false), $lr);
-		if ($tankorJel!='') $nev .= $tankorJel.' '.$ADAT['tipus'];
-		else $nev .= $ADAT['tipus'];
+		if ($tankorJel!='') $nev .= $tankorJel.' '.$ADAT['tankorNevExtra'];
+		else $nev .= $ADAT['tankorNevExtra']; //tankorNevExtra = tipus
 		$q = "REPLACE INTO tankorSzemeszter (tankorId,tanev,szemeszter,oraszam,tankorNev) VALUES (%u, %u, %u, %f, '%s')";
 		if ($ADAT['tanev'] < __TANEV || $ADAT['tankorNevMegorzes']===true) { // a neve már ne változzon, és az óraszáma?
 		    $q1 = "SELECT tankorNev FROM tankorSzemeszter WHERE tankorId=%u AND tanev=%u AND szemeszter=%u";

@@ -51,8 +51,11 @@
 
 		    $Tankorok = $Dolgozat[$dolgozatId]['tankor'];
 		    $TankorLista = array();
-		    for ($t = 0; $t < count($Tankorok); $t++) $TankorLista[] = $Tankorok[$t]['tankorNev'];
-		    echo implode('<br />',$TankorLista);
+		    for ($t = 0; $t < count($Tankorok); $t++) {
+			$_T = $Tankorok[$t];
+			$TankorLista[] = $Tankorok[$t]['tankorNev'];
+			echo '<span class="tankorAdat" data-tankorid="'.$_T['tankorId'].'">'.$_T['tankorNev'].'</span>';
+		    }
 
 		echo '</td>';
 		echo '<td>';
@@ -74,7 +77,6 @@
 
 		echo '</td>';
 		echo '</tr>';
-		flush();
 	    }
 	} else {
 	    echo '<tr>';
@@ -85,7 +87,10 @@
 	echo '</table>';
 
 	echo '<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>'; 
-	echo '<div id="chart_div"></div>';
+	echo '<table align="center" style="width:90%; border: solid 1px #888;">';
+	echo '<tr><th>';
+	    echo '<div id="chart_div""></div>';
+	echo '</th></tr></table>';
     }
 
     function putDolgozat($Dolgozat, $valaszthatoTankorok, $Tanarok, $ADAT) {

@@ -21,6 +21,7 @@
 	echo '<style type="text/css">
 	    
 	    table.ttf { background-color: #eee;}
+	    table.ttf thead tr th { background-color: #ddd;border-bottom: solid 1px #888; padding: 4px;}
 	    table.ttf tr.tankorHozzarendel2.exact td { background-color: cornflowerblue}
 	    table.ttf tr.tankorHozzarendel td { background-color: yellow}
 	    table.ttf tr.tankorHozzarendel2 td { background-color: orange}
@@ -30,6 +31,7 @@
 	    table.ttf tr.done td { background-color: lightgreen;}
 	    table.ttf tr td {padding:4px;}
 
+	    table.ttf tr td div.tankorLista span:hover { color: white; }
 	</style>';
 
 	// FILTEREZÉS
@@ -45,7 +47,7 @@
 	echo '<table class="ttf" cellspacing="1">';
 
 	echo '<thead>';
-	echo '<tr>';
+/*	echo '<tr>';
 	    echo '<th>';
 		echo 'Csoportnév';
 	    echo '</th>';
@@ -55,11 +57,12 @@
 	    echo '<th>';
 	    echo '</th>';
 	echo '</tr>';
-	echo '<tr>';
+*/	echo '<tr>';
 	    echo '<th colspan="6">';
 		foreach ( array('tankorHozzarendel','tankorHozzarendel2','tankorHozzarendel3','done','createTankor') as $k => $v) {
 		    echo '<input type="checkbox" name="'.$v.'" value="'.$v.'" checked="checked" />';
 		}
+		echo '<button type="button" class="nevsorSzinkron_btn">minden kész névsort szinkronizálásra jelöl</button>';
 	    echo '</th>';
 	echo '</tr>';
 	echo '</thead>';
@@ -78,8 +81,9 @@
 		$_class = '';
 	    }
 	    echo '<tr class="'.$D['action'].' '.$_class.'">';
-		echo '<td>'.$D['csoportNev'].'</td>';
+		echo '<td class="tankorCsoportAdat" data-tankorcsoportid="'.$D['csoportId'].'">'.$D['csoportNev'].'</td>';
 		echo '<td style="font-size:10px">';
+
 			echo '<div>';
 			for ($j=0;$j<count($ADAT['csoportAdat'][$D['csoportNev']]['diakNevsor']); $j++) {
 			    echo $ADAT['csoportAdat'][$D['csoportNev']]['diakNevsor'][$j];
@@ -99,11 +103,11 @@
 			echo '<select name="tankor2csoport[]">';
 			echo '<option>--'.$D['action'].'--</option>';
 			for ($j=0; $j<count($D['displayTankor']); $j++) {
-			    $_SEL = (count($D['displayTankor'])==1) ? ' selected="selected" ': '';
+			    $_SEL = (count($D['displayTankor'])==1 && $D['action']=='tankorHozzarendel') ? ' selected="selected" ': '';
 			    echo '<option value="'.$D['csoportId'].':####:'.$D['tanarId'].':####:'.$D['displayTankor'][$j]['tankorId'].':####:'.$D['oraszam'].'"    '.$_SEL.'>'.$D['displayTankor'][$j]['tankorNev'].'</option>';
 			}
 			echo '</select>';
-			echo '<div style="font-size:10px;">';
+			echo '<div class="tankorLista">';
 			for ($j=0; $j<count($D['displayTankor']); $j++) {
 			    $_tankorId = $D['displayTankor'][$j]['tankorId'];
 			    $_diffCount = count(array_diff(
@@ -115,7 +119,7 @@
 			    echo '('.$_tankorId.') tag: '.count($ADAT['tankorDiak'][$_tankorId]);
 
 			    echo " -- diff:" .$_diffCount;
-			    if ($_diffCount == 0) echo '*******';
+			    if ($_diffCount == 0) echo ' *******';
 			}
 			echo '</div>';
 			// ha ezt összehasonlítom a mayorban rögzített névsorral, akkor eldönhető lehet, hogy melyik a jó választás!
@@ -125,12 +129,31 @@
 			echo 'Új tankör létrehozása: <input type="text" name="ujTankor[]" value="'.$D['csoportId'].':####:'.$D['tanarId'].':####:'.$_osztalyok.':####:'.$D['targyId'].'.'.':####:'.$_O.':####:'.$D[1].'" />';
 		    } else {
 			echo '<div class="tankor tankorAdat tankorNev" data-tankorid="'.$D['tankorId'].'">'.$D['tankorId'].'</div>';
+
+			echo '<input type="checkbox" name="nevsorSzinkronFelulir[]" value="'.$D['csoportId'].':####:'.$D['tankorId'].'" class="nevsorSzinkronizal" />névsor felülír import alapján';
+
+
+			/*
+			echo '<label for="tnf_'.$i.'_1"><span class="icon-record"></span>';
+			echo ' nem frissít</label>';
+			echo '<input type="radio" name="tankorNevsorFrissit[]" value="" id="tnf_'.$i.'_1" />';
+			echo '<br/>';
+			echo '<label for="tnf_'.$i.'_2"><span class="icon-random"></span>';
+			echo ' importál (kibővít)</label>';
+			echo '<input type="radio" name="tankorNevsorFrissit[]" value="'.$D['csoportId'].':####:'.$D['tankorId'].'"  id="tnf_'.$i.'_2" />';
+			echo '<br/>';
+			echo '<label for="tnf_'.$i.'_3"><span class="icon-download"></span>';
+			echo ' töröl és importál</label>';
+			echo '<input type="radio" name="tankorNevsorFrissit[]" value="'.$D['csoportId'].':####:'.$D['tankorId'].'"  id="tnf_'.$i.'_3" />';
+			*/
 		    }
 
 		echo '</td>';
 	    echo '</tr>';
 	}
 	echo '</table>';
+	echo '<input type="submit" />';
+
 	formEnd();
 
     }

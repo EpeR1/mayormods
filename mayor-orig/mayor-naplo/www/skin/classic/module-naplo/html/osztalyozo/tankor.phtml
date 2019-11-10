@@ -88,7 +88,7 @@
 	    echo '<tr>'."\n";
 
 	    echo '<th class="nev" colspan="'.($colSpan+1).'">'."\n";
-		echo $Jegyek['tankörök'][$tankorId]['tankorNev'];
+		echo '<span class="tankorAdat" data-tankorid="'.$tankorId.'">'.$Jegyek['tankörök'][$tankorId]['tankorNev'].'</span>';
 		//_inlineHelp('');
 		echo ' ('.implode(', ',$Jegyek['tanárok']['tanarNevek']).')';
 	    echo '</th>'."\n";

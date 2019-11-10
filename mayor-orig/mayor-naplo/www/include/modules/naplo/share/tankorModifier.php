@@ -1,6 +1,7 @@
 <?php
 
     require_once('include/modules/naplo/share/tankorBlokk.php');
+    require_once('include/modules/naplo/share/tankorDiakModifier.php');
 
     function setTankorNevByDiakok($tankorId, $tankorNevExtra = null, $olr = null) { // módosítja a tankorOsztaly hozzárendelést
         if (!$olr) $lr = db_connect('naplo_intezmeny', array('fv' => 'ujTankor'));
@@ -37,6 +38,11 @@
 	if (is_null($tankorNevExtra)) {
 	    $q = "SELECT IF(tankorJel IS NOT NULL AND INSTR(tankorNev,tankorJel)!=0,  trim(substring(trim(substring_index(tankorNev,targyNev,-1)),length(tankorJel)+1)), trim(substring_index(tankorNev,targyNev,-1)))  AS tankorNevExtra FROM tankorSzemeszter LEFT JOIN tankor USING (tankorId) LEFT JOIN targy USING (targyId) LEFT JOIN tankorTipus USING (tankorTipusId) WHERE tankorId=%u AND tanev=%u ORDER BY tanev,szemeszter DESC LIMIT 1";
 	    $tankorNevExtra = db_query($q, array('fv' => 'genTankorNev', 'modul' => 'naplo_intezmeny', 'result'=>'value', 'values' => array($tankorId,__TANEV), 'debug'=>false), $lr);
+	}
+	if ($tankorNevExtra!='') {
+	    $q = "UPDATE tankor SET tankorNevExtra = '%s' WHERE tankorId=%u";
+	    $v = array($tankorNevExtra,$tankorId);
+	    db_query($q, array('fv' => 'setTankorNev', 'modul' => 'naplo_intezmeny', 'values' => $v, 'debug'=>false), $lr);
 	}
 
 	$q = "SELECT tankorJel FROM tankor LEFT JOIN tankorTipus USING (tankorTipusId) WHERE tankorId=%u";
@@ -100,9 +106,12 @@
 		if ($tankorJel!='') $nev .= $tankorJel.' '.$tankorNevExtra;
 		else $nev .= $tankorNevExtra;
 		if ($_tanev >= __TANEV) {
-		    $q = "UPDATE tankorSzemeszter SET tankorNev = '%s' WHERE tankorId=%u AND tanev=%u AND szemeszter=%u";
-		    $v = array($nev,$tankorId,$_tanev,$_szemeszter);
-		    if ($nev!='') db_query($q, array('fv' => 'setTankorNev', 'modul' => 'naplo_intezmeny', 'values' => $v, 'debug'=>false), $lr);
+		    if ($nev!='') {
+			$q = "UPDATE tankorSzemeszter SET tankorNev = '%s' WHERE tankorId=%u AND tanev=%u AND szemeszter=%u";
+			$v = array($nev,$tankorId,$_tanev,$_szemeszter);
+			db_query($q, array('fv' => 'setTankorNev', 'modul' => 'naplo_intezmeny', 'values' => $v, 'debug'=>false), $lr);
+			
+		    }
 		} else { 
 		    // a neve már ne változzon, és az óraszáma?
 /*		    $q1 = "SELECT tankorNev FROM tankorSzemeszter WHERE tankorId=%u AND tanev=%u AND szemeszter=%u";
@@ -495,4 +504,50 @@
 	return $ok;
     }
 
+     function addTankorToTankorCsoport($tankorId,$csoportId) {
+
+	global $_TANEV;
+	$now = time();
+	if ($now >= strtotime($_TANEV['kezdesDt']) && $now <= strtotime($_TANEV['zarasDt'])) {
+	    $refDt = date('Y-m-d');
+	} else { 
+	    $refDt = $_TANEV['kezdesDt'];
+	}
+
+	// tankörnévsorok egyeztetése:
+	$DIAK = getTankorDiakjaiByInterval($tankorId, __TANEV, $refDt, $refDt);
+	$R =  getTankorCsoportTankoreiByCsoportId($csoportId);
+	for ($i=0; $i<count($R); $i++) {
+	    if ($tankorId != $R[$i]['tankorId']) $TANKOROK[] = $R[$i]['tankorId']; 
+	}
+
+	if(count($DIAK['idk'])==0 && $TANKOROK[0]>0) {
+	    $_DIAK = getTankorDiakjaiByInterval($TANKOROK[0], __TANEV, $refDt, $refDt);
+	    for ($i=0; $i<count($_DIAK['idk']); $i++) {
+		$_diakId = $_DIAK['idk'][$i];
+		$D = $_DIAK['adatok'][$_diakId][0];
+		tankorDiakFelvesz(
+		    array('tankorId'=>$tankorId,
+			'diakId'=>$_diakId,
+			'tolDt'=>$D['beDt'],
+			'igDt'=>$D['igDt'],
+			'jovahagyva' => 1
+		    )
+		);
+	    }
+	} else {
+	    for ($i=0; $i<count($TANKOROK); $i++) {
+		$_DIAK = getTankorDiakjaiByInterval($TANKOROK[$i], __TANEV, $refDt, $refDt);
+		if ($DIAK['idk'] != $_DIAK['idk']) {
+		    $_SESSION['alert'][] = 'alert:diaknévsorok nem egyeznek a következő tankörökben:'.$TANKOROK[$i].' '.$tankorId;
+		    return false;
+		}
+	    }
+	}
+
+	$q = "INSERT IGNORE INTO tankorCsoport (tankorId,csoportId) VALUES (%u,%u)";
+	$v = array($tankorId,$csoportId);
+	db_query($q, array('fv'=>'addTankorToTankorCsoport','modul'=>'naplo','values'=>$v,'result'=>'insert'));
+	
+    }
 ?>

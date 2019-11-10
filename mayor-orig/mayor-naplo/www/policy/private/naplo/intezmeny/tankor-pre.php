@@ -18,6 +18,7 @@
     $ADAT['mkId'] = $mkId = readVariable($_POST['mkId'],'id',null);
     $ADAT['targyId'] = $targyId = readVariable($_POST['targyId'],'id',null);
     $ADAT['tankorId'] = $tankorId = readVariable($_POST['tankorId'],'id',readVariable($_GET['tankorId'],'id',null));
+    $ADAT['tanarId'] = $tanarId = readVariable($_POST['tanarId'],'id',readVariable($_GET['tanarId'],'id',null));
     $_POST['tanev'] = $ADAT['tanev'] = $tanev = readVariable($_POST['tanev'],'numeric unsigned',__TANEV);
 
     if ($tanev!=__TANEV) $_SESSION['alert'][] = 'info:nem az alapértelmezett tanévben vagyunk!';
@@ -39,6 +40,12 @@
 			$ADAT['tankorTipusId'] = readVariable($_POST['tankorTipusId'],'id');
 			$erintettHianyzasDb = hianyzasTankorTipusValtas($ADAT['tankorId'],$ADAT['tankorTipusId'],array('tanev'=>$ADAT['tanev']));
 			if ($erintettHianyzasDb>0) $_SESSION['alert'][] = 'info:db_hianyzas_tipus_modositas:'.$erintettHianyzasDb;
+		    }
+		    if ($tanev == __TANEV) {
+			$csoportId = readVariable($_POST['csoportId'],'id');
+			if ($csoportId>0 && $tankorId>0) {
+			    addTankorToTankorCsoport($tankorId,$csoportId);
+			}
 		    }
 		}
 		break;
@@ -194,7 +201,8 @@
     $ADAT['tankorId'] = $tankorId;
     $ADAT['tanev'] = $tanev;
     $ADAT['tankorOsztalyok'] = getTankorOsztalyaiByTanev($tankorId, $tanev, array('tagokAlapjan'=>true,'result'=>'id'));
-    $ADAT['tankorCsoportok'] = getTankorCsoport($tanev); // ezt nem használjuk most semmire!
+    $ADAT['tankorCsoportok'] = getTankorCsoport($tanev);
+    $ADAT['tankorTankorCsoportjai'] = getTankorCsoportByTankorId($tankorId);
 
     if ($tanev != '') $SZEMESZTEREK = getSzemeszterek(array('filter' => array("tanev>=$tanev",'tanev<='.($tanev+7))));
     
@@ -205,7 +213,7 @@
     $TOOL['munkakozossegSelect'] = array('tipus'=>'cella','paramName' => 'mkId', 'post' => array('tanev'));
     $TOOL['targySelect'] = array('tipus'=>'cella', 'mkId' => $mkId, 'targyak' => $ADAT['targyak'], 'post' => array('mkId', 'tanev'));
 //    $TOOL['diakSelect'] = array('tipus'=>'sor','paramName'=>'diakId', 'post'=>array());
-//    $TOOL['tanarSelect'] = array('tipus'=>'sor','paramName'=>'tanarId', 'post'=>array());
+    $TOOL['tanarSelect'] = array('tipus'=>'sor','paramName'=>'tanarId', 'post'=>array('mkId','targyId','tanev'));
     $TOOL['tankorSelect'] = array('tipus' => 'cella','paramName' => 'tankorId', 'post' => array('tanev', 'mkId', 'targyId'));
     $TOOL['oldalFlipper'] = array('tipus' => 'cella', 
 	'url' => array('index.php?page=naplo&sub=intezmeny&f=tankorDiak',

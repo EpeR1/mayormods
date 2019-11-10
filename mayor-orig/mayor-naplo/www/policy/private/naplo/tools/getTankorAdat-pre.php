@@ -30,6 +30,7 @@
     $_JSON['tankorTanar'] = getTankorTanarai($tankorId);
     $_JSON['tankorDiak'] = //getTankorDiakjai($tankorId);
 			   getTankorDiakjaiByInterval($tankorId);
+    $_JSON['tankorCsoport'] = getTankorCsoportByTankorId($tankorId,__TANEV,array('csoportNevekkel'=>true));
     $_JSON['tankorBlokk'] = getTankorBlokkByTankorId(array($tankorId),__TANEV,array('blokkNevekkel'=>true));
     $_JSON['tanmenetId'] = array_pop(getTanmenetByTankorIds(array($tankorId)));
     $_JSON['tanmenetAdat'] = getTanmenetAdat($_JSON['tanmenetId']);

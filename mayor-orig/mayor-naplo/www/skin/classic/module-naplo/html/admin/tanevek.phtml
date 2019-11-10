@@ -4,7 +4,7 @@
 
 	$SZEMESZTER_STATUSZ = Array('aktív','tervezett');
 
-	formBegin(array('class'=>'intezmeny'));
+	formBegin(array('class'=>'intezmeny tervezett'));
 
 	echo '<h2>'._UJ_TANEV.'</h2>'."\n";
 
@@ -14,28 +14,31 @@
 
 	//szemeszter: tanev, sorszám, status (aktív, lezárt, új, tervezett), kezdete, vége
 
-        echo _TANEV_JELE . ': <input type="text" name="ujTanev" id="tanev" value="" maxlength="4" size="4" />'."\n";
+        echo _TANEV_JELE . ': ';
+	    //echo '<input type="text" name="ujTanev" id="tanev" value="" maxlength="4" size="4" />'."\n";
+	    echo '<select name="ujTanev" id="tanev">';
+	    echo '<option value=""></option>';
+	    for ($i=2000; $i<2050; $i++) {
+		echo '<option value="'.$i.'">'.$i.'</option>';
+	    }
+	    echo '</select>';
 	echo '<hr />'."\n";
 
+	echo '<br/>';
+
+	echo '<ul>';
 	for ( $i = 1; $i <= 2; $i++ ) {
+	    echo '<li>';
 	    echo $i .'. ' . _SZEMESZTER . ":";
     	    echo '<input type="hidden" name="szemeszter[]" value="'.$i.'" />'."\n";
-    	    echo '<input class="date" type="text" name="kezdesDt[]" value="" maxlength="10" size="10" /> - '."\n";
-    	    echo '<input class="date" type="text" name="zarasDt[]" value="" maxlength="10" size="10" />'."\n";
+    	    echo '<input class="date" type="text" id="ujSzemeszter_'.$i.'_kezdesDt" name="kezdesDt[]" value="" maxlength="10" size="10" /> - '."\n";
+    	    echo '<input class="date" type="text" id="ujSzemeszter_'.$i.'_zarasDt" name="zarasDt[]" value="" maxlength="10" size="10" />'."\n";
 	    echo ' ('._TERVEZETT.')';
-	    echo '<br/>';
+	    echo '</li>';
 
-//	    echo '<select name="statusz[]">';
-//	    foreach($SZEMESZTER_STATUSZ as $key => $statusz) {
-//		    echo '<option value="'.$statusz.'">'.$statusz.'</option>';
-//	    }
-//	    echo '</select>';
 	}
-
+	echo '</ul>';
 	echo '<hr />'."\n";
-
-//	echo 'rootUser: <input type="text" name="rootUser" id="rootUser" value="root" />'."\n";
-//	echo 'rootPassword: <input type="password" name="rootPassword" id="rootPassword" value="" />'."\n";
 
         echo '<input type="submit" value="'._OK.'" />'."\n";
 
@@ -53,7 +56,7 @@
 	echo '<input type="hidden" name="action" value="szemeszterTorles" />'."\n";
 	echo '<input type="hidden" name="tanev" value="'.$tanev.'" />'."\n";
 	
-	echo '<h2>'._TANEV_SZEMESZTEREI.'</h2>'."\n";
+	echo '<h2>'.$tanev.'/'.($tanev+1).' '._TANEV_SZEMESZTEREI.'</h2>'."\n";
 	
 	echo '<div class="data">'."\n";
 	
@@ -95,11 +98,13 @@
 
     function putTanevLezarasForm( $ADAT ) {
 
+	$tanev=$ADAT['tanev'];
+
 	formBegin(array('class'=>'intezmeny'));
 
 	echo '<input type="hidden" name="action" value="tanevLezar" />'."\n";
 
-	echo '<h2>'._TANEV_LEZARAS.'</h2>'."\n";
+	echo '<h2>'.$tanev.'/'.($tanev+1).' '._TANEV_LEZARAS.'</h2>'."\n";
 
 	echo '<div class="data">'."\n";
 	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'"/>';

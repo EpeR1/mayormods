@@ -6,7 +6,7 @@
 	    $q = "SELECT csoportId,csoportNev,tankorId,getNev(tankorId,'tankor') AS tankorNev FROM csoport LEFT JOIN tankorCsoport USING (csoportId) WHERE csoportId=%u";
 	    $v = array($csoportId);
 	    $r = db_query($q, array(
-		'fv' => 'tankorCsoport', 'modul' => 'naplo', 'result' => 'multiassoc', 'keyfield' => 'csoportId', 'values' => $v
+		'fv' => 'tankorCsoport', 'modul' => 'naplo', 'result' => 'indexed', 'values' => $v
 	    ));
 	} else {
 	    $q = "SELECT csoportId,csoportNev,tankorId,getNev(tankorId,'tankor') AS tankorNev FROM csoport LEFT JOIN tankorCsoport USING (csoportId)";
@@ -19,11 +19,14 @@
 
     function getTankorCsoportByTankorIds($tankorIds) {
 
+	if (is_array($tankorIds) && count($tankorIds)>0) {
+
             $q = "SELECT csoportId,csoportNev,tankorId FROM csoport LEFT JOIN tankorCsoport USING (csoportId)
                     WHERE tankorId IN (".implode(',', array_fill(0, count($tankorIds), '%u')).")";
             return db_query($q, array(
 		'fv' => 'tankorCsoport', 'modul' => 'naplo', 'result' => 'multiassoc', 'keyfield' => 'csoportId', 'values' => $tankorIds
 	    ));
+	}
 
     }
 
@@ -163,6 +166,13 @@
 	$q = "DELETE FROM `%s`.csoport WHERE csoportId=%u";
 	$v = array($tanevDb, $csoportId);
 	db_query($q, array('fv' => 'tankorCsoportTorles', 'modul' => 'naplo', 'values' => $v));
+    }
+
+    function tankorCsoportHozzarendelesTorles($csoportId, $tankorId, $tanev = __TANEV) {
+	$tanevDb = tanevDbNev(__INTEZMENY, $tanev);
+	$q = "DELETE FROM `%s`.tankorCsoport WHERE csoportId=%u AND tankorId=%u";
+	$v = array($tanevDb, $csoportId, $tankorId);
+	db_query($q, array('fv' => 'tankorCsoportHozzarendelesTorles', 'modul' => 'naplo', 'values' => $v));
     }
 
     function _setMinMax($csoportId,$lr) {
