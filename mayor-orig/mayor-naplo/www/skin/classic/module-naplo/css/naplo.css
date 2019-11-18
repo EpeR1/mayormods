@@ -31,7 +31,6 @@
 
     table.toolBar form { margin: 0px; padding: 0px;}
 
-/* TH */
 
     table.toolBar th {
 	background-color: rgb(90,133,184);
@@ -45,6 +44,12 @@
 	border-width: 1px 1px 1px 1px;
 	border-style: solid;
     }
+
+    table.toolBar tr.kotelezo.hianyzo td.toolBarTool table ,
+	table.toolBar td.toolBarTool.kotelezo.hianyzo { background-color: orange }
+    table.toolBar tr.kotelezo.hibas td.toolBarTool table ,
+	table.toolBar td.toolBarTool.kotelezo.hibas { background-color: red; }
+
     table.toolBar th button.toolBarClear { float:right; border: none; background-color: #5A85B8; height:10px;font-size:9px; color:inherit; padding:0px 2px; color: rgba(255,255,255,0.5);}
     table.toolBar th button.toolBarClear:hover { color: rgba(255,255,255,1);}
 
@@ -61,7 +66,6 @@
     table.toolBar tr td.csoport:hover { color: rgba(255,255,255,1);}
 
 
-/* TD */
     table.toolBar td {padding: 0px;}
     table.toolBar td form td {padding: 1px;}
     table.toolBar td.gap { width: 50%; border-spacing: 0px; }
@@ -160,6 +164,8 @@
     div.beirasAdatok img { vertical-align: middle; }
 
     table.toolBar input { font-size: 10px; }
+
+    table.toolbar tr.kotelezo table th.toolBarTool { background-color: orange !important; }
 
     table.toolBar #toolBarHamburgerVezerlo { color:rgb(170, 170, 170);  }
     table.toolBar #toolBarHamburgerVezerlo:hover { color:white; }

@@ -39,15 +39,17 @@
 	// Az érintett tankörök id-inek listája
 	$tankorIds = $tankorAdat = array();
 	if (is_array($Tankorok) && ($count = count($Tankorok)) > 0) {
-	    $tankorFeltetel = 'tankorId IN (' . $Tankorok[0]['tankorId'];
-	    $tankorIds[] = $Tankorok[0]['tankorId'];
-	    $Tankorok[0]['tanar'] = getTankorTanaraiByInterval($Tankorok[0]['tankorId'], array('tanev' => __TANEV, 'tolDt' => _SHOW_DAYS_FROM, 'igDt' => _SHOW_DAYS_TO, 'result' => 'nevsor'));
-	    $tankorAdat[$Tankorok[0]['tankorId']] = $Tankorok[0];
+	    $_tankorId = intval($Tankorok[0]['tankorId']);
+	    $tankorFeltetel = 'tankorId IN (' . $_tankorId;
+	    $tankorIds[] = $_tankorId;
+	    $Tankorok[0]['tanar'] = getTankorTanaraiByInterval($_tankorId, array('tanev' => __TANEV, 'tolDt' => _SHOW_DAYS_FROM, 'igDt' => _SHOW_DAYS_TO, 'result' => 'nevsor'));
+	    $tankorAdat[$_tankorId] = $Tankorok[0];
 	    for ($i = 1; $i < $count; $i++) {
-		$tankorFeltetel .= ', '.$Tankorok[$i]['tankorId'];
-		$tankorIds[] = $Tankorok[$i]['tankorId'];
-		$Tankorok[$i]['tanar'] = getTankorTanaraiByInterval($Tankorok[$i]['tankorId'], array('tanev' => __TANEV, 'tolDt' => _SHOW_DAYS_FROM, 'igDt' => _SHOW_DAYS_TO, 'result' => 'nevsor'));
-		$tankorAdat[$Tankorok[$i]['tankorId']] = $Tankorok[$i];
+		$_tankorId = intval($Tankorok[$i]['tankorId']);
+		$tankorFeltetel .= ', '.$_tankorId;
+		$tankorIds[] = $_tankorId;
+		$Tankorok[$i]['tanar'] = getTankorTanaraiByInterval($_tankorId, array('tanev' => __TANEV, 'tolDt' => _SHOW_DAYS_FROM, 'igDt' => _SHOW_DAYS_TO, 'result' => 'nevsor'));
+		$tankorAdat[$_tankorId] = $Tankorok[$i];
 	    }
 	    $tankorFeltetel .= ')';
 	} 

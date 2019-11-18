@@ -33,7 +33,14 @@
     $refTolDt = readVariable($_POST['refTolDt'],'date');
     $refIgDt = readVariable($_POST['refIgDt'],'date');
 
-    if ($refTolDt=='' || $refIgDt=='') $_SESSION['alert'][] = 'info:nincs_intervallum';
+    if ($refTolDt=='' || $refIgDt=='') {
+	//$_SESSION['alert'][] = 'info:nincs_intervallum';
+	$refTolIgNincsKitoltve = true;	
+    }
+    if ($tanarId=='' && $osztalyId =='') {
+	$missingTanarOsztaly = true;
+    }
+
 
     $ADAT['telephelyek'] = getTelephelyek();
     $ADAT['haladasiModositando'] = readVariable($_POST['haladasiModositando'], 'bool');
@@ -67,9 +74,18 @@
 
     // itt ellenőrizzük, hogy a dt (referenciadátum) beleesik-e a tolIg be!
     if (isset($tolDt) && isset($refTolDt) && isset($refIgDt)) {
-	if (strtotime($tolDt)<strtotime($refTolDt)) $_SESSION['alert'][] = 'message:wrong_data:hibás referenciadátum!';
-	if (strtotime($tolDt)>strtotime($refIgDt)) $_SESSION['alert'][] = 'message:wrong_data:hibás referenciadátum!';
-	if (strtotime($refTolDt)>strtotime($refIgDt)) $_SESSION['alert'][] = 'message:wrong_data:hibás referenciadátum!';
+	if (strtotime($tolDt)<strtotime($refTolDt)) {
+	    // $_SESSION['alert'][] = 'message:wrong_data:hibás referenciadátum!';
+	    $refDtHibas = true;
+	}
+	if (strtotime($tolDt)>strtotime($refIgDt)) {
+	    // $_SESSION['alert'][] = 'message:wrong_data:hibás referenciadátum!';
+	    $refDtHibas = true;
+	}
+	if (strtotime($refTolDt)>strtotime($refIgDt)) {
+	    // $_SESSION['alert'][] = 'message:wrong_data:hibás referenciadátum!';
+	    $refDtHibas = true;
+	}
     }
     if ($action==='do') {
 	$HOT = readVariable($_POST['HALADASIORATOROL'],'id');
@@ -262,6 +278,9 @@
 	    'tolDt' => date('Y-m-d', strtotime('last Monday', strtotime($_TANEV['kezdesDt']))),
 //	    'tolDt' => $_TANEV['elozoZarasDt'],
 	    'igDt' => $_TANEV['kovetkezoKezdesDt'],
+	    'kotelezo' => true,
+	    'hianyzik' => $refTolIgNincsKitoltve,
+	    'hibas' => $refDtHibas
 	);
        $TOOL['datumTolIgSelect'] = array(
             'tipus' => 'sor', 'title' => 'REFDT',
@@ -272,18 +291,28 @@
 	    'override' => true,
             'tolDt' => date('Y-m-d', strtotime('last Monday', strtotime($_TANEV['kezdesDt']))),
             'igDt' => $_TANEV['zarasDt'],
+	    'kotelezo' => true,
+	    'hianyzik' => $refTolIgNincsKitoltve,
+	    'hibas' => $refDtHibas
         );
+	
 
 	//$TOOL['orarendiHetSelect'] = array('tipus'=>'cella' , 'paramName' => 'het', 'post'=>array('targyId','tankorId','osztalyId','tanarId'), 'disabled'=>true);
 //	if ($osztalyId!='' || $diakId!='') {
 //	    $TOOL['diakSelect'] = array('tipus'=>'sor','paramName'=>'diakId', 'post'=>array('refTolDt','refIgDt','tolDt','osztalyId','telephely'));
 //	} else 
 //	    $TOOL['munkakozossegSelect'] = array('tipus'=>'sor', 'paramName'=>'mkId', 'post'=>array('refTolDt','refIgDt','tolDt','telephely'));
-	$TOOL['tanarSelect'] = array('tipus'=>'cella', 'paramName'=>'tanarId', 'post'=>array('refTolDt','refIgDt','tolDt','telephely'));
-	$TOOL['osztalySelect']= array('tipus'=>'cella', 'paramName'=>'osztalyId', 'post'=>array('refTolDt','refIgDt','tolDt'));
+	$TOOL['tanarSelect'] = array('tipus'=>'cella', 'paramName'=>'tanarId', 'post'=>array('refTolDt','refIgDt','tolDt','telephely'),
+	    'kotelezo'=>true,
+	    'hianyzik'=>$missingTanarOsztaly
+	);
+	$TOOL['osztalySelect']= array('tipus'=>'cella', 'paramName'=>'osztalyId', 'post'=>array('refTolDt','refIgDt','tolDt'),
+	    'kotelezo'=>true,
+    	    'hianyzik'=>$missingTanarOsztaly
+	);
 //	$TOOL['telephelySelect'] = array('tipus'=>'cella', 'paramName'=>'telephely', 'post'=>array('refTolDt','refIgDt','tolDt','mkId','tanarId'));
 //	$TOOL['teremSelect'] = array('tipus'=>'cella', 'paramName'=>'teremId', 'telephely'=>$telephely, 'post'=>array('refTolDt','refIgDt','tolDt','telephely'));
-        if ($osztalyId!='' || $tanarId!='' || $diakId!='' || $mkId!='') $TOOL['tankorSelect'] = array('tipus'=>'sor','paramName'=>'tankorId', 'post'=>array('refTolDt','refIgDt','tolDt','osztalyId','targyId','tanarId','diakId','telephely'));
+//        if ($osztalyId!='' || $tanarId!='' || $diakId!='' || $mkId!='') $TOOL['tankorSelect'] = array('tipus'=>'sor','paramName'=>'tankorId', 'post'=>array('refTolDt','refIgDt','tolDt','osztalyId','targyId','tanarId','diakId','telephely'));
 	getToolParameters();
 
 ?>

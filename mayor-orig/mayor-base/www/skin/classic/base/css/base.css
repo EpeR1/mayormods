@@ -71,6 +71,7 @@
     #mayorSearch a { display: block; color: cornflowerblue; padding: 2px; font-size: 13px; }
     #mayorSearch a:before { content:' \25AB '; }
     #mayorSearch a:hover { text-decoration: underline; }
+    #mayorSearch a:focus { text-decoration: underline; }
     #mayorSearch a.aktiv { outline: solid 2px cornflower; }
     #mayorSearch a.aktiv:before, #mayorSearch a:hover:before { content:' \25AA '; }
 

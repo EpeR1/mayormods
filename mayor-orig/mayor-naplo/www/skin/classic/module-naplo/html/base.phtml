@@ -44,7 +44,12 @@
 	    echo '</th>';
 	    $colspan++;
 	}
-
+	if (_POLICY=='private') {
+	    echo '<th style="width:32px;">';
+		echo '<button type="submit" class="toolBarLeft icon-search mayorSearchIcon"></button>';
+	    echo '</th>';
+	    $colspan++;
+	}
 	echo '<td class="toolBarTitle" id="toolBarTitle" colspan="3">';
 	    if (defined('__PAGETITLE')) echo __PAGETITLE.'<br/>';
 	    else echo 'MaYoR elektronikus napló'.'<br/>';
@@ -57,12 +62,18 @@
 	echo '</td>'."\n";
 	reset($TOOL); 
 	foreach ( $TOOL as $tool => $params ) {
+
 //	    if ( function_exists( $func = "put$tool" ) && $params['tipus']=='cella') {
 	    if ( isset($params['tipus']) && $params['tipus']=='cella') {
 		if (isset($params['title'])) $title = '__'.$params['title'];
 		else $title = '__'.nagybetus($tool).'TITLE';
 
-		echo '<td class="toolBarTool cella" style="position:; vertical-align:top">';
+		$_kotelezoClass = ($params['kotelezo'] === true) ? 'kotelezo':'';
+		$_hianyzoClass = ($params['hianyzik'] === true) ? 'hianyzo':'';
+		$_hibasClass = ($params['hibas'] === true) ? 'hibas':'';
+
+		echo '<td class="toolBarTool cella '.$_kotelezoClass.' '.$_hianyzoClass.' '.$_hibasClass.'" style="position:; vertical-align:top">';
+
 		echo '<table style="/*border-bottom:solid 1px #558;*/" >'."\n";
 		    if (defined($title)) {
 			echo '<tr><th>';
@@ -138,8 +149,11 @@
 	reset($TOOL);
 	foreach ( $TOOL as $tool => $params ) {
 	    if ( function_exists( $func = "put$tool" ) && $params['tipus']=='sor') {
-		echo '<tr><td colspan="'.($colspan).'">';
-
+		$_kotelezoClass = ($params['kotelezo'] === true) ? 'kotelezo':'';
+		$_hianyzoClass = ($params['hianyzik'] === true) ? 'hianyzo':'';
+		$_hibasClass = ($params['hibas'] === true) ? 'hibas':'';
+		echo '<tr class="'.$_kotelezoClass.' '.$_hianyzoClass.' '.$_hibasClass.'">';
+		echo '<td colspan="'.($colspan).'">';
 		echo '<table align="center" cellspacing="0"><tr>';
 		if (isset($params['title'])) $title = '__'.$params['title'];
 		else $title = '__'.nagybetus($tool).'TITLE';

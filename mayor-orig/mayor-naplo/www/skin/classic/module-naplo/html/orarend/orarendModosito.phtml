@@ -2,10 +2,14 @@
 
     function putOrarend($ADAT) {
 
+	global $aHetNapjai;
+
 	echo '<div id="infoBox1"></div>';
 	echo '<div id="infoBox2"></div>';
 
-	global $aHetNapjai;
+	// jó lenne tudni, hogy milyen tipikus dátumbeállítások vannak
+	// az orarendiHet beállítás is jól jönne itt
+
 	$TANKOROK = $ADAT['felvehetoTankorok'];
 	$BLOKKOK = $ADAT['felvehetoBlokkok'];
 	if (is_array($ADAT['felvehetoTankorok']) && count($ADAT['felvehetoTankorok']) > 0) {
@@ -59,8 +63,14 @@
 			    $_th_class = ($ADAT['vanHaladasi'][$dt]['db']>0) ? 'spec': '';
 			    echo '<th class="'.$_th_class.'">';
 				if (count($ADAT['vanHaladasi'][$dt]['db'])>0) echo '<span class="icon-record" style="color: #E91E63" title="Már van betöltve haladási napló!"></span> ';
-				echo '<span>'.str_replace('-','.',$ADAT['orarend']['napok'][$nap]['dt']).'. ('.$ADAT['orarend']['napok'][$nap]['het'].')</span> ';
+				echo '<span>'.str_replace('-','.',$ADAT['orarend']['napok'][$nap]['dt']).'.';
+				echo '</span> ';
+
 				echo ($ADAT['orarend']['napok'][$nap]['megjegyzes']=='') ? $aHetNapjai[($nap-1)] : $ADAT['orarend']['napok'][$nap]['megjegyzes'];
+				    echo '<br/>Órarendi hét: <select>';
+					echo '<option>'.$ADAT['orarend']['napok'][$nap]['het'].'</option>';
+				    echo '</select> ';
+
 			    echo '</th>';
 			}		
     		echo '</tr>';

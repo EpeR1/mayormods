@@ -110,8 +110,12 @@
 		echo '<th class="t" title="'.$_title.'">';
 		    if (count($ADAT['targyTankor'][$targyId]) == 1) {
 			echo '<a href="'.href('index.php?page=naplo&sub=osztalyozo&f=tankor&tankorId='.$ADAT['targyTankor'][$targyId][0]['tankorId']).'">'.$targyNev.'</a>';
-		    } else
-		    echo $targyNev;
+		    } else {
+			echo $targyNev;
+			for ($i=0; $i<count($ADAT['targyTankor'][$targyId]); $i++) {
+			    echo '<a style="background-color:#aaa; border-radius:2px; color: #666; margin: 0px 4px; padding: 0px 2px;" href="'.href('index.php?page=naplo&sub=osztalyozo&f=tankor&tankorId='.$ADAT['targyTankor'][$targyId][$i]['tankorId']).'">'.($i+1).'</a>';
+			}
+		    }
 		    /* VIRTUAL */
 		    echo ' <select class="eeHidden" style="display:none"><option value="1">kis</option><option value="2">normál</option><option value="3">dolgozat</option><option value="4">témazáró</option><option value="5">vizsga</option></select>';
 		    putJegySelect(array(

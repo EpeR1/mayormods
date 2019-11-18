@@ -121,9 +121,11 @@ div.unfinished {
 
     div.orarendModositoToolbox { background-color: #444; border: solid 1px #ccc; padding:0.5em; color:white; width:80%; margin:auto; border-radius: 4px; colow: white;}
     div.orarendModositoToolbox table.tanarTankor {font-size: smaller; position:fixed; top:2px ; right: 2px; background-color: #444; z-index:1000; }
+
+    div.oraKartya {border-radius: 2px; margin: 2px 1px;}
     div.oraKartya.highlight { outline: solid 1px yellow }
     div.oraKartya span.highlight { background-color:yellow; }
-    div.orarendModositoToolbox button#tankorHelper { float:right; }
+    div.orarendModositoToolbox button#tankorHelper {  }
 
 
 }
