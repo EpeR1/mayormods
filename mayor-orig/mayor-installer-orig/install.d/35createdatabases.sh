@@ -98,7 +98,7 @@ read -n 1 -p "Telepíthetem? (i/N)" -s DO
 if [ "$DO" != "i" ]; then echo " ok, kiléptem..."; exit 1; fi
 echo -e "\n"
 
-read -p " A mysql root jelszó (a begépelt szöveg nem látszik!): " -s MYSQLROOTPW
+read -p " A mysql root jelszó - ha van - (a begépelt szöveg nem látszik!): " -s MYSQLROOTPW
 
 if [ ! -e $MAYORDIR/config/main.conf ]; then 
     cat $MAYORDIR/config/main.conf.example | sed s/%SQLPW%/$MYSQLROOTPW/ > $MAYORDIR/config/main.conf
@@ -107,9 +107,9 @@ fi
 
 if [ "$MYSQLROOTPW" = "" ]; 
 then 
-    MYSQLROOTPWSTR=""; 
+    MYSQLROOTPWSTR="-f"; 
 else 
-    MYSQLROOTPWSTR="-p$MYSQLROOTPW --user=root"
+    MYSQLROOTPWSTR="-f -p$MYSQLROOTPW --user=root"
 fi
 
 cat /tmp/mysql/mayor-login.sql | mysql $MYSQLROOTPWSTR --default-character-set=utf8

@@ -323,7 +323,7 @@ CREATE TABLE `tankorTipus` (
   `jelenlet` enum('kötelező','nem kötelező') COLLATE utf8_hungarian_ci NOT NULL,
   `regisztralando` enum('igen','nem') COLLATE utf8_hungarian_ci DEFAULT NULL,
   `hianyzasBeleszamit` enum('igen','nem') COLLATE utf8_hungarian_ci DEFAULT NULL,
-  `jelleg` enum('elmélet','gyakorlat') COLLATE utf8_hungarian_ci DEFAULT 'elmélet',
+  `jelleg` enum('elmélet','gyakorlat','osztályfüggetlen') COLLATE utf8_hungarian_ci DEFAULT 'elmélet',
   `nevsor` enum('állandó','változtatható') COLLATE utf8_hungarian_ci DEFAULT NULL,
   `tankorJel` varchar(3) COLLATE utf8_hungarian_ci DEFAULT NULL,
   PRIMARY KEY (`tankorTipusId`),

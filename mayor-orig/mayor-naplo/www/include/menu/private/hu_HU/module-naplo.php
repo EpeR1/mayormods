@@ -150,7 +150,7 @@
 	$MENU['modules']['naplo']['sub']['haladasi'] = array(
 	    'hetes' => array(array('txt' => 'Hetesek')),
 	    'stat' => array(array('txt' => 'Haladási statisztika')),
-	    'elszamolas' => array(array('txt' => 'Munkaidő')),
+	    'elszamolas' => array(array('txt' => 'Munkaidő elszámolás')),
 	);
 	if (MAYOR_SOCIAL === true) {
 	    $MENU['modules']['naplo']['sub']['haladasi']['helyettesites'] = array(array('txt' => 'Helyettesítés kezelés'));
@@ -302,7 +302,7 @@
 	    'specialis' => array(array('txt' => 'Speciális nap')),
 	    'elmaradas' => array(array('txt' => 'Haladási elmaradások')),
 	    'stat' => array(array('txt' => 'Haladási statisztika')),
-	    'elszamolas' => array(array('txt' => 'Elszámolás')),
+	    'elszamolas' => array(array('txt' => 'Munkaidő elszámolás')),
 	    'oralatogatas' => array(array('txt' => 'Óralátogatás')),
 	    'hetes' => array(array('txt' => 'Hetesek')),
 	);
@@ -431,7 +431,7 @@
 	    'specialis' => array(array('txt' => 'Speciális nap', 'rejtett' => true)),
 	    'elmaradas' => array(array('txt' => 'Haladási elmaradások', 'rejtett' => true)),
 	    'stat' => array(array('txt' => 'Haladási statisztika', 'rejtett' => true)),
-	    'elszamolas' => array(array('txt' => 'Elszámolás', 'rejtett' => true)),
+	    'elszamolas' => array(array('txt' => 'Munkaidő elszámolás', 'rejtett' => true)),
 	    'oralatogatas' => array(array('txt' => 'Óralátogatás', 'rejtett' => true)),
 	    'hetes' => array(array('txt' => 'Hetesek')),
 	);

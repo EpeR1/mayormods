@@ -155,9 +155,10 @@
 	    $str[] = 'tárgyból';
 
 	    $str[] = '<b>'.($KOVETELMENY[$D['jegyAdat']['jegyTipus']][$D['jegyAdat']['jegy']]['hivatalos']).'</b>';
-	    $str[] = '(röviden: '.$KOVETELMENY[$D['jegyAdat']['jegyTipus']][$D['jegyAdat']['jegy']]['rovid'].'),';
-	    $str[] = $D['jegyAdat']['jegyTipus'];
-	    $str[] = 'típusú értékelés került beírásra az osztályozó naplóba.';
+	    $str[] = '(röviden: '.$KOVETELMENY[$D['jegyAdat']['jegyTipus']][$D['jegyAdat']['jegy']]['rovid'].')';
+               if (!in_array($D['jegyAdat']['jegyTipus'],array('jegy','féljegy'))) $str[] = $D['jegyAdat']['jegyTipus'].' típusú';
+            $str[] = 'értékelés került beírásra az osztályozó naplóba';
+
 	}
 
 	if (is_array($D['oraAdat'])) {

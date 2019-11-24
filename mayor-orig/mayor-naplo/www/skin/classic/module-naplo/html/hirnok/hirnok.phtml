@@ -72,7 +72,7 @@
     function putHirnokBadge_jegy($D) {
 	echo '<a href="'.href('index.php?page=naplo&sub=osztalyozo&f=diak').'">';
 	// echo '<span class="icon-pencil"></span>';
-	if (in_array($D['jegyAdat']['jegy'],array(1,2,3,4,5))) echo '<span class="material-icons">looks_'.intval(($D['jegyAdat']['jegy'])).'</span>';
+	if (in_array($D['jegyAdat']['jegy'],array(1,2,3,4,5)) && in_array($D['jegyAdat']['jegyTipus'],array('jegy','féljegy'))) echo '<span class="material-icons">looks_'.intval(($D['jegyAdat']['jegy'])).'</span>';
 	else echo '<span class="material-icons">mode_edit</span>';
 	echo '</a>';
     }
@@ -232,9 +232,9 @@
 	    $str[] = 'tárgyból';
 
 	    $str[] = '<b>'.($KOVETELMENY[$D['jegyAdat']['jegyTipus']][$D['jegyAdat']['jegy']]['hivatalos']).'</b>';
-	    $str[] = '('.$KOVETELMENY[$D['jegyAdat']['jegyTipus']][$D['jegyAdat']['jegy']]['rovid'].'),';
-	    $str[] = $D['jegyAdat']['jegyTipus'];
-	    $str[] = 'típusú értékelés került beírásra az osztályozó naplóba.';
+	    $str[] = '('.$KOVETELMENY[$D['jegyAdat']['jegyTipus']][$D['jegyAdat']['jegy']]['rovid'].')';
+		if (!in_array($D['jegyAdat']['jegyTipus'],array('jegy','féljegy'))) $str[] = $D['jegyAdat']['jegyTipus'].' típusú';
+	    $str[] = 'értékelés került beírásra az osztályozó naplóba';
 	}
 
 	if (is_array($D['oraAdat'])) {
