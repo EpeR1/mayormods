@@ -99,4 +99,6 @@
 
     if (count($KERELEM_TAG) ==0) $KERELEM_TAG = array('névsor','jogviszony','órarend, haladási','hiányzás, igazolás','jegy, zárójegy');
 
+    if (!defined('__HABEL_GYURI_DEBUG')) define('__HABEL_GYURI_DEBUG',false);
+
 ?>

@@ -180,9 +180,13 @@
 	$txt = ($ADAT['txt']);
 	$dbName = 'naplo_'.__INTEZMENY.'_'.$ADAT['tanev'];
 
-	$q = "INSERT INTO `%s`.uzeno (dt,txt,feladoId,feladoTipus,cimzettId,cimzettTipus) VALUES (NOW(), '%s', %u, '%s', %u, '%s')";
-	$v = array($dbName, $txt, $feladoId, $feladoTipus, $cimzettId, $cimzettTipus);
-	return db_query($q,array('fv' => 'uzeno/postUzenet', 'modul' => 'naplo_intezmeny', 'values' => $v));
+	if ($cimzettId>0 && $feladoId>0 && $txt!='') {
+	    $q = "INSERT INTO `%s`.uzeno (dt,txt,feladoId,feladoTipus,cimzettId,cimzettTipus) VALUES (NOW(), '%s', %u, '%s', %u, '%s')";
+	    $v = array($dbName, $txt, $feladoId, $feladoTipus, $cimzettId, $cimzettTipus);
+	    return db_query($q,array('fv' => 'uzeno/postUzenet', 'modul' => 'naplo_intezmeny', 'values' => $v));
+	} else {
+	    return false;
+	}
     }
 
     // v3.1

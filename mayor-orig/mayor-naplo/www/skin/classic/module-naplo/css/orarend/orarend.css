@@ -71,6 +71,11 @@ table.orarend tbody tr td div.oraMostVan {
     border-color: lightgreen; border-width: 0px 4px 0px 4px; border-radius:2px; 
 }
 
+table.orarend tbody tr td div.utolsoora { 
+    border-style: solid; 
+    border-color: orange; border-width: 0px 0px 2px 0px; border-radius:2px; 
+}
+
 table.orarend tbody tr td div.dolgozat { 
     background-color: orange; color:white;
     border-radius:2px; padding:2px;

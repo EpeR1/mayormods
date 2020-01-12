@@ -51,6 +51,24 @@
 	return $RETURN_STR;
     }
 
+    function generateFutar_utolsoora($D) {
+       $a_az[0] = 'a';
+        $a_az[1] = 'az';
+        $a_az[2] = 'a';
+        $a_az[3] = 'a';
+        $a_az[4] = 'a';
+        $a_az[5] = 'az';
+        $a_az[6] = 'a';
+        $a_az[7] = 'a';
+        $a_az[8] = 'a';
+        $a_az[9] = 'a';
+        $a_az[10] = 'a';
+        $a_az[11] = 'a';
+        $a_az[12] = 'a';
+        $RETURN_STR .='Ma a haladási napló szerint a(z) <b>'.$D['adat']['teremNev'].'</b> teremben '.$a_az[$D['adat']['utolsooraateremben']].' <b>'.$D['adat']['utolsooraateremben'].'. óra</b> után már nincs óra!';
+	return $RETURN_STR;
+    }
+
     function generateFutarBadge_jegy($D) {
 	// return '<i class="material-icons">face</i>';
     }

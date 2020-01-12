@@ -2,9 +2,9 @@
 
     if (_RIGHTS_OK !== true) die();
 
-    global $Kerelmek,$telephelyId,$TELEPHELY;
+    global $Kerelmek,$telephelyId,$TELEPHELY, $kerelemId;
 
-    if ($skin=='classic') putHibabejelento($telephelyId);
+    if ($skin=='classic' && !($kerelemId>0)) putHibabejelento($telephelyId);
 
     if (is_array($Kerelmek) && count($Kerelmek)>0) {
 	if ($_GET['view']==2){

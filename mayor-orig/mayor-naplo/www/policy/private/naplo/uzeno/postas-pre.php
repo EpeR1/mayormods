@@ -27,6 +27,7 @@
     $ADAT['cimzett'] = readVariable($_POST['cimzett'],'string');
     $ADAT['diakokkal'] = readVariable($_POST['diakokkal'],'bool'); // ez mindig true
     $ADAT['txt'] = readVariable($_POST['txt'],'string');
+
     $ADAT['tanev'] = readVariable($_POST['tanev'],'numeric',__TANEV);
     list($_cimzettTipus,$_cimzettId) = explode('|',$ADAT['cimzett']);
     $ADAT['cimzettTipus'] = readVariable($_cimzettTipus,'strictstring',null);    
@@ -77,13 +78,15 @@
                 'txt'=> $ADAT['txt'] );
 
         if (postUzenet($P) === true) {
-	    /* Ha sikered */
+	    /* Ha sikeres */
 	    unset($_POST);
 	    header('Location: '.location('index.php?page=naplo&sub=uzeno&f=uzeno'));
 	} else {
 	    $_SESSION['alert'][] = 'page::uzenorogziteshiba';
 	}
 
+    } else {
+	    $_SESSION['alert'][] = 'page::uzenorogziteshiba';
     }
 
 ?>

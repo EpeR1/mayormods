@@ -55,6 +55,9 @@
     function putHirnokBadge_idoszak($D) {
 	echo '<span class="icon-calendar-sign"></span>';
     }
+    function putHirnokBadge_utolsoora($D) {
+	echo '<span class="icon-broom" style="background-color: #00bcd4"></span>';
+    }
     function putHirnokBadge_haladasiBeiratlan($D) {
 
 	if ($D['db']!=0)
@@ -111,6 +114,23 @@
 
     function putHirnok_idoszak($D) {
 	echo 'Aktív <b>'.$D['idoszakAdat']['tipus'].'</b> időszak: '.$D['idoszakAdat']['tolDt'].' – '.$D['idoszakAdat']['igDt'];
+    }
+
+    function putHirnok_utolsoora($D) {
+	$a_az[0] = 'a';
+	$a_az[1] = 'az';
+	$a_az[2] = 'a';
+	$a_az[3] = 'a';
+	$a_az[4] = 'a';
+	$a_az[5] = 'az';
+	$a_az[6] = 'a';
+	$a_az[7] = 'a';
+	$a_az[8] = 'a';
+	$a_az[9] = 'a';
+	$a_az[10] = 'a';
+	$a_az[11] = 'a';
+	$a_az[12] = 'a';
+	echo 'Ma a haladási napló szerint a(z) <b>'.$D['adat']['teremNev'].'</b> teremben '.$a_az[$D['adat']['utolsooraateremben']].' <b>'.$D['adat']['utolsooraateremben'].'. óra</b> után már nincs óra!';
     }
 
     function putHirnokBadge_hianyzas($D) {

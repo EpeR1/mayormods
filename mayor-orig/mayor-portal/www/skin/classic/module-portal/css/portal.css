@@ -40,12 +40,14 @@
 
 
     table.portalMain td.bal div.doboz div.dobozCim { 
-	width:100%; font-size:11px;font-weight: bold; padding: 0.1em 0em;  color: white; border-bottom: solid 1px #676767;
+	width:100%; font-size:11px;
+	font-weight: bold; padding: 0.1em 0em;  color: white; border-bottom: solid 1px #676767;
 	border-top-right-radius: 5px;
 	border-top-left-radius: 5px;
     }
     table.portalMain td.jobb div.doboz div.dobozCim { 
-	width:100%; font-size:11px;font-weight: bold; padding: 0.1em 0em;  color: white; border-bottom: solid 1px #676767;
+	width:100%; font-size:11px;
+	font-weight: bold; padding: 0.1em 0em;  color: white; border-bottom: solid 1px #676767;
 	border-top-right-radius: 5px;
 	border-top-left-radius: 5px;
     }

@@ -50,7 +50,7 @@
 		$return = (isset($IN)) ? preg_replace("/[^a-zA-Z0-9_\-]/i",'',$IN) : $default;
 		break;
 	    case 'html':
-		$return = (isset($IN)) ? preg_replace("/[^a-zA-Z0-9\ \.\,?_|:;űáéúőóüöíŰÁÉÚŐÓÜÖÍ\-]/i",'',$IN) : $default;
+		$return = (isset($IN)) ? preg_replace("/[^a-zA-Z0-9\ \.\,?_|:;űáäéúőóüöíŰÁÄÉÚŐÓÜÖÍ\-]/i",'',$IN) : $default;
 		break;
 	    case 'hexa':
 		$return = preg_replace("/[^0-9a-fA-F]/i",'',$IN);
@@ -76,7 +76,7 @@
 		$return = filter_var($IN, FILTER_VALIDATE_EMAIL);
 		break;
 	    case 'userAccount':
-		$return = (preg_match("#([a-z]|[A-Z]|[0-9]| |\.|,|_|[űáéúőóüöíŰÁÉÚŐÓÜÖÍäÄ]|-|@)*$#", $IN) != false) ? $IN : $default;
+		$return = (preg_match("#([a-z]|[A-Z]|[0-9]| |\.|,|_|[űáäéúőóüöíŰÁÄÉÚŐÓÜÖÍäÄ]|-|@)*$#", $IN) != false) ? $IN : $default;
 		break;
 	    default:
 		$return = $IN;

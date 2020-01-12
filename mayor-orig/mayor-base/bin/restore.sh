@@ -189,6 +189,7 @@ EOF
 ) | $MYSQL -h$MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PW
 	fi
 	echo -n '... '
+	# echo 'SET FOREIGN_KEY_CHECKS=0' &&
 	cat ${SQLFILE} | mysql -p${MYSQL_PW} --user=${MYSQL_USER} --default-character-set=utf8 ${DB}
 	echo ok
     fi

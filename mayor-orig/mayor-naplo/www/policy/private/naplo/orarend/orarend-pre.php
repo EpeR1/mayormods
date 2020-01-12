@@ -224,6 +224,7 @@
 	$ADAT['dt'] = $dt; // show this... ha a skin ajax
 
 	$ADAT['csengetesiRend'] = getCsengetesiRend();
+	$ADAT['utolsoorak'] = getUtolsoorak();
 	$ADAT['telephelyId'] = $telephelyId;
 	$ADAT['napiMinOra'] = getMinOra();
 	$ADAT['napiMaxOra'] = getMaxOra();

@@ -365,8 +365,10 @@ l53 -52 55 54 55 55 42 -43 43 -42 -55 -55 -54 -55 54 -55 55 -55 -43 -42 -42
     }
 
     function mayorGlobalLogin($loggedIn=false) {
-	global $AUTH;
+	global $AUTH,$page;
 	if (is_array($AUTH['private']['allowOnly'])) $_class='class="restricted"'; else $_class = '';
+
+	if ($page=="auth") return;
 
 	echo '<div id="mayorGlobalLogin" '.$_class.'>';
 	    if ($loggedIn) {
@@ -378,13 +380,13 @@ l53 -52 55 54 55 55 42 -43 43 -42 -55 -55 -54 -55 54 -55 55 -55 -43 -42 -42
 		echo '<table><tr><td style="padding-right:10px;">';
 		formBegin(array('class'=>'check passwordAuth','action'=>$secure_url));
 		echo '<span class="icon-adult '.$_class.'"></span>';
-		echo '<input '.$_focus.' type="text" name="userAccount" autocomplete="off" />';
+		echo '<input '.$_focus.' type="text" name="userAccount" placeholder="felhasználónév" autocomplete="username" id="mayorGlobalLoginUserAccount" />';
 		echo '<br/>';
 		echo '<span class="icon-key '.$_class.'"></span>';
-		echo '<input type="password" name="userPassword" />';
+		echo '<input type="password" name="userPassword" placeholder="jelszó" autocomplete="current-password" id="mayorGlobalLoginPassword" />';
 		echo '<input type="hidden" name="toPolicy" value="private" />';
 		echo '<input type="hidden" name="action" value="mayorGlobalLogin" />';
-		echo '<button type="submit" style="background-color:inherit;border: solid 0px white;padding:0px;"><span class="icon-play-alt"></span></button>';
+		echo '<button type="submit" class="dologin"><span class="icon-play-alt"></span></button>';
 		formEnd();
 		echo '</td><td style="">';
 		if (__GOOGLEAPI_ENABLED===true) {

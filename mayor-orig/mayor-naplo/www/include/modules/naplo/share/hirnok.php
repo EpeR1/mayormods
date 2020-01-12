@@ -232,6 +232,22 @@ global $SZEMESZTER;
 	    );
 	    }
 	}
+
+	// utolsó óra
+	if (__TANAR === true || (__NAPLOADMIN===true && $tanarId>0)) {
+    	    if (defined('__USERTANARID') && is_numeric(__USERTANARID)) { // cron esetén nincs ilyen
+		$q = "SELECT *,getOraTolTime(ora.oraId) AS tolTime, getOraIgTime(ora.oraId) AS igTime FROM (SELECT dt,max(ora) AS utolsooraateremben,teremId,terem.leiras AS teremNev FROM ora LEFT JOIN ".__INTEZMENYDBNEV.".terem USING (teremId) WHERE dt=curdate() AND teremId IS NOT NULL GROUP BY teremId) AS x LEFT JOIN ora ON (ora.dt = x.dt AND x.utolsooraateremben = ora.ora AND x.teremId = ora.teremId) WHERE ora.ki=%u";
+		$v = array(__USERTANARID);
+		$r = db_query($q, array('fv'=>'getHirnokFolyam/haladasi2','modul'=>'naplo','result'=>'indexed','values'=>$v));
+		for ($i=0; $i<count($r); $i++) {
+		    $R[mktime()][] = array(
+		    'hirnokTipus'=>'utolsoora',
+		    'adat'=>$r[$i]
+		    );
+		}
+	    }
+	}
+
 	// Üzenő
 //	 /* 20170418
 	initSzerep();

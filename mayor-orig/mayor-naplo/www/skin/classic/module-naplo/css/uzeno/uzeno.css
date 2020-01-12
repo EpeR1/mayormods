@@ -128,6 +128,9 @@
     a span.icon-network { color: #aaa; }
     a:hover span.icon-network { color: cornflowerblue; }
 
+    #uzenoSearchIcon { cursor:pointer; background-color: #bbb; border-radius:2px; padding:3px 3px 2px 2px; color:white; }
+    #uzenoSearchIcon:hover { background-color: cornflowerblue; }
+
 @media (max-width: 764px) {
 
     table.uzeno tbody tr td.felado { min-width:80px;}

@@ -121,7 +121,7 @@
     #nav li.active { background: #3facc7; }
 
     #nav li a { display: block; padding: 3px 10px; color: white; }
-    #nav > li > a { padding: 0px 20px; line-height: 60px; vertical-align: middle; display: table-cell; min-width: 70px; 
+    #nav > li > a { padding: 0px 20px; line-height: 60px; vertical-align: middle; display: table-cell; min-width: 40px;  
 	-webkit-transition: all 0.1s ease;
 	transition: all 0.1s ease;
     }
@@ -365,6 +365,18 @@
     #mayorGlobalLogin form input {margin:2px;}
     #mayorGlobalLogin table { height:60px;}
 
+
+    #mayorGlobalLogin form button.dologin {
+	background-color:inherit;
+	border: solid 0px white;padding:0px;
+	height:13px;
+	font-size:13px;
+    }
+    #mayorGlobalLogin form button.dologin:hover span { color: lightgreen; }
+    #mayorGlobalLogin form button.dologin.hint span { color: orange; 
+	-webkit-animation:colorchange 1s infinite alternate;
+    }
+
     #mayorGlobalLogin form button.api {
 	background-color: inherit;
 	border: solid 0px #fff;
@@ -400,7 +412,8 @@
 	border-top: solid 4px lightblue;
 	padding:0px; height:20px; width:100%;
 	background-color:rgba(250,250,250,0.9); position:fixed;
-	top:60px;left:0px; z-index:3
+	top:60px;
+	left:0px; z-index:2
     }
 
     #mayorErrorSmall.mayorErrorSmallError {
@@ -410,7 +423,8 @@
 	border-top: solid 4px orange;
 	padding:0px; height:20px; width:100%;
 	background-color:rgba(250,250,250,0.9); position:fixed;
-	top:60px;left:0px; z-index:3
+	top:60px;
+	left:0px; z-index:2
     }
 
 
@@ -768,5 +782,10 @@ border: solid 0px #eee;
     100%{background-position:0% 50%}
 }
 
+@-webkit-keyframes colorchange {
+  0% { color: lightgreen; }
+  50% { color: orange; }
+  100% { color: white; }
+}
 
 

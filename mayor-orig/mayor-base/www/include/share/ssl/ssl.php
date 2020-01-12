@@ -187,7 +187,9 @@ function random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzAB
 	    if (function_exists('mcrypt_encrypt')) {
 		$return = mcrypt_encrypt(MCRYPT_RIJNDAEL_128,$key,$data,MCRYPT_MODE_CBC,"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 	    } else {
-		$_SESSION['alert'][] = 'info:mcrypt függvény nem található (tipp! telepítsd a php5-mcrypt csomagot a szerverre)';
+		$return = openssl_encrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+		// $return = openssl_decrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+		//$_SESSION['alert'][] = 'info:mcrypt függvény nem található (tipp! telepítsd a php5-mcrypt csomagot a szerverre)';
 	    }
 	    return base64_encode($return);
 	}
@@ -201,7 +203,9 @@ function random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzAB
 	    if (function_exists('mcrypt_decrypt')) {
 		$return = mcrypt_decrypt(MCRYPT_RIJNDAEL_128,$key,$data,MCRYPT_MODE_CBC,"\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 	    } else {
-		$_SESSION['alert'][] = 'info:mcrypt függvény nem található (tipp! telepítsd a php5-mcrypt csomagot a szerverre)';
+		// $return = openssl_encrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+		$return = openssl_decrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+		// $_SESSION['alert'][] = 'info:mcrypt függvény nem található (tipp! telepítsd a php5-mcrypt csomagot a szerverre)';
 	    }
 	    return trim(urldecode($return));
 	}

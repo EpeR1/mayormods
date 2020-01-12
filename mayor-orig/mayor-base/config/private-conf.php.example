@@ -53,7 +53,9 @@
 	//'ldap base dn' => 'o=mayor,c=hu',
 	//'createAccountScript' => 'accounts.sh'
 
-	#Active Directory Test
+	###                 Active Directory Test                           ###
+	# self-signed cert esetén a /etc/ldap/ldap.conf-ba: TLS_REQCERT allow #
+	###                                                                 ###
         #'backend'          => 'ads',
         #'adsHostname'      => 'ldaps://your.domain:636',                 // Jelszóváltoztatáshoz kötelező az ldaps
         #'adsBaseDn'        => 'DC=your,DC=domain',

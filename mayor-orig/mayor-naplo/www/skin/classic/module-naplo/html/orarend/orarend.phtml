@@ -24,6 +24,9 @@
     function putOrarend($ADAT) {
 	global $aHetNapjai,$skin;
 
+	// $ADAT['utolsoorak'][$teremId]['oraId']
+
+
 	/* Képzés-Mátrix */
 	//dump($ADAT['kepzesOraterv']);
 	if (is_array($ADAT['kepzesOraterv']) && count($ADAT['kepzesOraterv'])>0) {
@@ -237,6 +240,7 @@
 				    $_tankorTipus = $ADAT['tankorok'][$_T['tankorId']][0]['tankorTipus'];
 				    $_tankorTipusId = $ADAT['tankorok'][$_T['tankorId']][0]['tankorTipusId'];
 				    $_oraMostVan = (in_array($_ORA['oraId'],$ADAT['orakMost']));
+				    $_utolsoora = ($_ORA['oraId']!='' && $_ORA['oraId'] == $ADAT['utolsoorak'][$dt][$_valosTeremId]['oraId']);
 				    //
 				    if ($kepzes_figyel 
 					&&$ADAT['tankorTipus'][$_tankorTipusId]['oratervi'] == 'óratervi'
@@ -249,14 +253,15 @@
 				    $_osztalyJel = $_T['osztalyJel'];
 				    // figyelem, itt jön a kiírás, a _putOra fv helyett:
 				    $_tipusClass = str_replace(' ','_',$_ORA['tipus']);
-				    $_oraMostVanClass = ($_oraMostVan) ? ' oraMostVan':'';
+				    $_oraMostVanClass = ($_oraMostVan) ? ' oraMostVan ':'';
+				    $_utolsooraClass = ($_utolsoora) ? ' utolsoora ':'';
 				    if ($_T['jelleg']=='osztályfüggetlen') { 
 					$_tipusClass .= ' osztályfüggetlen';
 				    } 
 				    $_oraAdat = (isset($_ORA['oo']) && _POLICY!='public') ? 'oraAdat' : ''; // haladási
 				    $_hianyzasAdat =  $ADAT['hianyzas'][$_ORA['oraId']][0];
 				    $_hianyzasClass = (is_array($_hianyzasAdat) && $_hianyzasAdat['hTipus']=='hiányzás') ? ' nemVoltBent ':''; 
-				    echo '<div class="'.$_tipusClass.$_frissClass.$_oraMostVanClass.$_hianyzasClass.' '.$_oraAdat.'" data-oraid="'.$_ORA['oraId'].'" title="'.$_ORA['tipus'].'" >';
+				    echo '<div class="'.$_tipusClass.$_frissClass.$_oraMostVanClass.$_utolsooraClass.$_hianyzasClass.' '.$_oraAdat.'" data-oraid="'.$_ORA['oraId'].'" title="'.$_ORA['tipus'].'" >';
 
 				    if (is_array($_hianyzasAdat)) {
 					echo '<span class="hianyzasTicker '.ekezettelen($_hianyzasAdat['hTipus']).' '.ekezettelen($_hianyzasAdat['statusz']).' '.ekezettelen($_hianyzasAdat['igazolas']).'">';
