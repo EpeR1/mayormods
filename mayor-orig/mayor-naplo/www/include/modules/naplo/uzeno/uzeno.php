@@ -180,7 +180,7 @@
 	$txt = ($ADAT['txt']);
 	$dbName = 'naplo_'.__INTEZMENY.'_'.$ADAT['tanev'];
 
-	if ($cimzettId>0 && $feladoId>0 && $txt!='') {
+	if ($txt!='') {
 	    $q = "INSERT INTO `%s`.uzeno (dt,txt,feladoId,feladoTipus,cimzettId,cimzettTipus) VALUES (NOW(), '%s', %u, '%s', %u, '%s')";
 	    $v = array($dbName, $txt, $feladoId, $feladoTipus, $cimzettId, $cimzettTipus);
 	    return db_query($q,array('fv' => 'uzeno/postUzenet', 'modul' => 'naplo_intezmeny', 'values' => $v));
