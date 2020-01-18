@@ -97,7 +97,7 @@
 			    } else {
 				$q = "UPDATE zaroJegy SET modositasDt=NOW(),hivatalosDt='%s',diakId=%u,targyId=%u,evfolyam=%u,evfolyamJel='%s',felev=%u,
 				    jegy='%s',jegyTipus='%s',megjegyzes='%s' 
-				  WHERE zaroJegyId=%u AND (jegy!='%s' OR jegyTipus!='%s' OR megjegyzes!='%s')";
+				  WHERE zaroJegyId=%u AND (jegy!='%s' OR jegyTipus!='%s' OR megjegyzes!='%s' OR megjegyzes IS NULL)";
 			    }
                             $v[] = $J['zaroJegyId'];
                             $v[] = $J['jegy'];
@@ -115,7 +115,7 @@
                               VALUES (NOW(),'%s',%u,%u,%u,'%s',%u,'%s','%s','%s')";
 			}
                     }
-		$results[] = db_query($q, array('modul' => 'naplo_intezmeny','values' => $v, 'fv' => 'zaroJegyBeiras', 'result' => 'insert'), $lr);
+		$results[] = db_query($q, array('debug'=>true,'modul' => 'naplo_intezmeny','values' => $v, 'fv' => 'zaroJegyBeiras', 'result' => 'insert'), $lr);
 	    }
         }
 
