@@ -425,7 +425,7 @@
     }
 
     function getUtolsoorak() {
-	$q = "SELECT *,getOraTolTime(ora.oraId) AS tolTime, getOraIgTime(ora.oraId) AS igTime
+	$q = "SELECT * -- ,getOraTolTime(ora.oraId) AS tolTime, getOraIgTime(ora.oraId) AS igTime
 FROM (SELECT dt,max(ora) AS utolsooraateremben,teremId,terem.leiras AS teremNev FROM ora LEFT JOIN ".__INTEZMENYDBNEV.".terem
 USING (teremId) WHERE teremId IS NOT NULL GROUP BY dt,teremId) AS x LEFT JOIN ora ON (ora.dt = x.dt AND x.utolsooraateremben = ora.ora AND x.teremId = ora.teremId)";
 	$r = db_query($q, array('fv'=>'getUtolsoorak','modul'=>'naplo','result'=>'indexed'));

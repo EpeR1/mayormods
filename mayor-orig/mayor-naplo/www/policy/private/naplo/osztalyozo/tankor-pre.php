@@ -231,7 +231,7 @@ if (!__NAPLOADMIN && !__VEZETOSEG && !__TANAR && !__DIAK && !__TITKARSAG) {
 
 //------
 	if ($action == 'jegyBeiras' && (isset($_POST['bizBeiroGomb']) || $_POST['bizBeiroGomb2']!='')) $action = 'jegyLezaras';
-	if (__EVKOZI_JEGYET_ADHAT) {
+	if (__EVKOZI_JEGYET_ADHAT === true) {
 
 		if ($action == 'jegyBeiras') {
 			$actionId = readVariable($_POST['actionId'],'strictstring');
@@ -268,7 +268,7 @@ if (!__NAPLOADMIN && !__VEZETOSEG && !__TANAR && !__DIAK && !__TITKARSAG) {
 			} // Nem csak súlyozást változtat
 		}
 	}
-	if (__ZAROJEGYET_ADHAT) {
+	if (__ZAROJEGYET_ADHAT === true) {
 		if ($action == 'jegyLezaras') {
 			$zaroJegyek = $_POST['zaroJegy'];
 			$tankorAdat = getTankorById($tankorId);
