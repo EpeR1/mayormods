@@ -115,12 +115,11 @@
                               VALUES (NOW(),'%s',%u,%u,%u,'%s',%u,'%s','%s','%s')";
 			}
                     }
-		$results[] = db_query($q, array('debug'=>true,'modul' => 'naplo_intezmeny','values' => $v, 'fv' => 'zaroJegyBeiras', 'result' => 'insert'), $lr);
+		$results[] = db_query($q, array('modul' => 'naplo_intezmeny','values' => $v, 'fv' => 'zaroJegyBeiras', 'result' => 'insert'), $lr);
 	    }
         }
 
 	if ($olr=='') db_close($lr); //+++ MISSING hibakezelés, tranzakciókezelés???
-
 	if (is_array($results) && count($results) == 1) return $results[0]; // vizsga oldal használja lastInsertId miatt
 	else return false;
 

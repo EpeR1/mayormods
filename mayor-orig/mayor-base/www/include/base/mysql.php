@@ -193,10 +193,13 @@
 	) $_SESSION['alert'][] = 'message:lehet hiba?:db_query/'.$SET['fv'].':'.$SET['modul'].':'.$q_pattern;
 
 	if ($SET['log']===true) mayorLogger(10,'mysql',$q,_USERACCOUNT);
-	if (MYSQLI_ENABLED===true)
+	if (MYSQLI_ENABLED===true) {
 	    $r = mysqli_query($lr,$q);
-	else
+	    $_insert_id = mysqli_insert_id($lr); // itt lekérdezzük, hogy a warning lekérdezés ne rontsa el debug=true esetén!!
+	} else {
     	    $r = @mysql_query($q, $lr);
+	    $_insert_id = mysql_insert_id($lr);
+	}
 	define(MYSQL_LOGGER,false);
 	if (MYSQL_LOGGER === true) {
 	    $filename = '/tmp/mysql.log';
@@ -283,7 +286,7 @@
                     break;
         	}
     	    } elseif ($SET['result'] == 'insert' && (substr(strtolower($q),0,6) == 'insert' || substr(strtolower($q),0,7) == 'replace')) {
-                $RESULT = mysqli_insert_id($lr);
+                $RESULT = $_insert_id; // mysqli_insert_id($lr); - ez itt már elromlik debug=true esetén a warning lekérdezés miatt
 		mayorLogger(1,'mysql',$q,_USERACCOUNT);
 	    } elseif ($SET['result'] == 'affected rows') {
 		$RESULT = mysqli_affected_rows($lr);
@@ -327,7 +330,7 @@
                     break;
         	}
     	    } elseif ($SET['result'] == 'insert' && (substr(strtolower($q),0,6) == 'insert' || substr(strtolower($q),0,7) == 'replace')) {
-                $RESULT = mysql_insert_id($lr);
+                $RESULT = $_insert_id; // mysql_insert_id($lr); - ez itt már elromlik debug=true esetén a warning lekérdezés miatt
 		mayorLogger(1,'mysql',$q,_USERACCOUNT);
 	    } elseif ($SET['result'] == 'affected rows') {
 		$RESULT = mysql_affected_rows($lr);
