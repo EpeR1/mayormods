@@ -4,8 +4,6 @@ if (PHP_SAPI!=='cli') define('_RUNLEVEL','www'); else define('_RUNLEVEL','cron')
 
 define('_JSLIB','jquery.min');
 
-if (!defined('_LOGLEVEL')) define('_LOGLEVEL',10);
-
 date_default_timezone_set('Europe/Budapest');
 
 if (_RUNLEVEL === 'cron') {
@@ -25,6 +23,9 @@ if (_RUNLEVEL === 'cron') {
 	die();
     }
 }
+
+if (!defined('_LOGLEVEL')) define('_LOGLEVEL',10);
+if (!defined('__DEBUG')) define('__DEBUG',false);
 
 if (!defined('_SECURECOOKIE')) define('_SECURECOOKIE', true);
 

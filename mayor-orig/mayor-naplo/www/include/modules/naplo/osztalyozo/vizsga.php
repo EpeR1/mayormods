@@ -110,7 +110,7 @@
 		// eredeti vizsga záradékolása és zárójegyhez kötése
 		$q = "UPDATE vizsga SET zaradekId=%u, zaroJegyId=%u WHERE vizsgaId=%u";
 		$v = array($zaradekId, $zaroJegyId, $vizsgaId);
-		db_query($q, array('modul' => 'naplo_intezmeny', 'fv' => 'vizsgaHalasztas/záradékolás', 'values' => $v));
+		db_query($q, array('modul' => 'naplo_intezmeny', 'fv' => 'vizsgaErtekeles/záradékolás', 'values' => $v));
 	    }
 	}
 

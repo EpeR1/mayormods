@@ -1,18 +1,5 @@
 <?php
-
-    if (__PORTAL_CODE!=='vmg') die();
-
-    $IMPORT_FILES = array(
-	'csoportba_jaro_tanulok' => _DATADIR.'/'."csoportba_jaro_tanulok.tsv",
-	'osztalyba_jaro_tanulok' => _DATADIR.'/'."osztalyba_jaro_tanulok.tsv",
-	'tantargyfelosztas' => _DATADIR.'/'."ttfimport.tsv",
-	'orarendiOra' => _DATADIR.'/'."orarendiOra.tsv",
-	'helyettesitett_tanorak' => _DATADIR.'/'."helyettesitett_tanorak.tsv",
-//	'elmaradt_tanorak' => _DATADIR.'/'."helyettesitett_tanorak.tsv",
-    );
-
 /*
-
 1. Nyilvántartás, Tanulói Adatok, Csoportok, Exportálás, Csoportba Járó tanulók
 
     _DATADIR.'/'."csoportba_jaro_tanulok.tsv"
@@ -51,11 +38,27 @@
 
     2019.09.02      1       1       Pintér László (mat)             07.B    osztályfőnöki   Tanévnyitó-Margitsziget 2019.09.02
     2019.09.02      2       2       Pintér László (mat)             07.B    osztályfőnöki   Tanévnyitó-Margitsziget 2019.09.02
-
 */
 
-
     if (_RIGHTS_OK !== true) die();
+
+    $IMPORT_FILES = array(
+	'csoportba_jaro_tanulok' => _DATADIR.'/'."csoportba_jaro_tanulok.tsv",
+	'osztalyba_jaro_tanulok' => _DATADIR.'/'."osztalyba_jaro_tanulok.tsv",
+	'tantargyfelosztas' => _DATADIR.'/'."ttfimport.tsvx",
+	'orarendiOra' => _DATADIR.'/'."orarendiOra.tsv",
+	'helyettesitett_tanorak' => _DATADIR.'/'."helyettesitett_tanorak.tsv",
+//	'elmaradt_tanorak' => _DATADIR.'/'."helyettesitett_tanorak.tsv",
+    );
+
+    // pre-check files
+    foreach($IMPORT_FILES as $key => $filename) {
+	if (file_exists($filename)===false) {
+	    // $_SESSION['alert'][] = 'info:file_not_exists:'.$filename;
+	    dump($IMPORT_FILES);
+	    die('FATAL ERROR! Not found: '.$filename);
+	}
+    }
 
     if (!__NAPLOADMIN) {
         $_SESSION['alert'][] = 'page:insufficient_access';
@@ -110,7 +113,9 @@
 	//    $OSZTALYNEV2ID[ $OSZTALY ];
 	//}
 	
-	// TODO valami szótár, nem tudjuk kitalálni
+	// TODO valami szótár, nem tudjuk kitalálni (tanév függő is!)
+
+       if (__INTEZMENY==='vmg') { // --TODO tanev
 	$ADAT['kulcsertektar']['osztalyjel2id'] = $OSZTALYJEL2ID = array(
 	    '07.A' => 124,
 	    '07.B' => 125,
@@ -138,9 +143,39 @@
 	    '12.D' => 109,
 	    '12.E' => 99,
 	);
+       } elseif (__INTEZMENY==='MZSG') {
+	    $ADAT['kulcsertektar']['osztalyjel2id'] = $OSZTALYJEL2ID = array(
+	    '7.a' => 72,
+	    '7.b' => 73,
+	    '8.a' => 74,
+	    '8.b' => 75,
+	    '9.ny' => 71,
+	    '9.a' => 60,
+	    '9.b' => 61,
+	    '9.c' => 68,
+	    '9.d' => 69,
+	    '9.e' => 70,
+	    '10.a' => 57,
+	    '10.b' => 58,
+	    '10.c' => 66,
+	    '10.d' => 67,
+	    '10.e' => 64,
+	    '11.a' => 50,
+	    '11.b' => 51,
+	    '11.c' => 62,
+	    '11.d' => 63,
+	    '11.e' => 59,
+	    '12.a' => 45,
+	    '12.b' => 46,
+	    '12.c' => 55,
+	    '12.d' => 56,
+	    '12.e' => 53,
+	    );
+       } else {
+	$_SESSION['alert'][] = 'page:nincs_osztalyjel2id';
+       }
 
-
-	$fn = fopen($IMPORT_FILES['tantargyfelosztas'],"r");
+	$fn = fopen($IMPORT_FILES['tantargyfelosztas'],"r") or die($IMPORT_FILES['tantargyfelosztas'].':file not found!');
 	while(! feof($fn))  {
 	    /*
 		0 => string '12.C' (length=4)
@@ -166,7 +201,7 @@
 	#	tankorosztaly kitalálás:
 	#	DIÁK1 -(import)-> kretaOsztalyNev -(osztalyNaplo)-> osztalyId
 
-	$fn = fopen($IMPORT_FILES['osztalyba_jaro_tanulok'],"r");
+	$fn = fopen($IMPORT_FILES['osztalyba_jaro_tanulok'],"r") or die($IMPORT_FILES['osztalyba_jaro_tanulok'].':file not found!');;
 	while(! feof($fn))  {
 	    $line = (fgets($fn));
 	    if (ord($line[0]) == 32) $line = "\t".trim($line);
@@ -186,6 +221,9 @@
 	    $osztalyId = $OSZTALYJEL2ID[$result[0]];
 	    $csoportNev = $result[0];
 	    $oId = $result[2];
+
+	    if(is_null($osztalyId)) $_SESSION['alert'][] = 'info:'.$IMPORT_FILES['osztalyba_jaro_tanulok'].':null osztalyId:adatok='.$result[0].':'.$line; 
+
 	    if (!in_array($osztalyId, $CSOPORTADAT[$csoportNev]['osztalyok'])) {
 		$CSOPORTADAT[$csoportNev]['osztalyok'][] = $osztalyId;
 	    }
@@ -203,18 +241,20 @@
 
 	#Csoportba Járó Tanulok:
 	
-	$fn = fopen($IMPORT_FILES['csoportba_jaro_tanulok'],"r");
+	$fn = fopen($IMPORT_FILES['csoportba_jaro_tanulok'],"r") or die($IMPORT_FILES['csoportba_jaro_tanulok'].':file not found!');;
 
 	while(! feof($fn))  {
 	    $line = (fgets($fn));
 	    if (ord($line[0]) == 32) $line = "\t".trim($line);
 	    else $line = trim($line);
 	    $result = explode("\t",$line);
+	    if (count($result)<1) continue;;
 	    // $ADAT['osztalyDiak'][] = $result;
 	    // osztalyNev --> osztalyId ???
 	    $osztalyId = $OSZTALYJEL2ID[$result[3]];
 	    $csoportNev = $result[0];
 	    $oId = $result[2];
+	    if(is_null($osztalyId)) $_SESSION['alert'][] = 'info:'.$IMPORT_FILES['csoportba_jaro_tanulok'].':null osztalyId:adatok='.$result[3].':'.$line; 
 	    if (!in_array($osztalyId, $CSOPORTADAT[$csoportNev]['osztalyok'])) {
 		$CSOPORTADAT[$csoportNev]['osztalyok'][] = $osztalyId;
 	    }
@@ -527,7 +567,7 @@ GROUP BY tankor.tankorId";
 		    $_M = array();
 		    if (is_array($ADAT['csoportAdat'][$_D[0]]['osztalyok']) && is_array($ADAT['csoportAdat'][$_D[1]]['osztalyok'])) {
 			$_M = array_merge(
-			    $ADAT['csoportAdat'][$_D[1]]['osztalyok'],
+			    $ADAT['csoportAdat'][$_D[0]]['osztalyok'],
 			    $ADAT['csoportAdat'][$_D[1]]['osztalyok']
 			);
 		    } elseif (is_array($ADAT['csoportAdat'][$_D[1]]['osztalyok'])) {
@@ -537,6 +577,13 @@ GROUP BY tankor.tankorId";
 		    }
 
 		    $_M = $ADAT['csoportAdat'][$_D['csoportNev']]['osztalyok'];
+
+		    // null értékek kiszűrése:
+		    $_TMP = array();
+		    for ($_tmpi = 0; $_tmpi<count($_M); $_tmpi++) {
+			if (!is_null($_M[$_tmpi]) && $_M[$_tmpi]>0) $_TMP[] = $_M[$_tmpi];
+		    }
+		    $_M = $_TMP;
 
 		    if (!is_array($_M) || count($_M)==0 || is_null($_M)) {
 			$_M = array(0);
@@ -554,6 +601,7 @@ GROUP BY tankor.tankorId ORDER BY tankorNev";
 
 		    $v = array(__TANEV,1,$_D['targyId'],$_D['oraszam']);
 		    $r2 = db_query($q,array('modul'=>'naplo_intezmeny','values'=>$v,'result'=>'indexed'));
+		    if ($r2===false) continue;;
 		    if (count($r2) >= 1) {
 			// mit tegyünk? kézzel fvesszük fel? tagokat ellenőrzünk?
 			$_D['action'] = 'tankorHozzarendel2';
@@ -614,17 +662,16 @@ GROUP BY tankor.tankorId ORDER BY tankorNev";
     // MaYoR: csoportId+targyId+tanarId => tankorId;
 
     $lr_naplo = db_connect('naplo');
-
-    $q = "select csoportId, targyId, tanarId, tankor.tankorId FROM tankorCsoport LEFT JOIN csoport USING (csoportId) LEFT JOIN intezmeny_vmg.tankor USING (tankorId) LEFT JOIN intezmeny_vmg.tankorTanar ON (tankor.tankorId = tankorTanar.tankorId AND beDt>='2019-09-01' AND (kiDt IS NULL or kiDt>=NOW()))";
+    $q = "select csoportId, targyId, tanarId, tankor.tankorId FROM tankorCsoport LEFT JOIN csoport USING (csoportId) LEFT JOIN ".__INTEZMENYDBNEV.".tankor USING (tankorId) LEFT JOIN ".__INTEZMENYDBNEV.".tankorTanar ON (tankor.tankorId = tankorTanar.tankorId AND beDt>='2019-09-01' AND (kiDt IS NULL or kiDt>=NOW()))";
     $r = db_query($q, array('fv' => 'pre', 'modul' => 'naplo', 'values' => $v, 'result'=>'indexed'),$lr_naplo);
     for ($i=0; $i<count($r); $i++) {
 	$d = $r[$i];
 	$TRIPLE2TANKOR[$d['csoportId']][$d['targyId']][$d['tanarId']] = $d['tankorId'];
     }
 
+    if ($IMPORT_FILES['orarendiOra'] != '') { 
     //  dump($TRIPLE2TANKOR);
-	$fn = fopen($IMPORT_FILES['orarendiOra'],"r");
-
+	$fn = fopen($IMPORT_FILES['orarendiOra'],"r")  or die($IMPORT_FILES['orarendiOra'].':file not found!');
 	while(! feof($fn))  {
 	    $line = (fgets($fn));
 	    if (ord($line[0]) == 32) $line = "\t".trim($line);
@@ -662,6 +709,7 @@ GROUP BY tankor.tankorId ORDER BY tankorNev";
 	    } // lehet, hogy nincs megfeleltetés, és az is, hogy helyettesített óra volt. Ezt külön file tartalmazza!
 	}
 	fclose($fn);
+    }
 
 	$ORATIPUSCONVERT = array(
 	'Nem szakszerű helyettesítés (felügyelet)' => 'felügyelet',
@@ -671,30 +719,29 @@ GROUP BY tankor.tankorId ORDER BY tankorNev";
 
 
 	$fn = fopen($IMPORT_FILES['helyettesitett_tanorak'],"r");
-// --TODO
-/*
-  0 => string '2019. 09. 04. 10:00' (length=19)
-  1 => string 'Szerda' (length=6)
-  2 => string '3' (length=1)
-  3 => string 'Elmaradt óra' (length=13)
-  4 => string 'Takácsi-Nagyné Past Zsuzsanna' (length=31)
-  5 => string 'Balkayné Kalló Ágnes Zsófia' (length=31)
-  6 => string 'Nem szakszerű helyettesítés (felügyelet)' (length=44)
-  7 => string '07.a.e.tnpzs' (length=12)
-  8 => string 'etika/hit- és erkölcstan' (length=26)
-  9 => string '111' (length=3)
-  10 => string 'Megtartott óra' (length=15)
-  11 => string '-' (length=1)
-  12 => string 'Tanóra' (length=7)
-*/
-/*
+	// --TODO
+	    /*
+	      0 => string '2019. 09. 04. 10:00' (length=19)
+	      1 => string 'Szerda' (length=6)
+	      2 => string '3' (length=1)
+	      3 => string 'Elmaradt óra' (length=13)
+	      4 => string 'Takácsi-Nagyné Past Zsuzsanna' (length=31)
+	      5 => string 'Balkayné Kalló Ágnes Zsófia' (length=31)
+	      6 => string 'Nem szakszerű helyettesítés (felügyelet)' (length=44)
+	      7 => string '07.a.e.tnpzs' (length=12)
+	      8 => string 'etika/hit- és erkölcstan' (length=26)
+	      9 => string '111' (length=3)
+	      10 => string 'Megtartott óra' (length=15)
+	      11 => string '-' (length=1)
+	      12 => string 'Tanóra' (length=7)
+
 	while(! feof($fn))  {
 	    $line = (fgets($fn));
 	    if (ord($line[0]) == 32) $line = "\t".trim($line);
 	    else $line = trim($line);
 	    $result = explode("\t",$line);
 	    // $X[] = $result;
-dump($result);
+	    dump($result);
 	    if (($_tankorId = $TRIPLE2TANKOR[$CSOPORT2ID[$result[7]]][$KRETATARGYNEV2TARGYID[$result[8]]][$TANAR2ID[$result[4]]])>0) { //csoport-targy-tanar
 		$_dt = str_replace('. ','-',substr($result[0],0,12));
 		$_ora = $result[2];
@@ -732,8 +779,11 @@ dump($result);
 
 	    } // lehet, hogy nincs megfeleltetés, és az is, hogy helyettesített óra volt. Ezt külön file tartalmazza!
 	}
-*/
+	*/
 	fclose($fn);
+
+
+
     db_close($lr_naplo);
 
     ##################################################################################

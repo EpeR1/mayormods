@@ -27,6 +27,9 @@
 		$msg = date('Y-m-d H:i:s').' '.$userAccount.': '.$message."\n";
 		fputs($fp,$msg);
 		fclose($fp);
+	    } else {
+		echo 'fatal error 004';
+		die();
 	    }
 	}
     }

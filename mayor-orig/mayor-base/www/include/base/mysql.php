@@ -196,9 +196,11 @@
 	if (MYSQLI_ENABLED===true) {
 	    $r = mysqli_query($lr,$q);
 	    $_insert_id = mysqli_insert_id($lr); // itt lekérdezzük, hogy a warning lekérdezés ne rontsa el debug=true esetén!!
+	    $_affected_rows = mysqli_affected_rows($lr);
 	} else {
     	    $r = @mysql_query($q, $lr);
 	    $_insert_id = mysql_insert_id($lr);
+	    $_affected_rows = mysql_affected_rows($lr);
 	}
 	define(MYSQL_LOGGER,false);
 	if (MYSQL_LOGGER === true) {
@@ -289,7 +291,7 @@
                 $RESULT = $_insert_id; // mysqli_insert_id($lr); - ez itt már elromlik debug=true esetén a warning lekérdezés miatt
 		mayorLogger(1,'mysql',$q,_USERACCOUNT);
 	    } elseif ($SET['result'] == 'affected rows') {
-		$RESULT = mysqli_affected_rows($lr);
+		$RESULT = $_affected_rows; // $RESULT = mysqli_affected_rows($lr);
 		mayorLogger(1,'mysql',$q,_USERACCOUNT);
     	    } else { // create, insert, de nem olyan resulttal...
                 $RESULT = $r;
@@ -333,7 +335,7 @@
                 $RESULT = $_insert_id; // mysql_insert_id($lr); - ez itt már elromlik debug=true esetén a warning lekérdezés miatt
 		mayorLogger(1,'mysql',$q,_USERACCOUNT);
 	    } elseif ($SET['result'] == 'affected rows') {
-		$RESULT = mysql_affected_rows($lr);
+		$RESULT = $_affected_rows; // $RESULT = mysql_affected_rows($lr);
 		mayorLogger(1,'mysql',$q,_USERACCOUNT);
     	    } else { // create, insert, de nem olyan resulttal...
                 $RESULT = $r;

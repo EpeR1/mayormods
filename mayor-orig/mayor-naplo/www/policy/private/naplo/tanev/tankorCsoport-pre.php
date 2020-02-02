@@ -144,7 +144,7 @@
 
 
 
-	$ADAT['tankorCsoport'] = getTankorCsoport(); 
+	$ADAT['tankorCsoport'] = getTankorCsoport($tanev); 
 	$ADAT['tankorCsoportAdat'] = getTankorCsoportAdat();
 
 	$TOOL['osztalySelect'] = array('tipus' => 'cella','paramName' => 'osztalyId', 'post' => array());

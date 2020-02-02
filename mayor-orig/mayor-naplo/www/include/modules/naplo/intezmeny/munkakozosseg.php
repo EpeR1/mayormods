@@ -115,8 +115,24 @@
     }
 
     function targyModosit($ADAT) {
-	$q = "UPDATE targy SET targyJelleg='%s',zaroKovetelmeny='%s',evkoziKovetelmeny='%s',targyRovidNev='%s'";
-	$v = array($ADAT['targyJelleg'],$ADAT['zaroKovetelmeny'],$ADAT['evkoziKovetelmeny'],$ADAT['targyRovidNev']);
+        $q = "UPDATE targy SET"; $v = array();
+        if ($ADAT['targyJelleg'] != '') {
+            $q .= " targyJelleg='%s',"; $v[] = $ADAT['targyJelleg'];
+        } else {
+            $q .= " targyJelleg=NULL,";
+        }
+        if ($ADAT['zaroKovetelmeny'] != '') {
+            $q .= "zaroKovetelmeny='%s',"; $v[] = $ADAT['zaroKovetelmeny'];
+        } else {
+            $q .= "zaroKovetelmeny=NULL,";
+        }
+        if ($ADAT['evkoziKovetelmeny'] != '') {
+            $q .= "evkoziKovetelmeny='%s',"; $v[] = $ADAT['evkoziKovetelmeny'];
+        } else {
+            $q .= "evkoziKovetelmeny=NULL,";
+        }
+        $q .= "targyRovidNev='%s'";
+        $v[] = $ADAT['targyRovidNev'];
 	if (is_numeric($ADAT['kirTargyId'])) {
 	    $q .= ",kirTargyId=%u";
 	    array_push($v,$ADAT['kirTargyId']);
