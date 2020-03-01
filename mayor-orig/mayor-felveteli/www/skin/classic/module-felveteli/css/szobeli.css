@@ -43,7 +43,7 @@
 
     table.irasbeliEredmeny {
 	margin-top:10px; margin-bottom: 50px;
-	width:300px;
+	width:;
 	background-color:#556670;
     }
     table.irasbeliEredmeny thead th { background-color: #eeeee0;
@@ -84,7 +84,7 @@
 
     table.felveteliAdatok {
 	margin-top:10px; margin-bottom: 20px;
-	width:600px;
+	min-width:320px;
 	background-color:#556670;
     }
     table.felveteliAdatok thead th { background-color: #eeeee0;
@@ -141,6 +141,8 @@
 	margin: auto;
 	padding: 20px;
     }
+
+    
 
 }
 @media print {

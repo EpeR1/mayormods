@@ -63,10 +63,34 @@
     }
 
     function getSzobeliByOktid($oktid, $olr = '') {
+	global $TAGOZATOK;
 	if (!is_numeric($oktid)) return false;
 	if ($olr=='') $lr = db_connect('felveteli'); else $lr=$olr;
 	$q = "SELECT * FROM szobeli_"._EV." WHERE `oktid`='$oktid' ORDER BY napdt,ido,tagozat";
 	$R = db_query($q,array('result'=>'indexed'),$lr);
+
+	    $q = "SELECT distinct tagozat FROM szobeli_"._EV;
+	    $X = db_query($q,array('result'=>'idonly'),$lr);
+	    dump($X);
+	    for ($i=0; $i<count($X); $i++) {
+		$_tmp[] = $TAGOZATOK[$X[$i]].' - '.$X[$i];
+	    }
+	    // define(SZOBELI_EREDMENY_PLACEHOLDER,'<p style="font-size:x-small">Feldolgozott tagozatok: '.implode('<br/>',$_tmp).'</p>');
+if (_EV==2020) {
+define(SZOBELI_EREDMENY_PLACEHOLDER,'
+<u>Ponthatárok</u>:
+<ul style="list-style-type:none">
+<li>7.A osztály (angol nyelv, 0710-es tanulmányi terület): 82 pont
+<li>7.B osztály (német nyelv, 0720-as tanulmányi terület): 72 pont
+<li>9/Ny.E nyelvi előkészítő osztály, német (0850-es tanulmányi terület): 93 pont
+<li>9/Ny.E nyelvi előkészítő osztály, spanyol (0855-ös tanulmányi terület): 96 pont
+<li>9.C osztály, ének (0930-as tanulmányi terület): 80 pont
+<li>9.C osztály, magyar (0934-es tanulmányi terület): 90 pont
+<li>9.D osztály, matematika (0940-es tanulmányi terület): 96 pont
+<li>9.D osztály, fizika (0942-es tanulmányi terület): 93 pont
+</ul>
+');
+}
 	if ($olr=='') db_close($lr);
 	return $R;
     }

@@ -13,7 +13,7 @@ if (_LEKERDEZHETO) {
 	putFelvetelizoAdatok($ADATOK);
 	//if ($ADATOK['evfolyam']!='hat') 
 //	putJelentkezes($JEL,$ADATOK);
-//	putSzobeliEredmeny($SZOBELI,$ADATOK);
+	putSzobeliEredmeny($SZOBELI,$ADATOK);
 //	putIdeiglenesEredmeny($EREDMENY,$ADATOK,$JEL);
 	$stamp = time();
 	if (

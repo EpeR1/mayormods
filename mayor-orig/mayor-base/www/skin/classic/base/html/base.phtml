@@ -96,7 +96,7 @@ function html_head($page,$sub,$f,$lang,$skin) {
 	}
     }
     echo '<link rel="shortcut icon" href="/skin/classic/base/img/favicon.ico" />'."\n";
-    echo '</head>'."\n".'<body data-sessionid="'._SESSIONID.'" data-mayortoken="'.$_SESSION['mayorToken'].'" data-mayorrev="'._MAYORREV.'">'."\n";
+    echo '</head>'."\n".'<body data-sessionid="'._SESSIONID.'" data-mayortoken="'.$_SESSION['mayorToken'].'" data-mayorrev="'._MAYORREV.'" data-policy="'._POLICY.'">'."\n";
     if (is_string($SSSBB) && $SSSBB!='') echo $SSSBB;
 		    
 }

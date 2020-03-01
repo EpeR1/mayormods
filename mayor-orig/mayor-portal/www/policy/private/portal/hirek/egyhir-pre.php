@@ -6,9 +6,9 @@ if (_RIGHTS_OK !== true) die();
     $hirId = readVariable($_POST['hirId'],'id',null);
     if ($hirId=='') $hirId = readVariable($_GET['hirId'],'id',null);
     $action = readVariable($_POST['action'],'strictstring',array(null,'save',''));
-    if (__PORTAL_CODE=='vmg' && $hirId>0 && isOwner($hirId)===false) {
-	$_SESSION['alert'][] = 'page:not_owner';
-    }
+//    if (__PORTAL_CODE=='vmg' && $hirId>0 && isOwner($hirId)===false) {
+//	$_SESSION['alert'][] = 'page:not_owner';
+//    }
 
     if ($action=='save' && (__HIREKADMIN || $hirId=='' || isOwner($hirId))) {
        global $LANGUAGES;
