@@ -421,10 +421,10 @@ $Zaradek = array(
 	    'dokumentum' => 'osztálynapló'),
 67 => array('sorszam' => '45.', 'szoveg' => 'Ezt az osztályozó naplót %tanulók száma% azaz %tanulók száma betűvel% osztályozott tanulóval lezártam.', 
 	    'dokumentum' => 'osztálynapló'),
-68 => array('sorszam' => '46.', 'szoveg' => 'Igazolom, hogy a tanuló a %tanév jele% tanévig %elvégzett órák száma% óra közösségi szolgálatot teljesített.', 
-	    'dokumentum' => 'bizonyítvány'),
+68 => array('sorszam' => '46.', 'szoveg' => 'Igazolom, hogy a tanuló a %tanév jele% tanévben %elvégzett órák száma% óra közösségi szolgálatot teljesített.', 
+	    'dokumentum' => 'osztálynapló, törzslap, bizonyítvány'),
 69 => array('sorszam' => '47.', 'szoveg' => 'A tanuló teljesítette az érettségi bizonyítvány kiadásához szükséges közösségi szolgálatot', 
-	    'dokumentum' => 'törzslap'),
+	    'dokumentum' => 'osztálynapló, törzslap, bizonyítvány'),
 70 => array('sorszam' => '48.', 'szoveg' => '%nemzetiség megnevezése% kiegészítő nemzetiségi tanulmányait a nyolcadik/tizenkettedik évfolyamon befejezte', 
 	    'dokumentum' => 'törzslap, bizonyítvány'),
 
