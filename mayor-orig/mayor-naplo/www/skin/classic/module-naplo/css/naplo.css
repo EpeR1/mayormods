@@ -214,7 +214,7 @@
 
 /*    #updateWindowSide h3:before { font-family: 'Elusive-Icons'; font-size:10px; content: "\e0a4"; padding-right:8px;font-weight:100; }*/
 
-    .updateWindowSide button.mentes,    .updateWindowSide button.torles  { margin: 4px 18px; height:2em; border-radius:2px; border: solid 1px white; color:white; background-color: #ddd;}
+    .updateWindowSide button.mentes,    .updateWindowSide button.torles  { margin: 4px 18px; height:2em; border-radius:2px; border: solid 1px white; color:white; background-color: #2196f3;}
     .updateWindowSide button.mentes:hover { background-color: lightgreen; }
     .updateWindowSide button.torles:hover { background-color: red; }
 

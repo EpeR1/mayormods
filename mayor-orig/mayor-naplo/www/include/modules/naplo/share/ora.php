@@ -23,15 +23,17 @@
                                  TRIM(CONCAT_WS(' ', t2.viseltNevElotag, t2.viseltCsaladiNev, t2.viseltUtonev)) AS kitCn,
                                  tankorNev,
 				 feladatTipusId,
-				 munkaido
+				 munkaido,
+				 hazifeladatId, hazifeladatLeiras
                             FROM `%s`.ora
+			    LEFT JOIN `%s`.oraHazifeladat USING (oraId)
                             LEFT JOIN ".__INTEZMENYDBNEV.".tankorSzemeszter USING (tankorId)
                             LEFT JOIN ".__INTEZMENYDBNEV.".tanar AS t1 ON ki=t1.tanarId
                             LEFT JOIN ".__INTEZMENYDBNEV.".tanar AS t2 ON kit=t2.tanarId
                     	    LEFT JOIN ".__INTEZMENYDBNEV.".feladatTipus USING (feladatTipusId)
                     	    LEFT JOIN ".__INTEZMENYDBNEV.".terem USING (teremId)
                             WHERE oraId=%u AND (tanev=%u OR feladatTipusId IS NOT NULL)";
-	    $v = array(tanevDbNev(__INTEZMENY, $tanev), $oraId, $tanev);
+	    $v = array(tanevDbNev(__INTEZMENY, $tanev),tanevDbNev(__INTEZMENY, $tanev), $oraId, $tanev);
 	    return db_query($q, array('fv' => 'getOraAdatById', 'modul' => 'naplo_intezmeny', 'result' => 'record', 'values' => $v), $olr);
 
         } else {
@@ -345,7 +347,9 @@
 	    array_unshift($v, $tolDt, $igDt, $tanarId);
 	    $RESULT = db_query($q, array('modul' => 'naplo', 'fv' => 'getTanarOrak', 'result' => 'idonly', 'values' => $v));			 
 	} else {
-	    $q = "SELECT * FROM ora WHERE dt>='%s' and dt<='%s' AND (ki=%u OR kit=%u) $WHERE ORDER BY dt,ora";
+	    $q = "SELECT * FROM ora 
+LEFT JOIN oraHazifeladat USING (oraId)
+WHERE dt>='%s' and dt<='%s' AND (ki=%u OR kit=%u) $WHERE ORDER BY dt,ora";
 	    array_unshift($v, $tolDt, $igDt, $tanarId, $tanarId);
 	    if ($SET['result']=='assoc') 
 		$RESULT = db_query($q, array('modul' => 'naplo', 'fv' => 'getTanarOrak', 'keyfield' => 'ora', 'result' => 'assoc', 'values' => $v));
@@ -385,10 +389,14 @@
 	    $RE = db_query($q, array('modul' => 'naplo', 'fv' => 'getOrak', 'result' => 'indexed', 'values' => $v));
 	} else {
 	    if ($SET['elmaradokNelkul'])
-		$q = "SELECT *,getOraTolTime(ora.oraId) AS tolTime,getOraIgTime(ora.oraId) AS igTime FROM ora WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count($TANKORIDK), '%u')).") 
+		$q = "SELECT *,getOraTolTime(ora.oraId) AS tolTime,getOraIgTime(ora.oraId) AS igTime FROM ora 
+LEFT JOIN oraHazifeladat USING (oraId)
+WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count($TANKORIDK), '%u')).") 
 			AND tipus NOT IN ('elmarad','elmarad máskor')";
 	    else 
-		$q = "SELECT *,getOraTolTime(ora.oraId) AS tolTime,getOraIgTime(ora.oraId) AS igTime FROM ora WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count($TANKORIDK), '%u')).")";
+		$q = "SELECT *,getOraTolTime(ora.oraId) AS tolTime,getOraIgTime(ora.oraId) AS igTime FROM ora
+LEFT JOIN oraHazifeladat USING (oraId)
+WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count($TANKORIDK), '%u')).")";
 	    $R = db_query($q, array('modul' => 'naplo', 'fv' => 'getOrak', 'result' => 'indexed', 'values' => $v));
 	    $RE['tankorok']=array();
 	    for ($i = 0; $i < count($R); $i++) {

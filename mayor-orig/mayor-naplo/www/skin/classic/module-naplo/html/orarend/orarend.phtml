@@ -234,7 +234,6 @@
 				    //
 				    $het = $_T['het'];
 				    $_ORA = $ADAT['haladasi']['orak'][$dt][$ora][$_T['tankorId']]; 
-
 				    $_valosTeremId = (is_null($_ORA['teremId']))? $_T['teremId']:$_ORA['teremId'];
 
 				    $_tankorTipus = $ADAT['tankorok'][$_T['tankorId']][0]['tankorTipus'];
@@ -262,8 +261,12 @@
 				    $_hianyzasAdat =  $ADAT['hianyzas'][$_ORA['oraId']][0];
 				    $_hianyzasClass = (is_array($_hianyzasAdat) && $_hianyzasAdat['hTipus']=='hiányzás') ? ' nemVoltBent ':''; 
 				    echo '<div class="'.$_tipusClass.$_frissClass.$_oraMostVanClass.$_utolsooraClass.$_hianyzasClass.' '.$_oraAdat.'" data-oraid="'.$_ORA['oraId'].'" title="'.$_ORA['tipus'].'" >';
+				    if (isset($_ORA['hazifeladatId'])) {
+					echo '<span class="icon-home-alt" title="h.f." style="color:#e91e63; padding-right:2px;"></span>';
+				    }
 
 				    if (is_array($_hianyzasAdat)) {
+
 					echo '<span class="hianyzasTicker '.ekezettelen($_hianyzasAdat['hTipus']).' '.ekezettelen($_hianyzasAdat['statusz']).' '.ekezettelen($_hianyzasAdat['igazolas']).'">';
 					if ($_hianyzasAdat['hTipus']=='hiányzás') 
 						echo '<span class="icon-hearing-impaired"></span>';

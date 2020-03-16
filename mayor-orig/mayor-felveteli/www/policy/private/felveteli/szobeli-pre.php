@@ -27,7 +27,7 @@
 	    $ADATOK = getFelvetelizoAdatok($nev,$oktid);
 	    if (is_array($ADATOK)) {
 		$SZOBELI = getSzobeliByOktid(intval($ADATOK['oktid']));
-  		//$EREDMENY = getIdeiglenesRangsor(intval($ADATOK['oktid']));
+  		$EREDMENY = getIdeiglenesRangsor(intval($ADATOK['oktid']));
 		//$EREDMENY = getSzobeliEredmeny($ADATOK['id']);
 		//$JEL = getJelentkezes(intval($ADATOK['id']));
 	    }

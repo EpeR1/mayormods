@@ -433,6 +433,7 @@
 			    echo '</span>';
 			}
 			echo '<input type="hidden" name="tanmenetIdContainer[]" value="'.$ADAT['tankorTanmenet'][ $dOra['tankorId'] ].'" />'."\n";
+			echo '<input type="hidden" name="hazifeladatIdContainer[]" value="'.$ADAT['tankorHazifeladat'][ $dOra['tankorId'] ].'" />'."\n";
 			echo '<input type="hidden" name="tankorIdContainer[]" value="'.$dOra['tankorId'].'" />'."\n";
 		// -------------------------------------------------------------------------	
 	    echo '</td>'."\n";
@@ -485,7 +486,6 @@
 		    echo $dOra['oraszam'];
 		    echo '</a>';
 
-
 		} else { // itt kiírhatjuk a heti terhelését
 		    //echo '<span style="color: purple;" title="a típusból ezen a héten összesen">eheti:'.($ADAT['oraTerheles'][$dOra['feladatTipusId']]['db']-$SZLO[$dOra['feladatTipusId']])."/".($ADAT['oraTerheles'][$dOra['feladatTipusId']]['db']).'</span>';
 		    //echo '<span style="color: purple;" title="a típusból ezen a héten összesen">eheti:'.($SZLO['sum']-$SZLO['sum_c'])."/".($SZLO['sum']).'</span>';
@@ -514,6 +514,16 @@
 		    if (count($_C)>0) echo '<span class="cimke">'.implode('</span> <span class="cimke">',$_C).'</span>';
 		  }
 		}
+		echo '<a href="'.href('index.php?page=naplo&sub=haladasi&f=hazifeladat&oraId='.$dOra['oraId'].'&hazifeladatId='.$ADAT['tankorHazifeladat'][ $dOra['oraId'] ]).'" class="onClickUpdateWindow" title="'._HAZIFELADAT.'">';
+		    if ($dOra['hazifeladatId']>0) {
+			echo '<span class="icon-home-alt" style="color: #ff5722"></span>';
+		    } else {
+			echo '<span class="icon-home" style="color: #aaa"></span>';
+		    }
+		echo '</a>';
+
+
+
 	    echo '</td>';
 	    // ----- Leírás ---------------------------------
 		if ($modosithatoOra) {

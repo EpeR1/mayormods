@@ -143,6 +143,15 @@ CREATE TABLE `ora` (
   CONSTRAINT `ora_ibfk_5` FOREIGN KEY (`feladatTipusId`) REFERENCES `%DB%`.`feladatTipus` (`feladatTipusId`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci ;
 
+CREATE TABLE `oraHazifeladat` (
+  `hazifeladatId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `oraId` int(10) unsigned DEFAULT NULL,
+  `hazifeladatLeiras` text COLLATE utf8_hungarian_ci NOT NULL,
+  PRIMARY KEY (`hazifeladatId`),
+  UNIQUE KEY `oraId` (`oraId`),
+  CONSTRAINT `oraHazifeladat_ibfk_1` FOREIGN KEY (`oraId`) REFERENCES `ora` (`oraId`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
 CREATE TABLE `orarendiOraTankor` (
   `tanarId` int(10) unsigned NOT NULL,
   `osztalyJel` varchar(7) COLLATE utf8_bin NOT NULL,

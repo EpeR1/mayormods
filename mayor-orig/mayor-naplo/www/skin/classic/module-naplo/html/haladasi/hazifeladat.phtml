@@ -1,0 +1,47 @@
+<?php
+
+    function putHazifeladat($ADAT) {
+
+	echo '<style type="text/css">';
+	echo '    
+	    fieldset.adatok { margin-bottom:1em; width:80%; margin-left:auto; margin-right:auto; border-radius: 2px; border: solid 1px #ddd;}
+	    fieldset.adatok legend { border-radius: 2px; background-color: #ff5722; color:white; padding: 2px 4px; }
+	';
+	echo '</style>';
+
+	echo '<fieldset class="adatok"><legend>'._ALAPADATOK.'</legend>'."\n";
+
+	    echo superdate($ADAT['oraAdat']['dt']).' ('.$ADAT['oraAdat']['dt'].'), '.$ADAT['oraAdat']['ora'].'. '._ORA.' – <span class="tankorNev" data-tankorid="'.$ADAT['oraId']['tankorId'].'">'.$ADAT['oraAdat']['tankorNev'].'</span> – '.$ADAT['oraAdat']['kiCn'];
+
+	    echo '<p>'.$ADAT['oraAdat']['leiras'].'</p>';
+
+	echo '</fieldset>'."\n";
+
+	if (__DIAK===true) {
+
+	    echo '<fieldset class="adatok"><legend>'._HAZIFELADAT.'</legend>'."\n";
+		echo ($ADAT['hazifeladatAdat']['hazifeladatLeiras']);
+	    echo '</fieldset>'."\n";
+
+	} else {
+	    echo '<script src="//cdn.ckeditor.com/4.14.0/basic/ckeditor.js"></script>';
+	    if ($skin != 'ajax') formBegin(array('class'=>'hazifeladat'));
+	    echo '<input type="hidden" name="action" value="hazifeladatBeiras"/>';
+	    echo '<input type="hidden" name="oraId" value="'.$ADAT['oraAdat']['oraId'].'"/>';
+	    echo '<input type="hidden" name="hazifeladatId" value="'.$ADAT['hazifeladatId'].'"/>';
+
+	    echo '<fieldset class="adatok"><legend>'._HAZIFELADAT.'</legend>'."\n";
+	    echo '<textarea name="hazifeladatLeiras" class="wysiwyg" rows="10" cols="80" style="width:100%">';
+		echo htmlspecialchars($ADAT['hazifeladatAdat']['hazifeladatLeiras']);
+	    echo '</textarea>';
+	    echo "
+                <script>
+                        CKEDITOR.replace( 'hazifeladatLeiras' );
+                </script>";
+	    echo '<input type="submit">';
+	    echo '</fieldset>'."\n";
+	    if ($skin != 'ajax') formEnd();
+	}
+    }
+
+?>

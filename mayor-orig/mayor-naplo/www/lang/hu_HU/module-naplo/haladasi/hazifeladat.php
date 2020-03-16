@@ -7,7 +7,7 @@
 
 /  -------------------------------------- */
 
-    define('__PAGETITLE','Haladási napló');
+    define('__PAGETITLE','Haladási napló - Házi feladat');
     define('_DATUM','dátum');
     define('_ORA','óra');
     define('_TANKOR','tankör');
@@ -35,7 +35,7 @@
     define('_TOROL','töröl');
     define('_BEALLITASAI', 'beállításai');
 
+    define('_ALAPADATOK','Óra adatok');
     define('_HAZIFELADAT','Házi feladat');
-
 
 ?>

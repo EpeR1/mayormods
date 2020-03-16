@@ -14,7 +14,7 @@ if (_LEKERDEZHETO) {
 	//if ($ADATOK['evfolyam']!='hat') 
 //	putJelentkezes($JEL,$ADATOK);
 	putSzobeliEredmeny($SZOBELI,$ADATOK);
-//	putIdeiglenesEredmeny($EREDMENY,$ADATOK,$JEL);
+	putIdeiglenesEredmeny($EREDMENY,$ADATOK,$JEL);
 	$stamp = time();
 	if (
 	    __FELVETELIADMIN===true ||

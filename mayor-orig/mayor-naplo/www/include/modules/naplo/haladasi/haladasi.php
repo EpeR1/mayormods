@@ -72,10 +72,12 @@
 	// Csatlakozás az adatbázishoz
 	$lr = db_connect('naplo', array('fv' => 'getHaladasi'));
         $q = "SELECT oraId, dt, ora, ki, kit, tankorId, teremId, ora.leiras, tipus, eredet, csoportId, feladatTipusId,
+		hazifeladatId,
 		getOraTolTime(oraId) AS tolTime,
 		getOraIgTime(oraId) AS igTime
                         FROM ora 
 			LEFT JOIN tankorCsoport USING (tankorId) 
+			LEFT JOIN oraHazifeladat USING (oraId) 
 			LEFT JOIN ".__INTEZMENYDBNEV.".feladatTipus USING (feladatTipusId)
                             WHERE dt>='%s' AND dt<='%s' AND tipus NOT LIKE 'elmarad%%'
                             $feltetel $teremFeltetel
