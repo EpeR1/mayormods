@@ -16,18 +16,17 @@ $db['nxt_prefix'] = "oc_";
 //$db['mayor_user'] = ""; 
 //$db['mayor_pass'] = "";
 
-$m2n['megfigyelo_user'] = "naplo_robot";
-$m2n['beken_hagy'] = array();      //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
-
 $m2n['min_evfolyam'] = 1;
 $m2n['isk_rovidnev'] = "rovid";
 $m2n['csoport_prefix'] = "(tk) ";
 $m2n['default_email'] = "indulo@iskola.hu";
 $m2n['default_passw'] = "EHYmGktzrdfS7wxJR6DFqxjJ";
 $m2n['default_quota'] = "10GB";
-$m2n['min_osztalyok'] =  array(); 	//pl:  array('9.a','11.a');
+$m2n['min_osztalyok'] =  array(); 	        //pl:  array('9.a','11.a');
 $m2n['csoportnev_hossz'] = 40;
 $m2n['felhasznalo_hossz'] = 45;
+$m2n['megfigyelo_user'] = "naplo_robot";    //ha nem kell, akkor állítsd üres stringre.
+$m2n['kihagy'] = array();                   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
 $m2n['default_lang']  = "hu";
 $m2n['mindenki_csop'] = "naplós_felhasználók";
 $m2n['zaras_tartas'] =  "2018-06-14";	//A jelölt napon befejezett, de nem lezárt tanév adatainak megtartása. (pl. szeptemberig) Ha már nem kell, akkor állítsd "1970-01-01"-ra !;
@@ -113,15 +112,17 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
     
     function catalog_userlist($link){	//akiket a script hozott létre
-        global $db,$log;
+        global $db,$log,$m2n;
         $ret['account'] = array();
         $ret['status'] = array();
         $q = "SELECT * FROM ".$db['m2n_db'].".".$db['m2n_prefix']."register WHERE STATUS != 'forbidden'; ";    
         if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
         if(( $r = mysqli_query($link, $q)) !== FALSE ){
             while ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
-                $ret['account'][] = $row['account'];
-                $ret['status'][] = $row['status'];
+                if(!in_array($row['account'], $m2n['kihagy'])){
+                    $ret['account'][] = $row['account'];
+                    $ret['status'][] = $row['status'];
+                }
             }
             mysqli_free_result($r);
             if ($log['verbose'] > 4 ){ echo "*\tFelhasználó m2n nyilvántartás lekérdezése.\n"; }
@@ -141,6 +142,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 $ret[] = $row['account'];
             }
             mysqli_free_result($r);
+            $ret = array_merge($ret, $m2n['kihagy']);
             if ($log['verbose'] > 4 ){ echo "*\tFelhasználó-letiltások m2n nyilvántartás lekérdezése.\n"; }
             return $ret;
         } else {
@@ -696,11 +698,18 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     if ($log['verbose'] > 0 ){ echo "\n***\tNyilvántartás ellenőrzése.\n";}
     $nxt_user = nxt_user_list();
     $m2n_catalog = catalog_userlist($link);
-    foreach($m2n_catalog['account'] as $key => $val){    //Erre a nextcloud "occ" parancs hibakezelése miatt van szükség
-    
-        if(@$nxt_user[$val] === null ){
+    $m2n_forbidden = catalog_forbiddenlist($link);
+
+    foreach($m2n_catalog['account'] as $key => $val){    
+        if(@$nxt_user[$val] === null ){         //Erre a nextcloud "occ" parancs hibakezelése miatt van szükség
             if ($log['verbose'] > 4 ){ echo "**-\tFelhasználónév:".po("\t($val)",$m2n['felhasznalo_hossz'],1)."--\tkivéve a nyilvántartásból.";}
             catalog_userdel($link, $val);
+        }
+    }
+    foreach($m2n_forbidden as $key => $val){    //Szinkronizálja a $m2n['kihagy'] listát a nyilvántartással.    
+        if(!in_array($val, $m2n['kihagy'])){
+            if ($log['verbose'] > 4 ){ echo "**-\tFelhasználónév:".po("\t($val)",$m2n['felhasznalo_hossz'],1)."--\tújraaktiválva nyilvántartásban.";}
+            catalog_userena($link,$val);
         }
     }
 

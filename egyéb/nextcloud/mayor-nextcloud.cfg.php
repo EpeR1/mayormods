@@ -19,9 +19,6 @@ $db['nxt_prefix'] = "oc_";
 //$db['mayor_user'] = "";
 //$db['mayor_pass'] = "";
 
-$m2n['megfigyelo_user'] = "naplo_robot";
-$m2n['beken_hagy'] = array();   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
-
 $m2n['min_evfolyam'] = 1;
 $m2n['isk_rovidnev'] = "rovid";
 $m2n['csoport_prefix'] = "(tk) ";
@@ -34,6 +31,8 @@ $m2n['felhasznalo_hossz'] = 45;
 $m2n['default_lang']  = "hu";
 $m2n['mindenki_csop'] = "naplós_felhasználók";
 $m2n['zaras_tartas'] =  "2018-06-14";	// Ha nem kell, akkor állítsd át "1970-01-01"-re.
+$m2n['megfigyelo_user'] = "naplo_robot";
+$m2n['kihagy'] = array();   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
 $m2n['verbose'] = 3 ;  
 
 $occ_path = "/var/www/nextcloud/";
@@ -82,9 +81,9 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
     $db['port'] = "3306";                   //nextcloud-mysql port
 
-    $db['user'] = "root";					//nextcloud-mysql felhasználónév
-											// HA nem a root-ot használjuk, akkor, saját kezűleg kell létrehozni a script saját, nyilvántartó adatbázisát, és a fenti jogokat beállítani rá, 
-											//  valamint Ha a Nextcloud verziószáma kisebb 14-nél, akkor a használt felhasználónak írási-olvasási-törlési
+    $db['user'] = "root";                   //nextcloud-mysql felhasználónév
+                                            // HA nem a root-ot használjuk, akkor, saját kezűleg kell létrehozni a script saját, nyilvántartó adatbázisát, és a fenti jogokat beállítani rá, 
+                                            //  valamint Ha a Nextcloud verziószáma kisebb 14-nél, akkor a használt felhasználónak írási-olvasási-törlési
                                             //  (insert,select,update,delete) joggal kell rendelkeznie a nextcloud adatbázis "..groups" tábláján.
                                             // Ha a Debian-on alapértelmezett root-ot használjuk, akkor mindez automatikusan történik.
 
@@ -149,7 +148,7 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
                                                         // ebbe a "mindenki" csoportba minden, a script által létrehozott felhasználó bekerül.
 
     $m2n['zaras_tartas'] =  "2018-06-19";               //A jelölt napon befejezett, de nem lezárt tanév adatainak megtartása. (pl. szeptemberig) 
-														// Ha már nem kell, akkor állítsd "1970-01-01"-ra !;
+	                                                    // Ha már nem kell, akkor állítsd "1970-01-01"-ra !;
 							
     $m2n['verbose'] = 3                                 //Log bőbeszédűség      (A leg informatívabb(tömörebb), talán a 3-mas fokozat.)
                                                         // 0: csak fatális hibák, 1: fontosabbak, 2: csop./felh. elvétel, 3: csop./felh. hozzáadás, 
@@ -161,8 +160,16 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
     $occ_user = "www-data";                             //A Nextcloud-servert futtató (Apache által használt) felhasználónév
 
+    $m2n['kihagy'] = array();                           //Lehetőség van egy-egy felhasználó kezelésének letiltására, ezt felsorolásként tehetjük meg.
+                                                        // Ekkor a script nem fog foglalkozni, az adott felhasználóval a továbbiakban.
+														//pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
+														
+	$m2n['megfigyelo_user'] = "naplo_robot";            //Lehetőség van egy úgymond "megfigyelő" felhasználó létrehozására.
+														// ez a felhasználó be lesz léptetve az összes csoportba, így az összes üzenetet megkapja, 
+                                                        // és az összes fájlt eléri, amit a csoportokkal megosztottak.
 
-	CONFIG FILE: "mayor-nextcloud.cfg.php";				//Lehetőség van a konfig exportálására egy külön fájlba, 
+
+    CONFIG FILE: "mayor-nextcloud.cfg.php";				//Lehetőség van a konfig exportálására egy külön fájlba, 
                                                         // így a mayor-nextcloud scriptet nem kell szerkeszteni, ha frissítés érkezik hozzá.
                                                         // Ez alapértelmezetten a maxor-nextcloud.php -val kell egy könyvtárba legyen.
                                                         
@@ -175,13 +182,11 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
 
 
+
+
 	További Információk:
  
-	Lehetőség van egy-egy felhasználó letiltására, ezt a nyilvántartó adatbázisban tehetjük meg, a "register" tábla, 
-	az adott felhasználónévhez tartozó "status" mezőjének "forbidden"-re állításával.
-	Ekkor a script nem fog foglalkozni, az adott felhasználóval a továbbiakban.
-
-
+	
 	Esetleg érdemes lehet a scriptet betenni a "cron"-ba (éjszakára), így naponta lefut, és követi napló változásait.
 	(Ez esetben figyelni kell arra, hogy mayorban a tankör-diák, tankör-tanár összerendelések az év végén lejárhatnak, (pl. júni. 15-én)
 	így a script futtatása júni. 16-án kitörli, letiltja az összes létrehozott mayor-os csoportot, és felhasználót a nextcloud-ból, 
