@@ -19,6 +19,10 @@ $db['nxt_prefix'] = "oc_";
 //$db['mayor_user'] = "";
 //$db['mayor_pass'] = "";
 
+$m2n['megfigyelo_user'] = "naplo_robot";
+$m2n['megfigyelo_hozzaadasa'] = True;
+$m2n['beken_hagyottak'] = array();   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
+
 $m2n['min_evfolyam'] = 1;
 $m2n['isk_rovidnev'] = "rovid";
 $m2n['csoport_prefix'] = "(tk) ";
@@ -40,7 +44,7 @@ $occ_user = "www-data";
 
 
 /*
-Nextcloud(13) - Mayor script
+Nextcloud(13+) - Mayor script
 
 Ezen script segítségével a Mayor-naplóból tudunk felhasználókat és csoportokat importálni a Nextcloud felhőbe,
 létrehozva ezzel a saját, iskolai felhőszolgáltatásunkat.
@@ -51,23 +55,22 @@ majd belépteti ezen csoportokba a diákokat, és tanárokat,  megspórolva ezze
 és egy csomó időt az adminisztrátornak.
 
 Támogatja a külön, illetve az egy, közös szerverre történő telepítését a mayornak és a nextcloud-nak. **(lásd: Szeparációs lehetőségek rész.)
-Egyelőre még csak a Nextcloud 13.x -mal tesztelt.
+A Nextcloud 13-mas és újabb verzióival használható.
 
 FONTOS!
     Legalább "php7.0" és "Apache 2.4" kell hozzá!
-
+ 
 
 
 Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
--(I.)   Először telepítsünk föl egy Nextcloud(13+) szervert egy Debian 9+ szerverre,
-        szükség van e-mail küldés (smtp) szolgáltatásra is. (ez lehet külső, pl.: google)
-        Bővebb leírást a telepítésről a
-        https://docs.nextcloud.com/server/13/admin_manual/installation/index.html   oldalon találunk.
+-(I.)   Először telepítsünk föl egy Nextcloud(legalább 13-mas verzió) szervert egy Debian (9-es vagy magasabb verzió) szerverre,
+        a Nextcloudnek szüksége van e-mail küldés (smtp) szolgáltatásra is. (ez lehet külső, pl.: google)
+        Bővebb leírást a telepítésről a "Nextcloud Admin Manual" oldalon találunk.
 
 -(II.)  Helyezzük el a "mayor-nextcloud.php"-t biztos, védett helyre,a nextcloud szerveren, akár a /etc/ mappába, akár a /root könyvtárba,
-        ezt később "root"-ként kell majd futtatnunk, és mysql jelszó is (lehet/) van benne, 
-        ezért ennek megfelelően állítsuk be a tulajdonost, és vegyük el a jogosultságokat. (chown root; chmod 600)
+        ezt később "root"-ként kell majd futtatnunk, és mysql jelszó is lehet/van benne, 
+        ezért ennek megfelelően védeni kell. Állítsuk be a tulajdonost, és korlátozzuk a jogosultságokat! (chown root; chmod 600)
 	Majd töltsük ki a konfigurációs fájlt az alább felsorolt beállítások szerint!
 
 
@@ -80,15 +83,15 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
     $db['port'] = "3306";                   //nextcloud-mysql port
 
-    $db['user'] = "root";                   //nextcloud-mysql felhasználónév
+    $db['user'] = "root";					//nextcloud-mysql felhasználónév
                                             // HA nem a root-ot használjuk, akkor, a használt felhasználónak írási-olvasási-törlési
                                             //  (insert,select,update,delete) joggal kell rendelkeznie a nextcloud adatbázis "..groups" tábláján,
                                             //  valamit saját kezűleg kell létrehozni a script saját, nyilvántartó adatbázisát, és a fenti jogokat beállítani rá.
                                             // Ha a Debian-on alapértelmezett root-ot használjuk, akkor mindez automatikusan történik.
 
-    $db['pass'] = "";                       //A nextcloud-mysql jelszó    (pl a "root" felhasználónévhez tartozó)
+    $db['pass'] = "";                       //A nextcloud-mysql jelszó    (A fenti felhasználónévhez tartozó)
                                             // érdemes a debian 9.x-en, a root-hoz alapértelmezett "unix_socket" bejelentkezési módot 
-                                            // használnunk, ez biztonságosabb, mert nem jön létre "olvasható" jelszó.
+                                            // használnunk, ez biztonságosabb, mert ekkor nem kell jelszó, más módon hitelesít, így biztonságosabb.
 
 
 
@@ -96,17 +99,17 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
     $db['nxt_prefix'] = "oc_";              //A Nextcloud által használt adatbázisban a táblák prefix-je. (ha van)
 
 
-    $db['m2n_db'] = "mayor_to_nextcloud";   //A nyilvántartó adatbázis neve. 
-                                            // Ennek az adatbázisnak a nextcloud-mysql szerveren kell lennie!
+    $db['m2n_db'] = "mayor_to_nextcloud";   //A mayor->nextcloud script adatbázisa (nyilvántartás). 
+                                            // Ennek az adatbázisnak a Nextcloud mysql szerverén kell lennie!
                                             //
-                                            // Ebben az adatbázisban könyveli el a script által létrehozott felhasználókat, azért,
+                                            // Ebben az adatbázisban könyveli le a script által létrehozott felhasználókat, azért,
                                             //  hogy így meg tudja különböztetni, a saját maga által létrehozottakat, az Adminisztrátor
-                                            //  által, külön létrehozott felhasználóktól.
+                                            //  által, kézzel létrehozott felhasználóktól, hogy azokat ne birizgálja.
 
-    $db['m2n_prefix'] = "m2n_";             //A nyilvántartó adatbázisban használt prefix, ha van. (ha nincs, akkor "üres string"-re kell állítani)
+    $db['m2n_prefix'] = "m2n_";             //A nyilvántartó adatbázisban használt prefix, ha van. (ha nincs, akkor "üres string"-re kell állítani ($db['m2n_prefix'] = "";))
 
 
-    //$db['mayor_host'] = "";               //Akkor használatos, ha a mayor alatti mysql szerver egy másik szerveren van.
+    //$db['mayor_host'] = "";               //Akkor használatos, ha a mayor alatti mysql szerver egy másik szerveren van, mint a Nextcloud által használt.
     //$db['mayor_port'] = "";               // ekkor ki kell venni kommentből, és ki kell tölteni a mayor-mysql serverre érvényes adatokkal.
     //$db['mayor_user'] = "";
     //$db['mayor_pass'] = "";               //A kiválasztott felhaználónak olvasnia (GRANT SELECT) kell tudnia a mayor-mysql serveren a(z):
@@ -124,42 +127,43 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
 
 
-    $m2n['default_email'] = "rendszergazda@iskola.hu";  //Ha a mayor intezmeny_xxx.diak, vagy az intezmeny_xxx.tanar táblákban nincs kitöltve az 
+    $m2n['default_email'] = "rendszergazda@iskola.hu";  //Ha a mayor napló "intezmeny_xxx.diak", vagy az "intezmeny_xxx.tanar" táblákban nincs kitöltve az 
                                                         // e-mail, akkor ezt használja alapértelmezetten. 
-                                                        // (ide megy a jelszó-emlékeztető, amíg a felhasználó birtokba nem veszi a fiókját)
+                                                        // (ide megy a jelszó-emlékeztető, amíg a felhasználó birtokba nem veszi a Nextcloud fiókját, és ben nem állít sajátot)
 
-    $m2n['default_passw'] = "EHYmGktzrdfS7wxJR6DFqxjJ"; //Az induló jelszó a Nextcloud-ban a felhasználóknak. (érdemes erőset megadni, a botnet-ek miatt)
+    $m2n['default_passw'] = "EHYmGktzrdfS7wxJR6DF11jJ"; //Az induló jelszó a Nextcloud-ban a felhasználóknak. (érdemes erőset/hosszút megadni, a botnet-ek/hackerek miatt)
 
-    $m2n['default_quota'] = "10GB";                     //Az induló fájl-kvóta a Nextcloud-ban.
+    $m2n['default_quota'] = "10GB";                     //Az indulási fájl-kvóta a Nextcloud-ban. (Rendszergazda később átállíthatja kézzel.)
 
     $m2n['default_lang']  = "hu";                       //Az alapértelmezett nyelv (később minden felhasználó átállíthatja magának)
 
     $m2n['min_osztalyok'] =  array( );                  //Ide lehet felsorolni az osztályokat, ha konkrét osztályokat akaruni importálni,
                                                         // ez logikai (megengedő) VAGY kapcsolatban van a $m2n['min_evfolyam'] -mal.
-                                                        //  Tehát ha beállítunk egy minimális évfolyamot, a felsorolt osztályok akkor is importálódnak,
-                                                        //  ha a minimális évfolyamnál kisebb.   //pl:  array('9.a','11.a');
+                                                        //  Tehát ha beállítunk egy minimális évfolyamot, a listában felsorolt osztályok akkor is importálódnak,
+                                                        //  ha a min_évfolyam-nál kisebbek.   //pl:  array('9.a','11.a');
 
-    $m2n['csoportnev_hossz'] = 40;                      // Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a csoport neve.
+    $m2n['csoportnev_hossz'] = 40;                      // Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a csoport neve. (csak a script kinézete/átláthatósága végett)
 
-    $m2n['felhasznalo_hossz'] = 45;                     // Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a felhasználó valódi neve.
+    $m2n['felhasznalo_hossz'] = 45;                     // Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a felhasználó valódi neve. (csak a script kinézete/átláthatósága végett)
 
-    $m2n['mindenki_csop'] = "naplós_felhasználók";      //A Nextcloud "mindenki" csoportja
+    $m2n['mindenki_csop'] = "naplós_felhasználók";      //Legyen egy olyan csoport, amiben "mindenki benne van".
                                                         // ebbe a "mindenki" csoportba minden, a script által létrehozott felhasználó bekerül.
 
     $m2n['zaras_tartas'] =  "2018-06-19";               //A jelölt napon befejezett, de nem lezárt tanév adatainak megtartása. (pl. szeptemberig) 
-							// Ha már nem kell, akkor állítsd "1970-01-01"-ra !;
+														// Ha már nem kell, akkor állítsd "1970-01-01"-ra !;
 							
     $m2n['verbose'] = 3                                 //Log bőbeszédűség      (A leg informatívabb(tömörebb), talán a 3-mas fokozat.)
                                                         // 0: csak fatális hibák, 1: fontosabbak, 2: csop./felh. elvétel, 3: csop./felh. hozzáadás, 
-                                                        // 4: csop./felh. tények, 5: részletesebben, 6: sql query + bash parancsok kiírása
+                                                        // 4: csop./felh. állapot, 5: részletesebben, 6: sql query + bash parancsok kiírása is
 
 
     $occ_path = "/var/www/nextcloud/";                  //A Nextcloud-server fájljainak elérési útja. (DocumentRoot)
                                                         // Erre szükség van a nextcloud "occ" parancsának eléréséhez.
 
-    $occ_user = "www-data";                             //A Nextcloud-servert futtató (Apache) felhasználónév
+    $occ_user = "www-data";                             //A Nextcloud-servert futtató (Apache által használt) felhasználónév
 
-    $cfgfile  = ".mayor-nextcloud.cfg.php";             //Lehetőség van a konfig-fejléc exportálására egy külön fájlba, 
+
+	CONFIG FILE: "mayor-nextcloud.cfg.php";				//Lehetőség van a konfig exportálására egy külön fájlba, 
                                                         // így a mayor-nextcloud scriptet nem kell szerkeszteni, ha frissítés érkezik hozzá.
                                                         // Ez alapértelmezetten a maxor-nextcloud.php -val kell egy könyvtárba legyen.
                                                         

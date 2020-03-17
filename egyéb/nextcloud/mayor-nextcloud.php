@@ -13,8 +13,12 @@ $db['nxt_dbname'] = "Nextcloud";
 $db['nxt_prefix'] = "oc_";
 //$db['mayor_host'] = "";
 //$db['mayor_port'] = "";
-//$db['mayor_user'] = "";
+//$db['mayor_user'] = ""; 
 //$db['mayor_pass'] = "";
+
+$m2n['megfigyelo_user'] = "naplo_robot";
+$m2n['megfigyelo_hozzaadasa'] = True;
+$m2n['beken_hagyottak'] = array();      //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
 
 $m2n['min_evfolyam'] = 1;
 $m2n['isk_rovidnev'] = "rovid";
@@ -109,7 +113,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         echo "\n\n\n".explode(".", json_decode(shell_exec($e),true)['version'])[0]."\n\n\n";
     }
     
-    function nxt_register_userlist($link){	//akiket a script hozott létre
+    function nxt_registered_userlist($link){	//akiket a script hozott létre
         global $db,$log;
         $ret['account'] = array();
         $ret['status'] = array();
@@ -128,7 +132,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         }
     }
     
-    function nxt_register_forbiddenlist($link){      //akiket a rendszergazda kitiltott
+    function nxt_registered_forbiddenlist($link){      //akiket a rendszergazda kitiltott
         global $log,$db;
         $q = "SELECT * FROM ".$db['m2n_db'].".".$db['m2n_prefix']."register WHERE STATUS = 'forbidden'; ";
         if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
@@ -145,7 +149,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         }
     }
     
-    function nxt_register_useradd($link, $account){	// feljegyzi az általa létrehozott felhasználókat
+    function nxt_registered_useradd($link, $account){	// feljegyzi az általa létrehozott felhasználókat
         global $log,$db;
         $q = "INSERT INTO ".$db['m2n_db'].".".$db['m2n_prefix']."register (account) VALUES ('".$account."')";
         if ($log['verbose'] > 5 ){ echo "M2N -> \t".$q."\n"; }
@@ -154,7 +158,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         } 
     }
 
-    function nxt_register_userena($link, $account){	// az engedélyezetteket
+    function nxt_registered_userena($link, $account){	// az engedélyezetteket
         global $db,$log;
         $q = "UPDATE ".$db['m2n_db'].".".$db['m2n_prefix']."register SET status='active' WHERE account='".$account."'";
         if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
@@ -163,7 +167,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         }
     }
 
-    function nxt_register_userdel($link, $account){	// a törölteket
+    function nxt_registered_userdel($link, $account){	// a törölteket
         global $db,$log;
         $q = "DELETE FROM ".$db['m2n_db'].".".$db['m2n_prefix']."register WHERE account='".$account."' ";
         if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
@@ -172,7 +176,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         }
     }
     
-    function nxt_register_userdis($link, $account){	// a letiltottakat
+    function nxt_registered_userdis($link, $account){	// a letiltottakat
         global $m2n,$db,$log;
         $q = "UPDATE ".$db['m2n_db'].".".$db['m2n_prefix']."register SET status='disabled' WHERE account='".$account."'";
         if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
@@ -561,8 +565,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     $mayor_user = array_merge($mayor_user, array(array('userAccount' => null, 'fullName' => null, 'tankorNev' => null,)) ); //strázsa a lista végére
     $nxt_user = nxt_user_list();
     $nxt_group = nxt_group_list();
-    $nxt_registered = nxt_register_userlist($link);
-    $m2n_forbidden = nxt_register_forbiddenlist($link);
+    $nxt_registered = nxt_registered_userlist($link);
+    $m2n_forbidden = nxt_registered_forbiddenlist($link);
     if ($log['verbose'] > 3 ){ echo "\n";}
 
     foreach($mayor_user as $key => $val){
@@ -584,11 +588,11 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     if ($log['verbose'] > 3 ){ echo " -".$log['curr']; $log['curr'] = "";}
                     if( in_array($curr, $nxt_registered['account'])){
                         if($nxt_registered['status'][array_keys($nxt_registered['account'], $curr)[0]] == 'disabled' ){
-                            nxt_register_userena($link, $curr);			//Ha netán le lenne tiltva, akkor engedélyezi,
+                            nxt_registered_userena($link, $curr);			//Ha netán le lenne tiltva, akkor engedélyezi,
                             user_ena($curr);					//ha a script tiltotta le.
                         }
                     } else { 
-                        nxt_register_useradd($link, $curr);
+                        nxt_registered_useradd($link, $curr);
                         if ($log['verbose'] > 1 ){ echo "??? -\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."\tlétezik a naplóban, és a nextcloudban, de nem szerepelt az m2n nyilvántartásában. +++ Felvéve.\n";} 
                     }
 
@@ -616,7 +620,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             if($curr != $key2 and $curr != null){				//Nincs még ilyen felhasználó
                 
                 user_add($curr, $curr_n);					//Akkor hozzá kell adni
-                nxt_register_useradd($link, $curr);
+                nxt_registered_useradd($link, $curr);
                 if ($log['verbose'] > 2 ){ echo "**-\tFelhasználó:".po("\t$curr_n ($curr)",$m2n['felhasznalo_hossz'],1)."--\tlétrehozva.\n";}
                     
                 foreach($tankorei as $key3 => $val3){                   //Hozzáadja a (tankör)csoportokhoz is egyből,
@@ -647,16 +651,16 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
 // A megszűnő felhasználónevek egyeztetése
     if ($log['verbose'] > 0 ){ echo "\n***\tTörlendő/Letiltandó felhasználók egyeztetése.\n";}
-    $nxt_registered = nxt_register_userlist($link);
+    $nxt_registered = nxt_registered_userlist($link);
     foreach($nxt_user as $key => $val){						//Benne van a nyilvántartásban,
             if(in_array($key, $nxt_registered['account'])){ 			//vagyis a script adta hozzá korábban
                 if( nxt_user_lastlogin($key) == "1970-01-01T00:00:00+00:00" ){	//Még soha nem lépett be = 1970.01.01 ??
                     user_del($key);						//Akkor törli 
-                    nxt_register_userdel($link, $key);				//A listáról is
+                    nxt_registered_userdel($link, $key);				//A listáról is
                     if ($log['verbose'] > 1 ){ echo "**-\tFelhasználó:".po("\t$val ($key)",$m2n['felhasznalo_hossz'],1)."--\ttörölve.\n";} 
                 } else {
                     user_dis($key);            					//Különben csak letiltja (fájlok ne vesszenek el)
-                    nxt_register_userdis($link, $key);				//Feljegyzi a nyilvántartásba
+                    nxt_registered_userdis($link, $key);				//Feljegyzi a nyilvántartásba
                     if ($log['verbose'] > 1 ){ echo "**-\tFelhasználó:".po("\t$val ($key)",$m2n['felhasznalo_hossz'],1)."--\tletiltva.\n";} 
                 }
             }
@@ -675,12 +679,12 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 // Végül a nyilvántartás kipucolása
     if ($log['verbose'] > 0 ){ echo "\n***\tNyilvántartás ellenőrzése.\n";}
     $nxt_user = nxt_user_list();
-    $nxt_registered = nxt_register_userlist($link);
+    $nxt_registered = nxt_registered_userlist($link);
     foreach($nxt_registered['account'] as $key => $val){    //Erre a nextcloud "occ" parancs hibakezelése miatt van szükség
     
         if(@$nxt_user[$val] === null ){
             if ($log['verbose'] > 4 ){ echo "**-\tFelhasználónév:".po("\t($val)",$m2n['felhasznalo_hossz'],1)."--\tkivéve a nyilvántartásból.";}
-            nxt_register_userdel($link, $val);
+            nxt_registered_userdel($link, $val);
         }
     }
 
