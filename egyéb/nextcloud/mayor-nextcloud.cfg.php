@@ -20,8 +20,7 @@ $db['nxt_prefix'] = "oc_";
 //$db['mayor_pass'] = "";
 
 $m2n['megfigyelo_user'] = "naplo_robot";
-$m2n['megfigyelo_hozzaadasa'] = True;
-$m2n['beken_hagyottak'] = array();   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
+$m2n['beken_hagy'] = array();   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
 
 $m2n['min_evfolyam'] = 1;
 $m2n['isk_rovidnev'] = "rovid";
@@ -84,9 +83,9 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
     $db['port'] = "3306";                   //nextcloud-mysql port
 
     $db['user'] = "root";					//nextcloud-mysql felhasználónév
-                                            // HA nem a root-ot használjuk, akkor, a használt felhasználónak írási-olvasási-törlési
-                                            //  (insert,select,update,delete) joggal kell rendelkeznie a nextcloud adatbázis "..groups" tábláján,
-                                            //  valamit saját kezűleg kell létrehozni a script saját, nyilvántartó adatbázisát, és a fenti jogokat beállítani rá.
+											// HA nem a root-ot használjuk, akkor, saját kezűleg kell létrehozni a script saját, nyilvántartó adatbázisát, és a fenti jogokat beállítani rá, 
+											//  valamint Ha a Nextcloud verziószáma kisebb 14-nél, akkor a használt felhasználónak írási-olvasási-törlési
+                                            //  (insert,select,update,delete) joggal kell rendelkeznie a nextcloud adatbázis "..groups" tábláján.
                                             // Ha a Debian-on alapértelmezett root-ot használjuk, akkor mindez automatikusan történik.
 
     $db['pass'] = "";                       //A nextcloud-mysql jelszó    (A fenti felhasználónévhez tartozó)

@@ -17,8 +17,7 @@ $db['nxt_prefix'] = "oc_";
 //$db['mayor_pass'] = "";
 
 $m2n['megfigyelo_user'] = "naplo_robot";
-$m2n['megfigyelo_hozzaadasa'] = True;
-$m2n['beken_hagyottak'] = array();      //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
+$m2n['beken_hagy'] = array();      //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
 
 $m2n['min_evfolyam'] = 1;
 $m2n['isk_rovidnev'] = "rovid";
@@ -232,17 +231,18 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function nxt_group_list() {		// Csoportok listázása a Nextcloud-ból
             global $occ_path,$occ_user,$log;
-            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:list --output=json'";
+            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:list --limit=1000000 --output=json'";  //* Jó nagy limittel dolgozzunk
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             return (array)json_decode(shell_exec($e),true);
     }
     
     function nxt_user_list() {		// Felhasználók listázása a Nextcloud-ból
             global $occ_path,$occ_user,$log;
-            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:report | grep \"total\" | sed -e \"s/[^0-9]//g\" | tr -d \"[:blank:]\n\" '";
-            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
-            $num = shell_exec($e); 
-            $num = $num + 100; 	// Biztos-ami-biztos, a nextcloud rejtett hibái miatt...
+        //    $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:report | grep \"total\" | sed -e \"s/[^0-9]//g\" | tr -d \"[:blank:]\n\" '";
+        //    if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+        //    $num = shell_exec($e); 
+            $num = 1000000;      //inkább kézi limit!
+        //    $num = $num + 100; 	// Biztos-ami-biztos, a nextcloud rejtett hibái miatt...
             $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:list --limit $num --output=json'";
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             return (array)json_decode(shell_exec($e),true);
@@ -327,7 +327,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         shell_exec($e);
     }
 
-    function po($inp,$ll,$dir){
+    function po($inp,$ll,$dir){  // Szép/olvasható kimenetet gyárt
             while(grapheme_strlen($inp) < $ll){
                 if($dir == 0){
                     $inp = " ".$inp." ";
@@ -503,7 +503,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         }
     $link2 = $link;
 
-    group_add($m2n['mindenki_csop']);				// A "mindenki" csoport hozzáadása 
+    // group_add($m2n['mindenki_csop']);				// A "mindenki" csoport hozzáadása 
 
 
     if(isset($db['mayor_user']) and isset($db['mayor_pass']) and isset($db['mayor_host']) or isset($db['mayor_port'])) 
@@ -527,22 +527,23 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 // Létrehozza az új coportokat a Mayor tankörök szerint
     if ($log['verbose'] > 0 ){ echo "\n***\tCsoportok egyeztetése.\n";}
     $tankorok = get_mayor_tankor($link2);
+    $tankorok = array_merge($tankorok, array( array("tankorId" => 0, "tankorNev" => $m2n['mindenki_csop'] )));
     $nxt_csop = nxt_group_list();
     $elozo_tcsop = "";
-    foreach($tankorok as $key => $val){								//Végignézi a tankörök szerint
-        foreach($nxt_csop as $key2 => $val2){							// 
-            if($key2 == $val['tankorNev']){							//Már van ilyen (tankör)nevű csoport
+    foreach($tankorok as $key => $val){                                                 //Végignézi a tankörök szerint
+        foreach($nxt_csop as $key2 => $val2){                                           // 
+            if($key2 == $val['tankorNev']){                                             //Már van ilyen (tankör)nevű csoport
                 if ($log['verbose'] > 3 ){ echo "  -\t Csoport:".po("\t".$val['tankorNev'],$m2n['csoportnev_hossz'],1)."-\tok.\n";}
                 $elozo_tcsop = $val['tankorNev'];
                 break;
             }
         }
-        unset($nxt_csop[$val['tankorNev']]);							//Megvizsgálva, többször már nem kell dönteni róla. 
-        if( $val['tankorNev'] == $elozo_tcsop and $key2 != $val['tankorNev'] ){			//Duplikált tankör(név) a Mayorban
+        unset($nxt_csop[$val['tankorNev']]);                                            //Megvizsgálva, többször már nem kell dönteni róla. 
+        if( $val['tankorNev'] == $elozo_tcsop and $key2 != $val['tankorNev'] ){         //Duplikált tankör(név) a Mayorban
                 if($log['verbose'] > 2 ){ echo "* -\t Dupla tankör:".po("\t".$val['tankorNev'], $m2n['csoportnev_hossz'],1)."-\tmayor.\n";}
         }
-        else if($key2 != $val['tankorNev']){ 							//Ha nincs ilyen (tankör)nevű csoport
-            group_add($val['tankorNev']);   							//Akkor létrehozza
+        else if($key2 != $val['tankorNev']){                                            //Ha nincs ilyen (tankör)nevű csoport
+            group_add($val['tankorNev']);                                               //Akkor létrehozza
             if ($log['verbose'] > 2 ){ echo "* -\t Új csoport:".po("\t".$val['tankorNev'],$m2n['csoportnev_hossz'],1)."-\thozzáadva.\n";}
          }
     }
@@ -561,7 +562,22 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 //-------------------------------------------------------------------------------------------------------------------------------
 // Felhasználónevek egyeztetése
     if ($log['verbose'] > 0 ){ echo "\n***\tFelhasználók egyeztetése.\n";}
+
     $mayor_user = array_merge( get_mayor_tanar($link2), get_mayor_diak($link2) );		//tanár, diák
+    
+    if(isset($m2n['megfigyelo_user']) && $m2n['megfigyelo_user'] != "" ){               //A megfigyelő felvétele
+        foreach(get_mayor_tankor($link2) as $key => $val){
+            $mayor_user = array_merge($mayor_user, array(
+                array( 'userAccount' => $m2n['megfigyelo_user'], 
+                    'email' => $m2n['default_email'],  
+                    'tanarId' => 0,
+                    'diakId' => 0,
+                    'tankorId' => $val['tankorId'],
+                    'fullName' => "MaYor Admin",
+                    'tankorNev' => $val['tankorNev'],
+                )));
+        }
+    }
     $mayor_user = array_merge($mayor_user, array(array('userAccount' => null, 'fullName' => null, 'tankorNev' => null,)) ); //strázsa a lista végére
     $nxt_user = nxt_user_list();
     $nxt_group = nxt_group_list();
