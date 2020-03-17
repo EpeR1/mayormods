@@ -178,15 +178,13 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 		A Nextcloud szerver "occ" parancsa elérhető kell legyen a script számára!
 		Az "occ" parancs működését pl. az: (>>> sudo -u www-data php /var/www/nextcloud/occ ) kiadásával ellenőrizzük!
 
-		Lehetőség van a scriptet a "--loglevel xx" kapcsolóval is indítani. (>>> php mayor-nextcloud.php --loglevel 3 )
-
-
-
+		
 
 
 	További Információk:
  
-	
+	Lehetőség van a scriptet a "--loglevel xx" kapcsolóval is indítani. (>>> php mayor-nextcloud.php --loglevel 3 )
+
 	Esetleg érdemes lehet a scriptet betenni a "cron"-ba (éjszakára), így naponta lefut, és követi napló változásait.
 	(Ez esetben figyelni kell arra, hogy mayorban a tankör-diák, tankör-tanár összerendelések az év végén lejárhatnak, (pl. júni. 15-én)
 	így a script futtatása júni. 16-án kitörli, letiltja az összes létrehozott mayor-os csoportot, és felhasználót a nextcloud-ból, 

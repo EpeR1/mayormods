@@ -216,6 +216,14 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         
     }
     
+    function user_info($userAccount){	// User állpot a Nextcloudban
+        global $occ_path,$occ_user,$log;
+            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:info $userAccount --output=json '";
+            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+            return (array)json_decode(shell_exec($e),true);
+    }
+
+
     function user_dis($userAccount){	// letiltja a felhasználót a Nextcloud-ban
         global $occ_path,$occ_user,$log;
             $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:disable $userAccount'";
@@ -485,7 +493,11 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     
     }
     
-    
+//-------------------------------------------------------------------------------------------------------------------------------
+    if(nxt_get_version() < 13){         //Nextcloud 13-tól támogatott
+        echo "\n\n******** Legalább Nextcloud 13-mas verzió szükséges! ********\n\n";
+        die();
+    }
 //-------------------------------------------------------------------------------------------------------------------------------    
 
     if($log['verbose'] > 0) { echo "\n\n######## Mayor-Nextcloud Script ########\n\n\n"; }
@@ -604,13 +616,14 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 if($curr == $key2){                                                         //Már létezik a felhasználó a Nextcloud-ban
                     $log['curr'] = "-\tFelhasználó:".po("\t$curr_n ($curr)",$m2n['felhasznalo_hossz'],1)."--\tok.\n";
                     if ($log['verbose'] > 3 ){ echo " -".$log['curr']; $log['curr'] = "";}
-                    if( in_array($curr, $m2n_catalog['account'])){                          //Van-e róla katalógusunk?
-                        if($m2n_catalog['status'][array_keys($m2n_catalog['account'], $curr)[0]] == 'disabled' ){
+                    if( in_array($curr, $m2n_catalog['account'])){                          //Benne van-e a nyilvántartásban?
+                        //if($m2n_catalog['status'][array_keys($m2n_catalog['account'], $curr)[0]] == 'disabled' ){ // Ha le lett tiltva
+                        if(user_info($curr)['enabled']!=true){                              // Inkább a nextcloud szerint!
                             catalog_userena($link, $curr);                                  //Ha netán le lenne tiltva, akkor engedélyezi,
                             user_ena($curr);                                                // ha a script tiltotta le.
                         }
-                    } else if(!in_array($curr, $m2n['kihagy'])) { 
-                        catalog_useradd($link, $curr);                                      //Nincs a katalógusban, felvesszük
+                    } else if(!in_array($curr, $m2n['kihagy'])) {                           //Nincs a katalógusban, nincs tiltva,  felvesszük        
+                        catalog_useradd($link, $curr);                                      
                         if ($log['verbose'] > 1 ){ echo "??? -\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."\tlétezik a naplóban, és a nextcloudban, de nem szerepelt az m2n nyilvántartásában. +++ Felvéve.\n";} 
                     } else {
                         //Azok, akik Benne vannak a naplóban, és benne vannak a kihagyottak között
@@ -704,13 +717,13 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     foreach($m2n_catalog['account'] as $key => $val){    
         if(@$nxt_user[$val] === null  ){         //Erre a nextcloud "occ" parancs hibakezelése miatt van szükség
-            if ($log['verbose'] > 4 ){ echo "**-\tFelhasználónév:".po("\t($val)",$m2n['felhasznalo_hossz'],1)."--\tkivéve a nyilvántartásból.";}
+            if ($log['verbose'] > 4 ){ echo "**-\tFelhasználónév:".po("\t($val)",$m2n['felhasznalo_hossz'],1)."--\tkivéve a nyilvántartásból.\n";}
             catalog_userdel($link, $val);
         }
     }
     foreach($m2n_forbidden as $key => $val){    //Szinkronizálja a $m2n['kihagy'] listát a nyilvántartással.    
         if(!in_array($val, $m2n['kihagy'])){
-            if ($log['verbose'] > 4 ){ echo "**-\tFelhasználónév:".po("\t($val)",$m2n['felhasznalo_hossz'],1)."--\tújraaktiválva nyilvántartásban.";}
+            if ($log['verbose'] > 4 ){ echo "**-\tFelhasználó:".po("\t($val)",$m2n['felhasznalo_hossz'],1)."--\tújra nyilvántartva.\n";}
             catalog_userena($link,$val);
         }
     }
