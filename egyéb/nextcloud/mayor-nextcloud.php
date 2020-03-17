@@ -379,7 +379,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 FROM naplo_".$m2n['isk_rovidnev']."_".$ev['tanev'].".osztalyNaplo
                 WHERE evfolyamJel >= ".$m2n['min_evfolyam']."  OR osztalyJel IN(".$req_oszt.") 
                 ORDER BY osztalyId)
-                ORDER BY tankorId ); 
+                ORDER BY tankorId ) ORDER BY tankorNev; 
             ";
             if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }
             if(( $r = mysqli_query($link, $q)) !== FALSE ){
@@ -520,19 +520,24 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
 //------------------------------------------------------------------------------------------------------------------------------
 
-// Létrehozza az új Mayor tanköröket
+// Létrehozza az új coportokat a Mayor tankörök szerint
     if ($log['verbose'] > 0 ){ echo "\n***\tCsoportok egyeztetése.\n";}
     $tankorok = get_mayor_tankor($link2);
     $nxt_csop = nxt_group_list();
+    $elozo_tcsop = "";
     foreach($tankorok as $key => $val){								//Végignézi a tankörök szerint
         foreach($nxt_csop as $key2 => $val2){							// 
             if($key2 == $val['tankorNev']){							//Már van ilyen (tankör)nevű csoport
                 if ($log['verbose'] > 3 ){ echo "  -\t Csoport:".po("\t".$val['tankorNev'],$m2n['csoportnev_hossz'],1)."-\tok.\n";}
+                $elozo_tcsop = $val['tankorNev'];
                 break;
             }
         }
         unset($nxt_csop[$val['tankorNev']]);							//Megvizsgálva, többször már nem kell dönteni róla. 
-        if($key2 != $val['tankorNev']){ 							//Ha nincs ilyen (tankör)nevű csoport
+        if( $val['tankorNev'] == $elozo_tcsop and $key2 != $val['tankorNev'] ){			//Duplikált tankör(név) a Mayorban
+                if($log['verbose'] > 2 ){ echo "* -\t Dupla tankör:".po("\t".$val['tankorNev'], $m2n['csoportnev_hossz'],1)."-\tmayor.\n";}
+        }
+        else if($key2 != $val['tankorNev']){ 							//Ha nincs ilyen (tankör)nevű csoport
             group_add($val['tankorNev']);   							//Akkor létrehozza
             if ($log['verbose'] > 2 ){ echo "* -\t Új csoport:".po("\t".$val['tankorNev'],$m2n['csoportnev_hossz'],1)."-\thozzáadva.\n";}
          }
@@ -541,9 +546,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     foreach($nxt_csop as $key => $val){           
         if(substr($key, 0, strlen($m2n['csoport_prefix'])) === $m2n['csoport_prefix'] ){	//Csak a "prefix"-el kezdődő nevűekre.
             group_del($key);									//elvégzi a törlést
-            if ($log['verbose'] > 1 ){ echo "** -\t Korábbi csoport:".po("\t$key",$m2n['csoportnev_hossz'],1)."\t eltávolítva.\n";}
+            if ($log['verbose'] > 1 ){ echo "** -\t Megszűnő csop:".po("\t$key",$m2n['csoportnev_hossz'],1)."\t eltávolítva.\n";}
         } else {
-            if ($log['verbose'] > 5 ){ echo " ---\t Külső csoport:".po("\t$key",$m2n['csoportnev_hossz'],1)."\t békén hagyva.\n";}
+            if ($log['verbose'] > 3 ){ echo " ---\t Egyéb csoport:".po("\t$key",$m2n['csoportnev_hossz'],1)."\t békén hagyva.\n";}
         }	// Figyelem! A csoport prefix-szel: "(tk) " kezdődő csoportokat magáénak tekinti, automatikusan töröli!
     }	// 	Akkor is, ha az külön, kézzel lett létrehozva.
 
