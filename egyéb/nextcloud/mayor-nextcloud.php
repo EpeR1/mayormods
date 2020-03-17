@@ -566,9 +566,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     foreach($nxt_csop as $key => $val){           
         if(substr($key, 0, strlen($m2n['csoport_prefix'])) === $m2n['csoport_prefix'] ){	//Csak a "prefix"-el kezdődő nevűekre.
             group_del($key);									//elvégzi a törlést
-            if ($log['verbose'] > 1 ){ echo "** -\t Megszűnő csop:".po("\t$key",$m2n['csoportnev_hossz'],1)."\t eltávolítva.\n";}
+            if ($log['verbose'] > 1 ){ echo "** -\t Megszűnő csop:".po("\t$key",$m2n['csoportnev_hossz'],1)."-\t eltávolítva.\n";}
         } else {
-            if ($log['verbose'] > 3 ){ echo " ---\t Egyéb csoport:".po("\t$key",$m2n['csoportnev_hossz'],1)."\t békén hagyva.\n";}
+            if ($log['verbose'] > 3 ){ echo " ---\t Egyéb csoport:".po("\t$key",$m2n['csoportnev_hossz'],1)."-\t békén hagyva.\n";}
         }	// Figyelem! A csoport prefix-szel: "(tk) " kezdődő csoportokat magáénak tekinti, automatikusan töröli!
     }	// 	Akkor is, ha az külön, kézzel lett létrehozva.
 
@@ -588,7 +588,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     'tanarId' => 0,
                     'diakId' => 0,
                     'tankorId' => $val['tankorId'],
-                    'fullName' => "MaYor Admin",
+                    'fullName' => "Napló Admin",
                     'tankorNev' => $val['tankorNev'],
                 )));
         }
@@ -619,8 +619,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     $log['curr'] = "-\tFelhasználó:".po("\t$curr_n ($curr)",$m2n['felhasznalo_hossz'],1)."--\tok.\n";
                     if ($log['verbose'] > 3 ){ echo " -".$log['curr']; $log['curr'] = "";}
                     if( in_array($curr, $m2n_catalog['account'])){                          //Benne van-e a nyilvántartásban?
-                        //if($m2n_catalog['status'][array_keys($m2n_catalog['account'], $curr)[0]] == 'disabled' ){ // Ha le lett tiltva
-                        if(user_info($curr)['enabled']!=true){                              // Inkább a nextcloud szerint!
+                        if($m2n_catalog['status'][array_keys($m2n_catalog['account'], $curr)[0]] == 'disabled' ){ // Ha le lett tiltva
+                        //if(user_info($curr)['enabled']!=true){                              // Ez valós, de irtó lassú
                             catalog_userena($link, $curr);                                  //Ha netán le lenne tiltva, akkor engedélyezi,
                             user_ena($curr);                                                // ha a script tiltotta le.
                         }
