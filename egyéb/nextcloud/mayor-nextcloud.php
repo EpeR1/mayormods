@@ -133,7 +133,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
     
     function catalog_forbiddenlist($link){      //akiket a rendszergazda kitiltott
-        global $log,$db;
+        global $log,$db,$m2n;
         $q = "SELECT * FROM ".$db['m2n_db'].".".$db['m2n_prefix']."register WHERE STATUS = 'forbidden'; ";
         if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
         if(( $r = mysqli_query($link, $q)) !== FALSE ){
