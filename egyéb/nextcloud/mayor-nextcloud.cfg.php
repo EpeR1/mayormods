@@ -174,7 +174,7 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
                                                         // Ez alapértelmezetten a maxor-nextcloud.php -val kell egy könyvtárba legyen.
                                                         
 
-	FONTOS!!
+	FONTOS!! 
 		A Nextcloud szerver "occ" parancsa elérhető kell legyen a script számára!
 		Az "occ" parancs működését pl. az: (>>> sudo -u www-data php /var/www/nextcloud/occ ) kiadásával ellenőrizzük!
 

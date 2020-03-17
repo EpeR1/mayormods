@@ -46,12 +46,13 @@ $search = array( 'á', 'ä', 'é', 'í', 'ó', 'ö', 'ő', 'ú', 'ü', 'ű', 'Á
 $replace = array( 'aa', 'ae', 'ee', 'ii', 'oo', 'oe', 'ooe', 'uu', 'ue', 'uue', 'Aa', 'Aae', 'Ee', 'Ii', 'Oo', 'Oe', 'Ooe', 'Uu', 'Ue', 'Uue');
 
 $log['verbose'] = $m2n['verbose'];
-if(@$argv[1] == "--loglevel" and is_numeric($argv[2])){$log['verbose'] = $argv[2];}
-
+for($i = 1; $i<$argc; $i++){
+    if(@$argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$log['verbose'] = $argv[$i+1]; $i++;}
+}
 
 if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Improved) és php7  kell!
 
-    function db_connect(array $db){
+    function db_connect(array $db){ 
         global $log;
         if ($log['verbose'] > 0 ){  echo "***\tAdatbázis kapcsolódás. (m2n_db=".$db['m2n_db'].")\n"; }
         $l = mysqli_connect($db['host'], $db['user'], $db['pass'], $db['m2n_db'],$db['port']);
@@ -597,12 +598,13 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     $nxt_group = nxt_group_list();
     $m2n_catalog = catalog_userlist($link);
     $m2n_forbidden = catalog_forbiddenlist($link);
+    
     if ($log['verbose'] > 3 ){ echo "\n";}
 
     foreach($mayor_user as $key => $val){
                                                                                     //Lecseréli az ékezetes betűket a felhasználónévből
         $mayor_user[$key]['userAccount'] = str_replace($search, $replace, $val['userAccount']);  // (pl: Á->Aa, á->aa, ...)
-        if(in_array($val['userAccount'], $m2n_forbidden) ){                         //És, ha a nyilvántartásban "forbidden"-ként szerepel, 
+        if(in_array($mayor_user[$key]['userAccount'], $m2n_forbidden) ){                         //És, ha a nyilvántartásban "forbidden"-ként szerepel, 
             unset($mayor_user[$key]);                                               // akkor nem foglalkozik vele tovább.
         }
     }
@@ -622,11 +624,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                             catalog_userena($link, $curr);                                  //Ha netán le lenne tiltva, akkor engedélyezi,
                             user_ena($curr);                                                // ha a script tiltotta le.
                         }
-                    } else if(!in_array($curr, $m2n['kihagy'])) {                           //Nincs a katalógusban, nincs tiltva,  felvesszük        
+                    } else  {                           //Nincs a katalógusban, nincs tiltva,  felvesszük        
                         catalog_useradd($link, $curr);                                      
-                        if ($log['verbose'] > 1 ){ echo "??? -\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."\tlétezik a naplóban, és a nextcloudban, de nem szerepelt az m2n nyilvántartásában. +++ Felvéve.\n";} 
-                    } else {
-                        //Azok, akik Benne vannak a naplóban, és benne vannak a kihagyottak között
+                        if ($log['verbose'] > 1 ){ echo "-\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."-\tnyilvántartásba véve.\n";} 
                     }
 
                     foreach($nxt_group as $key3 => $val3){                                  //A tankörök egyeztetése
@@ -723,8 +723,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
     foreach($m2n_forbidden as $key => $val){    //Szinkronizálja a $m2n['kihagy'] listát a nyilvántartással.    
         if(!in_array($val, $m2n['kihagy'])){
-            if ($log['verbose'] > 4 ){ echo "**-\tFelhasználó:".po("\t($val)",$m2n['felhasznalo_hossz'],1)."--\tújra nyilvántartva.\n";}
+            if ($log['verbose'] > 4 ){ echo "**-\tFelhasználó:".po("\t($val)",$m2n['felhasznalo_hossz'],1)."--\tújra engedélyezve.\n";}
             catalog_userena($link,$val);
+            user_ena($val);
         }
     }
 
