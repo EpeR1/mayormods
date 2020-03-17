@@ -609,9 +609,11 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                             catalog_userena($link, $curr);                                  //Ha netán le lenne tiltva, akkor engedélyezi,
                             user_ena($curr);                                                // ha a script tiltotta le.
                         }
-                    } else { 
+                    } else if(!in_array($curr, $m2n['kihagy'])) { 
                         catalog_useradd($link, $curr);                                      //Nincs a katalógusban, felvesszük
                         if ($log['verbose'] > 1 ){ echo "??? -\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."\tlétezik a naplóban, és a nextcloudban, de nem szerepelt az m2n nyilvántartásában. +++ Felvéve.\n";} 
+                    } else {
+                        //Azok, akik Benne vannak a naplóban, és benne vannak a kihagyottak között
                     }
 
                     foreach($nxt_group as $key3 => $val3){                                  //A tankörök egyeztetése
@@ -701,7 +703,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     $m2n_forbidden = catalog_forbiddenlist($link);
 
     foreach($m2n_catalog['account'] as $key => $val){    
-        if(@$nxt_user[$val] === null ){         //Erre a nextcloud "occ" parancs hibakezelése miatt van szükség
+        if(@$nxt_user[$val] === null  ){         //Erre a nextcloud "occ" parancs hibakezelése miatt van szükség
             if ($log['verbose'] > 4 ){ echo "**-\tFelhasználónév:".po("\t($val)",$m2n['felhasznalo_hossz'],1)."--\tkivéve a nyilvántartásból.";}
             catalog_userdel($link, $val);
         }
