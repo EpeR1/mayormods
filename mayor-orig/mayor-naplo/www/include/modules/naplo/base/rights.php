@@ -434,6 +434,7 @@ if (__NAPLO_INSTALLED === true) {
 	    } elseif (defined('__PARENTDIAKID')) {
 		define('__USERDIAKID',__PARENTDIAKID);
 		define('__USERSZULOID', getSzuloIdByUserAccount(("$page/$sub/$f" != 'naplo//diakValaszto')));
+//	    } elseif (_POLICY === 'parent') {
 	    } elseif ("$page/$sub/$f" != 'naplo//diakValaszto') {
 		header('Location: '.location('index.php?page=naplo&f=diakValaszto'));
 	    } else {

@@ -110,6 +110,7 @@ if ( $skin == 'ajax'
 	    // set defaults ++
 //	    if (strtotime($igDt) > strtotime($_TANEV['zarasDt'])) $igDt = $_TANEV['zarasDt'];
 	    $maxIgDt = date('Y-m-d', strtotime('next Saturday', strtotime($_TANEV['kovetkezoKezdesDt'])));
+
 	    if (strtotime($igDt) > strtotime($maxIgDt)) $igDt = $maxIgDt;
 	    elseif (strtotime($igDt) < strtotime($_TANEV['kezdesDt'])) $igDt = $_TANEV['kezdesDt'];
 	    if (date('w', strtotime($igDt)) == 0) $igDt = date('Y-m-d',strtotime('-1 days',strtotime($igDt))); // Hogy vasárnap még a múltheti látszódjon
@@ -269,10 +270,10 @@ if ( $skin == 'ajax'
 	) && (__NAPLOADMIN || __VEZETOSEG)) {
 	$_NAPOK = _genNapok($tolDt,$igDt);
 	for ($i=0; $i<count($_NAPOK); $i++) {
-		checkNaplo($_NAPOK[$i]);
+	    checkNaplo($_NAPOK[$i]);
 	}
-
     }
+
     /* ------------------------------------------------- */
 
 // Ezt nem használja a getHaladási...
