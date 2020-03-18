@@ -36,6 +36,6 @@
     define('_BEALLITASAI', 'beállításai');
 
     define('_ALAPADATOK','Óra adatok');
-    define('_HAZIFELADAT','Házi feladat');
+    define('_HAZIFELADAT','Házi feladat, Részletek, Referenciák, Hivatkozások');
 
 ?>

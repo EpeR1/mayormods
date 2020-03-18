@@ -23,14 +23,14 @@
     $ADAT['oraId' ] = $oraId = readVariable($_POST['oraId'],'id',readVariable($_GET['oraId'],'id'));
 //    $ADAT['hazifeladatId' ] = $hazifeladatId = readVariable($_POST['hazifeladatId'],'id', readVariable($_GET['hazifeladatId'],'id'));
     $ADAT['hazifeladatLeiras' ] = readVariable($_POST['hazifeladatLeiras'],'string');
-    $ADAT['oraAdat'] = getOraadatById($oraId);
     $action = readVariable($_POST['action'],'strictstring',null,array('hazifeladatBeiras'));
 
     $q = "SELECT hazifeladatId FROM oraHazifeladat WHERE oraId=%u";
     $values = array($ADAT['oraId']);
     $ADAT['hazifeladatId'] = $hazifeladatId = db_query($q, array('modul'=>'naplo','result'=>'value','values'=>$values));
+    $ADAT['oraAdat'] = getOraadatById($oraId);
 
-    if ($action=='hazifeladatBeiras') {
+    if (__TANAR===true && $action=='hazifeladatBeiras') {
 
 	if ($hazifeladatId>0) { // update
 	    $q = "UPDATE oraHazifeladat set hazifeladatLeiras='%s' WHERE hazifeladatId=%u";
@@ -40,13 +40,18 @@
 	    $q = "INSERT IGNORE INTO oraHazifeladat (hazifeladatLeiras,oraId) VALUES ('%s',%u)";
 	    $values = array($ADAT['hazifeladatLeiras'],$ADAT['oraId']);
 	    $hazifeladatId = db_query($q, array('modul'=>'naplo','result'=>'insert','values'=>$values));
-	}
 
+	}
+	if ($oraId>0 && strtotime(date('Y-m-d'))>=strtotime($ADAT['oraAdat']['dt'])) {
+	    $leiras = readVariable($_POST['oraLeiras'],'string');
+	    updateHaladasiNaploOra($oraId, $leiras);
+	}
     }
 
     $q = "SELECT * FROM oraHazifeladat WHERE oraId=%u";
     $values = array($ADAT['oraId']);
     $ADAT['hazifeladatAdat'] =  db_query($q, array('modul'=>'naplo','result'=>'record','values'=>$values));
+    $ADAT['oraAdat'] = getOraadatById($oraId);
 
 
     $TOOL['vissza'] = array('tipus'=>'vissza',

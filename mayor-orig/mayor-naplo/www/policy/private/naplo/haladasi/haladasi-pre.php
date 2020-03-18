@@ -110,7 +110,6 @@ if ( $skin == 'ajax'
 	    // set defaults ++
 //	    if (strtotime($igDt) > strtotime($_TANEV['zarasDt'])) $igDt = $_TANEV['zarasDt'];
 	    $maxIgDt = date('Y-m-d', strtotime('next Saturday', strtotime($_TANEV['kovetkezoKezdesDt'])));
-
 	    if (strtotime($igDt) > strtotime($maxIgDt)) $igDt = $maxIgDt;
 	    elseif (strtotime($igDt) < strtotime($_TANEV['kezdesDt'])) $igDt = $_TANEV['kezdesDt'];
 	    if (date('w', strtotime($igDt)) == 0) $igDt = date('Y-m-d',strtotime('-1 days',strtotime($igDt))); // Hogy vasárnap még a múltheti látszódjon
@@ -130,6 +129,7 @@ if ( $skin == 'ajax'
 // Vasárnap
                 $igDt = date('Y-m-d',strtotime('Sunday',strtotime($tolDt)));
             }
+
             if ($csakUres || strtotime($tolDt) < strtotime($_TANEV['kezdesDt'])) $tolDt = date('Y-m-d',strtotime($_TANEV['kezdesDt']));
 	    // Ha ezt kiveszem, akkor mindig kirakja a teljes hetet, de a jövőbeli órákat nem lehet beírni!
 	    // Itt a post értékét nem használjuk fel, csak vizsgáljuk.
@@ -175,6 +175,15 @@ if ( $skin == 'ajax'
 //	    || ((__TANAR || __VEZETOSEG ) && __FOLYO_TANEV)	// A tanév közben a tanároknak, vezetőségi tagoknak - az év végi napok problémásak így!
 	)
     ) {
+	// checkNaplo (2020)
+	/*
+	    checkNaplo($igDt);
+    	    $_dt = $igDt;
+    	    while (strtotime($_dt)>time()) {
+                $_dt = date('Y-m-d',strtotime('-1 day',strtotime($_dt)));
+                checkNaplo($_dt);
+            }
+	*/
 	// action
         if ($action == 'haladasiNaploBeiras' && (
 	    is_array($_POST['oraId'])
