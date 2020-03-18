@@ -31,12 +31,11 @@
 	table.haladasiBejegyzesek tbody tr.torolt input.ajaxRequestDone { display:none; }
 	table.haladasiBejegyzesek tbody tr.torolt span.INFO.ajaxRequestDone { display:none; }
 
-	table.haladasiBejegyzesek tbody.parosNap {
-    	    background-color: #dddddd;
-	}
-	table.haladasiBejegyzesek tbody.paratlanNap {
-    	    background-color: #eeeeee;
-	}
+	table.haladasiBejegyzesek tbody.parosNap { background-color: #dddddd; }
+	table.haladasiBejegyzesek tbody.paratlanNap { background-color: #eeeeee; }
+	table.haladasiBejegyzesek tbody.ma { background-color: #c5cae9; }
+	table.haladasiBejegyzesek tbody.jovo { background-color: #aaa; color:white;  }
+
 	table.haladasiBejegyzesek tbody td.ora {
 	    text-align: center;
 	}

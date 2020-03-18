@@ -166,6 +166,9 @@
 	$time = strtotime($dt);
 	$count = count($dNap);
 
+	$jovoDt = (strtotime($dt)>strtotime(date('Y-m-d')));
+	$maDt = (strtotime($dt)==strtotime(date('Y-m-d')));
+
 	$tipus = $orarendiHet = $megjegyzes = array();
 	if (is_array($napInfos)) foreach ($napInfos as $ni) {	
 	    if (!in_array($ni['tipus'], $tipus)) $tipus[] = $ni['tipus']; 
@@ -174,19 +177,24 @@
 	}
 	$tanitasiNap = false;
 	if (in_array('tanítási nap', $tipus) || in_array('speciális tanítási nap', $tipus)) {
-	    if (date('w',$time) % 2 == 0) echo '<tbody class="parosNap">'."\n";
-	    else echo '<tbody class="paratlanNap">'."\n";
+	    if (date('w',$time) % 2 == 0) $_class[]="parosNap";
+	    else $_class[]="paratlanNap";
 	    $tanitasiNap = true;
 	} elseif (in_array('tanítás nélküli munkanap', $tipus)) {
-	    echo '<tbody class="tanitasNelkul">'."\n";
+	    $_class[]="tanitasNelkul";
 	} elseif (in_array('szorgalmi időszakon kívüli munkanap', $tipus)) {
-	    echo '<tbody class="szorgalmiIdoszakonKivul">'."\n";
+	    $_class[]="szorgalmiIdoszakonKivul";
 	} else {
-	    echo '<tbody class="szunet">'."\n";
+	    $_class[]="szunet";
 	}
+
+	if ($jovoDt) $_class[]="jovo";
+	if ($maDt) $_class[]="ma";
+
+	echo '<tbody class="'.implode(' ',$_class).'">'."\n";
 	echo '<tr>';
 	    echo '<th class="nap">';
-		if (__PLUSZBEIRHAT===true) echo '<div class="icon-plus-sign rejtMutat"></div>';
+		if (__PLUSZBEIRHAT===true && !$jovoDt) echo '<div class="icon-plus-sign rejtMutat"></div>';
 	    echo '</th>'."\n";
 	    // Az első cella a dátum/nap
 	    echo '<th colspan="8" class="nap">';
@@ -358,6 +366,10 @@
 	if ( $ADAT['tankorTipusok'][$dOra['tankorTipusId']]['jelleg']=='osztályfüggetlen' && ($ADAT['haladasiTipus']=='osztalyHaladasi' || $ADAT['haladasiTipus']=='diakHaladasi')) return false; 
 	$modosithatoOra = modosithatoOra($dOra);
 //	$torolhetoOra = torolhetoOra($dOra);
+
+	$jovoDt = (strtotime($dOra['dt'])>strtotime(date('Y-m-d')));
+	$maDt = (strtotime($$dOra['dt'])==strtotime(date('Y-m-d')));
+
 	if (!in_array($dOra['tipus'],array('normál','normál máskor'))) {
 	    if ($dOra['tipus'] == 'összevonás') $tipus = 'Ö';
 	    else $tipus = nagybetus(substr($dOra['tipus'],0,1));
@@ -544,6 +556,8 @@
 		} else {
 		    if ($dOra['leiras']!='') {
     			echo '<td>'.$dOra['leiras'];
+		    } elseif ($jovoDt) {
+			echo '<td class="nincsBeirva"> ';
 		    } else {
 			echo '<td class="nincsBeirva">'._NINCS_BEIRVA;
 		    }
@@ -568,7 +582,7 @@
 		    }
 		//2014?		echo '<a href="'.$href.'" tabindex="200" class="onClickUpdateWindow">';
 		    echo '<a href="'.$href.'" tabindex="200" class="h" >';
-			echo _HIANYZOK;
+			if (!$jovoDt) echo _HIANYZOK;
 		    echo '</a>';
 		}
 	    echo '</td>'."\n";

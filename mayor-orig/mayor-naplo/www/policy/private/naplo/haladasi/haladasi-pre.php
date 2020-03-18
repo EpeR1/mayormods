@@ -102,7 +102,7 @@ if ( $skin == 'ajax'
 
             // egy tanár ($tanarId) vagy osztály ($osztaly) összes órája --> lapozni kell
 	    // reading sensitive data
-	    $igDt = readVariable($_POST['igDt'], 'datetime', date('Y-m-d'));
+	    $igDt = readVariable($_POST['igDt'], 'datetime', date('Y-m-d', strtotime('next saturday')));
 	    $tolDt = readVariable($_POST['tolDt'], 'datetime');
 	    $lapoz = readVariable($_POST['lapoz'], 'enum', null, array('<<','>>','nextWeek','prevWeek'));
 	    $lapoz1 = readVariable($_POST['lapoz1'], 'enum', null, array('<<','>>','nextWeek','prevWeek'));
@@ -133,7 +133,7 @@ if ( $skin == 'ajax'
             if ($csakUres || strtotime($tolDt) < strtotime($_TANEV['kezdesDt'])) $tolDt = date('Y-m-d',strtotime($_TANEV['kezdesDt']));
 	    // Ha ezt kiveszem, akkor mindig kirakja a teljes hetet, de a jövőbeli órákat nem lehet beírni!
 	    // Itt a post értékét nem használjuk fel, csak vizsgáljuk.
-	    if ((!isset($_POST['igDt']) || $_POST['igDt'] == '')&& strtotime($igDt) > time()) $igDt = date('Y-m-d');
+//	    if ((!isset($_POST['igDt']) || $_POST['igDt'] == '')&& strtotime($igDt) > time()) $igDt = date('Y-m-d');
             define('_SHOW_DAYS_FROM',$tolDt);
             define('_SHOW_DAYS_TO',$igDt);
 
@@ -144,7 +144,6 @@ if ( $skin == 'ajax'
             define('_SHOW_DAYS_TO',date('Y-m-d'));
 
         }
-
     /* ------------------------------------------------- */
     // Jogosultság ellenőrzés, tanév aktív-e...
 
@@ -176,14 +175,13 @@ if ( $skin == 'ajax'
 	)
     ) {
 	// checkNaplo (2020)
-	/*
-	    checkNaplo($igDt);
+	if (strtotime('next saturday')>=strtotime($igDt)) {
     	    $_dt = $igDt;
     	    while (strtotime($_dt)>time()) {
                 $_dt = date('Y-m-d',strtotime('-1 day',strtotime($_dt)));
                 checkNaplo($_dt);
             }
-	*/
+	}
 	// action
         if ($action == 'haladasiNaploBeiras' && (
 	    is_array($_POST['oraId'])
