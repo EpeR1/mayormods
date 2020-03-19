@@ -28,6 +28,7 @@ if (!defined('_LOGLEVEL')) define('_LOGLEVEL',10);
 if (!defined('__DEBUG')) define('__DEBUG',false);
 
 if (!defined('_SECURECOOKIE')) define('_SECURECOOKIE', true);
+if (!defined('AUTHTOKENENABLED')) define('AUTHTOKENENABLED', true);
 
 define('_BASE_URL',( ($_SERVER['HTTPS']=='on')?"https://".$_SERVER['SERVER_NAME']:"http://".$_SERVER['SERVER_NAME'] ));
 
