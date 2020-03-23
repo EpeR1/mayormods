@@ -191,7 +191,7 @@
 		if ($teremId!='') 
 		    $_D = getOrakByTeremId($teremId,array('tolDt'=>$_dt,'igDt'=>$_dt,'result'=>'likeOrarend'));
 		else 
-		    $_D = getOrak($TANKOROK['haladasi'],array('tolDt'=>$_dt,'igDt'=>$_dt,'result'=>'likeOrarend'));
+		    $_D = getOrak($TANKOROK['haladasi'],array('tolDt'=>$_dt,'igDt'=>$_dt,'result'=>'likeOrarend','diakId'=>$diakId));
 		$ADAT['haladasi']['orak'][$_dt] = $_D['orak'][$_dt];
 		if (is_array($_D['tankorok'])) $ADAT['haladasi']['tankorok'] = array_map('intval',array_unique(array_merge($_D['tankorok'],$ADAT['haladasi']['tankorok'])));
 	    }

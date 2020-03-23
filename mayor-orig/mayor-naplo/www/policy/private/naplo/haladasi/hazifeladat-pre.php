@@ -23,7 +23,7 @@
     $ADAT['oraId' ] = $oraId = readVariable($_POST['oraId'],'id',readVariable($_GET['oraId'],'id'));
 //    $ADAT['hazifeladatId' ] = $hazifeladatId = readVariable($_POST['hazifeladatId'],'id', readVariable($_GET['hazifeladatId'],'id'));
     $ADAT['hazifeladatLeiras' ] = readVariable($_POST['hazifeladatLeiras'],'string');
-    $action = readVariable($_POST['action'],'strictstring',null,array('hazifeladatBeiras'));
+    $action = readVariable($_POST['action'],'strictstring',null,array('hazifeladatBeiras','hazifeladatKesz'));
 
     $q = "SELECT hazifeladatId FROM oraHazifeladat WHERE oraId=%u";
     $values = array($ADAT['oraId']);
@@ -46,13 +46,41 @@
 	    $leiras = readVariable($_POST['oraLeiras'],'string');
 	    updateHaladasiNaploOra($oraId, $leiras);
 	}
+    } elseif (__DIAK===true) {
+	if (defined('__USERDIAKID') && __USERDIAKID>0) {
+	    $diakId=__USERDIAKID;
+	} elseif (defined('__SZULODIAKID') && __SZULODIAKID>0) {
+	    $diakId=__SZULODIAKID;
+	}
+	if ($diakId>0) {
+	    $q = "INSERT IGNORE INTO oraHazifeladatDiak (hazifeladatId,diakId,diakLattamDt) VALUES (%u,%u,NOW())";
+	    $values = array($ADAT['hazifeladatId'], $diakId);
+	    db_query($q, array('modul'=>'naplo','result'=>'insert','values'=>$values));
+
+	    if ($action=='hazifeladatKesz') {
+		if ($diakId>0 && $ADAT['hazifeladatId']>0) {
+		$q = "UPDATE oraHazifeladatDiak SET hazifeladatDiakStatus=IF(hazifeladatDiakStatus='','kész','') WHERE hazifeladatId=%u AND diakId=%u";
+		$values = array($ADAT['hazifeladatId'], $diakId);
+		db_query($q, array('modul'=>'naplo','result'=>'update','values'=>$values));
+		}
+	    }
+	    $q = "SELECT * FROM oraHazifeladatDiak WHERE hazifeladatId=%u AND diakId=%u";
+	    $values = array($ADAT['hazifeladatId'],$diakId);
+	    $ADAT['hazifeladatDiak'] = db_query($q, array('modul'=>'naplo','result'=>'record','values'=>$values));
+	}
+
     }
 
     $q = "SELECT * FROM oraHazifeladat WHERE oraId=%u";
     $values = array($ADAT['oraId']);
     $ADAT['hazifeladatAdat'] =  db_query($q, array('modul'=>'naplo','result'=>'record','values'=>$values));
-    $ADAT['oraAdat'] = getOraadatById($oraId);
 
+    if (__TANAR===true || __NAPLOADMIN===true || __VEZETOSEG===true) {
+	$q = "SELECT *,getNev(diakId,'diak') AS diakNev FROM oraHazifeladatDiak WHERE hazifeladatId=%u ORDER BY diakNev";
+	$values = array($ADAT['hazifeladatId']);
+	$ADAT['hazifeladatDiak'] =  db_query($q, array('debug'=>true,'modul'=>'naplo','result'=>'indexed','values'=>$values));
+    }
+    $ADAT['oraAdat'] = getOraadatById($oraId);
 
     $TOOL['vissza'] = array('tipus'=>'vissza',
         'paramName'=>'vissza',

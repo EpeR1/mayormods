@@ -2,13 +2,13 @@
 
     function putHazifeladat($ADAT) {
 
-	echo '<style type="text/css">';
+/*	echo '<style type="text/css">';
 	echo '    
 	    fieldset.adatok { margin-bottom:1em; width:80%; margin-left:auto; margin-right:auto; border-radius: 2px; border: solid 1px #ddd;}
 	    fieldset.adatok legend { border-radius: 2px; background-color: #ff5722; color:white; padding: 2px 4px; }
 	';
 	echo '</style>';
-
+*/
 	echo '<fieldset class="adatok"><legend>'._ALAPADATOK.'</legend>'."\n";
 
 	    echo ($ADAT['oraAdat']['dt']).' ('.$ADAT['oraAdat']['dt'].'), '.$ADAT['oraAdat']['ora'].'. '._ORA.' – <span class="tankorNev" data-tankorid="'.$ADAT['oraId']['tankorId'].'">'.$ADAT['oraAdat']['tankorNev'].'</span> – '.$ADAT['oraAdat']['kiCn'];
@@ -18,19 +18,33 @@
 
 	if (__DIAK===true) {
 
+	    if ($ADAT['hazifeladatDiak']['hazifeladatDiakStatus']=='kész') $_class = "kesz";
+
+	    if ($skin != 'ajax') formBegin(array('class'=>'hazifeladat'));
 	    echo '<fieldset class="adatok"><legend>'.ucfirst(_TANANYAG).'</legend>'."\n";
 		if ($ADAT['oraAdat']['leiras']=='') 
 		    { echo '<p style="color:#aaa;">még nincs kitöltve</p>'; }
 		else 
 		    { echo '<p>'.$ADAT['oraAdat']['leiras'].'</p>'; }
 	    echo '</fieldset>'."\n";
-	    echo '<fieldset class="adatok"><legend>'._HAZIFELADAT.'</legend>'."\n";
+	    echo '<fieldset class="adatok '.$_class.'"><legend>'._HAZIFELADAT.'</legend>'."\n";
 		if ($ADAT['hazifeladatAdat']['hazifeladatLeiras']=='') 
 		    { echo '<p style="color:#aaa;">még nincs kitöltve</p>'; }
 		else 
 		    { echo ($ADAT['hazifeladatAdat']['hazifeladatLeiras']); }
 	    echo '</fieldset>'."\n";
-
+	    if ($ADAT['hazifeladatId']>0) {
+	    echo '<div style="text-align:center; margin-bottom: 140px;">';		
+		echo '<input type="hidden" name="action" value="hazifeladatKesz">';
+		if ($ADAT['hazifeladatDiak']['hazifeladatDiakStatus']=='kész') {
+		    echo '<button type="submit" class="btnHfStatusz kesz"><span class="icon-ok-sign"></span> kész</button>';
+		} else {
+		    echo '<button type="submit" class="btnHfStatusz"><span class="icon-ok-sign"></span> késznek jelölöm</button>';
+		}
+	    echo '</div>';
+	    }
+	    
+	    echo formEnd();
 	} else {
 	    echo '<script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>';
 	    if ($skin != 'ajax') formBegin(array('class'=>'hazifeladat'));
@@ -79,7 +93,35 @@
 	    echo '<input type="submit">';
 	    echo '</fieldset>'."\n";
 	    if ($skin != 'ajax') formEnd();
+
+
+	    if (count($ADAT['hazifeladatDiak'])>0) {
+		echo '<fieldset class="adatok">';
+		echo '<legend>Visszajelzések</legend>';
+		putHazifeladatDiak($ADAT);
+		echo '</fieldset>';
+	    }
 	}
+    }
+
+    function putHazifeladatDiak($ADAT) {
+
+	if (count($ADAT['hazifeladatDiak'])==0) return false;
+
+	echo '<table class="hazifeladatDiak" cellpadding="1" cellspacing="1">';
+	echo '<thead>';
+	    echo '<tr><th>diák</th><th>látta</th><th>státusz</th><th></th></tr>';
+	echo '</thead>';
+	for ($i=0; $i<count($ADAT['hazifeladatDiak']); $i++) {
+	    $D = $ADAT['hazifeladatDiak'][$i];
+	    echo '<tr>';   
+	    echo '<td class="diakNev diakAdat" data-diakid="'.$D['diakId'].'">'.$D['diakNev'].'</td>';
+	    echo '<td>'.$D['diakLattamDt'].'</td>';
+	    echo '<td>'.$D['hazifeladatDiakStatus'].'</td>';
+	    echo '<td>'.$D['hazifeladatDiakMegjegyzes'].'</td>';
+	    echo '</tr>';
+	}
+	echo '</table>';
     }
 
 ?>

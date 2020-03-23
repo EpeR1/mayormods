@@ -528,7 +528,12 @@
 		}
 		echo '<a href="'.href('index.php?page=naplo&sub=haladasi&f=hazifeladat&oraId='.$dOra['oraId'].'&hazifeladatId='.$ADAT['tankorHazifeladat'][ $dOra['oraId'] ]).'" class="onClickUpdateWindow" title="'._HAZIFELADAT.'">';
 		    if ($dOra['hazifeladatId']>0) {
-			echo '<span class="icon-home-alt" style="color: #ff5722"></span>';
+			if ($ADAT['diakHazifeladat'][$dOra['oraId']]['hazifeladatDiakStatus'] =='kész') {
+			    $hfColor = 'lightgreen';
+			} else { 
+			    $hfColor =  '#ff5722';
+			}
+			echo '<span class="icon-home-alt" style="color: '.$hfColor.'"></span>';
 		    } else {
 			echo '<span class="icon-home" style="color: #aaa"></span>';
 		    }

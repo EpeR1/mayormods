@@ -262,11 +262,12 @@
 				    $_hianyzasClass = (is_array($_hianyzasAdat) && $_hianyzasAdat['hTipus']=='hiányzás') ? ' nemVoltBent ':''; 
 				    echo '<div class="'.$_tipusClass.$_frissClass.$_oraMostVanClass.$_utolsooraClass.$_hianyzasClass.' '.$_oraAdat.'" data-oraid="'.$_ORA['oraId'].'" title="'.$_ORA['tipus'].'" >';
 				    if (isset($_ORA['hazifeladatId'])) {
-					echo '<span class="icon-home-alt" title="h.f." style="color:#e91e63; padding-right:2px;"></span>';
+					if ($_ORA['diakHazifeladat']['hazifeladatDiakStatus'] == 'kész') $_hfcolor = 'lightgreen';
+					else $_hfcolor = '#e91e63';
+					echo '<span class="icon-home-alt" title="h.f." style="color:'.$_hfcolor.'; padding-right:2px;"></span>';
 				    }
 
 				    if (is_array($_hianyzasAdat)) {
-
 					echo '<span class="hianyzasTicker '.ekezettelen($_hianyzasAdat['hTipus']).' '.ekezettelen($_hianyzasAdat['statusz']).' '.ekezettelen($_hianyzasAdat['igazolas']).'">';
 					if ($_hianyzasAdat['hTipus']=='hiányzás') 
 						echo '<span class="icon-hearing-impaired"></span>';
@@ -336,7 +337,6 @@ if (MAYOR_SOCIAL === true) {
 				    if (in_array($_tankorTipus,array('délutáni','tanórán kívüli'))) {
 					echo ' &sup1';
 				    }
-
 				    echo '</div>';
 				    if (count($T[$nap][$ora]['orak'])>$i+1) 
 					//echo '<hr />';

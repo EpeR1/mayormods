@@ -1,0 +1,31 @@
+
+    fieldset.adatok { margin-bottom:1em; width:80%; margin-left:auto; margin-right:auto; border-radius: 2px; border: solid 1px #ddd;}
+    fieldset.adatok legend { border-radius: 2px; background-color: #ff5722; color:white; padding: 2px 4px; }
+
+    fieldset.adatok.kesz legend { background-color:lightgreen}
+
+    form button.btnHfStatusz {
+	background-color: #eee;
+	border-radius: 2px;
+	border: solid 1px #888;
+	color: #888;
+	padding:2px 18px 2px 4px;
+    }
+    form button.btnHfStatusz span { color:#eee; }
+    form button.btnHfStatusz.kesz span { color: lightgreen; }
+
+    form button.btnHfStatusz:hover {
+	background-color:lightgreen;
+	color:black;
+	border-color:black;
+    }
+    form button.btnHfStatusz.kesz:hover {
+	background-color: orange;
+    }
+    form button.btnHfStatusz:hover span { color: white; }
+
+    form button.btnHfStatusz.kesz:hover span { color: orange }
+
+    table.hazifeladatDiak { margin:auto; background-color: #eee;}
+    table.hazifeladatDiak thead tr th { background-color: #4caf50; color:white; font-weight:normal;}
+    table.hazifeladatDiak tbody tr td { background-color: white; font-weight:normal; padding: 2px 4px;}

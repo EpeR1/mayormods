@@ -361,6 +361,9 @@ if ( $skin == 'ajax'
 		}
 	    }
 	    $ADAT['oraLatogatasok'] = getOralatogatasByOraIds($ADAT['ORAIDK']);
+	    if (__DIAK===true && $diakId>0) {	
+		$ADAT['diakHazifeladat'] = getDiakHazifeladatByOraIds($ADAT['ORAIDK'],$diakId);
+	    }
 	    foreach ($ADAT['oraLatogatasok'] as $olId => $olAdat)
 		foreach ($olAdat['tanarIds'] as $_tanarId) $ADAT['oraLatogatasok'][$olId]['tanarNevek'][] = getTanarNevById($_tanarId);
 	    // Kell a munkaterv!! Ahhoz kell(enek) az osztály(ok)!

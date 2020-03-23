@@ -371,7 +371,7 @@ WHERE dt>='%s' and dt<='%s' AND (ki=%u OR kit=%u) $WHERE ORDER BY dt,ora";
 	return $RESULT;
     }
 
-    function getOrak($TANKORIDK, $SET=array('tolDt'=>'','igDt'=>'', 'result'=>'likeOrarend', 'elmaradokNelkul'=>false)) {
+    function getOrak($TANKORIDK, $SET=array('tolDt'=>'','igDt'=>'', 'result'=>'likeOrarend', 'elmaradokNelkul'=>false, 'diakId'=>null)) {
 
 	/* FIGYELEM! A függvény feltételezi, hogy az átadott tankoridkben az adott intervallumon helyes adatok szerepelnek!
 	    -- problémát okozhat, ha hosszú intervallumot adunk meg!!! -- lásd FS#100 */
@@ -404,6 +404,12 @@ WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count(
 		$_put['oo'] = false;
 		$RE['orak'][$R[$i]['dt']][$R[$i]['ora']][$R[$i]['tankorId']] = $_put;
 		if (!in_array($R[$i]['tankorId'],$RE['tankorok'])) $RE['tankorok'][] = intval($R[$i]['tankorId']);
+		if ($R[$i]['hazifeladatId']>0) {
+    		    if ($SET['diakId']>0) {
+		        $diakHazifeladat = getDiakHazifeladatByOraIds(array($R[$i]['oraId']) , $SET['diakId']);
+		        $RE['orak'][$R[$i]['dt']][$R[$i]['ora']][$R[$i]['tankorId']]['diakHazifeladat'] = $diakHazifeladat[$R[$i]['oraId']];
+		    }
+		}
 	    }
 	}
 	return $RE;
@@ -639,6 +645,16 @@ WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count(
 	    $R = db_query($q,array('debug'=>false,'fv'=>'getCimkek','modul'=>'naplo','values'=>$v,'result'=>'indexed'),$olr_naplo);
 	    return $R;
 	}
+    }
+
+    function getDiakHazifeladatByOraIds($oraIdk,$diakId,$olr='') {
+	$R = array();
+	    if (count($oraIdk)>0 && $diakId>0) {
+		$q = "SELECT * FROM oraHazifeladat LEFT JOIN oraHazifeladatDiak USING (hazifeladatId) WHERE diakId=%u AND oraId IN (".implode(',',$oraIdk).")";
+		$v = array($diakId);
+		$R = db_query($q,array('debug'=>false,'fv'=>'getDiakhazifeladatByOraIds','modul'=>'naplo','values'=>$v,'result'=>'assoc','keyfield'=>'oraId'),$olr);
+	    }
+	return $R;
     }
 
 

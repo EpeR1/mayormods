@@ -152,6 +152,20 @@ CREATE TABLE `oraHazifeladat` (
   CONSTRAINT `oraHazifeladat_ibfk_1` FOREIGN KEY (`oraId`) REFERENCES `ora` (`oraId`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
+CREATE TABLE `oraHazifeladatDiak` (
+  `hazifeladatId` int(10) unsigned NOT NULL DEFAULT '0',
+  `diakId` int(10) unsigned NOT NULL DEFAULT '0',
+  `diakLattamDt` datetime DEFAULT NULL,
+  `tanarLattamDt` datetime DEFAULT NULL,
+  `hazifeladatDiakStatus` enum('','kész') COLLATE utf8_hungarian_ci DEFAULT '',
+  `hazifeladatDiakMegjegyzes` varchar(255) COLLATE utf8_hungarian_ci NOT NULL,
+  PRIMARY KEY (`hazifeladatId`,`diakId`),
+  UNIQUE KEY `oraHazifeladatDiak_UK` (`hazifeladatId`,`diakId`),
+  KEY `oraHazifeladatDiak_ibfk_2` (`diakId`),
+  CONSTRAINT `oraHazifeladatDiak_ibfk_1` FOREIGN KEY (`hazifeladatId`) REFERENCES `oraHazifeladat` (`hazifeladatId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `oraHazifeladatDiak_ibfk_2` FOREIGN KEY (`diakId`) REFERENCES `%DB%`.`diak` (`diakId`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
 CREATE TABLE `orarendiOraTankor` (
   `tanarId` int(10) unsigned NOT NULL,
   `osztalyJel` varchar(7) COLLATE utf8_bin NOT NULL,
