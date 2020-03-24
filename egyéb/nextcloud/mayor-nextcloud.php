@@ -638,6 +638,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 )));
         }
     }
+   // usort($mayor_user, "mayor_userlistcmp");        // előbb rendezzük
     $mayor_user = array_merge($mayor_user, array(array('userAccount' => null, 'fullName' => null, 'tankorNev' => null,)) ); //strázsa a lista végére
     $nxt_user = nxt_user_list();
     $nxt_group = nxt_group_list();
@@ -658,7 +659,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     $tankorei = array();
     foreach($mayor_user as $key => $val){                                                   //Végignézi a mayorból kinyert lista alapján.
     
-        if($curr != $val['userAccount']){                                                   //Először felhasználónként egyet lépkedünk 
+        if($curr != $val['userAccount']){                                                   //CSAK Rendezett tömbökön !! 
             foreach($nxt_user as $key2 => $val2){
                 if($curr == $key2){                                                         //Már létezik a felhasználó a Nextcloud-ban
                     $log['curr'] = "-\tFelhasználó:".po("\t$curr_n ($curr)",$m2n['felhasznalo_hossz'],1)."--\tok.\n";

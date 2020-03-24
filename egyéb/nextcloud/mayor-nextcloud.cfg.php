@@ -147,7 +147,13 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
     $m2n['felhasznalo_hossz'] = 45;                     // Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a felhasználó valódi neve. (csak a script kinézete/átláthatósága végett)
 
     $m2n['mindenki_csop'] = "naplós_felhasználók";      //Legyen egy olyan csoport, amiben "mindenki benne van".
-                                                        // ebbe a "mindenki" csoportba minden, a script által létrehozott felhasználó bekerül.
+														// ebbe a "mindenki" csoportba minden, a script által létrehozott felhasználó bekerül.
+														
+	$m2n['mindenki_tanar'] = "naplós_tanárok";          //Legyen egy olyan csoport, amiben minden tanár benne van
+														// ebbe a "minden_tanár" csoportba a naplóbeli tanárok kerülnek.
+														
+	$m2n['mindenki_diak'] = "naplós_diákok";            //Legyen egy olyan csoport, amiben "minden diák" benne van.
+                                                        // ebbe a "minden_diák" csoportba a naplóbeli diákok kerülnek.
 
     $m2n['zaras_tartas'] =  "2018-06-19";               //A jelölt napon befejezett, de nem lezárt tanév adatainak megtartása. (pl. szeptemberig) 
 	                                                    // Ha már nem kell, akkor állítsd "1970-01-01"-ra !;
