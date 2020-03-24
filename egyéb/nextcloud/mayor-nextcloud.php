@@ -612,9 +612,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 // Felhasználónevek egyeztetése
     if ($log['verbose'] > 0 ){ echo "\n***\tFelhasználók egyeztetése.\n";}
     $mayor_user = array();
-    $mayor_user = array_merge( $mayor_user, add_tk_to_user( get_mayor_tanar($link2), null, $m2n['mindenki_tanar']));    //tanár, tankörök lekérdezése
-    $mayor_user = array_merge( $mayor_user, add_tk_to_user( get_mayor_diak($link2), null, $m2n['mindenki_diak']));		//diák, tankörök lekérdezése
-    $mayor_user = add_tk_to_user( $mayor_user, null, $m2n['mindenki_csop']);
+    $mayor_user = array_merge( $mayor_user, add_tk_to_user( get_mayor_tanar($link2), null, $m2n['mindenki_tanar']));    //tanár tankörök lekérdezése + minden tanár csoport
+    $mayor_user = array_merge( $mayor_user, add_tk_to_user( get_mayor_diak($link2), null, $m2n['mindenki_diak']));		//diák tankörök lekérdezése + minden diák csoport
+    $mayor_user = add_tk_to_user( $mayor_user, null, $m2n['mindenki_csop']);    //mindenki csoport
 
     if(isset($m2n['megfigyelo_user']) && $m2n['megfigyelo_user'] != "" ){               //A megfigyelő felvétele
         foreach(get_mayor_tankor($link2) as $key => $val){
@@ -666,7 +666,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     }
 
                     foreach($nxt_group as $key3 => $val3){                                  //A tankörök egyeztetése
-                        if(in_array($key3, $tankorei) or $key3 == $m2n['mindenki_csop']){   //szerepel-e a felhasználó tankörei között a csoport, vagy a "mindenki" csoport?
+                        if(in_array($key3, $tankorei) /*or $key3 == $m2n['mindenki_csop']*/){   //szerepel-e a felhasználó tankörei között a csoport, vagy a "mindenki" csoport?
                             if( in_array($curr, $val3)){                                    //Igen, és már benne is van +++
                                 if ($log['verbose'] > 3 ){ echo "  -\t\tBenne van a:".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tcsoportban.\n";} 
                             } else {                                                        //Nincs, most kell beletenni
