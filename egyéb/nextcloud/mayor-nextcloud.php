@@ -338,10 +338,10 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         shell_exec($e);
     }
 
-    function add_tk_to_user($list, $user, $tankorname){      //Naplón kívüli csoportokat adhatunk afelhasználókhoz
+    function add_tk_to_users($list, $user, $tankorname){      //Naplón kívüli csoportokat adhatunk a felhasználókhoz
         $curr = "";
-        foreach($list as $key => $val){
-            if($curr != $val['userAccount']){
+        foreach($list as $key => $val){                       // Csak rendezett tömbökön!
+            if($curr != $val['userAccount'] && ($user === null or ($user !== null && $val['userAccount'] == $user ))){ //Vagy mindenki vagy adott user + rendezett lista
                 
                 if(!isset($val['tanarId'])){        //workaround
                     $val['tanarId'] = 0;
@@ -349,7 +349,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 if(!isset($val['diakId'])){         //workaround
                     $val['diakId'] = 0;
                 }
-                $list = array_merge($list, array(
+                $list = array_merge($list, array(   
                     array( 'userAccount' => $val['userAccount'], 
                         'email' => $val['email'],  
                         'tanarId' => $val['tanarId'],
@@ -359,14 +359,20 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                         'tankorNev' => $tankorname,
                     )));
 
-                $curr = $val['userAccount'];
-                if(isset($user) && $user !== null && $val['userAccount'] == $user ){    // Null -> mindenkihez, "user" -> csak neki
+                if($user !== null && $val['userAccount'] == $user ){    // Null -> mindenkihez, "user" -> csak neki
                     break;
                 }
+                $curr = $val['userAccount'];
             }
         }
-        return $list;
+        return $list;    
     }
+
+
+    function mayor_userlistcmp($a, $b){
+        return strcmp($a['userAccount'], $b['userAccount']);
+    }
+
 
     function po($inp,$ll,$dir){                         // Szép kimenetet gyárt
             while(grapheme_strlen($inp) < $ll){
@@ -612,9 +618,12 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 // Felhasználónevek egyeztetése
     if ($log['verbose'] > 0 ){ echo "\n***\tFelhasználók egyeztetése.\n";}
     $mayor_user = array();
-    $mayor_user = array_merge( $mayor_user, add_tk_to_user( get_mayor_tanar($link2), null, $m2n['mindenki_tanar']));    //tanár tankörök lekérdezése + minden tanár csoport
-    $mayor_user = array_merge( $mayor_user, add_tk_to_user( get_mayor_diak($link2), null, $m2n['mindenki_diak']));		//diák tankörök lekérdezése + minden diák csoport
-    $mayor_user = add_tk_to_user( $mayor_user, null, $m2n['mindenki_csop']);    //mindenki csoport
+    $mayor_user = array_merge( $mayor_user, add_tk_to_users( get_mayor_tanar($link2), null, $m2n['mindenki_tanar']));    //tanár tankörök lekérdezése + minden tanár csoport
+    usort($mayor_user, "mayor_userlistcmp");
+    $mayor_user = array_merge( $mayor_user, add_tk_to_users( get_mayor_diak($link2), null, $m2n['mindenki_diak']));		//diák tankörök lekérdezése + minden diák csoport
+    usort($mayor_user, "mayor_userlistcmp");
+    $mayor_user = add_tk_to_users( $mayor_user, null, $m2n['mindenki_csop']);    //mindenki csoport
+    usort($mayor_user, "mayor_userlistcmp");
 
     if(isset($m2n['megfigyelo_user']) && $m2n['megfigyelo_user'] != "" ){               //A megfigyelő felvétele
         foreach(get_mayor_tankor($link2) as $key => $val){
