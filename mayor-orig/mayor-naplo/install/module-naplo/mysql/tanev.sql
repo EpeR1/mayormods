@@ -159,6 +159,8 @@ CREATE TABLE `oraHazifeladatDiak` (
   `tanarLattamDt` datetime DEFAULT NULL,
   `hazifeladatDiakStatus` enum('','kész') COLLATE utf8_hungarian_ci DEFAULT '',
   `hazifeladatDiakMegjegyzes` varchar(255) COLLATE utf8_hungarian_ci NOT NULL,
+  `hazifeladatDiakFilename` varchar(255) COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `hazifeladatDiakOrigFilename` varchar(255) COLLATE utf8_hungarian_ci DEFAULT NULL,
   PRIMARY KEY (`hazifeladatId`,`diakId`),
   UNIQUE KEY `oraHazifeladatDiak_UK` (`hazifeladatId`,`diakId`),
   KEY `oraHazifeladatDiak_ibfk_2` (`diakId`),

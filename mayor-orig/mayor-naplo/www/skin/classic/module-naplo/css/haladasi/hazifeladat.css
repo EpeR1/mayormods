@@ -13,7 +13,6 @@
     }
     form button.btnHfStatusz span { color:#eee; }
     form button.btnHfStatusz.kesz span { color: lightgreen; }
-
     form button.btnHfStatusz:hover {
 	background-color:lightgreen;
 	color:black;
@@ -23,9 +22,38 @@
 	background-color: orange;
     }
     form button.btnHfStatusz:hover span { color: white; }
-
     form button.btnHfStatusz.kesz:hover span { color: orange }
 
+
+
+
+/*---*/
+    form button.btnLattamStatusz {
+	background-color: #eee;
+	border-radius: 2px;
+	border: solid 1px #888;
+	color: #888;
+	padding:2px 18px 2px 4px;
+    }
+    form button.btnLattamStatusz:hover {
+	background-color:lightgreen;
+	color:black;
+	border-color:black;
+    }
+    form button.btnLattamStatusz span { color:#eee; }
+    form button.btnLattamStatusz:hover span { color: white; }
+
+    form button.btnLattamStatusz.lattam { background-color: lightgreen; color:white; }
+    form button.btnLattamStatusz.lattam span { color: white; }
+    form button.btnLattamStatusz.lattam:hover {background-color: orange;}
+    form button.btnLattamStatusz.lattam:hover span { color: orange }
+
+
     table.hazifeladatDiak { margin:auto; background-color: #eee;}
-    table.hazifeladatDiak thead tr th { background-color: #4caf50; color:white; font-weight:normal;}
+    table.hazifeladatDiak thead tr th { background-color: #4caf50; color:white; font-weight:normal; padding: 2px 4px;}
     table.hazifeladatDiak tbody tr td { background-color: white; font-weight:normal; padding: 2px 4px;}
+
+
+    table.hazifeladatDiak tr td a, fieldset.adatok a { color: black; }
+    table.hazifeladatDiak tr td a:hover, fieldset.adatok a:hover { text-decoration:underline; color: cornflowerblue; }
+    

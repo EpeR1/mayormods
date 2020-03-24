@@ -26,7 +26,7 @@
 
 	// Jogosultságok ellenőzése dir alapján
 	if (__DIAK===true) {
-	    if (strstr($dir,'naplo/face/')===false) return false;
+	    if (strstr($dir,'naplo/face/')===false && strstr($dir,'naplo/haladasi/hazifeladat')===false) return false;
 	}
 	// Titkarsag, Tanar, Naploadmin letoltheti, amit szeretne
 

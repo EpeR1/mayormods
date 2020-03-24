@@ -37,5 +37,5 @@
 
     define('_ALAPADATOK','Óra adatok');
     define('_HAZIFELADAT','Házi feladat, Részletek, Referenciák, Hivatkozások');
-
+    define('_HAZIFELTOLTES','Házi feltöltés (max. 1 file)');
 ?>
