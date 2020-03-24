@@ -262,9 +262,16 @@
 				    $_hianyzasClass = (is_array($_hianyzasAdat) && $_hianyzasAdat['hTipus']=='hiányzás') ? ' nemVoltBent ':''; 
 				    echo '<div class="'.$_tipusClass.$_frissClass.$_oraMostVanClass.$_utolsooraClass.$_hianyzasClass.' '.$_oraAdat.'" data-oraid="'.$_ORA['oraId'].'" title="'.$_ORA['tipus'].'" >';
 				    if (isset($_ORA['hazifeladatId'])) {
-					if ($_ORA['diakHazifeladat']['hazifeladatDiakStatus'] == 'kész') $_hfcolor = 'lightgreen';
-					else $_hfcolor = '#e91e63';
-					echo '<span class="icon-home-alt" title="h.f." style="color:'.$_hfcolor.'; padding-right:2px;"></span>';
+					if ($_ORA['hazifeladatFeltoltesEngedely']==1) {
+					    $_icon = 'icon-paper-clip-alt';
+					    if ($_ORA['diakHazifeladat']['hazifeladatDiakStatus'] == 'kész') { $_hfcolor = 'lightgreen';
+					    } else { $_hfcolor = '#3f51b5'; }
+					} else {
+					    $_icon= 'icon-home-alt';
+					    if ($_ORA['diakHazifeladat']['hazifeladatDiakStatus'] == 'kész') { $_hfcolor = 'lightgreen';
+					    } else { $_hfcolor = '#e91e63'; }
+					}
+					echo '<span class="'.$_icon.'" title="h.f." style="color:'.$_hfcolor.'; padding-right:2px;"></span>';
 				    }
 
 				    if (is_array($_hianyzasAdat)) {
