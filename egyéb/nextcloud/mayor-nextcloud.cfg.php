@@ -30,6 +30,8 @@ $m2n['csoportnev_hossz'] = 40;
 $m2n['felhasznalo_hossz'] = 45;
 $m2n['default_lang']  = "hu";
 $m2n['mindenki_csop'] = "naplós_felhasználók";
+$m2n['mindenki_tanar'] = "naplós_tanárok";
+$m2n['mindenki_diak'] = "naplós_diákok";
 $m2n['zaras_tartas'] =  "2018-06-14";	// Ha nem kell, akkor állítsd át "1970-01-01"-re.
 $m2n['megfigyelo_user'] = "naplo_robot";
 $m2n['kihagy'] = array();   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
@@ -166,7 +168,7 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 														
 	$m2n['megfigyelo_user'] = "naplo_robot";            //Lehetőség van egy úgymond "megfigyelő" felhasználó létrehozására.
 														// ez a felhasználó be lesz léptetve az összes csoportba, így az összes üzenetet megkapja, 
-                                                        // és az összes fájlt eléri, amit a csoportokkal megosztottak.
+                                                        // és az összes tankörben megosztott fájlt látja, amit a csoportokkal/tankörökkel megosztottak.
 
 
     CONFIG FILE: "mayor-nextcloud.cfg.php";				//Lehetőség van a konfig exportálására egy külön fájlba, 

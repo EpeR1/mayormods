@@ -338,7 +338,37 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         shell_exec($e);
     }
 
-    function po($inp,$ll,$dir){  // Szép/olvasható kimenetet gyárt
+    function add_tk_to_user($list, $user, $tankorname){      //Naplón kívüli csoportokat adhatunk afelhasználókhoz
+        $curr = "";
+        foreach($list as $key => $val){
+            if($curr != $val['userAccount']){
+                
+                if(!isset($val['tanarId'])){        //workaround
+                    $val['tanarId'] = 0;
+                }
+                if(!isset($val['diakId'])){         //workaround
+                    $val['diakId'] = 0;
+                }
+                $list = array_merge($list, array(
+                    array( 'userAccount' => $val['userAccount'], 
+                        'email' => $val['email'],  
+                        'tanarId' => $val['tanarId'],
+                        'diakId' => $val['diakId'],
+                        'tankorId' => 0,
+                        'fullName' => $val['fullName'],
+                        'tankorNev' => $tankorname,
+                    )));
+
+                $curr = $val['userAccount'];
+                if(isset($user) && $user !== null && $val['userAccount'] == $user ){    // Null -> mindenkihez, "user" -> csak neki
+                    break;
+                }
+            }
+        }
+        return $list;
+    }
+
+    function po($inp,$ll,$dir){                         // Szép kimenetet gyárt
             while(grapheme_strlen($inp) < $ll){
                 if($dir == 0){
                     $inp = " ".$inp." ";
@@ -350,6 +380,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             }
         return $inp;
     }
+
 
     function get_mayor_tankor($link){				// A tankörök neveinek lekérdezése a mayorból
         global $m2n,$log;
@@ -519,7 +550,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     $link2 = $link;
 
     // group_add($m2n['mindenki_csop']);				// A "mindenki" csoport hozzáadása 
-
+    // group_add($m2n['mindenki_tanar']);				// A "mindenki"/tanár csoport hozzáadása
+    // group_add($m2n['mindenki_diak']);				// A "mindenki"/diák csoport hozzáadása
 
     if(isset($db['mayor_user']) and isset($db['mayor_pass']) and isset($db['mayor_host']) or isset($db['mayor_port'])) 
     {
@@ -543,6 +575,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     if ($log['verbose'] > 0 ){ echo "\n***\tCsoportok egyeztetése.\n";}
     $tankorok = get_mayor_tankor($link2);
     $tankorok = array_merge($tankorok, array( array("tankorId" => 0, "tankorNev" => $m2n['mindenki_csop'] )));
+    $tankorok = array_merge($tankorok, array( array("tankorId" => 0, "tankorNev" => $m2n['mindenki_tanar'] )));
+    $tankorok = array_merge($tankorok, array( array("tankorId" => 0, "tankorNev" => $m2n['mindenki_diak'] )));
     $nxt_csop = nxt_group_list();
     $elozo_tcsop = "";
     foreach($tankorok as $key => $val){                                                 //Végignézi a tankörök szerint
@@ -577,9 +611,11 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 //-------------------------------------------------------------------------------------------------------------------------------
 // Felhasználónevek egyeztetése
     if ($log['verbose'] > 0 ){ echo "\n***\tFelhasználók egyeztetése.\n";}
+    $mayor_user = array();
+    $mayor_user = array_merge( $mayor_user, add_tk_to_user( get_mayor_tanar($link2), null, $m2n['mindenki_tanar']));    //tanár, tankörök lekérdezése
+    $mayor_user = array_merge( $mayor_user, add_tk_to_user( get_mayor_diak($link2), null, $m2n['mindenki_diak']));		//diák, tankörök lekérdezése
+    $mayor_user = add_tk_to_user( $mayor_user, null, $m2n['mindenki_csop']);
 
-    $mayor_user = array_merge( get_mayor_tanar($link2), get_mayor_diak($link2) );		//tanár, diák, tankörök lekérdezése
-    
     if(isset($m2n['megfigyelo_user']) && $m2n['megfigyelo_user'] != "" ){               //A megfigyelő felvétele
         foreach(get_mayor_tankor($link2) as $key => $val){
             $mayor_user = array_merge($mayor_user, array(
