@@ -24,8 +24,14 @@
     form button.btnHfStatusz:hover span { color: white; }
     form button.btnHfStatusz.kesz:hover span { color: orange }
 
+    #hazifeladatFeltoltesEngedely {
+	padding:15px 0px 15px 0px; margin:5px 0px; text-align:center; border-radius:2px; background-color:#eee
+    }
+    #hazifeladatFeltoltesEngedely.engedelyezve { background-color: #c8e6c9; }
 
-
+    input.btnSubmit {
+	margin: 5px auto 5px auto;
+    }
 
 /*---*/
     form button.btnLattamStatusz {

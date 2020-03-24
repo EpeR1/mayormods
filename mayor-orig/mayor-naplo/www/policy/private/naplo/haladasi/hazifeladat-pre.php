@@ -55,14 +55,14 @@
     $ADAT['oraAdat'] = getOraadatById($oraId);
 
     if (__TANAR===true && $action=='hazifeladatBeiras') {
-
+	$hazifeladatFeltoltesEngedely = readVariable($_POST['hazifeladatFeltoltesEngedely'],'id',0);
 	if ($hazifeladatId>0) { // update
-	    $q = "UPDATE oraHazifeladat set hazifeladatLeiras='%s' WHERE hazifeladatId=%u";
-	    $values = array($ADAT['hazifeladatLeiras'],$ADAT['hazifeladatId']);
+	    $q = "UPDATE oraHazifeladat set hazifeladatLeiras='%s',hazifeladatFeltoltesEngedely=%u WHERE hazifeladatId=%u";
+	    $values = array($ADAT['hazifeladatLeiras'],$hazifeladatFeltoltesEngedely,$ADAT['hazifeladatId']);
 	    $r = db_query($q, array('modul'=>'naplo','result'=>'update','values'=>$values));
 	} elseif ($oraId>0) { // insert
-	    $q = "INSERT IGNORE INTO oraHazifeladat (hazifeladatLeiras,oraId) VALUES ('%s',%u)";
-	    $values = array($ADAT['hazifeladatLeiras'],$ADAT['oraId']);
+	    $q = "INSERT IGNORE INTO oraHazifeladat (hazifeladatLeiras,oraId,hazifeladatFeltoltesEngedely) VALUES ('%s',%u,%u)";
+	    $values = array($ADAT['hazifeladatLeiras'],$ADAT['oraId'],$hazifeladatFeltoltesEngedely);
 	    $hazifeladatId = db_query($q, array('modul'=>'naplo','result'=>'insert','values'=>$values));
 
 	}

@@ -36,8 +36,9 @@
 		echo '<fieldset class="adatok '.$_class.'"><legend>'._HAZIFELTOLTES.'</legend>'."\n";
 		echo formBegin(array('enctype'=>'multipart/form-data'));
 
-		if (FILE_UPLOAD_ENABLED===false || $ADAT['hazifeladatDiak']['tanarLattamDt']!='' || $ADAT['hazifeladatDiak']['hazifeladatDiakStatus']=='kész') {
+		if (FILE_UPLOAD_ENABLED===false || $ADAT['hazifeladatAdat']['hazifeladatFeltoltesEngedely'] == 0 || $ADAT['hazifeladatDiak']['tanarLattamDt']!='' || $ADAT['hazifeladatDiak']['hazifeladatDiakStatus']=='kész') {
 		    if (FILE_UPLOAD_ENABLED===false) $mert = ', mert a feltöltés le van tiltva';
+		    elseif ($ADAT['hazifeladatAdat']['hazifeladatFeltoltesEngedely']==0) $mert = ', mert a tanár nem kért ide csatolt házi feladatot';
 		    elseif ($ADAT['hazifeladatDiak']['tanarLattamDt']!='') $mert = ', mert már láttamozta a tanár';
 		    elseif ($ADAT['hazifeladatDiak']['hazifeladatDiakStatus']=='kész') $mert = ', mert már késznek jelölted a feladatot';
 		    echo '<p style="color:#888">nem tudsz új filet feltölteni'.$mert.'</p>';
@@ -131,10 +132,18 @@
       removeButtons: 'Cut,Copy,Paste,PasteText,PasteFromWord,Anchor,Underline,Strike,SpecialChar,HorizontalRule'
 			});
                 </script>";
-	    echo '<input type="submit">';
+
+	    $_CHK = ($ADAT['hazifeladatAdat']['hazifeladatFeltoltesEngedely']==1) ? 'checked="checked"':'';
+	    $_cls = ($ADAT['hazifeladatAdat']['hazifeladatFeltoltesEngedely']==1) ? 'class="engedelyezve"':'';
+	    echo '<div id="hazifeladatFeltoltesEngedely" '.$_cls.'>';
+		echo '<input type="checkbox" name="hazifeladatFeltoltesEngedely" id="hazifeladatFeltoltesEngedelyChk" value="1" '.$_CHK.'/>';
+		echo '<label for="hazifeladatFeltoltesEngedelyChk">Diák/Szülő házi feladat csatolás engedélyezve</label>';
+	    echo '</div>';
+	    echo '<div style="width:100%; margin:auto; text-align:center;">';
+    		echo '<input type="submit" class="btnSubmit">';
+	    echo '</div>';
 	    echo '</fieldset>'."\n";
 	    if ($skin != 'ajax') formEnd();
-
 
 	    if (count($ADAT['hazifeladatDiak'])>0) {
 		echo '<fieldset class="adatok">';

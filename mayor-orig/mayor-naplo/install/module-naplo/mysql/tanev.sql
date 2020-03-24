@@ -147,6 +147,7 @@ CREATE TABLE `oraHazifeladat` (
   `hazifeladatId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `oraId` int(10) unsigned DEFAULT NULL,
   `hazifeladatLeiras` text COLLATE utf8_hungarian_ci NOT NULL,
+  `hazifeladatFeltoltesEngedely` tinyint(3) unsigned DEFAULT '0',
   PRIMARY KEY (`hazifeladatId`),
   UNIQUE KEY `oraId` (`oraId`),
   CONSTRAINT `oraHazifeladat_ibfk_1` FOREIGN KEY (`oraId`) REFERENCES `ora` (`oraId`) ON DELETE CASCADE ON UPDATE CASCADE
