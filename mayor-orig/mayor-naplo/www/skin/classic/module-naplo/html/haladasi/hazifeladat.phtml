@@ -88,6 +88,18 @@
 	    }
 
 	} else { ////////////////////////////////////////////////////////////////////////////////////
+
+	    if (__USERTANARID!=$ADAT['oraAdat']['ki']) { // nem saját óra
+
+		echo '<fieldset class="adatok"><legend>'._HAZIFELADAT.'</legend>'."\n";
+		    if ($ADAT['hazifeladatAdat']['hazifeladatLeiras']=='') 
+		    { echo '<p style="color:#aaa;">még nincs kitöltve</p>'; }
+		    else 
+		    { echo ($ADAT['hazifeladatAdat']['hazifeladatLeiras']); }
+		echo '</fieldset>'."\n";
+
+	    } else { // saját óra
+
 	    echo '<script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>';
 	    if ($skin != 'ajax') formBegin(array('class'=>'hazifeladat'));
 	    echo '<input type="hidden" name="action" value="hazifeladatBeiras"/>';
@@ -145,16 +157,75 @@
 	    echo '</fieldset>'."\n";
 	    if ($skin != 'ajax') formEnd();
 
+	    } // saját óra
+
 	    if (count($ADAT['hazifeladatDiak'])>0) {
 		echo '<fieldset class="adatok">';
 		echo '<legend>Visszajelzések</legend>';
 		putHazifeladatDiak($ADAT);
 		echo '</fieldset>';
 	    }
-	}
+        }
     }
 
     function putHazifeladatDiak($ADAT) {
+
+	if (count($ADAT['hazifeladatDiak'])==0) return false;
+
+	for ($i=0; $i<count($ADAT['hazifeladatDiak']); $i++) {
+	    $D = $ADAT['hazifeladatDiak'][$i];
+	    $DIAKHF[$D['diakId']] = $D;
+	}
+
+	echo formBegin();
+	echo '<input type="hidden" name="action" value="lattam" />';
+	echo '<input type="hidden" name="hazifeladatId" value="'.$ADAT['hazifeladatId'].'" />';
+	echo '<table class="hazifeladatDiak" cellpadding="1" cellspacing="1">';
+	echo '<thead>';
+	    if (__NAPLOADMIN===true || __VEZETOSEG===true)
+		echo '<tr><th>diák</th><th>látta</th><th colspan="2">státusz</th><th colspan="1">csatolmány</th><th>láttam</th></tr>';
+	    else 
+		echo '<tr><th>diák</th><th colspan="2">státusz</th><th colspan="1">csatolmány</th><th>láttam</th></tr>';
+	echo '</thead>';
+
+	if (is_array($ADAT['nevsor']['nevek']))
+	foreach ($ADAT['nevsor']['nevek'] as $diakId => $ITEM) {
+	    $D = $DIAKHF[$diakId];
+	    echo '<tr>';   
+	    echo '<td class="diakNev diakAdat" data-diakid="'.$diakId.'">'.$ITEM['diakNev'].'</td>';
+	    if (__NAPLOADMIN===true || __VEZETOSEG===true) echo '<td>'.$D['diakLattamDt'].'</td>';
+	    echo '<td colspan="2" class="'.ekezettelen($D['hazifeladatDiakStatus']).'">'.$D['hazifeladatDiakStatus'].'</td>';
+	    //echo '<td>'.$D['hazifeladatDiakMegjegyzes'].'</td>';
+
+	    $ADAT['dir'] = 'naplo/haladasi/hazifeladat';
+	    $ADAT['file'] = $D['hazifeladatDiakFilename'];
+	    $href = href('index.php?page=session&f=download&dir='.$ADAT['dir'].'&file='.$ADAT['file'].'&download=true');
+	    echo '<td>';
+		if ($D['hazifeladatDiakOrigFilename']!='') {
+		    echo '<a href="'.$href.'" target="_blank">'.htmlspecialchars($D['hazifeladatDiakOrigFilename']).'</a> <span class="icon-paper-clip"></span>';
+		}
+	    echo '</td>';
+	    echo '<td style="text-align: center">';
+//		if ($ADAT['hazifeladatDiak']['hazifeladatDiakStatus']=='kész') {
+		  if (__TANAR===true && __USERTANARID==$ADAT['oraAdat']['ki']) {
+		    if ($D['tanarLattamDt']=='') {
+			echo '<button type="submit" name="lattam[]" value="'.$diakId.'" class="btnLattamStatusz"><span class="icon-ok-sign"></span> láttam!</button>';
+		    } else {
+			echo '<button type="submit" name="megsemlattam[]" value="'.$diakId.'" class="btnLattamStatusz lattam"><span class="icon-ok-sign"></span> láttam.</button>';
+		    }
+		  } else {
+		    if ($D['tanarLattamDt']!='') {echo '<span class="icon-ok-sign" style="color:lightblue"></span>';}		    
+		  }
+//		}
+	    echo '</td>';
+	    echo '</tr>';
+	}
+	echo '</table>';
+	echo formEnd();
+
+    }
+
+    function putHazifeladatDiakOrig($ADAT) {
 
 	if (count($ADAT['hazifeladatDiak'])==0) return false;
 
@@ -163,13 +234,16 @@
 	echo '<input type="hidden" name="hazifeladatId" value="'.$ADAT['hazifeladatId'].'" />';
 	echo '<table class="hazifeladatDiak" cellpadding="1" cellspacing="1">';
 	echo '<thead>';
-	    echo '<tr><th>diák</th><th>látta</th><th colspan="2">státusz</th><th colspan="1">csatolmány</th><th>láttam</th></tr>';
+	    if (__NAPLOADMIN===true || __VEZETOSEG===true)
+		echo '<tr><th>diák</th><th>látta</th><th colspan="2">státusz</th><th colspan="1">csatolmány</th><th>láttam</th></tr>';
+	    else 
+		echo '<tr><th>diák</th><th colspan="2">státusz</th><th colspan="1">csatolmány</th><th>láttam</th></tr>';
 	echo '</thead>';
 	for ($i=0; $i<count($ADAT['hazifeladatDiak']); $i++) {
 	    $D = $ADAT['hazifeladatDiak'][$i];
 	    echo '<tr>';   
 	    echo '<td class="diakNev diakAdat" data-diakid="'.$D['diakId'].'">'.$D['diakNev'].'</td>';
-	    echo '<td>'.$D['diakLattamDt'].'</td>';
+	    if (__NAPLOADMIN===true || __VEZETOSEG===true) echo '<td>'.$D['diakLattamDt'].'</td>';
 	    echo '<td>'.$D['hazifeladatDiakStatus'].'</td>';
 	    echo '<td>'.$D['hazifeladatDiakMegjegyzes'].'</td>';
 
@@ -198,6 +272,7 @@
 	}
 	echo '</table>';
 	echo formEnd();
+
     }
 
 ?>

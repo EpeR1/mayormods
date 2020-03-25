@@ -61,5 +61,7 @@
 
 
     table.hazifeladatDiak tr td a, fieldset.adatok a { color: black; }
+    table.hazifeladatDiak tr td a:visited, fieldset.adatok a:visited { color: #888; }
     table.hazifeladatDiak tr td a:hover, fieldset.adatok a:hover { text-decoration:underline; color: cornflowerblue; }
     
+    table.hazifeladatDiak tr td.kesz { background-color: lightgreen; color:white; text-align:center }

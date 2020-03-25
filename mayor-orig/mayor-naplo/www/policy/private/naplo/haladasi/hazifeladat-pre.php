@@ -53,6 +53,7 @@
     $values = array($ADAT['oraId']);
     $ADAT['hazifeladatId'] = $hazifeladatId = db_query($q, array('modul'=>'naplo','result'=>'value','values'=>$values));
     $ADAT['oraAdat'] = getOraadatById($oraId);
+    $ADAT['nevsor'] = getTankorDiakjaiByInterval($ADAT['oraAdat']['tankorId'], __TANEV, $ADAT['oraAdat']['dt'], $ADAT['oraAdat']['dt']);
 
     if (__TANAR===true && $action=='hazifeladatBeiras') {
 	$hazifeladatFeltoltesEngedely = readVariable($_POST['hazifeladatFeltoltesEngedely'],'id',0);
@@ -71,16 +72,31 @@
 	    updateHaladasiNaploOra($oraId, $leiras);
 	}
     } elseif (__TANAR===true && $action=='lattam') {
+	$lr = db_connect('naplo');
+	db_start_trans($lr);
 	$lattamDiakIds = readVariable($_POST['lattam'],'id');
-	$q = "UPDATE oraHazifeladatDiak SET tanarLattamDt=null WHERE hazifeladatId=%u";
-	$values = array($ADAT['hazifeladatId'], $_diakId);
-	db_query($q, array('modul'=>'naplo','result'=>'update','values'=>$values));
+	$megsemlattamDiakIds = readVariable($_POST['megsemlattam'],'id');
 	for ($i=0; $i<count($lattamDiakIds); $i++) {
 	    $_diakId = $lattamDiakIds[$i];
-	    $q = "UPDATE oraHazifeladatDiak SET tanarLattamDt=NOW() WHERE hazifeladatId=%u AND diakId=%u";
 	    $values = array($ADAT['hazifeladatId'], $_diakId);
-	    db_query($q, array('modul'=>'naplo','result'=>'update','values'=>$values));
+	    $q = "SELECT count(*) AS db FROM oraHazifeladatDiak WHERE hazifeladatId=%u AND diakId=%u";
+	    $db = db_query($q, array('modul'=>'naplo','result'=>'value','values'=>$values),$lr);
+	    if ($db==1) {
+		$q = "UPDATE oraHazifeladatDiak SET tanarLattamDt=NOW() WHERE hazifeladatId=%u AND diakId=%u";
+		$r = db_query($q, array('modul'=>'naplo','result'=>'update','values'=>$values),$lr);
+	    } else {
+		$q = "INSERT IGNORE INTO oraHazifeladatDiak (hazifeladatId,diakId,tanarLattamDt) VALUES (%u,%u,NOW())";
+		db_query($q, array('modul'=>'naplo','result'=>'insert','values'=>$values),$lr);
+	    }
 	}
+	for ($i=0; $i<count($megsemlattamDiakIds); $i++) {
+	    $_diakId = $megsemlattamDiakIds[$i];
+	    $q = "UPDATE oraHazifeladatDiak SET tanarLattamDt=null WHERE hazifeladatId=%u AND diakId=%u";
+	    $values = array($ADAT['hazifeladatId'], $_diakId);
+	    db_query($q, array('modul'=>'naplo','result'=>'update','values'=>$values),$lr);
+	}
+	db_commit($lr);
+	db_close($lr);
     } elseif (__DIAK===true) {
 	if (defined('__USERDIAKID') && __USERDIAKID>0) {
 	    $diakId=__USERDIAKID;
