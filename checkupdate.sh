@@ -1,14 +1,15 @@
 #!/bin/bash
 
 
+git checkout MaYor-dev
+
 orev=$(cat rev.txt)
 nrev=$(wget http://www.mayor.hu/download/current/md5sum -O - | grep 'Revision' | cut -d ' ' -f 2)
 
 pd=$(pwd)
 
-if [ "$nrev" -gt "$orev" ]; then 
 
-	git checkout MaYor-dev
+if [ "$nrev" -gt "$orev" ]; then 
 
 	wget http://www.mayor.hu/download/current/rev.txt -O rev.txt
 	wget http://www.mayor.hu/download/current/md5sum  -O mayor-orig/md5sum
@@ -36,9 +37,7 @@ if [ "$nrev" -gt "$orev" ]; then
 	git commit -a -m "Rev: $nrev"
 	git tag -a "rev$nrev" -m "Rev: $nrev"
 
-	git checkout master
-        
 fi
         
-	
+git checkout master	
  
