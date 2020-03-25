@@ -8,6 +8,8 @@ pd=$(pwd)
 
 if [ "$nrev" -gt "$orev" ]; then 
 
+	git checkout MaYor-dev
+
 	wget http://www.mayor.hu/download/current/rev.txt -O rev.txt
 	wget http://www.mayor.hu/download/current/md5sum  -O mayor-orig/md5sum
 
@@ -34,7 +36,7 @@ if [ "$nrev" -gt "$orev" ]; then
 	git commit -a -m "Rev: $nrev"
 	git tag -a "rev$nrev" -m "Rev: $nrev"
 
-
+	git checkout master
         
 fi
         
