@@ -99,7 +99,7 @@ function filename2ext($filename) {
     $ext = substr(strrchr($filename, '.'), 1);
     $ext = substr($filename, strrpos($filename, '.') + 1);
     $ext = preg_replace('/^.*\.([^.]+)$/D', '$1', $filename);
-    $exts = split("[/\\.]", $filename);
+    $exts = explode('.', $filename);
     $n    = count($exts)-1;
     $ext  = $exts[$n];
     return $ext;
