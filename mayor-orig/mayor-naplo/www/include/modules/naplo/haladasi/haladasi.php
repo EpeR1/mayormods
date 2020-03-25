@@ -72,7 +72,7 @@
 	// Csatlakozás az adatbázishoz
 	$lr = db_connect('naplo', array('fv' => 'getHaladasi'));
         $q = "SELECT oraId, dt, ora, ki, kit, tankorId, teremId, ora.leiras, tipus, eredet, csoportId, feladatTipusId,
-		hazifeladatId,
+		hazifeladatId,hazifeladatFeltoltesEngedely,
 		getOraTolTime(oraId) AS tolTime,
 		getOraIgTime(oraId) AS igTime
                         FROM ora 
