@@ -22,6 +22,7 @@ $m2n['csoport_prefix'] = "(tk) ";
 $m2n['default_email'] = "indulo@iskola.hu";
 $m2n['default_passw'] = "EHYmGktzrdfS7wxJR6DFqxjJ";
 $m2n['default_quota'] = "10GB";
+$m2n['diak_quota']  = "2GB";
 $m2n['min_osztalyok'] =  array(); 	        //pl:  array('9.a','11.a');
 $m2n['csoportnev_hossz'] = 40;
 $m2n['felhasznalo_hossz'] = 45;
@@ -29,6 +30,8 @@ $m2n['megfigyelo_user'] = "naplo_robot";    //ha nem kell, akkor állítsd üres
 $m2n['kihagy'] = array();                   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
 $m2n['default_lang']  = "hu";
 $m2n['mindenki_csop'] = "naplós_felhasználók";
+$m2n['mindenki_tanar'] = "naplós_tanárok";
+$m2n['mindenki_diak'] = "naplós_diákok";
 $m2n['zaras_tartas'] =  "2018-06-14";	//A jelölt napon befejezett, de nem lezárt tanév adatainak megtartása. (pl. szeptemberig) Ha már nem kell, akkor állítsd "1970-01-01"-ra !;
 $m2n['verbose'] = 3 ;  
 
@@ -48,6 +51,7 @@ $replace = array( 'aa', 'ae', 'ee', 'ii', 'oo', 'oe', 'ooe', 'uu', 'ue', 'uue', 
 $log['verbose'] = $m2n['verbose'];
 for($i = 1; $i<$argc; $i++){
     if(@$argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$log['verbose'] = $argv[$i+1]; $i++;}
+    if(@$argv[$i] == "--set-diak-quota" and is_numeric($argv[$i+1])){    $i++;}
 }
 
 if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Improved) és php7  kell!
@@ -368,6 +372,21 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         return $list;    
     }
 
+    function add_param_to_user($list, $user, $paramname, $param){      //Naplón kívüli csoportokat adhatunk a felhasználókhoz
+        $curr = "";
+        foreach($list as $key => $val){   // Csak rendezett tömbökön!
+            if($curr != $val['userAccount'] && ($user === null or ($user !== null && $val['userAccount'] == $user ))){ //Vagy mindenki vagy adott user + rendezett lista
+                
+                $list[$key][$paramname] = $param;    // A paraméter
+
+                if($user !== null && $val['userAccount'] == $user ){    // Null -> mindenkihez, "user" -> csak neki
+                    break;
+                }
+                $curr = $val['userAccount'];
+            }
+        }
+        return $list;    
+    }
 
     function mayor_userlistcmp($a, $b){
         return strcmp($a['userAccount'], $b['userAccount']);
@@ -617,15 +636,22 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 //-------------------------------------------------------------------------------------------------------------------------------
 // Felhasználónevek egyeztetése
     if ($log['verbose'] > 0 ){ echo "\n***\tFelhasználók egyeztetése.\n";}
+    
+    $mayor_tanar = get_mayor_tanar($link2);     //Rendezve jön
+    $mayor_tanar = add_tk_to_users( $mayor_tanar, null, $m2n['mindenki_tanar']);    //tanár tankörök lekérdezése + minden tanár csoport
+    usort($mayor_tanar, "mayor_userlistcmp");
+
+    $mayor_diak = get_mayor_diak($link2);       //mysql rendezi
+    $mayor_diak = add_tk_to_users( $mayor_diak, null, $m2n['mindenki_diak']);		//diák tankörök lekérdezése + minden diák csoport
+    usort($mayor_diak, "mayor_userlistcmp");
+    $mayor_diak = add_param_to_user($mayor_diak, null, 'quota', $m2n['diak_quota']);
+
     $mayor_user = array();
-    $mayor_user = array_merge( $mayor_user, add_tk_to_users( get_mayor_tanar($link2), null, $m2n['mindenki_tanar']));    //tanár tankörök lekérdezése + minden tanár csoport
-    usort($mayor_user, "mayor_userlistcmp");
-    $mayor_user = array_merge( $mayor_user, add_tk_to_users( get_mayor_diak($link2), null, $m2n['mindenki_diak']));		//diák tankörök lekérdezése + minden diák csoport
-    usort($mayor_user, "mayor_userlistcmp");
+    $mayor_user = array_merge($mayor_tanar, $mayor_diak);
     $mayor_user = add_tk_to_users( $mayor_user, null, $m2n['mindenki_csop']);    //mindenki csoport
     usort($mayor_user, "mayor_userlistcmp");
 
-    if(isset($m2n['megfigyelo_user']) && $m2n['megfigyelo_user'] != "" ){               //A megfigyelő felvétele
+    if(isset($m2n['megfigyelo_user']) && $m2n['megfigyelo_user'] != "" ){               //A megfigyelő felvétele a lista végére
         foreach(get_mayor_tankor($link2) as $key => $val){
             $mayor_user = array_merge($mayor_user, array(
                 array( 'userAccount' => $m2n['megfigyelo_user'], 
