@@ -16,7 +16,7 @@ $db['nxt_dbname'] = "Nextcloud";
 $db['nxt_prefix'] = "oc_";
 //$db['mayor_host'] = "";
 //$db['mayor_port'] = "";
-//$db['mayor_user'] = "";
+//$db['mayor_user'] = ""; 
 //$db['mayor_pass'] = "";
 
 $m2n['min_evfolyam'] = 1;
