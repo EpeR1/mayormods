@@ -39,7 +39,8 @@ if [ $? == 0 ]; then
 		git tag -a "rev$nrev" -m "Rev: $nrev"
 
 	fi
+
+	git checkout @{-1}
 fi
         
-git checkout master	
  
