@@ -527,6 +527,25 @@
 		  }
 		}
 		echo '<a href="'.href('index.php?page=naplo&sub=haladasi&f=hazifeladat&oraId='.$dOra['oraId'].'&hazifeladatId='.$ADAT['tankorHazifeladat'][ $dOra['oraId'] ]).'" class="onClickUpdateWindow" title="'._HAZIFELADAT.'">';
+
+		
+                                   if (isset($dOra['hazifeladatId'])) {
+                                        if ($dOra['hazifeladatFeltoltesEngedely']==1) {
+                                            $_icon = 'icon-paper-clip-alt';
+                                            if ($ADAT['diakHazifeladat'][$dOra['oraId']]['hazifeladatDiakStatus'] == 'kész') { $_hfcolor = 'lightgreen';
+                                            } else { $_hfcolor = '#3f51b5'; }
+                                        } else {
+                                            $_icon= 'icon-home-alt';
+                                            if ($ADAT['diakHazifeladat'][$dOra['oraId']]['hazifeladatDiakStatus'] == 'kész') { $_hfcolor = 'lightgreen';
+                                            } else { $_hfcolor = '#e91e63'; }
+                                        }
+                                        echo '<span class="'.$_icon.'" title="h.f." style="color:'.$_hfcolor.';"></span>';
+		    } else {
+			echo '<span class="icon-home" style="color: #aaa"></span>';
+		    }
+
+/*
+
 		    if ($dOra['hazifeladatId']>0) {
 			if ($ADAT['diakHazifeladat'][$dOra['oraId']]['hazifeladatDiakStatus'] =='kész') {
 			    $hfColor = 'lightgreen';
@@ -537,6 +556,7 @@
 		    } else {
 			echo '<span class="icon-home" style="color: #aaa"></span>';
 		    }
+*/
 		echo '</a>';
 
 

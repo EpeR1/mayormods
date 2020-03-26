@@ -373,16 +373,10 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
 
     function add_param_to_user($list, $user, $paramname, $param){      //Naplón kívüli csoportokat adhatunk a felhasználókhoz
-        $curr = "";
         foreach($list as $key => $val){   // Csak rendezett tömbökön!
-            if($curr != $val['userAccount'] && ($user === null or ($user !== null && $val['userAccount'] == $user ))){ //Vagy mindenki vagy adott user + rendezett lista
+            if($user === null or ($user !== null && $val['userAccount'] == $user )){ //Vagy mindenki vagy adott user + rendezett lista
                 
                 $list[$key][$paramname] = $param;    // A paraméter
-
-                if($user !== null && $val['userAccount'] == $user ){    // Null -> mindenkihez, "user" -> csak neki
-                    break;
-                }
-                $curr = $val['userAccount'];
             }
         }
         return $list;    
