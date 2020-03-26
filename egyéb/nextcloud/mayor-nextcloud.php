@@ -375,12 +375,12 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     function add_param_to_user($list, $user, $paramname, $param){      //Naplón kívüli csoportokat adhatunk a felhasználókhoz
         foreach($list as $key => $val){   // Csak rendezett tömbökön!
             if($user === null or ($user !== null && $val['userAccount'] == $user )){ //Vagy mindenki vagy adott user + rendezett lista
-                
+
                 $list[$key][$paramname] = $param;    // A paraméter
             }
         }
         return $list;    
-    }
+    } 
 
     function mayor_userlistcmp($a, $b){
         return strcmp($a['userAccount'], $b['userAccount']);
