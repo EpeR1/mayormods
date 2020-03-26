@@ -53,7 +53,7 @@ try {
     // define('CLAMAV_ENABLED',true);
     if (CLAMAV_ENABLED === true) {
 	$safePath = escapeshellarg($_FILES['upfile']['tmp_name']);
-	$command = "clamdscan --quiet --stdout --fdpass ".$safePath." --remove  --log='/var/mayor/log/clamdscan.log'"; // --remove
+	$command = "clamdscan --quiet --stdout --fdpass ".$safePath." --remove"; // --remove
 	$out = '';
 	$int = -1;
 	exec($command, $out, $int);
