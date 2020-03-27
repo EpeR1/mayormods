@@ -274,6 +274,11 @@
 					echo '<span class="'.$_icon.'" title="h.f." style="color:'.$_hfcolor.'; padding-right:2px;"></span>';
 				    }
 
+				    if ($_ORA['cimkeLeiras']!='') {
+					$_cimkeMod = intval($_ORA['cimkeId']) % 5;
+					echo '<span class="cimke cimke_'.$_cimkeMod.'">'.$_ORA['cimkeLeiras'].'</span>';
+				    }
+
 				    if (is_array($_hianyzasAdat)) {
 					echo '<span class="hianyzasTicker '.ekezettelen($_hianyzasAdat['hTipus']).' '.ekezettelen($_hianyzasAdat['statusz']).' '.ekezettelen($_hianyzasAdat['igazolas']).'">';
 					if ($_hianyzasAdat['hTipus']=='hiányzás') 

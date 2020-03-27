@@ -53,7 +53,7 @@
 		    echo ($ADAT['oraTerheles'][$ADAT['tanarId']]['ossz']['heti']);
 	    }
 	echo '</th>';
-	echo '<th colspan="8" class="fejlec8">';
+	echo '<th colspan="9" class="fejlec8">';
     	    if ($tanarId!='') {
         	echo '<span class="tanarNev" data-tanarid="'.$tanarId.'">'.$title.'</span>';
 		if ($ADAT['csakUres']==true) {
@@ -106,7 +106,7 @@
 			echo ($ADAT['oraTerheles'][$ADAT['tanarId']]['ossz']['heti']);
 		    }
 		echo '</th>';
-		echo '<th colspan="8">';
+		echo '<th colspan="10">';
                 //    if (_SHOW_DAYS_FROM > $_TANEV['kezdesDt']) echo '<input class="gomb" type="submit" name="lapoz" value="<<" tabindex="5" />'."\n";
 		    if (_SHOW_DAYS_FROM > $_TANEV['kezdesDt']) 	echo '<button class="gomb" type="submit" name="lapoz1" value="prevWeek" tabindex="7"><span class="icon-chevron-left"></span></button>';
 
@@ -197,7 +197,7 @@
 		if (__PLUSZBEIRHAT===true && !$jovoDt) echo '<div class="icon-plus-sign rejtMutat"></div>';
 	    echo '</th>'."\n";
 	    // Az első cella a dátum/nap
-	    echo '<th colspan="8" class="nap">';
+	    echo '<th colspan="9" class="nap">';
 		echo str_replace('-','.',$dt) .'. ';
 		echo '<span class="napNev">'.$aHetNapjai[(date('w',$time)+6)%7].'</span>';
 		if ($napInfo2['napszam']!='' || $napInfo['orarendiHet'] != 0) {
@@ -237,7 +237,7 @@
 		if (__PLUSZBEIRHAT===true) putUjOra(array('dt'=>$dt, 'ora'=>$j));
 	    }	    
 	} else {
-	    echo '<tr><th colspan="9" class="nincsOra">'._NINCS_ORAJA.'</th></tr>';
+	    echo '<tr><th colspan="10" class="nincsOra">'._NINCS_ORAJA.'</th></tr>';
 //	    if ($tanitasiNap && strtotime(date('Y-m-d'))>=strtotime($dt)) {
 //	    if ( 
 //		(strtotime(date('Y-m-d'))>=strtotime($dt) 
@@ -523,9 +523,14 @@
 		    for ($c = 0; $c<count($ADAT['cimkek']); $c++) {
 			if (in_array($ADAT['cimkek'][$c]['cimkeId'], $dOra['cimke'])) $_C[] = $ADAT['cimkek'][$c]['cimkeLeiras'];
 		    }		    
-		    if (count($_C)>0) echo '<span class="cimke">'.implode('</span> <span class="cimke">',$_C).'</span>';
+		    if (count($_C)>0) { // vigyázz, csak egy címke engedélyezett! (egyelőre, különben sérül a getHaladasi)
+			$_cimkeId =  $dOra['cimke'][0];
+			echo '<span class="cimke cimke_'.$_cimkeId.'">'.implode('</span> <span class="cimke">',$_C).'</span>';
+		    }
 		  }
 		}
+	    echo '</td>';
+	    echo '<td class="cimke">';
 		echo '<a href="'.href('index.php?page=naplo&sub=haladasi&f=hazifeladat&oraId='.$dOra['oraId'].'&hazifeladatId='.$ADAT['tankorHazifeladat'][ $dOra['oraId'] ]).'" class="onClickUpdateWindow" title="'._HAZIFELADAT.'">';
 
 		
