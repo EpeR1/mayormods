@@ -134,7 +134,12 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
     $m2n['default_passw'] = "EHYmGktzrdfS7wxJR6DF11jJ"; //Az induló jelszó a Nextcloud-ban a felhasználóknak. (érdemes erőset/hosszút megadni, a botnet-ek/hackerek miatt)
 
-    $m2n['default_quota'] = "10GB";                     //Az indulási fájl-kvóta a Nextcloud-ban. (Rendszergazda később átállíthatja kézzel.)
+    $m2n['default_quota'] = "10GB";                     //Az általános indulási fájl-kvóta a Nextcloud-ban. (A wbes felületen később módosítható.)
+                                                        // Amikor új felhasználót ad hozzá, akkor az itt megadott méretre állítja a qvótáját.
+                                                        // Midel a diákoknak külön qvótát lehet beállítani, ezért ez értelemszerűen már csak a tanárokra vonatkozik.
+    
+    $m2n['diak_quota'] = "2GB";                         //A diákok! indulási kvótája
+                                                        // amikor új diákot ad hozzá, ezt a qvótát állítja be a számára.
 
     $m2n['default_lang']  = "hu";                       //Az alapértelmezett nyelv (később minden felhasználó átállíthatja magának)
 
@@ -148,16 +153,16 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
     $m2n['felhasznalo_hossz'] = 45;                     // Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a felhasználó valódi neve. (csak a script kinézete/átláthatósága végett)
 
     $m2n['mindenki_csop'] = "naplós_felhasználók";      //Legyen egy olyan csoport, amiben "mindenki benne van".
-														// ebbe a "mindenki" csoportba minden, a script által létrehozott felhasználó bekerül.
+                                                        // ebbe a "mindenki" csoportba minden, a script által létrehozott felhasználó bekerül.
 														
-	$m2n['mindenki_tanar'] = "naplós_tanárok";          //Legyen egy olyan csoport, amiben minden tanár benne van
-														// ebbe a "minden_tanár" csoportba a naplóbeli tanárok kerülnek.
+    $m2n['mindenki_tanar'] = "naplós_tanárok";          //Legyen egy olyan csoport, amiben minden tanár benne van
+                                                        // ebbe a "minden_tanár" csoportba a naplóbeli tanárok kerülnek.
 														
-	$m2n['mindenki_diak'] = "naplós_diákok";            //Legyen egy olyan csoport, amiben "minden diák" benne van.
+    $m2n['mindenki_diak'] = "naplós_diákok";            //Legyen egy olyan csoport, amiben "minden diák" benne van.
                                                         // ebbe a "minden_diák" csoportba a naplóbeli diákok kerülnek.
 
     $m2n['zaras_tartas'] =  "2018-06-19";               //A jelölt napon befejezett, de nem lezárt tanév adatainak megtartása. (pl. szeptemberig) 
-	                                                    // Ha már nem kell, akkor állítsd "1970-01-01"-ra !;
+                                                        // Ha már nem kell, akkor állítsd "1970-01-01"-ra !;
 							
     $m2n['verbose'] = 3                                 //Log bőbeszédűség      (A leg informatívabb(tömörebb), talán a 3-mas fokozat.)
                                                         // 0: csak fatális hibák, 1: fontosabbak, 2: csop./felh. elvétel, 3: csop./felh. hozzáadás, 
@@ -183,16 +188,28 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
                                                         // Ez alapértelmezetten a maxor-nextcloud.php -val kell egy könyvtárba legyen.
                                                         
 
-	FONTOS!! 
-		A Nextcloud szerver "occ" parancsa elérhető kell legyen a script számára!
-		Az "occ" parancs működését pl. az: (>>> sudo -u www-data php /var/www/nextcloud/occ ) kiadásával ellenőrizzük!
+
+    FONTOS!! 
+        A Nextcloud szerver "occ" parancsa elérhető kell legyen a script számára!
+        Az "occ" parancs működését pl. az: (>>> sudo -u www-data php /var/www/nextcloud/occ ) kiadásával ellenőrizzük!
+
+
+		
+	További Paraméterek / Kapcsolók:
+	
+		--loglevel x     :  A scriptbőbeszédűségét, logolását tudjuk ezzel szabályozni, ekkor ez az érték érvényesül, nem a configban megadott.
+
+        --set-diak-quota :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre
+
+
 
 		
 
 
+
+
+
 	További Információk:
- 
-	Lehetőség van a scriptet a "--loglevel xx" kapcsolóval is indítani. (>>> php mayor-nextcloud.php --loglevel 3 )
 
 	Esetleg érdemes lehet a scriptet betenni a "cron"-ba (éjszakára), így naponta lefut, és követi napló változásait.
 	(Ez esetben figyelni kell arra, hogy mayorban a tankör-diák, tankör-tanár összerendelések az év végén lejárhatnak, (pl. júni. 15-én)
