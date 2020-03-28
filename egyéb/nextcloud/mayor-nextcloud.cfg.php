@@ -25,7 +25,7 @@ $m2n['csoport_prefix'] = "(tk) ";
 $m2n['default_email'] = "indulo@iskola.hu";
 $m2n['default_passw'] = "EHYmGktzrdfS7wxJR6DFqxjJ";
 $m2n['default_quota'] = "10GB";
-$m2n['diak_quota']  = "2GB"; 
+$m2n['diak_quota']    = "2GB"; 
 $m2n['min_osztalyok'] =  array(); 	//pl:  array('9.a','11.a');
 $m2n['csoportnev_hossz'] = 40;
 $m2n['felhasznalo_hossz'] = 45;
@@ -38,7 +38,7 @@ $m2n['megfigyelo_user'] = "naplo_robot";
 $m2n['kihagy'] = array();   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
 $m2n['verbose'] = 3 ;  
 
-$occ_path = "/var/www/nextcloud/";
+$occ_path = "/var/www/nextcloud/"; 
 $occ_user = "www-data";
 
  

@@ -22,7 +22,7 @@ $m2n['csoport_prefix'] = "(tk) ";
 $m2n['default_email'] = "indulo@iskola.hu";
 $m2n['default_passw'] = "EHYmGktzrdfS7wxJR6DFqxjJ";
 $m2n['default_quota'] = "10GB";
-$m2n['diak_quota']  = "2GB";
+$m2n['diak_quota']    = "2GB";
 $m2n['min_osztalyok'] =  array(); 	        //pl:  array('9.a','11.a');
 $m2n['csoportnev_hossz'] = 40;
 $m2n['felhasznalo_hossz'] = 45;
@@ -302,7 +302,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 shell_exec($e);
             }
         }
-    }
+    } 
     
     function group_del($groupName){	// Csoport törlése a Nextcloud-ból
         global $occ_user,$occ_path,$db,$link,$log,$m2n;
@@ -372,9 +372,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         return $list;    
     }
 
-    function add_param_to_user($list, $user, $paramname, $param){      //Naplón kívüli csoportokat adhatunk a felhasználókhoz
-        foreach($list as $key => $val){   // Csak rendezett tömbökön!
-            if($user === null or ($user !== null && $val['userAccount'] == $user )){ //Vagy mindenki vagy adott user + rendezett lista
+    function add_param_to_user($list, $user, $paramname, $param){       // Paramétert állít be a felhasználónak.
+        foreach($list as $key => $val){                                 // Csak rendezett tömbökön! (vagy mégsem?)
+            if($user === null or ($user !== null && $val['userAccount'] == $user )){ //Vagy mindenki vagy adott user 
 
                 $list[$key][$paramname] = $param;    // A paraméter
             }
@@ -632,17 +632,20 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     if ($log['verbose'] > 0 ){ echo "\n***\tFelhasználók egyeztetése.\n";}
     
     $mayor_tanar = get_mayor_tanar($link2);     //Rendezve jön
-    $mayor_tanar = add_tk_to_users( $mayor_tanar, null, $m2n['mindenki_tanar']);    //tanár tankörök lekérdezése + minden tanár csoport
+    $mayor_tanar = add_tk_to_users( $mayor_tanar, null, $m2n['mindenki_tanar']);    //csak rendezett tömbökön!
+    $mayor_tanar = add_param_to_user($mayor_tanar, null, 'quota', $m2n['default_quota']);
+    $mayor_tanar = add_param_to_user($mayor_tanar, null, 'diakId', -1 ); 
     usort($mayor_tanar, "mayor_userlistcmp");
 
     $mayor_diak = get_mayor_diak($link2);       //mysql rendezi
-    $mayor_diak = add_tk_to_users( $mayor_diak, null, $m2n['mindenki_diak']);		//diák tankörök lekérdezése + minden diák csoport
-    usort($mayor_diak, "mayor_userlistcmp");
+    $mayor_diak = add_tk_to_users( $mayor_diak, null, $m2n['mindenki_diak']);		//csak rendezett tömbökön!
     $mayor_diak = add_param_to_user($mayor_diak, null, 'quota', $m2n['diak_quota']);
+    $mayor_diak = add_param_to_user($mayor_diak, null, 'tanarId', -1 );
+    usort($mayor_diak, "mayor_userlistcmp");
 
     $mayor_user = array();
     $mayor_user = array_merge($mayor_tanar, $mayor_diak);
-    $mayor_user = add_tk_to_users( $mayor_user, null, $m2n['mindenki_csop']);    //mindenki csoport
+    $mayor_user = add_tk_to_users( $mayor_user, null, $m2n['mindenki_csop']);       //csak rendezett tömbökön //mindenki csoport
     usort($mayor_user, "mayor_userlistcmp");
 
     if(isset($m2n['megfigyelo_user']) && $m2n['megfigyelo_user'] != "" ){               //A megfigyelő felvétele a lista végére
@@ -658,7 +661,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 )));
         }
     }
-   // usort($mayor_user, "mayor_userlistcmp");        // előbb rendezzük
+   // usort($mayor_user, "mayor_userlistcmp");        //ha a megfigyelo helyesen van egy rendezett lista végén, nem kell ismét rendezni
     $mayor_user = array_merge($mayor_user, array(array('userAccount' => null, 'fullName' => null, 'tankorNev' => null,)) ); //strázsa a lista végére
     $nxt_user = nxt_user_list();
     $nxt_group = nxt_group_list();
@@ -690,9 +693,15 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                             catalog_userena($link, $curr);                                  //Ha netán le lenne tiltva, akkor engedélyezi,
                             user_ena($curr);                                                // ha a script tiltotta le.
                         }
-                    } else  {                           //Nincs a katalógusban, nincs tiltva,  felvesszük        
+                    } else  {                                                               //Nincs a katalógusban, nincs tiltva,  felvesszük        
                         catalog_useradd($link, $curr);                                      
                         if ($log['verbose'] > 1 ){ echo "-\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."-\tnyilvántartásba véve.\n";} 
+                    }
+
+                    if($ALWAYS_SET_DIAK_QUOTA === true && $curr_tanarId < 0 && $curr_diakId > 0 ){  //Állítsunk-e erőből (diák) qvótát?
+                        $params['quota'] = $m2n['diak_quota'];                                      // Alapértelmezett diák kvóta
+                        user_set($curr,$params);
+                        if ($log['verbose'] > 2 ){ echo "* -\t\tBeállítva:\t"."Qvóta: ".$params['quota']."\t\n";}
                     }
 
                     foreach($nxt_group as $key3 => $val3){                                  //A tankörök egyeztetése
@@ -726,8 +735,13 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                         group_user_add($val3,$curr);
                         if ($log['verbose'] > 2 ){ echo "* -\t\tHozzáadva a:".po("\t $val3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n"; }
                     }
-                }                
-                $params['quota'] = $m2n['default_quota'];                                   // Alapértelmezett kvóta
+                }
+
+                if($curr_tanarId < 0 && $curr_diakId > 0) {                                 // Diákról van szó
+                    $params['quota'] = $m2n['diak_quota'];                                  // Alapértelmezett kvóta
+                } else {
+                    $params['quota'] = $m2n['default_quota'];                               // Alapértelmezett kvóta
+                }
                 $params['lang'] = $m2n['default_lang'];                                     // Nyelv
                 if($curr_e == ""){
                     $params['email'] = $m2n['default_email'];                               // e-mail beállítása
@@ -742,6 +756,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             $tankorei = array();                            // új ciklus kezdődik
             $curr = $val['userAccount'];                    //
             $curr_n = $val['fullName'];                     //
+            $curr_tanarId = $val['tanarId'];
+            $curr_diakId = $val['diakId'];
             $curr_e = @$val['email'];                       //
         }
         $tankorei[] = $val['tankorNev'];                    // Másodszor/Egyébként a csoportok (tankörök) gyűjtése
