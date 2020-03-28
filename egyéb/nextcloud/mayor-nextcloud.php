@@ -51,7 +51,7 @@ $replace = array( 'aa', 'ae', 'ee', 'ii', 'oo', 'oe', 'ooe', 'uu', 'ue', 'uue', 
 $log['verbose'] = $m2n['verbose'];
 for($i = 1; $i<$argc; $i++){
     if(@$argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$log['verbose'] = $argv[$i+1]; $i++;}
-    if(@$argv[$i] == "--set-diak-quota" ){ $ALWAYS_SET_DIAK_QUOTA = true;   $i++;}
+    if(@$argv[$i] == "--set-diak-quota" ){ $ALWAYS_SET_DIAK_QUOTA = true;  if($log['verbose'] < 4){ $log['verbose'] = 4;}  }
 }
 
 if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Improved) és php7  kell!
@@ -662,7 +662,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         }
     }
    // usort($mayor_user, "mayor_userlistcmp");        //ha a megfigyelo helyesen van egy rendezett lista végén, nem kell ismét rendezni
-    $mayor_user = array_merge($mayor_user, array(array('userAccount' => null, 'fullName' => null, 'tankorNev' => null,)) ); //strázsa a lista végére
+    $mayor_user = array_merge($mayor_user, array(array('userAccount' => null, 'fullName' => null, 'tankorNev' => null, 'diakId' => 0, 'tanarId' => 0,)) ); //strázsa a lista végére
     $nxt_user = nxt_user_list();
     $nxt_group = nxt_group_list();
     $m2n_catalog = catalog_userlist($link);
