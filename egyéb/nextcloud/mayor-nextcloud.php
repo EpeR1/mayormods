@@ -37,7 +37,7 @@ $m2n['verbose'] = 3 ;
 
 $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
-
+$ALWAYS_SET_DIAK_QUOTA = false; 
 $cfgfile = realpath(pathinfo($argv[0])['dirname'])."/"."mayor-nextcloud.cfg.php";  // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
 if( file_exists($cfgfile)===TRUE ){     include($cfgfile);  }
 
@@ -51,7 +51,7 @@ $replace = array( 'aa', 'ae', 'ee', 'ii', 'oo', 'oe', 'ooe', 'uu', 'ue', 'uue', 
 $log['verbose'] = $m2n['verbose'];
 for($i = 1; $i<$argc; $i++){
     if(@$argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$log['verbose'] = $argv[$i+1]; $i++;}
-    if(@$argv[$i] == "--set-diak-quota" and is_numeric($argv[$i+1])){    $i++;}
+    if(@$argv[$i] == "--set-diak-quota" ){ $ALWAYS_SET_DIAK_QUOTA = true;   $i++;}
 }
 
 if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Improved) és php7  kell!

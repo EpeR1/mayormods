@@ -41,9 +41,9 @@ $m2n['verbose'] = 3 ;
 $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
 
+ 
 
-
-
+ 
 /*
 Nextcloud(13+) - Mayor script
 
