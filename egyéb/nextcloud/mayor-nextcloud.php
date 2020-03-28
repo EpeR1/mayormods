@@ -51,8 +51,10 @@ $replace = array( 'aa', 'ae', 'ee', 'ii', 'oo', 'oe', 'ooe', 'uu', 'ue', 'uue', 
 $log['verbose'] = $m2n['verbose'];
 for($i = 1; $i<$argc; $i++){
     if(@$argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$log['verbose'] = intval($argv[$i+1]); $i++;}
-    if(@$argv[$i] == "--set-diak-quota" ){ $ALWAYS_SET_DIAK_QUOTA = true;  if($log['verbose'] < 4){ $log['verbose'] = 4;}  }
+    if(@$argv[$i] == "--set-diak-quota" ){ $ALWAYS_SET_DIAK_QUOTA = true;  }
 }
+if( $ALWAYS_SET_DIAK_QUOTA === true && $log['verbose'] < 4 ){    $log['verbose'] = 4; }
+
 
 if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Improved) és php7  kell!
 
@@ -703,7 +705,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     if($ALWAYS_SET_DIAK_QUOTA === true && $curr_tanarId < 0 && $curr_diakId > 0 ){  //Állítsunk-e erőből (diák) qvótát?
                         $params['quota'] = $m2n['diak_quota'];                                      // Alapértelmezett diák kvóta
                         user_set($curr,$params);
-                        if ($log['verbose'] > 2 ){ echo "* -\t\tBeállítva:\t"."Qvóta: ".$params['quota']."\t\n";}
+                        if ($log['verbose'] > 3 ){ echo "* -\t\tBeállítva:\t"."Qvóta: ".$params['quota']."\t\n";}
                     }
 
                     foreach($nxt_group as $key3 => $val3){                                  //A tankörök egyeztetése
