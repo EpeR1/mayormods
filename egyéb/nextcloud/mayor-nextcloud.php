@@ -273,18 +273,21 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     
     function user_set($userAccount, array $params){	//beállítja az e-mailt, quota-t, nyelvet a kapott értékekre
         global $occ_path,$occ_user,$log;        
-        if(isset($params['quota']))
+        if(isset($params['quota'])){
             $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:setting $userAccount files quota \"".$params['quota']."\"'";
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             shell_exec( $e );
-        if(isset($params['email']))  
+        }
+        if(isset($params['email'])){
             $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:setting $userAccount settings email \"".$params['email']."\"'";
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             shell_exec( $e );
-        if(isset($params['lang']))
+        }
+        if(isset($params['lang'])){
             $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:setting $userAccount core lang \"".$params['lang']."\"'";
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             shell_exec($e);
+        }
     }
     
     function group_add($groupName){ 	//Új csoport létrehozása a Nextcloud-ban 
