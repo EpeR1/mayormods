@@ -50,7 +50,7 @@ $replace = array( 'aa', 'ae', 'ee', 'ii', 'oo', 'oe', 'ooe', 'uu', 'ue', 'uue', 
 
 $log['verbose'] = $m2n['verbose'];
 for($i = 1; $i<$argc; $i++){
-    if(@$argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$log['verbose'] = $argv[$i+1]; $i++;}
+    if(@$argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$log['verbose'] = intval($argv[$i+1]); $i++;}
     if(@$argv[$i] == "--set-diak-quota" ){ $ALWAYS_SET_DIAK_QUOTA = true;  if($log['verbose'] < 4){ $log['verbose'] = 4;}  }
 }
 
@@ -385,7 +385,6 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     function mayor_userlistcmp($a, $b){
         return strcmp($a['userAccount'], $b['userAccount']);
     }
-
 
     function po($inp,$ll,$dir){                         // Szép kimenetet gyárt
             while(grapheme_strlen($inp) < $ll){
