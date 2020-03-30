@@ -156,4 +156,20 @@
 
     }
 
+    function oraHazifeladatDiakLatta($hazifeladatId) {
+	if (__DIAK===true && $hazifeladatId>0) {
+    	    if (defined('__USERDIAKID') && __USERDIAKID>0) {
+    	        $diakId=__USERDIAKID;
+    	    } elseif (defined('__SZULODIAKID') && __SZULODIAKID>0) {
+        	$diakId=__SZULODIAKID;
+    	    }
+    	    if ($diakId>0) {
+        	$q = "INSERT IGNORE INTO oraHazifeladatDiak (hazifeladatId,diakId,diakLattamDt) VALUES (%u,%u,NOW())";
+        	$values = array($hazifeladatId, $diakId);
+        	db_query($q, array('modul'=>'naplo','result'=>'insert','values'=>$values));
+	    }
+	}
+    }
+
+
 ?>

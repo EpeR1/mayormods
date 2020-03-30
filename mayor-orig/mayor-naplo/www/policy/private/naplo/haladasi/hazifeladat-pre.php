@@ -105,9 +105,11 @@
 	}
 
 	if ($diakId>0) {
-	    $q = "INSERT IGNORE INTO oraHazifeladatDiak (hazifeladatId,diakId,diakLattamDt) VALUES (%u,%u,NOW())";
-	    $values = array($ADAT['hazifeladatId'], $diakId);
-	    db_query($q, array('modul'=>'naplo','result'=>'insert','values'=>$values));
+	    // $q = "INSERT IGNORE INTO oraHazifeladatDiak (hazifeladatId,diakId,diakLattamDt) VALUES (%u,%u,NOW())";
+	    // $values = array($ADAT['hazifeladatId'], $diakId);
+	    // db_query($q, array('modul'=>'naplo','result'=>'insert','values'=>$values));
+
+	    oraHazifeladatDiakLatta($ADAT['hazifeladatId']);
 
 	    if ($action=='hazifeladatKesz') {
 		if ($diakId>0 && $ADAT['hazifeladatId']>0) {

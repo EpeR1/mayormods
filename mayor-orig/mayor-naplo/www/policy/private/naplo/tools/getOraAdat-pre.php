@@ -30,6 +30,10 @@
 
 	$_JSON['oraAdat'] = $ORAADAT = getOraAdatById($oraId);
 
+	if ($ORAADAT['hazifeladatId']>0) {
+	    oraHazifeladatDiakLatta($ORAADAT['hazifeladatId']); // log: diakLattamDt
+	}
+
 	if ($dolgozatBeirhato === true && $action=='dolgozatBeiras') {
 	    $dolgozatId = ujDolgozat('',$ORAADAT['tankorId']);
 	    dolgozatModositas($dolgozatId,'',$ORAADAT['dt']);
