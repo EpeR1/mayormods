@@ -29,6 +29,8 @@ $m2n['felhasznalo_hossz'] = 45;
 $m2n['megfigyelo_user'] = "naplo_robot";    //ha nem kell, akkor állítsd üres stringre.
 $m2n['kihagy'] = array();                   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
 $m2n['default_lang']  = "hu";
+$m2n['create_groupdirs'] = false;
+$m2n['groupdir_prefix'] = "tavsuli";
 $m2n['mindenki_csop'] = "naplós_felhasználók";
 $m2n['mindenki_tanar'] = "naplós_tanárok";
 $m2n['mindenki_diak'] = "naplós_diákok";
@@ -38,6 +40,7 @@ $m2n['verbose'] = 3 ;
 $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
 $ALWAYS_SET_DIAK_QUOTA = false; 
+//$ALWAYS_CREATE_VIDEODIR = false;
 $cfgfile = realpath(pathinfo($argv[0])['dirname'])."/"."mayor-nextcloud.cfg.php";  // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
 if( file_exists($cfgfile)===TRUE ){     include($cfgfile);  }
 
@@ -50,8 +53,9 @@ $replace = array( 'aa', 'ae', 'ee', 'ii', 'oo', 'oe', 'ooe', 'uu', 'ue', 'uue', 
 
 $log['verbose'] = $m2n['verbose'];
 for($i = 1; $i<$argc; $i++){
-    if(@$argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$log['verbose'] = intval($argv[$i+1]); $i++;}
-    if(@$argv[$i] == "--set-diak-quota" ){ $ALWAYS_SET_DIAK_QUOTA = true;  }
+    if($argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$log['verbose'] = intval($argv[$i+1]); $i++;}
+    if($argv[$i] == "--set-diak-quota" ){ $ALWAYS_SET_DIAK_QUOTA = true;  }
+    if($argv[$i] == "--create-groupdir"){ $m2n['groupdir_user'] = $argv[$i+1]; $i++;}
 }
 if( $ALWAYS_SET_DIAK_QUOTA === true && $log['verbose'] < 4 ){    $log['verbose'] = 4; }
 
@@ -346,6 +350,29 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         shell_exec($e);
     }
+
+
+    function create_groupdir($user, $path ){	// Hozzáad egy felhasználót egy csoporthoz a Nextcloud-ban
+        global $occ_user, $occ_path,$log,$m2n;
+        if(!is_dir($occ_path."/data/".$user."/files/".$path)){
+            $e = "su -s /bin/sh $occ_user -c 'mkdir -p  \"".$occ_path."/data/".$user."/files/".$path."\"  '";
+            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+            shell_exec($e);
+            $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" files:scan --path=\"".$user."/files/".$path."\" -v '";
+            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+            shell_exec($e);
+        }
+    }
+
+    function write_infotext($msg, $user, $path ){	// Hozzáad egy felhasználót egy csoporthoz a Nextcloud-ban
+        global $occ_user, $occ_path,$log,$m2n;
+        if(is_dir(pathinfo($occ_path."/data/".$user."/files/".$path)['dirname'] )){
+            // fwrite()
+        } else {
+            // error, dir is missing
+        }
+    }
+
 
     function add_tk_to_users($list, $user, $tankorname){      //Naplón kívüli csoportokat adhatunk a felhasználókhoz
         $curr = "";
