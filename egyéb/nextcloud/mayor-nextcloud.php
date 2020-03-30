@@ -791,10 +791,10 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     }
                     //------------------------- Tankörmappa  györkér + info.txt ------------------------//      //( " " --> mindenkinek, "username" --> csak neki ) && tanár
                     if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0 && $m2n['manage_groupdirs'] === true){   
-                        create_dir($curr,$m2n['groupdir_prefix']);                                              // Tankörmappa gyökér létrehozása
-                        write_tofile($curr, $m2n['groupdir_prefix']."INFO.txt", "message\r\n");                 // Információs fájlt is
+//                        create_dir($curr,$m2n['groupdir_prefix']);                                              // Tankörmappa gyökér létrehozása
+//                        write_tofile($curr, $m2n['groupdir_prefix']."INFO.txt", "message\r\n");                 // Információs fájlt is
                     }      
-                    //---------------------------------------------------------------------------------//
+                    //------------------------------------------ Tankörök egyeztetése -------------------------------------------//
                     foreach($nxt_group as $key3 => $val3){                                                      //A tankörök egyeztetése
                         if(in_array($key3, $tankorei) /*or $key3 == $m2n['mindenki_csop']*/){                   //szerepel-e a felhasználó tankörei között a csoport, vagy a "mindenki" csoport?
                             if( in_array($curr, $val3)){                                                        //Igen, és már benne is van +++
@@ -819,21 +819,27 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     }
                     //------------------------------------- Tankörmappa törlés ----------------------------------//     //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
                     if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0 && $m2n['manage_groupdirs'] === true){         
+                        
+//                        create_dir($curr,$m2n['groupdir_prefix']);                                              // Tankörmappa gyökér létrehozása
                         clean_dir($curr, $m2n['groupdir_prefix'], $tankorei);
+                        
+                        write_tofile($curr, $m2n['groupdir_prefix']."INFO.txt", "message\r\n");                 // Információs fájlt is
+                        files_scan($curr, $m2n['groupdir_prefix']);                             //Tankörmappa györkér NXT-scan
                     }
                     break;
                 }       
-            }
+            } 
             unset($nxt_user[$curr]);                                                        //Felhasználó Megvizsgálva, többször már nem kell dönteni róla.
             if($curr != $key2 and $curr != null){                                           //Nincs még ilyen felhasználó
                 
                 user_add($curr, $curr_n);                                                   //Akkor hozzá kell adni
                 catalog_useradd($link, $curr);
                 if ($log['verbose'] > 2 ){ echo "**-\tFelhasználó:".po("\t$curr_n ($curr)",$m2n['felhasznalo_hossz'],1)."--\tlétrehozva.\n";}
-                if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0 && $m2n['manage_groupdirs'] === true){   //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
+/*                if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0 && $m2n['manage_groupdirs'] === true){   //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
                     create_dir($curr,$m2n['groupdir_prefix']);                                  //Tankörmappa gyökér létrehozása
                     write_tofile("message\n\r", $curr, $m2n['groupdir_prefix']."INFO.txt");     // Információs fájlt is
-                }    
+                }   
+*/
 
                 foreach($tankorei as $key3 => $val3){                                       //Hozzáadja a (tankör)csoportokhoz is egyből,
                     if(array_key_exists($val3, $nxt_group)) {                               // de, csak akkor, ha az a csoport a Nextcloud-ban is létezik.
@@ -846,7 +852,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                         } 
                     }
                 }
-                if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0 ){    //null --> mindenkinek "username" --> csak neki
+                if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0 && $m2n['manage_groupdirs'] === true ){    //null --> mindenkinek "username" --> csak neki
+                    create_dir($curr,$m2n['groupdir_prefix']);                                  //Tankörmappa gyökér létrehozása
+                    write_tofile("message\n\r", $curr, $m2n['groupdir_prefix']."INFO.txt");     // Információs fájlt is
                     files_scan($curr, $m2n['groupdir_prefix']);                             //Tankörmappa györkér NXT-scan
                 }
 
