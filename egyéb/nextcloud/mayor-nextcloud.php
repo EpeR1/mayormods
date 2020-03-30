@@ -29,7 +29,7 @@ $m2n['felhasznalo_hossz'] = 45;
 $m2n['megfigyelo_user'] = "naplo_robot";    //ha nem kell, akkor állítsd üres stringre.
 $m2n['kihagy'] = array();                   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
 $m2n['default_lang']  = "hu";
-$m2n['create_groupdirs'] = false;
+$m2n['manage_groupdirs'] = false;
 $m2n['groupdir_prefix'] = "tavsuli";
 $m2n['mindenki_csop'] = "naplós_felhasználók";
 $m2n['mindenki_tanar'] = "naplós_tanárok";
@@ -416,9 +416,12 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     rmdir($occ_path."/data/".$user."/files/".$path."/".$val);
                     if($log['verbose'] > 5) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" deleted.\n"; }    
                 } else {    //Nem mappa, vagy nem üres
-                    @unlink($occ_path."/data/".$user."/files/".$path."/".$val.".please-remove");                     // Már az xxxx.backup is foglalt...
+                    if( @unlink($occ_path."/data/".$user."/files/".$path."/".$val.".please-remove") === true && $log['verbose'] > 1 ){   // Már az xxxx.backup is foglalt...
+                        echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" deleted!!!\n"; 
+                        user_notify($user,"Fájl: $val \nIllegális helyen, és útban volt. \nAutomata által törölve.", "Fájl: $val törölve!");
+                    }
                     rename($occ_path."/data/".$user."/files/".$path."/".basename($val, '.please-remove'), $occ_path."/data/".$user."/files/".$path."/".$val.".please-remove");
-                    if($log['verbose'] > 1) { echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" deleted!!!\n"; } 
+                    user_notify($user,"Az ön $path könyvtárában\nTiltott helyen lévő fáj található,\n vagy olyan tankörmappa,\n amely tankörnek ön továbbá nem tagja. \n Kérem távolítsa el! \nBiztonság kedvéért átnevezve:\n($val.please-remove)", "Fájl/Mappa rossz helyen! \n($val)");
                 }
             }
         }
@@ -786,9 +789,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                         user_set($curr,$params);
                         if ($log['verbose'] > 3 ){ echo "* -\t\tBeállítva:\t"."Qvóta: ".$params['quota']."\t\n";}
                     }
-                    //------------------------- Tankörmappa  györkér + info.txt ------------------------//
-                    if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0){   //( " " --> mindenkinek, "username" --> csak neki ) && tanár
-                        create_dir($curr,$m2n['groupdir_prefix']);                                          // Tankörmappa gyökér létrehozása
+                    //------------------------- Tankörmappa  györkér + info.txt ------------------------//      //( " " --> mindenkinek, "username" --> csak neki ) && tanár
+                    if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0 && $m2n['manage_groupdirs'] === true){   
+                        create_dir($curr,$m2n['groupdir_prefix']);                                              // Tankörmappa gyökér létrehozása
                         write_tofile($curr, $m2n['groupdir_prefix']."INFO.txt", "message\r\n");                 // Információs fájlt is
                     }      
                     //---------------------------------------------------------------------------------//
@@ -800,10 +803,11 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                                 if ($log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tHozzáadva a:".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n";}
                                 group_user_add($key3, $curr);                                                   //A "mindenki csoportot is ellenőrzi
                             }
-                            //------------------------------- Tankörmappa -----------------------------//
-                            if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0){         //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
+                            //------------------------------- Tankörmappa -----------------------------//       //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
+                            if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0 && $m2n['manage_groupdirs'] === true ){ 
                                 if($key3 != $m2n['mindenki_tanar'] && $key3 != $m2n['mindenki_diak'] && $key3 != $m2n['mindenki_tanar']){   //Ezekre a csoportokra minek?
                                     create_dir($curr,$m2n['groupdir_prefix'].$key3);                        //Tankörmappák létrehozása
+                                    if ($log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n";}
                                 }
                             }
                         } else {                                                                                //Nem szerepel a tankörei között
@@ -813,9 +817,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                             }
                         }
                     }
-                    //------------------------------------- Tankörmappa törlés ----------------------------------//
-                    if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0){         //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
-                        clean_dir($curr, $m2n['groupdir_prefix'], $tankorei),
+                    //------------------------------------- Tankörmappa törlés ----------------------------------//     //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
+                    if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0 && $m2n['manage_groupdirs'] === true){         
+                        clean_dir($curr, $m2n['groupdir_prefix'], $tankorei);
                     }
                     break;
                 }       
@@ -826,7 +830,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 user_add($curr, $curr_n);                                                   //Akkor hozzá kell adni
                 catalog_useradd($link, $curr);
                 if ($log['verbose'] > 2 ){ echo "**-\tFelhasználó:".po("\t$curr_n ($curr)",$m2n['felhasznalo_hossz'],1)."--\tlétrehozva.\n";}
-                if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0){   //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
+                if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0 && $m2n['manage_groupdirs'] === true){   //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
                     create_dir($curr,$m2n['groupdir_prefix']);                                  //Tankörmappa gyökér létrehozása
                     write_tofile("message\n\r", $curr, $m2n['groupdir_prefix']."INFO.txt");     // Információs fájlt is
                 }    
@@ -835,7 +839,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     if(array_key_exists($val3, $nxt_group)) {                               // de, csak akkor, ha az a csoport a Nextcloud-ban is létezik.
                         group_user_add($val3, $curr);
                         if ($log['verbose'] > 2 ){ echo "* -\t\tHozzáadva a:".po("\t $val3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n"; }
-                        if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0){         //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
+                        if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $curr_tanarId > 0 && $m2n['manage_groupdirs'] === true){         //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
                             if($val3 != $m2n['mindenki_tanar'] && $val3 != $m2n['mindenki_diak'] && $val3 != $m2n['mindenki_tanar']){   //Ezekre a csoportokra minek?
                                 create_dir($curr, $m2n['groupdir_prefix'].$val3);           //Tankörmappák létrehozása
                             }
