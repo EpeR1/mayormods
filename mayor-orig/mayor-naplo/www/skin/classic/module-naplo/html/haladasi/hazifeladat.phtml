@@ -107,7 +107,7 @@
 	    echo '<input type="hidden" name="hazifeladatId" value="'.$ADAT['hazifeladatId'].'"/>';
 
 	    echo '<fieldset class="adatok"><legend>'.ucfirst(_TANANYAG).'</legend>'."\n";
-		if ($ADAT['oraAdat']['oraId']>0 && strtotime(date('Y-m-d'))>=strtotime($ADAT['oraAdat']['dt'])) {
+		if ($ADAT['oraAdat']['oraId']>0 && strtotime(date('Y-m-d'))>=strtotime($ADAT['oraAdat']['dt']) && $ADAT['oraAdat']['oraBeirhato']===true) {
 		    echo '<input type="text" name="oraLeiras" value="'.$ADAT['oraAdat']['leiras'].'" style="width:70%">';
 		    echo '<input type="submit">';
 		} else {
@@ -116,6 +116,7 @@
 	    echo '</fieldset>'."\n";
 
 	    echo '<fieldset class="adatok"><legend>'._HAZIFELADAT.'</legend>'."\n";
+
 	    echo '<textarea name="hazifeladatLeiras" class="wysiwyg" rows="10" cols="80" style="width:100%">';
 		echo htmlspecialchars($ADAT['hazifeladatAdat']['hazifeladatLeiras']);
 	    echo '</textarea>';
@@ -151,6 +152,13 @@
 		echo '<input type="checkbox" name="hazifeladatFeltoltesEngedely" id="hazifeladatFeltoltesEngedelyChk" value="1" '.$_CHK.'/>';
 		echo '<label for="hazifeladatFeltoltesEngedelyChk">Diák/Szülő házi feladat csatolás engedélyezve</label>';
 	    echo '</div>';
+	    echo 'Leadási határidő: <input type="text" class="datetime" name="hazifeladatHataridoDt" id="hazifeladatHataridoDt" value="'.$ADAT['hazifeladatAdat']['hazifeladatHataridoDt'].'" placeholder="nem kötelező">';
+	    if ($ADAT['kovetkezoOraAdat']['oraId']>0) {
+		echo '<span id="hintDt"  data-hintdt="'.$ADAT['kovetkezoOraAdat']['dt'].' 08:00:00">';
+		echo '<span class="icon-circle-arrow-left"></span>';
+		echo 'következő tervezett óra: '.$ADAT['kovetkezoOraAdat']['dt'];
+		echo '</span>';
+	    }
 	    echo '<div style="width:100%; margin:auto; text-align:center;">';
     		echo '<input type="submit" class="btnSubmit">';
 	    echo '</div>';

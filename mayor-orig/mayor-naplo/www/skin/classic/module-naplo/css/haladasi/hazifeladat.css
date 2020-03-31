@@ -65,3 +65,8 @@
     table.hazifeladatDiak tr td a:hover, fieldset.adatok a:hover { text-decoration:underline; color: cornflowerblue; }
     
     table.hazifeladatDiak tr td.kesz { background-color: lightgreen; color:white; text-align:center }
+
+    input.modosit { background-color: #ffeb3b; }
+    span#hintDt {margin-left:5px; font-size:x-small; color:#888; cursor: copy;}
+    span#hintDt span { padding-right:2px; }
+    span#hintDt:hover { color:black; }

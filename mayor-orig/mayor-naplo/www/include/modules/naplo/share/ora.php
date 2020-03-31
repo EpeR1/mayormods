@@ -26,6 +26,8 @@
 				 munkaido,
 				 hazifeladatId, 
 				hazifeladatLeiras,
+				hazifeladatFeltoltesEngedely,
+				hazifeladatHataridoDt,
 				cimkeId, cimkeLeiras
                             FROM `%s`.ora
 			    LEFT JOIN `%s`.oraHazifeladat USING (oraId)
@@ -633,6 +635,18 @@ WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count(
 	return $R;
     }
 
+    function getKovetkezoOraAdatByOraId($oraId) {
+	if ($oraId>0) {
+	    $q = "SELECT * FROM ora WHERE oraId = %u";
+	    $v = array($oraId);
+	    $ORA = db_query($q,array('debug'=>false,'fv'=>'oraMostVane','modul'=>'naplo','values'=>$v,'result'=>'record'));
+	    $q = "SELECT * FROM ora WHERE dt>'%s' AND tankorId=%u AND tipus NOT IN ('elmarad','elmarad_máskor') ORDER BY dt LIMIT 1";
+	    $v = array($ORA['dt'],$ORA['tankorId']);
+	    $R = db_query($q,array('debug'=>false,'fv'=>'oraMostVane','modul'=>'naplo','values'=>$v,'result'=>'record'));
+	}
+	return $R;
+    }
+
     function getDiakOra($diakId,$dt,$ora,$olr_intezmeny = '',$olr_naplo) { // jelenlét mezőt nem vesszük figyelembe!!!
 
 	// diakId->tankor->ora
@@ -669,5 +683,31 @@ WHERE dt>='%s' and dt<='%s' AND tankorId IN (".implode(',', array_fill(0, count(
 	return $R;
     }
 
+    function getDiakHazifeladatByHatarido($diakId,$ADAT,$olr='') {
+	$dt = $hazifeladatHataridoDt = readVariable($ADAT['hazifeladatHataridoDt'],'date',null);
+	$R = array();
+	    if ($diakId>0 && !is_null($hazifeladatHataridoDt)) {
+		$tankorIds = getTankorByDiakId($diakId, __TANEV, $SET = array('csakId' => true, 'tolDt' => $dt, 'igDt' => $dt, 'result'=>'idonly'),$olr);
+		if (count($tankorIds)>0) {
+		    $q = "SELECT *,getNev(tankorId,'tankor') AS tankorNev 
+FROM oraHazifeladat 
+LEFT JOIN ora USING (oraId)
+LEFT JOIN oraHazifeladatDiak ON (oraHazifeladat.hazifeladatId = oraHazifeladatDiak.hazifeladatId AND diakId=%u) 
+WHERE tankorId IN (".implode(',',$tankorIds).") AND hazifeladatHataridoDt BETWEEN '%s' AND '%s 23:59:59'";
+		    $v = array($diakId,$hazifeladatHataridoDt,$hazifeladatHataridoDt);
+		} else { // fallback
+		    $q = "SELECT *,getNev(tankorId,'tankor') AS tankorNev FROM oraHazifeladat LEFT JOIN oraHazifeladatDiak USING (hazifeladatId) LEFT JOIN ora USING (oraId) WHERE diakId=%u AND DATE(hazifeladatHataridoDt)='%s'";
+		    $v = array($diakId,$hazifeladatHataridoDt);
+		}
+		$R = db_query($q,array('debug'=>false,'fv'=>'getDiakhazifeladatByOraIds','modul'=>'naplo','values'=>$v,'result'=>'indexed'),$olr);
+	    }
+	return $R;
+    }
+
+    function getOsztalyHazifeladatByHatarido($osztalyId,$ADAT,$olr='') {
+	// loop $diakId
+	$hazifeladatHataridoDt = $ADAT['hazifeladatHataridoDt'];
+	
+    }
 
 ?>

@@ -90,11 +90,24 @@ table.orarend tbody tr td div.jegyzet {
     margin:2px;
     font-size: x-small;
 }
+table.orarend tbody tr td div.hazifeladat { 
+    background-color: #3f51b5; color:white;
+    background-color: #e91e63;
+    border-radius:2px; padding:2px;
+    border: solid 1px white;
+    margin:2px;
+    font-size: x-small;
+}
 table.orarend tbody tr td div.jegyzet.publikus0 { } 
 table.orarend tbody tr td div.jegyzet.publikus1 { border: dashed 1px white; } 
 table.orarend tbody tr td div.jegyzet.publikus2 { border: dotted 1px white; } 
 table.orarend tbody tr td div.jegyzet.mase.publikus1 { background-color: #4caf50;} 
 table.orarend tbody tr td div.jegyzet.mase.publikus2 { background-color: #4caf50;} 
+
+
+table.orarend tbody tr td div.hazifeladat span { padding-right:2px; } 
+table.orarend tbody tr td div.hazifeladat.tanarLattam { background-color: #2E7D32;} 
+table.orarend tbody tr td div.hazifeladat.diakKesz { background-color: #4CAF50;} 
 
 table.orarend tbody tr.orarendJegyzetSor th { background-color: orange; border-color: orange; font-weight:normal; font-size: x-small; cursor: pointer}
 table.orarend tbody tr.orarendJegyzetSor td.jegyzetContainer { background-color: cornflowerblue; }
@@ -213,7 +226,6 @@ div.unfinished {
     table.orarend span.cimke_2 { background-color: orange; }
     table.orarend span.cimke_3 { background-color: #3f51b5; }
     table.orarend span.cimke_4 { background-color: #673ab7; }
-
 
 
     h2.mayorSocialEdition {
