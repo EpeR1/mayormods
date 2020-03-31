@@ -434,7 +434,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     function groupdir_create_root($user, $oktId, $path){        //Tankörmappák gyökerét előállítja
         global $groupdir_user, $m2n, $occ_path, $occ_user,$log;
         $ret = array(false, false);
-        if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   //Ha null -> mindenki, Ha "user" -> scak neki, && tanár && groupdir bekapcsolava
+        if(($groupdir_user === "" || ($groupdir_user !== "" && $user == $groupdir_user)) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   //Ha null -> mindenki, Ha "user" -> scak neki, && tanár && groupdir bekapcsolava
             
             if(is_file($occ_path."/data/".$user."/files/".$path) || is_link($occ_path."/data/".$user."/files/".$path)){     //Ha már vam ott valami ilyen fájl 
                 if(@unlink( $occ_path."/data/".$user."/files/".$path."backup") && $log['verbose'] > 0  ){                   //Helyet csinál a backupnak (sorry)
@@ -452,7 +452,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function groupdir_create_groupdir($user, $oktId, $path){
         global $groupdir_user, $m2n;
-        if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   
+        if(($groupdir_user === "" || ($groupdir_user !== "" && $user == $groupdir_user)) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   
             return create_dir($user, $path);                                              // Tankörmappa gyökér létrehozása
         }     
     }
@@ -460,7 +460,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     function groupdir_finish($user, $oktId, $path, $tankorei){
         global $groupdir_user, $m2n;
         $ret = array();
-        if(($groupdir_user === "" || ($groupdir_user !== "" && $curr == $groupdir_user)) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   
+        if(($groupdir_user === "" || ($groupdir_user !== "" && $user == $groupdir_user)) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   
             if(isset($tankrei)) {
                 $ret = clean_dir($user, $path, $tankorei);
             }
