@@ -253,9 +253,8 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
     --set-diak-quota :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre
 
+    --create-groupdir <username>:  A távoktatást segítő könyvtárstruktúrát csak az <username> felhasználónak  hozza létre.
 
-
-		
 
 
 
