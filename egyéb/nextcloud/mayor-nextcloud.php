@@ -415,7 +415,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         foreach($listdir as $key => $val) {
             if((!in_array(basename($val, '.please-remove'), $tankorei) || !is_dir($occ_path."/data/".$user."/files/".$path."/".$val)) && $val != "INFO.txt"){              //Nincs a tanköreiben, akkor  törölni kell (de csak ha üres)    
 
-                if(is_dir($occ_path."/data/".$user."/files/".$path."/".$val) && empty(scan_dir($curr, $path.$val))){        // Ha mappa, és üres -> törlés
+                if(is_dir($occ_path."/data/".$user."/files/".$path."/".$val) && empty(scan_dir($user, $path."/".$val))){        // Ha mappa, és üres -> törlés
                     $ret[0] = rmdir($occ_path."/data/".$user."/files/".$path."/".$val);
                     if($log['verbose'] > 5) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" deleted.\n"; }    
                 } else {    //Nem mappa, vagy nem üres
@@ -424,7 +424,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                         user_notify($user,"Fájl: $val \nIllegális helyen, és útban volt. \nAutomata által törölve.", "Fájl: $val törölve!");
                     }
                     $ret[1] = rename($occ_path."/data/".$user."/files/".$path."/".basename($val, '.please-remove'), $occ_path."/data/".$user."/files/".$path."/".$val.".please-remove");
-                    user_notify($user,"Az ön $path könyvtárában\nTiltott helyen lévő fáj található,\n vagy olyan tankörmappa,\n amely tankörnek ön továbbá nem tagja. \n Kérem távolítsa el! \nBiztonság kedvéért átnevezve:\n($val.please-remove)", "Fájl/Mappa rossz helyen! \n($val)");
+                    user_notify($user,"Az ön $path könyvtárában\\nTiltott helyen lévő fáj található,\\n vagy olyan tankörmappa,\\n amely tankörnek ön továbbá nem tagja. \\n Kérem távolítsa el! \\nBiztonság kedvéért átnevezve:\\n($val.please-remove)", "Fájl/Mappa rossz helyen! \\n($val)");
                 }
             }
         }
