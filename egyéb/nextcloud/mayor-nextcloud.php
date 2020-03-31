@@ -374,9 +374,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             fclose($h);
             chown($occ_path."/data/".$user."/files/".$path, $occ_user);
             chgrp($occ_path."/data/".$user."/files/".$path, $occ_user);
-            if($log['verbose'] > 5) { echo "php ->\tFILE OK: \"".$occ_path."/data/".$user."/files/".$path."\" created.\n"; }
+            if($log['verbose'] > 5) { echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."\" created.\n"; }
         } else {
-            if($log['verbose'] > 5) { echo "php ->\tFILE ERROR: \"".pathinfo($occ_path."/data/".$user."/files/".$path)['dirname']."\" dir not found.\n"; }
+            if($log['verbose'] > 5) { echo "php ->\tERROR: \"".pathinfo($occ_path."/data/".$user."/files/".$path)['dirname']."\" dir not found.\n"; }
         }
         return $ret;
     }
@@ -460,7 +460,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function groupdir_finish($user, $oktId, $path, $tankorei){
         global $groupdir_user, $m2n;
-        $ret = array();
+        $ret = array(false,false,false);
         if(($groupdir_user === "" || ($groupdir_user !== "" && $user == $groupdir_user)) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   
             if(isset($tankrei)) {
                 clean_dir($user, $path, $tankorei);
@@ -839,8 +839,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     }
                     //------------------------- Tankörmappa  györkér + info.txt ------------------------//     
                     $ret = groupdir_create_root($curr, $curr_tanarId, $m2n['groupdir_prefix']);
-                    if ($ret[0] === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\t".$m2n['groupdir_prefix'],$m2n['csoportnev_hossz'],1)."\tcsoportmappa gyökér.\n";}
-                    if ($ret[1] > 0 && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\t". $m2n['groupdir_prefix']."/INFO.txt",$m2n['csoportnev_hossz'],1)."\tfájl.\n";}
+                    if ($ret[0] === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\tfiles/".$m2n['groupdir_prefix'],$m2n['csoportnev_hossz'],1)."\tcsoportmappa gyökér.\n";}
+                    if ($ret[1] > 0 && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\tfiles/". $m2n['groupdir_prefix']."/INFO.txt",$m2n['csoportnev_hossz'],1)."\tfájl.\n";}
        
                     //------------------------------------------ Tankörök egyeztetése -------------------------------------------//
                     foreach($nxt_group as $key3 => $val3){                                                      //A tankörök egyeztetése
@@ -854,7 +854,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                             //------------------------------- Tankörmappa -----------------------------//       //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
                             if($key3 != $m2n['mindenki_tanar'] && $key3 != $m2n['mindenki_diak'] && $key3 != $m2n['mindenki_tanar']){   //Ezekre a csoportokra minek?
                                 $ret = groupdir_create_groupdir($curr, $curr_tanarId, $m2n['groupdir_prefix']."/".$key3);
-                                if ($ret === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\t$key3",$m2n['csoportnev_hossz'],1)."\t".$m2n['groupdir_prefix']."\n";}
+                                if ($ret === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tfiles/".$m2n['groupdir_prefix']."/\n";}
                             }
                     
                         //------------------------------------- Tankör (Csoportból) törlés -------------------------//
@@ -868,8 +868,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     //------------------------------------- Tankörmappa törlés + NXT-rescan ----------------------------------//     //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
                      
                     $ret = groupdir_finish($curr, $curr_tanarId, $m2n['groupdir_prefix'], $tankorei);
-                    if ($ret[0] === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tKitisztítva:".po("\t".$m2n['groupdir_prefix'], $m2n['csoportnev_hossz'],1)."\t".$m2n['groupdir_prefix']."\n";}
-                    if ($ret[3] === true && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tNXT-rescan :".po("\t".$m2n['groupdir_prefix'], $m2n['csoportnev_hossz'],1)."\t".$m2n['groupdir_prefix']."\n";}
+                    if ($ret[0] === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tKitisztítva:".po("\t".$m2n['groupdir_prefix'], $m2n['csoportnev_hossz'],1)."\tfiles/".$m2n['groupdir_prefix']."/\n";}
+                    if ($ret[3] === true && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tNXT-rescan :".po("\t".$m2n['groupdir_prefix'], $m2n['csoportnev_hossz'],1)."\tfiles/".$m2n['groupdir_prefix']."/\n";}
                     
                     break;
                 }       
@@ -882,8 +882,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 if ($log['verbose'] > 2 ){ echo "**-\tFelhasználó:".po("\t$curr_n ($curr)",$m2n['felhasznalo_hossz'],1)."--\tlétrehozva.\n";}
                 
                 $ret = groupdir_create_root($curr, $curr_tanarId, $m2n['groupdir_prefix']);
-                if ($ret[0] === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\t$path",$m2n['csoportnev_hossz'],1)."\tcsoportmappa gyökér.\n";}
-                if ($ret[1] > 0 && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\t$path/INFO.txt",$m2n['csoportnev_hossz'],1)."\tfájl.\n";}
+                if ($ret[0] === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\tfiles/".$m2n['groupdir_prefix'],$m2n['csoportnev_hossz'],1)."\tcsoportmappa gyökér.\n";}
+                if ($ret[1] > 0 && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\tfiles/".$m2n['groupdir_prefix']."/INFO.txt",$m2n['csoportnev_hossz'],1)."\tfájl.\n";}
        
                 foreach($tankorei as $key3 => $val3){                                       //Hozzáadja a (tankör)csoportokhoz is egyből,
                     if(array_key_exists($val3, $nxt_group)) {                               // de, csak akkor, ha az a csoport a Nextcloud-ban is létezik.
@@ -891,12 +891,12 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                         if ($log['verbose'] > 2 ){ echo "* -\t\tHozzáadva a:".po("\t $val3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n"; }
                         if($key3 != $m2n['mindenki_tanar'] && $key3 != $m2n['mindenki_diak'] && $key3 != $m2n['mindenki_tanar']){   //Ezekre a csoportokra minek?
                             $ret = groupdir_create_groupdir($curr, $curr_tanarId, $m2n['groupdir_prefix']."/".$key3);
-                            if ($ret === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\t$key3",$m2n['csoportnev_hossz'],1)."\t".$m2n['groupdir_prefix']."\n";}
+                            if ($ret === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tfiles/".$m2n['groupdir_prefix']."/\n";}
                         }
                     }
                 } 
                 $ret = groupdir_finish($curr, $curr_tanarId, $m2n['groupdir_prefix'], null);                                     
-                if ($ret[3] === true && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tNXT-rescan :".po("\t".$m2n['groupdir_prefix'], $m2n['csoportnev_hossz'],1)."\tcsoportmappa.\n";}
+                if ($ret[3] === true && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tNXT-rescan :".po("\t".$m2n['groupdir_prefix'], $m2n['csoportnev_hossz'],1)."\tfiles/".$m2n['groupdir_prefix']."/\n";}
 
 
 
