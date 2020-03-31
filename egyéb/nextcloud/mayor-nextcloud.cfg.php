@@ -198,6 +198,8 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
     
     $m2n['diak_quota'] = "2GB";                         //A diákok! indulási kvótája
                                                         // amikor új diákot ad hozzá, ezt a qvótát állítja be a számára.
+                                                        //Lehetőség van az összes diák kvótáját egyszerre, az itt beállított értékre állítani,
+                                                        // de ez nem fut automatikusan éjjelente, ezt kézzel kell, --set-diak-qupta kapcsoló kiadásával.
 
     $m2n['default_lang']  = "hu";                       //Az alapértelmezett nyelv (később minden felhasználó átállíthatja magának)
 
@@ -261,9 +263,11 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 	
 		--loglevel x     :  A scriptbőbeszédűségét, logolását tudjuk ezzel szabályozni, ekkor ez az érték érvényesül, nem a configban megadott.
 
-    --set-diak-quota :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre
+    --set-diak-quota :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre, 
+                        csak kézzel futtatva működik, az automatikus, napi futtatásban nicns benne.
 
-    --create-groupdir <username>:  A távoktatást segítő könyvtárstruktúrát csak az <username> felhasználónak  hozza létre.
+    --create-groupdir <username>:  A távoktatást segítő könyvtárstruktúrát csak az <username> felhasználónak  hozza létre,
+                                   illetve kapcsoló nélküli híváskor, automatikusan, a napi futásban, esténként az összes tanárnak egyszerre.
 
 
 
