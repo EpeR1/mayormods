@@ -424,7 +424,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                         user_notify($user,"Fájl: ".$val." Illegális helyen, volt. Automata által törölve.", "Fájl: ".$val." törölve!");
                     }
                     $ret[1] = rename($occ_path."/data/".$user."/files/".$path."/".$val, $occ_path."/data/".$user."/files/".$path."/".basename($val, '.please-remove').".please-remove");
-                    user_notify($user,"Az ön \"".$path."/\" könyvtárában Tiltott helyen lévő fáj található, vagy olyan tankör-mappa, amely tankörnek ön továbbá már nem tagja. \t Kérem távolítsa el! \t Biztonság kedvéért átnevezve:   ".basename($val, '.please-remove').".please-remove", "Fájl/Mappa rossz helyen! ".basename($val, '.please-remove') );
+                    user_notify($user,"Az ön >>".$path."<< könyvtárában Tiltott helyen lévő fáj található, vagy olyan tankör-mappa, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy távolítsa el belőle!   Biztonság kedvéért átnevezve, új neve -->   ".basename($val, '.please-remove').".please-remove", "Fájl/Mappa rossz helyen! --> ".basename($val, '.please-remove').".please-remove" );
                 }
             }
         }
