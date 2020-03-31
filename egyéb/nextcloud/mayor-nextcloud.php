@@ -419,12 +419,14 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     $ret[0] = rmdir($occ_path."/data/".$user."/files/".$path."/".$val);
                     if($log['verbose'] > 5) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" deleted.\n"; }    
                 } else {    //Nem mappa, vagy nem üres
-                    if( @unlink($occ_path."/data/".$user."/files/".$path."/".$val.".please-remove") === true && $log['verbose'] > 0 ){   // Már az xxxx.backup is foglalt...
-                        echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" deleted!!!\n"; 
-                        user_notify($user,"Fájl: ".$val.".please-remove Illegális helyen, volt. Automata által törölve.", "Fájl: ".$val.".please-remove törölve!");
+                    if( @unlink($occ_path."/data/".$user."/files/".$path."/".$val.time().".please-remove") === true && $log['verbose'] > 0 ){   // Már  "xxxx.please-remove" is volt...
+                        echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."/".$val.time()."\" deleted!!!\n"; 
+                        user_notify($user,"Fájl: ".$path."/".$val.".please-remove Illegális helyen, volt. Automata által törölve.", "Fájl: ".$path."/".$val.".please-remove törölve!");
                     }
-                    $ret[1] = rename($occ_path."/data/".$user."/files/".$path."/".$val, $occ_path."/data/".$user."/files/".$path."/".basename($val, '.please-remove').".please-remove");
-                    user_notify($user,"Az ön >>".$path."/<< könyvtárában tiltott helyen lévő fáj található, vagy olyan tankör-mappa, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy törölje belőle!   Biztonság kedvéért átnevezve, új neve -->   ".basename($val, '.please-remove').".please-remove", "Fájl/Mappa rossz helyen! --> ".$path."/".basename($val, '.please-remove').".please-remove" );
+                    if(file_exist(pathinfo(pathinfo(occ_path."/data/".$user."/files/".$path."/".$val)['filename'])['filename'])){       //Ha az eredeti könyvtár  vagy fájl él
+                        $ret[1] = rename($occ_path."/data/".$user."/files/".$path."/".$val, $occ_path."/data/".$user."/files/".$path."/".basename($val, '.please-remove').time().".please-remove");
+                        user_notify($user,"Az ön >>".$path."/<< könyvtárában tiltott helyen lévő fájl, vagy olyan tankör-mappa található, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy törölje belőle!  Később automatikusan törlésre kerül! A fájl átnevezve, új neve -->   ".basename($val, '.please-remove').time().".please-remove", "Fájl/Mappa rossz helyen! --> ".$path."/".basename($val, '.please-remove').time().".please-remove" );
+                    }
                 }
             }
         }
