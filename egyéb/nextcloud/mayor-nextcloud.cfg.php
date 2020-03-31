@@ -60,6 +60,7 @@ Ezen probléma kivédésére született ez, az alábbi megoldás:
 
 A tanátoknak a szerver automatikusan létrehoz egy, a távoktatásra használatos gyűjtőmappát, ebbe a mappába létrehozza a tanár által tanított (e-napló szerint) tanköröknek megfelelő mappákat automatikusan.
 
+
 A használati szabályok:
 1) A tanár ezekbe a mappákba helyezi/helyezheti el a diákoknak szánt fájlokat.
 2) A tanár ezeket a mappákat osztja meg a diákcsoportokkal.
@@ -69,11 +70,14 @@ A használati szabályok:
 6) A tankörmappák gyűjtőmappájában a rendet a szerver tartja, oda egyéb fájl, nem helyezhető.  Ha mégis kerülne oda egyéb fájl akkor, arról a szerver, a tanárt először értesíti, majd később a fájt automatikusan törli.
 
 
+
 Legyen egy gyakorlati példa:
 A tanár mappalistájában létrejön a gyűjtőmappa mondjuk: "Iskolai Távoktatás" névvel.
 Ezen, a "Iskolai Távoktatás" nevű mappán belül létrejön mondjuk, egy "(tk) 10.b fizika" és egy "(tk) 10.b osztályfőnöki" mappa.
 
 A tanár szabadon használhatja a   "(tk) 10.b fizika"   és a   "(tk) 10.b osztályfőnöki" mappákat, azokat szabadon megoszthatja, bele fájlokat helyezhet, belőlük fájlokat törölhet, ha engedélyezi a szerkesztést, akkor a diák is helyezhet bele fájlokat, vagy szerkesztheti*** a fájlokat.
+Ha a tankörmappát megosztja a diákkal/tankörrel, akkor a diáknak nem egy csomó fájl, és nem is az "Iskolai Távoktatás" mappa fog megjelenni a kezdőoldalán, hanem az adott tankörmappa. Tehát, ha a tanár a "(tk) 10.b fizika" mappát osztja meg, akkor a diák, a kezdőoldalán a "(tk) 10.b fizika" mappát fogja találni, és benne a tanár által hozzáadott fájlokat.
+
 
 Viszont a "Iskolai Távoktatás" nevű mappában csak! a  "(tk) 10.b fizika"   és a   "(tk) 10.b osztályfőnöki" mappák lehetnek, más fájl, vagy mappa, nem! 
 Ha mégis kerülne oda egyéb fájl, vagy mappa, akkor arról először értesíti a tanárt, majd a 3. értesítést követően, a nem odaillő fájlokat, vagy mappákat automatikusan törli.
@@ -84,6 +88,7 @@ Ugyanez történik akkor is, ha a tanár, (a naplóban) kikerül a tankörből, 
 
 Természetesen a tanárnak lehetősége van az idegennek minősített mappákat, és azok tartalmát a "Iskolai Távoktatás" mappán kívülre, a saját mappái közé áthelyezni,  vagy az idegennek minősített mappák tartalmát egy másik, már "elfogadott" tankörmappába tenni.
 (Ez utóbbit kell tenni, vagyis a tanárnak kézzel áthelyezni a fájlokat az egyik tankörmappából, az új tankörmappába, amikor évváltás van, és a tankör ugrik egyet "(tk) 10.b fizika"  --> "(tk) 11.b fizika". )
+
 
 
 
