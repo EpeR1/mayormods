@@ -40,7 +40,7 @@ $m2n['verbose'] = 3 ;
 $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
 $ALWAYS_SET_DIAK_QUOTA = false; 
-$groupdir_user = "naploadmin";
+$groupdir_user = "";
 $cfgfile = realpath(pathinfo($argv[0])['dirname'])."/"."mayor-nextcloud.cfg.php";  // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
 if( file_exists($cfgfile)===TRUE ){     include($cfgfile);  }
 
@@ -355,6 +355,14 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     function create_dir($user, $path){	    // Készít egy mappát a: data/$user/files/$path alá
         global $occ_user, $occ_path,$log;
         $ret = false;
+        if(!file_exists($occ_path."/data/".$user."/files/")){               // Ha Még nincs home könyvtára sem
+            $ret = mkdir($occ_path."/data/".$user."/files/", 0755, true);   // Akkor létrehozza
+            chown($occ_path."/data/".$user, $occ_user);
+            chgrp($occ_path."/data/".$user, $occ_user);
+            chown($occ_path."/data/".$user."/files/", $occ_user);
+            chgrp($occ_path."/data/".$user."/files/", $occ_user);
+            if($log['verbose'] > 5) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/"."\" \t created.\n"; }
+        }
         if(!file_exists($occ_path."/data/".$user."/files/".$path)){                      // Ha Még mindig nen könyvtár
             $ret = mkdir($occ_path."/data/".$user."/files/".$path, 0755, true);            // Akkor létrehozza
             chown($occ_path."/data/".$user."/files/".$path, $occ_user);
@@ -383,7 +391,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function files_scan($user, $path ){             // Nextcloud files:scan
         global $occ_user, $occ_path,$log;
-        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" files:scan --path=\"".$user."/files/".$path."\"   '";
+        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" files:scan --path=\"".$user."/files/".$path."\"   '";  // -v 
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         shell_exec($e);
     }
@@ -809,7 +817,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
         }
     }
-   // usort($mayor_user, "mayor_userlistcmp");        //ha a megfigyelo helyesen van egy rendezett lista végén, nem kell ismét rendezni
+
+    usort($mayor_user, "mayor_userlistcmp");        //ha a megfigyelo helyesen van egy rendezett lista végén, nem kell ismét rendezni
     $mayor_user = array_merge($mayor_user, array(array('userAccount' => null, 'fullName' => null, 'tankorNev' => null, 'diakId' => 0, 'tanarId' => 0,)) ); //strázsa a lista végére
     $nxt_user = nxt_user_list();
     $nxt_group = nxt_group_list();
@@ -907,7 +916,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                         if ($log['verbose'] > 2 ){ echo "* -\t\tHozzáadva a:".po("\t $val3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n"; }
                         if($key3 != $m2n['mindenki_tanar'] && $key3 != $m2n['mindenki_diak'] && $key3 != $m2n['mindenki_tanar']){   //Ezekre a csoportokra minek?
                             $ret = groupdir_create_groupdir($curr, $curr_tanarId, $m2n['groupdir_prefix']."/".$val3);
-                            if ($ret === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\tÚj mappa Létrehozva:".po("\t/".$key3."/",$m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappa\n";}
+                            if ($ret === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\tÚj mappa Létrehozva:".po("\t/".$val3."/",$m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappa\n";}
                         }
                     }
                 } 

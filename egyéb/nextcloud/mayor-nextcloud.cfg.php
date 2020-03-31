@@ -86,6 +86,7 @@ Természetesen a tanárnak lehetősége van az idegennek minősített mappákat,
 (Ez utóbbit kell tenni, vagyis a tanárnak kézzel áthelyezni a fájlokat az egyik tankörmappából, az új tankörmappába, amikor évváltás van, és a tankör ugrik egyet "(tk) 10.b fizika"  --> "(tk) 11.b fizika". )
 
 
+
 *** Tipp:
 1)
 Ha szeretnénk biztosra menni, és elkerülni, hogy a diák, a tanár által, az összes diáknak  küldött fájlokba véletlenül beleszerkesszen, hozzunk létre egy egy "beadás", vagy  hasonló nevű mappát a tankörmappán belül, és csak erre a "beadás" mappára adjuk meg a jogot a diáknak/diákcsoportnak/tankörnek szerkesztésre/módosításra.
