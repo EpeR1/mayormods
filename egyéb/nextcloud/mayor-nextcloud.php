@@ -916,7 +916,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                         if ($log['verbose'] > 2 ){ echo "* -\t\tHozzáadva a:".po("\t $val3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n"; }
                         if($val3 != $m2n['mindenki_tanar'] && $val3 != $m2n['mindenki_diak'] && $val3 != $m2n['mindenki_tanar']){   //Ezekre a csoportokra minek mappa?
                             $ret = groupdir_create_groupdir($curr, $curr_tanarId, $m2n['groupdir_prefix']."/".$val3);
-                            if ($ret === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\tÚj mappa Létrehozva:".po("\t/".$val3."/",$m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappa\n";}
+                            if ($ret === true && $log['verbose'] > 2 ){echo "* -\tÚj mappa Létrehozva:".po("\t/".$val3."/",$m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappa\n";}
                         }
                     }
                 } 
