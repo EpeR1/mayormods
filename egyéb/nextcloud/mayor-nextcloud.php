@@ -390,7 +390,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function user_notify($user, $msg, $title ){             // Nextcloud files:scan
         global $occ_user, $occ_path, $log;
-        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" notification:generate -l \"".$msg."\" -- ".$user." ".$title."'";
+        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" notification:generate -l \"".$msg."\" -- ".$user." \"".$title."\" '";
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         shell_exec($e);
     }
@@ -421,10 +421,10 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 } else {    //Nem mappa, vagy nem üres
                     if( @unlink($occ_path."/data/".$user."/files/".$path."/".$val.".please-remove") === true && $log['verbose'] > 0 ){   // Már az xxxx.backup is foglalt...
                         echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" deleted!!!\n"; 
-                        user_notify($user,"Fájl: $val \nIllegális helyen, és útban volt. \nAutomata által törölve.", "Fájl: $val törölve!");
+                        user_notify($user,"Fájl: ".$val." Illegális helyen, volt. Automata által törölve.", "Fájl: ".$val." törölve!");
                     }
-                    $ret[1] = rename($occ_path."/data/".$user."/files/".$path."/".basename($val, '.please-remove'), $occ_path."/data/".$user."/files/".$path."/".$val.".please-remove");
-                    user_notify($user,"Az ön $path könyvtárában\\nTiltott helyen lévő fáj található,\\n vagy olyan tankörmappa,\\n amely tankörnek ön továbbá nem tagja. \\n Kérem távolítsa el! \\nBiztonság kedvéért átnevezve:\\n($val.please-remove)", "Fájl/Mappa rossz helyen! \\n($val)");
+                    $ret[1] = rename($occ_path."/data/".$user."/files/".$path."/".$val, $occ_path."/data/".$user."/files/".$path."/".basename($val, '.please-remove').".please-remove");
+                    user_notify($user,"Az ön \"".$path."/\" könyvtárában Tiltott helyen lévő fáj található, vagy olyan tankör-mappa, amely tankörnek ön továbbá már nem tagja. \t Kérem távolítsa el! \t Biztonság kedvéért átnevezve:   ".basename($val, '.please-remove').".please-remove", "Fájl/Mappa rossz helyen! ".basename($val, '.please-remove') );
                 }
             }
         }
