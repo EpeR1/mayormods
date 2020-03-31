@@ -359,7 +359,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             $ret = mkdir($occ_path."/data/".$user."/files/".$path, 0755, true);            // Akkor létrehozza
             chown($occ_path."/data/".$user."/files/".$path, $occ_user);
             chgrp($occ_path."/data/".$user."/files/".$path, $occ_user);
-            if($log['verbose'] > 5) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."\" created.\n"; }
+            if($log['verbose'] > 5) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."\" \t created.\n"; }
         }
         return $ret;
     }
@@ -374,9 +374,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             fclose($h);
             chown($occ_path."/data/".$user."/files/".$path, $occ_user);
             chgrp($occ_path."/data/".$user."/files/".$path, $occ_user);
-            if($log['verbose'] > 5) { echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."\" created.\n"; }
+            if($log['verbose'] > 5) { echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."\" \t created.\n"; }
         } else {
-            if($log['verbose'] > 5) { echo "php ->\tERROR: \"".pathinfo($occ_path."/data/".$user."/files/".$path)['dirname']."\" dir not found.\n"; }
+            if($log['verbose'] > 5) { echo "php ->\tERROR: \"".pathinfo($occ_path."/data/".$user."/files/".$path)['dirname']."\" \t dir not found.\n"; }
         }
         return $ret;
     }
@@ -421,10 +421,10 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 } else {    //Nem mappa, vagy nem üres
                     if( @unlink($occ_path."/data/".$user."/files/".$path."/".$val.".please-remove") === true && $log['verbose'] > 0 ){   // Már az xxxx.backup is foglalt...
                         echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" deleted!!!\n"; 
-                        user_notify($user,"Fájl: ".$val." Illegális helyen, volt. Automata által törölve.", "Fájl: ".$val." törölve!");
+                        user_notify($user,"Fájl: ".$val.".please-remove Illegális helyen, volt. Automata által törölve.", "Fájl: ".$val.".please-remove törölve!");
                     }
                     $ret[1] = rename($occ_path."/data/".$user."/files/".$path."/".$val, $occ_path."/data/".$user."/files/".$path."/".basename($val, '.please-remove').".please-remove");
-                    user_notify($user,"Az ön >>".$path."/<< könyvtárában tiltott helyen lévő fáj található, vagy olyan tankör-mappa, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy távolítsa el belőle!   Biztonság kedvéért átnevezve, új neve -->   ".basename($val, '.please-remove').".please-remove", "Fájl/Mappa rossz helyen! --> ".$path."/".basename($val, '.please-remove').".please-remove" );
+                    user_notify($user,"Az ön >>".$path."/<< könyvtárában tiltott helyen lévő fáj található, vagy olyan tankör-mappa, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy törölje belőle!   Biztonság kedvéért átnevezve, új neve -->   ".basename($val, '.please-remove').".please-remove", "Fájl/Mappa rossz helyen! --> ".$path."/".basename($val, '.please-remove').".please-remove" );
                 }
             }
         }
@@ -440,7 +440,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             if(is_file($occ_path."/data/".$user."/files/".$path) || is_link($occ_path."/data/".$user."/files/".$path)){     //Ha már vam ott valami ilyen fájl 
                 if(@unlink( $occ_path."/data/".$user."/files/".$path."backup") && $log['verbose'] > 0  ){                   //Helyet csinál a backupnak (sorry)
                     rename($occ_path."/data/".$user."/files/".$path, $occ_path."/data/".$user."/files/".$path."backup");    //Átnevezi, hogy azért mégse vasszen oda
-                    echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."\" deleted!!!\n"; 
+                    echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."\" \t \t deleted!!!\n"; 
                     user_notify($user,"Fájl: $val \nIllegális helyen, és útban volt. \nAutomata által törölve.", "Fájl: $val törölve!");
                 }
             } 
