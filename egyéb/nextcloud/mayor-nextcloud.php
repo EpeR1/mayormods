@@ -462,12 +462,12 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         global $groupdir_user, $m2n;
         $ret = array(false,false,false);
         if(($groupdir_user === "" || ($groupdir_user !== "" && $user == $groupdir_user)) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   
-            if(isset($tankrei)) {
+            if(isset($tankorei)) {
                 clean_dir($user, $path, $tankorei);
-                $ret[0] = true;
+                $ret[0] = true;                     // ez még elég kezdetleges... 
             }
             files_scan($user, $path);                                              // Tankörmappa gyökér létrehozása
-            $ret[3] = true;
+            $ret[2] = true;
         }     
         return $ret;
     }
@@ -869,7 +869,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                      
                     $ret = groupdir_finish($curr, $curr_tanarId, $m2n['groupdir_prefix'], $tankorei);
                     if ($ret[0] === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tKitisztítva:".po("\t".$m2n['groupdir_prefix'], $m2n['csoportnev_hossz'],1)."\tfiles/".$m2n['groupdir_prefix']."/\n";}
-                    if ($ret[3] === true && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tNXT-rescan :".po("\t".$m2n['groupdir_prefix'], $m2n['csoportnev_hossz'],1)."\tfiles/".$m2n['groupdir_prefix']."/\n";}
+                    if ($ret[2] === true && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tNXT-rescan :".po("\t".$m2n['groupdir_prefix'], $m2n['csoportnev_hossz'],1)."\tfiles/".$m2n['groupdir_prefix']."/\n";}
                     
                     break;
                 }       
@@ -896,7 +896,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     }
                 } 
                 $ret = groupdir_finish($curr, $curr_tanarId, $m2n['groupdir_prefix'], null);                                     
-                if ($ret[3] === true && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tNXT-rescan :".po("\t".$m2n['groupdir_prefix'], $m2n['csoportnev_hossz'],1)."\tfiles/".$m2n['groupdir_prefix']."/\n";}
+                if ($ret[2] === true && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tNXT-rescan :".po("\t".$m2n['groupdir_prefix'], $m2n['csoportnev_hossz'],1)."\tfiles/".$m2n['groupdir_prefix']."/\n";}
 
 
 
