@@ -235,7 +235,14 @@
 
 	$_napok = getNapok(array('tolDt'=>$tolDt,'igDt'=>$igDt));
 	for ($i=0; $i<count($_napok); $i++) {
+	    $_dt = $_napok[$i];
 	    $ADAT['napok'][($i+1)] = getNapAdat($_napok[$i]);
+	    if ($diakId>0) {
+		$lr = db_connect('naplo');
+		$_HF = getDiakHazifeladatByHatarido($diakId,array('hazifeladatHataridoDt'=>$_dt),$lr);
+		if (is_array($_HF) && count($_HF)>0) $ADAT['hazifeladat'][$_dt] = $_HF;
+		db_close($lr);
+	    }
 	}
 
         if (_POLICY!='public' && is_array($TANKOROK)) {

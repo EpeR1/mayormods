@@ -24,11 +24,7 @@
     function putOrarend($ADAT) {
 	global $aHetNapjai,$skin;
 
-	// $ADAT['utolsoorak'][$teremId]['oraId']
-
-
 	/* Képzés-Mátrix */
-	//dump($ADAT['kepzesOraterv']);
 	if (is_array($ADAT['kepzesOraterv']) && count($ADAT['kepzesOraterv'])>0) {
 	    $kepzes_figyel = true;
 	    $KEPZES_MATRIX[2]=$ADAT['kepzesOraterv']['első nyelv']['sum'];
@@ -37,7 +33,6 @@
 		+$ADAT['kepzesOraterv']['kötelezően választható']['sum']
 		+$ADAT['kepzesOraterv']['szabadon választható']['sum']
 	    ;
-	    //dump($KEPZES_MATRIX);
 	} else $kepzes_figyel = false;
 	// ----------------
 	$multiTelephely = (count($ADAT['orarend']['telephelyIdk'])>1);
@@ -152,10 +147,10 @@
 		}
 		echo '<tbody>'."\n";
 //		echo '<caption>'.$het.'. heti órarend</caption>';
-		if (count($ADAT['dolgozat']['tervezett'])>0 || count($ADAT['jegyzet'])>0) { $_jegyzetSorCss = ''; } else { $_jegyzetSorStyle = 'display:none;'; }
+		if (count($ADAT['dolgozat']['tervezett'])>0 || count($ADAT['jegyzet'])>0 || (is_array($ADAT['hazifeladat']) && count($ADAT['hazifeladat'])>0)) { $_jegyzetSorCss = ''; } else { $_jegyzetSorStyle = 'display:none;'; }
 		echo '<tr id="orarendJegyzetSor" class="orarendJegyzetSor" style="'.$_jegyzetSorStyle.'">';
 			echo '<th>';
-			    echo 'dolgozatok, jegyzetek';
+			    echo 'dolgozatok, jegyzetek, határidők';
 			    // echo '<span class="icon-info-sign"></span>';
 			echo '</th>';
 			for ($nap=1;$nap<=$ADAT['hetiMaxNap'];$nap++) {
@@ -192,6 +187,30 @@
 					echo '</div>';
 				    }
 				}
+
+				//for ($d=0; $d<count($ADAT['hazifeladat'][$dt]); $d++) {
+				    if (is_array($ADAT['hazifeladat'][$dt]) && count($ADAT['hazifeladat'][$dt])>0) {
+					for ($_h=0; $_h<count($ADAT['hazifeladat'][$dt]); $_h++) {
+					    $_HF = $ADAT['hazifeladat'][$dt][$_h];
+					    $_oraId = $_HF['oraId'];
+					    $_str = '';
+					    // hazifeladatDiakStatus, diakLattamDt, tanarLattamDt, hazifeladatFeltoltesiEngedely
+					    if ($_HF['hazifeladatFeltoltesEngedely']) {
+						if ($_HF['tanarLattamDt']!='') { $_hfIcon = 'icon-ok-sign'; $_str = 'elfogadva'; } 
+						elseif ($_HF['hazifeladatDiakStatus']!='') { $_hfIcon = 'icon-ok-circle'; $_str = 'feltöltve';} 
+						else {$_hfIcon = 'icon-paper-clip-alt';	$_str = 'leadási határidő';}
+					    } else {
+						if ($_HF['tanarLattamDt']!='') { $_hfIcon = 'icon-ok'; $_str = 'elfogadva';}
+						elseif ($_HF['hazifeladatDiakStatus']!='') { $_hfIcon = 'icon-ok-circle'; $_str = 'kész';} 
+						else {$_hfIcon = 'icon-home-alt'; $_str='határidő';}
+					    }
+					    if ($_HF['tanarLattamDt']!='') $_hfClass = 'tanarLattam';
+					    elseif ($_HF['hazifeladatDiakStatus']!='') $_hfClass = 'diakKesz';
+					    else $_hfClass = '';
+					    echo '<div class="hazifeladat oraAdat '.$_hfClass.'" data-oraid="'.$_oraId.'" data-hazifeladatid="'.$x.'"><span class="'.$_hfIcon.'"></span>házifeladat '.$_str.'<br/>'.$_HF['tankorNev'].'</div>';
+					}
+				    }
+				//}
 			    echo '</td>';
 			}
 		echo '</tr>';
@@ -272,6 +291,11 @@
 					    } else { $_hfcolor = '#e91e63'; }
 					}
 					echo '<span class="'.$_icon.'" title="h.f." style="color:'.$_hfcolor.'; padding-right:2px;"></span>';
+				    }
+
+				    if ($_ORA['cimkeLeiras']!='') {
+					$_cimkeMod = intval($_ORA['cimkeId']) % 5;
+					echo '<span class="cimke cimke_'.$_cimkeMod.'">'.$_ORA['cimkeLeiras'].'</span>';
 				    }
 
 				    if (is_array($_hianyzasAdat)) {

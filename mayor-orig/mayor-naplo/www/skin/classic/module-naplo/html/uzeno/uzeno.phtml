@@ -124,7 +124,8 @@
 		    $href_szal = href('index.php?page=naplo&sub=uzeno&f=uzeno&szalId='.$D['feladoId'].'_'.$D['feladoTipus'].'_'.$D['cimzettId'].'_'.$D['cimzettTipus'].'&mId='.$D['mId'],array('sessionID','lang','policy'));
 
 		    // $D['txt'] = '<a href="'.$href_szal.'">'.nl2br(htmlspecialchars($D['txt'])).'</a>';
-		    $D['txt'] = makelinksclickable(nl2br(supertext($D['txt'])));
+		    // $D['txt'] = makelinksclickable(nl2br(supertext($D['txt'])));
+		    $D['txt'] = (nl2br(supertext($D['txt'])));
 		    echo (mb_substr($D['txt'],0,2000,'UTF-8'));
 		    if (mb_strlen($D['txt'],'UTF-8')>2000) {
 			echo ' <a class="more" href="'.$href.'">...</a>';

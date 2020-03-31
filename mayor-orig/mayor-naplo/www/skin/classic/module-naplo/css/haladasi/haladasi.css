@@ -316,6 +316,13 @@
 
     td.cimke { text-align:center; white-space: wrap; background-color: rgba(255,255,255,0.3);}
     td.cimke span.cimke {background-color: orange; color:white; font-size:x-small; padding:0px 2px; border-radius: 2px; margin:2px;}
+    td.cimke span.cimke_0 { background-color: #4caf50; }
+    td.cimke span.cimke_1 { background-color: red; }
+    td.cimke span.cimke_2 { background-color: orange; }
+    td.cimke span.cimke_3 { background-color: #3f51b5; }
+    td.cimke span.cimke_4 { background-color: #673ab7; }
+
+
 }
 @media print {
     table.haladasiBejegyzesek thead tr th { border-bottom: solid 1px black;}

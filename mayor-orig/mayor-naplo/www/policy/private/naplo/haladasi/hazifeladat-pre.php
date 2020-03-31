@@ -53,21 +53,32 @@
     $values = array($ADAT['oraId']);
     $ADAT['hazifeladatId'] = $hazifeladatId = db_query($q, array('modul'=>'naplo','result'=>'value','values'=>$values));
     $ADAT['oraAdat'] = getOraadatById($oraId);
+    $ADAT['oraAdat']['oraBeirhato'] = oraBeirhato($ADAT['oraAdat']['oraId']);
     $ADAT['nevsor'] = getTankorDiakjaiByInterval($ADAT['oraAdat']['tankorId'], __TANEV, $ADAT['oraAdat']['dt'], $ADAT['oraAdat']['dt']);
-
+    $ADAT['kovetkezoOraAdat'] = getKovetkezoOraAdatByOraId($ADAT['oraAdat']['oraId']);
     if (__TANAR===true && $action=='hazifeladatBeiras') {
+	$hazifeladatHataridoDt = readVariable($_POST['hazifeladatHataridoDt'],'datetime',null);
 	$hazifeladatFeltoltesEngedely = readVariable($_POST['hazifeladatFeltoltesEngedely'],'id',0);
 	if ($hazifeladatId>0) { // update
-	    $q = "UPDATE oraHazifeladat set hazifeladatLeiras='%s',hazifeladatFeltoltesEngedely=%u WHERE hazifeladatId=%u";
-	    $values = array($ADAT['hazifeladatLeiras'],$hazifeladatFeltoltesEngedely,$ADAT['hazifeladatId']);
-	    $r = db_query($q, array('modul'=>'naplo','result'=>'update','values'=>$values));
+	    if (is_null($hazifeladatHataridoDt)) {
+		$q = "UPDATE oraHazifeladat set hazifeladatLeiras='%s',hazifeladatFeltoltesEngedely=%u WHERE hazifeladatId=%u";
+		$values = array($ADAT['hazifeladatLeiras'],$hazifeladatFeltoltesEngedely,$ADAT['hazifeladatId']);
+	    } else {
+		$q = "UPDATE oraHazifeladat set hazifeladatLeiras='%s',hazifeladatFeltoltesEngedely=%u,hazifeladatHataridoDt='%s' WHERE hazifeladatId=%u";
+		$values = array($ADAT['hazifeladatLeiras'],$hazifeladatFeltoltesEngedely,$hazifeladatHataridoDt,$ADAT['hazifeladatId']);
+	    }
+	    $r = db_query($q, array('debug'=>false,'modul'=>'naplo','result'=>'update','values'=>$values));
 	} elseif ($oraId>0) { // insert
-	    $q = "INSERT IGNORE INTO oraHazifeladat (hazifeladatLeiras,oraId,hazifeladatFeltoltesEngedely) VALUES ('%s',%u,%u)";
-	    $values = array($ADAT['hazifeladatLeiras'],$ADAT['oraId'],$hazifeladatFeltoltesEngedely);
+	    if (is_null($hazifeladatHataridoDt)) {
+		$q = "INSERT IGNORE INTO oraHazifeladat (hazifeladatLeiras,oraId,hazifeladatFeltoltesEngedely) VALUES ('%s',%u,%u)";
+		$values = array($ADAT['hazifeladatLeiras'],$ADAT['oraId'],$hazifeladatFeltoltesEngedely);
+	    } else {
+		$q = "INSERT IGNORE INTO oraHazifeladat (hazifeladatLeiras,oraId,hazifeladatFeltoltesEngedely,hazifeladatHataridoDt) VALUES ('%s',%u,%u,'%s')";
+		$values = array($ADAT['hazifeladatLeiras'],$ADAT['oraId'],$hazifeladatFeltoltesEngedely,$hazifeladatHataridoDt);
+	    }
 	    $hazifeladatId = db_query($q, array('modul'=>'naplo','result'=>'insert','values'=>$values));
-
 	}
-	if ($oraId>0 && strtotime(date('Y-m-d'))>=strtotime($ADAT['oraAdat']['dt'])) {
+	if ($oraId>0 && $ADAT['oraAdat']['oraBeirhato']===true ) {
 	    $leiras = readVariable($_POST['oraLeiras'],'string');
 	    updateHaladasiNaploOra($oraId, $leiras);
 	}
@@ -105,9 +116,11 @@
 	}
 
 	if ($diakId>0) {
-	    $q = "INSERT IGNORE INTO oraHazifeladatDiak (hazifeladatId,diakId,diakLattamDt) VALUES (%u,%u,NOW())";
-	    $values = array($ADAT['hazifeladatId'], $diakId);
-	    db_query($q, array('modul'=>'naplo','result'=>'insert','values'=>$values));
+	    // $q = "INSERT IGNORE INTO oraHazifeladatDiak (hazifeladatId,diakId,diakLattamDt) VALUES (%u,%u,NOW())";
+	    // $values = array($ADAT['hazifeladatId'], $diakId);
+	    // db_query($q, array('modul'=>'naplo','result'=>'insert','values'=>$values));
+
+	    oraHazifeladatDiakLatta($ADAT['hazifeladatId']);
 
 	    if ($action=='hazifeladatKesz') {
 		if ($diakId>0 && $ADAT['hazifeladatId']>0) {
@@ -168,6 +181,7 @@
 	$ADAT['hazifeladatDiak'] =  db_query($q, array('debug'=>false,'modul'=>'naplo','result'=>'indexed','values'=>$values));
     }
     $ADAT['oraAdat'] = getOraadatById($oraId);
+    $ADAT['oraAdat']['oraBeirhato'] = oraBeirhato($ADAT['oraAdat']['oraId']);
 
     $TOOL['vissza'] = array('tipus'=>'vissza',
         'paramName'=>'vissza',

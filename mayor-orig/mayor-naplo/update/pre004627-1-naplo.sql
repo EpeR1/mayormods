@@ -10,8 +10,8 @@ IF NOT EXISTS (
 ) THEN
 
 CREATE TABLE `oraHazifeladatDiak` (
-  `hazifeladatId` int(10) unsigned DEFAULT NULL,
-  `diakId` int(10) unsigned DEFAULT NULL,
+  `hazifeladatId` int(10) unsigned NOT NULL,
+  `diakId` int(10) unsigned NOT NULL,
   `diakLattamDt` datetime DEFAULT NULL,
   `tanarLattamDt` datetime DEFAULT NULL,
   `hazifeladatDiakStatus` ENUM('','kész') DEFAULT '',

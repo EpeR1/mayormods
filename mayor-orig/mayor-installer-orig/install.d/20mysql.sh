@@ -26,3 +26,9 @@ then
     echo -n "  futtatom a mysql_Secure_installation scriptet: "
     mysql_secure_installation
 fi
+if [ "x${RELEASE}" == "x10" ]
+then
+    echo -e "\nMariaDB/MySQL beállítások"
+    echo -n "  futtatom a mysql_Secure_installation scriptet: "
+    mysql_secure_installation
+fi

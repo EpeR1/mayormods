@@ -49,12 +49,27 @@ try {
     // You should name it uniquely.
     // DO NOT USE $_FILES['upfile']['name'] WITHOUT ANY VALIDATION !!
     // On this example, obtain safe unique name from its binary data.
+
+    // define('CLAMAV_ENABLED',true);
+    if (CLAMAV_ENABLED === true) {
+	$safePath = escapeshellarg($_FILES['upfile']['tmp_name']);
+	$command = "clamdscan --quiet --stdout --fdpass ".$safePath." --remove"; // --remove
+	$out = '';
+	$int = -1;
+	exec($command, $out, $int);
+	if ($int!==0) {
+	    if (file_exists($safePath)) unlink($safePath);
+    	    throw new RuntimeException('Szerintünk ez vírusos!!!');    
+	}
+    }
+
     if (!move_uploaded_file($_FILES['upfile']['tmp_name'],$ADAT['subdir'].'/'.$ADAT['filename'])) {
         throw new RuntimeException('Nem tudtuk átmozgatni. Van jogunk írni a célkönyvtárba?');
     }
 
     } catch (RuntimeException $e) {
 	$_SESSION['alert'][] = 'info::'.$e->getMessage();
+	return false;
     }
     return true;
 
