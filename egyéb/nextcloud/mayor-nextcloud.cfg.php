@@ -94,7 +94,7 @@ Természetesen a tanárnak lehetősége van az idegennek minősített mappákat,
 
 *** Tipp:
 1)
-Ha szeretnénk biztosra menni, és elkerülni, hogy a diák, a tanár által, az összes diáknak  küldött fájlokba véletlenül beleszerkesszen, hozzunk létre egy egy "beadás", vagy  hasonló nevű mappát a tankörmappán belül, és csak erre a "beadás" mappára adjuk meg a jogot a diáknak/diákcsoportnak/tankörnek szerkesztésre/módosításra.
+Ha szeretnénk biztosra menni, és elkerülni, hogy a diák, a tanár által, az egész tankörnek küldött fájlokba véletlenül beleszerkesszen, hozzunk létre egy egy "beadás", vagy  hasonló nevű mappát a tankörmappán belül, és csak erre a "beadás" mappára adjuk meg a jogot a diáknak/diákcsoportnak/tankörnek szerkesztésre/módosításra.
 
 2)
 Ha videófájlokat szeretnénk feltölteni nagy mennyiségben, akkor hozzunk létre az adott tankörhöz tartozó tankörmappában egy "Videók" nevű mappát, és abba helyezzük el a videófájlokat. A könnyebb megkülönböztethetőség végett nevezzük át a videófájlokat dátum szerinti, fájlnévre, vagy sorszámozzuk őket, és a sorszámot tüntessük föl a fájl nevében!
