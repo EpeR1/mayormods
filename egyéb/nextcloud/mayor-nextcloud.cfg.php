@@ -43,66 +43,51 @@ $m2n['verbose'] = 3 ;
 $occ_path = "/var/www/nextcloud/"; 
 $occ_user = "www-data";
 
+
+
+
 $m2n['infotxt_szöveg'] = <<<EOT
 
-                                 FONTOS INFORMÁCIÓK!
+                    FONTOS INFORMÁCIÓK!
 
 Ez a mappa, és a benne lévő mappák, a távoktatás segítésére, egyszerűsítésére szolgálnak.
 
-Fontos tudni, hogy ha megosztunk egy, a mi mappánkon belüli fájlt, vagy mappát, egy másik felhasználóval a felhőben, 
-akkor a megoszott fájl, vagy mappa, a másik felhasználónak a kezdőoldalán jelenik meg, a fájlok között.
-Egy idő után, ha az illető, már nagyon sok megosztást fogadott, a rengeteg fájl már számára egy átláthatatlan 
-mappa-tengert fog képezni, és nagyon nehéz lesz benne eligazodnia.
+Fontos tudni, hogy ha megosztunk egy, a mi mappánkon belüli fájlt, vagy mappát, egy másik felhasználóval a felhőben, akkor a megosztott fájl, vagy mappa, a másik felhasználónak a kezdőoldalán jelenik meg, a fájlok között.
+Egy idő után, ha az illető, már nagyon sok megosztást fogadott, a rengeteg fájl már számára egy átláthatatlan mappa-tengert fog képezni, és nagyon nehéz lesz benne eligazodnia.
 
 
 Ezen probléma kivédésére született ez, az alábbi megoldás:
 
-A tanátoknak a szerver automatikusan létrehoz egy, a távoktatásra használatos gyűjtőmappát,
-ebbe a mappába létrehozza a tanár által tanított (e-napló szerint) tanköröknek megfelelő mappákat automatikusan.
+A tanátoknak a szerver automatikusan létrehoz egy, a távoktatásra használatos gyűjtőmappát, ebbe a mappába létrehozza a tanár által tanított (e-napló szerint) tanköröknek megfelelő mappákat automatikusan.
 
 A használati szabályok:
 1) A tanár ezekbe a mappákba helyezi/helyezheti el a diákoknak szánt fájlokat.
-2) A tanár ezeket a mappákat oszja meg a diákcsoportokkal.
-3) A diák ezekben a mappákban helyezi el a nyilvánosan visszaküldendő fájlokat, képeket. 
-   (Ezt a mappát, a tankör összes tagja látja, amelyik tankörrel megosztottuk.)
-4) A diák, a privát módon visszaküldendő fájlokat, a tanárral való megegyezés szeint, 
-   lehetőleg ne ebbe a mappába helyezze el, azt egyszerűen ossza meg a tanárával.
+2) A tanár ezeket a mappákat osztja meg a diákcsoportokkal.
+3) A diák ezekben a mappákban helyezi el a nyilvánosan visszaküldendő fájlokat, képeket. (Ezt a mappát, a tankör összes tagja látja, amelyik tankörrel megosztottuk.)
+4) A diák, a privát módon visszaküldendő fájlokat, a tanárral való megegyezés szerint, lehetőleg ne ebbe a mappába helyezze el, azt egyszerűen ossza meg a tanárával.
 5) A Tankörmappákban a  fájlok rendjét a tanár határozza/határozhatja meg.
-6) A tankörmappák gyűjtőmappájában a rendet a szerver tartja, oda egyéb fájl, nem helyezhető.
-   Ha mégis kerülne oda egyéb fájl akkor, arról a szerver, a tanárt először értesíti, majd később a fájt automatikusan törli.
+6) A tankörmappák gyűjtőmappájában a rendet a szerver tartja, oda egyéb fájl, nem helyezhető.  Ha mégis kerülne oda egyéb fájl akkor, arról a szerver, a tanárt először értesíti, majd később a fájt automatikusan törli.
 
 
 Legyen egy gyakorlati példa:
 A tanár mappalistájában létrejön a gyűjtőmappa mondjuk: "Iskolai Távoktatás" névvel.
 Ezen, a "Iskolai Távoktatás" nevű mappán belül létrejön mondjuk, egy "(tk) 10.b fizika" és egy "(tk) 10.b osztályfőnöki" mappa.
 
-A tanár szabadon használhatja a   "(tk) 10.b fizika"   és a   "(tk) 10.b osztályfőnöki" mappákat,
-azokat szabadon megoszthatja, bele fájlokat helyezhet, belőlük fájlokat törölhet,
-ha engedélyezi a szerkesztést, akkor a diák is helyezhet bele fájlokat, vagy szerkeszheti*** a fájlokat.
+A tanár szabadon használhatja a   "(tk) 10.b fizika"   és a   "(tk) 10.b osztályfőnöki" mappákat, azokat szabadon megoszthatja, bele fájlokat helyezhet, belőlük fájlokat törölhet, ha engedélyezi a szerkesztést, akkor a diák is helyezhet bele fájlokat, vagy szerkesztheti*** a fájlokat.
 
-Viszont a "Iskolai Távoktatás" nevű mappában csak! a  "(tk) 10.b fizika"   és a   "(tk) 10.b osztályfőnöki" mappák lehetnek,
-más fájl, vagy mappa, nem! 
-Ha mégis kerülne oda egyéb fájl, vagy mappa, akkor arról először értesíti a tanárt, 
-majd a 3. értesítést követően, a nem odaillő fájlokat, vagy mappákat automatikusan törli.
+Viszont a "Iskolai Távoktatás" nevű mappában csak! a  "(tk) 10.b fizika"   és a   "(tk) 10.b osztályfőnöki" mappák lehetnek, más fájl, vagy mappa, nem! 
+Ha mégis kerülne oda egyéb fájl, vagy mappa, akkor arról először értesíti a tanárt, majd a 3. értesítést követően, a nem odaillő fájlokat, vagy mappákat automatikusan törli.
 
-Ez szintén vonatkozik a korábban itt levő, de átnevezeett mappákra is, tehát, ha 
-a "(tk) 10.b fizika" mappát a tanár véletlenül átnevezné, akkor onnantól azt is "idegen" mappának fogja tekinteni.
+Ez szintén vonatkozik a korábban itt levő, de átnevezett mappákra is, tehát, ha a "(tk) 10.b fizika" mappát a tanár véletlenül átnevezné, akkor onnantól azt is "idegen" mappának fogja tekinteni.
 
-Ugyanez történik akkor is, ha a tanár, (a naplóban) kikerül a tankörből, tehát nem tanítja tovább, 
-vagy a tankör ugrik egyet évkezdéskor, és a "(tk) 10.b fizika"-ból "(tk) 11.b fizika" lesz, 
-ekkor a, még ottmaradó "(tk) 10.b fizika" mappát szintén idegennek fogja tekinteni.
+Ugyanez történik akkor is, ha a tanár, (a naplóban) kikerül a tankörből, tehát nem tanítja tovább, vagy a tankör ugrik egyet évkezdéskor, és a "(tk) 10.b fizika"-ból "(tk) 11.b fizika" lesz, ekkor a, még ottmaradó "(tk) 10.b fizika" mappát szintén idegennek fogja tekinteni.
 
-Természetesen a tanárnak lehetősége van az idegennek minősített mappákat, és azok tartalmát
-a "Iskolai Távoktatás" mappán kívülre, a saját mappái közé áthelyezni, 
-vagy az idegennek minősített mappák tartalmát egy másik, már "elfogadott" tankörmappába tenni.
-(Ez utóbbit kell tenni, vagyis a tanárnak kézzel áthelyezni a fájlokat az egyik tankörmappából, az új tankörmappába, 
- amikor évváltás van, és a tankör ugrik egyet "(tk) 10.b fizika"  --> "(tk) 11.b fizika". )
+Természetesen a tanárnak lehetősége van az idegennek minősített mappákat, és azok tartalmát a "Iskolai Távoktatás" mappán kívülre, a saját mappái közé áthelyezni,  vagy az idegennek minősített mappák tartalmát egy másik, már "elfogadott" tankörmappába tenni.
+(Ez utóbbit kell tenni, vagyis a tanárnak kézzel áthelyezni a fájlokat az egyik tankörmappából, az új tankörmappába, amikor évváltás van, és a tankör ugrik egyet "(tk) 10.b fizika"  --> "(tk) 11.b fizika". )
 
 
 *** Tipp:
-Ha szeretnénk biztosra menni, és elkerülni, hogy a diák, a tanár által, az összes diáknak  küldött fájlokba véletlenül beleszerkesszen,
-hozzunk létre egy egy "beadás", vagy  hasonló nevű mappát a tankörmappán belül, és csak erre a "beadás" mappára adjuk meg a jogot 
-a diáknak/diákcsoportnak/tankörnek szerkesztésre/módosításra.
+Ha szeretnénk biztosra menni, és elkerülni, hogy a diák, a tanár által, az összes diáknak  küldött fájlokba véletlenül beleszerkesszen, hozzunk létre egy egy "beadás", vagy  hasonló nevű mappát a tankörmappán belül, és csak erre a "beadás" mappára adjuk meg a jogot a diáknak/diákcsoportnak/tankörnek szerkesztésre/módosításra.
 
 EOT;
 
@@ -226,6 +211,10 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
     $m2n['zaras_tartas'] =  "2018-06-19";               //A jelölt napon befejezett, de nem lezárt tanév adatainak megtartása. (pl. szeptemberig) 
                                                         // Ha már nem kell, akkor állítsd "1970-01-01"-ra !;
+
+    $m2n['manage_groupdirs'] = false;                   //Ha szerenénk, hogy a script létrehozza a távoktatást segítő tankörmappákat, állítsuk "true"-re!
+
+    $m2n['groupdir_prefix'] = "Iskolai Távoktatás";     //A távoktatást segítő mappák gyüjtőmappája/gyökérkönyvtára.
 							
     $m2n['verbose'] = 3                                 //Log bőbeszédűség      (A leg informatívabb(tömörebb), talán a 3-mas fokozat.)
                                                         // 0: csak fatális hibák, 1: fontosabbak, 2: csop./felh. elvétel, 3: csop./felh. hozzáadás, 
@@ -262,7 +251,7 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 	
 		--loglevel x     :  A scriptbőbeszédűségét, logolását tudjuk ezzel szabályozni, ekkor ez az érték érvényesül, nem a configban megadott.
 
-        --set-diak-quota :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre
+    --set-diak-quota :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre
 
 
 
