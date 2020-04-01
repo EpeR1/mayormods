@@ -147,8 +147,6 @@
 		    }
 
 		    if ($sikeresFeltoltes===true) {
-			// --todo unlink existing?--
-
 			$q = "SELECT hazifeladatDiakFilename FROM oraHazifeladatDiak WHERE hazifeladatId=%u AND diakId=%u";
 			$values = array($ADAT['hazifeladatId'],$diakId);
 			$oldFilename = db_query($q, array('modul'=>'naplo','result'=>'value','values'=>$values));
@@ -158,7 +156,7 @@
 			$origFilename = mb_ereg_replace("([^\w\s\d\-_~,;\[\]\(\).])", '', $_FILES['upfile']['name']);
 			$origFilename = mb_ereg_replace("([\.]{2,})", '', $_FILES['upfile']['name']);
 			if ($origFilename=='') $origFilename = $FILEADAT['filename'];
-			$q = "UPDATE oraHazifeladatDiak SET hazifeladatDiakFilename='%s',hazifeladatDiakOrigFilename='%s' WHERE hazifeladatId=%u AND diakId=%u";
+			$q = "UPDATE oraHazifeladatDiak SET hazifeladatDiakFilename='%s',hazifeladatDiakOrigFilename='%s',hazifeladatDiakFileDt=NOW() WHERE hazifeladatId=%u AND diakId=%u";
 			$values = array($FILEADAT['filename'],$origFilename,$ADAT['hazifeladatId'], $diakId);
 			db_query($q, array('modul'=>'naplo','result'=>'update','values'=>$values));
 		    }

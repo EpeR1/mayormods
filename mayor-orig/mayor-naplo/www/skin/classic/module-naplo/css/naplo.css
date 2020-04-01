@@ -212,6 +212,10 @@
     #updateWindowSideContent ul li a:hover,#updateWindowSideSubContent ul li a:hover { color:#999 }
     #updateWindowSideTitle a:hover,	#updateWindowSideSubTitle a:hover { color:#999 }
 
+    div.sideOraAdatHazifeladat {border-left: solid 0px #888; padding: 4px; background-color: #e91e63; font-size: x-small;}
+    div.sideOraAdatHazifeladat a { text-decoration:underline; }
+    div.sideOraAdatHazifeladat a:hover { font-style:italic; }
+
 /*    #updateWindowSide h3:before { font-family: 'Elusive-Icons'; font-size:10px; content: "\e0a4"; padding-right:8px;font-weight:100; }*/
 
     .updateWindowSide button.mentes,    .updateWindowSide button.torles  { margin: 4px 18px; height:2em; border-radius:2px; border: solid 1px white; color:white; background-color: #2196f3;}

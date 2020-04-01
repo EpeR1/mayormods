@@ -28,6 +28,20 @@
 		    { echo '<p style="color:#aaa;">még nincs kitöltve</p>'; }
 		else 
 		    { echo ($ADAT['hazifeladatAdat']['hazifeladatLeiras']); }
+		if ($ADAT['hazifeladatAdat']['hazifeladatHataridoDt']!='') {
+		    $_lejart = (strtotime(date('Y-m-d H:i:s'))>=strtotime($ADAT['hazifeladatAdat']['hazifeladatHataridoDt']));
+
+echo '<style type="text/css">
+    div.hatarido { background-color: #f5f5f5; border-radius: 2px; padding-top:10px; padding-bottom:10px; padding-left:10px;}
+    div.hatarido.lejart { background-color: #bdbdbd; color: white;}
+</style>
+';
+		    $_icon = ($_lejart) ? 'icon-ban-circle':'icon-time';
+		    $_class = ($_lejart) ? 'hatarido lejart':'hatarido';
+		    echo '<div class="'.$_class.'">';		    
+			echo '<span class="'.$_icon.'"></span> Határidő: '.$ADAT['hazifeladatAdat']['hazifeladatHataridoDt'];
+		    echo '</div>';
+		}
 	    echo '</fieldset>'."\n";
 
 
@@ -64,6 +78,9 @@
 		    echo '<a href="'.$href.'" target="_blank">'.htmlspecialchars($ADAT['hazifeladatDiak']['hazifeladatDiakOrigFilename']).'</a> <span class="icon-paper-clip"></span>';
 		    if ($ADAT['hazifeladatDiak']['tanarLattamDt']!='') {
 			echo ' <span class="icon-ok-sign" style="color: lightgreen"></span> '.$ADAT['hazifeladatDiak']['tanarLattamDt'];
+		    }
+		    if (strtotime($ADAT['hazifeladatDiak']['hazifeladatDiakFileDt']) > strtotime($ADAT['hazifeladatAdat']['hazifeladatHataridoDt'])) {
+			echo '<span class="hataridoUtaniFeltoltes">határidő utáni feltöltés</span>';
 		    }
 		    echo '</li></ul>';
 		}
@@ -202,8 +219,13 @@
 	    echo '<tr>';   
 	    echo '<td class="diakNev diakAdat" data-diakid="'.$diakId.'">'.$ITEM['diakNev'].'</td>';
 	    if (__NAPLOADMIN===true || __VEZETOSEG===true) echo '<td>'.$D['diakLattamDt'].'</td>';
-	    echo '<td colspan="2" class="'.ekezettelen($D['hazifeladatDiakStatus']).'">'.$D['hazifeladatDiakStatus'].'</td>';
+	    echo '<td colspan="1" class="'.ekezettelen($D['hazifeladatDiakStatus']).'">'.$D['hazifeladatDiakStatus'].'</td>';
 	    //echo '<td>'.$D['hazifeladatDiakMegjegyzes'].'</td>';
+	    echo '<td>';
+		    if (strtotime($D['hazifeladatDiakFileDt']) > strtotime($ADAT['hazifeladatAdat']['hazifeladatHataridoDt'])) {
+			echo '<span class="hataridoUtaniFeltoltes">határidő utáni feltöltés</span>';
+		    }
+	    echo '</td>';
 
 	    $ADAT['dir'] = 'naplo/haladasi/hazifeladat';
 	    $ADAT['file'] = $D['hazifeladatDiakFilename'];
@@ -233,54 +255,5 @@
 
     }
 
-    function putHazifeladatDiakOrig($ADAT) {
-
-	if (count($ADAT['hazifeladatDiak'])==0) return false;
-
-	echo formBegin();
-	echo '<input type="hidden" name="action" value="lattam" />';
-	echo '<input type="hidden" name="hazifeladatId" value="'.$ADAT['hazifeladatId'].'" />';
-	echo '<table class="hazifeladatDiak" cellpadding="1" cellspacing="1">';
-	echo '<thead>';
-	    if (__NAPLOADMIN===true || __VEZETOSEG===true)
-		echo '<tr><th>diák</th><th>látta</th><th colspan="2">státusz</th><th colspan="1">csatolmány</th><th>láttam</th></tr>';
-	    else 
-		echo '<tr><th>diák</th><th colspan="2">státusz</th><th colspan="1">csatolmány</th><th>láttam</th></tr>';
-	echo '</thead>';
-	for ($i=0; $i<count($ADAT['hazifeladatDiak']); $i++) {
-	    $D = $ADAT['hazifeladatDiak'][$i];
-	    echo '<tr>';   
-	    echo '<td class="diakNev diakAdat" data-diakid="'.$D['diakId'].'">'.$D['diakNev'].'</td>';
-	    if (__NAPLOADMIN===true || __VEZETOSEG===true) echo '<td>'.$D['diakLattamDt'].'</td>';
-	    echo '<td>'.$D['hazifeladatDiakStatus'].'</td>';
-	    echo '<td>'.$D['hazifeladatDiakMegjegyzes'].'</td>';
-
-	    $ADAT['dir'] = 'naplo/haladasi/hazifeladat';
-	    $ADAT['file'] = $D['hazifeladatDiakFilename'];
-	    $href = href('index.php?page=session&f=download&dir='.$ADAT['dir'].'&file='.$ADAT['file'].'&download=true');
-	    echo '<td>';
-		if ($D['hazifeladatDiakOrigFilename']!='') {
-		    echo '<a href="'.$href.'" target="_blank">'.htmlspecialchars($D['hazifeladatDiakOrigFilename']).'</a> <span class="icon-paper-clip"></span>';
-		}
-	    echo '</td>';
-	    echo '<td style="text-align: center">';
-//		if ($ADAT['hazifeladatDiak']['hazifeladatDiakStatus']=='kész') {
-		if (__TANAR===true) {
-		    if ($D['tanarLattamDt']=='') {
-			echo '<button type="submit" name="lattam[]" value="'.$D['diakId'].'" class="btnLattamStatusz"><span class="icon-ok-sign"></span> láttam!</button>';
-		    } else {
-			echo '<button type="submit" class="btnLattamStatusz lattam"><span class="icon-ok-sign"></span> láttam.</button>';
-		    }
-		} else {
-		    if ($D['tanarLattamDt']!='') {echo '<span class="icon-ok-sign" style="color:lightblue"></span>';}		    
-		}
-//		}
-	    echo '</td>';
-	    echo '</tr>';
-	}
-	echo '</table>';
-	echo formEnd();
-
-    }
 
 ?>
