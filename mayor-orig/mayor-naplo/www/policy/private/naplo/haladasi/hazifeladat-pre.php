@@ -61,7 +61,7 @@
 	$hazifeladatFeltoltesEngedely = readVariable($_POST['hazifeladatFeltoltesEngedely'],'id',0);
 	if ($hazifeladatId>0) { // update
 	    if (is_null($hazifeladatHataridoDt)) {
-		$q = "UPDATE oraHazifeladat set hazifeladatLeiras='%s',hazifeladatFeltoltesEngedely=%u WHERE hazifeladatId=%u";
+		$q = "UPDATE oraHazifeladat set hazifeladatLeiras='%s',hazifeladatFeltoltesEngedely=%u,hazifeladatHataridoDt=NULL WHERE hazifeladatId=%u";
 		$values = array($ADAT['hazifeladatLeiras'],$hazifeladatFeltoltesEngedely,$ADAT['hazifeladatId']);
 	    } else {
 		$q = "UPDATE oraHazifeladat set hazifeladatLeiras='%s',hazifeladatFeltoltesEngedely=%u,hazifeladatHataridoDt='%s' WHERE hazifeladatId=%u";

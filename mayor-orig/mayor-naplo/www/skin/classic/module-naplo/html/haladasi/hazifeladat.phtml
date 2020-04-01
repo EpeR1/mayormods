@@ -79,7 +79,10 @@ echo '<style type="text/css">
 		    if ($ADAT['hazifeladatDiak']['tanarLattamDt']!='') {
 			echo ' <span class="icon-ok-sign" style="color: lightgreen"></span> '.$ADAT['hazifeladatDiak']['tanarLattamDt'];
 		    }
-		    if (strtotime($ADAT['hazifeladatDiak']['hazifeladatDiakFileDt']) > strtotime($ADAT['hazifeladatAdat']['hazifeladatHataridoDt'])) {
+
+		    if ($ADAT['hazifeladatAdat']['hazifeladatHataridoDt']!='' 
+			&& $D['hazifeladatDiakFileDt']!=''
+			&& strtotime($D['hazifeladatDiakFileDt']) > strtotime($ADAT['hazifeladatAdat']['hazifeladatHataridoDt'])) {
 			echo '<span class="hataridoUtaniFeltoltes">határidő utáni feltöltés</span>';
 		    }
 		    echo '</li></ul>';
@@ -222,7 +225,9 @@ echo '<style type="text/css">
 	    echo '<td colspan="1" class="'.ekezettelen($D['hazifeladatDiakStatus']).'">'.$D['hazifeladatDiakStatus'].'</td>';
 	    //echo '<td>'.$D['hazifeladatDiakMegjegyzes'].'</td>';
 	    echo '<td>';
-		    if (strtotime($D['hazifeladatDiakFileDt']) > strtotime($ADAT['hazifeladatAdat']['hazifeladatHataridoDt'])) {
+		    if ($ADAT['hazifeladatAdat']['hazifeladatHataridoDt']!='' 
+			&& $D['hazifeladatDiakFileDt']!=''
+			&& strtotime($D['hazifeladatDiakFileDt']) > strtotime($ADAT['hazifeladatAdat']['hazifeladatHataridoDt'])) {
 			echo '<span class="hataridoUtaniFeltoltes">határidő utáni feltöltés</span>';
 		    }
 	    echo '</td>';
