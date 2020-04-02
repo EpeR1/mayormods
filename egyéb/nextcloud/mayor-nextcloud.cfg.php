@@ -288,10 +288,10 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
     $m2n['mindenki_csop'] = "naplós_felhasználók";      //Legyen egy olyan csoport, amiben "mindenki benne van".
                                                         // ebbe a "mindenki" csoportba minden, a script által létrehozott felhasználó bekerül.
-														
+
     $m2n['mindenki_tanar'] = "naplós_tanárok";          //Legyen egy olyan csoport, amiben minden tanár benne van
                                                         // ebbe a "minden_tanár" csoportba a naplóbeli tanárok kerülnek.
-														
+
     $m2n['mindenki_diak'] = "naplós_diákok";            //Legyen egy olyan csoport, amiben "minden diák" benne van.
                                                         // ebbe a "minden_diák" csoportba a naplóbeli diákok kerülnek.
 
@@ -301,7 +301,7 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
     $m2n['manage_groupdirs'] = false;                   //Ha szerenénk, hogy a script létrehozza a távoktatást segítő tankörmappákat, állítsuk "true"-re!
 
     $m2n['groupdir_prefix'] = "Iskolai Távoktatás";     //A távoktatást segítő mappák gyüjtőmappája/gyökérkönyvtára.
-							
+ 
     $m2n['verbose'] = 3                                 //Log bőbeszédűség      (A leg informatívabb(tömörebb), talán a 3-mas fokozat.)
                                                         // 0: csak fatális hibák, 1: fontosabbak, 2: csop./felh. elvétel, 3: csop./felh. hozzáadás, 
                                                         // 4: csop./felh. állapot, 5: részletesebben, 6: sql query + bash parancsok kiírása is
@@ -314,14 +314,14 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
     $m2n['kihagy'] = array();                           //Lehetőség van egy-egy felhasználó kezelésének letiltására, ezt felsorolásként tehetjük meg.
                                                         // Ekkor a script nem fog foglalkozni, az adott felhasználóval a továbbiakban.
-														//pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
-														
-	$m2n['megfigyelo_user'] = "naplo_robot";            //Lehetőség van egy úgymond "megfigyelő" felhasználó létrehozására.
-														// ez a felhasználó be lesz léptetve az összes csoportba, így az összes üzenetet megkapja, 
+                                                        //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
+                                                        
+    $m2n['megfigyelo_user'] = "naplo_robot";            //Lehetőség van egy úgymond "megfigyelő" felhasználó létrehozására.
+                                                        // ez a felhasználó be lesz léptetve az összes csoportba, így az összes üzenetet megkapja, 
                                                         // és az összes tankörben megosztott fájlt látja, amit a csoportokkal/tankörökkel megosztottak.
 
 
-    CONFIG FILE: "mayor-nextcloud.cfg.php";				//Lehetőség van a konfig exportálására egy külön fájlba, 
+    CONFIG FILE: "mayor-nextcloud.cfg.php";             //Lehetőség van a konfig exportálására egy külön fájlba, 
                                                         // így a mayor-nextcloud scriptet nem kell szerkeszteni, ha frissítés érkezik hozzá.
                                                         // Ez alapértelmezetten a maxor-nextcloud.php -val kell egy könyvtárba legyen.
                                                         
@@ -332,9 +332,9 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
         Az "occ" parancs működését pl. az: (>>> sudo -u www-data php /var/www/nextcloud/occ ) kiadásával ellenőrizzük!
 
 
-		
-	További Paraméterek / Kapcsolók:
-	
+
+    További Paraméterek / Kapcsolók:
+
         --loglevel x     :  A scriptbőbeszédűségét, logolását tudjuk ezzel szabályozni, ekkor ez az érték érvényesül, nem a configban megadott.
 
         --set-diak-quota :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre, 
