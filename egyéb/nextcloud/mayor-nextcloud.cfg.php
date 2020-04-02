@@ -71,21 +71,28 @@ tanított (e-napló szerint) tanköröknek megfelelő mappákat automatikusan.
 
 
 
-A használati szabályok:
+A működési szabályok:
 
 1) A tanár ezekbe a mappákba helyezheti el a diákoknak szánt fájlokat.
+   (Ha akarja, ez nem kötelező, csak segítség.)
 
 2) A tanár ezeket a mappákat osztja meg a diákcsoportokkal.
 
 3) A diák ezekben a mappákban helyezi el a nyilvánosan visszaküldendő 
    fájlokat, képeket. (Ezt a mappát, a tankör összes tagja látja,
-    amelyik tankörrel megosztottuk.)
+   amelyik tankörrel, vagy csoporttal megosztottuk.
+   A megosztást nekünk, kézzel kell elvégezni, az nem történik 
+   meg automatikusan.)
 
 4) A diák, a privát módon visszaküldendő fájlokat, a tanárral való 
    megegyezés szerint, lehetőleg ne ebbe a mappába helyezze el,
-   azt egyszerűen ossza meg a tanárával.
+   hanem azt egyszerűen ossza meg a tanárával, vagy valamilyen 
+   más módon juttassa vissza.
 
-5) A Tankörmappákban a  fájlok rendjét a tanár határozhatja meg.
+5) A Tankörmappákban, a fájlok rendjét a tanár határozhatja meg,
+   viszont, amelyik mappára, vagy alsóbb mappára engedélyezve van 
+   a diák(ok) részére a feltöltés/szerkesztés/törlés, 
+   ott már értelemszerűen nem csak a tanár dönt.
 
 6) A tankörmappák gyűjtőmappájában a rendet a szerver tartja, 
    oda egyéb fájl, nem helyezhető.  
@@ -93,10 +100,11 @@ A használati szabályok:
    és a tanárnak értesítést küld, egészen addig, amíg az "idegen" 
    fájlok tekintetében helyre nem áll a rend.
    Az átnevezéskor, a szerver, a fájl nevét kiegészíti egy
-   "számsorozat.please-remove" utótaggal, ezt, a fájl áthelyezése
-   után már kézzel eltávolíthatjuk. (Az "Átnevezés" gomb segítségével)
+   "számsorozat.please-remove" utótaggal. Ezt az utótagot, a fájl,
+   a gyűjtőmappából történő áthelyezése után már kézzel eltávolíthatjuk. 
+   (Az "Átnevezés" gomb segítségével.)
 
-7) A szerver, a tankörök egyeztetését, az e-naplóval minden nap egyszer, 
+7) A szerver, a tankörök egyeztetését, az e-naplóval, minden nap egyszer, 
    éjfél és hajnali 5 óra között végzi el. Tehát, az iskolatitkárok 
    által elvégzett módosítások, így a tankör-csoportok összerendezése,
    a tankörök, valamint a tanárok és diákok jogviszonyában beálló 
@@ -110,7 +118,8 @@ Legyen egy gyakorlati példa:
 A tanár mappalistájában létrejön a gyűjtőmappa mondjuk: 
 "Iskolai Távoktatás" névvel.
 Ezen, a mappán belül létrejön mondjuk, egy "(tk) 10.b fizika" 
-és egy "(tk) 10.b osztályfőnöki" mappa.
+és egy "(tk) 10.b osztályfőnöki" tankörmappa.
+(Vagyis, a tanár, az e-naplóban ezen tankörök tagja.)
 
 A tanár szabadon használhatja a   "(tk) 10.b fizika"   és a   
 "(tk) 10.b osztályfőnöki" mappákat, azokat szabadon megoszthatja, 
@@ -128,7 +137,7 @@ akkor a diák, a kezdőoldalán a "(tk) 10.b fizika" mappát fogja
 találni, és benne a tanár által hozzáadott fájlokat.
 
 
-Viszont a "Iskolai Távoktatás" nevű mappában csak! a  
+Viszont az "Iskolai Távoktatás" nevű mappában csak! a  
 "(tk) 10.b fizika"   és a   "(tk) 10.b osztályfőnöki" mappák lehetnek, 
 más fájl, vagy mappa, nem!
  
@@ -165,16 +174,16 @@ fájlokat az egyik tankörmappából, az új tankörmappába, amikor
 Ha szeretnénk biztosra menni, és elkerülni, hogy a diák, 
 a tanár által, az egész tankörnek küldött fájlokba véletlenül 
 beleszerkesszen, vagy esetleg töröljön belőlük, hozzunk létre egy 
-"beadás", vagy  hasonló nevű mappát a tankörmappán belül, 
+"beadás", vagy  hasonló nevű mappát, a tankörmappán belül, 
 és csak erre a "beadás" mappára adjuk meg a jogot a 
-diáknak/tankörnek szerkesztésre/módosításra/törlésre.
+diáknak/tankörnek szerkesztésre/módosításra/törlésre/stb..
 
 
 2)
-Ha videófájlokat szeretnénk feltölteni nagy mennyiségben, 
+Ha videó fájlokat szeretnénk feltölteni nagy mennyiségben, 
 akkor hozzunk létre az adott tankörhöz tartozó tankörmappában egy 
-"Videók" nevű mappát, és abba helyezzük el a videófájlokat. 
-A könnyebb megkülönböztethetőség végett nevezzük át a videófájlokat 
+"Videók" nevű mappát, és abba helyezzük el a videó fájlokat. 
+A könnyebb megkülönböztethetőség végett nevezzük át a videó fájlokat 
 dátum szerinti, fájlnévre, vagy sorszámozzuk őket, 
 és a sorszámot tüntessük föl a fájl nevében!
 
@@ -184,7 +193,7 @@ finomhangolnunk, mert nem jönnek automatikusan létre a
 feltöltési/szerkesztési/törlési/stb. engedélyek. 
 
 Tehát, minután megosztottuk egy tankörrel, kattintsunk rá a 
-fektetett "V" betűhöz haonlító ikonra, és a megosztási beállításoknál 
+fektetett "V" betűhöz hasonlító ikonra, és a megosztási beállításoknál 
 engedélyezzük a feltöltést/szerkesztést/törlést/továbbadást/stb. a 
 csoport tagjainak, igényünknek megfelelően! 
 
@@ -193,13 +202,13 @@ mert azt sem állítja be a szerver automatikusan.)
 
 
 4)
-Ha egy rossz helyen lévő fájl miatt értesíést kapunk, akkor a 
-legfontosabb, hogy a fájl onnan, a tágoktatás gyüjtőmappájából,
+Ha egy rossz helyen lévő fájl miatt értesítést kapunk, akkor a 
+legfontosabb, hogy a fájl onnan, a távoktatás gyűjtőmappájából,
 elkerüljön, tehát ne másoljuk, hanem helyezzük át, a saját, egyéb
 mappáinkba / egyéb fájlaink közé! 
 
 Utána, ha ez megtörtént, nevezzük vissza, az eredeti nevére,
-vagyis törtöljük ki a nevéből a szerver által odarakott:
+vagyis töröljük ki a nevéből a szerver által odarakott:
 "számsorozat.please-remove" utótagot, a "Átnevezés" gomb segítségével!
 
 
