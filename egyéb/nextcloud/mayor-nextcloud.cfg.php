@@ -50,54 +50,128 @@ $m2n['infotxt_szöveg'] = <<<EOT
 
                     FONTOS INFORMÁCIÓK!
 
-Ez a mappa, és a benne lévő mappák, a távoktatás segítésére, egyszerűsítésére szolgálnak.
+Ez a mappa, és a benne lévő mappák, a távoktatás segítésére, 
+egyszerűsítésére szolgálnak.
 
-Fontos tudni, hogy ha megosztunk egy, a mi mappánkon belüli fájlt, vagy mappát, egy másik felhasználóval a felhőben, akkor a megosztott fájl, vagy mappa, a másik felhasználónak a kezdőoldalán jelenik meg, a fájlok között.
-Egy idő után, ha az illető, már nagyon sok megosztást fogadott, a rengeteg fájl már számára egy átláthatatlan mappa-tengert fog képezni, és nagyon nehéz lesz benne eligazodnia.
+Fontos tudni, hogy ha megosztunk egy, a mi mappánkon belüli fájlt, vagy. 
+vagy mappát, egy másik felhasználóval a felhőben, akkor a megosztott 
+fájl, vagy mappa, a másik felhasználónak a kezdőoldalán jelenik meg, 
+a fájlok között.
+
+Egy idő után, ha az illető, már nagyon sok megosztást fogadott, 
+a rengeteg fájl már számára egy átláthatatlan mappa-tengert fog képezni,
+és nagyon nehéz lesz benne eligazodnia.
 
 
 Ezen probléma kivédésére született ez, az alábbi megoldás:
 
-A tanátoknak a szerver automatikusan létrehoz egy, a távoktatásra használatos gyűjtőmappát, ebbe a mappába létrehozza a tanár által tanított (e-napló szerint) tanköröknek megfelelő mappákat automatikusan.
+A tanátoknak a szerver automatikusan létrehoz egy, a távoktatásra 
+használatos gyűjtőmappát, ebbe a mappába létrehozza a tanár által 
+tanított (e-napló szerint) tanköröknek megfelelő mappákat automatikusan.
 
 
 A használati szabályok:
-1) A tanár ezekbe a mappákba helyezi/helyezheti el a diákoknak szánt fájlokat.
+1) A tanár ezekbe a mappákba helyezheti el a diákoknak szánt fájlokat.
 2) A tanár ezeket a mappákat osztja meg a diákcsoportokkal.
-3) A diák ezekben a mappákban helyezi el a nyilvánosan visszaküldendő fájlokat, képeket. (Ezt a mappát, a tankör összes tagja látja, amelyik tankörrel megosztottuk.)
-4) A diák, a privát módon visszaküldendő fájlokat, a tanárral való megegyezés szerint, lehetőleg ne ebbe a mappába helyezze el, azt egyszerűen ossza meg a tanárával.
-5) A Tankörmappákban a  fájlok rendjét a tanár határozza/határozhatja meg.
-6) A tankörmappák gyűjtőmappájában a rendet a szerver tartja, oda egyéb fájl, nem helyezhető.  Ha mégis kerülne oda egyéb fájl akkor, arról a szerver, a tanárt először értesíti, majd később a fájt automatikusan törli.
+3) A diák ezekben a mappákban helyezi el a nyilvánosan visszaküldendő 
+   fájlokat, képeket. (Ezt a mappát, a tankör összes tagja látja,
+    amelyik tankörrel megosztottuk.)
+4) A diák, a privát módon visszaküldendő fájlokat, a tanárral való 
+   megegyezés szerint, lehetőleg ne ebbe a mappába helyezze el,
+   azt egyszerűen ossza meg a tanárával.
+5) A Tankörmappákban a  fájlok rendjét a tanár határozhatja meg.
+6) A tankörmappák gyűjtőmappájában a rendet a szerver tartja, 
+   oda egyéb fájl, nem helyezhető.  
+   Ha mégis kerülne oda egyéb fájl akkor, arról a szerver, 
+   a tanárt először értesíti, majd később a fájt automatikusan törli.
+
 
 
 
 Legyen egy gyakorlati példa:
-A tanár mappalistájában létrejön a gyűjtőmappa mondjuk: "Iskolai Távoktatás" névvel.
-Ezen, a "Iskolai Távoktatás" nevű mappán belül létrejön mondjuk, egy "(tk) 10.b fizika" és egy "(tk) 10.b osztályfőnöki" mappa.
 
-A tanár szabadon használhatja a   "(tk) 10.b fizika"   és a   "(tk) 10.b osztályfőnöki" mappákat, azokat szabadon megoszthatja, bele fájlokat helyezhet, belőlük fájlokat törölhet, ha engedélyezi a szerkesztést, akkor a diák is helyezhet bele fájlokat, vagy szerkesztheti*** a fájlokat.
-Ha a tankörmappát megosztja a diákkal/tankörrel, akkor a diáknak nem egy csomó fájl, és nem is az "Iskolai Távoktatás" mappa fog megjelenni a kezdőoldalán, hanem az adott tankörmappa. Tehát, ha a tanár a "(tk) 10.b fizika" mappát osztja meg, akkor a diák, a kezdőoldalán a "(tk) 10.b fizika" mappát fogja találni, és benne a tanár által hozzáadott fájlokat.
+A tanár mappalistájában létrejön a gyűjtőmappa mondjuk: 
+"Iskolai Távoktatás" névvel.
+Ezen, a mappán belül létrejön mondjuk, egy "(tk) 10.b fizika" 
+és egy "(tk) 10.b osztályfőnöki" mappa.
+
+A tanár szabadon használhatja a   "(tk) 10.b fizika"   és a   
+"(tk) 10.b osztályfőnöki" mappákat, azokat szabadon megoszthatja, 
+bele fájlokat helyezhet, belőlük fájlokat törölhet, stb., 
+ha engedélyezi a szerkesztést, akkor a diák is helyezhet bele 
+fájlokat, vagy szerkesztheti*** a benne lévő fájlokat.
+
+Ha a tankörmappát megosztja a diákkal/ egész tankörrel,
+akkor a diáknak így már nem egy csomó fájl, rendezetlenül, 
+és nem is az "Iskolai Távoktatás" nevű mappa fog megjelenni 
+a kezdőoldalán, hanem az adott tankörmappa. 
+
+Tehát, ha a tanár a "(tk) 10.b fizika" mappát osztja meg, 
+akkor a diák, a kezdőoldalán a "(tk) 10.b fizika" mappát fogja 
+találni, és benne a tanár által hozzáadott fájlokat.
 
 
-Viszont a "Iskolai Távoktatás" nevű mappában csak! a  "(tk) 10.b fizika"   és a   "(tk) 10.b osztályfőnöki" mappák lehetnek, más fájl, vagy mappa, nem! 
-Ha mégis kerülne oda egyéb fájl, vagy mappa, akkor arról először értesíti a tanárt, majd a 3. értesítést követően, a nem odaillő fájlokat, vagy mappákat automatikusan törli.
+Viszont a "Iskolai Távoktatás" nevű mappában csak! a  
+"(tk) 10.b fizika"   és a   "(tk) 10.b osztályfőnöki" mappák lehetnek, 
+más fájl, vagy mappa, nem!
+ 
+Ha mégis kerülne oda egyéb fájl, vagy mappa, akkor arról először 
+értesíti a tanárt, majd a 3. értesítést követően, a nem odaillő 
+fájlokat, vagy mappákat automatikusan törli.
 
-Ez szintén vonatkozik a korábban itt levő, de átnevezett mappákra is, tehát, ha a "(tk) 10.b fizika" mappát a tanár véletlenül átnevezné, akkor onnantól azt is "idegen" mappának fogja tekinteni.
+Ez szintén vonatkozik a korábban itt levő, de átnevezett mappákra is, 
+tehát, ha a "(tk) 10.b fizika" mappát a tanár véletlenül átnevezné, 
+valami másra, akkor onnantól azt is "idegen" mappának fogja tekinteni.
 
-Ugyanez történik akkor is, ha a tanár, (a naplóban) kikerül a tankörből, tehát nem tanítja tovább, vagy a tankör ugrik egyet évkezdéskor, és a "(tk) 10.b fizika"-ból "(tk) 11.b fizika" lesz, ekkor a, még ottmaradó "(tk) 10.b fizika" mappát szintén idegennek fogja tekinteni.
+Ugyanez történik akkor is, ha a tanár, (a napló szerint) kikerül a 
+tankörből, tehát nem tanítja tovább, vagy a tankör ugrik egyet 
+évkezdéskor, és a "(tk) 10.b fizika"-ból "(tk) 11.b fizika" lesz, 
+ekkor, a, még ottmaradó "(tk) 10.b fizika" mappát szintén 
+idegennek fogja tekinteni.
 
-Természetesen a tanárnak lehetősége van az idegennek minősített mappákat, és azok tartalmát a "Iskolai Távoktatás" mappán kívülre, a saját mappái közé áthelyezni,  vagy az idegennek minősített mappák tartalmát egy másik, már "elfogadott" tankörmappába tenni.
-(Ez utóbbit kell tenni, vagyis a tanárnak kézzel áthelyezni a fájlokat az egyik tankörmappából, az új tankörmappába, amikor évváltás van, és a tankör ugrik egyet "(tk) 10.b fizika"  --> "(tk) 11.b fizika". )
+Természetesen a tanárnak lehetősége van az idegennek minősített 
+mappákat, és azok tartalmát a "Iskolai Távoktatás" mappán kívülre, 
+a saját mappái közé áthelyezni, vagy az idegennek minősített mappák 
+tartalmát egy másik, már "elfogadott" tankörmappába áttenni.
+
+(Ez utóbbit kell tenni, vagyis a tanárnak, kézzel áthelyezni a 
+fájlokat az egyik tankörmappából, az új tankörmappába, amikor 
+évváltás van, és a tankör ugrik egyet 
+"(tk) 10.b fizika"  --> "(tk) 11.b fizika". )
 
 
 
 
-*** Tipp:
+*** Tippek:
+
 1)
-Ha szeretnénk biztosra menni, és elkerülni, hogy a diák, a tanár által, az egész tankörnek küldött fájlokba véletlenül beleszerkesszen, hozzunk létre egy egy "beadás", vagy  hasonló nevű mappát a tankörmappán belül, és csak erre a "beadás" mappára adjuk meg a jogot a diáknak/diákcsoportnak/tankörnek szerkesztésre/módosításra.
+Ha szeretnénk biztosra menni, és elkerülni, hogy a diák, 
+a tanár által, az egész tankörnek küldött fájlokba véletlenül 
+beleszerkesszen, vagy esetleg töröljön belőlük, hozzunk létre egy 
+"beadás", vagy  hasonló nevű mappát a tankörmappán belül, 
+és csak erre a "beadás" mappára adjuk meg a jogot a 
+diáknak/tankörnek szerkesztésre/módosításra/törlésre.
 
 2)
-Ha videófájlokat szeretnénk feltölteni nagy mennyiségben, akkor hozzunk létre az adott tankörhöz tartozó tankörmappában egy "Videók" nevű mappát, és abba helyezzük el a videófájlokat. A könnyebb megkülönböztethetőség végett nevezzük át a videófájlokat dátum szerinti, fájlnévre, vagy sorszámozzuk őket, és a sorszámot tüntessük föl a fájl nevében!
+Ha videófájlokat szeretnénk feltölteni nagy mennyiségben, 
+akkor hozzunk létre az adott tankörhöz tartozó tankörmappában egy 
+"Videók" nevű mappát, és abba helyezzük el a videófájlokat. 
+A könnyebb megkülönböztethetőség végett nevezzük át a videófájlokat 
+dátum szerinti, fájlnévre, vagy sorszámozzuk őket, 
+és a sorszámot tüntessük föl a fájl nevében!
+
+
+3) A létrejövő mappák megosztási beállításait nekünk kell 
+finomhangolnunk, mert nem jönnek automatikusan létre a 
+feltöltési/szerkesztési/törlési/stb. engedélyek. 
+
+Tehát, minután megosztottuk egy tankörrel, kattintsunk rá a 
+fektetett "V" betűhöz haonlító ikonra, és a megosztási beállításoknál 
+engedélyezzük a feltöltést/szerkesztést/törlést/továbbadást/stb. a 
+csoport tagjainak, igényünknek megfelelően! 
+
+(Magát a megosztást is nekünk, kézzel kell megtennünk, 
+mert azt sem állítja be a szerver automatikusan.)
 
 EOT;
 
