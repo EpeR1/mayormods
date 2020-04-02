@@ -53,7 +53,7 @@ $m2n['infotxt_szöveg'] = <<<EOT
 Ez a mappa, és a benne lévő mappák, a távoktatás segítésére, 
 egyszerűsítésére szolgálnak.
 
-Fontos tudni, hogy ha megosztunk egy, a mi mappánkon belüli fájlt, vagy. 
+Fontos tudni, hogy ha megosztunk egy, a mi mappánkon belüli fájlt, 
 vagy mappát, egy másik felhasználóval a felhőben, akkor a megosztott 
 fájl, vagy mappa, a másik felhasználónak a kezdőoldalán jelenik meg, 
 a fájlok között.
@@ -70,20 +70,37 @@ használatos gyűjtőmappát, ebbe a mappába létrehozza a tanár által
 tanított (e-napló szerint) tanköröknek megfelelő mappákat automatikusan.
 
 
+
 A használati szabályok:
+
 1) A tanár ezekbe a mappákba helyezheti el a diákoknak szánt fájlokat.
+
 2) A tanár ezeket a mappákat osztja meg a diákcsoportokkal.
+
 3) A diák ezekben a mappákban helyezi el a nyilvánosan visszaküldendő 
    fájlokat, képeket. (Ezt a mappát, a tankör összes tagja látja,
     amelyik tankörrel megosztottuk.)
+
 4) A diák, a privát módon visszaküldendő fájlokat, a tanárral való 
    megegyezés szerint, lehetőleg ne ebbe a mappába helyezze el,
    azt egyszerűen ossza meg a tanárával.
+
 5) A Tankörmappákban a  fájlok rendjét a tanár határozhatja meg.
+
 6) A tankörmappák gyűjtőmappájában a rendet a szerver tartja, 
    oda egyéb fájl, nem helyezhető.  
-   Ha mégis kerülne oda egyéb fájl akkor, arról a szerver, 
-   a tanárt először értesíti, majd később a fájt automatikusan törli.
+   Ha mégis kerülne oda egyéb fájl akkor, azt a szerver, átnevezi,
+   és a tanárnak értesítést küld, egészen addig, amíg az "idegen" 
+   fájlok tekintetében helyre nem áll a rend.
+   Az átnevezéskor, a szerver, a fájl nevét kiegészíti egy
+   "számsorozat.please-remove" utótaggal, ezt, a fájl áthelyezése
+   után már kézzel eltávolíthatjuk. (Az "Átnevezés" gomb segítségével)
+
+7) A szerver, a tankörök egyeztetését, az e-naplóval minden nap egyszer, 
+   éjfél és hajnali 5 óra között végzi el. Tehát, az iskolatitkárok 
+   által elvégzett módosítások, így a tankör-csoportok összerendezése,
+   a tankörök, valamint a tanárok és diákok jogviszonyában beálló 
+   változás, csak másnap reggelre lép érvénybe.
 
 
 
@@ -142,7 +159,7 @@ fájlokat az egyik tankörmappából, az új tankörmappába, amikor
 
 
 
-*** Tippek:
+*** Tippek/Megjegyzések:
 
 1)
 Ha szeretnénk biztosra menni, és elkerülni, hogy a diák, 
@@ -151,6 +168,7 @@ beleszerkesszen, vagy esetleg töröljön belőlük, hozzunk létre egy
 "beadás", vagy  hasonló nevű mappát a tankörmappán belül, 
 és csak erre a "beadás" mappára adjuk meg a jogot a 
 diáknak/tankörnek szerkesztésre/módosításra/törlésre.
+
 
 2)
 Ha videófájlokat szeretnénk feltölteni nagy mennyiségben, 
@@ -172,6 +190,26 @@ csoport tagjainak, igényünknek megfelelően!
 
 (Magát a megosztást is nekünk, kézzel kell megtennünk, 
 mert azt sem állítja be a szerver automatikusan.)
+
+
+4)
+Ha egy rossz helyen lévő fájl miatt értesíést kapunk, akkor a 
+legfontosabb, hogy a fájl onnan, a tágoktatás gyüjtőmappájából,
+elkerüljön, tehát ne másoljuk, hanem helyezzük át, a saját, egyéb
+mappáinkba / egyéb fájlaink közé! 
+
+Utána, ha ez megtörtént, nevezzük vissza, az eredeti nevére,
+vagyis törtöljük ki a nevéből a szerver által odarakott:
+"számsorozat.please-remove" utótagot, a "Átnevezés" gomb segítségével!
+
+
+5)
+Az INFO.txt, vagyis, ez a leírás, minden éjjel frissítődik, illetve újra
+létrehozódik a szerveren, hogy mindig a legfrissebb információkat 
+tartalmazza, tehát nem szükséges törölni. Ám erre is igaz, hogy 
+ha véletlenül átnevezzük, akkor már idegennek fogja tekinteni
+a rendszer. Ekkor, az "idegen" változatát már törölnünk szükséges!
+
 
 EOT;
 
