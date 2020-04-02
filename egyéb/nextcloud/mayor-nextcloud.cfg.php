@@ -193,9 +193,10 @@ finomhangolnunk, mert nem jönnek automatikusan létre a
 feltöltési/szerkesztési/törlési/stb. engedélyek. 
 
 Tehát, minután megosztottuk egy tankörrel, kattintsunk rá a 
-fektetett "V" betűhöz hasonlító ikonra, és a megosztási beállításoknál 
-engedélyezzük a feltöltést/szerkesztést/törlést/továbbadást/stb. a 
-csoport tagjainak, igényünknek megfelelően! 
+fektetett "V" betűhöz hasonlító ikonra, és a megosztási beállításoknál,
+a "..."-ra kattintva engedélyezzük a 
+feltöltést/szerkesztést/törlést/továbbadást/stb. a csoport tagjainak,
+igényünknek megfelelően! 
 
 (Magát a megosztást is nekünk, kézzel kell megtennünk, 
 mert azt sem állítja be a szerver automatikusan.)
