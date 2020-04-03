@@ -66,9 +66,13 @@
     
     table.hazifeladatDiak tr td.kesz { background-color: lightgreen; color:white; text-align:center }
 
+    table.hazifeladatDiak tr td.diakNev.extraDiak { background-color: violet; }
+
     input.modosit { background-color: #ffeb3b; }
     span#hintDt {margin-left:5px; font-size:x-small; color:#888; cursor: copy;}
     span#hintDt span { padding-right:2px; }
     span#hintDt:hover { color:black; }
 
     span.hataridoUtaniFeltoltes { margin-left: 2px; font-size: x-small; background-color: #e91e63; border-radius:2px; padding: 0px 2px; color:white; }
+
+    
