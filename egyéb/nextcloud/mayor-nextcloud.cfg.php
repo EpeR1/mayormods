@@ -142,8 +142,8 @@ Viszont az "Iskolai Távoktatás" nevű mappában csak! a
 más fájl, vagy mappa, nem!
  
 Ha mégis kerülne oda egyéb fájl, vagy mappa, akkor arról először 
-értesíti a tanárt, majd a 3. értesítést követően, a nem odaillő 
-fájlokat, vagy mappákat automatikusan törli.
+értesíti a tanárt, majd, a nem odaillő fájlokat, vagy mappákat 
+automatikusan eltávolításra megjelöli.
 
 Ez szintén vonatkozik a korábban itt levő, de átnevezett mappákra is, 
 tehát, ha a "(tk) 10.b fizika" mappát a tanár véletlenül átnevezné, 
@@ -159,10 +159,11 @@ Természetesen a tanárnak lehetősége van az idegennek minősített
 mappákat, és azok tartalmát a "Iskolai Távoktatás" mappán kívülre, 
 a saját mappái közé áthelyezni, vagy az idegennek minősített mappák 
 tartalmát egy másik, már "elfogadott" tankörmappába áttenni.
+Majd a kiürült, előző mappát törölnie kell!
 
 (Ez utóbbit kell tenni, vagyis a tanárnak, kézzel áthelyezni a 
 fájlokat az egyik tankörmappából, az új tankörmappába, amikor 
-évváltás van, és a tankör ugrik egyet 
+évváltás van, és a tankör ugrik egyet: 
 "(tk) 10.b fizika"  --> "(tk) 11.b fizika". )
 
 
@@ -191,6 +192,8 @@ dátum szerinti, fájlnévre, vagy sorszámozzuk őket,
 3) A létrejövő mappák megosztási beállításait nekünk kell 
 finomhangolnunk, mert nem jönnek automatikusan létre a 
 feltöltési/szerkesztési/törlési/stb. engedélyek. 
+A megosztás pillanatában, a fogadó félnek, csak az olvasási 
+jogosultsága jön létre, automatikusan.
 
 Tehát, minután megosztottuk egy tankörrel, kattintsunk rá a 
 fektetett "V" betűhöz hasonlító ikonra, és a megosztási beállításoknál,
