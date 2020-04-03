@@ -218,16 +218,17 @@ echo '<style type="text/css">
 
 	/* kiegészítjük a tankörnévsort az egyéb diákokkal, akik látták ezt a házifeladatot */
 	for ($i=0; $i<count($ADAT['hazifeladatDiak']); $i++) {
+	    $_diakId = $ADAT['hazifeladatDiak'][$i]['diakId'];
 	    if (!is_array($ADAT['nevsor']['nevek'][$_diakId])) {
 		$EXTRA = $ADAT['hazifeladatDiak'][$i];
-		$ADAT['nevsor']['nevek'][$EXTRA['diakId']] = array('diakId'=>$ADAT['hazifeladatDiak'][$i]['diakId'],'diakNev'=>$EXTRA['diakNev'],'extra'=>true);
+		$ADAT['nevsor']['nevek'][$EXTRA['diakId']] = array('diakId'=>$ADAT['hazifeladatDiak'][$i]['diakId'],'diakNev'=>$EXTRA['diakNev'],'extra'=>'add');
 	    }
 	}
 
 	if (is_array($ADAT['nevsor']['nevek']))
 	foreach ($ADAT['nevsor']['nevek'] as $diakId => $ITEM) {
 	    $D = $DIAKHF[$diakId];
-	    $_extraClass = ($ITEM['extra']===true) ? 'extraDiak':'';
+	    $_extraClass = ($ITEM['extra']=='add') ? 'extraDiak':'';
 	    echo '<tr>';   
 	    echo '<td class="diakNev diakAdat '.$_extraClass.'" data-diakid="'.$diakId.'">'.$ITEM['diakNev'].'</td>';
 	    if (__NAPLOADMIN===true || __VEZETOSEG===true) echo '<td>'.$D['diakLattamDt'].'</td>';
