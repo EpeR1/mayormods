@@ -60,9 +60,9 @@
     table.hazifeladatDiak tbody tr td { background-color: white; font-weight:normal; padding: 2px 4px;}
 
 
-    table.hazifeladatDiak tr td a, fieldset.adatok a { color: black; }
+    table.hazifeladatDiak tr td a, fieldset.adatok a { color: cornflowerblue; text-decoration: underline; }
     table.hazifeladatDiak tr td a:visited, fieldset.adatok a:visited { color: #888; }
-    table.hazifeladatDiak tr td a:hover, fieldset.adatok a:hover { text-decoration:underline; color: cornflowerblue; }
+    table.hazifeladatDiak tr td a:hover, fieldset.adatok a:hover { font-style:italic; }
     
     table.hazifeladatDiak tr td.kesz { background-color: lightgreen; color:white; text-align:center }
 
