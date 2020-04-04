@@ -396,7 +396,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function files_scan($user, $path ){                     // Nextcloud files:scan --path=xxx
         global $occ_user, $occ_path,$log;
-        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" files:scan --path=\"".$user."/files/".$path."\"   '";  // -v 
+        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" files:scan --path=\"".$user."/files/".$path."\"/   '";  // -v 
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         shell_exec($e);
     }
@@ -466,6 +466,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 rename($occ_path."/data/".$user."/files/".$path, $occ_path."/data/".$user."/files/".$path.".".time().".please-remove");    //Átnevezi, hogy azért mégse vasszen oda
                 echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."\" \t \t moved away!!!\n"; 
                 user_notify($user,"Fájl:  >>".$path.".please-remove<<  Illegális helyen volt. Server által eltávolítva.", "Fájl: >>".$path."<< eltávolítva!");
+                files_scan($user, "" ); //Ekkor az egész $user/files mappát szkenneli
             } 
             $ret[0] = create_dir($user, $path);                                             // Tankörmappa gyökér létrehozása
             $ret[1] = write_tofile($user, $path."/"."INFO.txt", $m2n['infotxt_szöveg']);    // Információs fájlt is
