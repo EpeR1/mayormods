@@ -354,26 +354,14 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function create_dir($user, $path){	    // Készít egy mappát a: data/$user/files/$path alá
         global $occ_user, $occ_path,$log;
-        $ret = false;
-        /* if(!file_exists($occ_path."/data/".$user."/files/")){               // Ha Még nincs home könyvtára sem
-            $ret = mkdir($occ_path."/data/".$user."/files/", 0755, true);   // Akkor létrehozza
-            chown($occ_path."/data/".$user, $occ_user);
-            chgrp($occ_path."/data/".$user, $occ_user);
-            chown($occ_path."/data/".$user."/files/", $occ_user);
-            chgrp($occ_path."/data/".$user."/files/", $occ_user);
-            if($log['verbose'] > 5) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/"."\" \t created.\n"; }
-        } */
+        $ret = null;
         if(!file_exists($occ_path."/data/".$user."/files/".$path)){                      // Ha Még nem létezik
             $ret = @mkdir($occ_path."/data/".$user."/files/".$path, 0755, true);            // Akkor létrehozza
             if($ret === true && $log['verbose'] > 5) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."\" \t created.\n"; }
             if($ret === false && $log['verbose'] > -1) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."\" \t makedir failed!!\n"; }
-
-            $e =  "/bin/chown -R '".$occ_user.":".$occ_user."' '".$occ_path."/data/".$user."/'";
-            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
-            shell_exec($e);
-            // chown($occ_path."/data/".$user."/files/".$path, $occ_user);
-            // chgrp($occ_path."/data/".$user."/files/".$path, $occ_user);
-            //if($log['verbose'] > 5) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."\" \t created.\n"; }
+            chown($occ_path."/data/".$user."/files/".$path, $occ_user);
+            chgrp($occ_path."/data/".$user."/files/".$path, $occ_user);
+            if($log['verbose'] > 5) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."\" \t created.\n"; }
         }
         return $ret;
     }
@@ -396,7 +384,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function files_scan($user, $path ){                     // Nextcloud files:scan --path=xxx
         global $occ_user, $occ_path,$log;
-        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" files:scan --path=\"".$user."/files/".$path."\"/   '";  // -v 
+        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" files:scan --path=\"".$user."/files/".$path."\"   '";  // -v 
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         shell_exec($e);
     }
@@ -434,18 +422,15 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     rmdir($occ_path."/data/".$user."/files/".$path."/".$val);
                     $ret[0][] = $val;
                     if($log['verbose'] > 5) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" deleted.\n"; }    
+
                 } else {    //Nem mappa, vagy nem üres
-                    //if( @unlink($occ_path."/data/".$user."/files/".$path."/".$val.time().".please-remove") === true && $log['verbose'] > 0 ){   // Már  "xxxx.please-remove" is volt...
-                    //    echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."/".$val.time()."\" deleted!!!\n"; 
-                    //    user_notify($user,"Fájl: ".$path."/".$val.".please-remove Illegális helyen, volt. Automata által törölve.", "Fájl: ".$path."/".$val.".please-remove törölve!");
-                    //}
                     if(file_exists( $occ_path."/data/".$user."/files/".$path."/".pathinfo(basename($occ_path."/data/".$user."/files/".$path."/".$val ,".please-remove"))['basename'])){       //Ha az eredeti könyvtár  vagy fájl él
                         rename($occ_path."/data/".$user."/files/".$path."/".$val, $occ_path."/data/".$user."/files/".$path."/".basename($val, '.please-remove').".".time().".please-remove");
                         $ret[1][] = basename($val, '.please-remove').".".time().".please-remove";
                         user_notify($user,"Az ön >>".$path."/<< könyvtárában tiltott helyen lévő fájl, vagy olyan (tankör)mappa található, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy törölje belőle!  Később automatikusan törlésre kerül! A fájl átnevezve, új neve -->   ".basename($val, '.please-remove').".".time().".please-remove", "Fájl/Mappa rossz helyen! --> ".$path."/".basename($val, '.please-remove').".".time().".please-remove" );
                         if($log['verbose'] > 5) { echo "php ->\tF/D: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" \t renamed -> ".basename($val, '.please-remove').".".time().".please-remove"."\n"; }
                     } else {    
-                        // A Hanyagul otthagyottakért figyelmeztessen:
+                        // A Hanyagul otthagyottakért csak figyelmeztessen:
                         user_notify($user,"Az ön >>".$path."/<< könyvtárában tiltott helyen lévő fájl, vagy olyan (tankör)mappa található, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy törölje belőle!  Később automatikusan törlésre kerül! --> ".$val, "Fájl/Mappa rossz helyen! --> ".$path."/".$val );
                     }
                 }
@@ -470,6 +455,11 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             } 
             $ret[0] = create_dir($user, $path);                                             // Tankörmappa gyökér létrehozása
             $ret[1] = write_tofile($user, $path."/"."INFO.txt", $m2n['infotxt_szöveg']);    // Információs fájlt is
+            if(is_null($ret[0])){                                                           // Ha frissen létrehozott mappa, akkor az egész userre kell jogot adni
+                $e =  "/bin/chown -R '".$occ_user.":".$occ_user."' '".$occ_path."/data/".$user."/'";
+                if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+                shell_exec($e);
+            }
         }    
         return $ret; 
     }
