@@ -529,7 +529,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         return $list;    
     }
 
-    function add_param_to_user($list, $user, $paramname, $param){       // Paramétert állít be a felhasználónak.
+    function set_param_to_user($list, $user, $paramname, $param){       // Paramétert állít be a felhasználónak.
         foreach($list as $key => $val){                                 // Csak rendezett tömbökön! (vagy mégsem?)
             if($user === null or ($user !== null && $val['userAccount'] == $user )){ //Vagy mindenki vagy adott user 
 
@@ -789,22 +789,25 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     
     $mayor_tanar = get_mayor_tanar($link2);     //Rendezve jön
     $mayor_tanar = add_tk_to_users( $mayor_tanar, null, $m2n['mindenki_tanar']);    //csak rendezett tömbökön!
-    $mayor_tanar = add_param_to_user($mayor_tanar, null, 'quota', $m2n['default_quota']);
-    $mayor_tanar = add_param_to_user($mayor_tanar, null, 'diakId', -1 ); 
+    $mayor_tanar = set_param_to_user($mayor_tanar, null, 'quota', $m2n['default_quota']);
+    $mayor_tanar = set_param_to_user($mayor_tanar, null, 'diakId', -1 ); 
     usort($mayor_tanar, "mayor_userlistcmp");
 
     $mayor_diak = get_mayor_diak($link2);       //mysql rendezi
     $mayor_diak = add_tk_to_users( $mayor_diak, null, $m2n['mindenki_diak']);		//csak rendezett tömbökön!
-    $mayor_diak = add_param_to_user($mayor_diak, null, 'quota', $m2n['diak_quota']);
-    $mayor_diak = add_param_to_user($mayor_diak, null, 'tanarId', -1 );
+    $mayor_diak = set_param_to_user($mayor_diak, null, 'quota', $m2n['diak_quota']);
+    $mayor_diak = set_param_to_user($mayor_diak, null, 'tanarId', -1 );
     usort($mayor_diak, "mayor_userlistcmp");
 
     $mayor_user = array();
-    $mayor_user = array_merge($mayor_tanar, $mayor_diak);
-    $mayor_user = add_tk_to_users( $mayor_user, null, $m2n['mindenki_csop']);       //csak rendezett tömbökön //mindenki csoport
-    usort($mayor_user, "mayor_userlistcmp");
-
+    $mayor_user = array_merge($mayor_tanar, $mayor_diak);                               //Tanár, és diák lista együtt
     if(isset($m2n['megfigyelo_user']) && $m2n['megfigyelo_user'] != "" ){               //A megfigyelő felvétele a lista végére
+        $mayor_user = array_merge($mayor_user, array(
+            array( 'userAccount' => $m2n['megfigyelo_user'],                            //A virtuális "naplo_admin" legyen egyben tanár is
+                'tanarId' => 1, 'diakId' => 0, 'tankorId' => 0, 'fullName' => "Napló Admin",
+                'email' => $m2n['default_email'],
+                'tankorNev' => $m2n['mindenki_tanar'],
+            )));
         foreach(get_mayor_tankor($link2) as $key => $val){
             $mayor_user = array_merge($mayor_user, array(
                 array( 'userAccount' => $m2n['megfigyelo_user'], 
@@ -819,9 +822,11 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
         }
     }
-
-    usort($mayor_user, "mayor_userlistcmp");        //ha a megfigyelo helyesen van egy rendezett lista végén, nem kell ismét rendezni
+    usort($mayor_user, "mayor_userlistcmp");        //rendezés
+    $mayor_user = add_tk_to_users( $mayor_user, null, $m2n['mindenki_csop']);       //csak rendezett tömbökön //mindenki csoport
+    usort($mayor_user, "mayor_userlistcmp");        //Végén ismét rendezzük az egészet 
     $mayor_user = array_merge($mayor_user, array(array('userAccount' => null, 'fullName' => null, 'tankorNev' => null, 'diakId' => 0, 'tanarId' => 0,)) ); //strázsa a lista végére
+
     $nxt_user = nxt_user_list();
     $nxt_group = nxt_group_list();
     $m2n_catalog = catalog_userlist($link);

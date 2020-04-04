@@ -333,9 +333,11 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
                                                         //  Tehát ha beállítunk egy minimális évfolyamot, a listában felsorolt osztályok akkor is importálódnak,
                                                         //  ha a min_évfolyam-nál kisebbek.   //pl:  array('9.a','11.a');
 
-    $m2n['csoportnev_hossz'] = 40;                      // Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a csoport neve. (csak a script kinézete/átláthatósága végett)
+    $m2n['csoportnev_hossz'] = 40;                      //Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a csoport neve. 
+                                                        // (csak a script kinézete/átláthatósága végett)
 
-    $m2n['felhasznalo_hossz'] = 45;                     // Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a felhasználó valódi neve. (csak a script kinézete/átláthatósága végett)
+    $m2n['felhasznalo_hossz'] = 45;                     //Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a felhasználó valódi neve. 
+                                                        // (Ssak a script szép kinézete, átláthatósága végett.)
 
     $m2n['mindenki_csop'] = "naplós_felhasználók";      //Legyen egy olyan csoport, amiben "mindenki benne van".
                                                         // ebbe a "mindenki" csoportba minden, a script által létrehozott felhasználó bekerül.
@@ -370,6 +372,8 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
     $m2n['megfigyelo_user'] = "naplo_robot";            //Lehetőség van egy úgymond "megfigyelő" felhasználó létrehozására.
                                                         // ez a felhasználó be lesz léptetve az összes csoportba, így az összes üzenetet megkapja, 
                                                         // és az összes tankörben megosztott fájlt látja, amit a csoportokkal/tankörökkel megosztottak.
+                                                        //EZ a felhasználó nem egyezik meg a MaYor "mayoradmin" felhasználójával (nem lesz automatikusan rendszergazda)!
+                                                        // de megadható ugyanazon felhasználónév, és lejszó, mint a MaYor "mayoradmin"-nak
 
 
     CONFIG FILE: "mayor-nextcloud.cfg.php";             //Lehetőség van a konfig exportálására egy külön fájlba, 
