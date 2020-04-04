@@ -479,17 +479,18 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         }
     }
 
-    function groupdir_finish($user, $oktId, $path, $tankorei, $pret){   //$path=
+    function groupdir_finish($user, $oktId, $path, $tankorei ){   //$path=
         global $groupdir_user, $m2n;
         $ret = array(array(),array(),array(),false,false);      //return sekelton
         if(($groupdir_user === "" || ($groupdir_user !== "" && $user == $groupdir_user)) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   
             if(isset($tankorei)) {
                 $ret = clean_dir($user, $path, $tankorei);
+                $ret[3] = false; //mert felülírja a skeleton-t
             }
-            $ret[3] = write_tofile($user, $path."/"."INFO.txt", $m2n['infotxt_szöveg']);        //INFO.txt újraírása
+//            $ret[3] = write_tofile($user, $path."/"."INFO.txt", $m2n['infotxt_szöveg']);        //INFO.txt újraírása
             if(!empty($ret[0]) or !empty($ret[1]) ){
                 files_scan($user, $path);                                                       // Nextcloud értesítése
-                $ret[4] = true;
+                $ret[3] = true;
             }
         }     
         return $ret;
@@ -901,7 +902,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     if (count($ret[0]) > 0 && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} foreach($ret[0] as $retkey => $retval){ echo "* -\t Üres (Tankör)mappa:".po("\t/".$retval."/", $m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappából törölve.\n";}}
                     if (count($ret[1]) > 0 && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} foreach($ret[1] as $retkey => $retval){ echo "* -\tFájl/Mappa Átnevezve:".po("\t/".$retval."/", $m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappában.\n";}}
                     if (count($ret[2]) > 0 && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} foreach($ret[2] as $retkey => $retval){ echo "* -\t\tTankörmappa:".po("\t/".$retval."/", $m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappában békén hagyva.\n";}}
-                    if ($ret[3] > 0 && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tÚjraírva :".po("\t./".$curr."/files/". $m2n['groupdir_prefix']."/INFO.txt",$m2n['csoportnev_hossz'],1)."\tfájl.\n";  
+                    if ($ret[3] > 0 && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tÚjraírva :".po("\t./".$curr."/files/". $m2n['groupdir_prefix']."/INFO.txt",$m2n['csoportnev_hossz'],1)."\tfájl.\n";  }
                     if ($ret[4] === true && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";}   echo "* -\t\tNXT-rescan :".po("\t./".$curr."/files/".$m2n['groupdir_prefix']."/", $m2n['csoportnev_hossz'],1)."\t mappán.\n";}
                     
                     break;
