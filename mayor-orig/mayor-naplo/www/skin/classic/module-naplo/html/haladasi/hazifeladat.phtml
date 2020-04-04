@@ -221,7 +221,9 @@ echo '<style type="text/css">
 	    $_diakId = $ADAT['hazifeladatDiak'][$i]['diakId'];
 	    if (!is_array($ADAT['nevsor']['nevek'][$_diakId])) {
 		$EXTRA = $ADAT['hazifeladatDiak'][$i];
-		$ADAT['nevsor']['nevek'][$EXTRA['diakId']] = array('diakId'=>$ADAT['hazifeladatDiak'][$i]['diakId'],'diakNev'=>$EXTRA['diakNev'],'extra'=>'add');
+		if ($EXTRA['hazifeladatDiakStatus']!='') { // csak akkor rakjuk be a névsorba, ha késznek jelölte a diák
+		    $ADAT['nevsor']['nevek'][$EXTRA['diakId']] = array('diakId'=>$ADAT['hazifeladatDiak'][$i]['diakId'],'diakNev'=>$EXTRA['diakNev'],'extra'=>'add');
+		}
 	    }
 	}
 

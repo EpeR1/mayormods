@@ -164,12 +164,37 @@
         	$diakId=__SZULODIAKID;
     	    }
     	    if ($diakId>0) {
-        	$q = "INSERT IGNORE INTO oraHazifeladatDiak (hazifeladatId,diakId,diakLattamDt) VALUES (%u,%u,NOW())";
-        	$values = array($hazifeladatId, $diakId);
-        	db_query($q, array('modul'=>'naplo','result'=>'insert','values'=>$values));
+		if (diakSajatHazifeladatE($hazifeladatId)) {
+        	    $q = "INSERT IGNORE INTO oraHazifeladatDiak (hazifeladatId,diakId,diakLattamDt) VALUES (%u,%u,NOW())";
+        	    $values = array($hazifeladatId, $diakId);
+        	    db_query($q, array('modul'=>'naplo','result'=>'insert','values'=>$values));
+		}
 	    }
 	}
     }
 
+    function diakSajatHazifeladatE($hazifeladatId) { 
+	$sajat = false;
+	if (__DIAK===true && $hazifeladatId>0) {
+    	    if (defined('__USERDIAKID') && __USERDIAKID>0) {
+    	        $diakId=__USERDIAKID;
+    	    } elseif (defined('__SZULODIAKID') && __SZULODIAKID>0) {
+        	$diakId=__SZULODIAKID;
+    	    }
+    	    if ($diakId>0) {
+
+		$q = "SELECT tankorId,dt AS oraDt FROM oraHazifeladat LEFT JOIN ora USING (oraId) WHERE hazifeladatId=%u";
+		$values = array($hazifeladatId);
+        	$ORA = db_query($q, array('debug'=>false,'modul'=>'naplo','result'=>'record','values'=>$values));
+		
+		$dt = $ORA['oraDt'];
+		$tankorId = $ORA['tankorId'];
+		$diakTankorIds = getTankorIdsByDiakIds(array($diakId), array('tanev' => __TANEV,'tolDt'=>$dt,'igDt'=>$dt,'felmentettekkel'=>true));
+
+		if (in_array($tankorId,$diakTankorIds)) $sajat = true;
+	    }
+	}
+	return $sajat;
+    }
 
 ?>
