@@ -40,7 +40,7 @@ $m2n['verbose'] = 3 ;
 $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
 $ALWAYS_SET_DIAK_QUOTA = false; 
-$groupdir_user = "";
+$groupdir_user = "naplo_robot";
 $cfgfile = realpath(pathinfo($argv[0])['dirname'])."/"."mayor-nextcloud.cfg.php";  // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
 if( file_exists($cfgfile)===TRUE ){     include($cfgfile);  }
 
