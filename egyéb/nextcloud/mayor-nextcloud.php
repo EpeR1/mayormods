@@ -31,6 +31,7 @@ $m2n['kihagy'] = array();                   //pl:  array('Trap.Pista', 'Ebeed.El
 $m2n['default_lang']  = "hu";
 $m2n['manage_groupdirs'] = false;           // Foglalkozzon-e a script a tankörmappákkal
 $m2n['groupdir_prefix'] = "tavsuli";
+$m2n['groupdir_users'] = array("naplo_robot","123abcd");    //Ha mindenkire ->  =array(); //(legyen üres)
 $m2n['mindenki_csop'] = "naplós_felhasználók";
 $m2n['mindenki_tanar'] = "naplós_tanárok";
 $m2n['mindenki_diak'] = "naplós_diákok";
@@ -40,7 +41,7 @@ $m2n['verbose'] = 3 ;
 $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
 $ALWAYS_SET_DIAK_QUOTA = false; 
-$groupdir_user = "naplo_robot";
+
 $cfgfile = realpath(pathinfo($argv[0])['dirname'])."/"."mayor-nextcloud.cfg.php";  // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
 if( file_exists($cfgfile)===TRUE ){     include($cfgfile);  }
 
@@ -55,7 +56,7 @@ $log['verbose'] = $m2n['verbose'];
 for($i = 1; $i<$argc; $i++){
     if($argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$log['verbose'] = intval($argv[$i+1]); $i++;}
     if($argv[$i] == "--set-diak-quota" ){ $ALWAYS_SET_DIAK_QUOTA = true;  }
-    if($argv[$i] == "--create-groupdir"){ $groupdir_user = $argv[$i+1]; $i++;}
+    if($argv[$i] == "--create-groupdir"){ $m2n['groupdir_users'] = array( $argv[$i+1] ); $i++;}
 }
 if( $ALWAYS_SET_DIAK_QUOTA === true && $log['verbose'] < 4 ){    $log['verbose'] = 4; }
 
@@ -448,9 +449,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
 
     function groupdir_create_root($user, $oktId, $path){                //Tankörmappák gyökerét előállítja $path=tankörgyökér
-        global $groupdir_user, $m2n, $occ_path, $occ_user,$log;
+        global $m2n, $occ_path, $occ_user,$log;
         $ret = array(false, false);
-        if(($groupdir_user === "" || ($groupdir_user !== "" && $user == $groupdir_user)) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   //Ha null -> mindenki, Ha "user" -> scak neki, && tanár && groupdir bekapcsolava
+        if((empty($m2n['groupdir_users']) || in_array($user, $m2n['groupdir_users'])) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   //Ha null -> mindenki, Ha "user" -> scak neki, && tanár && groupdir bekapcsolava
             
             if(is_file($occ_path."/data/".$user."/files/".$path) || is_link($occ_path."/data/".$user."/files/".$path)){     //Ha már vam ott valami ilyen fájl 
                 rename($occ_path."/data/".$user."/files/".$path, $occ_path."/data/".$user."/files/".$path.".".time().".please-remove");    //Átnevezi, hogy azért mégse vasszen oda
@@ -471,10 +472,10 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
 
     function groupdir_create_groupdir($user, $oktId, $path){        // $path = tankörmappa
-        global $groupdir_user, $m2n;
+        global $m2n;
         $ret = false;
         if( basename($path,"_beadás") != $m2n['mindenki_tanar'] and basename($path,"_beadás") != $m2n['mindenki_diak'] and basename($path,"_beadás") != $m2n['mindenki_csop']){   //Ezekre a csoportokra minek? 
-            if(($groupdir_user === "" || ($groupdir_user !== "" && $user == $groupdir_user)) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   
+            if((empty($m2n['groupdir_users']) || in_array($user, $m2n['groupdir_users'])) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   
                 $ret = create_dir($user, $path);                                                // Tankörmappa létrehozása
                 if($ret === true){
                     files_scan($user, $path);
@@ -485,9 +486,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
 
     function groupdir_finish($user, $oktId, $path, $tankorei ){     //$path=tankörgyökér
-        global $groupdir_user, $m2n;
+        global $m2n;
         $ret = array(array(),array(),array(),false,false);      //return sekelton
-        if(($groupdir_user === "" || ($groupdir_user !== "" && $user == $groupdir_user)) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   
+        if((empty($m2n['groupdir_users']) || in_array($user, $m2n['groupdir_users'])) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   
             if(isset($tankorei)) {
                 $ret = clean_dir($user, $path, $tankorei);
                 $ret[3] = false; //mert felülírja a skeleton-t
