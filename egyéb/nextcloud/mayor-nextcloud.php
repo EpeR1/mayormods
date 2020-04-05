@@ -115,10 +115,14 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
 
     function escp($str){                //Escape strings
-        $str = str_replace(array('`', '\'', "\"" ),array('\`', '\\\'', "\\\""), $str);
+        $str = str_replace(array("\\","`", "\'", "\"" ),array("\\\\", "\`", "\\\'", "\\\""), $str);
         return escapeshellarg($str);
     }
 
+    function rnescp($str){                //Escape strings
+        $str = str_replace(array("\\","`", "\'", "\"" ),array("_", "-", "´", "˝"), $str);
+        return escapeshellarg($str);
+    }
 
     function nxt_get_version(){
         global $occ_path,$occ_user,$m2n,$log;
@@ -431,7 +435,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
                 } else {    //Nem mappa, vagy nem üres
                     if(file_exists( $occ_path."/data/".$user."/files/".$path."/".pathinfo(basename($occ_path."/data/".$user."/files/".$path."/".$val ,".please-remove"))['basename'])){       //Ha az eredeti könyvtár  vagy fájl él
-                        rename($occ_path."/data/".$user."/files/".$path."/".$val, $occ_path."/data/".$user."/files/".$path."/".basename($val, '.please-remove').".".time().".please-remove");
+                        rename($occ_path."/data/".$user."/files/".$path."/".$val, rnescp($occ_path."/data/".$user."/files/".$path."/".basename($val, '.please-remove').".".time().".please-remove"));
                         $ret[1][] = basename($val, '.please-remove').".".time().".please-remove";
                         user_notify($user,"Az ön >>".$path."/<< könyvtárában tiltott helyen lévő fájl, vagy olyan (tankör)mappa található, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy törölje belőle!  Eltávolításra megjeleölve! A fájl átnevezve, új neve -->   ".basename($val, '.please-remove').".".time().".please-remove", "Fájl/Mappa rossz helyen! --> ".$path."/".basename($val, '.please-remove').".".time().".please-remove" );
                         if($log['verbose'] > 5) { echo "php ->\tF/D: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" \t renamed -> ".basename($val, '.please-remove').".".time().".please-remove"."\n"; }
@@ -454,7 +458,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         if((empty($m2n['groupdir_users']) || in_array($user, $m2n['groupdir_users'])) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   //Ha null -> mindenki, Ha "user" -> scak neki, && tanár && groupdir bekapcsolava
             
             if(is_file($occ_path."/data/".$user."/files/".$path) || is_link($occ_path."/data/".$user."/files/".$path)){     //Ha már vam ott valami ilyen fájl 
-                rename($occ_path."/data/".$user."/files/".$path, $occ_path."/data/".$user."/files/".$path.".".time().".please-remove");    //Átnevezi, hogy azért mégse vasszen oda
+                rename($occ_path."/data/".$user."/files/".$path, rnescp($occ_path."/data/".$user."/files/".$path.".".time().".please-remove"));    //Átnevezi, hogy azért mégse vasszen oda
                 echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."\" \t \t moved away!!!\n"; 
                 user_notify($user,"Fájl:  >>".$path.".please-remove<<  Illegális helyen volt. Server által eltávolítva.", "Fájl: >>".$path."<< eltávolítva!");
                 files_scan($user, "" ); //Ekkor az egész $user/files mappát szkenneli
