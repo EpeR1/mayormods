@@ -389,14 +389,14 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function files_scan($user, $path ){                     // Nextcloud files:scan --path=xxx
         global $occ_user, $occ_path,$log;
-        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" files:scan --path=\"".escp($user)."/files/".escp($path)."\"   '";  // -v 
+        $e =  "su -s /bin/sh $occ_user -c \"php '".$occ_path."/occ' files:scan --path=".escp($user."/files/".$path)."   \"";  // -v 
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         shell_exec($e);
     }
 
     function user_notify($user, $msg, $title ){             // Nextcloud értesítés
         global $occ_user, $occ_path, $log;
-        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" notification:generate -l \"".escp($msg)."\" -- ".escp($user)." \"".escp($title)."\" '";
+        $e =  "su -s /bin/sh $occ_user -c \"php '".$occ_path."/occ' notification:generate -l ".escp($msg)." -- ".escp($user)." ".escp($title)." \"";
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         shell_exec($e);
     }
