@@ -114,14 +114,20 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         }
     }
 
+    function rmnp($str){    //Remove non-printable
+        return preg_replace('/[\x00-\x1F\x7F-\xA0\xAD]/u', '', $str);
+    }
+
     function escp($str){                //Escape strings
         $str = str_replace(array("\\","`", "\'", "\"" ),array("\\\\", "\`", "\\\'", "\\\""), $str);
         return escapeshellarg($str);
     }
 
     function rnescp($str){                //Escape strings
-        str_replace(array("\\","`", "\'", "\"", "\ ", ), array("_", "", "", "", "_",  ), $str);
-        return substr(escapeshellarg($str), 1, -1);
+        $str = rmnp($str);
+        $str = escapeshellarg($str);
+        $str = str_replace(array("\\", "`", "'", "\"", "\ ", ), array("", "", "", "", "_", ), $str);
+        return $str;
     }
 
     function nxt_get_version(){
