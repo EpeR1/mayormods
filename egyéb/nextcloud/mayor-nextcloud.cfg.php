@@ -90,9 +90,9 @@ A működési szabályok:
    más módon juttassa vissza.
 
 5) A Tankörmappákban, a fájlok rendjét a tanár határozhatja meg,
-   viszont, amelyik mappára, vagy alsóbb mappára engedélyezve van 
-   a diák(ok) részére a feltöltés/szerkesztés/törlés, 
-   ott már értelemszerűen nem csak a tanár dönt.
+   viszont, amelyik mappára engedélyezve van a diák(ok) részére a 
+   feltöltés/szerkesztés/törlés, ott már értelemszerűen nem csak a 
+   tanár dönt a fájlok sorsáról.
 
 6) A tankörmappák gyűjtőmappájában a rendet a szerver tartja, 
    oda egyéb fájl, nem helyezhető.  
@@ -120,6 +120,10 @@ A tanár mappalistájában létrejön a gyűjtőmappa mondjuk:
 Ezen, a mappán belül létrejön mondjuk, egy "(tk) 10.b fizika" 
 és egy "(tk) 10.b osztályfőnöki" tankörmappa.
 (Vagyis, a tanár, az e-naplóban ezen tankörök tagja.)
+
+Ezen mappák mellé létrejön még a "(tk) 10.b fizika_beadás" és a
+"(tk) 10.b osztályfőnöki_beadás" mappa is. Ezek a mappák a diákok 
+által visszaküldendő fájlok gyűjtésére szolgálnak.
 
 A tanár szabadon használhatja a   "(tk) 10.b fizika"   és a   
 "(tk) 10.b osztályfőnöki" mappákat, azokat szabadon megoszthatja, 
@@ -174,10 +178,15 @@ fájlokat az egyik tankörmappából, az új tankörmappába, amikor
 1)
 Ha szeretnénk biztosra menni, és elkerülni, hogy a diák, 
 a tanár által, az egész tankörnek küldött fájlokba véletlenül 
-beleszerkesszen, vagy esetleg töröljön belőlük, hozzunk létre egy 
-"beadás", vagy  hasonló nevű mappát, a tankörmappán belül, 
-és csak erre a "beadás" mappára adjuk meg a jogot a 
-diáknak/tankörnek szerkesztésre/módosításra/törlésre/stb..
+beleszerkesszen, vagy esetleg töröljön belőlük, akkor vonjuk meg a
+szerkesztési/létrehozási/törlési jogokat, és ezt ellenőrizzük is 
+minden megosztáskor, hogy valóban a megfelelő jogok vannak-e bállítva
+a megosztott mappán!
+
+A szerver létrehoz egy "_beadás", végződésű mappát is, a tankörmappák 
+mellé, hogy ezeket használhassuk a visszaküldendő fájlok gyűjtésére, így
+csak erre a "_beadás" mappára kell jogot adnunk a diáknak/tankörnek 
+a szerkesztésre/módosításra/törlésre/stb..
 
 
 2)

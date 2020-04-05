@@ -432,11 +432,11 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     if(file_exists( $occ_path."/data/".$user."/files/".$path."/".pathinfo(basename($occ_path."/data/".$user."/files/".$path."/".$val ,".please-remove"))['basename'])){       //Ha az eredeti könyvtár  vagy fájl él
                         rename($occ_path."/data/".$user."/files/".$path."/".$val, $occ_path."/data/".$user."/files/".$path."/".basename($val, '.please-remove').".".time().".please-remove");
                         $ret[1][] = basename($val, '.please-remove').".".time().".please-remove";
-                        user_notify($user,"Az ön >>".$path."/<< könyvtárában tiltott helyen lévő fájl, vagy olyan (tankör)mappa található, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy törölje belőle!  Később automatikusan törlésre kerül! A fájl átnevezve, új neve -->   ".basename($val, '.please-remove').".".time().".please-remove", "Fájl/Mappa rossz helyen! --> ".$path."/".basename($val, '.please-remove').".".time().".please-remove" );
+                        user_notify($user,"Az ön >>".$path."/<< könyvtárában tiltott helyen lévő fájl, vagy olyan (tankör)mappa található, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy törölje belőle!  Eltávolításra megjeleölve! A fájl átnevezve, új neve -->   ".basename($val, '.please-remove').".".time().".please-remove", "Fájl/Mappa rossz helyen! --> ".$path."/".basename($val, '.please-remove').".".time().".please-remove" );
                         if($log['verbose'] > 5) { echo "php ->\tF/D: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" \t renamed -> ".basename($val, '.please-remove').".".time().".please-remove"."\n"; }
                     } else {    
                         // A Hanyagul otthagyottakért csak figyelmeztessen:
-                        user_notify($user,"Az ön >>".$path."/<< könyvtárában tiltott helyen lévő fájl, vagy olyan (tankör)mappa található, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy törölje belőle!  Később automatikusan törlésre kerül! --> ".$val, "Fájl/Mappa rossz helyen! --> ".$path."/".$val );
+                        user_notify($user,"Az ön >>".$path."/<< könyvtárában tiltott helyen lévő fájl, vagy olyan (tankör)mappa található, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy törölje belőle!  Eltávolításra megjelölve! --> ".$val, "Fájl/Mappa rossz helyen! --> ".$path."/".$val );
                     }
                 }
             } else {
@@ -461,7 +461,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             $ret[0] = create_dir($user, $path);                                             // Tankörmappa gyökér létrehozása
             $ret[1] = write_tofile($user, $path."/"."INFO.txt", $m2n['infotxt_szöveg']);    // INFO.txt (Újra)Írása.
             if($ret[0] === true){                                                           // Ha frissen létrehozott mappa, akkor az egész userre kell jogot adni
-                $e =  "/bin/chown -R '".$occ_user.":".$occ_user."' '".$occ_path."/data/".escp($user)."/'";
+                $e =  "/bin/chown -R ".escp($occ_user.":".$occ_user)." ".escp($occ_path."/data/".$user."/")." ";
                 if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
                 shell_exec($e);
                 files_scan($user, $path);
