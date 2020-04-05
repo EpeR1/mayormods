@@ -113,6 +113,12 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         }
     }
 
+    function escp($str){                //Escape strings
+        $str = str_replace(array('`', '\'', "\"" ),array('\`', '\\\'', "\\\""), $str);
+        return escapeshellarg($str);
+    }
+
+
     function nxt_get_version(){
         global $occ_path,$occ_user,$m2n,$log;
         // sudo -u honlap-felho php /home/honlap-felho/web/occ status --output=json
@@ -163,7 +169,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     
     function catalog_useradd($link, $account){	// feljegyzi az általa létrehozott felhasználókat
         global $log,$db;
-        $q = "INSERT INTO ".$db['m2n_db'].".".$db['m2n_prefix']."register (account) VALUES ('".$account."')";
+        $q = "INSERT INTO ".$db['m2n_db'].".".$db['m2n_prefix']."register (account) VALUES ('".mysqli_real_escape_string($link, $account)."')";
         if ($log['verbose'] > 5 ){ echo "M2N -> \t".$q."\n"; }
         if(( mysqli_query($link, $q)) !== FALSE ){
             if ($log['verbose'] > 4 ){ echo "*\tFelhasználó-hozzáadás, m2n nyilvántartásba vétele.\n"; }
@@ -172,7 +178,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function catalog_userena($link, $account){	// az engedélyezetteket
         global $db,$log;
-        $q = "UPDATE ".$db['m2n_db'].".".$db['m2n_prefix']."register SET status='active' WHERE account='".$account."'";
+        $q = "UPDATE ".$db['m2n_db'].".".$db['m2n_prefix']."register SET status='active' WHERE account='".mysqli_real_escape_string($link, $account)."'";
         if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
         if(( mysqli_query($link, $q)) !== FALSE ){
             if ($log['verbose'] > 4 ){ echo "*\tFelhasználó-engedélyezés, m2n nyilvántartásba vétele.\n" ;}
@@ -181,7 +187,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function catalog_userdel($link, $account){	// a törölteket
         global $db,$log;
-        $q = "DELETE FROM ".$db['m2n_db'].".".$db['m2n_prefix']."register WHERE account='".$account."' ";
+        $q = "DELETE FROM ".$db['m2n_db'].".".$db['m2n_prefix']."register WHERE account='".mysqli_real_escape_string($link, $account)."' ";
         if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
         if(( mysqli_query($link, $q)) !== FALSE ){
             if ($log['verbose'] > 5 ){ echo "*\tFelhasználó-törlés, m2n nyilvántartásba vétele.\n"; }
@@ -190,7 +196,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     
     function catalog_userdis($link, $account){	// a letiltottakat
         global $m2n,$db,$log;
-        $q = "UPDATE ".$db['m2n_db'].".".$db['m2n_prefix']."register SET status='disabled' WHERE account='".$account."'";
+        $q = "UPDATE ".$db['m2n_db'].".".$db['m2n_prefix']."register SET status='disabled' WHERE account='".mysqli_real_escape_string($link, $account)."'";
         if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
         if(( mysqli_query($link, $q)) !== FALSE ){
             if ($log['verbose'] > 5 ){ echo "*\tFelhasználó-letiltás, m2n nyilvántartásba vétele.\n"; }
@@ -383,14 +389,14 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function files_scan($user, $path ){                     // Nextcloud files:scan --path=xxx
         global $occ_user, $occ_path,$log;
-        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" files:scan --path=\"".$user."/files/".$path."\"   '";  // -v 
+        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" files:scan --path=\"".escp($user)."/files/".escp($path)."\"   '";  // -v 
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         shell_exec($e);
     }
 
     function user_notify($user, $msg, $title ){             // Nextcloud értesítés
         global $occ_user, $occ_path, $log;
-        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" notification:generate -l \"".$msg."\" -- ".$user." \"".$title."\" '";
+        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" notification:generate -l \"".escp($msg)."\" -- ".escp($user)." \"".escp($title)."\" '";
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         shell_exec($e);
     }
@@ -455,12 +461,12 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             $ret[0] = create_dir($user, $path);                                             // Tankörmappa gyökér létrehozása
             $ret[1] = write_tofile($user, $path."/"."INFO.txt", $m2n['infotxt_szöveg']);    // INFO.txt (Újra)Írása.
             if($ret[0] === true){                                                           // Ha frissen létrehozott mappa, akkor az egész userre kell jogot adni
-                $e =  "/bin/chown -R '".$occ_user.":".$occ_user."' '".$occ_path."/data/".$user."/'";
+                $e =  "/bin/chown -R '".$occ_user.":".$occ_user."' '".$occ_path."/data/".escp($user)."/'";
                 if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
                 shell_exec($e);
                 files_scan($user, $path);
             }
-        }    
+        }     
         return $ret; 
     }
 
@@ -478,7 +484,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         }
     }
 
-    function groupdir_finish($user, $oktId, $path, $tankorei ){   //$path=
+    function groupdir_finish($user, $oktId, $path, $tankorei ){     //$path=tankörgyökér
         global $groupdir_user, $m2n;
         $ret = array(array(),array(),array(),false,false);      //return sekelton
         if(($groupdir_user === "" || ($groupdir_user !== "" && $user == $groupdir_user)) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   
@@ -489,7 +495,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             if(!empty($ret[0]) or !empty($ret[1]) ){
                 files_scan($user, $path);                                                       // Nextcloud értesítése
                 $ret[3] = true;
-            }
+            } 
+            files_scan($user, $path."/INFO.txt");
         }     
         return $ret;
     }
