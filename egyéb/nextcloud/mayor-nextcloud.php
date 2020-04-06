@@ -468,7 +468,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 user_notify($user,"Fájl:  >>".$path.".please-remove<<  Illegális helyen volt. Server által eltávolítva.", "Fájl: >>".$path."<< eltávolítva!");
                 files_scan($user, "" ); //Ekkor az egész $user/files mappát szkenneli
             } 
-            $ret[0] = create_dir($user, $path);                                             // Tankörmappa gyökér létrehozása
+            $ret[0] = create_dir($user, rmnp($path));                                             // Tankörmappa gyökér létrehozása
             $ret[1] = write_tofile($user, $path."/"."INFO.txt", $m2n['infotxt_szöveg']);    // INFO.txt (Újra)Írása.
             if($ret[0] === true){                                                           // Ha frissen létrehozott mappa, akkor az egész userre kell jogot adni
                 $e =  "/bin/chown -R ".escp($occ_user.":".$occ_user)." ".escp($occ_path."/data/".$user."/")." ";
@@ -485,7 +485,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         $ret = false;
         if( basename($path,"_beadás") != $m2n['mindenki_tanar'] and basename($path,"_beadás") != $m2n['mindenki_diak'] and basename($path,"_beadás") != $m2n['mindenki_csop']){   //Ezekre a csoportokra minek? 
             if((empty($m2n['groupdir_users']) || in_array($user, $m2n['groupdir_users'])) && $oktId > 0 && $m2n['manage_groupdirs'] === true){   
-                $ret = create_dir($user, $path);                                                // Tankörmappa létrehozása
+                $ret = create_dir($user, rmnp($path));                                                // Tankörmappa létrehozása
                 if($ret === true){
                     files_scan($user, $path);
                 }
