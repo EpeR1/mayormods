@@ -722,7 +722,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
 //-------------------------------------------------------------------------------------------------------------------------------    
 
-    if(true) { echo "\n\n######## Mayor-Nextcloud Script ########\n";   echo "########  (".date("Y-m-d H:i:s").")\n\n"; }
+    if(true) { echo "\n\n######## Mayor-Nextcloud Script ########\n";   echo "######## (".date("Y-m-d H:i:s").")\n\n"; $t_start = microtime(true); }
     
 
     if( file_exists($cfgfile)===TRUE ){
@@ -1034,7 +1034,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     @mysqli_close($link2);
     @mysqli_close($link);
-    if ($log['verbose'] > 0 ){echo "\nkész.\n"; echo "(".date("Y-m-d H:i:s").")\n";} //endline
+    $t_run = (mictrotime(true) - $t_start)/60;
+    if ($log['verbose'] > 0 ){ echo "\n(Runtime: ".$t_run."min.)\nkész.\n";} //endline
 
 } else {
     echo "\n\n******** Legalább PHP7 és mysqli szükséges! ********\n\n";

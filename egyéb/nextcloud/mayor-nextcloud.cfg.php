@@ -68,7 +68,7 @@ a rengeteg fájl már számára egy átláthatatlan mappa-tengert fog képezni,
 Ezen probléma kivédésére született ez, az alábbi megoldás:
 
 A tanátoknak a szerver automatikusan létrehoz egy, a távoktatásra 
-használatos gyűjtőmappát, ebbe a mappába létrehozza a tanár által 
+használatos gyűjtőmappát, utána ebbe a mappába létrehozza a tanár által 
 tanított (e-napló szerint) tanköröknek megfelelő mappákat automatikusan.
 
 
@@ -97,16 +97,17 @@ A működési szabályok:
    tanár dönt a fájlok sorsáról.
 
 6) A tankörmappák gyűjtőmappájában a rendet a szerver tartja, 
-   oda egyéb fájl, nem helyezhető.  
+   oda egyéb fájl, mappa nem helyezhető.  
    Ha mégis kerülne oda egyéb fájl akkor, azt a szerver, átnevezi,
    és a tanárnak értesítést küld, egészen addig, amíg az "idegen" 
    fájlok tekintetében helyre nem áll a rend.
    Az átnevezéskor, a szerver, a fájl nevét kiegészíti egy
    "számsorozat.please-remove" utótaggal. Ezt az utótagot, a fájl,
-   a gyűjtőmappából történő áthelyezése után már kézzel eltávolíthatjuk. 
-   (Az "Átnevezés" gomb segítségével.)
+   a gyűjtőmappából történő áthelyezése után már kézzel eltávolíthatjuk,
+   így visszakapjuk az eredeti fájlunkat, mappáinkat. 
+   (Az "Átnevezés" gomb segítségével. (Jobb-Egér kattintással.))
 
-7) A szerver, a tankörök egyeztetését, az e-naplóval, minden nap egyszer, 
+7) A szerver, a tankörök egyeztetését, a naplóval, minden nap egyszer,
    éjfél és hajnali 5 óra között végzi el. Tehát, az iskolatitkárok 
    által elvégzett módosítások, így a tankör-csoportok összerendezése,
    a tankörök, valamint a tanárok és diákok jogviszonyában beálló 
@@ -125,7 +126,8 @@ Ezen, a mappán belül létrejön mondjuk, egy "(tk) 10.b fizika"
 
 Ezen mappák mellé létrejön még a "(tk) 10.b fizika_beadás" és a
 "(tk) 10.b osztályfőnöki_beadás" mappa is. Ezek a mappák a diákok 
-által visszaküldendő fájlok gyűjtésére szolgálnak.
+által visszaküldendő fájlok gyűjtésére szolgálhatnak.
+
 
 A tanár szabadon használhatja a   "(tk) 10.b fizika"   és a   
 "(tk) 10.b osztályfőnöki" mappákat, azokat szabadon megoszthatja, 
@@ -143,9 +145,11 @@ akkor a diák, a kezdőoldalán a "(tk) 10.b fizika" mappát fogja
 találni, és benne a tanár által hozzáadott fájlokat.
 
 
-Viszont az "Iskolai Távoktatás" nevű mappában csak! a  
-"(tk) 10.b fizika"   és a   "(tk) 10.b osztályfőnöki" mappák lehetnek, 
-más fájl, vagy mappa, nem!
+Viszont az "Iskolai Távoktatás" nevű mappában csak(!!) a  
+"(tk) 10.b fizika"   és a   "(tk) 10.b osztályfőnöki" mappák lehetnek,
+valamint a beadásra szolgáló társmappák, illetve az INFO.txt.
+Más fájl, vagy mappa, nem! 
+
  
 Ha mégis kerülne oda egyéb fájl, vagy mappa, akkor arról először 
 értesíti a tanárt, majd, a nem odaillő fájlokat, vagy mappákat 
@@ -161,16 +165,18 @@ tankörből, tehát nem tanítja tovább, vagy a tankör ugrik egyet
 ekkor, a, még ottmaradó "(tk) 10.b fizika" mappát szintén 
 idegennek fogja tekinteni.
 
-Természetesen a tanárnak lehetősége van az idegennek minősített 
-mappákat, és azok tartalmát a "Iskolai Távoktatás" mappán kívülre, 
-a saját mappái közé áthelyezni, vagy az idegennek minősített mappák 
-tartalmát egy másik, már "elfogadott" tankörmappába áttenni.
-Majd a kiürült, előző mappát törölnie kell!
+Ilyenkor a tanárnak szükséges, kézzel, az idegennek minősített mappákat 
+kiüríteni, és az egész mappát, vagy csak azok tartalmát 
+az "Iskolai Távoktatás" mappán kívülre, a saját mappái közé áthelyezni, 
+vagy az idegennek minősített mappák tartalmát egy másik, az "elfogadott" 
+tankörmappák valamelyikébe átrakni.
+Majd a kiürült, előző mappát kézzel kell törölnie!
 
 (Ez utóbbit kell tenni, vagyis a tanárnak, kézzel áthelyezni a 
 fájlokat az egyik tankörmappából, az új tankörmappába, amikor 
 évváltás van, és a tankör ugrik egyet: 
 "(tk) 10.b fizika"  --> "(tk) 11.b fizika". )
+
 
 
 
@@ -182,7 +188,7 @@ Ha szeretnénk biztosra menni, és elkerülni, hogy a diák,
 a tanár által, az egész tankörnek küldött fájlokba véletlenül 
 beleszerkesszen, vagy esetleg töröljön belőlük, akkor vonjuk meg a
 szerkesztési/létrehozási/törlési jogokat, és ezt ellenőrizzük is 
-minden megosztáskor, hogy valóban a megfelelő jogok vannak-e bállítva
+minden megosztáskor, hogy valóban a megfelelő jogok vannak-e beállítva
 a megosztott mappán!
 
 A szerver létrehoz egy "_beadás", végződésű mappát is, a tankörmappák 
@@ -191,12 +197,13 @@ csak erre a "_beadás" mappára kell jogot adnunk a diáknak/tankörnek
 a szerkesztésre/módosításra/törlésre/stb..
 
 
+
 2)
 Ha videó fájlokat szeretnénk feltölteni nagy mennyiségben, 
 akkor hozzunk létre az adott tankörhöz tartozó tankörmappában egy 
 "Videók" nevű mappát, és abba helyezzük el a videó fájlokat. 
 A könnyebb megkülönböztethetőség végett nevezzük át a videó fájlokat 
-dátum szerinti, fájlnévre, vagy sorszámozzuk őket, 
+dátum szerinti fájlnévre, vagy sorszámozzuk őket, 
 és a sorszámot tüntessük föl a fájl nevében!
 
 
@@ -204,7 +211,7 @@ dátum szerinti, fájlnévre, vagy sorszámozzuk őket,
 finomhangolnunk, mert nem jönnek automatikusan létre a 
 feltöltési/szerkesztési/törlési/stb. engedélyek. 
 A megosztás pillanatában, a fogadó félnek, csak az olvasási 
-jogosultsága jön létre, automatikusan.
+jogosultsága jön létre automatikusan.
 
 Tehát, minután megosztottuk egy tankörrel, kattintsunk rá a 
 fektetett "V" betűhöz hasonlító ikonra, és a megosztási beállításoknál,
@@ -214,6 +221,15 @@ igényünknek megfelelően!
 
 (Magát a megosztást is nekünk, kézzel kell megtennünk, 
 mert azt sem állítja be a szerver automatikusan.)
+
+Alapesetben, gyakorlatilag csak annyi a dolgunk, hogy például, 
+a "(tk) 10.b fizika" mappát megosszuk a "(tk) 10.b fizika" tankörrel.
+Ha a beadást is szeretnénk itt összegyűjteni, akkor 
+a "(tk) 10.b fizika_beadás" mappát is meg kell osszuk 
+a "(tk) 10.b fizika" tankörrel, ügyelve arra, hogy csak 
+a "(tk) 10.b fizika_beadás" mappára kerüljön a diákok számára 
+létrehozási/szerkesztési/törlési jogosultság.
+
 
 
 4)
@@ -364,6 +380,9 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
     $m2n['manage_groupdirs'] = false;                   //Ha szerenénk, hogy a script létrehozza a távoktatást segítő tankörmappákat, állítsuk "true"-re!
 
+    $m2n['groupdir_users'] = array("123abcd", );        //Ha csak egyes tanároknak szeretnénk bekapcsolni a tankörmappákat,
+                                                        // ha minden tanárnak, akkor állítsuk üresre a tömböt!   / = array();/
+
     $m2n['groupdir_prefix'] = "Iskolai Távoktatás";     //A távoktatást segítő mappák gyüjtőmappája/gyökérkönyvtára.
  
     $m2n['verbose'] = 3                                 //Log bőbeszédűség      (A leg informatívabb(tömörebb), talán a 3-mas fokozat.)
@@ -401,13 +420,13 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
     További Paraméterek / Kapcsolók:
 
-        --loglevel x     :  A scriptbőbeszédűségét, logolását tudjuk ezzel szabályozni, ekkor ez az érték érvényesül, nem a configban megadott.
+         --loglevel x     :  A scriptbőbeszédűségét, logolását tudjuk ezzel szabályozni, ekkor ez az érték érvényesül, nem a configban megadott.
 
-        --set-diak-quota :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre, 
-                        csak kézzel futtatva működik, az automatikus, napi futtatásban nicns benne.
+         --set-diak-quota :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre, 
+                             csak kézzel futtatva működik, az automatikus, napi futtatásban nicns benne.
 
-        --create-groupdir <username>:  A távoktatást segítő könyvtárstruktúrát csak az <username> felhasználónak  hozza létre,
-                                   illetve kapcsoló nélküli híváskor, automatikusan, a napi futásban, esténként az összes tanárnak egyszerre.
+         --create-groupdir <username>:  A távoktatást segítő könyvtárstruktúrát csak az <username> felhasználónak  hozza létre,
+                                        illetve kapcsoló nélküli híváskor, automatikusan, a napi futásban, esténként az összes tanárnak egyszerre.
 
 
 
