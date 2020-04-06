@@ -24,6 +24,7 @@ $m2n['isk_rovidnev'] = "rovid";
 $m2n['csoport_prefix'] = "(tk) ";
 $m2n['default_email'] = "indulo@iskola.hu";
 $m2n['default_passw'] = "EHYmGktzrdfS7wxJR6DFqxjJ";
+$m2n['always_set_diak_quota'] = false;
 $m2n['default_quota'] = "10GB";
 $m2n['diak_quota']    = "2GB"; 
 $m2n['min_osztalyok'] =  array(); 	//pl:  array('9.a','11.a');

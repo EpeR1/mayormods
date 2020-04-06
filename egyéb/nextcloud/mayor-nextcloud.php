@@ -2,6 +2,7 @@
 <?php 
 $db = array();
 $m2n = array();
+$m2l = array();
 ////////////////////////////////////////////// Figyelem! az alábbi konfig automatikusan külön fájból töltődik, ha létezik a "mayor-nextcloud.cfg.php" fájl!! /////////////////////////////////
 $db['host'] = "localhost";
 $db['port'] = "3306";
@@ -21,6 +22,7 @@ $m2n['isk_rovidnev'] = "rovid";
 $m2n['csoport_prefix'] = "(tk) ";
 $m2n['default_email'] = "indulo@iskola.hu";
 $m2n['default_passw'] = "EHYmGktzrdfS7wxJR6DFqxjJ";
+$m2n['always_set_diak_quota'] = false;
 $m2n['default_quota'] = "10GB";
 $m2n['diak_quota']    = "2GB";
 $m2n['min_osztalyok'] =  array(); 	        //pl:  array('9.a','11.a');
@@ -40,25 +42,19 @@ $m2n['verbose'] = 3 ;
 
 $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
-$ALWAYS_SET_DIAK_QUOTA = false; 
 
 $cfgfile = realpath(pathinfo($argv[0])['dirname'])."/"."mayor-nextcloud.cfg.php";  // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
 if( file_exists($cfgfile)===TRUE ){     include($cfgfile);  }
-
-
-
-
 // Le kell cserélni az ékezetes betűket, mert a Vezetéknév.Keresztnév nem POSIX kompatibilis.
 $search = array( 'á', 'ä', 'é', 'í', 'ó', 'ö', 'ő', 'ú', 'ü', 'ű', 'Á', 'Ä', 'É', 'Í', 'Ó', 'Ö', 'Ő', 'Ú', 'Ü', 'Ű');	// egyelőre csak a magyar betűket ismeri
 $replace = array( 'aa', 'ae', 'ee', 'ii', 'oo', 'oe', 'ooe', 'uu', 'ue', 'uue', 'Aa', 'Aae', 'Ee', 'Ii', 'Oo', 'Oe', 'Ooe', 'Uu', 'Ue', 'Uue');
 
-$log['verbose'] = $m2n['verbose'];
 for($i = 1; $i<$argc; $i++){
-    if($argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$log['verbose'] = intval($argv[$i+1]); $i++;}
-    if($argv[$i] == "--set-diak-quota" ){ $ALWAYS_SET_DIAK_QUOTA = true;  }
-    if($argv[$i] == "--create-groupdir"){ $m2n['groupdir_users'] = array( $argv[$i+1] ); $i++;}
+    if($argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$m2l['log_verbose'] = intval($argv[$i+1]); $i++;}
+    if($argv[$i] == "--set-diak-quota" ){ $m2l['always_set_diak_quota'] = true;  }
+    if($argv[$i] == "--create-groupdir"){ $m2l['groupdir_users'] = array($argv[$i+1]); $i++;}
 }
-if( $ALWAYS_SET_DIAK_QUOTA === true && $log['verbose'] < 4 ){    $log['verbose'] = 4; }
+
 
 
 if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Improved) és php7  kell!
@@ -726,7 +722,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
 //-------------------------------------------------------------------------------------------------------------------------------    
 
-    if($log['verbose'] > 0) { echo "\n\n######## Mayor-Nextcloud Script ########\n";   echo "######## ".date("Y-m-d H:i:s")."\n\n"; }
+    if(true) { echo "\n\n######## Mayor-Nextcloud Script ########\n";   echo "########  (".date("Y-m-d H:i:s").")\n\n"; }
     
 
     if( file_exists($cfgfile)===TRUE ){
@@ -735,7 +731,11 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     } else {
         if($log['verbose'] > 0) { echo "***	M2N Config betöltése: (".pathinfo($cfgfile)['dirname']."/mayor-nextcloud.php fejlécéből.) ***\n\n"; }
     }
-    
+    $log['verbose'] = $m2n['verbose'];
+    if(isset($m2l['always_set_diak_quota'])){ $m2n['always_set_diak_quota'] = $m2l['always_set_diak_quota']; }
+    if(isset($m2l['groupdir_users'])){ $m2n['groupdir_users'] = $m2l['groupdir_users']; }
+    if(isset($m2l['log_verbose'])){ $log['verbose'] = $m2l['log_verbose']; }
+    if( $m2l['always_set_diak_quota'] === true && $log['verbose'] < 4 ){    $log['verbose'] = 4; }
     
     if(($link = db_connect($db)) == FALSE){			//csatlakozás
         echo "\n******** MySQL (general) kapcsolat hiba. ********\n";
@@ -882,7 +882,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                         if ($log['verbose'] > 1 ){ echo "-\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."-\tnyilvántartásba véve.\n";} 
                     }
                     //---------------------------------------  QUOTA -----------------------------------//
-                    if($ALWAYS_SET_DIAK_QUOTA === true && $curr_tanarId < 0 && $curr_diakId > 0 ){              //Állítsunk-e erőből (diák) qvótát?
+                    if($m2n['always_set_diak_quota'] === true && $curr_tanarId < 0 && $curr_diakId > 0 ){              //Állítsunk-e erőből (diák) qvótát?
                         $params['quota'] = $m2n['diak_quota'];                                                  // Alapértelmezett diák kvóta
                         user_set($curr,$params);
                         if ($log['verbose'] > 3 ){ echo "* -\t\tBeállítva:\t"."Qvóta: ".$params['quota']."\t\n";}
@@ -1034,7 +1034,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     @mysqli_close($link2);
     @mysqli_close($link);
-    if ($log['verbose'] > 0 ){echo "kész.\n"; echo "(".date("Y-m-d H:i:s").")\n";} //endline
+    if ($log['verbose'] > 0 ){echo "\nkész.\n"; echo "(".date("Y-m-d H:i:s").")\n";} //endline
 
 } else {
     echo "\n\n******** Legalább PHP7 és mysqli szükséges! ********\n\n";
