@@ -16,7 +16,7 @@ $db['nxt_prefix'] = "oc_";
 //$db['mayor_port'] = "";
 //$db['mayor_user'] = ""; 
 //$db['mayor_pass'] = "";
- 
+  
 $m2n['min_evfolyam'] = 1;
 $m2n['isk_rovidnev'] = "rovid";
 $m2n['csoport_prefix'] = "(tk) ";
@@ -56,7 +56,7 @@ for($i = 1; $i<$argc; $i++){
 }
 
 
-
+ 
 if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Improved) és php7  kell!
 
     function db_connect(array $db){ 
@@ -88,7 +88,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             }
             return $l;
         }
-    }
+    } 
 // bezár: mysqli_close($link);
 
     function script_install($link){
