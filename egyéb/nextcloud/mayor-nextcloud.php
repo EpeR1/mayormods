@@ -735,7 +735,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     if(isset($m2l['always_set_diak_quota'])){ $m2n['always_set_diak_quota'] = $m2l['always_set_diak_quota']; }
     if(isset($m2l['groupdir_users'])){ $m2n['groupdir_users'] = $m2l['groupdir_users']; }
     if(isset($m2l['log_verbose'])){ $log['verbose'] = $m2l['log_verbose']; }
-    if( $m2l['always_set_diak_quota'] === true && $log['verbose'] < 4 ){    $log['verbose'] = 4; }
+    if( $m2n['always_set_diak_quota'] === true && $log['verbose'] < 4 ){    $log['verbose'] = 4; }
     
     if(($link = db_connect($db)) == FALSE){			//csatlakozás
         echo "\n******** MySQL (general) kapcsolat hiba. ********\n";
