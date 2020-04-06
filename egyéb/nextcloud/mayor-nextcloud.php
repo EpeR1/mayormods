@@ -1034,9 +1034,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     @mysqli_close($link2);
     @mysqli_close($link);
-    $t_run = (mictrotime(true) - $t_start)/60;
+    $t_run = (microtime(true) - $t_start)/60;
     if ($log['verbose'] > 0 ){ echo "\n(Runtime: ".$t_run."min.)\nkész.\n";} //endline
-
+ 
 } else {
     echo "\n\n******** Legalább PHP7 és mysqli szükséges! ********\n\n";
 }
