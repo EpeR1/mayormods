@@ -15,7 +15,7 @@ $db['nxt_prefix'] = "oc_";
 //$db['mayor_port'] = "";
 //$db['mayor_user'] = ""; 
 //$db['mayor_pass'] = "";
-
+ 
 $m2n['min_evfolyam'] = 1;
 $m2n['isk_rovidnev'] = "rovid";
 $m2n['csoport_prefix'] = "(tk) ";
@@ -133,7 +133,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     function nxt_get_version(){
         global $occ_path,$occ_user,$m2n,$log;
         // sudo -u honlap-felho php /home/honlap-felho/web/occ status --output=json
-        $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" status --output=json'" ;
+        $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." status --output=json \"" ;
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         return explode(".", json_decode(shell_exec($e),true)['version'])[0]; 
         echo "\n\n\n".explode(".", json_decode(shell_exec($e),true)['version'])[0]."\n\n\n";
@@ -218,10 +218,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         global $occ_path,$occ_user,$m2n,$log;
 //  	export OC_PASS=ErősJelszó123; su -s /bin/sh www-data -c 'php web/occ user:add --password-from-env  --display-name="Teszt Tamás" --group="csop" t.tamas'
         if(strlen($userAccount) > 64 or strlen($fullName) > 64){
-            echo "\n******** Hiba: A felahsználónév, vagy a \"teljes név\" hosszabb, mint 64 karakter! ********\n";
+            echo "\n******** Hiba: A felahsználónév, vagy a \"teljes név\" hosszabb, mint 64 karakter! NEM hozható létre!! ********\n";
         } else {
-            $e = "export OC_PASS=".$m2n['default_passw']."; su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:add 	\
-                 --password-from-env --display-name=\"$fullName\" --group=\"".$m2n['mindenki_csop']."\" $userAccount'" ;
+            $e = "export OC_PASS=".escp($m2n['default_passw'])."; su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:add  --password-from-env --display-name=".escp($fullName)." --group=".escp($m2n['mindenki_csop'])." ".escp($userAccount)." \"" ;
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             shell_exec($e);
         }
@@ -229,15 +228,15 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function user_del($userAccount){	// kitöröl vagy letilt egy felhasználót a Nextcloud-ban
 	global $occ_path,$occ_user,$log;
-        $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:info $userAccount --output=json'";
+        $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:info ".escp($userAccount)." --output=json \"";
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         $last_login = json_decode(shell_exec($e),true)['last_seen'] ;
         if($last_login == "1970-01-01T00:00:00+00:00" ){	
-            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:delete $userAccount'";		// Ha még soha nem lépett be
+            $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:delete ".escp($userAccount)." \"";		// Ha még soha nem lépett be
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             shell_exec($e);											// akkor törölhető
         } else {
-            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:disable $userAccount'";
+            $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:disable ".escp($userAccount)." \"";
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             shell_exec($e);											// különben csak letiltja
         }
@@ -246,7 +245,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     
     function user_info($userAccount){	// User állpot a Nextcloudban
         global $occ_path,$occ_user,$log;
-            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:info $userAccount --output=json '";
+            $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:info ".escp($userAccount)." --output=json \"";
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             return (array)json_decode(shell_exec($e),true);
     }
@@ -254,14 +253,14 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function user_dis($userAccount){	// letiltja a felhasználót a Nextcloud-ban
         global $occ_path,$occ_user,$log;
-            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:disable $userAccount'";
+            $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:disable ".escp($userAccount)." \"";
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             shell_exec($e);
     }
 
     function user_ena($userAccount){	// engedélyezi
         global $occ_path,$occ_user,$log;
-            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:enable $userAccount'";
+            $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:enable ".escp($userAccount)." \"";
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             shell_exec($e);   
     }
@@ -269,26 +268,26 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function nxt_group_list() {		// Csoportok listázása a Nextcloud-ból
             global $occ_path,$occ_user,$log;
-            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:list --limit=1000000 --output=json'";  //* Jó nagy limittel dolgozzunk
+            $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." group:list --limit=1000000 --output=json \"";  //* Jó nagy limittel dolgozzunk
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             return (array)json_decode(shell_exec($e),true);
     }
     
     function nxt_user_list() {		// Felhasználók listázása a Nextcloud-ból
             global $occ_path,$occ_user,$log;
-        //    $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:report | grep \"total\" | sed -e \"s/[^0-9]//g\" | tr -d \"[:blank:]\n\" '";
+        //    $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:report | grep 'total' | sed -e 's/[^0-9]//g' | tr -d '[:blank:]\n' \"";
         //    if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         //    $num = shell_exec($e); 
             $num = 1000000;      //inkább kézi limit!
         //    $num = $num + 100; 	// Biztos-ami-biztos, a nextcloud rejtett hibái miatt...
-            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:list --limit $num --output=json'";
+            $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:list --limit ".escp($num)." --output=json \"";
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             return (array)json_decode(shell_exec($e),true);
     }
     
     function nxt_user_lastlogin($userAccount){ 	// legutóbbi belépés lekérdezése
         global $occ_path,$occ_user,$log;
-        $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:info $userAccount  --output=json'";
+        $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:info ".escp($userAccount)."  --output=json \"";
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         return  json_decode(shell_exec($e),true)['last_seen'] ;
     }
@@ -297,33 +296,36 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     function user_set($userAccount, array $params){	//beállítja az e-mailt, quota-t, nyelvet a kapott értékekre
         global $occ_path,$occ_user,$log;        
         if(isset($params['quota'])){
-            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:setting $userAccount files quota \"".$params['quota']."\"'";
+            $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:setting ".escp($userAccount)." files quota ".escp($params['quota'])." \"";
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             shell_exec( $e );
         }
         if(isset($params['email'])){
-            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:setting $userAccount settings email \"".$params['email']."\"'";
+            $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:setting ".escp($userAccount)." settings email ".escp($params['email'])." \"";
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             shell_exec( $e );
         }
         if(isset($params['lang'])){
-            $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" user:setting $userAccount core lang \"".$params['lang']."\"'";
+            $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:setting ".escp($userAccount)." core lang ".escp($params['lang'])." \"";
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
             shell_exec($e);
         }
-    }
+    } 
     
+
+
     function group_add($groupName){ 	//Új csoport létrehozása a Nextcloud-ban 
         global $occ_user,$occ_path,$link,$db,$log;
+        $groupName = rmnp($groupName);
         if(strlen($groupName) > 64){	//mivel (egyelőre) nics erre 'occ' parancs, ezért közvetlenül kell...
             echo "\n****** Hiba: a csoportnév nagyobb, mint 64 karakter!! ******\n";
         } else {
             if(nxt_get_version() < 14) {
-                $q = "INSERT IGNORE INTO ".$db['nxt_dbname'].".".$db['nxt_prefix']."groups (gid) VALUES ('".$groupName."'); ";
+                $q = "INSERT IGNORE INTO ".mysqli_real_escape_string($link, $db['nxt_dbname']).".".mysqli_real_escape_string($link, $db['nxt_prefix'])."groups (gid) VALUES ('".mysqli_real_escape_string($link,$groupName)."'); ";
                 if ($log['verbose'] > 5 ){ echo "NXT ->\t".$q."\n"; }
                 if(mysqli_query($link, $q) !== TRUE ) echo "\nNXT -> \t****** Csoport létrehozási hiba. (adatbázis) ******\n";
             } else {
-                $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:add \"$groupName\" '";
+                $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." group:add ".escp($groupName)." \"";
                 if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
                 shell_exec($e);
             }
@@ -333,21 +335,22 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     function group_del($groupName){	// Csoport törlése a Nextcloud-ból
         global $occ_user,$occ_path,$db,$link,$log,$m2n;
         $grp = nxt_group_list();
+        $groupName = rmnp($groupName);
         if(isset($grp[$groupName])){
-	    if(nxt_get_version() < 14){	// Mivel erre csak a Nextcloud 14-től van "occ" parancs, ezért néha közvetlenül kell...
+	        if(nxt_get_version() < 14){	// Mivel erre csak a Nextcloud 14-től van "occ" parancs, ezért néha közvetlenül kell...
 
                 foreach($grp[$groupName] as $key => $user){
-                    $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:removeuser \"$groupName\" $user'";
+                    $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." group:removeuser ".escp($groupName)." ".escp($user)." \"";
                     if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
                     shell_exec($e);
                     if ($log['verbose'] > 1 ){ echo "*--\t\tTörölve".po(" ($user) a: $groupName",$m2n['csoportnev_hossz']+5,1)."\t csoportból.\n"; }
                 }
-                $q = "DELETE FROM ".$db['nxt_dbname'].".".$db['nxt_prefix']."groups WHERE gid='".$groupName."'; " ;
+                $q = "DELETE FROM ".mysqli_real_escape_string($link, $db['nxt_dbname']).".".mysqli_real_escape_string($link,$db['nxt_prefix'])."groups WHERE gid='".mysqli_real_escape_string($link, $groupName)."'; " ;
                 if ($log['verbose'] > 5 ){ echo "NXT ->\t".$q."\n"; }
                 if(mysqli_query($link, $q) !== TRUE ) echo "\n NXT -> \t****** csoport törlési hiba. (adatbázis) ******\n";
                 
             } else {
-                $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:delete \"$groupName\" '";
+                $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." group:delete ".escp($groupName)." \"";
                 if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
                 shell_exec($e);  
             }
@@ -356,14 +359,14 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     function group_user_add($groupName, $userAccount){	// Hozzáad egy felhasználót egy csoporthoz a Nextcloud-ban
         global $occ_user, $occ_path,$log;
-        $e = "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:adduser \"$groupName\" $userAccount'";
+        $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." group:adduser ".escp($groupName)." ".escp($userAccount)." \"";
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         shell_exec($e);
     }
 
     function group_user_del($groupName, $userAccount){	// Kitöröl egy felhasználót egy Nextcoud csoportból
         global $occ_user, $occ_path,$log;
-        $e =  "su -s /bin/sh $occ_user -c 'php \"".$occ_path."/occ\" group:removeuser \"$groupName\" $userAccount'";
+        $e =  "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." group:removeuser ".escp($groupName)." ".escp($userAccount)." \"";
         if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
         shell_exec($e);
     }
@@ -594,7 +597,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             WHERE statusz = 'aktív' AND kezdesDt <= CURRENT_DATE() AND (CURRENT_DATE() <= zarasDt OR zarasDt = '".$m2n['zaras_tartas']."' ));	 ";
 */             
 //csak a megadott évfeolyamokhoz kötődő tankörök:
-        $qq = "SELECT tanev FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter WHERE statusz = 'aktív' GROUP BY tanev; ";
+        $qq = "SELECT tanev FROM intezmeny_".mysqli_real_escape_string($link, $m2n['isk_rovidnev']).".szemeszter WHERE statusz = 'aktív' GROUP BY tanev; ";
         if ($log['verbose'] > 5 ){ echo "MAY ->\t".$qq."\n"; }
         if( ($r = mysqli_query($link, $qq)) !== FALSE ){
             $ev = mysqli_fetch_array($r, MYSQLI_ASSOC);
@@ -723,7 +726,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
 //-------------------------------------------------------------------------------------------------------------------------------    
 
-    if($log['verbose'] > 0) { echo "\n\n######## Mayor-Nextcloud Script ########\n\n\n"; }
+    if($log['verbose'] > 0) { echo "\n\n######## Mayor-Nextcloud Script ########\n";   echo "######## ".date("Y-m-d H:i:s")."\n\n"; }
+    
 
     if( file_exists($cfgfile)===TRUE ){
         include($cfgfile);
@@ -1030,7 +1034,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
     @mysqli_close($link2);
     @mysqli_close($link);
-    if ($log['verbose'] > 0 ){echo "kész.\n";} //endline
+    if ($log['verbose'] > 0 ){echo "kész.\n"; echo "(".date("Y-m-d H:i:s").")\n";} //endline
 
 } else {
     echo "\n\n******** Legalább PHP7 és mysqli szükséges! ********\n\n";
