@@ -22,35 +22,35 @@ if (isset($argv[1]) and $argv[1] == "config"){
 
         $cf .= "mayor_ip_sum.label Összes\n";
         $cf .= "mayor_ip_sum.draw AREA\n";
-        $cf .= "mayor_ip_sum.info Összes\n";
+        $cf .= "mayor_ip_sum.info Összes bejelentkezett felhasználó\n";
 
         $cf .= "mayor_ip_k.label Külső IP\n";
         $cf .= "mayor_ip_k.draw AREA\n";
-        $cf .= "mayor_ip_k.info Külső IP\n";
+        $cf .= "mayor_ip_k.info Külső IP címről\n";
 
         $cf .= "mayor_ip_b.label Belső IP\n";
         $cf .= "mayor_ip_b.draw AREA\n";
-        $cf .= "mayor_ip_b.info Belső IP\n";
+        $cf .= "mayor_ip_b.info Belső IP címről\n";
 
         $cf .= "mayor_p_pri.label Policy pri.\n";
         $cf .= "mayor_p_pri.draw LINE1.2\n";
-        $cf .= "mayor_p_pri.info Policy pri.\n";
+        $cf .= "mayor_p_pri.info Policy privát\n";
 
         $cf .= "mayor_p_par.label Policy par.\n";
         $cf .= "mayor_p_par.draw LINE1.2\n";
-        $cf .= "mayor_p_par.info Policy par.\n";
+        $cf .= "mayor_p_par.info Policy parent\n";
 
         $cf .= "mayor_a_t1.label Aktív: ".$set['t_active']."perc\n";
         $cf .= "mayor_a_t1.draw AREA\n";
-        $cf .= "mayor_a_t1.info Aktív: ".$set['t_active']."perc\n";
+        $cf .= "mayor_a_t1.info Aktív felhasználók az elmúlt ".$set['t_active']."percben\n";
 
         $cf .= "mayor_a_t2.label Aktív: ".($set['t_active']*2)."perc\n";
         $cf .= "mayor_a_t2.draw LINE1\n";
-        $cf .= "mayor_a_t2.info Aktív: ".($set['t_active']*2)."perc\n";
+        $cf .= "mayor_a_t2.info Aktív felhasználók az elmúlt ".($set['t_active']*2)."percben\n";
 
         $cf .= "mayor_a_tt.label Aktív: tétlen\n";
         $cf .= "mayor_a_tt.draw LINE1\n";
-        $cf .= "mayor_a_tt.info Aktív: tétlen\n";
+        $cf .= "mayor_a_tt.info Tétlen, de bejelentkezett felhasználók\n";
 	
 	echo iconv("UTF-8", "ISO-8859-2", $cf), PHP_EOL;
 
