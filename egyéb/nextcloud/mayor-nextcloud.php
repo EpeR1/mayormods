@@ -722,7 +722,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     }
 //-------------------------------------------------------------------------------------------------------------------------------    
 
-    if(true) { echo "\n\n######## Mayor-Nextcloud Script ########\n";   echo "######## (".date("Y-m-d H:i:s").")\n\n"; $t_start = microtime(true); }
+    if(true) { echo "\n\n######## Mayor-Nextcloud Script ########\n";   echo "######## (".date("Y-m-d H:i:s").") ########\n\n"; $t_start = microtime(true); }
     
 
     if( file_exists($cfgfile)===TRUE ){
