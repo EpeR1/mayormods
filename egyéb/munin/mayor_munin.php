@@ -3,13 +3,10 @@
 
 $ret = array();
 $set['host'] = getenv('host');
-//$set['occ_user'] = getenv('occ_user');        //If "serverinfo" would be a part of occ commands...
-//$set['occ_path'] = getenv('occ_path');
-$set['db_user'] = getenv('db_user');
-$set['db_pass'] = getenv('db_pass');
-$set['db_db'] = getenv('db_db');
-$set['db_host'] = getenv('db_host');
-$set['db_prefix'] = getenv('db_prefix');
+$set['db_user'] = strval(getenv('db_user'));
+$set['db_pass'] = strval(getenv('db_pass'));
+$set['db_db']   = "mayor_login";
+$set['db_host'] = strval(getenv('db_host'));
 $set['t_active'] = intval(getenv('t_active'));
 /*
 $set['db_user'] = "mayor-munin";
@@ -32,7 +29,7 @@ if (isset($argv[1]) and $argv[1] == "config"){
 
         $cf .= "mayor_ip_sum.label Összes\n";
         $cf .= "mayor_ip_sum.draw AREA\n";
-        $cf .= "mayor_ip_sum.info Összes bejelentkezett felhasználó\n";
+        $cf .= "mayor_ip_sum.info Összes bejelentkezett felhasználó +(a villámgyorsak)\n";
 
         $cf .= "mayor_ip_k.label Külső IP\n";
         $cf .= "mayor_ip_k.draw AREA\n";
