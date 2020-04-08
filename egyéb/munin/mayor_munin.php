@@ -1,19 +1,29 @@
 #!/usr/bin/env php
 <?php
 
-
+$ret = array();
+$set['host'] = getenv('host');
+//$set['occ_user'] = getenv('occ_user');        //If "serverinfo" would be a part of occ commands...
+//$set['occ_path'] = getenv('occ_path');
+$set['db_user'] = getenv('db_user');
+$set['db_pass'] = getenv('db_pass');
+$set['db_db'] = getenv('db_db');
+$set['db_host'] = getenv('db_host');
+$set['db_prefix'] = getenv('db_prefix');
+$set['t_active'] = intval(getenv('t_active'));
+/*
 $set['db_user'] = "mayor-munin";
 $set['db_pass'] = "";
 $set['db_db']	= "mayor_login";
 $set['db_host'] = "localhost";
-$set['naplo_host'] = "mayor.iskolaneve.hu";
+$set['host'] = "mayor.iskolaneve.hu";
 $set['t_active'] = "10";   //pl: 10 perc (Az elmúlt x percben aktívak voltak)
-$ret = array();
+*/
 
 
 if (isset($argv[1]) and $argv[1] == "config"){ 
 
-        $cf  = "host_name ".$set['naplo_host']."\n";
+        $cf  = "host_name ".$set['host']."\n";
         $cf .= "graph_title Napló rendszerterhelés (Mayor)\n";
         $cf .= "graph_args --base 1000 \n";
         $cf .= "graph_vlabel db/fő\n";
@@ -65,7 +75,7 @@ if (isset($argv[1]) and $argv[1] == "config"){
 } else {
 
 	if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7 ) { //MySQLi (Improved) és php7  kell!!!
-
+		$ret['ip_sum'] = 0;
 	    $ret['ip_b'] = 0;
 	    $ret['ip_k'] = 0;
 	    $ret['p_pri'] = 0;
@@ -78,6 +88,7 @@ if (isset($argv[1]) and $argv[1] == "config"){
 	    $l = mysqli_connect($set['db_host'], $set['db_user'], $set['db_pass'], $set['db_db']);
 	    if(!$l){
 			// echo "hiba\n ";
+			$ret['ip_sum'] = "U";
 			$ret['ip_b'] = "U";
 			$ret['ip_k'] = "U";
 			$ret['p_pri'] = "U";
