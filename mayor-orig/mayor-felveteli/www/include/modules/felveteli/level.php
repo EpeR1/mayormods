@@ -78,14 +78,16 @@
 		$TeX .= ' felvételt nyert '."\n\n";
 		$TeX .= '\end{center}'."\n";
 		$TeX .= '\begin{center}'."\n";
-		$TeX .= ' a Városmajori Gimnázium '.$OSZTALYABA[$tagozatId].".\n\n";
+		$TeX .= ' a Városmajori Gimnázium '.$OSZTALYABA[$D['vegeredmeny']]." osztályába.\n\n";
 		$TeX .= '\end{center}'."\n\n";
-		$TeX .= 'Tájékoztatom, hogy az első szülői értekezlet '._SZULOI_ERTEKEZLET_IDOPONTBAN.' lesz, amelyre ezúton hívom meg a Szülőket.'."\n";
+//		$TeX .= 'Tájékoztatom, hogy az első szülői értekezlet '._SZULOI_ERTEKEZLET_IDOPONTBAN.' lesz, amelyre ezúton hívom meg a Szülőket.'."\n";
+		$TeX .= 'Tájékoztatom, hogy az első szülői értekezlet '._SZULOI_ERTEKEZLET_IDOPONTBAN.' lesz.'."\n";
 		if (in_array($tagozatId,array(1,2,11,12,3,4,5,6))) {
-		    $TeX .= 'A szülői értekezlet ideje alatt a tanulók nyelvi szintfelmérőt írnak.\footnote{Amennyiben a tanuló az első idegen nyelvet nem tanulta, a szintfelmérőt nem szükséges megírnia.} ';
+		    // $TeX .= 'A szülői értekezlet ideje alatt a tanulók nyelvi szintfelmérőt írnak.\footnote{Amennyiben a tanuló az első idegen nyelvet nem tanulta, a szintfelmérőt nem szükséges megírnia.} ';
 		}
 		$TeX .= 'A beiratkozással és tankönyvrendeléssel kapcsolatos aktuális teendőkért kérjük ne felejtsék rendszeresen felkeresni honlapunkat.'." ";
-		$TeX .= 'Hogy a család számára a nyári programtervezést megkönnyítsük, előre jelezzük, hogy a gólyatábor várható időpontja '._GOLYATABOR_IDOPONT.' lesz.'."\n\n";
+//		$TeX .= 'Hogy a család számára a nyári programtervezést megkönnyítsük, előre jelezzük, hogy a gólyatábor várható időpontja '._GOLYATABOR_IDOPONT.' lesz.';
+		$TeX .= "\n\n";
         	$TeX .= '\vspace{14pt}'."\n";
 		$TeX .= 'Remélem, az iskolánkban eltöltött évek hasznosak és eredményesek lesznek.'."\n\n";
 

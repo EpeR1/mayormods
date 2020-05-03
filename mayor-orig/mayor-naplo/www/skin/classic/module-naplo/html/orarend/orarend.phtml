@@ -390,13 +390,14 @@ if (MAYOR_SOCIAL === true) {
 				}
 				*/
 				/* és ide jönnek a pluszok */
+
 				$j=0;
 				if (is_array($ADAT['haladasi']['orak'][$dt][$ora])) {
 				    foreach ($ADAT['haladasi']['orak'][$dt][$ora] as $_tankorId => $__T) {
 					if (!is_array($ORARENDI) || !in_array($_tankorId,$ORARENDI)) {
 					    if ($j!=0) echo '<hr/>'; $j++;
 					    $_ORA = $ADAT['haladasi']['orak'][$dt][$ora];
-					    _putOra($_ORA,$_tankorId,$TANKOR_DOLGOZAT);
+					    _putOra($_ORA,$_tankorId,$TANKOR_DOLGOZAT); // hazi
 					}
 				    }
 				}
@@ -460,10 +461,33 @@ if (MAYOR_SOCIAL === true) {
     function _putOra($ORA,$_tankorId,$TANKOR_DOLGOZAT) {
 	    global $ADAT;
 	    if ($_tankorId=='') return false;
+	    // list($oraId,$oraAdat);
 	    $_ORA = $ORA[$_tankorId];
 	    $_tipusClass = str_replace(' ','_',$_ORA['tipus']);
 	    $_eredetClass = $_ORA['eredet'];
-	    echo '<div class="'.$_tipusClass.' '.$_eredetClass.'" title="'.$_ORA['tipus'].'" >';
+	    $dt = $_ORA['dt'];
+	    echo '<div class="oraAdat '.$_tipusClass.' '.$_eredetClass.'" title="'.$_ORA['tipus'].'" data-oraid="'.$_ORA['oraId'].'">';
+
+	    // HÁZI
+				    if (isset($_ORA['hazifeladatId'])) {
+					if ($_ORA['hazifeladatFeltoltesEngedely']==1) {
+					    $_icon = 'icon-paper-clip-alt';
+					    if ($_ORA['diakHazifeladat']['hazifeladatDiakStatus'] == 'kész') { $_hfcolor = 'lightgreen';
+					    } else { $_hfcolor = '#3f51b5'; }
+					} else {
+					    $_icon= 'icon-home-alt';
+					    if ($_ORA['diakHazifeladat']['hazifeladatDiakStatus'] == 'kész') { $_hfcolor = 'lightgreen';
+					    } else { $_hfcolor = '#e91e63'; }
+					}
+					echo '<span class="'.$_icon.'" title="h.f." style="color:'.$_hfcolor.'; padding-right:2px;"></span>';
+				    }
+
+				    if ($_ORA['cimkeLeiras']!='') {
+					$_cimkeMod = intval($_ORA['cimkeId']) % 5;
+					echo '<span class="cimke cimke_'.$_cimkeMod.'">'.$_ORA['cimkeLeiras'].'</span>';
+				    }
+		// HÁZI qfix
+
 		if ($TANKOR_DOLGOZAT[$_tankorId][$_ORA['dt']]>0) echo '<span style="color:orange;" class="icon-idea-alt"></span>';
 			echo '<span title="'.$_targyJel.' '.$_osztalyJel.' ('.$ADAT['tankorok'][$_T['tankorId']][0]['tankorId'].')" >';
 			echo $ADAT['tankorok'][$_ORA['tankorId']][0]['tankorNev'];
