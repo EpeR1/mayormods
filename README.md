@@ -2,8 +2,6 @@
 
 Ez a tároló, a MaYoR elektornikus napló (© [www.mayor.hu](http://www.mayor.hu)), és a hozzá készített apróbb javítások/módosítások/kiegészítések gyüjteménye.  
 
-**Original: [http://git.bmrg.hu/pub/mayormods.git](http://git.bmrg.hu/pub/mayormods.git/)**   
-**Mirror 2: [https://github.com/eper1/mayormods](https://github.com/EpeR1/mayormods)**   
 
 
 ## Struktúra:
