@@ -256,8 +256,10 @@
 				    // záradékhoz (2015)
  				    $ADAT['diakAdat'][$diakId]['bukottTargy'][] = $ADAT['targyAdat'][$targyId]['targyNev'];
 				} 
-				if (isset($jegyAdat['megjegyzes']) && $zaraskorTag) {
-				    $ADAT['stat'][ $jegyAdat['megjegyzes'] ]++;
+				if ($zaraskorTag) {
+				    if (isset($jegyAdat['megjegyzes'])) {
+					$ADAT['stat'][ $jegyAdat['megjegyzes'] ]++;
+				    }
 				    if (in_array($jegyAdat['jegyTipus'],array('jegy','féljegy'))) {
 					$ADAT['jegyEloszlas'][$targyId][$jegyAdat['jegy']]++;
 					if (!in_array($targyId,array_merge($ADAT['szorgalomTargyIdk'],$ADAT['magatartasTargyIdk'])) && $zaraskorTag) $ADAT['jegyEloszlas']['osszes'][$jegyAdat['jegy']]++;
