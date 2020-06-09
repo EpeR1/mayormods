@@ -126,7 +126,7 @@
 				    list($_diakId, $_zaradekIndex, $zaradekId, $csereStr) = explode('/', $zAdat); // --TODO per jel hibás lehet!
 				    if ($zaradekId == '') $zaradekId = null;
 				    if (in_array($_zaradekIndex, array_values($ZaradekIndex['konferencia bukás']))) $csere = array('%évfolyam%' => $ADAT['evfolyamJel'].".");
-				    else $csere = array('%évfolyam%' => ($ADAT['kovetkezoEvfolyamJel']).".", '%évfolyam betűvel%' => ($_EVFOLYAMJEL_BETUVEL[ $ADAT['kovetkezoEvfolyamJel'] ]).".");
+				    else $csere = array('%évfolyam%' => ($ADAT['kovetkezoEvfolyamJel']).".", '%évfolyam betűvel%' => $_EVFOLYAMJEL_BETUVEL[ $ADAT['kovetkezoEvfolyamJel'] ]);
 				    $csere['%tantárgy%'] = str_replace('=',', ',$csereStr); // TODO, és-re cserélhetjük vessző helyett
 				    zaradekRogzites(array('diakId'=>$_diakId, 'zaradekId' => $zaradekId, 'zaradekIndex'=>$_zaradekIndex, 'dt'=>$ADAT['utolsoTanitasiNap'], 'csere' => $csere));
 				}
