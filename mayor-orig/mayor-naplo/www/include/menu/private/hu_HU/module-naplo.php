@@ -570,6 +570,7 @@
 		'szuloiAzonositok' => array(array('txt' => 'Szülői azonosítók generálása','icon'=>'icon-adult')),
 		'rpcPrivilege' => array(array('txt' => 'RPC jogosultságok')),
 		'kréta magic' => array(array('txt' => 'Kréta 2 MaYoR', 'icon'=>'icon-asterisk', 'url'=>'index.php?page=naplo&sub=import&f=tantargyFelosztas')),
+		'debug' => array(array('txt' => 'Rendszerinformáció', 'icon'=>'icon-cog')),
 	);
 	$MENU['modules']['naplo']['sub']['hirnok'] =  array(
 	    'hirnok' =>array(array('txt' => 'Hírnök', 'icon'=>'icon-bullhorn')),
