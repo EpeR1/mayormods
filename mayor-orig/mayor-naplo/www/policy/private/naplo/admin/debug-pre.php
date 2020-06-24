@@ -12,7 +12,7 @@
     $ADAT['debug_result']['sql_server']['sql_version']=db_query('SELECT VERSION()',array('modul'=>'naplo','fb'=>'debug',result=>'indexed'));
     $ADAT['debug_result']['tex_cli'] = @shell_exec('tex --version');
     $ADAT['debug_result']['xetex_cli'] = @shell_exec('xetex --version');
-    $ADAT['debug_result']['constants'] = @get_defined_constants();
+//    $ADAT['debug_result']['constants'] = @get_defined_constants();
 
     @ini_set('xdebug.var_display_max_depth', '3');
     @ini_set('xdebug.var_display_max_children', '4096');
