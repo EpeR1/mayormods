@@ -140,6 +140,7 @@ INSERT INTO `osztalyJelleg` VALUES (1,1,'Általános iskola',0,NULL,NULL,NULL,NU
 (34,NULL,'4 évfolyamos gimnázium két tanítási nyelvű előkészítő évfolyammal (1+4)',1,NULL,9,12,'Kny',1,'9/Kny,9,10,11,12','érettségi vizsga'),
 (35,NULL,'4 évfolyamos gimnázium nemzetiségi előkészítő évfolyammal (1+4)',1,NULL,9,12,'N',1,'9/N,9,10,11,12','érettségi vizsga'),
 (36,NULL,'4 évfolyamos gimnázium nyelvi előkészítő évfolyammal (1+4)',1,NULL,9,12,'Ny',1,'9/Ny,9,10,11,12','érettségi vizsga'),
+(37,NULL,'4 évfolyamos gimnázium érettségire felkészítő évfolyammal WALDORF (4+1)',1,NULL,9,13,NULL,1,'9,10,11,12,13','érettségi vizsga'),
 (41,NULL,'5 évfolyamos gimnázium',1,NULL,9,13,'',0,'9,10,11,12,13','érettségi vizsga'),
 (42,NULL,'5 évfolyamos gimnázium AJTP előkészítő évfolyammal (1+5)',1,NULL,9,13,'AJTP',0,'9/AJTP,9,10,11,12,13','érettségi vizsga'),
 (43,NULL,'5 évfolyamos gimnázium AJKP előkészítő évfolyammal (1+5)',1,NULL,9,13,'AJKP',0,'9/AJKP,9,10,11,12,13','érettségi vizsga'),
@@ -173,7 +174,14 @@ INSERT INTO `osztalyJelleg` VALUES (1,1,'Általános iskola',0,NULL,NULL,NULL,NU
 (90,NULL,'szakképzés (Ksz/11) - szakmai elméleti és gyakorlati oktatást folytató szakgimnáziumi (tizedik évf. utáni) - egy éves szakképzés',0,NULL,NULL,NULL,NULL,1,'Ksz/11','bizonyítvány'),
 (91,NULL,'Köznevelési Híd (I.) program - 1 évfolyamos, alapfokú végzettséghez kötött, középiskolára felkészítő képzés (KH)',0,NULL,NULL,NULL,NULL,1,'KH','bizonyítvány'),
 (92,NULL,'Szakképzési Híd (II.) program - 1 évfolyamos (10 hónapos), alapfokú végzettséget nem adó, szakképzést előkészítő osztály (SZH/1)',0,NULL,NULL,NULL,NULL,1,'SZH/1','bizonyítvány'),
-(93,NULL,'Szakképzési Híd (II.) program - 2 évfolyamos (20 hónapos), alapfokú végzettséget adó, szakképzést előkészítő osztály (SZH/1-2)',0,NULL,NULL,NULL,NULL,1,'SZH/1,SZH/2','bizonyítvány');
+(93,NULL,'Szakképzési Híd (II.) program - 2 évfolyamos (20 hónapos), alapfokú végzettséget adó, szakképzést előkészítő osztály (SZH/1-2)',0,NULL,NULL,NULL,NULL,1,'SZH/1,SZH/2','bizonyítvány'),
+(171,NULL,'technikum (5)',1,NULL,9,NULL,'',1,'9,10,11,12,13','érettségi vizsga'),
+(172,NULL,'technikum AJTP előkészítő évfolyammal (1+5)',1,NULL,9,NULL,'AJTP',1,'9/AJTP,9,10,11,12,13','érettségi vizsga'),
+(173,NULL,'technikum AJKP előkészítő évfolyammal (1+5)',1,NULL,9,NULL,'AJKP',1,'9/AJKP,9,10,11,12,13','érettségi vizsga'),
+(174,NULL,'technikum két tanítási nyelvű előkészítő évfolyammal (1+5)',1,NULL,9,NULL,'Kny',1,'9/Kny,9,10,11,12,13','érettségi vizsga'),
+(175,NULL,'technikum nemzetiségi előkészítő évfolyammal (1+5)',1,NULL,9,NULL,'N',1,'9/N,9,10,11,12,13','érettségi vizsga'),
+(176,NULL,'technikum nyelvi előkészítő évfolyammal (1+5)',1,NULL,9,NULL,'Ny',1,'9/Ny,9,10,11,12,13','érettségi vizsga')
+;
 
 CREATE TABLE `rpcJogosultsag` (
   `nodeId` mediumint(8) unsigned zerofill NOT NULL DEFAULT '00000000',
