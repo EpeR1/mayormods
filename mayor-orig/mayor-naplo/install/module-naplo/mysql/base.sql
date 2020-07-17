@@ -180,7 +180,9 @@ INSERT INTO `osztalyJelleg` VALUES (1,1,'Általános iskola',0,NULL,NULL,NULL,NU
 (173,NULL,'technikum AJKP előkészítő évfolyammal (1+5)',1,NULL,9,NULL,'AJKP',1,'9/AJKP,9,10,11,12,13','érettségi vizsga'),
 (174,NULL,'technikum két tanítási nyelvű előkészítő évfolyammal (1+5)',1,NULL,9,NULL,'Kny',1,'9/Kny,9,10,11,12,13','érettségi vizsga'),
 (175,NULL,'technikum nemzetiségi előkészítő évfolyammal (1+5)',1,NULL,9,NULL,'N',1,'9/N,9,10,11,12,13','érettségi vizsga'),
-(176,NULL,'technikum nyelvi előkészítő évfolyammal (1+5)',1,NULL,9,NULL,'Ny',1,'9/Ny,9,10,11,12,13','érettségi vizsga')
+(176,NULL,'technikum nyelvi előkészítő évfolyammal (1+5)',1,NULL,9,NULL,'Ny',1,'9/Ny,9,10,11,12,13','érettségi vizsga'),
+(201,NULL,'szakközépiskola - 3 szakképzési évfolyam (3)',1,NULL,9,11,NULL,1,'9,10,11','szakmai vizsga'),
+(202,NULL,'szakképző iskola - 3 szakképzési évfolyam (3)',1,NULL,9,11,NULL,1,'9,10,11','szakmai vizsga')
 ;
 
 CREATE TABLE `rpcJogosultsag` (
