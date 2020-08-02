@@ -74,7 +74,7 @@
 	$bontasId = db_query($q, array('fv'=>'addBontas/insert','modul'=>'naplo','result'=>'insert','values'=>array($osztalyId,$kepzesOratervId,$targyId)), $lr);
 
 	// is_resource mysqli esetán nem jó (object)
-	if (!$olr) db_close();
+	if (!$olr) db_close($lr);
 
 	return array(
 	    'targyId' => $targyId,

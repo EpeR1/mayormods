@@ -18,6 +18,7 @@
 	if ($ADAT['targyBontasStatus']===false && $action=='targyBontasInit') {
 	    $ADAT['targyBontasStatus'] = initFromLastYear();
 	}
+dump($ADAT);
 	// telephely - csak szűréshez kell
 	$ADAT['telephelyId'] = $telephelyId = readVariable($_POST['telephelyId'], 'id');
 	// kötelező szűrési opció

@@ -12,8 +12,8 @@ HOME="/tmp"
 export HOME
 
 # Make sure this exists
-# cd $BASEDIR/print/module-naplo/tex/
-# fmtutil-sys --cnffile $BASEDIR/print/module-naplo/tex/mayor.cnf --fmtdir $BASEDIR/print/module-naplo/ --byfmt mayor
+# cd $BASEDIR/print/module-naplo/xetex/
+# fmtutil-sys --cnffile $BASEDIR/print/module-naplo/xetex/mayor-xetex.cnf --fmtdir $BASEDIR/print/module-naplo/ --byfmt mayor-xetex
         
 cat <<EOF > $1.tex
 %\font\kicsi=ecrm0500
