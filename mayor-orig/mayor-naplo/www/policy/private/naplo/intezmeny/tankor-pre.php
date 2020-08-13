@@ -31,6 +31,17 @@
     //$_TA = getTanevAdat($tanev);
     //$_TA['statusz'];
 
+    // A tankörcsoportok felvétele az Elnevezés ($TANKOR_TIPUS) mezőben kiválasztható listába)
+	$q = "select distinct csoportNev from csoport";
+	$lr = db_connect('naplo');
+	$r = db_query($q, array('fv'=>'AddCsoportToTankorTipus','v'=>array(),'result'=>'idonly'), $lr);
+	db_close($lr);
+	foreach ($r as $cs) {
+	    if(strlen($cs) > 30) $cs = substr($cs, 0, 28).'...';
+	    $TANKOR_TIPUS[$cs] = "($cs)"; 
+	}
+    // $TANKOR_TIPUS bővítés
+
     if (__NAPLOADMIN || __VEZETOSEG) {
 	switch ($action) {
 	    case 'ujTankor': // VAGY MÓDOSÍTÁS!!!

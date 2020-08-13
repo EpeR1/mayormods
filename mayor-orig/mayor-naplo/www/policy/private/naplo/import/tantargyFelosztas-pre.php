@@ -31,7 +31,7 @@
     10.2.n.djpr	német nyelv	4,00	Dobrosi-Jelinek Piroska Rita	Nem
     12.2.n.djpr	német nyelv	3,00	Dobrosi-Jelinek Piroska Rita	Nem
     11.D		dráma	1,00	Dobrosi-Jelinek Piroska Rita	Nem
-
+    
 4. e-Napló, Tanórák Listája, Excel Export (jobb oldali gomb)
 
     _DATADIR.'/'."orarendiOra.tsv
@@ -45,7 +45,7 @@
     $IMPORT_FILES = array(
 	'csoportba_jaro_tanulok' => _DATADIR.'/'."csoportba_jaro_tanulok.tsv",
 	'osztalyba_jaro_tanulok' => _DATADIR.'/'."osztalyba_jaro_tanulok.tsv",
-	'tantargyfelosztas' => _DATADIR.'/'."ttfimport.tsvx",
+	'tantargyfelosztas' => _DATADIR.'/'."ttfimport.tsv",
 	'orarendiOra' => _DATADIR.'/'."orarendiOra.tsv",
 	'helyettesitett_tanorak' => _DATADIR.'/'."helyettesitett_tanorak.tsv",
 //	'elmaradt_tanorak' => _DATADIR.'/'."helyettesitett_tanorak.tsv",
@@ -144,33 +144,33 @@
 	    '12.E' => 99,
 	);
        } elseif (__INTEZMENY==='MZSG') {
-	    $ADAT['kulcsertektar']['osztalyjel2id'] = $OSZTALYJEL2ID = array(
-	    '7.a' => 72,
-	    '7.b' => 73,
-	    '8.a' => 74,
-	    '8.b' => 75,
-	    '9.ny' => 71,
-	    '9.a' => 60,
-	    '9.b' => 61,
-	    '9.c' => 68,
-	    '9.d' => 69,
-	    '9.e' => 70,
-	    '10.a' => 57,
-	    '10.b' => 58,
-	    '10.c' => 66,
-	    '10.d' => 67,
-	    '10.e' => 64,
-	    '11.a' => 50,
-	    '11.b' => 51,
-	    '11.c' => 62,
-	    '11.d' => 63,
-	    '11.e' => 59,
-	    '12.a' => 45,
-	    '12.b' => 46,
-	    '12.c' => 55,
-	    '12.d' => 56,
-	    '12.e' => 53,
-	    );
+            $ADAT['kulcsertektar']['osztalyjel2id'] = $OSZTALYJEL2ID = array(
+            '7.a' => 76,
+            '7.b' => 77,
+            '8.a' => 72,
+            '8.b' => 73,
+            '9.ny' => 78,
+            '9.a' => 74,
+            '9.b' => 75,
+            '9.c' => 79,
+            '9.d' => 80,
+            '9.e' => 71,
+            '10.a' => 60,
+            '10.b' => 61,
+            '10.c' => 68,
+            '10.d' => 69,
+            '10.e' => 70,
+            '11.a' => 57,
+            '11.b' => 58,
+            '11.c' => 66,
+            '11.d' => 67,
+            '11.e' => 64,
+            '12.a' => 50,
+            '12.b' => 51,
+            '12.c' => 62,
+            '12.d' => 63,
+            '12.e' => 59,
+            );
        } else {
 	$_SESSION['alert'][] = 'page:nincs_osztalyjel2id';
        }
