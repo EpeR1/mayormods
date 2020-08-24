@@ -94,7 +94,7 @@
 	    if ($DIAKOK[$i]['oId']!='') {
 		$OID2ID[$DIAKOK[$i]['oId']] = intval($DIAKOK[$i]['diakId']); 
 	    } else {
-		$ADAT['bug']['diak'][] = $DIAKOK[$i]['oId'];
+	        $ADAT['bug']['diak'][] = $DIAKOK[$i]['oId'].serialize($DIAKOK[$i]);
 	    }
 	}
 	// TÁRGYAK
@@ -527,7 +527,7 @@
 		$_D = $ADAT['ttf'][$i];
 		$q = "select *,tankorSzemeszter.tankorId AS tankorId from tankorSzemeszter 
 LEFT JOIN tankor USING (tankorId)
-LEFT JOIN tankorTanar ON (tankorTanar.tankorId=tankor.tankorId AND beDt<=NOW() AND (kiDt is null or kiDt>=NOW())) 
+LEFT JOIN tankorTanar ON (tankorTanar.tankorId=tankor.tankorId AND beDt<='2020-09-01' AND (kiDt is null or kiDt>='2020-09-01')) 
 LEFT JOIN ".__TANEVDBNEV.".tankorCsoport ON (tankor.tankorId = tankorCsoport.tankorId)
 LEFT JOIN ".__TANEVDBNEV.".csoport USING (csoportId)
 WHERE tanev=%u AND szemeszter=%u AND targyId=%u AND oraszam=%f AND tanarId=%u
@@ -551,7 +551,7 @@ GROUP BY tankor.tankorId";
 // Belerakjuk azon tanköröket is, ahol vélhetően csak a csoport hozzárendelés hiányzik
 		$q = "select *,tankorSzemeszter.tankorId AS tankorId from tankorSzemeszter 
 LEFT JOIN tankor USING (tankorId)
-LEFT JOIN tankorTanar ON (tankorTanar.tankorId=tankor.tankorId AND beDt<=NOW() AND (kiDt is null or kiDt>=NOW())) 
+LEFT JOIN tankorTanar ON (tankorTanar.tankorId=tankor.tankorId AND beDt<='2020-09-01' AND (kiDt is null or kiDt>='2020-09-01')) 
 LEFT JOIN ".__TANEVDBNEV.".tankorCsoport ON (tankor.tankorId = tankorCsoport.tankorId)
 LEFT JOIN ".__TANEVDBNEV.".csoport USING (csoportId)
 WHERE tanev=%u AND szemeszter=%u AND targyId=%u AND oraszam=%f AND tanarId=%u
@@ -591,7 +591,7 @@ GROUP BY tankor.tankorId";
 		    }
 		    $q = "select *,tankorSzemeszter.tankorId AS tankorId from tankorSzemeszter 
 LEFT JOIN tankor USING (tankorId) 
-LEFT JOIN tankorTanar ON (tankorTanar.tankorId=tankor.tankorId AND beDt<=NOW() AND (kiDt is null or kiDt>=NOW()))
+LEFT JOIN tankorTanar ON (tankorTanar.tankorId=tankor.tankorId AND beDt<='2020-09-01' AND (kiDt is null or kiDt>='2020-09-01'))
 LEFT JOIN tankorOsztaly ON (tankor.tankorId = tankorOsztaly.tankorId)
 WHERE tanev=%u AND szemeszter=%u AND targyId=%u 
 AND oraszam=%f 
@@ -611,7 +611,7 @@ GROUP BY tankor.tankorId ORDER BY tankorNev";
 		    } else {
 			    $q = "select *,tankorSzemeszter.tankorId AS tankorId from tankorSzemeszter 
 LEFT JOIN tankor USING (tankorId) 
-LEFT JOIN tankorTanar ON (tankorTanar.tankorId=tankor.tankorId AND beDt<=NOW() AND (kiDt is null or kiDt>=NOW()))
+LEFT JOIN tankorTanar ON (tankorTanar.tankorId=tankor.tankorId AND beDt<='2020-09-01' AND (kiDt is null or kiDt>='2020-09-01'))
 WHERE tanev=%u AND szemeszter=%u AND targyId=%u
 AND oraszam>=%f
 AND tanarId IS NULL 
@@ -662,7 +662,7 @@ GROUP BY tankor.tankorId ORDER BY tankorNev";
     // MaYoR: csoportId+targyId+tanarId => tankorId;
 
     $lr_naplo = db_connect('naplo');
-    $q = "select csoportId, targyId, tanarId, tankor.tankorId FROM tankorCsoport LEFT JOIN csoport USING (csoportId) LEFT JOIN ".__INTEZMENYDBNEV.".tankor USING (tankorId) LEFT JOIN ".__INTEZMENYDBNEV.".tankorTanar ON (tankor.tankorId = tankorTanar.tankorId AND beDt>='2019-09-01' AND (kiDt IS NULL or kiDt>=NOW()))";
+    $q = "select csoportId, targyId, tanarId, tankor.tankorId FROM tankorCsoport LEFT JOIN csoport USING (csoportId) LEFT JOIN ".__INTEZMENYDBNEV.".tankor USING (tankorId) LEFT JOIN ".__INTEZMENYDBNEV.".tankorTanar ON (tankor.tankorId = tankorTanar.tankorId AND beDt>='2019-09-01' AND (kiDt IS NULL or kiDt>='2020-09-01'))";
     $r = db_query($q, array('fv' => 'pre', 'modul' => 'naplo', 'values' => $v, 'result'=>'indexed'),$lr_naplo);
     for ($i=0; $i<count($r); $i++) {
 	$d = $r[$i];

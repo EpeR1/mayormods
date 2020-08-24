@@ -29,7 +29,8 @@
 
 	    table.ttf tr.createTankor td { background-color: magenta;}
 	    table.ttf tr.done td { background-color: lightgreen;}
-	    table.ttf tr td {padding:4px;}
+	    table.ttf tr td {padding:4px; border-bottom: solid 1px #ccc;}
+	    table.ttf tr td:hover {outline: solid 2px cornflowerblue;}
 
 	    table.ttf tr td div.tankorLista span:hover { color: white; }
 	</style>';
@@ -104,7 +105,7 @@
 			echo '<option>--'.$D['action'].'--</option>';
 			for ($j=0; $j<count($D['displayTankor']); $j++) {
 			    $_SEL = (count($D['displayTankor'])==1 && $D['action']=='tankorHozzarendel') ? ' selected="selected" ': '';
-			    echo '<option value="'.$D['csoportId'].':####:'.$D['tanarId'].':####:'.$D['displayTankor'][$j]['tankorId'].':####:'.$D['oraszam'].'"    '.$_SEL.'>'.$D['displayTankor'][$j]['tankorNev'].'</option>';
+			    echo '<option value="'.$D['csoportId'].':####:'.$D['tanarId'].':####:'.$D['displayTankor'][$j]['tankorId'].':####:'.$D['oraszam'].'"    '.$_SEL.'>'.$D['displayTankor'][$j]['tankorNev'].' ('.$D['displayTankor'][$j]['tankorId'].')</option>';
 			}
 			echo '</select>';
 			echo '<div class="tankorLista">';
@@ -124,7 +125,16 @@
 			echo '</div>';
 			// ha ezt összehasonlítom a mayorban rögzített névsorral, akkor eldönhető lehet, hogy melyik a jó választás!
 			echo ' Új tankör:';
-			echo '<input type="checkbox" name="ujTankor[]" value="'.$D['csoportId'].':####:'.$D['tanarId'].':####:'.$_osztalyok.':####:'.$D['targyId'].'.'.':####:'.$_O.':####:'.$D[1].'" />';
+ 			if (count($_osztalyok)>0) {
+ 			    echo '<input type="checkbox" name="ujTankor[]" value="'.$D['csoportId'].':####:'.$D['tanarId'].':####:'.$_osztalyok.':####:'.$D['targyId'].'.'.':####:'.$_O.':####:'.$D[1].'" />';
+ 			} else {
+ 			    echo '<select name="ujTankor[]">';
+ 				echo '<option value=""></option>';
+ 				foreach ($ADAT['kulcsertektar']['osztalyjel2id'] as $__osztalyJel => $__osztalyId) { // TODO osztalyJel mayorbol inkabb
+ 				    echo '<option value="'.$D['csoportId'].':####:'.$D['tanarId'].':####:'.$__osztalyId.':####:'.$D['targyId'].'.'.':####:'.$_O.':####:'.$D[1].'">'.$__osztalyJel.'</option>';
+ 				}
+ 			    echo '</select>';
+ 			}
 		    } elseif ($D['action'] == 'createTankor') {
 			echo 'Új tankör létrehozása: <input type="text" name="ujTankor[]" value="'.$D['csoportId'].':####:'.$D['tanarId'].':####:'.$_osztalyok.':####:'.$D['targyId'].'.'.':####:'.$_O.':####:'.$D[1].'" />';
 		    } else {

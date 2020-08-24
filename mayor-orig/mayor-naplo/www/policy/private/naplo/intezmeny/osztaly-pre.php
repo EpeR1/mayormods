@@ -19,7 +19,9 @@ require_once('include/modules/naplo/share/tankorDiakModifier.php');
 require_once('include/modules/naplo/share/hianyzasModifier.php');
 require_once('include/modules/naplo/share/jegyModifier.php');
 require_once('include/modules/naplo/share/jegy.php');
+require_once('include/share/net/upload.php');
 
+define('FILE_UPLOAD_DIR',_DOWNLOADDIR.'/private/naplo/upload/');
 
 if (defined('__INTEZMENY') and __INTEZMENY != '') {
 	$ADAT['tanevek'] = getTanevek(true);
@@ -40,11 +42,28 @@ else $TA = $_TANEV;
 /* -------- */
 // Adatok frissítése adatállományból
 
-if (__NAPLOADMIN && isset($_POST['fileName']) && $_POST['fileName'] != '') {
+if (__NAPLOADMIN===true && 
+	(
+	    (isset($_POST['fileName']) && $_POST['fileName'] != '') 
+	    or
+	    (is_array($_FILES) && $_FILES['upfile']['name']!='')
+	)
+    ) {
+
     define('_SKIP_ON_DUP',readVariable($_POST['skipOnDup'],'bool'));
+    if (is_array($_FILES) && $_FILES['upfile']['name']!='') { // távoli feltöltés
+	try {
+	    $_F = array('subdir'=>FILE_UPLOAD_DIR, 'filename'=>uniqid()); // move ide
+	    $sikeresFeltoltes = mayorFileUpload($_F, false);
+	    $fileName = FILE_UPLOAD_DIR.$_F['filename'];
+        } catch (Exception $e) {
+            dump($e);
+        }
+    } else { // helyi beolvasás
+	//    $fileName = fileNameNormal($_POST['fileName']);
+	$fileName = ($_POST['fileName']); // TODO
+    }
     $mezo_elvalaszto = '	'; // "\t"
-//    $fileName = fileNameNormal($_POST['fileName']);
-    $fileName = ($_POST['fileName']); // TODO
     $ADATOK = array();
 
 	if (file_exists($fileName)) {
