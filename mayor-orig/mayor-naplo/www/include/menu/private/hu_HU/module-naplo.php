@@ -348,6 +348,7 @@
 	    'diakExport' => array(array('txt' => 'Diak adatok')),
 	    'tantargyFelosztas' => array(array('txt' => 'Tantárgyfelosztás export')),
 	    'kreta' => array(array('txt' => 'KRÉTA export')),
+	    'kretaOrarend' => array(array('txt' => 'KRÉTA órarend export')),
 	);
 
 	
@@ -529,6 +530,7 @@
 	    'tantargyFelosztas' => array(array('txt' => 'Tantárgyfelosztás export')),
 	    'sulix' => array(array('txt' => 'Együttműködés SuliXerverrel')),
 	    'kreta' => array(array('txt' => 'KRÉTA export')),
+	    'kretaOrarend' => array(array('txt' => 'KRÉTA órarend export')),
 	    'tanarOsztalyOraszam' => array(array('txt' => 'Tanár-Osztály óraszámok')),
 	);
 	$MENU['modules']['naplo']['sub']['intezmeny'] = array(
