@@ -41,7 +41,7 @@
 	    list($helyseg,$_nev) = explode(" - ",$O['leiras']);
 	    $ADAT['export'][] = array(
 		$kretaHETIREND[ $O['het'] ],				// Hetirend
-		$aHetNapjai[ $O['nap'] ],				// Nap
+		$aHetNapjai[ $O['nap']-1 ],				// Nap
 		$O['ora'],						// Óra
 		$ADAT['t2osztaly'][ $O['tankorId'] ],			// Osztály
 		$ADAT['t2csoport'][ $O['tankorId'] ],			// Csoport

@@ -46,7 +46,7 @@ then
 elif [[ "x${RELEASE}" =~ ^x10.* ]]
 then
     ## PHP 7.2-től php-mcrypt deprecated --> kivettük, de a kódban még van...
-    PKGS="apache2 php php-json php-mysql php-ldap php-mbstring php-curl php-bcmath mariadb-server-10.3 recode texlive texlive-fonts-extra texlive-latex-extra texlive-binaries texlive-xetex ntp wget ssl-cert ssh pwgen texlive-lang-european"
+    PKGS="apache2 php php-json php-mysql php-ldap php-mbstring php-curl php-bcmath mariadb-server-10.3 recode texlive texlive-fonts-extra texlive-latex-extra texlive-binaries texlive-xetex ntp wget ssl-cert ssh pwgen texlive-lang-european ghostscript"
 else
     PKGS="apache2 php5 php5-json php5-mysqlnd php5-ldap php5-mcrypt php5-curl mysql-server recode texlive texlive-fonts-extra texlive-latex-extra texlive-binaries texlive-xetex ttf-mscorefonts-installer ntp wget ssl-cert ssh pwgen texlive-lang-european texlive-lang-hungarian"
 fi
