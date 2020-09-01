@@ -19,7 +19,7 @@ $db['nxt_prefix'] = "oc_";
 //$db['mayor_user'] = ""; 
 //$db['mayor_pass'] = "";
 
-$m2n['min_evfolyam'] = 1;
+$m2n['min_evfolyam'] = 7;
 $m2n['isk_rovidnev'] = "rovid";  
 $m2n['csoport_prefix'] = "(tk) ";
 $m2n['default_email'] = "indulo@iskola.hu";
