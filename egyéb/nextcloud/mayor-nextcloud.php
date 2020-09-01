@@ -31,6 +31,7 @@ $m2n['felhasznalo_hossz'] = 45;
 $m2n['megfigyelo_user'] = "naplo_robot";    //ha nem kell, akkor állítsd üres stringre.
 $m2n['kihagy'] = array();                   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
 $m2n['default_lang']  = "hu";
+$m2n['manage_groups'] = false;
 $m2n['manage_groupdirs'] = false;           // Foglalkozzon-e a script a tankörmappákkal
 $m2n['groupdir_prefix'] = "tavsuli";
 $m2n['groupdir_users'] = array("naplo_robot","123abcd");    //Ha mindenkire ->  =array(); //(legyen üres)
@@ -44,15 +45,22 @@ $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
 
 $cfgfile = realpath(pathinfo($argv[0])['dirname'])."/"."mayor-nextcloud.cfg.php";  // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
-if( file_exists($cfgfile)===TRUE ){     include($cfgfile);  }
 // Le kell cserélni az ékezetes betűket, mert a Vezetéknév.Keresztnév nem POSIX kompatibilis.
 $search = array( 'á', 'ä', 'é', 'í', 'ó', 'ö', 'ő', 'ú', 'ü', 'ű', 'Á', 'Ä', 'É', 'Í', 'Ó', 'Ö', 'Ő', 'Ú', 'Ü', 'Ű');	// egyelőre csak a magyar betűket ismeri
 $replace = array( 'aa', 'ae', 'ee', 'ii', 'oo', 'oe', 'ooe', 'uu', 'ue', 'uue', 'Aa', 'Aae', 'Ee', 'Ii', 'Oo', 'Oe', 'Ooe', 'Uu', 'Ue', 'Uue');
 
-for($i = 1; $i<$argc; $i++){
+for($i = 1; $i<$argc; $i++){  //Ha van külön config megadva, akkor először azt töltjük be.
+    if($argv[$i] == "--config" ){$cfgfile = strval($argv[$i+1]); $i++;}
+}
+if( file_exists($cfgfile)===TRUE ){     include($cfgfile);  }   //Config betöltés
+
+
+for($i = 1; $i<$argc; $i++){    // Kézzel felülbírált config opciók
     if($argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$m2l['log_verbose'] = intval($argv[$i+1]); $i++;}
     if($argv[$i] == "--set-diak-quota" ){ $m2l['always_set_diak_quota'] = true;  }
     if($argv[$i] == "--create-groupdir"){ $m2l['groupdir_users'] = array($argv[$i+1]); $i++;}
+    if($argv[$i] == "--manage_groupdirs" and is_string($argv[$i+1])){$m2l['manage_groupdirs'] = boolval($argv[$i+1]); $i++;}
+    if($argv[$i] == "--manage_groups" and is_string($argv[$i+1])){$m2l['manage_groups'] = boolval($argv[$i+1]); $i++;}
 }
 
 
@@ -774,32 +782,34 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     $tankorok = array_merge($tankorok, array( array("tankorId" => 0, "tankorNev" => $m2n['mindenki_diak'] )));
     $nxt_csop = nxt_group_list();
     $elozo_tcsop = "";
-    foreach($tankorok as $key => $val){                                                 //Végignézi a tankörök szerint
-        foreach($nxt_csop as $key2 => $val2){                                           // 
-            if($key2 == $val['tankorNev']){                                             //Már van ilyen (tankör)nevű csoport
-                if ($log['verbose'] > 3 ){ echo "  -\t Csoport:".po("\t".$val['tankorNev'],$m2n['csoportnev_hossz'],1)."-\tok.\n";}
-                $elozo_tcsop = $val['tankorNev'];
-                break;
+    if($m2n['manage_groups'] === true){
+        foreach($tankorok as $key => $val){                                                 //Végignézi a tankörök szerint
+            foreach($nxt_csop as $key2 => $val2){                                           // 
+                if($key2 == $val['tankorNev']){                                             //Már van ilyen (tankör)nevű csoport
+                    if ($log['verbose'] > 3 ){ echo "  -\t Csoport:".po("\t".$val['tankorNev'],$m2n['csoportnev_hossz'],1)."-\tok.\n";}
+                    $elozo_tcsop = $val['tankorNev'];
+                    break;
+                }
+            }
+            unset($nxt_csop[$val['tankorNev']]);                                            //Megvizsgálva, többször már nem kell dönteni róla. 
+            if( $val['tankorNev'] == $elozo_tcsop and $key2 != $val['tankorNev'] ){         //Duplikált tankör(név) a Mayorban
+                    if($log['verbose'] > 2 ){ echo "* -\t Dupla tankör:".po("\t".$val['tankorNev'], $m2n['csoportnev_hossz'],1)."-\tmayor.\n";}
+            }
+            else if($key2 != $val['tankorNev']){                                            //Ha nincs ilyen (tankör)nevű csoport
+                group_add($val['tankorNev']);                                               //Akkor létrehozza
+                if ($log['verbose'] > 2 ){ echo "* -\t Új csoport:".po("\t".$val['tankorNev'],$m2n['csoportnev_hossz'],1)."-\thozzáadva.\n";}
             }
         }
-        unset($nxt_csop[$val['tankorNev']]);                                            //Megvizsgálva, többször már nem kell dönteni róla. 
-        if( $val['tankorNev'] == $elozo_tcsop and $key2 != $val['tankorNev'] ){         //Duplikált tankör(név) a Mayorban
-                if($log['verbose'] > 2 ){ echo "* -\t Dupla tankör:".po("\t".$val['tankorNev'], $m2n['csoportnev_hossz'],1)."-\tmayor.\n";}
-        }
-        else if($key2 != $val['tankorNev']){                                            //Ha nincs ilyen (tankör)nevű csoport
-            group_add($val['tankorNev']);                                               //Akkor létrehozza
-            if ($log['verbose'] > 2 ){ echo "* -\t Új csoport:".po("\t".$val['tankorNev'],$m2n['csoportnev_hossz'],1)."-\thozzáadva.\n";}
-         }
+    // A megszűnt tanköröket-csoportokat kitörli 
+        foreach($nxt_csop as $key => $val){           
+            if(substr($key, 0, strlen($m2n['csoport_prefix'])) === $m2n['csoport_prefix'] ){	//Csak a "prefix"-el kezdődő nevűekre.
+                group_del($key);									//elvégzi a törlést
+                if ($log['verbose'] > 1 ){ echo "** -\t Megszűnő csop:".po("\t$key",$m2n['csoportnev_hossz'],1)."-\t eltávolítva.\n";}
+            } else {
+                if ($log['verbose'] > 3 ){ echo " ---\t Egyéb csoport:".po("\t$key",$m2n['csoportnev_hossz'],1)."-\t békén hagyva.\n";}
+            }	// Figyelem! A csoport prefix-szel: "(tk) " kezdődő csoportokat magáénak tekinti, automatikusan töröli!
+        }	// 	Akkor is, ha az külön, kézzel lett létrehozva.
     }
-// A megszűnt tanköröket-csoportokat kitörli 
-    foreach($nxt_csop as $key => $val){           
-        if(substr($key, 0, strlen($m2n['csoport_prefix'])) === $m2n['csoport_prefix'] ){	//Csak a "prefix"-el kezdődő nevűekre.
-            group_del($key);									//elvégzi a törlést
-            if ($log['verbose'] > 1 ){ echo "** -\t Megszűnő csop:".po("\t$key",$m2n['csoportnev_hossz'],1)."-\t eltávolítva.\n";}
-        } else {
-            if ($log['verbose'] > 3 ){ echo " ---\t Egyéb csoport:".po("\t$key",$m2n['csoportnev_hossz'],1)."-\t békén hagyva.\n";}
-        }	// Figyelem! A csoport prefix-szel: "(tk) " kezdődő csoportokat magáénak tekinti, automatikusan töröli!
-    }	// 	Akkor is, ha az külön, kézzel lett létrehozva.
 
 
 
@@ -823,8 +833,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
     $mayor_user = array_merge($mayor_tanar, $mayor_diak);                               //Tanár, és diák lista együtt
     if(isset($m2n['megfigyelo_user']) && $m2n['megfigyelo_user'] != "" ){               //A megfigyelő felvétele a lista végére
         $mayor_user = array_merge($mayor_user, array(
-            array( 'userAccount' => $m2n['megfigyelo_user'],                            //A virtuális "naplo_admin" legyen egyben tanár is
-                'tanarId' => 1, 'diakId' => 0, 'tankorId' => 0, 'fullName' => "Napló Admin",
+            array( 'userAccount' => $m2n['megfigyelo_user'],                            //A megfigyelő user legyen egyben  virtuális tanár is
+                'tanarId' => 1, 'diakId' => 0, 'tankorId' => 0, 'fullName' => "Napló Admin Megfigyelő",
                 'email' => $m2n['default_email'],
                 'tankorNev' => $m2n['mindenki_tanar'],
             )));
@@ -835,7 +845,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                     'tanarId' => 1,
                     'diakId' => 0,
                     'tankorId' => $val['tankorId'],
-                    'fullName' => "Napló Admin",
+                    'fullName' => "Napló Admin Megfigyelő",
                     'tankorNev' => $val['tankorNev'],
                 )));
                 //if($val['tankorNev'] == "(tk) 10.b kémia" ){ break; }
@@ -882,48 +892,50 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                         if ($log['verbose'] > 1 ){ echo "-\t\tA felhasználó:".po("\t$curr",$m2n['felhasznalo_hossz'],1)."-\tnyilvántartásba véve.\n";} 
                     }
                     //---------------------------------------  QUOTA -----------------------------------//
-                    if($m2n['always_set_diak_quota'] === true && $curr_tanarId < 0 && $curr_diakId > 0 ){              //Állítsunk-e erőből (diák) qvótát?
-                        $params['quota'] = $m2n['diak_quota'];                                                  // Alapértelmezett diák kvóta
+                    if($m2n['always_set_diak_quota'] === true && $curr_tanarId < 0 && $curr_diakId > 0 ){           //Állítsunk-e erőből (diák) qvótát?
+                        $params['quota'] = $m2n['diak_quota'];                                                      // Alapértelmezett diák kvóta
                         user_set($curr,$params);
                         if ($log['verbose'] > 3 ){ echo "* -\t\tBeállítva:\t"."Qvóta: ".$params['quota']."\t\n";}
                     }
-                    //------------------------- Tankörmappa  györkér + info.txt ------------------------//     
-                    $ret = groupdir_create_root($curr, $curr_tanarId, $m2n['groupdir_prefix']);
-                    if ($ret[0] === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\t./".$curr."/files/".$m2n['groupdir_prefix'],$m2n['csoportnev_hossz'],1)."\ttankörmappa gyökér.\n";}
-                    if ($ret[1] > 0 && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\t./".$curr."/files/". $m2n['groupdir_prefix']."/INFO.txt",$m2n['csoportnev_hossz'],1)."\tfájl.\n";}
-       
-                    //------------------------------------------ Tankörök egyeztetése -------------------------------------------//
-                    foreach($nxt_group as $key3 => $val3){                                                      //A tankörök egyeztetése
-                        if(in_array($key3, $tankorei) /*or $key3 == $m2n['mindenki_csop']*/){                   //szerepel-e a felhasználó tankörei között a csoport, vagy a "mindenki" csoport?
-                            if( in_array($curr, $val3)){                                                        //Igen, és már benne is van +++
-                                if ($log['verbose'] > 3 ){ echo "  -\t\tBenne van a:".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tcsoportban.\n";} 
-                            } else {                                                                            //Nincs, most kell beletenni
-                                if ($log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tHozzáadva a:".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n";}
-                                group_user_add($key3, $curr);                                                   //A "mindenki csoportot is ellenőrzi
-                            }
 
-                            //------------------------------- Tankörmappa -----------------------------//       //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
-                            $ret = groupdir_create_groupdir($curr, $curr_tanarId, $m2n['groupdir_prefix']."/".$key3); 
-                            if ($ret === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\tÚj mappa Létrehozva:".po("\t/".$key3."/",$m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappába\n";}
-                            $ret = groupdir_create_groupdir($curr, $curr_tanarId, $m2n['groupdir_prefix']."/".$key3."_beadás");
-                            if ($ret === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\tÚj mappa Létrehozva:".po("\t/".$key3."_beadás/",$m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappába\n";}
-                    
-                        //------------------------------------- Tankör (Csoportból) törlés -------------------------//
-                        } else {                                                                                //Nem szerepel a tankörei között
-                            if(in_array($curr, $val3) and  (substr($key3, 0, strlen($m2n['csoport_prefix'])) === $m2n['csoport_prefix']) ){ // korábban benne volt egy tankörben, de már nincs, vagy a hozzátartozó tankörben már nem tanít  => kiveszi
-                                if ($log['verbose'] > 1 ){if($log['curr'] !== ""){echo "*".$log['curr'];$log['curr'] = "";} echo  "* -\t\tTörölve a:".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tcsoportból.\n";}
-                                group_user_del($key3, $curr);                                                   //egy korábbi tankör lehetett...
+                    if($m2n['manage_groups'] === true){                                                             //Csak, ha a acsoportokhoz is nyúlunk
+                        //------------------------- Tankörmappa  györkér + info.txt ------------------------//     
+                        $ret = groupdir_create_root($curr, $curr_tanarId, $m2n['groupdir_prefix']);
+                        if ($ret[0] === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\t./".$curr."/files/".$m2n['groupdir_prefix'],$m2n['csoportnev_hossz'],1)."\ttankörmappa gyökér.\n";}
+                        if ($ret[1] > 0 && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tLétrehozva :".po("\t./".$curr."/files/". $m2n['groupdir_prefix']."/INFO.txt",$m2n['csoportnev_hossz'],1)."\tfájl.\n";}
+       
+                        //------------------------------------------ Tankörök egyeztetése -------------------------------------------//
+                        foreach($nxt_group as $key3 => $val3){                                                      //A tankörök egyeztetése
+                            if(in_array($key3, $tankorei) /*or $key3 == $m2n['mindenki_csop']*/){                   //szerepel-e a felhasználó tankörei között a csoport, vagy a "mindenki" csoport?
+                                if( in_array($curr, $val3)){                                                        //Igen, és már benne is van +++
+                                    if ($log['verbose'] > 3 ){ echo "  -\t\tBenne van a:".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tcsoportban.\n";} 
+                                } else {                                                                            //Nincs, most kell beletenni
+                                    if ($log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tHozzáadva a:".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n";}
+                                    group_user_add($key3, $curr);                                                   //A "mindenki csoportot is ellenőrzi
+                                }
+
+                                //------------------------------- Tankörmappa -----------------------------//       //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
+                                $ret = groupdir_create_groupdir($curr, $curr_tanarId, $m2n['groupdir_prefix']."/".$key3); 
+                                if ($ret === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\tÚj mappa Létrehozva:".po("\t/".$key3."/",$m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappába\n";}
+                                $ret = groupdir_create_groupdir($curr, $curr_tanarId, $m2n['groupdir_prefix']."/".$key3."_beadás");
+                                if ($ret === true && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\tÚj mappa Létrehozva:".po("\t/".$key3."_beadás/",$m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappába\n";}
+                        
+                            //------------------------------------- Tankör (Csoportból) törlés -------------------------//
+                            } else {                                                                                //Nem szerepel a tankörei között
+                                if(in_array($curr, $val3) and  (substr($key3, 0, strlen($m2n['csoport_prefix'])) === $m2n['csoport_prefix']) ){ // korábban benne volt egy tankörben, de már nincs, vagy a hozzátartozó tankörben már nem tanít  => kiveszi
+                                    if ($log['verbose'] > 1 ){if($log['curr'] !== ""){echo "*".$log['curr'];$log['curr'] = "";} echo  "* -\t\tTörölve a:".po("\t$key3",$m2n['csoportnev_hossz'],1)."\tcsoportból.\n";}
+                                    group_user_del($key3, $curr);                                                   //egy korábbi tankör lehetett...
+                                }
                             }
                         }
+
+                        //------------------------------------- Tankörmappa törlés + NXT-rescan ----------------------------------//     //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
+                        $ret = groupdir_finish($curr, $curr_tanarId, $m2n['groupdir_prefix'], $tankorei);
+                        if (count($ret[0]) > 0 && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} foreach($ret[0] as $retkey => $retval){ echo "* -\t Üres (Tankör)mappa:".po("\t/".$retval."/", $m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappából törölve.\n";}}
+                        if (count($ret[1]) > 0 && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} foreach($ret[1] as $retkey => $retval){ echo "* -\tFájl/Mappa Átnevezve:".po("\t/".$retval."/", $m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappában.\n";}}
+                        if (count($ret[2]) > 0 && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} foreach($ret[2] as $retkey => $retval){ echo "* -\t\tTankörmappa:".po("\t/".$retval."/", $m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappában békén hagyva.\n";}}
+                        if ($ret[3] === true && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";}   echo "* -\t\tNXT-rescan :".po("\t./".$curr."/files/".$m2n['groupdir_prefix']."/", $m2n['csoportnev_hossz'],1)."\t mappán.\n";}
                     }
-                    //------------------------------------- Tankörmappa törlés + NXT-rescan ----------------------------------//     //( "_" --> mindenkinek, "username" --> csak neki ) && tanár
-                     
-                    $ret = groupdir_finish($curr, $curr_tanarId, $m2n['groupdir_prefix'], $tankorei);
-                    if (count($ret[0]) > 0 && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} foreach($ret[0] as $retkey => $retval){ echo "* -\t Üres (Tankör)mappa:".po("\t/".$retval."/", $m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappából törölve.\n";}}
-                    if (count($ret[1]) > 0 && $log['verbose'] > 2 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} foreach($ret[1] as $retkey => $retval){ echo "* -\tFájl/Mappa Átnevezve:".po("\t/".$retval."/", $m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappában.\n";}}
-                    if (count($ret[2]) > 0 && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} foreach($ret[2] as $retkey => $retval){ echo "* -\t\tTankörmappa:".po("\t/".$retval."/", $m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappában békén hagyva.\n";}}
-                    if ($ret[3] === true && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";}   echo "* -\t\tNXT-rescan :".po("\t./".$curr."/files/".$m2n['groupdir_prefix']."/", $m2n['csoportnev_hossz'],1)."\t mappán.\n";}
-                    
                     break;
                 }       
             }  
@@ -937,20 +949,21 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 $ret = groupdir_create_root($curr, $curr_tanarId, $m2n['groupdir_prefix']);
                 if ($ret[0] === true && $log['verbose'] > 2 ){ echo "* -\t\tLétrehozva :".po("\t./".$curr."/files/".$m2n['groupdir_prefix']."/",$m2n['csoportnev_hossz'],1)."\ttankörmappa gyökér.\n";}
                 if ($ret[1] > 0 && $log['verbose'] > 2 ){ echo "* -\t\tLétrehozva :".po("\t./".$curr."/files/".$m2n['groupdir_prefix']."/INFO.txt",$m2n['csoportnev_hossz'],1)."\tfájl.\n";}
-       
-                foreach($tankorei as $key3 => $val3){                                       //Hozzáadja a (tankör)csoportokhoz is egyből,
-                    if(array_key_exists($val3, $nxt_group)) {                               // de, csak akkor, ha az a csoport a Nextcloud-ban is létezik.
-                        group_user_add($val3, $curr);
-                        if ($log['verbose'] > 2 ){ echo "* -\t\tHozzáadva a:".po("\t $val3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n"; }
-                        $ret = groupdir_create_groupdir($curr, $curr_tanarId, $m2n['groupdir_prefix']."/".$val3);
-                        if ($ret === true && $log['verbose'] > 2 ){echo "* -\tÚj mappa Létrehozva:".po("\t/".$val3."/",$m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappa\n";}
-                        $ret = groupdir_create_groupdir($curr, $curr_tanarId, $m2n['groupdir_prefix']."/".$val3."_beadás");
-                        if ($ret === true && $log['verbose'] > 2 ){echo "* -\tÚj mappa Létrehozva:".po("\t/".$val3."_beadás/",$m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappa\n";}
-                    }
-                } 
-                $ret = groupdir_finish($curr, $curr_tanarId, $m2n['groupdir_prefix'], null);                                    
-                if ($ret[3] === true && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tNXT-rescan :".po("\t./".$curr."/files/".$m2n['groupdir_prefix']."/", $m2n['csoportnev_hossz'],1)."\t mappán.\n";}
 
+                if($m2n['manage_groups'] === true){
+                    foreach($tankorei as $key3 => $val3){                                       //Hozzáadja a (tankör)csoportokhoz is egyből,
+                        if(array_key_exists($val3, $nxt_group)) {                               // de, csak akkor, ha az a csoport a Nextcloud-ban is létezik.
+                            group_user_add($val3, $curr);
+                            if ($log['verbose'] > 2 ){ echo "* -\t\tHozzáadva a:".po("\t $val3",$m2n['csoportnev_hossz'],1)."\tcsoporthoz.\n"; }
+                            $ret = groupdir_create_groupdir($curr, $curr_tanarId, $m2n['groupdir_prefix']."/".$val3);
+                            if ($ret === true && $log['verbose'] > 2 ){echo "* -\tÚj mappa Létrehozva:".po("\t/".$val3."/",$m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappa\n";}
+                            $ret = groupdir_create_groupdir($curr, $curr_tanarId, $m2n['groupdir_prefix']."/".$val3."_beadás");
+                            if ($ret === true && $log['verbose'] > 2 ){echo "* -\tÚj mappa Létrehozva:".po("\t/".$val3."_beadás/",$m2n['csoportnev_hossz'],1)."\t./".$curr."/files/".$m2n['groupdir_prefix']."/   mappa\n";}
+                        }
+                    } 
+                    $ret = groupdir_finish($curr, $curr_tanarId, $m2n['groupdir_prefix'], null);                                    
+                    if ($ret[3] === true && $log['verbose'] > 3 ){if($log['curr'] !== ""){echo "**".$log['curr'];$log['curr'] = "";} echo "* -\t\tNXT-rescan :".po("\t./".$curr."/files/".$m2n['groupdir_prefix']."/", $m2n['csoportnev_hossz'],1)."\t mappán.\n";}
+                }
 
                 if($curr_diakId > 0) {      //Ennyi is  elég                                // Diákról van szó    /// if($curr_tanarId < 0 && $curr_diakId > 0)
                     $params['quota'] = $m2n['diak_quota'];                                  // Alapértelmezett kvóta
