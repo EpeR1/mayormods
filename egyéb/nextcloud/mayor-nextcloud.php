@@ -2,7 +2,6 @@
 <?php 
 $db = array();
 $m2n = array();
-$m2l = array();
 ////////////////////////////////////////////// Figyelem! az alábbi konfig automatikusan külön fájból töltődik, ha létezik a "mayor-nextcloud.cfg.php" fájl!! /////////////////////////////////
 $db['host'] = "localhost";
 $db['port'] = "3306";
@@ -39,10 +38,13 @@ $m2n['mindenki_csop'] = "naplós_felhasználók";
 $m2n['mindenki_tanar'] = "naplós_tanárok";
 $m2n['mindenki_diak'] = "naplós_diákok";
 $m2n['zaras_tartas'] =  "2018-06-14";	//A jelölt napon befejezett, de nem lezárt tanév adatainak megtartása. (pl. szeptemberig) Ha már nem kell, akkor állítsd "1970-01-01"-ra !;
+$m2n['infotxt_szöveg'] = "info.txt";
 $m2n['verbose'] = 3 ;  
 
 $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
+$printhelp = false;
+$printconfig = false;
 
 $cfgfile = realpath(pathinfo($argv[0])['dirname'])."/"."mayor-nextcloud.cfg.php";  // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
 // Le kell cserélni az ékezetes betűket, mert a Vezetéknév.Keresztnév nem POSIX kompatibilis.
@@ -50,19 +52,36 @@ $search = array( 'á', 'ä', 'é', 'í', 'ó', 'ö', 'ő', 'ú', 'ü', 'ű', 'Á
 $replace = array( 'aa', 'ae', 'ee', 'ii', 'oo', 'oe', 'ooe', 'uu', 'ue', 'uue', 'Aa', 'Aae', 'Ee', 'Ii', 'Oo', 'Oe', 'Ooe', 'Uu', 'Ue', 'Uue');
 
 for($i = 1; $i<$argc; $i++){  //Ha van külön config megadva, akkor először azt töltjük be.
-    if($argv[$i] == "--config" ){$cfgfile = strval($argv[$i+1]); $i++;}
+    if($argv[$i] == "--config-file" ){$cfgfile = strval($argv[$i+1]); $i++;}
 }
-if( file_exists($cfgfile)===TRUE ){     include($cfgfile);  }   //Config betöltés
+if(file_exists($cfgfile) === TRUE){ include($cfgfile); }   //Config betöltés
 
 
 for($i = 1; $i<$argc; $i++){    // Kézzel felülbírált config opciók
-    if($argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$m2l['log_verbose'] = intval($argv[$i+1]); $i++;}
-    if($argv[$i] == "--set-diak-quota" ){ $m2l['always_set_diak_quota'] = true;  }
-    if($argv[$i] == "--create-groupdir"){ $m2l['groupdir_users'] = array($argv[$i+1]); $i++;}
-    if($argv[$i] == "--manage_groupdirs" and is_string($argv[$i+1])){$m2l['manage_groupdirs'] = boolval($argv[$i+1]); $i++;}
-    if($argv[$i] == "--manage_groups" and is_string($argv[$i+1])){$m2l['manage_groups'] = boolval($argv[$i+1]); $i++;}
+    if($argv[$i] == "--help" ){$printhelp = true;}
+    if($argv[$i] == "--loglevel" and is_numeric($argv[$i+1])){$m2n['verbose'] = intval($argv[$i+1]); $i++;}
+    if($argv[$i] == "--set-diak-quota" ){ $m2n['always_set_diak_quota'] = true;  }
+    if($argv[$i] == "--create-groupdir"){ $m2n['groupdir_users'] = array($argv[$i+1]); $i++;}
+    if($argv[$i] == "--manage-groupdirs" and is_string($argv[$i+1])){$m2n['manage_groupdirs'] = boolval($argv[$i+1]); $i++;}
+    if($argv[$i] == "--manage-groups" and is_string($argv[$i+1])){$m2n['manage_groups'] = boolval($argv[$i+1]); $i++;}
+    if($argv[$i] == "--config-print" ){ $printconfig = true;  }
 }
 
+function print_help(){
+    echo "php mayor-nextcloud.php [kapcsolók] \n";
+    echo "Kapcsolók: (felülbírálja a configot!)\n";
+    echo "  --help                      :  Help kiírása. \n";
+    echo "  --config-file               :  Konfig fájl elérési útvonala.\n";
+    echo "  --config-print              :  A betöltött konfig kiírása\n";
+    echo "  --loglevel x                :  A bőbeszédűséget/logolást tudjuk ezzel szabályozni, ekkor ez az érték érvényesül, nem a configban megadott. \n";
+    echo "  --set-diak-quota            :  Az összes diák qvótáját átállítja az \"\$m2n['diak_quota'] = x\" -nél megadott értékre, \n"; 
+    echo "                                    csak kézzel futtatva működik, az automatikus, napi futtatásban nicns benne.\n";
+    echo "  --create-groupdir <username>:  A távoktatást segítő könyvtárstruktúrát csak az <username> felhasználónak  hozza létre, \n";
+    echo "                                    illetve kapcsoló nélküli híváskor, automatikusan, a napi futásban, esténként az összes tanárnak egyszerre.\n";
+    echo "  --manage-groups <1/0>       :  Ha 1: A felhasználókat csoportokba rendezi a MaYor tankörök szerint, ha 0, nem foglalkozik vele.\n";
+    echo "  --manage-groupdirs <1/0>    :  Ha 1: tankörmappákat hoz létre a tankör-csoportokhoz, ha 0, nem foglalkozik vele. (kell hozzá a --manage-groups is!)\n";
+    echo "\n\n";
+}
 
  
 if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Improved) és php7  kell!
@@ -704,7 +723,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 SELECT szemeszter
                 FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter
                 WHERE statusz = 'aktív' AND kezdesDt <= CURRENT_DATE() AND (CURRENT_DATE() <= zarasDt OR zarasDt = '".$m2n['zaras_tartas']."' ))
-                ORDER BY userAccount ;
+                ORDER BY userAccount;
             ";
             if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }
             if(( $r = mysqli_query($link, $q)) !== FALSE ){
@@ -728,21 +747,27 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         echo "\n\n******** Legalább Nextcloud 13-mas verzió szükséges! ********\n\n";
         die();
     }
+    if($printhelp === true){
+        print_help();
+        die();
+    }
+    if ($m2n['manage_groupdirs'] === true && $m2n['manage_groups'] === false){
+        print_help();
+        die();
+    }
 //-------------------------------------------------------------------------------------------------------------------------------    
 
-    if(true) { echo "\n\n######## Mayor-Nextcloud Script ########\n";   echo "######## (".date("Y-m-d H:i:s").") ########\n\n"; $t_start = microtime(true); }
-    
+    if(true) { echo "\n\n######## Mayor-Nextcloud Script ########\n";   echo "######## (".date("Y-m-d H:i:s").")  ########\n\n"; $t_start = microtime(true); }
+    if(true) { echo "***	M2N Config betöltése: ($cfgfile fájlból.) ***\n\n"; }
 
-    if( file_exists($cfgfile)===TRUE ){
-        include($cfgfile);
-        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: ($cfgfile fájlból.) ***\n\n"; }
-    } else {
-        if($log['verbose'] > 0) { echo "***	M2N Config betöltése: (".pathinfo($cfgfile)['dirname']."/mayor-nextcloud.php fejlécéből.) ***\n\n"; }
+    if($printconfig === true){
+        echo "\n Betöltött Konfig:\n";
+        $m2l = $m2n;
+        $m2l['infotxt_szöveg'] = "<-- TEXT -->";    //Túl hosszú lenne kiprintelni
+        var_export($m2l);
+        echo "\n";
     }
     $log['verbose'] = $m2n['verbose'];
-    if(isset($m2l['always_set_diak_quota'])){ $m2n['always_set_diak_quota'] = $m2l['always_set_diak_quota']; }
-    if(isset($m2l['groupdir_users'])){ $m2n['groupdir_users'] = $m2l['groupdir_users']; }
-    if(isset($m2l['log_verbose'])){ $log['verbose'] = $m2l['log_verbose']; }
     if( $m2n['always_set_diak_quota'] === true && $log['verbose'] < 4 ){    $log['verbose'] = 4; }
     
     if(($link = db_connect($db)) == FALSE){			//csatlakozás
@@ -800,6 +825,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 if ($log['verbose'] > 2 ){ echo "* -\t Új csoport:".po("\t".$val['tankorNev'],$m2n['csoportnev_hossz'],1)."-\thozzáadva.\n";}
             }
         }
+    }
     // A megszűnt tanköröket-csoportokat kitörli 
         foreach($nxt_csop as $key => $val){           
             if(substr($key, 0, strlen($m2n['csoport_prefix'])) === $m2n['csoport_prefix'] ){	//Csak a "prefix"-el kezdődő nevűekre.
@@ -809,7 +835,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
                 if ($log['verbose'] > 3 ){ echo " ---\t Egyéb csoport:".po("\t$key",$m2n['csoportnev_hossz'],1)."-\t békén hagyva.\n";}
             }	// Figyelem! A csoport prefix-szel: "(tk) " kezdődő csoportokat magáénak tekinti, automatikusan töröli!
         }	// 	Akkor is, ha az külön, kézzel lett létrehozva.
-    }
+    
 
 
 

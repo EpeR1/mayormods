@@ -31,6 +31,7 @@ $m2n['min_osztalyok'] =  array(); 	//pl:  array('9.a','11.a');
 $m2n['csoportnev_hossz'] = 40;
 $m2n['felhasznalo_hossz'] = 45;
 $m2n['default_lang']  = "hu";
+$m2n['manage_groups'] = false;
 $m2n['manage_groupdirs'] = false;   //Foglalkozzon-e a script a tankörmappákkal
 $m2n['groupdir_users'] = array("naplo_robot","123abcd");  //Ha a tömb üres, akkor az összes tanárral dolgozik.
 $m2n['groupdir_prefix'] = "Iskolai Távoktatás";
