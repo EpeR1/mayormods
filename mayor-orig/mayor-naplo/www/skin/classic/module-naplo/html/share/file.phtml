@@ -2,7 +2,7 @@
 
 	function putFileSelectForm($dbtable, $post = array()) {
 
-		formBegin(array('class'=>'updateTable'));
+		formBegin(array('class'=>'updateTable', 'enctype'=>'multipart/form-data'));
 		// A form címe
 		if (defined('_FILESELECTTITLE')) echo '<h1>'._FILESELECTTITLE.'</h1>';
 		// A továbbadandó POST adatok
@@ -12,8 +12,10 @@
 		}
 		echo '<input type="hidden" name="dbtable" value="'.$dbtable.'">'."\n";
 		echo '<input type="checkbox" name="skipOnDup" value="true" /> Meglevő rekord találatkor kihagyjuk a rekord frissítést';
-		echo '<label for="file">'._FILENEV.':</label>'."\n";
-		echo '<input type="text" id="file" name="fileName" />'."\n";
+		echo '<p><label for="file">'._FILENEV.':</label>'."\n";
+		echo '<input type="text" id="file" name="fileName" /></p>'."\n";
+		echo '<p>Vagy feltöltés:';
+		echo '<input type="file" name="upfile"  /></p>';
 		echo '<input type="submit" value="'._OK.'" />'."\n";
 		formEnd();
 

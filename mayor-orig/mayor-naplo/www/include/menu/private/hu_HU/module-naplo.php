@@ -348,6 +348,7 @@
 	    'diakExport' => array(array('txt' => 'Diak adatok')),
 	    'tantargyFelosztas' => array(array('txt' => 'Tantárgyfelosztás export')),
 	    'kreta' => array(array('txt' => 'KRÉTA export')),
+	    'kretaOrarend' => array(array('txt' => 'KRÉTA órarend export')),
 	);
 
 	
@@ -529,6 +530,7 @@
 	    'tantargyFelosztas' => array(array('txt' => 'Tantárgyfelosztás export')),
 	    'sulix' => array(array('txt' => 'Együttműködés SuliXerverrel')),
 	    'kreta' => array(array('txt' => 'KRÉTA export')),
+	    'kretaOrarend' => array(array('txt' => 'KRÉTA órarend export')),
 	    'tanarOsztalyOraszam' => array(array('txt' => 'Tanár-Osztály óraszámok')),
 	);
 	$MENU['modules']['naplo']['sub']['intezmeny'] = array(
@@ -570,6 +572,7 @@
 		'szuloiAzonositok' => array(array('txt' => 'Szülői azonosítók generálása','icon'=>'icon-adult')),
 		'rpcPrivilege' => array(array('txt' => 'RPC jogosultságok')),
 		'kréta magic' => array(array('txt' => 'Kréta 2 MaYoR', 'icon'=>'icon-asterisk', 'url'=>'index.php?page=naplo&sub=import&f=tantargyFelosztas')),
+		'debug' => array(array('txt' => 'Rendszerinformáció', 'icon'=>'icon-cog')),
 	);
 	$MENU['modules']['naplo']['sub']['hirnok'] =  array(
 	    'hirnok' =>array(array('txt' => 'Hírnök', 'icon'=>'icon-bullhorn')),

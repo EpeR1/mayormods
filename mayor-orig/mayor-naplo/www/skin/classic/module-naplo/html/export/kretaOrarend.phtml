@@ -1,0 +1,66 @@
+<?php
+
+    function putKretaOrarendForm($ADAT) {
+
+        formBegin(array('action'=>href('index.php?page=naplo&sub=export&f=kretaOrarend'), 'class'=>"export"));
+        echo '<input type="hidden" name="action" value="kretaOrarendExport" />'."\n";
+
+        echo '<fieldset><legend>Kréta - Órarend export</legend>'."\n";
+        echo '<table>'."\n";
+
+        echo '<tr>'."\n";
+            echo '<th>Tudnivalók</th>'."\n";
+        echo '</tr><tr>';
+            echo '<td>';
+                echo '<p>Az elkészült órarendet a Krétába való importálásra alkalmas formátumban exportáljuk ki 
+(ld <a href="https://tudasbazis.ekreta.hu/pages/viewpage.action?pageId=2425433">Kréta tudásbázis/Órarend importálása</a>).
+</p><p>
+A funkció működéséhez sok előfeltételnek kell megfelelni, hogy a két rendszer adatai jól megfeleltetetők legyenek egymással:
+</p>
+<ul>
+<li>A configban a $kretaHETIREND vektorba fel kell venni a Kráta adatszótárának "Hetirend" típusú elemeit.
+<li>A tanárneveknek pontosan egyeznie kell a két rendszerben
+<li>A tárgyaknál fel kell venni a kretaTargyNev mezőbe a Krétában használt tárgynevet
+<li>Minden tankörnek bele kell tartoznia pontosan egy csoportba, mely egy Kréta csoportot vagy osztályt jelöl meg
+<li>...
+</ul>
+';
+            echo '</td>';
+        echo '</tr>';
+
+        echo '<tr><th>Formátum kiválasztása</th></tr>';
+
+
+        echo '<tr>';
+            echo '<td>';
+                echo '<ul>';
+                echo '<li>';
+                echo '<input type="radio" name="formatum" value="xml" id="xml" checked="checked" />'."\n";
+                echo '<label for="xml">.XML</label>'."\n";
+                echo '</li>';
+                echo '<li>';
+                echo '<input type="radio" name="formatum" value="csv" id="csv" />'."\n";
+                echo '<label for="csv">.CSV</label>'."\n";
+                echo '</li>';
+                echo '<li>';
+                echo '<input type="radio" name="formatum" value="ods" id="ods" />'."\n";
+                echo '<label for="ods">.ODS</label>'."\n";
+                echo '</li></ul>';
+            echo '</td>'."\n";
+        echo '</tr>'."\n";
+
+        echo '<tr>';
+            echo '<th>';
+            echo '<input type="submit" value="'._LETOLTES.'" />'."\n";
+            echo '</th>';
+        echo '</tr>';
+
+        echo '</table>'."\n";
+        echo '</fieldset>';
+        formEnd();
+
+
+
+    }
+
+?>

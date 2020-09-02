@@ -263,7 +263,7 @@ CREATE TABLE `tanar` (
   `oId` bigint(20) unsigned DEFAULT NULL,
   `beDt` date DEFAULT NULL,
   `kiDt` date DEFAULT NULL,
-  `viseltNevElotag` varchar(8) COLLATE utf8_hungarian_ci NOT NULL DEFAULT '',
+  `viseltNevElotag` varchar(8) COLLATE utf8_hungarian_ci DEFAULT NULL,
   `viseltCsaladinev` varchar(64) COLLATE utf8_hungarian_ci NOT NULL DEFAULT '',
   `viseltUtonev` varchar(64) COLLATE utf8_hungarian_ci NOT NULL DEFAULT '',
   `szuletesiHely` varchar(16) COLLATE utf8_hungarian_ci DEFAULT NULL,
