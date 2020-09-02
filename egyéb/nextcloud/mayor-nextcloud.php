@@ -1126,9 +1126,9 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 
 //test
 //script_install($link);
-
-    if ($log['verbose'] > 0 ){ echo "\nÖsszes művelet: ".$mod_nxt_user_all+$mod_nxt_user_all."db.\n";} 
-    if ($log['verbose'] > 0 ){ echo "Feldolgozva: ".$mod_nxt_user_all."db felhasználó\n";} 
+    if ($log['verbose'] > 0 ){ echo "\n\nStatisztikák:\n";}
+    if ($log['verbose'] > 0 ){ echo "Összes művelet: ".($mod_nxt_user + $mod_nxt_group)."db.\n";} 
+    if ($log['verbose'] > 0 ){ echo "Feldolgozva: ".$mod_nxt_user_all."db felhasználó.\n";} 
     if ($log['verbose'] > 0 ){ echo "Változtatás: ".$mod_nxt_user."db a Nextcloud felhasználói beállításokban.\n";}
     if ($log['verbose'] > 0 ){ echo "Változtatás: ".$mod_nxt_group."db a Nextcloud csoport beállításokban.\n";} 
  
@@ -1141,7 +1141,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
 } else {
     echo "\n\n******** Legalább PHP7 és mysqli szükséges! ********\n\n";
 }
-
+ 
 
 
 ?>

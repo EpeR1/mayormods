@@ -385,6 +385,10 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
                                                         // ha minden tanárnak, akkor állítsuk üresre a tömböt!   / = array();/
 
     $m2n['groupdir_prefix'] = "Iskolai Távoktatás";     //A távoktatást segítő mappák gyüjtőmappája/gyökérkönyvtára.
+
+    $m2n['manage_groups'] = true;                       //Foglalkozzon-e a tankörökkel/csoportokkal?  Ha true -> igen, ha false, akkor csak a felhasználókat 
+                                                        // egyezteti a mayorral
+    $m2n['manage_groupdirs'] = false;                   //A tankör-cspoprt mappákat kezelje-e vagy sem.  
  
     $m2n['verbose'] = 3                                 //Log bőbeszédűség      (A leg informatívabb(tömörebb), talán a 3-mas fokozat.)
                                                         // 0: csak fatális hibák, 1: fontosabbak, 2: csop./felh. elvétel, 3: csop./felh. hozzáadás, 
@@ -421,17 +425,18 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
     További Paraméterek / Kapcsolók:
 
-         --loglevel x     :  A scriptbőbeszédűségét, logolását tudjuk ezzel szabályozni, ekkor ez az érték érvényesül, nem a configban megadott.
-
-         --set-diak-quota :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre, 
-                             csak kézzel futtatva működik, az automatikus, napi futtatásban nicns benne.
-
-         --create-groupdir <username>:  A távoktatást segítő könyvtárstruktúrát csak az <username> felhasználónak  hozza létre,
-                                        illetve kapcsoló nélküli híváskor, automatikusan, a napi futásban, esténként az összes tanárnak egyszerre.
-
-
-
-
+      --help                      :  Help kiírása. 
+      --debug                     :  Ugyanaz mint a "--loglevel 100" 
+      --loglevel x                :  A bőbeszédűséget/logolást tudjuk ezzel szabályozni, ekkor ez az érték érvényesül, nem a configban megadott.
+      --config-file               :  Konfig fájl elérési útvonala.
+      --config-print              :  A betöltött konfig kiírása.
+      --set-diak-quota            :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre,  
+                                       csak kézzel futtatva működik, az automatikus, napi futtatásban nicns benne.
+      --create-groupdir <username>:  A távoktatást segítő könyvtárstruktúrát csak az <username> felhasználónak  hozza létre, 
+                                       egyébként kapcsoló nélküli híváskor, (pl: automatikusan, a napi futásban éjjel), az összes tanárnak egyszerre.
+      --manage-groups <1/0>       :  Ha 1: A felhasználókat csoportokba rendezi a MaYor tankörök szerint, ha 0, nem foglalkozik a csoportokkal.
+      --manage-groupdirs <1/0>    :  Ha 1: tankörmappákat hoz létre a tankör-csoportokhoz, ha 0, nem foglalkozik vele. (kell hozzá a --manage-groups is!)
+    
 
 
 	További Információk:
