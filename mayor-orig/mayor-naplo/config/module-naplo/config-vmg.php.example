@@ -112,6 +112,11 @@
     define('_JELES_ATLAG', 4.75);
     define('_JELES_LEGGYENGEBB_JEGY', 3);
 
+    // A kréta órarend exportban használt hetirend típusok a Kréta adatszótára szerint...
+    global $kretaHETIREND;
+    $kretaHETIREND = array(1 => 'A hét', 2 => 'B hét', 3 => 'Minden hét');
+
+
 */
 
 ?>

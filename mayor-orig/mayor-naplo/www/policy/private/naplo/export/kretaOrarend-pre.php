@@ -12,7 +12,8 @@
 	Helyiség: 		a tanóra helyisége (ha nincs ilyen nevű helyiség a rendszerben, akkor ez rögzítésre kerül)
 
 
-	- A Heti rend - a config_xyz.php-ben: felsorolja az orarendiHet --> Kréta "Hetirend" típusú adatszótárának elemeit
+	- A Heti rend - a config_xyz.php-ben: $kretaHETIREND felsorolja az orarendiHet --> Kréta "Hetirend" típusú adatszótárának elemeit
+	    a lekérdezés a hetek összegét veszi: 1 --> A hét, 2 --> B hét, 1+2=3 --> Minden hét
 	- Minden tárgynál be van írva a kretaTargyNev
 	- Feltételezzük, hogy minden tankör pontosan egy csoportba tartozik bele, s a csoportok a Kréta csoportoknak/osztályoknak megfelelők
 	- A csoportok elnevezésében feltételezések:
@@ -32,11 +33,11 @@ if (!__NAPLOADMIN && !__VEZETOSEG) {
     require_once('include/modules/naplo/share/targy.php');
     require_once('include/modules/naplo/share/file.php');
 
+    $dt = $ADAT['dt'] = readVariable($_POST['dt'], 'date');
     if ($action == "kretaOrarendExport") {
 	$ADAT['tanar'] = getTanarok(array('result'=>'assoc'));
 	$ADAT['export'] = getOrarendAdat($ADAT);
     
-
         $ADAT['formatum'] = readVariable($_POST['formatum'], 'enum', null, array('csv','ods','xml'));
         if ($ADAT['formatum'] == 'xml') $ADAT['mime'] = 'application/vnd.ms-excel';
         if (isset($ADAT['formatum'])) {
@@ -48,6 +49,13 @@ if (!__NAPLOADMIN && !__VEZETOSEG) {
 
     }
 
-
+        $TOOL['datumSelect'] = array(
+            'tipus'=>'sor', 'post'=>array('formatum'),
+            'paramName' => 'dt', 
+            'tolDt' => date('Y-m-d', strtotime('last Monday', strtotime($_TANEV['kezdesDt']))),
+            'igDt' => $_TANEV['zarasDt'],
+            'override' => true
+        );
+	getToolParameters();
 
 }
