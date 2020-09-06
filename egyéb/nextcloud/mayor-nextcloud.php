@@ -113,7 +113,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
             if ($log['verbose'] > 4 ){ echo "*\tSikeres kapcsolódás. (m2n_db=".$db['m2n_db'].") info:".mysqli_get_host_info($l)."\n"; }
             mysqli_set_charset($l, "utf8");
             mysqli_query($l, "SET NAMES utf8 COLLATE utf8_general_ci;" );
-            if(mysqli_query($l, "SELECT * FROM ".$db['m2n_db'].".".$db['m2n_prefix']."register;" ) == FALSE ){
+            if(mysqli_query($l, "SELECT * FROM ".$db['m2n_db'].".".$db['m2n_prefix']."register LIMIT 10;" ) == FALSE ){
                 script_install($l);
             }
             return $l;
@@ -250,7 +250,8 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         } else {
             $e = "export OC_PASS=".escp($m2n['default_passw'])."; su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:add  --password-from-env --display-name=".escp($fullName)." --group=".escp($m2n['mindenki_csop'])." ".escp($userAccount)." \"" ;
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
-            shell_exec($e);
+            $ret = shell_exec($e);
+            if ($log['verbose'] > 11 ){ print_r($ret); }
         }
     }
 
@@ -262,11 +263,13 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         if($last_login == "1970-01-01T00:00:00+00:00" ){	
             $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:delete ".escp($userAccount)." \"";		// Ha még soha nem lépett be
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
-            shell_exec($e);											// akkor törölhető
+            $ret = shell_exec($e);											// akkor törölhető
+            if ($log['verbose'] > 11 ){ print_r($ret); }
         } else {
             $e = "su -s /bin/sh $occ_user -c \"php ".escp($occ_path."/occ")." user:disable ".escp($userAccount)." \"";
             if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
-            shell_exec($e);											// különben csak letiltja
+            $ret = shell_exec($e);											// különben csak letiltja
+            if ($log['verbose'] > 11 ){ print_r($ret); }
         }
         
     }
