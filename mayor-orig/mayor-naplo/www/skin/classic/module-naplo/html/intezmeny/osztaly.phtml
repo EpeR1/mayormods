@@ -423,5 +423,26 @@ function putOsztalyJellegek($ADAT,$osztalyJellegId) {
 
 }
 
+function putOidEllenor($ADAT) {
+
+	formBegin(array('class'=>'osztalyForm'));
+	echo '<input type="hidden" name="action" value="oidEllenor" />';
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
+
+	echo '<h1>'._OIDELLENOR.'</h1>';
+	
+	var_dump($ADAT['oidCheck']);
+
+	echo '<textarea name="oidtxt" rows="10">';
+	    echo $ADAT['oidtxt'];
+	echo '</textarea>';
+
+	echo '<br/><input type="submit" value="'._OK.'" />';
+
+	formEnd();
+
+}
+
 
 ?>
