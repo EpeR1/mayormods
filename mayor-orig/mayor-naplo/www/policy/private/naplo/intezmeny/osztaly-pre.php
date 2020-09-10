@@ -125,7 +125,7 @@ if ($action == 'oidEllenor' && __NAPLOADMIN===true) {
     $oidxp = explode("\n",str_replace(' ',"\n",str_replace('\r','\n',$_POST['oidtxt'])));
     $ADAT['oidtxt'] = $_re;
     for($i=0; $i<count($oidxp); $i++) {
-	$_oid = $oidxp[$i];
+	$_oid = trim($oidxp[$i]);
         $ADAT['oidCheck'][$_oid] = getDiakokByPattern($_oid);
     }
 
