@@ -27,7 +27,7 @@
 	formBegin();
 
 	    if (__HIREKADMIN===true) {
-		    echo '<script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>';
+		    echo '<script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js" charset="utf-8"></script>';
 
 		    echo '<table class="egyhirdetail" cellspacing="1">';
 		    echo '<tr><th colspan="3">'._BEALLITASOK.'</th></tr>';
@@ -139,7 +139,8 @@
 	echo '<script type="text/javascript">';
 	echo "
    CKEDITOR.replace('txt', {
-      uiColor: '#eeeeee'
+      uiColor: '#eeeeee',
+      entities_latin : false
     });
 ";
 	echo '</script>';
