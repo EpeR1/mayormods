@@ -30,7 +30,10 @@
 		    echo '<script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js" charset="utf-8"></script>';
 
 		    echo '<table class="egyhirdetail" cellspacing="1">';
-		    echo '<tr><th colspan="3">'._BEALLITASOK.'</th></tr>';
+		    echo '<tr><th colspan="3">';
+			echo _BEALLITASOK;
+			if ($HIR['owner']!='') echo ' ('.$HIR['owner'].')';
+		    echo '</th></tr>';
 		    echo '<tr><td style="text-align:right">';
 
 		    echo _TOLDT.': <input type="text" name="kdt" id="kdt" value="'.$HIR['kdt'].'" class="datetime" /><br/>';	
@@ -40,21 +43,34 @@
 		echo '<td>';
 
 		    reset($LANGUAGES);
-		    echo '<select name="lang">';
-		    for($i=0; $i<count($LANGUAGES); $i++) {
+
+		    if (count($LANGUAGES) == 1) {
+			echo '<input type="hidden" name="lang" value="'.$LANGUAGES[0].'" />';
+		    } else {
+			echo '<select name="lang">';
+			for($i=0; $i<count($LANGUAGES); $i++) {
 			//echo '<input type="checkbox" name="policies" value="'.$LANGUAGES[$i].'" />';
 			$_CHK = ($LANGUAGES[$i]==$HIR['lang']) ? ' selected="selected" ':'';
 			echo '<option value="'.$LANGUAGES[$i].'" '.$_CHK.'/>';
 			echo $LANGUAGES[$i];
 			echo '</option>';
+			}
+			echo '</select>';
 		    }
-		    echo '</select>';
-	
 		    _putKategoriak($ADAT,$HIR['cid']);
 
 	    	echo '</td>';
-		echo '<td>';
-		    echo $HIR['owner'];
+		echo '<td style="line-height:2em; max-width: 300px">';
+		    // ujfajta kategoria kezelés
+		    $SELECTED_HIRKATEGORIAK = explode(',',$HIR['hirkategoriak']);
+		    for ($i=0; $i<count($ADAT['kategoriak']); $i++) {
+			$_D = $ADAT['kategoriak'][$i];
+			$_SEL = (in_array($_D['id'],$SELECTED_HIRKATEGORIAK)) ? ' selected ':''; 
+		
+			echo '<span class="kategoriaSelector '.$_SEL.'" id="kategoriaSelector_'.$_D['id'].'" data-kategoriaid="'.$_D['id'].'">'.$_D['leiras'].'</span> ';
+		    }
+		    echo '<span id="kategoriaSelectorContainer"></span>';
+		    // -------------------------
 		echo '</td>';
 		echo '</tr>';
 
@@ -67,7 +83,6 @@
 		    $_CHK = ($FLAGS[$i]==$HIR['flag']) ? ' checked="checked" ':'';
 		    echo '<input type="radio" id="F'.$i.'" name="flag" value="'.$FLAGS[$i].'" '.$_CHK.'/>';
 		    echo '<label for="F'.$i.'">';
-		    echo '&nbsp;&nbsp;&nbsp;&nbsp;';
 		    echo $FLAGSS[$i];
 		    echo '('.$FLAGS[$i].')';
 		    echo '</label>';
@@ -124,8 +139,8 @@
 	    echo "\n".'<textarea name="txt" id="txt" class="wysiwyg" rows="10" cols="80">'.htmlspecialchars($HIR['txt']).'</textarea>'."\n";
 
 	    echo '<br/>';
-	    echo _KEP;
-	    echo '<input type="text" name="pic" id="pic" size="128" value="'.$HIR['pic'].'" /><br/>';
+	    echo _KEP.': ';
+	    echo '<input type="text" name="pic" id="pic" size="128" value="'.$HIR['pic'].'" placeholder="https://"/><br/>';
 	    echo '<input type="submit" value="'._ROGZIT.'" />';
 	    echo '<input type="hidden" name="action" value="save" />';
 	    echo '<input type="hidden" name="hirId" value="'.($HIR['id']).'" />';

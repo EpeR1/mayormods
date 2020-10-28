@@ -86,8 +86,10 @@ hr {display: none;}
 
     table.portalMain div.dobozTart a { color: black }
 
-
-
+    
+    div.static h1 { margin: 20px;}
+    div.static p { margin-left: 26px; margin-right:26px; margin-bottom: 1.2rem; font-size: 14px; line-height:1.6em;}
+    
 @media (max-width: 850px) {
   .bal, .jobb {
     display: none;

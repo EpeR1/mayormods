@@ -10,15 +10,24 @@
 
     table.hAdmin {
 	background-color: #445560;
-	
+	width:90%;	
     }
     table.hAdmin tr td {
-	background-color: #eeeeee;
+	background-color: #eee;
+    	padding: 2px 4px;
+	line-height: 1.6em;
+    }
+    table.hAdmin tr:hover td {
+	outline: solid 1px #d64161;
+	background-color: #fff;
     }
 
+    table.hAdmin tr td.latszik {
+	background-color: #d64161; color:white;
+    }
 
     table.hAdmin tr.unk td {
-	background-color: #993456;
+	background-color: #feb236;
     }
     table.hAdmin tr.old td {
 	background-color: #999999;

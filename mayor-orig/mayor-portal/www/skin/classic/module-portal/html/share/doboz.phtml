@@ -22,8 +22,9 @@
 	    $bgcolor =  ($SET['background-color']=='') ? '#eeeeee' : $SET['background-color'] ;
 	    $width = ($SET['width']=='') ? '100%':$SET['width'];
 	    if ($SET['header-link']!='') $cime = '<a href="'.$SET['header-link'].'">'.$cime.'</a>';
+	    if (isset($SET['header-css']) && $SET['header-css']!='') $_style = $SET['header-css'];
 	    echo '<div class="doboz">';
-		echo '<div class="dobozCim" style="width: '.$width.'; background-color: '.$SET['header-color'].'"><span>'.$cime.'</span></div>';
+		echo '<div class="dobozCim" style="width: '.$width.'; background-color: '.$SET['header-color'].'; '.$_style.'"><span>'.$cime.'</span></div>';
 		echo '<div class="dobozTart" style="background-color: '.$bgcolor.'">'.$bele.'</div>';
 	    echo '</div>';
 

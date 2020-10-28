@@ -61,13 +61,23 @@ SET character_set_client = @saved_cs_client;
 
 DROP TABLE IF EXISTS `kategoriak`;
 CREATE TABLE `kategoriak` (
-  `id` mediumint(8) unsigned NOT NULL default '0',
-  `leiras` varchar(70) NOT NULL default '',
+  `id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `leiras` varchar(70) NOT NULL DEFAULT '',
   `precode` text,
-  `postcode` text
+  `postcode` text,
+  UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 PACK_KEYS=1;
 
-
+DROP TABLE IF EXISTS `hirKategoria`;
+CREATE TABLE `hirKategoria` (
+  `hirId` int(10) unsigned NOT NULL,
+  `kategoriaId` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY (`hirId`,`kategoriaId`),
+  KEY `hirKategoria_FKIndex1` (`hirId`),
+  KEY `hirKategoria_FKIndex2` (`kategoriaId`),
+  CONSTRAINT `hirKategoria_ibfk_1` FOREIGN KEY (`hirId`) REFERENCES `hirek` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `hirKategoria_ibfk_2` FOREIGN KEY (`kategoriaId`) REFERENCES `kategoriak` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 --
 -- Table structure for table `linkek`
 --

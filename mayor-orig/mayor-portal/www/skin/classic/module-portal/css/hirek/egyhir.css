@@ -3,40 +3,62 @@
 
     div.egyhir {
 	margin-left: 50px;
+	margin-right:50px;
     }
 
     div.egyhir form {
 	font-weight: bold;
+	margin-bottom: 40px;
+	border-bottom: solid 1px #eee;
     }
 
     div.egyhir label {
-
+	padding-right: 1em;
     }
 
     div.egyhir input {
-	background-color: white;
+/*	background-color: white;
 	border: solid 1px #667766;
-    }
+*/    }
 
     div.egyhir textarea {
 	width: 80%;
 	height: 300px;
+/*
 	border: solid 1px #667766;	
 	background-color: white;
+*/
     }
 
     table.egyhirdetail {
 	background-color: #eeeeee;
-	border-bottom: solid 2px #667766;
     }
     table.egyhirdetail td {
 	border: solid 1px #667766;
+	line-height: 2em;
+	padding: 0.4em;
     }
     table.egyhirdetail th {
-	background-color: #667766;
+	background-color: cornflowerblue;
 	color: white;
 	height:30px;
-	border-bottom: solid 2px #001100;
     }
 
     .mceEditor iframe { border: blue 1px solid; }
+
+    #pic, #cim { line-height: 1.4em; margin-bottom:1em;}
+
+span.kategoriaSelector { border-radius: 4px; padding: 2px 4px; background-color: white; border: solid 1px black; font-weight:normal;
+cursor: pointer;
+-webkit-transition : 100ms ease-out;
+  -moz-transition : 100ms ease-out;
+  -o-transition : 100ms ease-out;
+  transition : 100ms ease-out;
+ }
+
+span.kategoriaSelector.selected { background-color: #d64161; color:white; }
+span.kategoriaSelector.modified { background-color: #878f99; color:white; border-color:white; }
+span.kategoriaSelector.selected.modified { background-color: #6b5b95; color:white;  border-color: black;}
+span.kategoriaSelector:hover { border: solid 1px #6b5b95; background-color: #ff7b25; color:white; }
+span.kategoriaSelector.selected:hover { background-color: #878f99; color:white; }
+
