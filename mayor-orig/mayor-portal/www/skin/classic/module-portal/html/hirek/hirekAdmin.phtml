@@ -40,7 +40,7 @@
 	$FLAGS = array(0=>'nem látszik', 1=>'látszik', 2=>2, 3=>3);
 	$now = time();
 	echo '<table class="hAdmin hideShowContainer" align="center" cellspacing="1">';
-	echo '<tr><td colspan="7"><button type="button" class="onClickHideShow">Mindent mutass!</button></td></tr>'."\n";
+	echo '<tr><th colspan="7"><button type="button" class="onClickHideShow"> + Mindent mutass! + </button></th></tr>'."\n";
 	for ($i=0; $i<count($ADAT['szovegek']); $i++) {
 	    $D = $ADAT['szovegek'][$i];
 	    if ($D['class']==0) $_class='class="unk"'; else 

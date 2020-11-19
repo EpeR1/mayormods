@@ -13,7 +13,7 @@ function putTanarLista($ADAT) {
 	    if ($T['titulus']!='') echo '<div class="titulus">'.$T['titulus'].'</div>';
 	    if ($T['statusz']=='külső óraadó') echo '<div class="titulus">'.$T['statusz'].'</div>';
 	    if ($T['besorolas']=='Gyakornok') echo '<div class="titulus">'.kisbetus($T['besorolas']).'</div>';
-//	    if ($T['besorolas']=='Mesterpedagógus') echo '<div class="titulus">'.kisbetus($T['besorolas']).'</div>';
+	    if ($T['besorolas']=='Mesterpedagógus') echo '<div class="titulus">'.kisbetus($T['besorolas']).'</div>';
 
 	    $osztalyai = ($ADAT['tanarOsztaly'][$T['tanarId']]);
 	    for ($j=0; $j<count($osztalyai); $j++) {
@@ -28,6 +28,19 @@ function putTanarLista($ADAT) {
 		    echo $munkakozossegei[$j]['munkakozossegNev']. ' munkaközösség-vezető';
 		echo '</div>';
 	    }
+
+/*
+	    $targyai = explode(',',$T['kepesitesTargyIdk']);
+	    if (count($targyai)>0) {
+		echo '<div class="" style="color:#aaa; font-size:smaller">';
+		for ($j=0; $j<count($targyai); $j++) {
+		    $_targyId = $targyai[$j];
+		    echo ' '.$ADAT['targyak'][$_targyId][0]['targyNev'].' ';
+		}
+		echo '</div>';
+	    }
+*/
+
 	echo '</td>';
 	if (($i+1) % 3 == 0 && $i!=count($ADAT['tanarok'])-1) echo '</tr><tr>';
     }

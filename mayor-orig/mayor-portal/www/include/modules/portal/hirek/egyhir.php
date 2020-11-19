@@ -41,6 +41,9 @@
 	    }
 	} else $q = '';
 	if ($q!='') $r = db_query($q,array('modul'=>'portal','result'=>'insert','values'=>$v));
+	$q = "DELETE FROM `hirKategoria` WHERE hirId=%u";
+	$v = array($hirId);
+	db_query($q,array('modul'=>'portal','result'=>'delete','values'=>$v));
 	if (is_array($DATA['kategoriaId'])) {
 	    for ($i=0; $i<count($DATA['kategoriaId']); $i++) {
 		$q = "INSERT IGNORE INTO `hirKategoria` (hirId,kategoriaId) VALUES (%u,%u)";

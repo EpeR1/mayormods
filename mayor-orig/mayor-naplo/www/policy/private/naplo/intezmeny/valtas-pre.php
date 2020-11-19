@@ -5,6 +5,7 @@
     require_once('include/modules/naplo/share/intezmenyek.php');
     require_once('include/modules/naplo/share/szemeszter.php');
     require_once('include/modules/naplo/share/tanar.php');
+    require_once('include/modules/naplo/share/targy.php');
     require_once('include/modules/naplo/share/osztaly.php');
     require_once('include/modules/naplo/share/munkakozosseg.php');
 
@@ -40,6 +41,7 @@
 	}
     }
     $ADAT['tanarok'] = getTanarok(array('extraAttrs'=>'titulus,statusz,besorolas','telephelyId'=>__TELEPHELYID));
+    $ADAT['targyak'] = getTargyak(array('arraymap'=>array('targyId')));
     $lr = db_connect('naplo_intezmeny');
     for($i=0; $i<count($ADAT['tanarok']); $i++) {
 	$_tanarId = $ADAT['tanarok'][$i]['tanarId'];

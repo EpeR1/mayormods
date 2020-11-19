@@ -68,6 +68,13 @@
 
     div.egyHir span.tag { background-color: #bbb; padding: 0px 4px; margin: 0px 2px; border-radius:2px; color:white;}
 
+    div.egyHirmeta a { color: #aaa; border-bottom: dotted 1px #bbb}
+    div.egyHirmeta a:hover { color: #444; border-bottom: solid 1px #bbb}
+
+    h2.hirKategoriaSelected { text-align: center; padding-left:22px; padding-right:22px; color: #7d96a0 ; text-decoration: underline solid #eee; font-weight:100; letter-spacing:2px; font-size: 24px; font-variant:small-caps}
+    h2.hirKategoriaSelected a  { display:none; color: #d64161; padding-left: 6px; font-size:14px;}
+    h2.hirKategoriaSelected:hover { padding-right:0px;}
+    h2.hirKategoriaSelected:hover a { display: inline-block;}
 
 div.egyHir:after {
   clear: both;
@@ -87,7 +94,7 @@ hr {display: none;}
     table.portalMain div.dobozTart a { color: black }
 
     
-    div.static h1 { margin: 20px;}
+    div.static h1 { margin: 20px; }
     div.static p { margin-left: 26px; margin-right:26px; margin-bottom: 1.2rem; font-size: 14px; line-height:1.6em;}
     
 @media (max-width: 850px) {

@@ -36,8 +36,9 @@
 	return ($_TANEV['szemeszter'][1]['statusz'] == 'aktív') // Csak aktív szemeszterbe írhatunk
                 && (
                     ((__VEZETOSEG || __NAPLOADMIN) && $Feladat && $haladasiOraAdat['eredet']=='órarend')
-                    || $time <= time()
-                )       // A jövőbeli órák nem írhatók be, kivéve, ha az előírt tanári feladat (pl versenyfelügyelet)!
+                    || $time <= time()  // A jövőbeli órák nem írhatók be, kivéve, ha az előírt tanári feladat (pl versenyfelügyelet)!
+		    || $time >= time()   // Pandemic Release
+                )       
                 && (
                     // Az admin bármikor módosíthat - de csak vezetői utasításra teszi!
                     __NAPLOADMIN
