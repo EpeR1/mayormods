@@ -25,7 +25,8 @@
 	$dolgozatBeirhato = $oraBeirhato;
 	if ($oraBeirhato===true && $action=='oraBeiras') {
 	    $leiras = readVariable($_POST['leiras'], 'string');
-	    updateHaladasiNaploOra($oraId,$leiras);
+	    $cimkeId = readVariable($_POST['cimkeId'], 'id');
+	    updateHaladasiNaploOra($oraId,$leiras,$cimkeId);
 	}
 	$_JSON['oraAdat'] = $ORAADAT = getOraAdatById($oraId);
 	if ($ORAADAT['hazifeladatId']>0) {
@@ -56,6 +57,7 @@
 	        <input class="mayorToken" type="hidden" name="mayorToken" value="'.$_SESSION['mayorToken'].'" />
 	        <input type="hidden" name="action" value="oraBeiras" />
 	        <input type="hidden" name="oraId" value="'.$oraId.'" />
+	        <input type="hidden" name="cimkeId" value="'.$_JSON['oraAdat']['cimkeId'].'" />
 	        <textarea name="leiras" style="margin-top:8px; width:99%; height:100px;">'. supertext($_JSON['oraAdat']['leiras']).'</textarea>';
 	    $oraForm .= '<button type="button" class="setOraAdat mentes" value="mentés" data-oraid="'.$oraId.'"><span class="icon-ok"></span> MENTÉS </button>';
 	    $oraForm .= '</form>';

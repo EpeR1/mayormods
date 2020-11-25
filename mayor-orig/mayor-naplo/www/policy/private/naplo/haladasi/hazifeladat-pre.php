@@ -80,7 +80,8 @@
 	}
 	if ($oraId>0 && $ADAT['oraAdat']['oraBeirhato']===true ) {
 	    $leiras = readVariable($_POST['oraLeiras'],'string');
-	    updateHaladasiNaploOra($oraId, $leiras);
+	    $cimkeId = readVariable($_POST['cimkeId'],'string');
+	    updateHaladasiNaploOra($oraId, $leiras, $cimkeId);
 	}
     } elseif (__TANAR===true && $action=='lattam') {
 	$lr = db_connect('naplo');

@@ -41,7 +41,7 @@ CREATE TABLE `hirek` (
   `lang` varchar(5) default 'hu_HU',
   `cim` text,
   `txt` text,
-  `owner` varchar(10) default NULL,
+  `owner` varchar(255) default NULL,
   `flag` tinyint(3) unsigned NOT NULL default '0',
   `cid` tinyint(3) unsigned NOT NULL default '0',
   `pic` varchar(20) default NULL,
