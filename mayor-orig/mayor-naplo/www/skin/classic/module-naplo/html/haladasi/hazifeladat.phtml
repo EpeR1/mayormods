@@ -131,7 +131,8 @@ echo '<style type="text/css">
 	    echo '<input type="hidden" name="hazifeladatId" value="'.$ADAT['hazifeladatId'].'"/>';
 
 	    echo '<fieldset class="adatok"><legend>'.ucfirst(_TANANYAG).'</legend>'."\n";
-		if ($ADAT['oraAdat']['oraId']>0 && strtotime(date('Y-m-d'))>=strtotime($ADAT['oraAdat']['dt']) && $ADAT['oraAdat']['oraBeirhato']===true) {
+//		if ($ADAT['oraAdat']['oraId']>0 && strtotime(date('Y-m-d'))>=strtotime($ADAT['oraAdat']['dt']) && $ADAT['oraAdat']['oraBeirhato']===true) {
+		if ($ADAT['oraAdat']['oraId']>0 && $ADAT['oraAdat']['oraBeirhato']===true ) {
 		    echo '<input type="text" name="oraLeiras" value="'.$ADAT['oraAdat']['leiras'].'" style="width:70%">';
 		    echo '<input type="submit">';
 		} else {
