@@ -79,7 +79,7 @@
 		$category = $SET['groups'][$i];
 		$groupCn = kisbetus(ekezettelen($category));
 		if ($category == '') continue;
-		$q = "SELECT gid FROM groups WHERE groupCn='%s'";
+		$q = "SELECT gid FROM `groups` WHERE groupCn='%s'";
 		$gid = db_query($q, array('fv' => 'mysqlCreateAccount', 'modul' => $modul, 'result' => 'value', 'values' => array($groupCn)), $lr);
 		if ($gid === false || is_null($gid)) { // --FIXME -- ez jó így BENCE radyx
 		    if ($SET['createGroup']) {
