@@ -646,7 +646,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '7.0', '
             $ret = mysqli_fetch_array($r, MYSQLI_ASSOC); 
             mysqli_free_result($r);
         } else {
-            echo "\nMAY ->\t ******** Mayor_napló (tankör)lekérdezési hiba. (adatbázis) ********\n";
+            echo "\nMAY ->\t ******** Mayor_napló (szemeszter)lekérdezési hiba. (adatbázis) ********\n";
         }
         if ($log['verbose'] > 10 ){ print_r($ret); }
         return $ret;
@@ -712,7 +712,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '7.0', '
                     WHERE accounts.studyId = tanar.oId AND statusz != 'jogviszonya lezárva' AND tanar.beDt <= CURRENT_DATE() AND (CURRENT_DATE() <= tanar.kiDt OR tanar.kiDt IS NULL) 
                     AND tanar.tanarId = tankorTanar.tanarId AND tankorTanar.beDt <= CURRENT_DATE() AND (CURRENT_DATE() <= tankorTanar.kiDt OR tankorTanar.kiDt = '".$m2n['zaras_tartas']."' ) 
                     AND tankorTanar.tankorId = tankorSzemeszter.tankorId 
-                    AND tankorSzemeszter.tanev = '".$ev['tanev']."' AND szemeszter = '".$ev['szemeszter']."'
+                    AND tankorSzemeszter.tanev = '".$ev['tanev']."' AND tankorSzemeszter.szemeszter = '".$ev['szemeszter']."'
                     ORDER BY userAccount ;
             ";
             if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }  

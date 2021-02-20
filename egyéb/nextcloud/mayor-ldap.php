@@ -794,8 +794,8 @@ ldap_set_option($ld, LDAP_OPT_PROTOCOL_VERSION, 3);
 ldap_set_option($ld, LDAP_OPT_REFERRALS, 0);
 
 
-
-$basedn = "DC=ad,DC=bmrg,DC=lan";
+ 
+$basedn = "DC=ad,DC=bmrg,DC=lan"; 
 ldap_set_option($ld, LDAP_OPT_MATCHED_DN, $basedn);
 
 
