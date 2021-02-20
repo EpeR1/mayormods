@@ -87,7 +87,7 @@ function print_help(){
 }
 
  
-if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Improved) és php7  kell!
+if (function_exists('mysqli_connect') and version_compare(phpversion(), '7.0', '>=')) { //MySQLi (Improved) és php7  kell!
 
     function db_connect(array $db){ 
         global $log;
@@ -777,6 +777,63 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         return $ret;
     }
     
+//-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+var_dump( version_compare(phpversion(), '7.0', '<='));
+echo "\n\n".phpversion()."\n\n";
+
+die();
+$server = "10.100.3.3";  //this is the LDAP server you're connecting with
+$port = "636";
+$ld = ldap_connect("ldaps://$server:$port"); //always connect securely via LDAPS when possible
+
+ldap_set_option($ld, LDAP_OPT_X_TLS_REQUIRE_CERT, LDAP_OPT_X_TLS_NEVER);  
+// LDAP_OPT_X_TLS_NEVER,  LDAP_OPT_X_TLS_HARD, LDAP_OPT_X_TLS_DEMAND, LDAP_OPT_X_TLS_ALLOW, LDAP_OPT_X_TLS_TRY
+ldap_set_option($ld, LDAP_OPT_NETWORK_TIMEOUT, 10);
+ldap_set_option($ld, LDAP_OPT_PROTOCOL_VERSION, 3);
+ldap_set_option($ld, LDAP_OPT_REFERRALS, 0);
+
+
+
+$basedn = "DC=ad,DC=bmrg,DC=lan";
+ldap_set_option($ld, LDAP_OPT_MATCHED_DN, $basedn);
+
+
+$ldapbind = ldap_bind($ld, $dn, $pass); //this is the point we are authenticating
+
+
+
+
+print_r($ldapbind);
+echo "\n---\n";
+
+$dn = "dc=ad,dc=bmrg,dc=lan"; //very important: in which part of your database are you looking
+$filter = "(objectclass=*)"; //don't filter anyone out (every user has a uid)
+$sr = ldap_search($ld, $dn, $filter) or die ("bummer"); //define your search scope
+
+$results = ldap_get_entries($ld, $sr); //here we are pulling the actual entries from the search we just defined
+print_r($results); //will give you all results is array form. 
+echo "\n--\n";
+
+//did the connecting and binding
+$dn = "cn=bikeowners,cn=groups,dc=server,dc=example,dc=com"; //note the extra "cn=groups" for looking in a group that is not "users"
+$filter = "email=*"; //email address must be set but can be anything
+$sr = ldap_search($ld, $dn, $filter) or die ("bummer"); //define your search scope
+
+
+ldap_close($ld);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------//
@@ -816,7 +873,7 @@ if (function_exists('mysqli_connect') and PHP_MAJOR_VERSION >= 7) { //MySQLi (Im
         echo "\n******** MySQL (general) kapcsolat hiba. ********\n";
         echo "\n******** Script leáll... ********\n";
         die();
-        }
+    }
     $link2 = $link;
 
     // group_add($m2n['mindenki_csop']);				// A "mindenki" csoport hozzáadása 
