@@ -251,6 +251,13 @@
     div.arckepContainer.szulo span {background-color: #40e0d0; }
     div.arckepContainer.diak span {background-color: #6495ed; }
 
+    span.cimke { margin:0px 1px; border-radius: 2px; font-size:xx-small; color:white; padding: 0px 2px 0px 2px;  background-color:#ddd; }
+    span.cimke_0 { background-color: #4caf50; }
+    span.cimke_1 { background-color: red; }
+    span.cimke_2 { background-color: orange; }
+    span.cimke_3 { background-color: #3f51b5; }
+    span.cimke_4 { background-color: #673ab7; }
+
 @media (max-width: 764px) {
 
     #toolBarTitle {display:;}

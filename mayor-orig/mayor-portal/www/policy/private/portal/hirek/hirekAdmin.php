@@ -1,5 +1,7 @@
 <?php
 
-    global $HIREK;
-    putHirek($HIREK['szovegek']);
+    global $ADAT;
+
+    putKategoriaSzerkeszto($ADAT['kategoriak']);
+    putHirek($ADAT);
 ?>

@@ -64,7 +64,7 @@
     	if (!$lr) return false;
 	// Keresés
 	if ($attr == 'member') {
-	    $q = "SELECT `".implode('`,`', array_fill(0, count($searchAttrs), '%s'))."` FROM groups LEFT JOIN members 
+	    $q = "SELECT `".implode('`,`', array_fill(0, count($searchAttrs), '%s'))."` FROM `groups` LEFT JOIN members 
 		ON members.gid=groups.gid
 		LEFT JOIN accounts USING (uid)
 		WHERE gid IN 
@@ -72,7 +72,7 @@
 		AND groups.policy='%s'";
 	    $v = array_merge($searchAttrs, array($pattern, $toPolicy, $toPolicy));
 	} else {
-	    $q = "SELECT DISTINCT `".implode('`,`', array_fill(0, count($searchAttrs), '%s'))."` FROM groups LEFT JOIN members 
+	    $q = "SELECT DISTINCT `".implode('`,`', array_fill(0, count($searchAttrs), '%s'))."` FROM `groups` LEFT JOIN members 
 		ON members.gid=groups.gid
 		LEFT JOIN accounts USING (uid)
 		WHERE `%s` LIKE '%%%s%%' AND groups.policy='%s'";
@@ -122,7 +122,7 @@
 
 	    $homeDirectory = $ret['homeDirectory']; // de nem használjuk semmire...
 	    // A user csoport törlése
-	    $q = "DELETE FROM groups WHERE gid=%u";
+	    $q = "DELETE FROM `groups` WHERE gid=%u";
 	    $v = array($ret['uid']);
 	    $r = db_query($q, array('fv' => 'mysqlDeleteAccount', 'modul' => $modul, 'values' => $v), $lr);
 	    if (!$r) { db_close($lr); return false; }
@@ -155,7 +155,7 @@
         }
 
         // csoport törlése
-	$q = "DELETE FROM groups WHERE policy='%s' AND groupCn='%s'";
+	$q = "DELETE FROM `groups` WHERE policy='%s' AND groupCn='%s'";
 	$v = array($toPolicy, $groupCn);
 	$r = db_query($q, array('fv' => 'mysqlDeleteGroup', 'modul' => "$toPolicy auth", 'values' => $v));
 

@@ -140,7 +140,7 @@
 	    $_THESE = '*';
 	    $v = array();
 	}
-	$q = "SELECT $_THESE FROM groups WHERE groupCn='%s' AND policy='%s'";
+	$q = "SELECT $_THESE FROM `groups` WHERE groupCn='%s' AND policy='%s'";
 
 	array_push($v, $groupCn, $toPolicy);
 	$A = db_query($q, array('fv' => 'mysqlGetGroupInfo', 'modul' => $modul, 'result' => 'record', 'values' => $v), $lr);
@@ -185,7 +185,7 @@
 	$lr = db_connect($modul, array('fv' => 'mysqlChangeGroupInfo'));
         if (!$lr) return false;
 
-	$q = "SELECT gid FROM groups WHERE groupCn='%s' AND policy='%s'";
+	$q = "SELECT gid FROM `groups` WHERE groupCn='%s' AND policy='%s'";
 	$v = array($groupCn, $toPolicy);
 	$gid = db_query($q, array('fv' => 'mysqlChangeGroupInfo', 'modul' => $modul, 'result' => 'value', 'values' => $v), $lr);
 	if ($gid === false) { db_close($lr); return false; }
@@ -241,7 +241,7 @@
 			    $v = array($attr);
 			}
                     }
-		    $q = "UPDATE groups SET $W WHERE groupCn='%s' AND policy='%s'";
+		    $q = "UPDATE `groups` SET $W WHERE groupCn='%s' AND policy='%s'";
 		    array_push($v, $groupCn, $toPolicy);
 		    db_query($q, array('fv' => 'mysqlChangeGroupInfo', 'modul' => $modul, 'values' => $v), $lr);
         	}

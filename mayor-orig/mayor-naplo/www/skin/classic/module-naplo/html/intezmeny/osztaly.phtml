@@ -423,5 +423,44 @@ function putOsztalyJellegek($ADAT,$osztalyJellegId) {
 
 }
 
+function putOidEllenor($ADAT) {
+
+	formBegin(array('class'=>'osztalyForm'));
+	echo '<input type="hidden" name="action" value="oidEllenor" />';
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
+	echo '<input type="hidden" name="osztalyId" value="'.$ADAT['osztalyId'].'" />';
+
+	echo '<h1>'._OIDELLENOR.'</h1>';
+	
+	if (is_array($ADAT['oidCheck'])) {
+	    echo '<table>';
+	    foreach($ADAT['oidCheck'] as $oId=>$DA) {
+	      for ($i=0; $i<count($DA); $i++) {
+		$D = $DA[$i];
+		echo '<tr>';
+		echo '<td>'.$oId.'</td>';
+		echo '<td class="diakAdat diakNev" data-diakid="'.$D['diakId'].'">'.$D['diakId'].'</td>';
+		echo '<td class="diakAdat diakNev" data-diakid="'.$D['diakId'].'">'.$D['diakNev'].'</td>';
+		echo '<td>'.$D['oId'].'</td>';
+		echo '<td>';
+		    if ($ADAT['osztalyAdat']['osztalyJel']!=$D['osztalyJel']) {echo '!!!!!!!';}
+		    //echo '72455076207';
+		    echo $D['osztalyJel'];
+		echo '</td>';
+		echo '</tr>';
+	      }
+	    }
+	    echo '</table>';
+	}
+	echo '<textarea name="oidtxt" rows="10">';
+	    echo $ADAT['oidtxt'];
+	echo '</textarea>';
+
+	echo '<br/><input type="submit" value="'._OK.'" />';
+
+	formEnd();
+
+}
+
 
 ?>

@@ -14,7 +14,14 @@
 //    $ADAT['nevnap']['ma'] = getNevnap(date('m'),date('d'));
 //    $ADAT['nevnap']['holnap'] = getNevnap(date('m'),date('d')+1);
 
-    $FILTER=array('tolDt'=>date('Y-m-d H:i:s'), 'igDt'=>date('Y-m-d H:i:s'),'flag'=>array(1),'class'=>array(1));
+    $ADAT['kategoriak'] = getKategoriak();
+    for ($i=0; $i<count($ADAT['kategoriak']); $i++) {
+        $RESTRICTKATEGORIA[] = intval($ADAT['kategoriak'][$i]['id']);
+    }
+    $kategoriaId = readVariable($_GET['kategoriaId'],'id',null,$RESTRICTKATEGORIA);
+    $ADAT['kategoriaId'] = $kategoriaId;
+
+    $FILTER=array('tolDt'=>date('Y-m-d H:i:s'), 'igDt'=>date('Y-m-d H:i:s'),'flag'=>array(1),'class'=>array(1),'kategoria'=>array($kategoriaId));
     if (defined('__PORTAL_RESTRICT_CID')) 
 	$FILTER['cid'] = explode(',',__PORTAL_RESTRICT_CID);
 

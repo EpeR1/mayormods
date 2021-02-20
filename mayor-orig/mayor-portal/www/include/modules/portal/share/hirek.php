@@ -13,7 +13,7 @@
 	return $r;
     }
 
-    function getHirek($SET = array('all'=>true,'tolDt'=>'', 'igDt'=>'', 'id' => '', 'flag'=>array(), 'class'=>array(), 'cid'=>array(), 'limit'=>'', 'lang'=>'hu_HU') ) {
+    function getHirek($SET = array('all'=>true,'tolDt'=>'', 'igDt'=>'', 'id' => '', 'flag'=>array(), 'class'=>array(), 'cid'=>array(), 'limit'=>'', 'lang'=>'hu_HU', 'kategoria'=>array()) ) {
 
 	$tolDt = $SET['tolDt']; $igDt = $SET['igDt'];
 	if ($tolDt!='') $W[] = "kdt<='$tolDt'";
@@ -21,6 +21,8 @@
 	if (count($SET['flag'])>0) $W[] = "flag IN (".implode(',',$SET['flag']).")";
 	if (count($SET['class'])>0) $W[] = "class IN (".implode(',',$SET['class']).")";
 	if (count($SET['cid'])>0) $W[] = "cid IN (".implode(',',$SET['cid']).")";
+	if (is_array($SET['kategoria']) && count($SET['kategoria'])>0 && !is_null($SET['kategoria'][0])) 
+	    $W[] = "kategoriaId IN (".implode(',',$SET['kategoria']).")";
 	if ($SET['lang']!='')  $W[] = "lang='".$SET['lang']."'";
 
 	if ($SET['limit']!='') $L = ' LIMIT '.$SET['limit'];
@@ -42,7 +44,7 @@
 	} else $WHERE = '';
 
 	if ($SET['all']===true) $WHERE = ''; 
-	$q = "SELECT * FROM hirek $WHERE ORDER BY kdt DESC,vdt DESC".$L;
+	$q = "SELECT hirek.*, hirek.id AS hirId, GROUP_CONCAT(kategoriaId) AS hirkategoriak FROM hirek LEFT JOIN hirKategoria ON (hirek.id=hirId) $WHERE GROUP BY hirek.id ORDER BY kdt DESC,vdt DESC".$L;
 	$HIREK['szovegek'] = db_query($q, array('modul'=>'portal','result'=>'indexed'));
 	return $HIREK;
     }

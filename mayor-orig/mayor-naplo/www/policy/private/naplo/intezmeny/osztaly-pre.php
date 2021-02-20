@@ -19,6 +19,7 @@ require_once('include/modules/naplo/share/tankorDiakModifier.php');
 require_once('include/modules/naplo/share/hianyzasModifier.php');
 require_once('include/modules/naplo/share/jegyModifier.php');
 require_once('include/modules/naplo/share/jegy.php');
+require_once('include/modules/naplo/share/kereso.php');
 require_once('include/share/net/upload.php');
 
 define('FILE_UPLOAD_DIR',_DOWNLOADDIR.'/private/naplo/upload/');
@@ -116,7 +117,19 @@ if (isset($osztalyId)) {
 	$ADAT['diakok'] = getDiakok(array('tanev' => $tanev));
 }
 
-if ($action == 'osztalyAdatModositas' && __NAPLOADMIN) {
+
+if ($action == 'oidEllenor' && __NAPLOADMIN===true) {
+
+    // --TODO
+    $_re = str_replace(' ',"\n",str_replace('\r','\n',$_POST['oidtxt']));
+    $oidxp = explode("\n",str_replace(' ',"\n",str_replace('\r','\n',$_POST['oidtxt'])));
+    $ADAT['oidtxt'] = $_re;
+    for($i=0; $i<count($oidxp); $i++) {
+	$_oid = trim($oidxp[$i]);
+        $ADAT['oidCheck'][$_oid] = getDiakokByPattern($_oid);
+    }
+
+} elseif ($action == 'osztalyAdatModositas' && __NAPLOADMIN) {
 
 	$leiras = readVariable($_POST['leiras'], 'string');
 	$ofoTanarId = readVariable($_POST['ofoTanarId'], 'id');

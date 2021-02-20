@@ -66,9 +66,11 @@
 	} elseif ($SET['mkId'] == '') {
 	    if (count($where) > 0) $W = 'WHERE ' . implode(' AND ',$where);
 	    $q = "SELECT tanarId, TRIM(CONCAT_WS(' ',viseltNevElotag, ViseltCsaladiNev, viseltUtoNev)) AS tanarNev, statusz,
-		    hetiKotelezoOraszam,hetiLekotottMinOraszam,hetiLekotottMaxOraszam,hetiKotottMaxOraszam,hetiMunkaora
+		    hetiKotelezoOraszam,hetiLekotottMinOraszam,hetiLekotottMaxOraszam,hetiKotottMaxOraszam,hetiMunkaora 
 			$extraAttrs
-		FROM ".__INTEZMENYDBNEV.".tanar $W ORDER BY CONCAT_WS(' ', ViseltCsaladiNev, viseltUtoNev)";
+		FROM ".__INTEZMENYDBNEV.".tanar 
+--		LEFT JOIN ".__INTEZMENYDBNEV.".tanarKepesites USING (tanarId) LEFT JOIN ".__INTEZMENYDBNEV.".kepesitesTargy USING (kepesitesId)
+		$W ORDER BY CONCAT_WS(' ', ViseltCsaladiNev, viseltUtoNev)";
 	} else {
 	    if (count($where) > 0) $W = 'AND ' . implode(' AND ',$where);
 	    $q = "SELECT tanar.tanarId AS tanarId, TRIM(CONCAT_WS(' ',viseltNevElotag, ViseltCsaladiNev, viseltUtoNev)) AS tanarNev, statusz,

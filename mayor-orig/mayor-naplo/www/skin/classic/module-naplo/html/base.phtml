@@ -3,7 +3,6 @@
     if (_RIGHTS_OK !== true) die();
 
     require_once('include/share/date/names.php');
-
     if (_RUNLEVEL!=='cron') putEszkozSor();
 
     function putUjIntezmeny() {
@@ -61,10 +60,11 @@
 	    if ($showHelp) echo '<span id="toolBarHelpButton" class="onClickHideShow">?</span>';
 	echo '</td>'."\n";
 	reset($TOOL); 
-	foreach ( $TOOL as $tool => $params ) {
 
+	foreach ( $TOOL as $tool => $params ) {
 //	    if ( function_exists( $func = "put$tool" ) && $params['tipus']=='cella') {
 	    if ( isset($params['tipus']) && $params['tipus']=='cella') {
+
 		if (isset($params['title'])) $title = '__'.$params['title'];
 		else $title = '__'.nagybetus($tool).'TITLE';
 
@@ -274,9 +274,8 @@
     }
 
     function putForrasSelect() {
-
 	global $TOOL;
-	putToolFormStart('forrasSelect');
+	putToolFormStart('forrasSelect','forras');
 	    echo '<select name="'.$TOOL['forrasSelect']['paramName'].'" class="onChangeSubmit">';
 		echo '<option value=""> - </option>'."\n";
 		$SEL = array($TOOL['forrasSelect']['paramValue'] => ' selected="selected" ');
@@ -285,7 +284,6 @@
 		}
 	    echo '</select>';
 	putToolFormStop();
-
     }
 
     function putIntezmenySelect() {

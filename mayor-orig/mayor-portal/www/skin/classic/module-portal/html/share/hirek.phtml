@@ -9,6 +9,16 @@
 	    }
 
 	} else {
+
+	  $KATEGORIAID2LEIRAS = (reindex($ADAT['kategoriak'],array('id')));
+
+	  if ($ADAT['kategoriaId']>0 && $KATEGORIAID2LEIRAS[$ADAT['kategoriaId']][0]['leiras']!='') {
+		echo '<h2 class="hirKategoriaSelected">';
+		    echo ucfirst($KATEGORIAID2LEIRAS[$ADAT['kategoriaId']][0]['leiras']);
+		    echo '<a href="'.href('index.php?page=portal&f=portal&sub=portal').'" class="icon-remove-sign"></a>';
+		echo '</h2>';
+	  }
+
 	  for ($i=0; $i<count($ADAT['hirek']['szovegek']); $i++) {
 
 	    $D = $ADAT['hirek']['szovegek'][$i];
@@ -34,7 +44,13 @@
 			for ($j=0; $j<count($CSOPORT); $j++) echo '<span class="tag">'.$CSOPORT[$j].'</span>';
 			//echo '</span>';
 		    }
-
+		    if ($D['hirkategoriak']!='') {
+			$D['kategoriaIdk'] = explode(',',$D['hirkategoriak']);
+			for ($j=0; $j<count($D['kategoriaIdk']); $j++ ) {
+			    echo ' · ';
+			    echo '<a href="'.href('index.php?page=portal&sub=portal&f=portal&kategoriaId='.$D['kategoriaIdk'][$j]).'" class="hirkategoriaLeiras">'.$KATEGORIAID2LEIRAS[$D['kategoriaIdk'][$j]][0]['leiras'].'</a>';
+			}
+		    }
 		echo '</div>';
 	    }
 	    echo '<div class="hir">';

@@ -4,6 +4,7 @@
 
         formBegin(array('action'=>href('index.php?page=naplo&sub=export&f=kretaOrarend'), 'class'=>"export"));
         echo '<input type="hidden" name="action" value="kretaOrarendExport" />'."\n";
+	echo '<input type="hidden" name="dt" value="'.$ADAT['dt'].'" />'."\n";
 
         echo '<fieldset><legend>Kréta - Órarend export</legend>'."\n";
         echo '<table>'."\n";

@@ -1,5 +1,7 @@
 <?php
 
+if (in_array(__PORTAL_CODE,array('vmg','kos'))) {
+
     if (__PORTAL_CODE=='kos' || $sub == 'kos') {
 	$MENU['felveteli'] = array(
     	    array('txt' => 'Felvételi (általános iskola)', 'url' => 'index.php?page=felveteli&sub=kos')
@@ -45,4 +47,6 @@
         array('txt' => '6.', 'url' => 'index.php?page=felveteli&sub=tajekoztato/20082009&f=6'),
     );
 */
+
+}
 ?>

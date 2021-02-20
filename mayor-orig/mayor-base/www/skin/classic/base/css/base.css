@@ -102,7 +102,8 @@
 	padding-left: 140px; 
     }
 
-    #nav li { position: relative; }
+    #nav li { position: relative;  }
+    #nav li:first { white-space: nowrap; }
     #nav > li { float: left; z-index: 20; text-align: center; padding: 0;
 /*	    background-color: #3fa79c;  */
 	    background-color: #3496B9;

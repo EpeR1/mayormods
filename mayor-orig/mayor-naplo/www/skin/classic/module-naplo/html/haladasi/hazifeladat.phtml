@@ -8,8 +8,11 @@
 	    echo ($ADAT['oraAdat']['dt']).' ('.$ADAT['oraAdat']['dt'].'), '.$ADAT['oraAdat']['ora'].'. '._ORA;
 	    echo '</span>';
 	    echo ' – <span class="tankorNev tankorAdat" data-tankorid="'.$ADAT['oraAdat']['tankorId'].'">'.$ADAT['oraAdat']['tankorNev'].'</span>';
+	    if ($ADAT['oraAdat']['cimkeLeiras']!='') {
+		echo ' – '.'<span class="cimke cimke_'.(intval($ADAT['oraAdat']['cimkeId'])%5).'">'.$ADAT['oraAdat']['cimkeLeiras'].'</span>';
+	    }
 	    echo ' – <span class="tanarNev" data-tanarid="'.$ADAT['oraAdat']['ki'].'">'.$ADAT['oraAdat']['kiCn'].'</span>';
-	    // echo '<p>'.$ADAT['oraAdat']['leiras'].'</p>';
+
 
 	echo '</fieldset>'."\n";
 
@@ -124,10 +127,12 @@ echo '<style type="text/css">
 	    if ($skin != 'ajax') formBegin(array('class'=>'hazifeladat'));
 	    echo '<input type="hidden" name="action" value="hazifeladatBeiras"/>';
 	    echo '<input type="hidden" name="oraId" value="'.$ADAT['oraAdat']['oraId'].'"/>';
+	    echo '<input type="hidden" name="cimkeId" value="'.$ADAT['oraAdat']['cimkeId'].'"/>';
 	    echo '<input type="hidden" name="hazifeladatId" value="'.$ADAT['hazifeladatId'].'"/>';
 
 	    echo '<fieldset class="adatok"><legend>'.ucfirst(_TANANYAG).'</legend>'."\n";
-		if ($ADAT['oraAdat']['oraId']>0 && strtotime(date('Y-m-d'))>=strtotime($ADAT['oraAdat']['dt']) && $ADAT['oraAdat']['oraBeirhato']===true) {
+//		if ($ADAT['oraAdat']['oraId']>0 && strtotime(date('Y-m-d'))>=strtotime($ADAT['oraAdat']['dt']) && $ADAT['oraAdat']['oraBeirhato']===true) {
+		if ($ADAT['oraAdat']['oraId']>0 && $ADAT['oraAdat']['oraBeirhato']===true ) {
 		    echo '<input type="text" name="oraLeiras" value="'.$ADAT['oraAdat']['leiras'].'" style="width:70%">';
 		    echo '<input type="submit">';
 		} else {

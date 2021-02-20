@@ -1,27 +1,55 @@
 <?php
 
+    function putKategoriaSzerkeszto($ADAT) {
+	if (!in_array(__PORTAL_CODE,array('vmg','kanizsay'))) return false;
+	formBegin();
+	echo '<table align="center">';
+
+	    for ($i=0; $i<count($ADAT); $i++) {
+		$D = $ADAT[$i];
+		echo '<tr>';
+		echo '<td><input type="hidden" name="kategoriaId[]" value="'.$D['id'].'" />';
+		    echo '<input type="checkbox" name="kategoriaTorlendo[]" value="'.$D['id'].'" title="Törlöm!" />';
+		    echo $D['id'];
+		echo '</td>';
+//		echo '<td>'.$D['leiras'].'</td>';
+		echo '<td><input type="text" name="leiras_'.$D['id'].'" value="'.$D['leiras'].'" placeholder="leírás" /></td>';
+		echo '<td><input type="text" name="precode_'.$D['id'].'" value="'.htmlentities($D['precode']).'" placeholder="precode" /></td>';
+		echo '<td><input type="text" name="postcode_'.$D['id'].'" value="'.htmlentities($D['postcode']).'" placeholder="postcode" /></td>';
+		echo '<td>'.$D['precode'].'</td>';
+		echo '<td>'.$D['postcode'].'</td>';
+		echo '</tr>';
+	    }
+
+	    echo '<tr>';
+		echo '<td><input type="text" name="id" value="" placeholder="id" /></td>';
+		echo '<td><input type="text" name="leiras" value="" placeholder="leírás" /></td>';
+		echo '<td><input type="text" name="precode" value="" placeholder="precode" /></td>';
+		echo '<td><input type="text" name="postcode" value="" placeholder="postcode" /></td>';
+	    echo '</tr>';
+	    echo '<tr><th colspan="4">';
+	    echo '<input type="hidden" name="action" value="kategoriaSzerkeszt" />';
+	    echo '<input type="submit">';
+	    echo '</th></tr>';
+	    echo '</table>';
+	formEnd();
+    }
+
     function putHirek($ADAT) {
-
-/*
-    hideShowContainer
-    onClickHideShow
-    openable
-*/
-
 	$CLASS = array(1=>'külső hír',2=>'kis hír',6=>'csak belső',0=>'ISMERETLEN');
 	$FLAGS = array(0=>'nem látszik', 1=>'látszik', 2=>2, 3=>3);
 	$now = time();
-	echo '<table class="hAdmin hideShowContainer" align="center">';
-	echo '<tr><th colspan="5"><button type="button" class="onClickHideShow">+++</button></th></tr>'."\n";
-	for ($i=0; $i<count($ADAT); $i++) {
-	    $D = $ADAT[$i];
+	echo '<table class="hAdmin hideShowContainer" align="center" cellspacing="1">';
+	echo '<tr><th colspan="7"><button type="button" class="onClickHideShow"> + Mindent mutass! + </button></th></tr>'."\n";
+	for ($i=0; $i<count($ADAT['szovegek']); $i++) {
+	    $D = $ADAT['szovegek'][$i];
 	    if ($D['class']==0) $_class='class="unk"'; else 
 	    if (strtotime($D['vdt'])<$now || $D['flag']==0) $_class='class="old openable" style="display: none"'; else $_class="";
 
 	    echo '<tr '.$_class.'>';
-	    echo '<td>';
-		echo $D['lang'];
-	    echo '</td>';
+	    // echo '<td>';
+		// echo $D['lang'];
+	    // echo '</td>';
 
 	    echo '<td>';
 		echo '<a href="'.href('index.php?page=portal&sub=hirek&f=egyhir&hirId='.$D['id']).'">';
@@ -36,10 +64,20 @@
 		echo ' '.$D['csoport'];
 	    echo '</td>';
 	    echo '<td>';
-		echo $D['owner'];
+		if ($D['hirkategoriak']!='') {
+		    $_K = explode(',',$D['hirkategoriak']);
+		    for($j=0; $j<count($_K); $j++) {
+			echo ' '.$ADAT['kategoriaId2txt'][$_K[$j]][0]['leiras'];
+		    }
+		}
 	    echo '</td>';
 	    echo '<td>';
+		echo $D['owner'];
+	    echo '</td>';
+	    echo '<td style="white-space: nowrap">';
 		echo $D['kdt'];
+	    echo '</td>';
+	    echo '<td style="white-space: nowrap">';
 		echo $D['vdt'];
 	    echo '</td></tr>';
 	    echo "\n\n";

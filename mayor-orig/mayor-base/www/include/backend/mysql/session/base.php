@@ -32,7 +32,7 @@
 	}
 
 	// Az gid lekérdezése
-	$q = "SELECT gid FROM groups WHERE groupCn = '%s' AND policy = '%s'";
+	$q = "SELECT gid FROM `groups` WHERE groupCn = '%s' AND policy = '%s'";
 	$v = array($groupCn, $toPolicy);
 	$gid = db_query($q, array('fv' => 'mysqlMemberOf', 'modul' => $modul, 'result' => 'value', 'values' => $v), $lr);
 	if ($gid === false) {

@@ -137,7 +137,8 @@ function includeJS($page,$sub,$f,$skin) {
 		    echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
 		}
 	    }
-	    if (__RICH_TEXT_EDITOR===true && $f == 'egyhir') {
+/*
+	    if (__RICH_TEXT_EDITOR===true && $f == 'egyhir') { // disabled
 		// Koschtit Image Gallery
 		if ($page == 'portal') {
 		    //require_once('skin/classic/share/javascript/koschtit/ki_include.php');
@@ -147,7 +148,7 @@ function includeJS($page,$sub,$f,$skin) {
 		    <script src="skin/classic/share/javascript/tiny_mce/tiny_mce.js" type="text/javascript"></script>
 		    <script src="skin/classic/module-portal/javascript/hirek/egyhir.php?lang='.$lang.'" type="text/javascript"></script>';
 	    }
-
+*/
 	//	if (file_exists(($_f="skin/$skin/base/javascript/jstorage.min.js")) ) {
 	//	echo '<script language="JavaScript" type="text/javascript"  charset="utf-8" src="'.$_f.'?ver='._MAYORREV.'"></script>'."\n";
 	//    }	    

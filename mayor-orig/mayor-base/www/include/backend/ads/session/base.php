@@ -138,7 +138,7 @@
 
 	$userDn = ADSuserAccountToDn($userAccount, $toPolicy);
 	if (in_array($group, $AUTH[$toPolicy]['categories'])) {
-	    if (strpos($userDn, ',ou='.ekezettelen($group).',') !== false) return true;
+	    if (strpos(kisbetus($userDn), ',ou='.ekezettelen($group).',') !== false) return true;
 # Ha nincs megfelelő ou-ban, akkor nézzük a csoport tagságot - így berakható időszakosan akárki pl a titkárság kategóriába...
 #	    else return false;
 	}

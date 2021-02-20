@@ -26,6 +26,7 @@ if (_RIGHTS_OK !== true) die();
         $DATA['flag']= readVariable($_POST['flag'],'numeric',null);
         $DATA['class']= readVariable($_POST['class'],'numeric',null);
         $DATA['cid']= readVariable($_POST['cid'],'numeric',null);
+        $DATA['kategoriaId']= readVariable($_POST['kategoriaId'],'id',null);
         $DATA['lang'] = readVariable($_POST['lang'],'strictstring',$LANGUAGES);
 	$DATA['owner'] = _USERACCOUNT;
 	if (is_array($_POST['csoport'])) {

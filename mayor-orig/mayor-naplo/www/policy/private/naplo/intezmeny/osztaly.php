@@ -12,7 +12,8 @@
 
 	// Osztályhoz rendelés
 	if (isset($ADAT['osztalyId']) && ($ADAT['osztalyAdat']["kezdoTanev"]<=$ADAT['tanev'] && $ADAT['osztalyAdat']["vegzoTanev"]>=$ADAT['tanev'])) {
-		
+	
+
 	    putOsztalyAdatokForm($ADAT);
 
 	    if ($ADAT['osztalyJellegek'][ $ADAT['osztalyAdat']['osztalyJellegId'] ]['kovOsztalyJellegId'] != 0) { // NyEK évfolyam
@@ -23,6 +24,8 @@
 		putTagTorlesForm($ADAT);
     	    }
     	    putUjTagForm($ADAT);
+
+	    if (__NAPLOADMIN ===true) putOidEllenor($ADAT);
 
 	    if (__NAPLOADMIN) {
     		if ($fileName == '') {

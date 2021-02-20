@@ -91,11 +91,11 @@
 			mysqli_set_charset($lr, "utf8");
 			mysqli_query($lr, "SET NAMES utf8");
 			mysqli_query($lr, "SET collation_connection='utf8_hungarian_ci'");
-			mysqli_query($lr, "SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+			mysqli_query($lr, "SET SESSION sql_mode=(SELECT REPLACE(REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''),'NO_ZERO_DATE',''))");
 		    } else {
 			mysql_query("SET NAMES utf8", $lr);
 			mysql_query("SET collation_connection='utf8_hungarian_ci'", $lr);
-                        mysql_query("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))", $lr);
+                        mysql_query("SET SESSION sql_mode=(SELECT REPLACE(REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''),'NO_ZERO_DATE',''))", $lr);
 		    }
 		} else {
 		    $_SESSION['alert'][] = "message:sql_select_db_failure:db_connect/${SET['fv']}:$modul:".$MYSQL_DATA[$modul]['db'];

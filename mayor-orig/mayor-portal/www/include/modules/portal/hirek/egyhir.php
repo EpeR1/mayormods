@@ -13,7 +13,7 @@
 	$flag = intval($DATA['flag']);
 	$class = intval($DATA['class']);
 	$lang = (in_array($DATA['lang'],$LANGUAGES)) ? $DATA['lang'] : _DEFAULT_LANG;
-	if ($DATA['cid']>0) $cid = $DATA['cid'];
+	if ($DATA['cid']>0) $cid = $DATA['cid']; // -- TODO!!!!
 	$csoport = $DATA['csoport'];
 	if ($hirId!='' && __HIREKADMIN == false ) {
 	    $q = "SELECT owner FROM hirek WHERE owner='%s'";
@@ -41,6 +41,16 @@
 	    }
 	} else $q = '';
 	if ($q!='') $r = db_query($q,array('modul'=>'portal','result'=>'insert','values'=>$v));
+	$q = "DELETE FROM `hirKategoria` WHERE hirId=%u";
+	$v = array($hirId);
+	db_query($q,array('modul'=>'portal','result'=>'delete','values'=>$v));
+	if (is_array($DATA['kategoriaId'])) {
+	    for ($i=0; $i<count($DATA['kategoriaId']); $i++) {
+		$q = "INSERT IGNORE INTO `hirKategoria` (hirId,kategoriaId) VALUES (%u,%u)";
+		$v = array($hirId,$DATA['kategoriaId'][$i]);
+		db_query($q,array('modul'=>'portal','result'=>'insert','values'=>$v));
+	    }
+	}
 	return $r;
     }
 

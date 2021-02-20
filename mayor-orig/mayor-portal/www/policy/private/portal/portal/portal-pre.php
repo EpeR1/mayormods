@@ -5,7 +5,13 @@
     require_once('include/modules/portal/share/kerdoiv.php');
     require_once('include/modules/session/groupInfo.php');
 
-    $ADAT['hirek'] = getHirek(array('cid'=>array(0),'tolDt'=>date('Y-m-d H:i:s'), 'igDt'=>date('Y-m-d H:i:s'),'flag'=>array(1),'class'=>array(1,6),'csoport'=>$AUTH['my']['categories']));
+    $ADAT['kategoriak'] = getKategoriak();
+    for ($i=0; $i<count($ADAT['kategoriak']); $i++) {
+        $RESTRICTKATEGORIA[] = intval($ADAT['kategoriak'][$i]['id']);
+    }
+    $kategoriaId = readVariable($_GET['kategoriaId'],'id',null,$RESTRICTKATEGORIA);
+    $ADAT['kategoriaId'] = $kategoriaId;
+    $ADAT['hirek'] = getHirek(array('kategoria'=>array($kategoriaId),'cid'=>array(0),'tolDt'=>date('Y-m-d H:i:s'), 'igDt'=>date('Y-m-d H:i:s'),'flag'=>array(1),'class'=>array(1,6),'csoport'=>$AUTH['my']['categories']));
     $ADAT['kerdoiv'] = getKerdoiv(_POLICY);
 
     $ev=date('Y');$honap=date('m');$nap=date('d');
