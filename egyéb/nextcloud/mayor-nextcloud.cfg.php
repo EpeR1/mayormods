@@ -270,24 +270,117 @@ Támogatja a külön, illetve az egy, közös szerverre történő telepítésé
 A Nextcloud 13-mas és újabb verzióival használható.
 
 FONTOS!
-    Legalább "php7.0" és "Apache 2.4" kell hozzá!
+  Legalább "php7.0" és "Apache 2.4" kell hozzá!
  
 
 
 Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
 -(I.)   Először telepítsünk föl egy Nextcloud(legalább 13-mas verzió) szervert egy Debian (9-es vagy magasabb verzió) szerverre,
-        a Nextcloudnek szüksége van e-mail küldés (smtp) szolgáltatásra is. (ez lehet külső, pl.: google)
-        Bővebb leírást a telepítésről a "Nextcloud Admin Manual" oldalon találunk.
+        a Nextcloudnak szüksége van e-mail küldés (smtp) szolgáltatásra is. (ez lehet külső, pl.: google)
+        Bővebb leírást a telepítésről az interneten "Nextcloud Admin Manual"-ra keresve találunk.
 
 -(II.)  Helyezzük el a "mayor-nextcloud.php"-t biztos, védett helyre,a nextcloud szerveren, akár a /etc/ mappába, akár a /root könyvtárba,
         ezt később "root"-ként kell majd futtatnunk, és mysql jelszó is lehet/van benne, 
         ezért ennek megfelelően védeni kell. Állítsuk be a tulajdonost, és korlátozzuk a jogosultságokat! (chown root; chmod 600)
-	Majd töltsük ki a konfigurációs fájlt az alább felsorolt beállítások szerint!
+
+-(III.) Majd töltsük ki a konfigurációs fájlt (mayor-nextcloud.cfg.php) az alább felsorolt beállítások szerint!
+        (Ennek is állísunk (ugyanolyan)szigorú jogosultságokat, mint a fenti esetben! )
+
+-(IV.)  Ezután, a script, az első futtatásnál automatikusan telepíti magát. 
+        Ez azt jelenti, hogy létrehoz egy mysql adatbázist saját magának, ahol később nyilvántartja, hogy melyek azoka felhasználók, amelyeket ő hozott létre. 
+        Így később, a folyamatos nyilvántartás révén a script a saját maga által létrehozott felhasználókat veszi csak figyelembe,
+        a többi, a más által létrehozott Nextcloud felhasználókhoz alapvetően nem nyúl.
+        Ez később felülbírálható, ha a script nyilvántartási adatbázisába kézzel felvesszük az adott felhasználó nevét.
 
 
 
--(III.) A "mayor-nextcloud.cfg.php" fajl elején találhatóak a konfigurációs adatok, ezeket a következőképpen módosíthatjuk:
+
+-(V.)  	A mayor-nextcloud script működése néhány mondatban:
+	
+	Első lépésben lekérdezi a feltételeknek megfelelő tanköröket a mayorból, (tankör-osztály évfolyama, tankör aktív-e a dátumok apaján)
+	  majd ez alapján ellenőrzi, hogy a Nextcloud-ban már szerepelnek-e ezen tankörneveknek megfelelő csoportok.
+	  Ha új tankör van a mayorban, akkor azt a Nextcloud-ban is létrehozza, ha egy tankört töröltek a mayorból, akkor azt a csoportot Nextcloud-ból is törli.
+	Fontos!
+	A csoport prefix-szel, például: "(tk) "-val kezdődő csoportokat magáénak tekinti, és ha nem találja a mayorban, akkor automatikusan töröli!
+	
+	Második lépésben lekérdezi a felhasználókat a mayorból, (jogviszony státusz, évfolyam, kapcsolódó tankörök)
+	  csak azokat a tanárokat, illetve diákokat veszi figyelembe, akinek a státusza nem "jogviszonya lezárva", vagy nem "felvételt nyert".
+ 	Ha az illető még nem rendelkezik felhasználónévvel a Nextcloud-ban, akkor létrehozza, 
+	- ha a mayorban, az "intezmeny_xxx.diak", illetve az "intezmeny_xxx.tanar" táblákon van beállított e-mail címe, akkor azt használja,
+	- ha nincs, akkor az alapértelmezettet állítja be a Nextcloud-ba, valamint ekkor állítódik be az alapértelmezett qvóta, és a felhasználó valódi neve is.
+	  (Ezeket később Rendszergazdai, és Felhasználói oldalról változtatni lehet, értelemszerűen.)
+	Ha az illető már rendelkezik felhasználónévvel, de az le volt tiltva, akkor újra engedélyezi.
+
+	Ezután egyezteti a tankör-csoport összerendeléseket, ha az illető új tankörbe került be, akkor belépteti a megfelelő csportba, 
+	  ha kikerült egy tankörből, akkor a csoportból is kilépteti.
+
+	Végül ellenőrzi a kiléptetndő felhasználókat.
+	Ha velekinek a státusza a mayorban "jogviszonya lezárva"-ra változott, vagy a felhasználónevét a mayorból törölték, akkor 	
+	- ha még nem lépett be soha a Nextcloudba, akkor a felhasználót fizikailag törli.
+	- ha már használta a fiókját, akkor csak letiltja, azért, hogy a fájljai ne vesszenek el automatikusan. 
+	(Ez, utóbbi esetben a Rendszergazdának kell külön elvégezni a törlést.)
+ 
+
+
+
+- (VI.)  További Információk:
+
+	Esetleg érdemes lehet a scriptet betenni a "cron"-ba (éjszakára), így naponta lefut, és követi napló változásait.
+	(Ez esetben figyelni kell arra, hogy mayorban a tankör-diák, tankör-tanár összerendelések az év végén lejárhatnak, (pl. júni. 15-én)
+	így a script futtatása júni. 16-án kitörli, letiltja az összes létrehozott mayor-os csoportot, és felhasználót a nextcloud-ból, 
+	amely csak a script szept. 1-je után történő futtatásával hozható vissza, 
+	ezért érdemes lehet a script automatikus futtatását átmenetileg júni. 15. és szept. 1. között felfüggeszteni.	)
+	(pl: /etc/crontab -ban
+		01  3   * * *     root    php -f /root/mayor-nextcloud.php						)
+
+
+	A mayor által ajánlott "Vezetéknév.Keresztnév" típusú felhasználónév formátum, bár hasznos, mert könnyen megjegyezhető,
+	viszont (sajnos) egyáltalán nem POSIX kompatibilis (amely csak az angol ABC betűit +pár kiegészítő karaktert engedélyez)
+	így a legtöbb rendszerrel nem hozható összhangba, ezért szükség van az ékezetes karakterek lecserélésére.
+
+	A karakterek cseréje az alábbi módon történik:
+	
+		á --> aa 	Á --> Aa
+		ä --> ae	Ä --> Aae
+		é --> ee	É --> Ee	Például:
+		í --> ii	Í --> Ii	Vezetéknév.Keresztnév --> Vezeteekneev.Keresztneev
+		ó --> oo	Ó --> Oo	Bőrönd.Ödön	      --> Booeroend.Oedoen
+		ö --> oe	Ö --> Oe
+		ő --> ooe	Ő --> Ooe	Ha a mayor felhasználónév nem tartalmaz ékezetes betűt,
+		ú --> uu	Ú --> Uu	akkor nem történik csere, a felhasználónév marad az eredeti.
+		ü --> ue	Ü --> Ue
+		ű --> uue	Ű --> Uue
+
+	Ezeket a karakter cseréket maga a script végzi, futás közben, a mayor felhasználónevekből,
+	a létrejövő Nextcloud felhasználónév már a lecserélt változat lesz.
+
+
+
+
+-(VII.)  További Paraméterek / Kapcsolók:
+
+      --help                      :  Help kiírása. 
+      --debug                     :  Ugyanaz mint a "--loglevel 100" 
+      --loglevel x                :  A bőbeszédűséget/logolást tudjuk ezzel szabályozni, ekkor ez az érték érvényesül, nem a configban megadott.
+      --config-file               :  Konfig fájl elérési útvonala.
+      --config-print              :  A betöltött konfig kiírása.
+      --set-diak-quota            :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre,  
+                                       csak kézzel futtatva működik, az automatikus, napi futtatásban nicns benne.
+      --create-groupdir <username>:  A távoktatást segítő könyvtárstruktúrát csak az <username> felhasználónak  hozza létre, 
+                                       egyébként kapcsoló nélküli híváskor, (pl: automatikusan, a napi futásban éjjel), az összes tanárnak egyszerre.
+      --manage-groups <1/0>       :  Ha 1: A felhasználókat csoportokba rendezi a MaYor tankörök szerint, ha 0, nem foglalkozik a csoportokkal.
+      --manage-groupdirs <1/0>    :  Ha 1: tankörmappákat hoz létre a tankör-csoportokhoz, ha 0, nem foglalkozik vele. (kell hozzá a --manage-groups is!)
+    
+
+  FONTOS!! 
+    A Nextcloud szerver "occ" parancsa elérhető kell legyen a script számára!
+    Az "occ" parancs működését pl. az: (>>> sudo -u www-data php /var/www/nextcloud/occ ) kiadásával ellenőrizzük!
+
+
+
+
+-(VIII.) A "mayor-nextcloud.cfg.php" fajl elején találhatóak a konfigurációs adatok, ezeket a következőképpen módosíthatjuk:
 
 
     $db['host'] = "localhost";              //Ez a nextcloud alatt futó mysql elérhetősége.
@@ -417,86 +510,8 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
                                                         
 
 
-    FONTOS!! 
-        A Nextcloud szerver "occ" parancsa elérhető kell legyen a script számára!
-        Az "occ" parancs működését pl. az: (>>> sudo -u www-data php /var/www/nextcloud/occ ) kiadásával ellenőrizzük!
-
-
-
-    További Paraméterek / Kapcsolók:
-
-      --help                      :  Help kiírása. 
-      --debug                     :  Ugyanaz mint a "--loglevel 100" 
-      --loglevel x                :  A bőbeszédűséget/logolást tudjuk ezzel szabályozni, ekkor ez az érték érvényesül, nem a configban megadott.
-      --config-file               :  Konfig fájl elérési útvonala.
-      --config-print              :  A betöltött konfig kiírása.
-      --set-diak-quota            :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre,  
-                                       csak kézzel futtatva működik, az automatikus, napi futtatásban nicns benne.
-      --create-groupdir <username>:  A távoktatást segítő könyvtárstruktúrát csak az <username> felhasználónak  hozza létre, 
-                                       egyébként kapcsoló nélküli híváskor, (pl: automatikusan, a napi futásban éjjel), az összes tanárnak egyszerre.
-      --manage-groups <1/0>       :  Ha 1: A felhasználókat csoportokba rendezi a MaYor tankörök szerint, ha 0, nem foglalkozik a csoportokkal.
-      --manage-groupdirs <1/0>    :  Ha 1: tankörmappákat hoz létre a tankör-csoportokhoz, ha 0, nem foglalkozik vele. (kell hozzá a --manage-groups is!)
-    
-
-
-	További Információk:
-
-	Esetleg érdemes lehet a scriptet betenni a "cron"-ba (éjszakára), így naponta lefut, és követi napló változásait.
-	(Ez esetben figyelni kell arra, hogy mayorban a tankör-diák, tankör-tanár összerendelések az év végén lejárhatnak, (pl. júni. 15-én)
-	így a script futtatása júni. 16-án kitörli, letiltja az összes létrehozott mayor-os csoportot, és felhasználót a nextcloud-ból, 
-	amely csak a script szept. 1-je után történő futtatásával hozható vissza, 
-	ezért érdemes lehet a script automatikus futtatását átmenetileg júni. 15. és szept. 1. között felfüggeszteni.	)
-	(pl: /etc/crontab -ban
-		01  3   * * *     root    php -f /root/mayor-nextcloud.php						)
-
-
-	A mayor által ajánlott "Vezetéknév.Keresztnév" típusú felhasználónév formátum, bár hasznos, mert könnyen megjegyezhető,
-	viszont (sajnos) egyáltalán nem POSIX kompatibilis (amely csak az angol ABC betűit +pár kiegészítő karaktert engedélyez)
-	így a legtöbb rendszerrel nem hozható összhangba, ezért szükség van az ékezetes karakterek lecserélésére.
-
-	A karakterek cseréje az alábbi módon történik:
-	
-		á --> aa 	Á --> Aa
-		ä --> ae	Ä --> Aae
-		é --> ee	É --> Ee	Például:
-		í --> ii	Í --> Ii	Vezetéknév.Keresztnév --> Vezeteekneev.Keresztneev
-		ó --> oo	Ó --> Oo	Bőrönd.Ödön	      --> Booeroend.Oedoen
-		ö --> oe	Ö --> Oe
-		ő --> ooe	Ő --> Ooe	Ha a mayor felhasználónév nem tartalmaz ékezetes betűt,
-		ú --> uu	Ú --> Uu	akkor nem történik csere, a felhasználónév marad az eredeti.
-		ü --> ue	Ü --> Ue
-		ű --> uue	Ű --> Uue
-
-	Ezeket a karakter cseréket maga a script végzi, futás közben, a mayor felhasználónevekből,
-	a létrejövő Nextcloud felhasználónév már a lecserélt változat lesz.
-
 		
 
-	A mayor-nextcloud script működése néhány mondatban:
-	
-	Első lépésben lekérdezi a feltételeknek megfelelő tanköröket a mayorból, (tankör-osztály évfolyama, tankör aktív-e a dátumok apaján)
-	  majd ez alapján ellenőrzi, hogy a Nextcloud-ban már szerepelnek-e ezen tankörneveknek megfelelő csoportok.
-	  Ha új tankör van a mayorban, akkor azt a Nextcloud-ban is létrehozza, ha egy tankört töröltek a mayorból, akkor azt a csoportot Nextcloud-ból is törli.
-	Fontos!
-	A csoport prefix-szel, például: "(tk) "-val kezdődő csoportokat magáénak tekinti, és ha nem találja a mayorban, akkor automatikusan töröli!
-	
-	Második lépésben lekérdezi a felhasználókat a mayorból, (jogviszony státusz, évfolyam, kapcsolódó tankörök)
-	  csak azokat a tanárokat, illetve diákokat veszi figyelembe, akinek a státusza nem "jogviszonya lezárva", vagy nem "felvételt nyert".
- 	Ha az illető még nem rendelkezik felhasználónévvel a Nextcloud-ban, akkor létrehozza, 
-	- ha a mayorban, az "intezmeny_xxx.diak", illetve az "intezmeny_xxx.tanar" táblákon van beállított e-mail címe, akkor azt használja,
-	- ha nincs, akkor az alapértelmezettet állítja be a Nextcloud-ba, valamint ekkor állítódik be az alapértelmezett qvóta, és a felhasználó valódi neve is.
-	  (Ezeket később Rendszergazdai, és Felhasználói oldalról változtatni lehet, értelemszerűen.)
-	Ha az illető már rendelkezik felhasználónévvel, de az le volt tiltva, akkor újra engedélyezi.
-
-	Ezután egyezteti a tankör-csoport összerendeléseket, ha az illető új tankörbe került be, akkor belépteti a megfelelő csportba, 
-	  ha kikerült egy tankörből, akkor a csoportból is kilépteti.
-
-	Végül ellenőrzi a kiléptetndő felhasználókat.
-	Ha velekinek a státusza a mayorban "jogviszonya lezárva"-ra változott, vagy a felhasználónevét a mayorból törölték, akkor 	
-	- ha még nem lépett be soha a Nextcloudba, akkor a felhasználót fizikailag törli.
-	- ha már használta a fiókját, akkor csak letiltja, azért, hogy a fájljai ne vesszenek el automatikusan. 
-	(Ez, utóbbi esetben a Rendszergazdának kell külön elvégezni a törlést.)
- 
 
 
 
