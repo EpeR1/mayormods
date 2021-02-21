@@ -1,47 +1,49 @@
 <?php 
 
 //////////////////////// Figyelem! Az alábbi config érvényes a Mayor-Nextcloud scripthez, nem a "mayor-nextcloud.php" fejléce!!  ////////////////////////////
+$cfg = array();
+
+$cfg['db_host'] = "localhost";
+$cfg['db_port'] = "3306";
+$cfg['db_user'] = "root";
+$cfg['db_pass'] = "";
+$cfg['db_m2n_db'] = "mayor_to_nextcloud";
+$cfg['db_m2n_prefix'] = "m2n_";
+$cfg['db_nxt_dbname'] = "Nextcloud";
+$cfg['db_nxt_prefix'] = "oc_";
+//$cfg['db_mayor_host'] = ""; 
+//$cfg['db_mayor_port'] = "";
+//$cfg['db_mayor_user'] = ""; 
+//$cfg['db_mayor_pass'] = "";
+
+$cfg['min_evfolyam'] = 7;
+$cfg['isk_rovidnev'] = "rovid";  
+$cfg['csoport_prefix'] = "(tk) ";
+$cfg['default_email'] = "indulo@iskola.hu";
+$cfg['default_passw'] = "EHYmGktzrdfS7wxJR6DFqxjJ";
+$cfg['always_set_diak_quota'] = false;
+$cfg['default_quota'] = "10GB";
+$cfg['diak_quota']    = "2GB"; 
+$cfg['min_osztalyok'] =  array(); 	//pl:  array('9.a','11.a');
+$cfg['csoportnev_hossz'] = 40;
+$cfg['felhasznalo_hossz'] = 45;
+$cfg['default_lang']  = "hu";
+$cfg['manage_groups'] = false;
+$cfg['manage_groupdirs'] = false;   //Foglalkozzon-e a script a tankörmappákkal
+$cfg['groupdir_users'] = array("naplo_robot","123abcd");  //Ha a tömb üres, akkor az összes tanárral dolgozik.
+$cfg['groupdir_prefix'] = "Iskolai Távoktatás";
+$cfg['mindenki_csop'] = "naplós_felhasználók";
+$cfg['mindenki_tanar'] = "naplós_tanárok";
+$cfg['mindenki_diak'] = "naplós_diákok";
+$cfg['zaras_tartas'] =  "2018-06-14";	// Ha nem kell, akkor állítsd át "1970-01-01"-re.
+$cfg['megfigyelo_user'] = "naplo_robot";
+$cfg['kihagy'] = array();   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
+$cfg['verbose'] = 3 ;  
 
 
-$db = array();
-$m2n = array();
+$cfg['rootBindDn'] = "CN=LDAP_ADATCSERE_ADMIN,CN=Users,DC=ad,DC=iskola,DC=hu";
+$cfg['rootBindPass'] = "<password>";
 
-$db['host'] = "localhost";
-$db['port'] = "3306";
-$db['user'] = "root";
-$db['pass'] = "";
-$db['m2n_db'] = "mayor_to_nextcloud";
-$db['m2n_prefix'] = "m2n_";
-$db['nxt_dbname'] = "Nextcloud";
-$db['nxt_prefix'] = "oc_";
-//$db['mayor_host'] = ""; 
-//$db['mayor_port'] = "";
-//$db['mayor_user'] = ""; 
-//$db['mayor_pass'] = "";
-
-$m2n['min_evfolyam'] = 7;
-$m2n['isk_rovidnev'] = "rovid";  
-$m2n['csoport_prefix'] = "(tk) ";
-$m2n['default_email'] = "indulo@iskola.hu";
-$m2n['default_passw'] = "EHYmGktzrdfS7wxJR6DFqxjJ";
-$m2n['always_set_diak_quota'] = false;
-$m2n['default_quota'] = "10GB";
-$m2n['diak_quota']    = "2GB"; 
-$m2n['min_osztalyok'] =  array(); 	//pl:  array('9.a','11.a');
-$m2n['csoportnev_hossz'] = 40;
-$m2n['felhasznalo_hossz'] = 45;
-$m2n['default_lang']  = "hu";
-$m2n['manage_groups'] = false;
-$m2n['manage_groupdirs'] = false;   //Foglalkozzon-e a script a tankörmappákkal
-$m2n['groupdir_users'] = array("naplo_robot","123abcd");  //Ha a tömb üres, akkor az összes tanárral dolgozik.
-$m2n['groupdir_prefix'] = "Iskolai Távoktatás";
-$m2n['mindenki_csop'] = "naplós_felhasználók";
-$m2n['mindenki_tanar'] = "naplós_tanárok";
-$m2n['mindenki_diak'] = "naplós_diákok";
-$m2n['zaras_tartas'] =  "2018-06-14";	// Ha nem kell, akkor állítsd át "1970-01-01"-re.
-$m2n['megfigyelo_user'] = "naplo_robot";
-$m2n['kihagy'] = array();   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
-$m2n['verbose'] = 3 ;  
 
 $occ_path = "/var/www/nextcloud/"; 
 $occ_user = "www-data";
@@ -49,7 +51,7 @@ $occ_user = "www-data";
 
 
 
-$m2n['infotxt_szöveg'] = <<<EOT
+$cfg['infotxt_szöveg'] = <<<EOT
 
                     FONTOS INFORMÁCIÓK!
 
@@ -365,7 +367,7 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
       --loglevel x                :  A bőbeszédűséget/logolást tudjuk ezzel szabályozni, ekkor ez az érték érvényesül, nem a configban megadott.
       --config-file               :  Konfig fájl elérési útvonala.
       --config-print              :  A betöltött konfig kiírása.
-      --set-diak-quota            :  Az összes diák qvótáját átállítja az "$m2n['diak_quota'] = x" -nél megadott értékre,  
+      --set-diak-quota            :  Az összes diák qvótáját átállítja az "$cfg['diak_quota'] = x" -nél megadott értékre,  
                                        csak kézzel futtatva működik, az automatikus, napi futtatásban nicns benne.
       --create-groupdir <username>:  A távoktatást segítő könyvtárstruktúrát csak az <username> felhasználónak  hozza létre, 
                                        egyébként kapcsoló nélküli híváskor, (pl: automatikusan, a napi futásban éjjel), az összes tanárnak egyszerre.
@@ -383,107 +385,107 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 -(VIII.) A "mayor-nextcloud.cfg.php" fajl elején találhatóak a konfigurációs adatok, ezeket a következőképpen módosíthatjuk:
 
 
-    $db['host'] = "localhost";              //Ez a nextcloud alatt futó mysql elérhetősége.
+    $cfg['db_host'] = "localhost";              //Ez a nextcloud alatt futó mysql elérhetősége.
                                             // (Csak localhost lehet, a scriptet a nextcloud-szerveren kell futtatnunk.)
 
-    $db['port'] = "3306";                   //nextcloud-mysql port
+    $cfg['db_port'] = "3306";                   //nextcloud-mysql port
 
-    $db['user'] = "root";                   //nextcloud-mysql felhasználónév
+    $cfg['db_user'] = "root";                   //nextcloud-mysql felhasználónév
                                             // HA nem a root-ot használjuk, akkor, saját kezűleg kell létrehozni a script saját, nyilvántartó adatbázisát, és a fenti jogokat beállítani rá, 
                                             //  valamint Ha a Nextcloud verziószáma kisebb 14-nél, akkor a használt felhasználónak írási-olvasási-törlési
                                             //  (insert,select,update,delete) joggal kell rendelkeznie a nextcloud adatbázis "..groups" tábláján.
                                             // Ha a Debian-on alapértelmezett root-ot használjuk, akkor mindez automatikusan történik.
 
-    $db['pass'] = "";                       //A nextcloud-mysql jelszó    (A fenti felhasználónévhez tartozó)
+    $cfg['db_pass'] = "";                       //A nextcloud-mysql jelszó    (A fenti felhasználónévhez tartozó)
                                             // érdemes a debian 9.x-en, a root-hoz alapértelmezett "unix_socket" bejelentkezési módot 
                                             // használnunk, ez biztonságosabb, mert ekkor nem kell jelszó, más módon hitelesít, így biztonságosabb.
 
 
 
-    $db['nxt_dbname'] = "nextcloud";        //A Nextcloud által használt adatbázis neve.
-    $db['nxt_prefix'] = "oc_";              //A Nextcloud által használt adatbázisban a táblák prefix-je. (ha van)
+    $cfg['db_nxt_dbname'] = "nextcloud";        //A Nextcloud által használt adatbázis neve.
+    $cfg['db_nxt_prefix'] = "oc_";              //A Nextcloud által használt adatbázisban a táblák prefix-je. (ha van)
 
 
-    $db['m2n_db'] = "mayor_to_nextcloud";   //A mayor->nextcloud script adatbázisa (nyilvántartás). 
+    $cfg['db_m2n_db'] = "mayor_to_nextcloud";   //A mayor->nextcloud script adatbázisa (nyilvántartás). 
                                             // Ennek az adatbázisnak a Nextcloud mysql szerverén kell lennie!
                                             //
                                             // Ebben az adatbázisban könyveli le a script által létrehozott felhasználókat, azért,
                                             //  hogy így meg tudja különböztetni, a saját maga által létrehozottakat, az Adminisztrátor
                                             //  által, kézzel létrehozott felhasználóktól, hogy azokat ne birizgálja.
 
-    $db['m2n_prefix'] = "m2n_";             //A nyilvántartó adatbázisban használt prefix, ha van. (ha nincs, akkor "üres string"-re kell állítani ($db['m2n_prefix'] = "";))
+    $cfg['db_m2n_prefix'] = "m2n_";             //A nyilvántartó adatbázisban használt prefix, ha van. (ha nincs, akkor "üres string"-re kell állítani ($cfg['db_m2n_prefix'] = "";))
 
 
-    //$db['mayor_host'] = "";               //Akkor használatos, ha a mayor alatti mysql szerver egy másik szerveren van, mint a Nextcloud által használt.
-    //$db['mayor_port'] = "";               // ekkor ki kell venni kommentből, és ki kell tölteni a mayor-mysql serverre érvényes adatokkal.
-    //$db['mayor_user'] = "";
-    //$db['mayor_pass'] = "";               //A kiválasztott felhaználónak olvasnia (GRANT SELECT) kell tudnia a mayor-mysql serveren a(z):
+    //$cfg['db_mayor_host'] = "";               //Akkor használatos, ha a mayor alatti mysql szerver egy másik szerveren van, mint a Nextcloud által használt.
+    //$cfg['db_mayor_port'] = "";               // ekkor ki kell venni kommentből, és ki kell tölteni a mayor-mysql serverre érvényes adatokkal.
+    //$cfg['db_mayor_user'] = "";
+    //$cfg['db_mayor_pass'] = "";               //A kiválasztott felhaználónak olvasnia (GRANT SELECT) kell tudnia a mayor-mysql serveren a(z):
                                             // intezmeny_xxx, mayor_parent, naplo_xxx_yyyy adatbázisokból.
 	
                                             //Ha a mayor-mysql sezvere fizikailag (vagy virtuálisan) másik szerveren van, akkor érdemes egy "ssh-tunnel"-lel 
                                             // áthozni a portját a nextcloud-serverre. (ez a legbiztonságossabb)
 
 
-    $m2n['isk_rovidnev'] = "rovid";         //A mayor-ban használt "iskola rövidneve" megnevezés.
+    $cfg['isk_rovidnev'] = "rovid";         //A mayor-ban használt "iskola rövidneve" megnevezés.
 
-    $m2n['min_evfolyam'] = 10;              //A minimális évfolyam, amelytől fölfelé engedélyezzük a felhő használatát a diákoknak.
+    $cfg['min_evfolyam'] = 10;              //A minimális évfolyam, amelytől fölfelé engedélyezzük a felhő használatát a diákoknak.
 
-    $m2n['csoport_prefix'] = "(tk) ";       //A Nextcloud-ban ezzel az előtaggal jelennek majd meg mayor-ból importált csoportok, a jobb átláthatóság érdekében.
+    $cfg['csoport_prefix'] = "(tk) ";       //A Nextcloud-ban ezzel az előtaggal jelennek majd meg mayor-ból importált csoportok, a jobb átláthatóság érdekében.
 
 
 
-    $m2n['default_email'] = "rendszergazda@iskola.hu";  //Ha a mayor napló "intezmeny_xxx.diak", vagy az "intezmeny_xxx.tanar" táblákban nincs kitöltve az 
+    $cfg['default_email'] = "rendszergazda@iskola.hu";  //Ha a mayor napló "intezmeny_xxx.diak", vagy az "intezmeny_xxx.tanar" táblákban nincs kitöltve az 
                                                         // e-mail, akkor ezt használja alapértelmezetten. 
                                                         // (ide megy a jelszó-emlékeztető, amíg a felhasználó birtokba nem veszi a Nextcloud fiókját, és ben nem állít sajátot)
 
-    $m2n['default_passw'] = "EHYmGktzrdfS7wxJR6DF11jJ"; //Az induló jelszó a Nextcloud-ban a felhasználóknak. (érdemes erőset/hosszút megadni, a botnet-ek/hackerek miatt)
+    $cfg['default_passw'] = "EHYmGktzrdfS7wxJR6DF11jJ"; //Az induló jelszó a Nextcloud-ban a felhasználóknak. (érdemes erőset/hosszút megadni, a botnet-ek/hackerek miatt)
 
-    $m2n['default_quota'] = "10GB";                     //Az általános indulási fájl-kvóta a Nextcloud-ban. (A wbes felületen később módosítható.)
+    $cfg['default_quota'] = "10GB";                     //Az általános indulási fájl-kvóta a Nextcloud-ban. (A wbes felületen később módosítható.)
                                                         // Amikor új felhasználót ad hozzá, akkor az itt megadott méretre állítja a qvótáját.
                                                         // Midel a diákoknak külön qvótát lehet beállítani, ezért ez értelemszerűen már csak a tanárokra vonatkozik.
     
-    $m2n['diak_quota'] = "2GB";                         //A diákok! indulási kvótája
+    $cfg['diak_quota'] = "2GB";                         //A diákok! indulási kvótája
                                                         // amikor új diákot ad hozzá, ezt a qvótát állítja be a számára.
                                                         //Lehetőség van az összes diák kvótáját egyszerre, az itt beállított értékre állítani,
                                                         // de ez nem fut automatikusan éjjelente, ezt kézzel kell, --set-diak-qupta kapcsoló kiadásával.
 
-    $m2n['default_lang']  = "hu";                       //Az alapértelmezett nyelv (később minden felhasználó átállíthatja magának)
+    $cfg['default_lang']  = "hu";                       //Az alapértelmezett nyelv (később minden felhasználó átállíthatja magának)
 
-    $m2n['min_osztalyok'] =  array( );                  //Ide lehet felsorolni az osztályokat, ha konkrét osztályokat akaruni importálni,
-                                                        // ez logikai (megengedő) VAGY kapcsolatban van a $m2n['min_evfolyam'] -mal.
+    $cfg['min_osztalyok'] =  array( );                  //Ide lehet felsorolni az osztályokat, ha konkrét osztályokat akaruni importálni,
+                                                        // ez logikai (megengedő) VAGY kapcsolatban van a $cfg['min_evfolyam'] -mal.
                                                         //  Tehát ha beállítunk egy minimális évfolyamot, a listában felsorolt osztályok akkor is importálódnak,
                                                         //  ha a min_évfolyam-nál kisebbek.   //pl:  array('9.a','11.a');
 
-    $m2n['csoportnev_hossz'] = 40;                      //Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a csoport neve. 
+    $cfg['csoportnev_hossz'] = 40;                      //Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a csoport neve. 
                                                         // (csak a script kinézete/átláthatósága végett)
 
-    $m2n['felhasznalo_hossz'] = 45;                     //Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a felhasználó valódi neve. 
+    $cfg['felhasznalo_hossz'] = 45;                     //Formázott kimenet: Kiegészíti "space"-kkel a kimenetet, ha rövidebb lenne a felhasználó valódi neve. 
                                                         // (Ssak a script szép kinézete, átláthatósága végett.)
 
-    $m2n['mindenki_csop'] = "naplós_felhasználók";      //Legyen egy olyan csoport, amiben "mindenki benne van".
+    $cfg['mindenki_csop'] = "naplós_felhasználók";      //Legyen egy olyan csoport, amiben "mindenki benne van".
                                                         // ebbe a "mindenki" csoportba minden, a script által létrehozott felhasználó bekerül.
 
-    $m2n['mindenki_tanar'] = "naplós_tanárok";          //Legyen egy olyan csoport, amiben minden tanár benne van
+    $cfg['mindenki_tanar'] = "naplós_tanárok";          //Legyen egy olyan csoport, amiben minden tanár benne van
                                                         // ebbe a "minden_tanár" csoportba a naplóbeli tanárok kerülnek.
 
-    $m2n['mindenki_diak'] = "naplós_diákok";            //Legyen egy olyan csoport, amiben "minden diák" benne van.
+    $cfg['mindenki_diak'] = "naplós_diákok";            //Legyen egy olyan csoport, amiben "minden diák" benne van.
                                                         // ebbe a "minden_diák" csoportba a naplóbeli diákok kerülnek.
 
-    $m2n['zaras_tartas'] =  "2018-06-19";               //A jelölt napon befejezett, de nem lezárt tanév adatainak megtartása. (pl. szeptemberig) 
+    $cfg['zaras_tartas'] =  "2018-06-19";               //A jelölt napon befejezett, de nem lezárt tanév adatainak megtartása. (pl. szeptemberig) 
                                                         // Ha már nem kell, akkor állítsd "1970-01-01"-ra !;
 
-    $m2n['manage_groupdirs'] = false;                   //Ha szerenénk, hogy a script létrehozza a távoktatást segítő tankörmappákat, állítsuk "true"-re!
+    $cfg['manage_groupdirs'] = false;                   //Ha szerenénk, hogy a script létrehozza a távoktatást segítő tankörmappákat, állítsuk "true"-re!
 
-    $m2n['groupdir_users'] = array("123abcd", );        //Ha csak egyes tanároknak szeretnénk bekapcsolni a tankörmappákat,
+    $cfg['groupdir_users'] = array("123abcd", );        //Ha csak egyes tanároknak szeretnénk bekapcsolni a tankörmappákat,
                                                         // ha minden tanárnak, akkor állítsuk üresre a tömböt!   / = array();/
 
-    $m2n['groupdir_prefix'] = "Iskolai Távoktatás";     //A távoktatást segítő mappák gyüjtőmappája/gyökérkönyvtára.
+    $cfg['groupdir_prefix'] = "Iskolai Távoktatás";     //A távoktatást segítő mappák gyüjtőmappája/gyökérkönyvtára.
 
-    $m2n['manage_groups'] = true;                       //Foglalkozzon-e a tankörökkel/csoportokkal?  Ha true -> igen, ha false, akkor csak a felhasználókat 
+    $cfg['manage_groups'] = true;                       //Foglalkozzon-e a tankörökkel/csoportokkal?  Ha true -> igen, ha false, akkor csak a felhasználókat 
                                                         // egyezteti a mayorral
-    $m2n['manage_groupdirs'] = false;                   //A tankör-cspoprt mappákat kezelje-e vagy sem.  
+    $cfg['manage_groupdirs'] = false;                   //A tankör-cspoprt mappákat kezelje-e vagy sem.  
  
-    $m2n['verbose'] = 3                                 //Log bőbeszédűség      (A leg informatívabb(tömörebb), talán a 3-mas fokozat.)
+    $cfg['verbose'] = 3                                 //Log bőbeszédűség      (A leg informatívabb(tömörebb), talán a 3-mas fokozat.)
                                                         // 0: csak fatális hibák, 1: fontosabbak, 2: csop./felh. elvétel, 3: csop./felh. hozzáadás, 
                                                         // 4: csop./felh. állapot, 5: részletesebben, 6: sql query + bash parancsok kiírása is
 
@@ -493,11 +495,11 @@ Beállítása az alábbiak szerint: (egy lehetséges elrendezés)
 
     $occ_user = "www-data";                             //A Nextcloud-servert futtató (Apache által használt) felhasználónév
 
-    $m2n['kihagy'] = array();                           //Lehetőség van egy-egy felhasználó kezelésének letiltására, ezt felsorolásként tehetjük meg.
+    $cfg['kihagy'] = array();                           //Lehetőség van egy-egy felhasználó kezelésének letiltására, ezt felsorolásként tehetjük meg.
                                                         // Ekkor a script nem fog foglalkozni, az adott felhasználóval a továbbiakban.
                                                         //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
                                                         
-    $m2n['megfigyelo_user'] = "naplo_robot";            //Lehetőség van egy úgymond "megfigyelő" felhasználó létrehozására.
+    $cfg['megfigyelo_user'] = "naplo_robot";            //Lehetőség van egy úgymond "megfigyelő" felhasználó létrehozására.
                                                         // ez a felhasználó be lesz léptetve az összes csoportba, így az összes üzenetet megkapja, 
                                                         // és az összes tankörben megosztott fájlt látja, amit a csoportokkal/tankörökkel megosztottak.
                                                         //EZ a felhasználó nem egyezik meg a MaYor "mayoradmin" felhasználójával (nem lesz automatikusan rendszergazda)!
