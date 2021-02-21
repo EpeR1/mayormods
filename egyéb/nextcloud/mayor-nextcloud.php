@@ -585,6 +585,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '7.0', '
                 if(!isset($val['diakId'])){         //workaround
                     $val['diakId'] = 0;
                 }
+                /*
                 $list = array_merge($list, array(   
                     array( 'userAccount' => $val['userAccount'], 
                         'email' => $val['email'],  
@@ -593,8 +594,17 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '7.0', '
                         'tankorId' => 0,
                         'fullName' => $val['fullName'],
                         'tankorNev' => $tankorname,
-                    )));
+                        )
+                    )
+                );
+                */
 
+                $list = array_merge($list, array( $val));
+
+                $list[$key]['tankorNev'] = $tankorname;
+                $list[$key]['tankorId'] = 0;
+                
+                    
                 if($user !== null && $val['userAccount'] == $user ){    // Null -> mindenkihez, "user" -> csak neki
                     break;
                 }
@@ -634,16 +644,14 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '7.0', '
         return $inp;
     }
 
-    function get_mayor_szemeszter($link) {
+    function get_mayor_szemeszter($link, $date) {
         global $m2n,$log;
         $ret = array();
-        $q = "SELECT * FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter 
-            WHERE ((statusz = 'aktív' OR statusz = 'lezárt') AND zarasDt = '".$m2n['zaras_tartas']."') 
-                OR (statusz = 'aktív' AND kezdesDt <= CURRENT_DATE() AND CURRENT_DATE() <= zarasDt) ; 
-        ";
+        $q = "SELECT * FROM intezmeny_".$m2n['isk_rovidnev'].".szemeszter WHERE (statusz = 'aktív' OR statusz = 'lezárt') AND kezdesDt <= '".$date."'  ORDER BY zarasDt DESC LIMIT 1; ";
         if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }
         if( ($r = mysqli_query($link, $q)) !== FALSE ){
             $ret = mysqli_fetch_array($r, MYSQLI_ASSOC); 
+            $ret["reqDt"] = $date;              //szükség lehet a megkérdezett dt-re is
             mysqli_free_result($r);
         } else {
             echo "\nMAY ->\t ******** Mayor_napló (szemeszter)lekérdezési hiba. (adatbázis) ********\n";
@@ -662,23 +670,23 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '7.0', '
         foreach($m2n['min_osztalyok'] as $key => $val){		//A megadott konkrét osztályokra
             $req_oszt .= ",'$val'";
         }
-        $ev = get_mayor_szemeszter($link);
-        if(!empty($ev)){
+        $szm = get_mayor_szemeszter($link, $m2n['zaras_tartas']);
+        if(!empty($szm)){
             //Létező összes tankör:
             /* $q = "SELECT tankorId, TRIM(BOTH ' ' FROM CONCAT('".$m2n['csoport_prefix']."',tankorNev)) AS tankorNev
                     FROM intezmeny_".$m2n['isk_rovidnev'].".tankorSzemeszter
-                    WHERE tanev = '".$ev['tanev']."' AND szemeszter = '".$ev['szemeszter']."';	 
+                    WHERE tanev = '".$szm['tanev']."' AND szemeszter = '".$szm['szemeszter']."';	 
                 ";
             */             
             //csak a megadott évfeolyamokhoz kötődő tankörök:
             $q = "SELECT tankorId, TRIM(BOTH ' ' FROM CONCAT('".$m2n['csoport_prefix']."',tankorNev)) AS tankorNev
                 FROM intezmeny_".$m2n['isk_rovidnev'].".tankorSzemeszter
-                WHERE tanev = '".$ev['tanev']."' AND szemeszter = '".$ev['szemeszter']."' AND tankorId IN(
+                WHERE tanev = '".$szm['tanev']."' AND szemeszter = '".$szm['szemeszter']."' AND tankorId IN(
                 SELECT tankorId
                 FROM intezmeny_".$m2n['isk_rovidnev'].".tankorOsztaly
                 WHERE osztalyId IN (
                 SELECT osztalyId
-                FROM naplo_".$m2n['isk_rovidnev']."_".$ev['tanev'].".osztalyNaplo
+                FROM naplo_".$m2n['isk_rovidnev']."_".$szm['tanev'].".osztalyNaplo
                 WHERE evfolyamJel >= ".$m2n['min_evfolyam']."  OR osztalyJel IN(".$req_oszt.") 
                 ORDER BY osztalyId)
                 ORDER BY tankorId ) ORDER BY tankorNev; 
@@ -703,18 +711,26 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '7.0', '
     function get_mayor_tanar($link){		// A tanárok lekérdezése a mayorból
         global $m2n,$log;
         $ret = array();
-        $ev = get_mayor_szemeszter($link);
-        if(!empty($ev)){
-            $q = "SELECT userAccount, email, tanar.tanarId, tankorTanar.tankorId, 
-                TRIM(BOTH ' ' FROM CONCAT_WS(' ',viseltNevElotag, viseltCsaladinev, viseltUtonev)) AS fullName, 
-                TRIM(BOTH ' ' FROM CONCAT('".$m2n['csoport_prefix']."',tankorNev)) AS tankorNev
+        $szm = get_mayor_szemeszter($link, $m2n['zaras_tartas']);
+        if(!empty($szm)){
+            $q = "SELECT accounts.userAccount, accounts.mail, tanar.email, tanar.tanarId, tankorTanar.tankorId, tanar.oId, '' AS employeeId, 
+                        tanar.beDt, tanar.kiDt, '' AS kezdoTanev, '' AS vegzoTanev, '' AS jel, '' AS beEv, '' AS osztalyJel,
+                        tanar.viseltNevElotag, tanar.viseltCsaladinev, tanar.viseltUtonev,
+                        tanar.szuletesiHely,tanar.szuletesiIdo,  '' as lakhelyOrszag, '' as lakhelyHelyseg, '' as lakhelyIrsz,
+                        '' AS lakHely, '' AS telefon, '' AS mobil, tanar.statusz, 'Tanár' AS beoszt, 
+                        TRIM(BOTH ' ' FROM CONCAT_WS(' ',viseltNevElotag, viseltCsaladinev, viseltUtonev)) AS fullName, 
+                        TRIM(BOTH ' ' FROM CONCAT('".$m2n['csoport_prefix']."',tankorNev)) AS tankorNev
                     FROM intezmeny_".$m2n['isk_rovidnev'].".tanar, mayor_private.accounts, intezmeny_".$m2n['isk_rovidnev'].".tankorTanar, intezmeny_".$m2n['isk_rovidnev'].".tankorSzemeszter
-                    WHERE accounts.studyId = tanar.oId AND statusz != 'jogviszonya lezárva' AND tanar.beDt <= CURRENT_DATE() AND (CURRENT_DATE() <= tanar.kiDt OR tanar.kiDt IS NULL) 
-                    AND tanar.tanarId = tankorTanar.tanarId AND tankorTanar.beDt <= CURRENT_DATE() AND (CURRENT_DATE() <= tankorTanar.kiDt OR tankorTanar.kiDt = '".$m2n['zaras_tartas']."' ) 
+                    WHERE accounts.studyId = tanar.oId AND statusz != 'jogviszonya lezárva' 
+                    AND ( (tanar.beDt <= '".$szm['reqDt']."' AND ( tanar.kiDt >= '".$szm['reqDt']."' OR tanar.kiDt IS NULL)) 
+						/*OR (tanar.beDt <= CURRENT_DATE()  AND (CURRENT_DATE() <= tanar.kiDt OR tanar.kiDt IS NULL))*/ )
+                    AND tanar.tanarId = tankorTanar.tanarId 
+                    AND  ((tankorTanar.beDt <= '".$szm['reqDt']."'  AND tankorTanar.kiDt >= '".$szm['reqDt']."'  ) 
+						/*OR (tankorTanar.beDt <= CURRENT_DATE() AND CURRENT_DATE() <= tankorTanar.kiDt )*/ )
                     AND tankorTanar.tankorId = tankorSzemeszter.tankorId 
-                    AND tankorSzemeszter.tanev = '".$ev['tanev']."' AND tankorSzemeszter.szemeszter = '".$ev['szemeszter']."'
-                    ORDER BY userAccount ;
-            ";
+                        AND tankorSzemeszter.tanev = '".$szm['tanev']."' AND tankorSzemeszter.szemeszter = '".$szm['szemeszter']."'
+                    ORDER BY fullName ;
+                ";
             if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }  
             if(( $r = mysqli_query($link, $q)) !== FALSE ){
                 while ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
@@ -739,27 +755,39 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '7.0', '
         foreach($m2n['min_osztalyok'] as $key => $val){         //A megadott konkrét osztályokra
             $req_oszt .= ",'$val'";
         }
-        $ev = get_mayor_szemeszter($link);
-        if(!empty($ev)){
-            $q = "SELECT userAccount, email, diak.diakId, tankorDiak.tankorId, 
-                TRIM(BOTH ' ' FROM CONCAT_WS(' ',viseltNevElotag, viseltCsaladinev, viseltUtonev)) AS fullName, 
-                TRIM(BOTH ' ' FROM CONCAT('".$m2n['csoport_prefix']."',tankorNev)) AS tankorNev
-                    FROM intezmeny_".$m2n['isk_rovidnev'].".diak, mayor_private.accounts,intezmeny_".$m2n['isk_rovidnev'].".tankorDiak, intezmeny_".$m2n['isk_rovidnev'].".tankorSzemeszter
+        $szm = get_mayor_szemeszter($link, $m2n['zaras_tartas']);
+        if(!empty($szm)){
+            $q = "SELECT accounts.userAccount, accounts.mail, diak.email, diak.diakId, tankorDiak.tankorId, diak.oId, diak.diakigazolvanySzam AS employeeId, 
+                        diak.jogviszonyKezdete AS beDt, diak.jogviszonyVege AS kiDt, osztaly.kezdoTanev, osztaly.vegzoTanev, osztaly.jel, diak.kezdoTanev AS beEv,
+                        osztalyNaplo.osztalyJel, diak.viseltNevElotag, diak.viseltCsaladinev, diak.viseltUtonev, 
+                        diak.szuletesiHely, diak.szuletesiIdo, diak.lakhelyOrszag, diak.lakhelyHelyseg, diak.lakhelyIrsz, 
+                        TRIM(BOTH ' ' FROM CONCAT_WS(' ',diak.lakhelyKozteruletNev, diak.lakhelyKozteruletJelleg, diak.lakhelyHazszam, diak.lakhelyEmelet, diak.lakhelyAjto)) AS lakHely,
+                        diak.telefon, diak.mobil, diak.statusz,
+                        TRIM(BOTH ' ' FROM CONCAT_WS(' ',viseltNevElotag, viseltCsaladinev, viseltUtonev)) AS fullName, 
+                        TRIM(BOTH ' ' FROM CONCAT('".$m2n['csoport_prefix']."',tankorNev)) AS tankorNev
+                    FROM intezmeny_".$m2n['isk_rovidnev'].".diak, mayor_private.accounts, intezmeny_".$m2n['isk_rovidnev'].".tankorDiak, intezmeny_".$m2n['isk_rovidnev'].".tankorSzemeszter, 
+                         intezmeny_".$m2n['isk_rovidnev'].".osztalyDiak, intezmeny_".$m2n['isk_rovidnev'].".osztaly, naplo_".$m2n['isk_rovidnev']."_".$szm['tanev'].".osztalyNaplo
                     WHERE diak.diakId IN (
                         SELECT diakId
                         FROM intezmeny_".$m2n['isk_rovidnev'].".osztalyDiak
                         WHERE osztalyId IN (
                             SELECT osztalyId
-                            FROM naplo_".$m2n['isk_rovidnev']."_".$ev['tanev'].".osztalyNaplo
+                            FROM naplo_".$m2n['isk_rovidnev']."_".$szm['tanev'].".osztalyNaplo
                             WHERE evfolyamJel >= ".$m2n['min_evfolyam']." OR osztalyJel IN(".$req_oszt.") 
                             ORDER BY osztalyId)
                         ORDER BY diakId) 
                     AND diak.statusz != 'jogviszonya lezárva' AND diak.statusz != 'felvételt nyert' AND diak.oId = accounts.studyId 
-                    AND tankorDiak.diakId = diak.diakId AND tankorDiak.beDt <= CURRENT_DATE() AND (tankorDiak.kiDt >= CURRENT_DATE() OR tankorDiak.kiDt IS NULL OR tankorDiak.kiDt = '".$m2n['zaras_tartas']."' ) 
+                    AND tankorDiak.diakId = diak.diakId 
+                    AND ((tankorDiak.beDt <= '".$szm['reqDt']."' AND (tankorDiak.kiDt IS NULL OR tankorDiak.kiDt >= '".$szm['reqDt']."' ))
+						/*OR (tankorDiak.beDt <= CURRENT_DATE() AND (tankorDiak.kiDt IS NULL OR tankorDiak.kiDt >= CURRENT_DATE() ))*/ )
                     AND tankorSzemeszter.tankorId = tankorDiak.tankorId 
-                    AND tankorSzemeszter.tanev = '".$ev['tanev']."' AND tankorSzemeszter.szemeszter = '".$ev['szemeszter']."'
-                    ORDER BY userAccount;
-            ";
+                        AND tankorSzemeszter.tanev = '".$szm['tanev']."' AND tankorSzemeszter.szemeszter = '".$szm['szemeszter']."'
+                    AND osztalyDiak.diakId = diak.diakId
+                        AND (osztalyDiak.beDt <= '".$szm['reqDt']."' AND (osztalyDiak.kiDt >= '".$szm['reqDt']."' OR osztalyDiak.kiDt IS NULL))   
+                    AND osztaly.osztalyId = osztalyDiak.osztalyId
+                    AND osztalyDiak.osztalyId = osztalyNaplo.osztalyId
+                    ORDER BY fullName ;
+                ";
             if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }
             if(( $r = mysqli_query($link, $q)) !== FALSE ){
                 while ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) { 
@@ -941,7 +969,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '7.0', '
             unset($mayor_user[$key]);                                               // akkor nem foglalkozik vele tovább.
         }
     }
-
+die();
     $curr = "";
     $tankorei = array();
     $mod_nxt_user_all = 0;
@@ -1094,10 +1122,10 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '7.0', '
             // -    akkor vagy új user, vagy már meglévő, 
             // -    ezért őt kihúzza az $nxt_user listáról, --> megtartja
             // ezután ha valaki még rajta van az $nxt_user listán, az
-            // -    vagy más, mayor_naplón kívüli user (rendszergazda vette föl) --> nem törli, ha kellene
-            // -    vagy megszűnő, korábbi mayor_napló-s user --> törli (vagy letiltja)
+            // -    vagy más, mayor_naplón kívüli user (rendszergazda vette föl) --> nem törli
+            // -    vagy megszűnő, korábbi mayor_napló-s user --> törli, vagy letiltja
             // ha rajta van a $catalog listán is, és nincs rajta $mayor_user listán 
-            // -	akkor őt a script hozta létre régen --> megszűnő, törli (vagy letiltja)
+            // -	akkor őt a script hozta létre régen --> megszűnő, törli, vagy letiltja
             // (hiszen, ha aktív lenne, rajta lenne a $mayor_user listán, és kihúzta volna a $nxt_user-ből)
     }
 

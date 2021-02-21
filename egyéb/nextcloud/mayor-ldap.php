@@ -799,7 +799,7 @@ $basedn = "DC=ad,DC=bmrg,DC=lan";
 ldap_set_option($ld, LDAP_OPT_MATCHED_DN, $basedn);
 
 
-$ldapbind = ldap_bind($ld, $dn, $pass); //this is the point we are authenticating
+$ldapbind = ldap_bind($ld, $cfg['rootBindDn'], $cfg['rootBindPass']); //this is the point we are authenticating
 
 
 
