@@ -403,9 +403,8 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         }
     } 
     
-    function group_del($groupName){	// Csoport törlése a Nextcloud-ból
+    function group_del($groupName, $grp){	// Csoport törlése a Nextcloud-ból
         global $occ_user,$occ_path,$cfg,$link,$log,$cfg,$nxt_version,$dryrun;
-        $grp = nxt_group_list();
         $groupName = rmnp($groupName);
         if(isset($grp[$groupName])){
 	        if($nxt_version < 14){	// Mivel erre csak a Nextcloud 14-től van "occ" parancs, ezért néha közvetlenül kell...
@@ -919,6 +918,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     $tankorok = array_merge($tankorok, array( array("tankorId" => 0, "tankorNev" => $cfg['mindenki_tanar'] )));
     $tankorok = array_merge($tankorok, array( array("tankorId" => 0, "tankorNev" => $cfg['mindenki_diak'] )));
     $nxt_csop = nxt_group_list();
+    $nxt_csop2 = nxt_group_list();                                                              //Gyorsítási célzattal, mert lassú
     $elozo_tcsop = "";
     $mod_nxt_group = 0;
     if($cfg['manage_groups'] === true){
@@ -944,7 +944,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         // A megszűnt tanköröket-csoportokat kitörli 
         foreach($nxt_csop as $key => $val){           
             if(substr($key, 0, strlen($cfg['csoport_prefix'])) === $cfg['csoport_prefix'] ){	//Csak a "prefix"-el kezdődő nevűekre.
-                group_del($key);									                            //elvégzi a törlést
+                group_del($key, $nxt_csop2);									                            //elvégzi a törlést
                 $mod_nxt_group++;
                 if ($log['verbose'] > 1 ){ echo "** -\t Megszűnő csop:".po("\t$key",$cfg['csoportnev_hossz'],1)."-\t eltávolítva.\n";}
             } else {
