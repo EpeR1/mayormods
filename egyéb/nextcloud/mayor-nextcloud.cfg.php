@@ -35,14 +35,14 @@ $cfg['groupdir_prefix'] = "Iskolai Távoktatás";
 $cfg['mindenki_csop'] = "naplós_felhasználók";
 $cfg['mindenki_tanar'] = "naplós_tanárok";
 $cfg['mindenki_diak'] = "naplós_diákok";
-$cfg['zaras_tartas'] =  "2018-06-14";	// Ha nem kell, akkor állítsd át "1970-01-01"-re.
+$cfg['allapot_tartas'] =  "2018-06-14";	// Ha nem kell, akkor állítsd át "1970-01-01"-re.
 $cfg['megfigyelo_user'] = "naplo_robot";
 $cfg['kihagy'] = array();   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
 $cfg['verbose'] = 3 ;  
 
 
-$cfg['rootBindDn'] = "CN=LDAP_ADATCSERE_ADMIN,CN=Users,DC=ad,DC=iskola,DC=hu";
-$cfg['rootBindPass'] = "<password>";
+$cfg['ad_rootBindDn'] = "CN=LDAP_ADATCSERE_ADMIN,CN=Users,DC=ad,DC=iskola,DC=hu";
+$cfg['ad_rootBindPass'] = "<password>";
 
 
 $occ_path = "/var/www/nextcloud/"; 

@@ -45,7 +45,7 @@ $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
 $printhelp = false;
 $printconfig = false;
-$printpassw = false;
+$printpasswds = false;
 $debug = false;
 
 $cfgfile = realpath(pathinfo($argv[0])['dirname'])."/"."mayor-nextcloud.cfg.php";  // A fenti konfig behívható config fájlból is, így a nextcloud-betöltő (ez a php) szerkesztés nélkül frissíthető.
@@ -58,7 +58,7 @@ for($i = 1; $i<$argc; $i++){  //Ha van külön config megadva, akkor először a
     if($argv[$i] == "--config-file" ){$cfgfile = strval($argv[$i+1]); $i++;}
 }
 if(file_exists($cfgfile) === TRUE){ include($cfgfile); }   //Config betöltés
-if(!empty($m2n)){  $cfg_o = $cfg;  $cfg = $m2n;  $cfg = array_merge($cfg, $cfg_o); }
+if(!empty($m2n)){  $cfg_o = $cfg;  $cfg = $m2n;  $cfg = array_merge($cfg, $cfg_o); }    //Ha valahol még a régi config lenne 
 
 for($i = 1; $i<$argc; $i++){    // Kézzel felülbírált config opciók
     if($argv[$i] == "--help" ){$printhelp = true;}
@@ -69,7 +69,7 @@ for($i = 1; $i<$argc; $i++){    // Kézzel felülbírált config opciók
     if($argv[$i] == "--manage-groupdirs" and is_string($argv[$i+1])){$cfg['manage_groupdirs'] = boolval($argv[$i+1]); $i++;}
     if($argv[$i] == "--manage-groups" and is_string($argv[$i+1])){$cfg['manage_groups'] = boolval($argv[$i+1]); $i++;}
     if($argv[$i] == "--allapot-tartas" and is_string($argv[$i+1])){$cfg['allapot_tartas'] = strval($argv[$i+1]); $i++;}
-    if($argv[$i] == "--print-passwords" ){ $printpassw = true;  }
+    if($argv[$i] == "--print-passwords" ){ $printpasswds = true;  }
     if($argv[$i] == "--print-config" ){ $printconfig = true;  }
 }
 
@@ -79,7 +79,6 @@ function print_help(){
     echo "  --help                      :  Help kiírása. \n";
     echo "  --debug                     :  Ugyanaz mint a \"--loglevel 100\" \n";
     echo "  --config-file               :  Konfig fájl elérési útvonala.\n";
-    echo "  --config-print              :  A betöltött konfig kiírása\n";
     echo "  --loglevel x                :  A bőbeszédűséget/logolást tudjuk ezzel szabályozni, ekkor ez az érték érvényesül, nem a configban megadott. \n";
     echo "  --set-diak-quota            :  Az összes diák qvótáját átállítja az \"\$cfg['diak_quota'] = x\" -nél megadott értékre, \n"; 
     echo "                                    csak kézzel futtatva működik, az automatikus, napi futtatásban nicns benne.\n";
@@ -87,6 +86,8 @@ function print_help(){
     echo "                                    illetve kapcsoló nélküli híváskor, automatikusan, a napi futásban, esténként az összes tanárnak egyszerre.\n";
     echo "  --manage-groups <1/0>       :  Ha 1: A felhasználókat csoportokba rendezi a MaYor tankörök szerint, ha 0, nem foglalkozik vele.\n";
     echo "  --manage-groupdirs <1/0>    :  Ha 1: tankörmappákat hoz létre a tankör-csoportokhoz, ha 0, nem foglalkozik vele. (kell hozzá a --manage-groups is!)\n";
+    echo "  --print-config              :  A betöltött konfig kiírása a konzolra.\n";
+    echo "  --print-passwords           :  A létrehozott felhasználóknál a jelszavakat is megjeleníti a konzolon.\n";
     echo "\n\n";
 }
 
@@ -99,7 +100,18 @@ function phpv() {   //Az aktuális php verzió lekérdezése
 function rndstr($l, $chs) { //Ál-Véletlen stringet generál
     return substr(str_shuffle($chs), 0, $l);
 }
+
+function gen_password($l = 12, $inp = array()){
+    global $pwchars;
+    return rndstr(16, $pwchars);
+}
  
+function gen_username($inp){            //Felhasználónevet generál
+    global $search, $replace;
+    $ret = str_replace($search, $replace, $inp['userAccount']);  // (pl: Á->Aa, á->aa, ...)
+    return $ret;
+}
+
 
 if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '>=')) { //MySQLi (Improved) és php7  kell!
 
@@ -127,7 +139,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         global $cfg,$log;
         if(mysqli_query($l, "SELECT * FROM ".$cfg['db_m2n_db'].".".$cfg['db_m2n_prefix']."register LIMIT 10;" ) == FALSE ){ //nincs nyilvántartás
             $q = "CREATE DATABASE IF NOT EXISTS ".$cfg['db_m2n_db']." DEFAULT COLLATE 'utf8_general_ci'; ";
-            if ($log['verbose'] > 5 ){ echo "M2N -> \t".$q."\n\n"; }
+            if ($log['verbose'] > 7 ){ echo "M2N -> \t".$q."\n\n"; }
             if(( $r = mysqli_query($l, $q)) !== FALSE ){
                 if ($log['verbose'] > 0 ){ echo "*\tAz ".$cfg['db_m2n_db']." adatbázis sikeresen létrehozva.\n"; }
             }
@@ -137,7 +149,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
                     PRIMARY KEY (account)) 
                     COLLATE='utf8_general_ci' 
                     ENGINE=InnoDB;";
-            if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
+            if ($log['verbose'] > 7 ){ echo "M2N ->\t".$q."\n"; }
             if(( $r = mysqli_query($l, $q)) !== FALSE ){
                 if ($log['verbose'] > 0 ){ echo "*\tAz ".$cfg['db_m2n_db'].".".$cfg['db_m2n_prefix']."register (script-katalógus) tábla sikeresen létrehozva.\n\n";}
             }
@@ -165,7 +177,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         $ret = array();
         // sudo -u honlap-felho ".phpv()." /home/honlap-felho/web/occ status --output=json
         $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." status --output=json \"" ;
-        if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
         $ret[0] = shell_exec($e);
         $ret[1] = intval(explode(".", json_decode($ret[0],true)['version'])[0]); 
         if ($log['verbose'] > 10 ){ print_r($ret); echo "\n\n"; }
@@ -177,7 +189,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         $ret['account'] = array();
         $ret['status'] = array();
         $q = "SELECT * FROM ".$cfg['db_m2n_db'].".".$cfg['db_m2n_prefix']."register WHERE STATUS != 'forbidden'; ";    
-        if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
+        if ($log['verbose'] > 7 ){ echo "M2N ->\t".$q."\n"; }
         if(( $r = mysqli_query($link, $q)) !== FALSE ){
             while ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
                 if(!in_array($row['account'], $cfg['kihagy'])){
@@ -197,7 +209,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function catalog_forbiddenlist($link){      //akiket a rendszergazda kitiltott
         global $log,$cfg,$cfg;
         $q = "SELECT * FROM ".$cfg['db_m2n_db'].".".$cfg['db_m2n_prefix']."register WHERE STATUS = 'forbidden'; ";
-        if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
+        if ($log['verbose'] > 7 ){ echo "M2N ->\t".$q."\n"; }
         if(( $r = mysqli_query($link, $q)) !== FALSE ){
             $ret = array();
             while ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
@@ -215,7 +227,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function catalog_useradd($link, $account){	// feljegyzi az általa létrehozott felhasználókat
         global $log,$cfg;
         $q = "INSERT INTO ".$cfg['db_m2n_db'].".".$cfg['db_m2n_prefix']."register (account) VALUES ('".mysqli_real_escape_string($link, $account)."')";
-        if ($log['verbose'] > 5 ){ echo "M2N -> \t".$q."\n"; }
+        if ($log['verbose'] > 7 ){ echo "M2N -> \t".$q."\n"; }
         if(( mysqli_query($link, $q)) !== FALSE ){
             if ($log['verbose'] > 4 ){ echo "*\tFelhasználó-hozzáadás, m2n nyilvántartásba vétele.\n"; }
         } 
@@ -224,7 +236,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function catalog_userena($link, $account){	// az engedélyezetteket
         global $cfg,$log;
         $q = "UPDATE ".$cfg['db_m2n_db'].".".$cfg['db_m2n_prefix']."register SET status='active' WHERE account='".mysqli_real_escape_string($link, $account)."'";
-        if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
+        if ($log['verbose'] > 7 ){ echo "M2N ->\t".$q."\n"; }
         if(( mysqli_query($link, $q)) !== FALSE ){
             if ($log['verbose'] > 4 ){ echo "*\tFelhasználó-engedélyezés, m2n nyilvántartásba vétele.\n" ;}
         }
@@ -233,7 +245,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function catalog_userdel($link, $account){	// a törölteket
         global $cfg,$log;
         $q = "DELETE FROM ".$cfg['db_m2n_db'].".".$cfg['db_m2n_prefix']."register WHERE account='".mysqli_real_escape_string($link, $account)."' ";
-        if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
+        if ($log['verbose'] > 7 ){ echo "M2N ->\t".$q."\n"; }
         if(( mysqli_query($link, $q)) !== FALSE ){
             if ($log['verbose'] > 5 ){ echo "*\tFelhasználó-törlés, m2n nyilvántartásba vétele.\n"; }
         }
@@ -242,7 +254,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function catalog_userdis($link, $account){	// a letiltottakat
         global $cfg,$cfg,$log;
         $q = "UPDATE ".$cfg['db_m2n_db'].".".$cfg['db_m2n_prefix']."register SET status='disabled' WHERE account='".mysqli_real_escape_string($link, $account)."'";
-        if ($log['verbose'] > 5 ){ echo "M2N ->\t".$q."\n"; }
+        if ($log['verbose'] > 7 ){ echo "M2N ->\t".$q."\n"; }
         if(( mysqli_query($link, $q)) !== FALSE ){
             if ($log['verbose'] > 5 ){ echo "*\tFelhasználó-letiltás, m2n nyilvántartásba vétele.\n"; }
         }
@@ -250,30 +262,34 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     
     function user_add($userAccount, $fullName){		// létrehoz egy felhasználót a Nextcloud-ban
         global $occ_path,$occ_user,$cfg,$log;
+        $ret = array();
 //  	export OC_PASS=ErősJelszó123; su -s /bin/sh www-data -c '".phpv()." web/occ user:add --password-from-env  --display-name="Teszt Tamás" --group="csop" t.tamas'
         if(strlen($userAccount) > 64 or strlen($fullName) > 64){
             echo "\n******** Hiba: A felahsználónév, vagy a \"teljes név\" hosszabb, mint 64 karakter! NEM hozható létre!! ********\n";
         } else {
-            $e = "export OC_PASS=".escp(rndstr(20, $pwchars))."; su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:add  --password-from-env --display-name=".escp($fullName)." --group=".escp($cfg['mindenki_csop'])." ".escp($userAccount)." \"" ;
-            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
-            $ret = shell_exec($e);
+            $pw = gen_password(16);
+            $ret[1] = $pw;
+            $e = "export OC_PASS=".escp($pw)."; su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:add  --password-from-env --display-name=".escp($fullName)." --group=".escp($cfg['mindenki_csop'])." ".escp($userAccount)." \"" ;
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+            $ret[0] = shell_exec($e);
             if ($log['verbose'] > 11 ){ print_r($ret); }
         }
+        return $ret;
     }
 
     function user_del($userAccount){	// kitöröl vagy letilt egy felhasználót a Nextcloud-ban
 	global $occ_path,$occ_user,$log;
         $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:info ".escp($userAccount)." --output=json \"";
-        if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
         $last_login = json_decode(shell_exec($e),true)['last_seen'] ;
         if($last_login == "1970-01-01T00:00:00+00:00" ){	
             $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:delete ".escp($userAccount)." \"";		// Ha még soha nem lépett be
-            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
             $ret = shell_exec($e);											// akkor törölhető
             if ($log['verbose'] > 11 ){ print_r($ret); }
         } else {
             $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:disable ".escp($userAccount)." \"";
-            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
             $ret = shell_exec($e);											// különben csak letiltja
             if ($log['verbose'] > 11 ){ print_r($ret); }
         }
@@ -283,7 +299,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function user_info($userAccount){	// User állpot a Nextcloudban
         global $occ_path,$occ_user,$log;
             $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:info ".escp($userAccount)." --output=json \"";
-            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
             $ret = (array)json_decode(shell_exec($e),true);
             if ($log['verbose'] > 10 ){ print_r($ret); }
             return $ret;
@@ -293,7 +309,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function user_dis($userAccount){	// letiltja a felhasználót a Nextcloud-ban
         global $occ_path,$occ_user,$log;
             $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:disable ".escp($userAccount)." \"";
-            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
             $ret = shell_exec($e);
             if ($log['verbose'] > 11 ){ print_r($ret); }
     }
@@ -301,7 +317,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function user_ena($userAccount){	// engedélyezi
         global $occ_path,$occ_user,$log;
             $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:enable ".escp($userAccount)." \"";
-            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
             $ret = shell_exec($e);   
             if ($log['verbose'] > 11 ){ print_r($ret); }
     }
@@ -310,7 +326,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function nxt_group_list() {		// Csoportok listázása a Nextcloud-ból
             global $occ_path,$occ_user,$log;
             $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." group:list --limit=1000000 --output=json \"";  //* Jó nagy limittel dolgozzunk
-            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
             $ret = (array)json_decode(shell_exec($e),true);
             if ($log['verbose'] > 10 ){ print_r($ret); }
             return $ret;
@@ -319,12 +335,12 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function nxt_user_list() {		// Felhasználók listázása a Nextcloud-ból
             global $occ_path,$occ_user,$log;
         //    $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:report | grep 'total' | sed -e 's/[^0-9]//g' | tr -d '[:blank:]\n' \"";
-        //    if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+        //    if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
         //    $num = shell_exec($e); 
             $num = 1000000;      //inkább kézi limit!
         //    $num = $num + 100; 	// Biztos-ami-biztos, a nextcloud rejtett hibái miatt...
             $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:list --limit ".escp($num)." --output=json \"";
-            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
             $ret =  (array)json_decode(shell_exec($e),true);
             if ($log['verbose'] > 10 ){ print_r($ret); }
             return $ret;
@@ -333,7 +349,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function nxt_user_lastlogin($userAccount){ 	// legutóbbi belépés lekérdezése
         global $occ_path,$occ_user,$log;
         $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:info ".escp($userAccount)."  --output=json \"";
-        if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
         $ret = json_decode(shell_exec($e),true)['last_seen'];
         if ($log['verbose'] > 10 ){ print_r($ret); }
         return $ret;
@@ -344,17 +360,17 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         global $occ_path,$occ_user,$log;        
         if(isset($params['quota'])){
             $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:setting ".escp($userAccount)." files quota ".escp($params['quota'])." \"";
-            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
             shell_exec( $e );
         }
         if(isset($params['email'])){
             $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:setting ".escp($userAccount)." settings email ".escp($params['email'])." \"";
-            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
             shell_exec( $e );
         }
         if(isset($params['lang'])){
             $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:setting ".escp($userAccount)." core lang ".escp($params['lang'])." \"";
-            if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
             shell_exec($e);
         }
     } 
@@ -369,11 +385,11 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         } else {
             if(nxt_get_version()[1] < 14) {
                 $q = "INSERT IGNORE INTO ".mysqli_real_escape_string($link, $cfg['db_nxt_dbname']).".".mysqli_real_escape_string($link, $cfg['db_nxt_prefix'])."groups (gid) VALUES ('".mysqli_real_escape_string($link,$groupName)."'); ";
-                if ($log['verbose'] > 5 ){ echo "NXT ->\t".$q."\n"; }
+                if ($log['verbose'] > 7 ){ echo "NXT ->\t".$q."\n"; }
                 if(mysqli_query($link, $q) !== TRUE ) echo "\nNXT -> \t****** Csoport létrehozási hiba. (adatbázis) ******\n";
             } else {
                 $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." group:add ".escp($groupName)." \"";
-                if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+                if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
                 $ret = shell_exec($e);
                 if ($log['verbose'] > 11 ){ print_r($ret); }
             }
@@ -389,18 +405,18 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
 
                 foreach($grp[$groupName] as $key => $user){
                     $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." group:removeuser ".escp($groupName)." ".escp($user)." \"";
-                    if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+                    if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
                     $ret = shell_exec($e);
                     if ($log['verbose'] > 11 ){ print_r($ret); }
                     if ($log['verbose'] > 1 ){ echo "*--\t\tTörölve".po(" ($user) a: $groupName",$cfg['csoportnev_hossz']+5,1)."\t csoportból.\n"; }
                 }
                 $q = "DELETE FROM ".mysqli_real_escape_string($link, $cfg['db_nxt_dbname']).".".mysqli_real_escape_string($link,$cfg['db_nxt_prefix'])."groups WHERE gid='".mysqli_real_escape_string($link, $groupName)."'; " ;
-                if ($log['verbose'] > 5 ){ echo "NXT ->\t".$q."\n"; }
+                if ($log['verbose'] > 7 ){ echo "NXT ->\t".$q."\n"; }
                 if(mysqli_query($link, $q) !== TRUE ) echo "\n NXT -> \t****** csoport törlési hiba. (adatbázis) ******\n";
                 
             } else {
                 $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." group:delete ".escp($groupName)." \"";
-                if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+                if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
                 $ret = shell_exec($e);  
                 if ($log['verbose'] > 11 ){ print_r($ret); }
             }
@@ -410,7 +426,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function group_user_add($groupName, $userAccount){	// Hozzáad egy felhasználót egy csoporthoz a Nextcloud-ban
         global $occ_user, $occ_path,$log;
         $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." group:adduser ".escp($groupName)." ".escp($userAccount)." \"";
-        if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
         $ret = shell_exec($e);
         if ($log['verbose'] > 11 ){ print_r($ret); }
     }
@@ -418,7 +434,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function group_user_del($groupName, $userAccount){	// Kitöröl egy felhasználót egy Nextcoud csoportból
         global $occ_user, $occ_path,$log;
         $e =  "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." group:removeuser ".escp($groupName)." ".escp($userAccount)." \"";
-        if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
         $ret = shell_exec($e);
         if ($log['verbose'] > 11 ){ print_r($ret); }
     }
@@ -431,8 +447,8 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
             $ret = @mkdir($occ_path."/data/".$user."/files/".$path, 0755, true);            // Akkor létrehozza
             chown($occ_path."/data/".$user."/files/".$path, $occ_user);
             chgrp($occ_path."/data/".$user."/files/".$path, $occ_user);
-            if($ret === true && $log['verbose'] > 5) { echo "".phpv()." ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."\" \t created.\n"; }
-            if($ret === false && $log['verbose'] > -1) { echo "".phpv()." ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."\" \t makedir failed!!\n"; } //mondjuk ilyen egyáltalán mikor lehet?
+            if($ret === true && $log['verbose'] > 7) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."\" \t created.\n"; }
+            if($ret === false && $log['verbose'] > -1) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."\" \t makedir failed!!\n"; } //mondjuk ilyen egyáltalán mikor lehet?
         }
         if ($log['verbose'] > 11 ){ print_r($ret); }
         return $ret;
@@ -447,9 +463,9 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
             fclose($h);
             chown($occ_path."/data/".$user."/files/".$path, $occ_user);
             chgrp($occ_path."/data/".$user."/files/".$path, $occ_user);
-            if($log['verbose'] > 5) { echo "".phpv()." ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."\" \t created.\n"; }
+            if($log['verbose'] > 7) { echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."\" \t created.\n"; }
         } else {
-            if($log['verbose'] > 5) { echo "".phpv()." ->\tFILE ERROR: \"".$occ_path."/data/".$user."/files/".$path."\" \t dir not found.\n"; }
+            if($log['verbose'] > 5) { echo "php ->\tFILE ERROR: \"".$occ_path."/data/".$user."/files/".$path."\" \t dir not found.\n"; }
         }
         if ($log['verbose'] > 11 ){ print_r($ret); }
         return $ret;
@@ -458,7 +474,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function files_scan($user, $path ){                     // Nextcloud files:scan --path=xxx
         global $occ_user, $occ_path,$log;
         $e =  "su -s /bin/sh $occ_user -c \"".phpv()." '".$occ_path."/occ' files:scan --path=".escp($user."/files/".$path)."   \"";  // -v 
-        if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
         $ret = shell_exec($e);
         if ($log['verbose'] > 11 ){ print_r($ret); }
     }
@@ -466,7 +482,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     function user_notify($user, $msg, $title ){             // Nextcloud értesítés
         global $occ_user, $occ_path, $log;
         $e =  "su -s /bin/sh $occ_user -c \"".phpv()." '".$occ_path."/occ' notification:generate -l ".escp($msg)." -- ".escp($user)." ".escp($title)." \"";
-        if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
         $ret = shell_exec($e);
         if ($log['verbose'] > 11 ){ print_r($ret); }
     }
@@ -497,14 +513,14 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
                 if(is_dir($occ_path."/data/".$user."/files/".$path."/".$val) && empty(scan_dir($user, $path."/".$val))){        // Ha mappa, és üres -> törlés
                     rmdir($occ_path."/data/".$user."/files/".$path."/".$val);
                     $ret[0][] = $val;
-                    if($log['verbose'] > 5) { echo "".phpv()." ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" deleted.\n"; }    
+                    if($log['verbose'] > 7) { echo "php ->\tDIR: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" deleted.\n"; }    
 
                 } else {    //Nem mappa, vagy nem üres
                     if(file_exists( $occ_path."/data/".$user."/files/".$path."/".pathinfo(basename($occ_path."/data/".$user."/files/".$path."/".$val ,".please-remove"))['basename'])){       //Ha az eredeti könyvtár  vagy fájl él
                         rename($occ_path."/data/".$user."/files/".$path."/".$val, $occ_path."/data/".rnescp($user."/files/".$path."/".basename($val, '.please-remove').".".time().".please-remove"));
                         $ret[1][] = basename($val, '.please-remove').".".time().".please-remove";
                         user_notify($user,"Az ön >>".$path."/<< könyvtárában tiltott helyen lévő fájl, vagy olyan (tankör)mappa található, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy törölje belőle!  Eltávolításra megjeleölve! A fájl átnevezve, új neve -->   ".rnescp(basename($val, '.please-remove').".".time().".please-remove"), "Fájl/Mappa rossz helyen! --> ".rnescp($path."/".basename($val, '.please-remove').".".time().".please-remove" ));
-                        if($log['verbose'] > 5) { echo "".phpv()." ->\tF/D: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" \t renamed -> ".rnescp(basename($val, '.please-remove').".".time().".please-remove")."\n"; }
+                        if($log['verbose'] > 7) { echo "php ->\tF/D: \"".$occ_path."/data/".$user."/files/".$path."/".$val."\" \t renamed -> ".rnescp(basename($val, '.please-remove').".".time().".please-remove")."\n"; }
                     } else {    
                         // A Hanyagul otthagyottakért csak figyelmeztessen:
                         user_notify($user,"Az ön >>".$path."/<< könyvtárában tiltott helyen lévő fájl, vagy olyan (tankör)mappa található, amely tankörnek ön továbbá már nem tagja.   Kérem helyezze el kívül a >>".$path."/<< mappán, vagy törölje belőle!  Eltávolításra megjelölve! --> ".$val, "Fájl/Mappa rossz helyen! --> ".$path."/".$val );
@@ -526,7 +542,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
             
             if(is_file($occ_path."/data/".$user."/files/".$path) || is_link($occ_path."/data/".$user."/files/".$path)){     //Ha már vam ott valami ilyen fájl 
                 rename($occ_path."/data/".$user."/files/".$path, $occ_path."/data/".rnescp($user."/files/".$path.".".time().".please-remove"));    //Átnevezi, hogy azért mégse vasszen oda
-                echo "".phpv()." ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."\" \t \t moved away!!!\n"; 
+                echo "php ->\tFILE: \"".$occ_path."/data/".$user."/files/".$path."\" \t \t moved away!!!\n"; 
                 user_notify($user,"Fájl:  >>".$path.".please-remove<<  Illegális helyen volt. Server által eltávolítva.", "Fájl: >>".$path."<< eltávolítva!");
                 files_scan($user, "" ); //Ekkor az egész $user/files mappát szkenneli
             } 
@@ -534,7 +550,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
             $ret[1] = write_tofile($user, $path."/"."INFO.txt", $cfg['infotxt_szöveg']);    // INFO.txt (Újra)Írása.
             if($ret[0] === true){                                                           // Ha frissen létrehozott mappa, akkor az egész userre kell jogot adni
                 $e =  "/bin/chown -R ".escp($occ_user.":".$occ_user)." ".escp($occ_path."/data/".$user."/")." ";
-                if($log['verbose'] > 5) { echo "bash ->\t".$e."\n"; }
+                if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
                 shell_exec($e);
                 files_scan($user, $path);
             }
@@ -618,7 +634,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     } 
 
     function mayor_userlistcmp($a, $b){
-        return strcmp($a['userAccount'], $b['userAccount']);
+        return strcmp($a['fullName'], $b['fullName']);
     }
 
     function po($inp,$ll,$dir){                         // Szép kimenetet gyárt
@@ -638,10 +654,10 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         global $cfg,$log;
         $ret = array();
         $q = "SELECT * FROM intezmeny_".$cfg['isk_rovidnev'].".szemeszter WHERE (statusz = 'aktív' OR statusz = 'lezárt') AND kezdesDt <= '".$date."'  ORDER BY zarasDt DESC LIMIT 1; ";
-        if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }
+        if ($log['verbose'] > 7 ){ echo "MAY ->\t".$q."\n"; }
         if( ($r = mysqli_query($link, $q)) !== FALSE ){
             $ret = mysqli_fetch_array($r, MYSQLI_ASSOC); 
-            $ret["reqDt"] = $date;              //szükség lehet a megkérdezett dt-re is
+            if(!empty($ret)){  $ret["reqDt"] = $date; }             //szükség lehet a megkérdezett dt-re is
             mysqli_free_result($r);
         } else {
             echo "\nMAY ->\t ******** Mayor_napló (szemeszter)lekérdezési hiba. (adatbázis) ********\n";
@@ -681,7 +697,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
                 ORDER BY osztalyId)
                 ORDER BY tankorId ) ORDER BY tankorNev; 
             ";
-            if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }
+            if ($log['verbose'] > 7 ){ echo "MAY ->\t".$q."\n"; }
             if(( $r = mysqli_query($link, $q)) !== FALSE ){
                 while ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
                     $ret[] = $row;
@@ -691,7 +707,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
                 echo "\nMAY ->\t ******** Mayor_napló (tankör)lekérdezési hiba. (adatbázis) ********\n";
             }
         } else {
-            echo "\nMAY ->\t ******** Mayor_napló (tankör)lekérdezési hiba. (adatbázis) ********\n";
+            echo "\nMAY ->\t ******** Mayor_napló (tankör)lekérdezési hiba. (Nincs ilyen Szemeszter: ".$date."!) ********\n";
         }
         if ($log['verbose'] > 10 ){ print_r($ret); }
         return $ret;
@@ -721,7 +737,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
                         AND tankorSzemeszter.tanev = '".$szm['tanev']."' AND tankorSzemeszter.szemeszter = '".$szm['szemeszter']."'
                     ORDER BY fullName ;
                 ";
-            if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }  
+            if ($log['verbose'] > 7 ){ echo "MAY ->\t".$q."\n"; }  
             if(( $r = mysqli_query($link, $q)) !== FALSE ){
                 while ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) {
                     $ret[] = $row;
@@ -731,7 +747,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
                 echo "\nMAY ->\t ******** Mayor_napló (tanár)lekérdezési hiba. (adatbázis) ********\n";
             }
         } else {
-            echo "\nMAY ->\t ******** Mayor_napló (tanár)lekérdezési hiba. (adatbázis) ********\n";
+            echo "\nMAY ->\t ******** Mayor_napló (tanár)lekérdezési hiba. (Nincs ilyen Szemeszter: ".$date."!) ********\n";
         }
         if ($log['verbose'] > 10 ){ print_r($ret); }
         return $ret;
@@ -778,7 +794,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
                     AND osztalyDiak.osztalyId = osztalyNaplo.osztalyId
                     ORDER BY fullName ;
                 ";
-            if ($log['verbose'] > 5 ){ echo "MAY ->\t".$q."\n"; }
+            if ($log['verbose'] > 7 ){ echo "MAY ->\t".$q."\n"; }
             if(( $r = mysqli_query($link, $q)) !== FALSE ){
                 while ($row = mysqli_fetch_array($r, MYSQLI_ASSOC)) { 
                     $ret[] = $row;
@@ -788,7 +804,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
                 echo "\nMAY ->\t ******** Mayor_napló (diák)lekérdezési hiba. (adatbázis) ********";
             }
         } else {
-            echo "\nMAY ->\t ******** Mayor_napló (diák)lekérdezési hiba. (adatbázis) ********";
+            echo "\nMAY ->\t ******** Mayor_napló (diák)lekérdezési hiba. (Nincs ilyen Szemeszter: ".$date."!) ********";
         }
         if ($log['verbose'] > 10 ){ print_r($ret); }
         return $ret;
@@ -802,13 +818,15 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
   
 
 
-    if(true) { echo "\n\n######## Mayor-Nextcloud Script ########\n";   echo "######## (".date("Y-m-d H:i:s").")  ########\n\n"; $t_start = microtime(true); }
-    if(true) { echo "***	M2N Config betöltése: ($cfgfile fájlból.) ***\n\n"; }
-
+    if(true) { echo "\n\n########   Mayor-Nextcloud Script    ########\n";   echo "########   (".date("Y-m-d H:i:s").")     ########\n"; }
+    $t_start = microtime(true); 
+    
     if(!isset($cfg['allapot_tartas']) or empty($cfg['allapot_tartas']) or $cfg['allapot_tartas'] == "1970-01-01"){      //A jelölt nap állapotának betöltése
         $cfg['allapot_tartas'] = date("Y-m-d");
     }
+    if(true) { echo "######## Szinkron: (".$cfg['allapot_tartas'].")-hoz. ########\n"; }
 
+    if(true) { echo "\n***	M2N Config betöltése: ($cfgfile fájlból.) ***\n\n"; }
     if($printconfig === true or $debug === true){
         echo "\n Betöltött Konfig:\n";
         $m2l = $cfg;
@@ -817,7 +835,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         echo "\n";
     }
     $log['verbose'] = $cfg['verbose'];
-    if($debug === true) {$log['verbose'] = 100;}
+    if($debug === true) {$log['verbose'] = 1000;    $printpasswds = true;}
     if( $cfg['always_set_diak_quota'] === true && $log['verbose'] < 4 ){    $log['verbose'] = 4; }
 
 
@@ -929,7 +947,8 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
 
     $mayor_user = array();
     $mayor_user = array_merge($mayor_tanar, $mayor_diak);                               //Tanár, és diák lista együtt
-    if(isset($cfg['megfigyelo_user']) && $cfg['megfigyelo_user'] != "" ){               //A megfigyelő felvétele a lista végére
+
+    if(!empty($cfg['megfigyelo_user'])){                                                //A megfigyelő user felvétele a lista végére
         $mayor_user = array_merge($mayor_user, array(
             array( 'userAccount' => $cfg['megfigyelo_user'],                            //A megfigyelő user legyen egyben  virtuális tanár is
                 'tanarId' => 1, 'diakId' => 0, 'tankorId' => 0, 'fullName' => "Napló Admin Megfigyelő",
@@ -940,19 +959,20 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
             $mayor_user = array_merge($mayor_user, array(
                 array( 'userAccount' => $cfg['megfigyelo_user'], 
                     'email' => $cfg['default_email'],  
-                    'tanarId' => 1,
+                    'tanarId' => 70000000000,
                     'diakId' => 0,
                     'tankorId' => $val['tankorId'],
                     'fullName' => "Napló Admin Megfigyelő",
                     'tankorNev' => $val['tankorNev'],
-                )));
-                //if($val['tankorNev'] == "(tk) 10.b kémia" ){ break; }
-
+                    )
+                )
+            );
+            //if($val['tankorNev'] == "(tk) 10.b kémia" ){ break; }
         }
     }
-    usort($mayor_user, "mayor_userlistcmp");        //rendezés
+    usort($mayor_user, "mayor_userlistcmp");                                        //rendezés
     $mayor_user = add_tk_to_users( $mayor_user, null, $cfg['mindenki_csop']);       //csak rendezett tömbökön //mindenki csoport
-    usort($mayor_user, "mayor_userlistcmp");        //Végén ismét rendezzük az egészet 
+    usort($mayor_user, "mayor_userlistcmp");                                        //Végén ismét rendezzük az egészet 
     $mayor_user = array_merge($mayor_user, array(array('userAccount' => null, 'fullName' => null, 'tankorNev' => null, 'diakId' => 0, 'tanarId' => 0,)) ); //strázsa a lista végére
 
     $nxt_user = nxt_user_list();
@@ -962,14 +982,13 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     
     if ($log['verbose'] > 3 ){ echo "\n";}
 
-    foreach($mayor_user as $key => $val){
-                                                                                    //Lecseréli az ékezetes betűket a felhasználónévből
-        $mayor_user[$key]['userAccount'] = str_replace($search, $replace, $val['userAccount']);  // (pl: Á->Aa, á->aa, ...)
-        if(in_array($mayor_user[$key]['userAccount'], $m2n_forbidden) ){                         //És, ha a nyilvántartásban "forbidden"-ként szerepel, 
+    foreach($mayor_user as $key => $val){                                           //Lecseréli az ékezetes betűket a felhasználónévből 
+        $mayor_user[$key]['userAccount'] = gen_username($val);       // lehet saját függvény is
+        if(in_array($mayor_user[$key]['userAccount'], $m2n_forbidden) ){            //És, ha a nyilvántartásban "forbidden"-ként szerepel, 
             unset($mayor_user[$key]);                                               // akkor nem foglalkozik vele tovább.
         }
     }
-die();
+
     $curr = "";
     $tankorei = array();
     $mod_nxt_user_all = 0;
@@ -1049,9 +1068,10 @@ die();
             unset($nxt_user[$curr]);                                                        //Felhasználó Megvizsgálva, többször már nem kell dönteni róla.
             if($curr != $key2 and $curr != null){                                           //Nincs még ilyen felhasználó
                 
-                user_add($curr, $curr_n);                                                   //Akkor hozzá kell adni
+                $ret = user_add($curr, $curr_n);                                                   //Akkor hozzá kell adni
                 catalog_useradd($link, $curr);
-                if ($log['verbose'] > 2 ){ echo "**-\tFelhasználó:".po("\t$curr_n ($curr)",$cfg['felhasznalo_hossz'],1)."--\tlétrehozva.\n"; }
+                if ($printpasswds === true ){ $pw = $ret[1]; } else { $pw = "<password>"; }
+                if ($log['verbose'] > 2 ){ echo "**-\tFelhasználó:".po("\t".po($curr_n, 20, 1)." ($curr/$pw)",$cfg['felhasznalo_hossz'],1)." --\tlétrehozva.\n"; }
                 $mod_nxt_user++;
 
                 if($cfg['manage_groups'] === true){
@@ -1079,11 +1099,14 @@ die();
                     $params['quota'] = $cfg['default_quota'];                               // Alapértelmezett kvóta
                 }
                 $params['lang'] = $cfg['default_lang'];                                     // Nyelv
-                if($curr_e == ""){
+                /*
+                if($curr_email == ""){
                     $params['email'] = $cfg['default_email'];                               // e-mail beállítása
                 } else {
-                    $params['email'] = $curr_e;                                             // ha van a mysql-ben e-mail, akkor azt használja
+                    $params['email'] = $curr_email;                                             // ha van a mysql-ben e-mail, akkor azt használja
                 }
+                */
+                $params['email'] = $curr_email;
                 user_set($curr,$params);                                                    //Alapértelmezett paraméterek érvényesítése
                 if ($log['verbose'] > 3 ){ echo "* -\t\tBeállítva:\t"."Qvóta: ".$params['quota']."\tNyelv: ".$params['lang']."\tE-mail: ".$params['email']."\n";}
             }
@@ -1094,7 +1117,13 @@ die();
             $curr_n = $val['fullName'];                     //
             $curr_tanarId = $val['tanarId'];
             $curr_diakId = $val['diakId'];
-            $curr_e = @$val['email'];                       //
+            if(!empty($val['email'])) { 
+                $curr_email = $val['email']; 
+            } else if(!empty($val['mail'])){
+                $curr_email = $val['mail'];
+            } else {
+                $curr_email = $cfg['default_email'];                               // e-mail beállítása
+            }
         }
         $tankorei[] = $val['tankorNev'];                    // Másodszor/Egyébként a csoportok (tankörök) gyűjtése
     }
