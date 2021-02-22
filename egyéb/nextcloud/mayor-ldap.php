@@ -41,6 +41,16 @@ $cfg['allapot_tartas'] =  "2018-06-14";	//A jelölt napnak megfelelő állapot b
 $cfg['infotxt_szöveg'] = "info.txt";
 $cfg['verbose'] = 3 ;  
 
+
+
+$cfg['ldap_server'] = "ldaps://windows.iskola.hu:636";      //Jelszóváltoztatást csak TLS/SSL porton enged a windows!
+$cfg['ldap_reqCert'] = "allow";                             // Ellenőrizze-e a certet: "true" "allow" "never"
+$cfg['ldap_baseDn']   =   "DC=ad,DC=iskola,DC=hu";
+$cfg['ldap_rootBindDn'] = "CN=LDAP_ADATCSERE_ADMIN,CN=Users,DC=ad,DC=iskola,DC=hu";
+$cfg['ldap_rootBindPw'] = "<password>";
+
+
+
 $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
 $nxt_version = 0;
@@ -133,7 +143,8 @@ function rnescp($str){                //Escape strings
 }
 
 
-if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '>=')) { //MySQLi (Improved) és php7  kell!
+
+if (function_exists('mysqli_connect') and function_exists('ldap_search') and version_compare(phpversion(), '5.0', '>=')) { //MySQLi (Improved) és php7  kell!
 
     function db_connect($db = ""){ 
         global $log,$cfg;
@@ -154,6 +165,49 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         return $l;      //Egyébként a sikeressel tér vissza
     } 
     // bezár: mysqli_close($link); 
+
+
+
+    function ldap_open($host = ""){
+        global $cfg, $log;
+        
+        if(empty($host)){
+            $host = $cfg['ldap_server']; 
+        }
+        if ($log['verbose'] > 0 ){  echo "***\tLDAP kapcsolódás. ('".$host."')\n"; }
+        $ld = ldap_connect($host);  
+        
+        if($ld !== False){
+    
+            if($cfg['ldap_reqCert'] == "never"){                                            //Mennyire legyen szigorú a CERT-ekkel
+                ldap_set_option($ld, LDAP_OPT_X_TLS_REQUIRE_CERT, LDAP_OPT_X_TLS_NEVER);
+            } else if($cfg['ldap_reqCert'] == "allow"){
+                ldap_set_option($ld, LDAP_OPT_X_TLS_REQUIRE_CERT, LDAP_OPT_X_TLS_ALLOW);
+            } else if($cfg['ldap_reqCert'] == "true"){
+                ldap_set_option($ld, LDAP_OPT_X_TLS_REQUIRE_CERT, LDAP_OPT_X_TLS_HARD);
+            } else {
+                ldap_set_option($ld, LDAP_OPT_X_TLS_REQUIRE_CERT, LDAP_OPT_X_TLS_TRY);            
+            }
+            ldap_set_option($ld, LDAP_OPT_NETWORK_TIMEOUT, 10);                             //Szerver felülbírálhatja
+            ldap_set_option($ld, LDAP_OPT_PROTOCOL_VERSION, 3);     
+            ldap_set_option($ld, LDAP_OPT_REFERRALS, 0);                                    //Így azért gyorsabb
+            ldap_set_option($ld, LDAP_OPT_MATCHED_DN, $cfg['ldap_baseDn']);                 //Jobb, ha mindjárt az elején beállítjuk
+        
+            if(ldap_bind($ld, $cfg['ldap_rootBindDn'], $cfg['ldap_rootBindPw']) === FALSE){
+                $ern = ldap_errno($ld);
+                echo "\n**** Sikertelen kapcsolódás! **** ('".$host."') info:".ldap_err2str($ern)." [$ern] \n\n";
+                return null;
+            } else {
+                if ($log['verbose'] > 0 ){ echo "*\tSikeres kapcsolódás. ('".$host."') info:".ldap_error($ld)."\n\n"; }
+                return $ld;
+            }
+        } else {
+            echo "\n**** Sikertelen kapcsolódás! **** ('".$host."') info:".ldap_error($ld)."\n\n";
+            return null;
+        }
+    }
+    // bezár: ldap_close($ldap);
+
 
     function script_install($l){
         global $cfg,$log;
@@ -833,54 +887,6 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         return $ret;
     }
     
-//-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-var_dump( version_compare(phpversion(), '7.0', '<='));
-echo "\n\n".phpversion()."\n\n";
-
-die();
-$server = "10.100.3.3";  //this is the LDAP server you're connecting with
-$port = "636";
-$ld = ldap_connect("ldaps://$server:$port"); //always connect securely via LDAPS when possible
-
-ldap_set_option($ld, LDAP_OPT_X_TLS_REQUIRE_CERT, LDAP_OPT_X_TLS_NEVER);  
-// LDAP_OPT_X_TLS_NEVER,  LDAP_OPT_X_TLS_HARD, LDAP_OPT_X_TLS_DEMAND, LDAP_OPT_X_TLS_ALLOW, LDAP_OPT_X_TLS_TRY
-ldap_set_option($ld, LDAP_OPT_NETWORK_TIMEOUT, 10);
-ldap_set_option($ld, LDAP_OPT_PROTOCOL_VERSION, 3);
-ldap_set_option($ld, LDAP_OPT_REFERRALS, 0);
-
-
- 
-$basedn = "DC=ad,DC=bmrg,DC=lan"; 
-ldap_set_option($ld, LDAP_OPT_MATCHED_DN, $basedn);
-
-
-$ldapbind = ldap_bind($ld, $cfg['rootBindDn'], $cfg['rootBindPass']); //this is the point we are authenticating
-
-
-
-
-print_r($ldapbind);
-echo "\n---\n";
-
-$dn = "dc=ad,dc=bmrg,dc=lan"; //very important: in which part of your database are you looking
-$filter = "(objectclass=*)"; //don't filter anyone out (every user has a uid)
-$sr = ldap_search($ld, $dn, $filter) or die ("bummer"); //define your search scope
-
-$results = ldap_get_entries($ld, $sr); //here we are pulling the actual entries from the search we just defined
-print_r($results); //will give you all results is array form. 
-echo "\n--\n";
-
-//did the connecting and binding
-$dn = "cn=bikeowners,cn=groups,dc=server,dc=example,dc=com"; //note the extra "cn=groups" for looking in a group that is not "users"
-$filter = "email=*"; //email address must be set but can be anything
-$sr = ldap_search($ld, $dn, $filter) or die ("bummer"); //define your search scope
-
-
-ldap_close($ld);
-
-
-
 
 //--------------------------------------------------------------------------------------------------------------------------------------------//
 // RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN //
@@ -912,6 +918,67 @@ ldap_close($ld);
 
 
     
+
+
+
+
+
+
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+$ld = ldap_open();
+
+function ldap_find(){
+
+
+    
+}
+
+$dn = "dc=ad,dc=bmrg,dc=lan"; //very important: in which part of your database are you looking
+$filter = "(objectclass=*)"; //don't filter anyone out (every user has a uid)
+$sr = ldap_search($ld, $dn, $filter) or die ("bummer"); //define your search scope
+
+$results = ldap_get_entries($ld, $sr); //here we are pulling the actual entries from the search we just defined
+print_r($results); //will give you all results is array form. 
+echo "\n--\n";
+
+//did the connecting and binding
+$dn = "cn=bikeowners,cn=groups,dc=server,dc=example,dc=com"; //note the extra "cn=groups" for looking in a group that is not "users"
+$filter = "email=*"; //email address must be set but can be anything
+$sr = ldap_search($ld, $dn, $filter) or die ("bummer"); //define your search scope
+
+
+ldap_close($ld);
+
+
+
+die();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //-------------------------------------------------------------------------------------------------------------------------------    
     $ret = nxt_get_version();

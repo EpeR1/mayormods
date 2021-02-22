@@ -41,8 +41,11 @@ $cfg['kihagy'] = array();   //pl:  array('Trap.Pista', 'Ebeed.Elek', '22att')
 $cfg['verbose'] = 3 ;  
 
 
-$cfg['ad_rootBindDn'] = "CN=LDAP_ADATCSERE_ADMIN,CN=Users,DC=ad,DC=iskola,DC=hu";
-$cfg['ad_rootBindPass'] = "<password>";
+$cfg['ldap_server'] = "ldaps://windows.iskola.hu:636";      //Jelszóváltoztatást csak TLS/SSL porton enged a windows!
+$cfg['ldap_reqCert'] = "allow";                             // Ellenőrizze-e a certet: "true" "allow" "never"
+$cfg['ldap_baseDn']   =   "DC=ad,DC=iskola,DC=hu";
+$cfg['ldap_rootBindDn'] = "CN=LDAP_ADATCSERE_ADMIN,CN=Users,DC=ad,DC=iskola,DC=hu";
+$cfg['ldap_rootBindPw'] = "<password>";
 
 
 $occ_path = "/var/www/nextcloud/"; 
