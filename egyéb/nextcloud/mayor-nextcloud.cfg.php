@@ -46,7 +46,23 @@ $cfg['ldap_reqCert'] = "allow";                             // Ellenőrizze-e a 
 $cfg['ldap_baseDn']   =   "DC=ad,DC=iskola,DC=hu";
 $cfg['ldap_rootBindDn'] = "CN=LDAP_ADATCSERE_ADMIN,CN=Users,DC=ad,DC=iskola,DC=hu";
 $cfg['ldap_rootBindPw'] = "<password>";
-
+$cfg['ldap_pageSize']   = 100;
+$cfg['ld_username']       = "sAMAccountName";
+$cfg['ld_oId']            = "serialNumber";
+$cfg['ld_employeeId']     = "employeeNumber";
+$cfg['ld_osztalyJel']     = "department";
+$cfg['ld_viseltNevElotag'] = "initials";
+$cfg['ld_viseltCsaladinev'] = "sn";
+$cfg['ld_viseltUtonev']   = "givenName";
+$cfg['ld_lakhelyOrszag']  = "co";
+$cfg['ld_lakhelyHelyseg'] = "l";
+$cfg['ld_lakhelyIrsz']    = "postalCode";
+$cfg['ld_lakHely']        = "streetAddress";
+$cfg['ld_telefon']        = "homePhone";
+$cfg['ld_mobil']          = "mobile";
+$cfg['ld_statusz']        = "company";
+$cfg['ld_beoszt']         = "title";
+$cfg['ld_nxtQuota']       = "description";
 
 $occ_path = "/var/www/nextcloud/"; 
 $occ_user = "www-data";

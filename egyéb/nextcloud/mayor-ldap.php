@@ -48,6 +48,23 @@ $cfg['ldap_reqCert'] = "allow";                             // Ellenőrizze-e a 
 $cfg['ldap_baseDn']   =   "DC=ad,DC=iskola,DC=hu";
 $cfg['ldap_rootBindDn'] = "CN=LDAP_ADATCSERE_ADMIN,CN=Users,DC=ad,DC=iskola,DC=hu";
 $cfg['ldap_rootBindPw'] = "<password>";
+$cfg['ldap_pageSize'] = 100;
+$cfg['ld_username'] = "sAMAccountName";
+$cfg['ld_oId'] = "serialNumber";
+$cfg['ld_employeeId'] = "employeeNumber";
+$cfg['ld_osztalyJel'] = "department";
+$cfg['ld_viseltNevElotag'] = "initials";
+$cfg['ld_viseltCsaladinev'] = "sn";
+$cfg['ld_viseltUtonev'] = "givenName";
+$cfg['ld_lakhelyOrszag'] = "st";
+$cfg['ld_lakhelyHelyseg'] = "l";
+$cfg['ld_lakhelyIrsz'] = "postalCode";
+$cfg['ld_lakHely']  = "streetAddress";
+$cfg['ld_telefon']  = "homePhone";
+$cfg['ld_mobil']    ="mobile";
+$cfg['ld_statusz'] = "company";
+$cfg['ld_beoszt'] = "title";
+$cfg['ld_nxtQuota'] = "description";
 
 
 
@@ -69,8 +86,9 @@ $pwchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_?";
 for($i = 1; $i<$argc; $i++){  //Ha van külön config megadva, akkor először azt töltjük be.
     if($argv[$i] == "--config-file" ){$cfgfile = strval($argv[$i+1]); $i++;}
 }
-if(file_exists($cfgfile) === TRUE){ include($cfgfile); }   //Config betöltés
-if(!empty($m2n)){  $cfg_o = $cfg;  $cfg = $m2n;  $cfg = array_merge($cfg, $cfg_o); }    //Ha valahol még a régi config lenne 
+if(file_exists($cfgfile) === TRUE){ $cfg_o = $cfg; include($cfgfile); $cfg_n = $cfg; $cfg = array_merge($cfg, $cfg_o, $cfg_n); }   //Config betöltés
+if(!empty($m2n)){  $cfg_o = $cfg; $cfg = array_merge($cfg, $m2n, $cfg_o); }    //Ha valahol még a régi config lenne 
+
 
 for($i = 1; $i<$argc; $i++){    // Kézzel felülbírált config opciók
     if($argv[$i] == "--help" ){$printhelp = true;}
@@ -207,6 +225,108 @@ if (function_exists('mysqli_connect') and function_exists('ldap_search') and ver
         }
     }
     // bezár: ldap_close($ldap);
+
+    function ldap_find($ld, $base, $filt, $attr=array()){
+        global $cfg, $log;
+        $ret = array();
+        $cookie = '';
+        $errn = $mdn = $errmsg = $refs = $ctrl = null;
+        ldap_set_option($ld, LDAP_OPT_PROTOCOL_VERSION, 3);
+    
+        if(version_compare(phpversion(), '7.4', '<')){     //PHP 5-7
+            do {
+                if ($log['verbose'] > 7 ){ echo "LDAP ->\t ldap_search('".$ld."', '".$base."', '".$filt."', \$attr,  0, 0, 0, LDAP_DEREF_NEVER);\n Attr: "; print_r($attr); }
+                ldap_control_paged_result($ld, $cfg['ldap_pageSize'], true, $cookie);
+                $res  = ldap_search($ld, $base, $filt, $attr, 0, 0, 0, LDAP_DEREF_NEVER);
+                ldap_parse_result($ld, $res, $errn , $mdn , $errmsg , $refs, $ctrl);
+                if($errn == 0){
+                    $ret = array_merge($ret, ldap_get_entries($ld, $res));
+                } else {
+                    echo "\nLDAP ->\t ******** Ldap ('".$ld."', '".$base."', '".$filt."') lekérdezési hiba. (Infó: [".$errn."]".$errmsg."!) ********";
+                }
+                ldap_control_paged_result_response($ld, $res, $cookie);      
+            } while($cookie !== null && $cookie != '');
+    
+        } else {                                            //PHP 8+
+            do {
+                if ($log['verbose'] > 7 ){ echo "LDAP ->\t ldap_search('".$ld."', '".$base."', '".$filt."', \$attr,  0, 0, 0, LDAP_DEREF_NEVER, \$ctrl);\n Attr: "; print_r($attr); }    
+                $ctrl = array(array('oid' => LDAP_CONTROL_PAGEDRESULTS, 'iscritical' => true, 'value' => array('size' => $cfg['ldap_pageSize'], 'cookie' => $cookie)));
+                $res  = ldap_search($ld, $base, $filt, $attr, 0, 0, 0, LDAP_DEREF_NEVER, $ctrl);
+                ldap_parse_result($ld, $res, $errn , $mdn , $errmsg , $refs, $ctrl);
+                if($errn == 0){
+                    $ret = array_merge($ret, ldap_get_entries($ld, $res));  
+                } else {
+                    echo "\nLDAP ->\t ******** Ldap ('".$ld."', '".$base."', '".$filt."') lekérdezési hiba. (Infó: [".$errn."]".$errmsg."!) ********";
+                }
+                if (isset($ctrl[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'])) {   //újraküldéshez
+                    $cookie = $ctrl[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'];
+                } else {
+                    $cookie = '';
+                }
+            } while (!empty($cookie));
+        }
+        if ($log['verbose'] > 10 ){ print_r($ret); }  
+        if($res !== False){
+            ldap_free_result($res);
+        }
+        return $ret;
+    }
+
+
+    function ld_user_add($l, $user, $attr=null){
+        global $cfg,$log;
+    
+        $def['objectclass'][0] = "top";         //Alap dolgok, ami mindenképpen kell
+        $def['objectclass'][1] = "person";
+        $def['objectclass'][2] = "organizationalPerson";
+        $def['objectclass'][3] = "user";
+        $def['instancetype'][0] = "4"; 
+        $def['useraccountcontrol'][0] = "514";
+        $def['accountexpires'][0] = "9223372036854775807";  // vagy "0"
+        $def['distinguishedname'][0] = "CN=".$user.",CN=Users,".$cfg['ldap_baseDn'];
+        $def['displayname'][0] = $user; 
+        $def[strtolower($cfg['ld_username'])][0] = $user; 
+        $def[strtolower($cfg['ld_oId'])][0] = "1111";
+    
+        if(!empty($attr)){
+            $def['displayname'][0]                          =   $attr['fullName'];
+            $def['mail'][0]                                 =   $attr['email'];
+            $def[strtolower($cfg['ld_oId'])][0]             =   $attr['oId'];
+            if(!empty($attr['employeeId']      )){ $def[strtolower($cfg['ld_employeeId'])][0]      =   $attr['employeeId']; }
+            if(!empty($attr['osztalyJel']      )){ $def[strtolower($cfg['ld_osztalyJel'])][0]      =   $attr['osztalyJel']; }
+            if(!empty($attr['viseltNevElotag'] )){ $def[strtolower($cfg['ld_viseltNevElotag'])][0] =   $attr['viseltNevElotag']; }
+            if(!empty($attr['viseltCsaladinev'])){ $def[strtolower($cfg['ld_viseltCsaladinev'])][0]=   $attr['viseltCsaladinev']; }
+            if(!empty($attr['viseltUtonev']    )){ $def[strtolower($cfg['ld_viseltUtonev'])][0]    =   $attr['viseltUtonev']; }
+            if(!empty($attr['lakhelyOrszag']   )){ $def[strtolower($cfg['ld_lakhelyOrszag'])][0]   =   $attr['lakhelyOrszag']; }
+            if(!empty($attr['lakhelyHelyseg']  )){ $def[strtolower($cfg['ld_lakhelyHelyseg'])][0]  =   $attr['lakhelyHelyseg']; }
+            if(!empty($attr['lakhelyIrsz']     )){ $def[strtolower($cfg['ld_lakhelyIrsz'])][0]     =   $attr['lakhelyIrsz']; }
+            if(!empty($attr['lakHely']         )){ $def[strtolower($cfg['ld_lakHely'])][0]         =   $attr['lakHely']; }
+            if(!empty($attr['telefon']         )){ $def[strtolower($cfg['ld_telefon'])][0]         =   $attr['telefon']; }
+            if(!empty($attr['mobil']           )){ $def[strtolower($cfg['ld_mobil'])][0]           =   $attr['mobil']; }
+            if(!empty($attr['statusz']         )){ $def[strtolower($cfg['ld_statusz'])][0]         =   $attr['statusz']; }
+            if(!empty($attr['beoszt']          )){ $def[strtolower($cfg['ld_beoszt'])][0]          =   $attr['beoszt']; }
+            if(!empty($attr['quota']           )){ $def[strtolower($cfg['ld_nxtQuota'])][0]        =   $attr['quota']; }
+            $def[strtolower('telephoneNumber')][0]          =   $attr['oId'];
+            $def[strtolower('physicalDeliveryOfficeName')][0] = "MaYor-Script-Managed";
+            $def[strtolower('info')][0] = "Jogviszony kezdete: ".($attr['kezdoTanev'])."\r\nJogviszony terv. vége: ".($attr['vegzoTanev']+1)." Június\r\n\r\n(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
+            //$def[strtolower($cfg['ld_'])][0] = $attr[''];
+            unset($def['']);
+        }
+
+        $dn = $def['distinguishedname'][0]; //Így egyszerű
+
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_add('".$l."', '".$dn."', \$def)\n"; } if ($log['verbose'] > 11 ){ echo "Attr: "; print_r($def); }
+        if (ldap_add($l, $dn, $def)){
+            // passwd 
+            // + enable
+            //csoportokba léptetés
+        } else {
+            $errn = ldap_errno($l);
+            echo "\nLDAP ->\t ******** LDAP Felhasználó létrehozási hiba. (infó: [$errn] ".ldap_err2str($errn)."!) ********";
+        }
+    }
+
+
 
 
     function script_install($l){
@@ -930,43 +1050,60 @@ if (function_exists('mysqli_connect') and function_exists('ldap_search') and ver
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-
-
 $ld = ldap_open();
 
-function ldap_find(){
 
 
-    
-}
 
-$dn = "dc=ad,dc=bmrg,dc=lan"; //very important: in which part of your database are you looking
-$filter = "(objectclass=*)"; //don't filter anyone out (every user has a uid)
-$sr = ldap_search($ld, $dn, $filter) or die ("bummer"); //define your search scope
 
-$results = ldap_get_entries($ld, $sr); //here we are pulling the actual entries from the search we just defined
-print_r($results); //will give you all results is array form. 
-echo "\n--\n";
 
-//did the connecting and binding
-$dn = "cn=bikeowners,cn=groups,dc=server,dc=example,dc=com"; //note the extra "cn=groups" for looking in a group that is not "users"
-$filter = "email=*"; //email address must be set but can be anything
-$sr = ldap_search($ld, $dn, $filter) or die ("bummer"); //define your search scope
+
+
+
+
+
+
+
+$dn = "dc=ad,dc=bmrg,dc=lan"; 
+$filter = "(objectclass=*)";
+$attr = array("mail", "sn");
+
+$aa = ldap_find($ld,$dn,$filter);
+//print_r($aa);
+
+
+
+$attr=array();
+$attr['fullName']           = "fn Teszt Elek";
+$attr['email']              = "elek@suli.hu";
+$attr['oId']                = "75999888777";
+$attr['employeeId']         = "123AA";
+$attr['osztalyJel']         = "12.c";
+$attr['viseltNevElotag']    = "Msgr.";
+$attr['viseltCsaladinev']   = "Teszt";
+$attr['viseltUtonev']       = "Elek";
+$attr['lakhelyOrszag']      = "Magyarország";
+$attr['lakhelyHelyseg']     = "Pilisborosjenő";
+$attr['lakhelyIrsz']        = "1234";
+$attr['lakHely']            = "Boros utca 19.";
+$attr['telefon']            = "1234567";
+$attr['mobil']              = "06700000000";
+$attr['statusz']            = "jogviszonyban van";
+$attr['beoszt']             = "Diák";
+$attr['quota']              = "4GB";
+$attr['vegzoTanev']         = 3001;
+
+        
+
+ld_user_add($ld, 'abcd', $attr);
+
+
+
+
 
 
 ldap_close($ld);
-
-
-
 die();
-
-
-
-
-
-
-
 
 
 
@@ -1338,9 +1475,90 @@ die();
     if ($log['verbose'] > 0 ){ echo "\n(Runtime: ".$t_run." min.)\nkész.\n";} //endline
  
 } else {
-    echo "\n\n******** Legalább PHP5 és mysqli szükséges! ********\n\n";
+    echo "\n\n******** Legalább PHP5, php-mysql(i) és php-ldap szükséges! ********\n\n";
 }
  
+
+
+/*
+sn:: Vezetéknév
+serialNumber:: sorozatszám2
+serialNumber:: sorozatszám1
+c: HU
+l:: Telepulés
+st:: Megyé
+street:: Utcá
+title:: Beosztás
+description:: Leirás
+postalAddress:: postaiCímx2
+postalAddress:: postaiCímX1
+postalCode:: Iranyitoszám
+postOfficeBox:: Postafiók
+physicalDeliveryOfficeName:: Irodá
+telephoneNumber:: tel0é
+facsimileTelephoneNumber:: tel_faxé0
+givenName:: Utónév
+initials:: MónoGR
+otherTelephone: 000111222333
+otherTelephone: telefon1
+info:: Megjegyzés 2.0
+memberOf: CN=suli_mail,OU=suli-mail,DC=ad,DC=suli,DC=lan
+memberOf: CN=suli_edu,OU=suli-edu,DC=ad,DC=suli,DC=lan
+memberOf: CN=suli_cloud,OU=suli-cloud,DC=ad,DC=suli,DC=lan
+otherPager: 1212
+otherPager: 2323
+otherPager: tel_szemelyhivo1
+co:: Magyarország
+department:: Ország
+company:: Cég
+streetAddress:: Utca\n Neve \n Hosszú
+otherHomePhone: 0101
+otherHomePhone: 11223344
+otherHomePhone: tel_otthon1
+wWWHomePage:: webé0
+employeeNumber:: emplNumé
+employeeType:: emltypeé
+personalTitle:: személyiCím
+homePostalAddress:: otthonicím
+name:: Teljes Név
+countryCode: 348
+employeeID:: employeIDé
+homeDirectory: C:\totalcmd
+comment:: kóómment
+sAMAccountName: ggg
+division:: diviízió
+otherFacsimileTelephoneNumber: 2323
+otherFacsimileTelephoneNumber: tel_fax1
+otherMobile: tel_mobil1
+primaryTelexNumber: Telex
+otherMailbox:: másikl1@email
+otherMailbox:: másik2@email
+ipPhone:: tel_ipí0
+otherIpPhone: 00000
+otherIpPhone: tel_ip1
+url: weblap2
+url: http://weblap1
+uid: uid2
+uid: uid1
+mail:: eméail@email.com
+roomNumber:: szobaszám2
+roomNumber:: szobaszám1
+homePhone:: tel_otthoní0
+mobile:: tel_mobiló0
+pager:: tel_szemelyhivó0
+jpegPhoto::
+departmentNumber:: departmentNumber2é
+departmentNumber:: departmentNumber1á
+middleName:: középsőNév
+thumbnailPhoto::
+preferredLanguage: nyelv
+uidNumber: 1601
+gidNumber: 1601
+unixHomeDirectory: /home/aa/bb
+loginShell: /bin/bash
+*/   
+
+
 
 
 ?>

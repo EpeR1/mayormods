@@ -59,8 +59,9 @@ $pwchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_?";
 for($i = 1; $i<$argc; $i++){  //Ha van külön config megadva, akkor először azt töltjük be.
     if($argv[$i] == "--config-file" ){$cfgfile = strval($argv[$i+1]); $i++;}
 }
-if(file_exists($cfgfile) === TRUE){ include($cfgfile); }   //Config betöltés
-if(!empty($m2n)){  $cfg_o = $cfg;  $cfg = $m2n;  $cfg = array_merge($cfg, $cfg_o); }    //Ha valahol még a régi config lenne 
+if(file_exists($cfgfile) === TRUE){ $cfg_o = $cfg; include($cfgfile); $cfg_n = $cfg; $cfg = array_merge($cfg, $cfg_o, $cfg_n); }   //Config betöltés
+if(!empty($m2n)){  $cfg_o = $cfg; $cfg = array_merge($cfg, $m2n, $cfg_o); }    //Ha valahol még a régi config lenne 
+
 
 for($i = 1; $i<$argc; $i++){    // Kézzel felülbírált config opciók
     if($argv[$i] == "--help" ){$printhelp = true;}
