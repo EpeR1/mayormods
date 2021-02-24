@@ -46,6 +46,7 @@ $cfg['verbose'] = 3 ;
 $cfg['ldap_server'] = "ldaps://windows.iskola.hu:636";      //Jelszóváltoztatást csak TLS/SSL porton enged a windows!
 $cfg['ldap_reqCert'] = "allow";                             // Ellenőrizze-e a certet: "true" "allow" "never"
 $cfg['ldap_baseDn']   =   "DC=ad,DC=iskola,DC=hu";
+//$cfg['ldap_groupOuName'] = "";
 $cfg['ldap_rootBindDn'] = "CN=LDAP_ADATCSERE_ADMIN,CN=Users,DC=ad,DC=iskola,DC=hu";
 $cfg['ldap_rootBindPw'] = "<password>";
 $cfg['ldap_pageSize'] = 100;
@@ -84,12 +85,24 @@ $cfgfile = realpath(pathinfo($argv[0])['dirname'])."/"."mayor-nextcloud.cfg.php"
 $search = array( 'á', 'ä', 'é', 'í', 'ó', 'ö', 'ő', 'ú', 'ü', 'ű', 'Á', 'Ä', 'É', 'Í', 'Ó', 'Ö', 'Ő', 'Ú', 'Ü', 'Ű');	// egyelőre csak a magyar betűket ismeri
 $replace = array( 'aa', 'ae', 'ee', 'ii', 'oo', 'oe', 'ooe', 'uu', 'ue', 'uue', 'Aa', 'Aae', 'Ee', 'Ii', 'Oo', 'Oe', 'Ooe', 'Uu', 'Ue', 'Uue');
 $pwchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_?";
+$ldap_group_attrs = array('objectCalss', 'samaccountname', 'cn', 'member', 'name', 'description', 'info', 'mail', 'gidNumber', 'samaccounttype', 'instancetype', );
+$ldap_user_attrs  = array('sn', 'serialNumber', 'c', 'l', 'st', 'street', 'title', 'description', 'postalAddress', 'postalCode', 'postOfficeBox', 'physicalDeliveryOfficeName',
+                            'telephoneNumber', 'facsimileTelephoneNumber', 'givenName', 'initials', 'otherTelephone', 'info', 'memberOf', 'otherPager', 'co', 'department',
+                            'company', 'streetAddress', 'otherHomePhone', 'wWWHomePage', 'employeeNumber', 'employeeType', 'personalTitle', 'homePostalAddress', 'name',
+                            'countryCode', 'employeeID', 'homeDirectory', 'comment', 'sAMAccountName', 'division', 'otherFacsimileTelephoneNumber', 'otherMobile',
+                            'primaryTelexNumber', 'otherMailbox', 'ipPhone', 'otherIpPhone', 'url', 'uid', 'mail', 'roomNumber', 'homePhone', 'mobile', 'pager', 
+                            'jpegPhoto', 'departmentNumber', 'middleName', 'thumbnailPhoto', 'preferredLanguage', 'uidNumber', 'gidNumber', 'unixHomeDirectory', 'loginShell'
+                        );   
+
+
+
+
 
 for($i = 1; $i<$argc; $i++){  //Ha van külön config megadva, akkor először azt töltjük be.
     if($argv[$i] == "--config-file" ){$cfgfile = strval($argv[$i+1]); $i++;}
 }
 if(file_exists($cfgfile) === TRUE){ $cfg_o = $cfg; include($cfgfile); $cfg_n = $cfg; $cfg = array_merge($cfg, $cfg_o, $cfg_n); }   //Config betöltés
-if(!empty($m2n)){  $cfg_o = $cfg; $cfg = array_merge($cfg, $m2n, $cfg_o); }    //Ha valahol még a régi config lenne 
+if(!empty($m2n)){ $cfg = array_merge($cfg, $m2n); }    //Ha valahol még a régi config lenne 
 
 
 for($i = 1; $i<$argc; $i++){    // Kézzel felülbírált config opciók
@@ -301,63 +314,64 @@ if (function_exists('mysqli_connect') and function_exists('iconv') and function_
 
     function ld_user_add($l, $user, $fullname, $attr=array()){
         global $cfg,$log;
-        $attb = $ret = array();
+        $attrs = $ret = array();
 
-        $attb['objectclass'][0] = "top";                    //Alap dolgok, ami mindenképpen kell
-        $attb['objectclass'][1] = "person";
-        $attb['objectclass'][2] = "organizationalPerson";
-        $attb['objectclass'][3] = "user";
-        $attb['instancetype'][0] = "4"; 
-        $attb['useraccountcontrol'][0] = "514";
-        $attb['accountexpires'][0] = "9223372036854775807";  // vagy "0"
-        $attb['distinguishedname'][0] = "CN=".ldap_escape($user, "", LDAP_ESCAPE_DN).",CN=Users,".$cfg['ldap_baseDn'];       //Ezt még lehetne cizellálni
-        $attb[strtolower($cfg['ld_username'])][0] = $user; 
+        $attrs['objectclass'][0] = "top";                    //Alap dolgok, ami mindenképpen kell
+        $attrs['objectclass'][1] = "person";
+        $attrs['objectclass'][2] = "organizationalPerson";
+        $attrs['objectclass'][3] = "user";
+        $attrs['instancetype'][0] = "4"; 
+        $attrs['useraccountcontrol'][0] = "514";
+        $attrs['accountexpires'][0] = "9223372036854775807";  // vagy "0"
+        $attrs['distinguishedname'][0] = "CN=".ldap_escape($user, "", LDAP_ESCAPE_DN).",CN=Users,".$cfg['ldap_baseDn'];       //Ezt még lehetne cizellálni
+        $attrs[strtolower($cfg['ld_username'])][0] = $user; 
     
         $attr = attr_add_defaults($attr);
-        if(!empty($fullname)                ){ $attb['displayname'][0] = $fullname;}
-        else if(!empty($attr['fullName'])   ){ $attb['displayname'][0] = $attr['fullName'];}
-        else                                 { $attb['displayname'][0] = $user;}
-        $attb['mail'][0]                                 =   $attr['email'];
-        $attb[strtolower($cfg['ld_oId'])][0]             =   $attr['oId'];
-        $attb[strtolower($cfg['ld_employeeId'])][0]      =   $attr['employeeId']; 
-        $attb[strtolower($cfg['ld_osztalyJel'])][0]      =   $attr['osztalyJel']; 
-        $attb[strtolower($cfg['ld_viseltNevElotag'])][0] =   $attr['viseltNevElotag']; 
-        $attb[strtolower($cfg['ld_viseltCsaladinev'])][0]=   $attr['viseltCsaladinev']; 
-        $attb[strtolower($cfg['ld_viseltUtonev'])][0]    =   $attr['viseltUtonev']; 
-        $attb[strtolower($cfg['ld_lakhelyOrszag'])][0]   =   $attr['lakhelyOrszag']; 
-        $attb[strtolower($cfg['ld_lakhelyHelyseg'])][0]  =   $attr['lakhelyHelyseg']; 
-        $attb[strtolower($cfg['ld_lakhelyIrsz'])][0]     =   $attr['lakhelyIrsz']; 
-        $attb[strtolower($cfg['ld_lakHely'])][0]         =   $attr['lakHely']; 
-        $attb[strtolower($cfg['ld_telefon'])][0]         =   $attr['telefon']; 
-        $attb[strtolower($cfg['ld_mobil'])][0]           =   $attr['mobil']; 
-        $attb[strtolower($cfg['ld_statusz'])][0]         =   $attr['statusz']; 
-        $attb[strtolower($cfg['ld_beoszt'])][0]          =   $attr['beoszt']; 
-        $attb[strtolower($cfg['ld_nxtQuota'])][0]        =   $attr['quota']; 
-        $attb[strtolower($cfg['ld_iroda'])][0]           = "MaYor-Script-Managed";
-        $attb[strtolower($cfg['ld_info'])][0] = "Jogviszony kezdete: ".($attr['kezdoTanev'])."\r\nJogviszony terv. vége: ".($attr['vegzoTanev']+1)." Június\r\n\r\n(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
-        //$attb[strtolower($cfg['ld_'])][0] = $attr[''];
-        unset($attb['']);   //Üresek kipucolása
+        if(!empty($fullname)                ){ $attrs['displayname'][0] = $fullname;}
+        else if(!empty($attr['fullName'])   ){ $attrs['displayname'][0] = $attr['fullName'];}
+        else                                 { $attrs['displayname'][0] = $user;}
+        $attrs['mail'][0]                                 =   $attr['email'];
+        $attrs[strtolower($cfg['ld_oId'])][0]             =   $attr['oId'];
+        $attrs[strtolower($cfg['ld_employeeId'])][0]      =   $attr['employeeId']; 
+        $attrs[strtolower($cfg['ld_osztalyJel'])][0]      =   $attr['osztalyJel']; 
+        $attrs[strtolower($cfg['ld_viseltNevElotag'])][0] =   $attr['viseltNevElotag']; 
+        $attrs[strtolower($cfg['ld_viseltCsaladinev'])][0]=   $attr['viseltCsaladinev']; 
+        $attrs[strtolower($cfg['ld_viseltUtonev'])][0]    =   $attr['viseltUtonev']; 
+        $attrs[strtolower($cfg['ld_lakhelyOrszag'])][0]   =   $attr['lakhelyOrszag']; 
+        $attrs[strtolower($cfg['ld_lakhelyHelyseg'])][0]  =   $attr['lakhelyHelyseg']; 
+        $attrs[strtolower($cfg['ld_lakhelyIrsz'])][0]     =   $attr['lakhelyIrsz']; 
+        $attrs[strtolower($cfg['ld_lakHely'])][0]         =   $attr['lakHely']; 
+        $attrs[strtolower($cfg['ld_telefon'])][0]         =   $attr['telefon']; 
+        $attrs[strtolower($cfg['ld_mobil'])][0]           =   $attr['mobil']; 
+        $attrs[strtolower($cfg['ld_statusz'])][0]         =   $attr['statusz']; 
+        $attrs[strtolower($cfg['ld_beoszt'])][0]          =   $attr['beoszt']; 
+        $attrs[strtolower($cfg['ld_nxtQuota'])][0]        =   $attr['quota']; 
+        $attrs[strtolower($cfg['ld_iroda'])][0]           = "MaYor-Script-Managed";
+        $attrs[strtolower($cfg['ld_info'])][0] = "Jogviszony kezdete: ".($attr['kezdoTanev'])."\r\nJogviszony terv. vége: ".($attr['vegzoTanev']+1)." Június\r\n\r\n(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
+        //$attrs[strtolower($cfg['ld_'])][0] = $attr[''];
+        unset($attrs['']);   //Üresek kipucolása
         
-        $dn = $attb['distinguishedname'][0]; //Így egyszerű
+        $dn = $attrs['distinguishedname'][0]; //Így egyszerű
+        $ret[4] = $attrs;
 
-        if($log['verbose'] > 7){ echo "LDAP ->\tldap_add('".$l."', '".$dn."', \$attb)\n"; } if ($log['verbose'] > 11 ){ echo "Attr: "; print_r($attb); }
-        if($ret[0] = ldap_add($l, $dn, $attb)){
-            unset($attb);                           //Régiek törlése
-            $ret[2] = ldap_errno($l);
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_add('".$l."', '".$dn."', \$attrs)\n"; } if ($log['verbose'] > 11 ){ echo "Attr: "; print_r($attrs); }
+        if($ret[0] = @ldap_add($l, $dn, $attrs)){
+            unset($attrs);                           //Régiek törlése
+            $ret[2] = $errn = ldap_errno($l);
             $ret[3] = ldap_err2str($errn);
             $ret[1] = gen_password(16);   //Jelszó
-            $attb[strtolower('unicodePwd')][0] =  iconv( "UTF-8", "UTF-16LE", "\"".$ret[1]."\"" );
-            if($log['verbose'] > 7){ echo "LDAP ->\tldap_mod_replace('".$l."', '".$dn."', \$attb)\n"; } if ($log['verbose'] > 11 ){ echo "Attr: "; print_r($attb); }
+            $attrs[strtolower('unicodePwd')][0] =  iconv( "UTF-8", "UTF-16LE", "\"".$ret[1]."\"" );
+            if($log['verbose'] > 7){ echo "LDAP ->\tldap_mod_replace('".$l."', '".$dn."', \$attrs)\n"; } if ($log['verbose'] > 11 ){ echo "Attr: "; print_r($attrs); }
             
-            if(!ldap_mod_replace ($l, $dn, $attb )){        //Jelszó beállítása
+            if(!@ldap_mod_replace ($l, $dn, $attrs )){        //Jelszó beállítása
                 $ret[2] = $errn = ldap_errno($l);
                 echo "\nLDAP ->\t ******** LDAP Felhasználó jelszócsere hiba. (infó: [$errn] ".ldap_err2str($errn)."!) ********\n";
                 $ret[3] = ldap_err2str($errn);
                 return $ret;
             } 
-            unset($attb);                                   //User Engedélyezése
-            $attb[strtolower('userAccountControl')][0] = 512;   
-            if(!ldap_mod_replace ($l, $dn, $attb )){
+            unset($attrs);                                   //User Engedélyezése
+            $attrs[strtolower('userAccountControl')][0] = 512;   
+            if(!@ldap_mod_replace ($l, $dn, $attrs )){
                 $ret[2] = $errn = ldap_errno($l);
                 echo "\nLDAP ->\t ******** LDAP Felhasználó jelszócsere hiba. (infó: [$errn] ".ldap_err2str($errn)."!) ********\n";
                 $ret[3] = ldap_err2str($errn);
@@ -372,13 +386,133 @@ if (function_exists('mysqli_connect') and function_exists('iconv') and function_
     }
     
 
-function ld_group_user_add(){
+function ld_group_user_add($l, $groupName, $userAccount, $scope = null){
+    global $cfg,$log,$ldap_group_attrs,$ldap_user_attrs;
+    $ret = array(0 => true, 2 => 0);
+    $dn = "";
 
-$group_name = "CN=MyGroup,OU=Groups,DC=example,DC=com";
-$group_info['member'] = $dn; // User's DN is added to group's 'member' array
-ldap_mod_add($connect,$group_name,$group_info);
+    if(empty($scope) or $scope == "own"){           //A Script saját csoportjai között
+        $dn = "OU=".ldap_escape($cfg['isk_rovidnev']."-mayor", "", LDAP_ESCAPE_DN).",".$cfg['ldap_baseDn'];
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$dn."', '(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER).")', \$ldap_group_attrs);\n"; }  if ($log['verbose'] > 11 ) { echo "Attr: "; print_r($ldap_group_attrs); }
+        $group = ldap_find($l, $dn, "(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER)."))", $ldap_group_attrs );    
+    } else if($scope == "global"){                  //Egész szerveren
+        $dn = $cfg['ldap_baseDn'];
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$dn."', '(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER).")', \$ldap_group_attrs);\n"; } if ($log['verbose'] > 11 ) { echo "Attr: "; print_r($ldap_group_attrs); }
+        $group = ldap_find($l, $dn, "(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER)."))", $ldap_group_attrs );
+    } else {                                        //Csak a megadott DN-ben (OU)
+        $dn = $scope;
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$dn."', '(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER).")', \$ldap_group_attrs);\n"; } if ($log['verbose'] > 11 ) { echo "Attr: "; print_r($ldap_group_attrs); }
+        $group = ldap_find($l, $dn, "(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER)."))", $ldap_group_attrs );
+    }
+    if ($log['verbose'] > 11 ){ echo "\$group = "; print_r($group); }
 
+
+    if(!empty($group) and $group['count'] == 1){    //Ha megvan a csoport //A felhasználókat viszont globálisan keresi!
+
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$cfg['ldap_baseDn']."', '(&(|(|(objectClass=person)(objectClass=organizationalPerson))(objectClass=user))(".$cfg['ld_username']."=".ldap_escape($userAccount, "", LDAP_ESCAPE_FILTER)."))', array('dn'));\n"; } 
+        $users = ldap_find($l, $cfg['ldap_baseDn'], "(&(|(|(objectClass=person)(objectClass=organizationalPerson))(objectClass=user))(".$cfg['ld_username']."=".ldap_escape($userAccount, "", LDAP_ESCAPE_FILTER).") )" , array('dn'));
+        if ($log['verbose'] > 11 ) { echo "Users: "; print_r($users); }
+
+        if(!empty($users) and $users['count'] == 1){
+            $userdn = $users[0]['dn'];
+            if(!in_array($userdn, $group[0]['member'])){
+                $ldif['member'] = $userdn;
+                $ret[0] = @ldap_mod_add($l, $group[0]['dn'], $ldif);
+                $ret[2] = $errn = ldap_errno($l);
+                $ret[3] = ldap_err2str($errn);
+                if ($log['verbose'] > 6 ){ echo "\nLDAP ->\t Felhasználó: [".$userAccount."] hozzáadva a: [".$groupName."]/[".$dn."] csoporthoz!\n"; }
+            } else {
+                if ($log['verbose'] > 6 ) { echo "\nLDAP ->\t Felhasználó: [".$userAccount."] már benne volt a: [".$groupName."]/[".$dn."] csoportban!\n"; }
+            }
+        } else if($users['count'] > 1){ //Több user
+            echo "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Több ugyanolyan felhasználó a létezik! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
+        } else {    //vagy nincs user
+            echo "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Nincs ilyen felhasználó! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
+        }
+    } else if($group['count'] > 1) { //Több csoport, 
+        echo "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Több ugyanolyan csoport található! [".$groupName."]/[".$dn."]) ********\n";
+    } else { ///vagy nincs csoport
+        echo "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Csoport nem található! [".$groupName."]/[".$dn."]) ********\n";
+    }
+    return $ret;
 }
+
+
+function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
+    global $cfg,$log,$ldap_group_attrs,$ldap_user_attrs;
+    $ret = array(0 => true, 2 => 0);
+    $dn = "";
+
+    if(empty($scope) or $scope == "own"){           //A Script saját csoportjai között
+        $dn = "OU=".ldap_escape($cfg['isk_rovidnev']."-mayor", "", LDAP_ESCAPE_DN).",".$cfg['ldap_baseDn'];
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$dn."', '(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER).")', \$ldap_group_attrs);\n"; }  if ($log['verbose'] > 11 ) { echo "Attr: "; print_r($ldap_group_attrs); }
+        $group = ldap_find($l, $dn, "(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER)."))", $ldap_group_attrs );    
+    } else if($scope == "global"){                  //Egész szerveren
+        $dn = $cfg['ldap_baseDn'];
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$dn."', '(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER).")', \$ldap_group_attrs);\n"; } if ($log['verbose'] > 11 ) { echo "Attr: "; print_r($ldap_group_attrs); }
+        $group = ldap_find($l, $dn, "(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER)."))", $ldap_group_attrs );
+    } else {                                        //Csak a megadott DN-ben (OU)
+        $dn = $scope;
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$dn."', '(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER).")', \$ldap_group_attrs);\n"; } if ($log['verbose'] > 11 ) { echo "Attr: "; print_r($ldap_group_attrs); }
+        $group = ldap_find($l, $dn, "(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER)."))", $ldap_group_attrs );
+    }
+    if ($log['verbose'] > 11 ){ echo "\$group = "; print_r($group); }
+    $ret[4] = $dn;
+
+
+    if(!empty($group) and $group['count'] == 1){    //Ha megvan a csoport //A felhasználókat viszont globálisan keresi!
+        for($i = 0; $i < $group[0]['member']['count']; $i++){            //Memebereket végigkérdezi
+            if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$group[0]['member'][$i]."', '', array('".strtolower($cfg['ld_username'])."'));\n"; } 
+            $users = ldap_find($l, $group[0]['member'][$i], "(objectClass=*)", array(strtolower($cfg['ld_username'])));   //lekérdezni egyesével a sAMAccountName-t
+            if ($log['verbose'] > 11 ) { echo "Users: "; print_r($users); }
+
+            if($users[0][strtolower($cfg['ld_username'])][0] == $userAccount){  //Ha ő az, törölni belőle
+                $ldif['member'] = $group[0]['member'][$i];     //vagy   $users[0]['dn'];
+                if($log['verbose'] > 7){ echo "LDAP ->\tldap_mod_del('".$l."', '".$group[0]['dn']."', '', array('member' => '".$ldif['member']."'));\n"; } 
+                if(!($ret[0] = ldap_mod_del($l, $group[0]['dn'], $ldif)) ){
+                    $errn = ldap_errno($l);
+                    echo "\nLDAP ->\t ******** LDAP Csoportból törlés hiba! (infó: [".$errn."] ".ldap_err2str($errn)." ) ********\n";
+                }           
+                $ret[2] = ldap_errno($l);
+                $ret[3] = ldap_err2str($ret[2]); 
+            }
+        }
+        if(empty($ldif)){   //Nem töröltünk senkit
+            if ($log['verbose'] > 7 ){ echo "\nLDAP ->\t Felhasználó: [".$userAccount."] nincs: [".$groupName."]/[".$dn."] csoporthoz!\n"; }
+        }
+        return $ret;
+        
+        /*
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$cfg['ldap_baseDn']."', '(&(|(|(objectClass=person)(objectClass=organizationalPerson))(objectClass=user))(".$cfg['ld_username']."=".ldap_escape($userAccount, "", LDAP_ESCAPE_FILTER)."))', array('dn'));\n"; } 
+        $users = ldap_find($l, $cfg['ldap_baseDn'], "(&(|(|(objectClass=person)(objectClass=organizationalPerson))(objectClass=user))(".$cfg['ld_username']."=".ldap_escape($userAccount, "", LDAP_ESCAPE_FILTER).") )" , array('memberOf'));
+        if ($log['verbose'] > 11 ) { echo "Users: "; print_r($users); }
+
+        if(!empty($users) and $users['count'] == 1){        //Csak 1db user van
+            $userdn = $users[0]['dn'];
+            if(in_array($userdn, $group[0]['member'])){
+                $ldif['member'] = $userdn;
+                $ret[0] = @ldap_mod_del($l, $group[0]['dn'], $ldif);
+                $ret[2] = $errn = ldap_errno($l);
+                $ret[3] = ldap_err2str($errn);
+                if ($log['verbose'] > 7 ){ echo "\nLDAP ->\t Felhasználó: [".$userAccount."] törölve a: [".$groupName."]/[".$dn."] csoportból!\n"; }
+            } else {
+                if ($log['verbose'] > 7 ) { echo "\nLDAP ->\t Felhasználó: [".$userAccount."] nincs benne a: [".$groupName."]/[".$dn."] csoportban!\n"; }
+            }
+        } else if($users['count'] > 1){ //Több user
+            echo "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Több ugyanolyan felhasználó a létezik! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
+        } else {    //vagy nincs user
+            echo "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Nincs ilyen felhasználó! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
+        }
+        */
+    } else if($group['count'] > 1) { //Több csoport, 
+        echo "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Több ugyanolyan csoport található! [".$groupName."]/[".$dn."]) ********\n";
+    } else { ///vagy nincs csoport
+        echo "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Csoport nem található! [".$groupName."]/[".$dn."]) ********\n";
+    }
+    return $ret;
+}
+
+
 
 
     function script_install($l){
@@ -1147,10 +1281,11 @@ $attr['vegzoTanev']         = 3001;
 
         
 
-ld_user_add($ld, 'abcd', '', $attr);
-
-
- 
+//$rv = ld_user_add($ld, 'aaa', '', $attr);
+//print_r($rv);
+ld_group_user_add($ld, "bmrg_cloud", "aaa", "global");
+ld_group_user_del($ld, "naplos_tanar", "aaa");
+ld_group_user_del($ld, "naplos_diak", "23bbp");
 
 
 
