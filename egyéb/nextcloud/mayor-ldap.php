@@ -281,7 +281,7 @@ if (function_exists('mysqli_connect') and function_exists('iconv') and function_
                 }
             } while (!empty($cookie));
         }
-        if ($log['verbose'] > 10 ){ print_r($ret); }  
+        if ($log['verbose'] > 11 ){ $pr = $ret; for($i = 0; $i < $pr['count']; $i++){ $pr[$i]['jpegphoto'][0] = base64_encode($pr[$i]['jpegphoto'][0]);  $pr[$i]['thumbnailphoto'][0] = base64_encode($pr[$i]['thumbnailphoto'][0]);} print_r($pr);}
         if($res !== False){
             ldap_free_result($res);
         }
@@ -415,7 +415,7 @@ function ld_group_user_add($l, $groupName, $userAccount, $scope = null){
 
         if(!empty($users) and $users['count'] == 1){
             $userdn = $users[0]['dn'];
-            if(!in_array($userdn, $group[0]['member'])){
+            if(empty($group[0]['member']) or !in_array($userdn, $group[0]['member'])){
                 $ldif['member'] = $userdn;
                 $ret[0] = @ldap_mod_add($l, $group[0]['dn'], $ldif);
                 $ret[2] = $errn = ldap_errno($l);
@@ -459,9 +459,8 @@ function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
     if ($log['verbose'] > 11 ){ echo "\$group = "; print_r($group); }
     $ret[4] = $dn;
 
-
-    if(!empty($group) and $group['count'] == 1){    //Ha megvan a csoport //A felhasználókat viszont globálisan keresi!
-        for($i = 0; $i < $group[0]['member']['count']; $i++){            //Memebereket végigkérdezi
+    if(!empty($group) and $group['count'] == 1 ){    //Ha megvan a csoport //A felhasználókat viszont globálisan keresi!
+        for(  $i = 0;  (!empty($group[0]['member']) and $i < $group[0]['member']['count']);    $i++  ){            //Memebereket végigkérdezi
             if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$group[0]['member'][$i]."', '', array('".strtolower($cfg['ld_username'])."'));\n"; } 
             $users = ldap_find($l, $group[0]['member'][$i], "(objectClass=*)", array(strtolower($cfg['ld_username'])));   //lekérdezni egyesével a sAMAccountName-t
             if ($log['verbose'] > 11 ) { echo "Users: "; print_r($users); }
@@ -480,7 +479,6 @@ function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
         if(empty($ldif)){   //Nem töröltünk senkit
             if ($log['verbose'] > 7 ){ echo "\nLDAP ->\t Felhasználó: [".$userAccount."] nincs: [".$groupName."]/[".$dn."] csoporthoz!\n"; }
         }
-        return $ret;
         
         /*
         if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$cfg['ldap_baseDn']."', '(&(|(|(objectClass=person)(objectClass=organizationalPerson))(objectClass=user))(".$cfg['ld_username']."=".ldap_escape($userAccount, "", LDAP_ESCAPE_FILTER)."))', array('dn'));\n"; } 
@@ -505,12 +503,26 @@ function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
         }
         */
     } else if($group['count'] > 1) { //Több csoport, 
-        echo "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Több ugyanolyan csoport található! [".$groupName."]/[".$dn."]) ********\n";
+        echo "\nLDAP ->\t ******** LDAP Csoportból törlés hiba! (infó: Több ugyanolyan csoport található! [".$groupName."]/[".$dn."]) ********\n";
     } else { ///vagy nincs csoport
-        echo "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Csoport nem található! [".$groupName."]/[".$dn."]) ********\n";
+        echo "\nLDAP ->\t ******** LDAP Csoportból törlés hiba! (infó: Csoport nem található! [".$groupName."]/[".$dn."]) ********\n";
     }
     return $ret;
 }
+
+
+function ld_user_info($l, $userAccount){    //Csak a fontosabb tulajdonságokkal
+    global $cfg,$log,$ldap_user_attrs;
+    $ret = array();
+
+    if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$cfg['ldap_baseDn']."', '(&(|(|(objectClass=person)(objectClass=organizationalPerson))(objectClass=user))(".$cfg['ld_username']."=".ldap_escape($userAccount, "", LDAP_ESCAPE_FILTER)."))', \$ldap_user_attrs);\n"; } 
+    $users = ldap_find($l, $cfg['ldap_baseDn'], "(&(|(|(objectClass=person)(objectClass=organizationalPerson))(objectClass=user))(".$cfg['ld_username']."=".ldap_escape($userAccount, "", LDAP_ESCAPE_FILTER).") )", $ldap_user_attrs);
+    if ($log['verbose'] > 11 ){ $pr = $users; for($i = 0; $i < $users['count']; $i++){ $pr[$i]['jpegphoto'][0] = base64_encode($pr[$i]['jpegphoto'][0]);  $pr[$i]['thumbnailphoto'][0] = base64_encode($pr[$i]['thumbnailphoto'][0]); }    echo "Users: ";  print_r($pr); }
+
+    return $users;
+}
+
+
 
 
 
@@ -643,7 +655,7 @@ function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
     }
 
     function user_del($userAccount){	// kitöröl vagy letilt egy felhasználót a Nextcloud-ban
-	global $occ_path,$occ_user,$log,$dryrun;
+	    global $occ_path,$occ_user,$log,$dryrun;
         $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:info ".escp($userAccount)." --output=json \"";
         if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
         $last_login = json_decode(shell_exec($e),true)['last_seen'] ;
@@ -663,52 +675,51 @@ function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
     
     function user_info($userAccount){	// User állpot a Nextcloudban
         global $occ_path,$occ_user,$log;
-            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:info ".escp($userAccount)." --output=json \"";
-            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
-            $ret = (array)json_decode(shell_exec($e),true);
-            if ($log['verbose'] > 10 ){ print_r($ret); }
-            return $ret;
+        $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:info ".escp($userAccount)." --output=json \"";
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+        $ret = (array)json_decode(shell_exec($e),true);
+        if ($log['verbose'] > 10 ){ print_r($ret); }
+        return $ret;
     }
-
 
     function user_dis($userAccount){	// letiltja a felhasználót a Nextcloud-ban
         global $occ_path,$occ_user,$log,$dryrun;
-            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:disable ".escp($userAccount)." \"";
-            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
-            if(!$dryrun){ $ret = shell_exec($e); } else { $ret = true; }
-            if ($log['verbose'] > 11 ){ print_r($ret); }
+        $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:disable ".escp($userAccount)." \"";
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+        if(!$dryrun){ $ret = shell_exec($e); } else { $ret = true; }
+        if ($log['verbose'] > 11 ){ print_r($ret); }
     }
 
     function user_ena($userAccount){	// engedélyezi
         global $occ_path,$occ_user,$log,$dryrun;
-            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:enable ".escp($userAccount)." \"";
-            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
-            if(!$dryrun){ $ret = shell_exec($e); } else { $ret = true; }
-            if ($log['verbose'] > 11 ){ print_r($ret); }
+        $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:enable ".escp($userAccount)." \"";
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+        if(!$dryrun){ $ret = shell_exec($e); } else { $ret = true; }
+        if ($log['verbose'] > 11 ){ print_r($ret); }
     }
 
 
     function nxt_group_list() {		// Csoportok listázása a Nextcloud-ból
-            global $occ_path,$occ_user,$log;
-            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." group:list --limit=1000000 --output=json \"";  //* Jó nagy limittel dolgozzunk
-            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
-            $ret = (array)json_decode(shell_exec($e),true);
-            if ($log['verbose'] > 10 ){ print_r($ret); }
-            return $ret;
+        global $occ_path,$occ_user,$log;
+        $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." group:list --limit=1000000 --output=json \"";  //* Jó nagy limittel dolgozzunk
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+        $ret = (array)json_decode(shell_exec($e),true);
+        if ($log['verbose'] > 10 ){ print_r($ret); }
+        return $ret;
     }
     
     function nxt_user_list() {		// Felhasználók listázása a Nextcloud-ból
-            global $occ_path,$occ_user,$log;
+        global $occ_path,$occ_user,$log;
         //    $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:report | grep 'total' | sed -e 's/[^0-9]//g' | tr -d '[:blank:]\n' \"";
         //    if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
         //    $num = shell_exec($e); 
-            $num = 1000000;      //inkább kézi limit!
+        $num = 1000000;      //inkább kézi limit!
         //    $num = $num + 100; 	// Biztos-ami-biztos, a nextcloud rejtett hibái miatt...
-            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:list --limit ".escp($num)." --output=json \"";
-            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
-            $ret =  (array)json_decode(shell_exec($e),true);
-            if ($log['verbose'] > 10 ){ print_r($ret); }
-            return $ret;
+        $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:list --limit ".escp($num)." --output=json \"";
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+        $ret =  (array)json_decode(shell_exec($e),true);
+        if ($log['verbose'] > 10 ){ print_r($ret); }
+        return $ret;
     }
     
     function nxt_user_lastlogin($userAccount){ 	// legutóbbi belépés lekérdezése
@@ -1284,9 +1295,9 @@ $attr['vegzoTanev']         = 3001;
 //$rv = ld_user_add($ld, 'aaa', '', $attr);
 //print_r($rv);
 ld_group_user_add($ld, "bmrg_cloud", "aaa", "global");
-ld_group_user_del($ld, "naplos_tanar", "aaa");
-ld_group_user_del($ld, "naplos_diak", "23bbp");
-
+ld_group_user_del($ld, "naplos_tanar", "gergo112");
+ld_group_user_add($ld, "naplos_diak", "23bbp");
+print_r(ld_user_info($ld, "gergo1111"));
 
 
 ldap_close($ld);
@@ -1304,7 +1315,7 @@ die();
 
 
 
-//-------------------------------------------------------------------------------------------------------------------------------    
+ //-------------------------------------------------------------------------------------------------------------------------------    
     $ret = nxt_get_version();
     $nxt_version = $ret[1];
     if($ret[1] < 13){         //Nextcloud 13-tól támogatott
@@ -1348,7 +1359,7 @@ die();
     // group_add($cfg['mindenki_tanar']);				// A "mindenki"/tanár csoport hozzáadása
     // group_add($cfg['mindenki_diak']);				// A "mindenki"/diák csoport hozzáadása
 
-//------------------------------------------------------------------------------------------------------------------------------
+ //------------------------------------------------------------------------------------------------------------------------------
 
 // Létrehozza az új coportokat a Mayor tankörök szerint
     if ($log['verbose'] > 0 ){ echo "\n***\tCsoportok egyeztetése.\n";}
