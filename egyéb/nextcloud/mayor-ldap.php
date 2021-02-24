@@ -70,7 +70,6 @@ $cfg['ld_nxtQuota'] = "description";
 $cfg['ld_leiras'] = "description";
 $cfg['ld_iroda'] = "physicalDeliveryOfficeName";
 $cfg['ld_info'] = "info";
-$cfg['ld_groupMember'] = 'member';
 $cfg['csoport_oupfx'] = "mayor";
 
 
@@ -316,7 +315,7 @@ if (function_exists('mysqli_connect') and function_exists('iconv') and function_
 
 
 
-function ld_user_info($l, $userAccount, $attr = array()){    //Csak a fontosabb tulajdonságokkal
+function ld_user_info($l, $userAccount, $attrs = array()){    //Csak a fontosabb tulajdonságokkal
     global $cfg,$log,$ldap_user_attrs;
     if(empty($attrs)){
         $attrs = $ldap_user_attrs;
@@ -332,8 +331,11 @@ function ld_user_info($l, $userAccount, $attr = array()){    //Csak a fontosabb 
 }
 
 
-function ld_find_group($l, $groupName, $scope, $attrs){
-    global $cfg,$log;
+function ld_find_group($l, $groupName, $scope, $attrs = array()){
+    global $cfg,$log,$ldap_group_attrs;
+    if(empty($attrs)){
+        $attrs = $ldap_group_attrs;
+    }
     $ret = array();
     $dn = "";
 
@@ -360,6 +362,12 @@ function ld_find_group($l, $groupName, $scope, $attrs){
         global $cfg,$log;
         $attrs = $ret = array();
 
+
+        $attr = attr_add_defaults($attr);
+        if(!empty($fullname)                ){ $attrs['displayname'][0] = $fullname;}
+        else if(!empty($attr['fullName'])   ){ $attrs['displayname'][0] = $attr['fullName'];}
+        else                                 { $attrs['displayname'][0] = $user;}
+
         $dn = "CN=".ldap_escape($user, "", LDAP_ESCAPE_DN).",CN=Users,".$cfg['ldap_baseDn'];       //Ezt még lehetne cizellálni
 
         $attrs['objectclass'][0] = "top";                    //Alap dolgok, ami mindenképpen kell
@@ -370,12 +378,8 @@ function ld_find_group($l, $groupName, $scope, $attrs){
         $attrs['useraccountcontrol'][0] = "514";
         $attrs['accountexpires'][0] = "9223372036854775807";  // vagy "0"
         $attrs['distinguishedname'][0] = $dn;
-        $attrs[strtolower($cfg['ld_username'])][0] = $user; 
-    
-        $attr = attr_add_defaults($attr);
-        if(!empty($fullname)                ){ $attrs['displayname'][0] = $fullname;}
-        else if(!empty($attr['fullName'])   ){ $attrs['displayname'][0] = $attr['fullName'];}
-        else                                 { $attrs['displayname'][0] = $user;}
+        $attrs[strtolower($cfg['ld_username'])][0]        =   $user; 
+
         $attrs['mail'][0]                                 =   $attr['email'];
         $attrs[strtolower($cfg['ld_oId'])][0]             =   $attr['oId'];
         $attrs[strtolower($cfg['ld_employeeId'])][0]      =   $attr['employeeId']; 
@@ -455,26 +459,31 @@ function ld_group_user_add($l, $groupName, $userAccount, $scope = null){
                 $ret[0] = @ldap_mod_add($l, $group[0]['dn'], $ldif);
                 $ret[2] = ldap_errno($l);
                 $ret[3] = ldap_err2str($ret[2]);
+
+                unset($attrs);                          //Módosítási dátum frissítés
+                $attrs[strtolower($cfg['ld_info'])][0] = "(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
+                @ldap_mod_replace($l, $group[0]['dn'], $attrs);
+
                 //if ($log['verbose'] > 6 ){ echo "\nLDAP ->\t Felhasználó: [".$userAccount."] hozzáadva a: [".$groupName."]/[".$dn."] csoporthoz!\n"; }
             } else {
                 //if ($log['verbose'] > 6 ) { echo "\nLDAP ->\t Felhasználó: [".$userAccount."] már benne volt a: [".$groupName."]/[".$dn."] csoportban!\n"; }
             }
         } else if($users['count'] > 1){ //Több user
             $ret[0] = false;
-            $ret[3] = "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Több ugyanolyan felhasználó a létezik! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
+            $ret[3] = "LDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Több ugyanolyan felhasználó a létezik! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
             echo $ret[3];
         } else {    //vagy nincs user
             $ret[0] = false;
-            $ret[3] = "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Nincs ilyen felhasználó! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
+            $ret[3] = "LDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Nincs ilyen felhasználó! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
             echo $ret[3];
         }
     } else if($group['count'] > 1) { //Több csoport, 
         $ret[0] = false;
-        $ret[3] = "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Több ugyanolyan csoport található! [".$groupName."]/[".$dn."]) ********\n";
+        $ret[3] = "LDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Több ugyanolyan csoport található! [".$groupName."]/[".$dn."]) ********\n";
         echo $ret[3];
     } else { ///vagy nincs csoport
         $ret[0] = false;
-        $ret[3] = "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Csoport nem található! [".$groupName."]/[".$dn."]) ********\n";
+        $ret[3] = "LDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Csoport nem található! [".$groupName."]/[".$dn."]) ********\n";
         echo $ret[3];
     }
     return $ret;
@@ -509,6 +518,11 @@ function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
                 $ret[0] = ldap_mod_del($l, $group[0]['dn'], $ldif);
                 $ret[2] = ldap_errno($l);
                 $ret[3] = ldap_err2str($ret[2]); 
+                
+                unset($attrs);                      //Módosítási dátum frissítés
+                $attrs[strtolower($cfg['ld_info'])][0] = "(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
+                @ldap_mod_replace($l, $group[0]['dn'], $attrs);
+
                 if($ret[0] === false ){
                     $errn = ldap_errno($l);
                     echo "\nLDAP ->\t ******** LDAP Csoportból törlés hiba! (infó: {".$groupName."/".$userAccount."} [".$errn."] ".ldap_err2str($errn)." ) ********\n";
@@ -516,7 +530,7 @@ function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
             }
         }
         if(empty($ldif)){   //Nem töröltünk senkit
-            $ret[3] = "\nLDAP ->\t Felhasználó: [".$userAccount."] nincs: [".$groupName."]/[".$dn."] csoportban!\n";
+            $ret[3] = "LDAP ->\t Felhasználó: [".$userAccount."] nincs: [".$groupName."]/[".$dn."] csoportban!\n";
             if ($log['verbose'] > 7 ){ echo $ret[3]; }
         }
        
@@ -533,9 +547,14 @@ function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
                 $ret[0] = @ldap_mod_del($l, $group[0]['dn'], $ldif);
                 $ret[2] = $errn = ldap_errno($l);
                 $ret[3] = ldap_err2str($errn);
-                if ($log['verbose'] > 7 ){ echo "\nLDAP ->\t Felhasználó: [".$userAccount."] törölve a: [".$groupName."]/[".$dn."] csoportból!\n"; }
+
+                unset($attrs);  //Módosítási dátum frissítés
+                $attrs[strtolower($cfg['ld_info'])][0] = "(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
+                @ldap_mod_replace($l, $group[0]['dn'], $attrs);
+
+                //if ($log['verbose'] > 7 ){ echo "\nLDAP ->\t Felhasználó: [".$userAccount."] törölve a: [".$groupName."]/[".$dn."] csoportból!\n"; }
             } else {
-                if ($log['verbose'] > 7 ) { echo "\nLDAP ->\t Felhasználó: [".$userAccount."] nincs benne a: [".$groupName."]/[".$dn."] csoportban!\n"; }
+                //if ($log['verbose'] > 7 ) { echo "\nLDAP ->\t Felhasználó: [".$userAccount."] nincs benne a: [".$groupName."]/[".$dn."] csoportban!\n"; }
             }
         } else if($users['count'] > 1){ //Több user
             echo "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Több ugyanolyan felhasználó a létezik! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
@@ -545,10 +564,10 @@ function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
         */
     } else if($group['count'] > 1) {                            //Több csoport, 
         $ret[0] = false;
-        $ret[3] = "\nLDAP ->\t ******** LDAP Csoportból törlés hiba! (infó: Több ugyanolyan csoport található! [".$groupName."]/[".$dn."]) ********\n";
+        $ret[3] = "LDAP ->\t ******** LDAP Csoportból törlés hiba! (infó: Több ugyanolyan csoport található! [".$groupName."]/[".$dn."]) ********\n";
     } else {                                                    /// vagy nincs ilyen csoport
         $ret[0] = false;
-        $ret[3] =  "\nLDAP ->\t ******** LDAP Csoportból törlés hiba! (infó: Csoport nem található! [".$groupName."]/[".$dn."]) ********\n";
+        $ret[3] =  "LDAP ->\t ******** LDAP Csoportból törlés hiba! (infó: Csoport nem található! [".$groupName."]/[".$dn."]) ********\n";
     }
     return $ret;
 }
@@ -580,8 +599,6 @@ function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
         }
         return $ret;
     }
-
-
 
 
     function ld_group_del($l, $groupName, $scope=null){
@@ -1387,14 +1404,24 @@ $attr['quota']              = "4GB";
 $attr['vegzoTanev']         = 3001;
 
         
+echo "\nUser:\n";
+$rv = ld_user_add($ld, 'aaa', '', $attr);
+print_r($rv);
 
-//$rv = ld_user_add($ld, 'aaa', '', $attr);
-//print_r($rv);
-ld_group_add($ld, "(tk) 10.c Tééészta");
-ld_group_user_add($ld, "bmrg_cloud", "aaa", "global");
-print_r(ld_group_user_del($ld, "naplos_tanar", "gergo112"));
-ld_group_user_add($ld, "naplos_diak", "23bbp");
-print_r(ld_user_info($ld, "gergo1111"));
+echo "g add\n";
+print_r(ld_group_add($ld, "(tk) 10.c Tééészta"));
+echo "g u add\n";
+print_r(ld_group_user_del($ld, "bmrg_cloud", "aaa", "global"));
+echo "g u add\n";
+print_r(ld_group_user_del($ld, "(tk) 10.c Tééészta", "aaa", "own"));
+
+echo "g u add\n";
+print_r(ld_group_user_del($ld, "(tk) 10.c Tééészta", "23bbp", "own"));
+
+echo "g u del\n";
+print_r(ld_group_user_del($ld, "naplos_tanar", "gergo113"));
+
+//print_r(ld_user_info($ld, "gergo1111"));
 
 
 ldap_close($ld);
