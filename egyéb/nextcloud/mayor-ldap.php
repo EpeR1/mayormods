@@ -50,7 +50,7 @@ $cfg['ldap_rootBindDn'] = "CN=LDAP_ADATCSERE_ADMIN,CN=Users,DC=ad,DC=iskola,DC=h
 $cfg['ldap_rootBindPw'] = "<password>";
 $cfg['ldap_pageSize'] = 100;
 $cfg['ld_username'] = "sAMAccountName";
-$cfg['ld_oId'] = "serialNumber";
+$cfg['ld_oId'] = "telephoneNumber";  //"serialNumber";
 $cfg['ld_employeeId'] = "employeeNumber";
 $cfg['ld_osztalyJel'] = "department";
 $cfg['ld_viseltNevElotag'] = "initials";
@@ -65,6 +65,8 @@ $cfg['ld_mobil']    ="mobile";
 $cfg['ld_statusz'] = "company";
 $cfg['ld_beoszt'] = "title";
 $cfg['ld_nxtQuota'] = "description";
+$cfg['ld_iroda'] = "physicalDeliveryOfficeName";
+$cfg['ld_info'] = "info";
 
 
 
@@ -162,7 +164,7 @@ function rnescp($str){                //Escape strings
 
 
 
-if (function_exists('mysqli_connect') and function_exists('ldap_search') and version_compare(phpversion(), '5.0', '>=')) { //MySQLi (Improved) és php7  kell!
+if (function_exists('mysqli_connect') and function_exists('iconv') and function_exists('ldap_search') and version_compare(phpversion(), '5.0', '>=')) { //MySQLi (Improved) és php7  kell!
 
     function db_connect($db = ""){ 
         global $log,$cfg;
@@ -226,6 +228,7 @@ if (function_exists('mysqli_connect') and function_exists('ldap_search') and ver
     }
     // bezár: ldap_close($ldap);
 
+
     function ldap_find($ld, $base, $filt, $attr=array()){
         global $cfg, $log;
         $ret = array();
@@ -273,60 +276,109 @@ if (function_exists('mysqli_connect') and function_exists('ldap_search') and ver
     }
 
 
-    function ld_user_add($l, $user, $attr=null){
-        global $cfg,$log;
-    
-        $def['objectclass'][0] = "top";         //Alap dolgok, ami mindenképpen kell
-        $def['objectclass'][1] = "person";
-        $def['objectclass'][2] = "organizationalPerson";
-        $def['objectclass'][3] = "user";
-        $def['instancetype'][0] = "4"; 
-        $def['useraccountcontrol'][0] = "514";
-        $def['accountexpires'][0] = "9223372036854775807";  // vagy "0"
-        $def['distinguishedname'][0] = "CN=".$user.",CN=Users,".$cfg['ldap_baseDn'];
-        $def['displayname'][0] = $user; 
-        $def[strtolower($cfg['ld_username'])][0] = $user; 
-        $def[strtolower($cfg['ld_oId'])][0] = "1111";
-    
-        if(!empty($attr)){
-            $def['displayname'][0]                          =   $attr['fullName'];
-            $def['mail'][0]                                 =   $attr['email'];
-            $def[strtolower($cfg['ld_oId'])][0]             =   $attr['oId'];
-            if(!empty($attr['employeeId']      )){ $def[strtolower($cfg['ld_employeeId'])][0]      =   $attr['employeeId']; }
-            if(!empty($attr['osztalyJel']      )){ $def[strtolower($cfg['ld_osztalyJel'])][0]      =   $attr['osztalyJel']; }
-            if(!empty($attr['viseltNevElotag'] )){ $def[strtolower($cfg['ld_viseltNevElotag'])][0] =   $attr['viseltNevElotag']; }
-            if(!empty($attr['viseltCsaladinev'])){ $def[strtolower($cfg['ld_viseltCsaladinev'])][0]=   $attr['viseltCsaladinev']; }
-            if(!empty($attr['viseltUtonev']    )){ $def[strtolower($cfg['ld_viseltUtonev'])][0]    =   $attr['viseltUtonev']; }
-            if(!empty($attr['lakhelyOrszag']   )){ $def[strtolower($cfg['ld_lakhelyOrszag'])][0]   =   $attr['lakhelyOrszag']; }
-            if(!empty($attr['lakhelyHelyseg']  )){ $def[strtolower($cfg['ld_lakhelyHelyseg'])][0]  =   $attr['lakhelyHelyseg']; }
-            if(!empty($attr['lakhelyIrsz']     )){ $def[strtolower($cfg['ld_lakhelyIrsz'])][0]     =   $attr['lakhelyIrsz']; }
-            if(!empty($attr['lakHely']         )){ $def[strtolower($cfg['ld_lakHely'])][0]         =   $attr['lakHely']; }
-            if(!empty($attr['telefon']         )){ $def[strtolower($cfg['ld_telefon'])][0]         =   $attr['telefon']; }
-            if(!empty($attr['mobil']           )){ $def[strtolower($cfg['ld_mobil'])][0]           =   $attr['mobil']; }
-            if(!empty($attr['statusz']         )){ $def[strtolower($cfg['ld_statusz'])][0]         =   $attr['statusz']; }
-            if(!empty($attr['beoszt']          )){ $def[strtolower($cfg['ld_beoszt'])][0]          =   $attr['beoszt']; }
-            if(!empty($attr['quota']           )){ $def[strtolower($cfg['ld_nxtQuota'])][0]        =   $attr['quota']; }
-            $def[strtolower('telephoneNumber')][0]          =   $attr['oId'];
-            $def[strtolower('physicalDeliveryOfficeName')][0] = "MaYor-Script-Managed";
-            $def[strtolower('info')][0] = "Jogviszony kezdete: ".($attr['kezdoTanev'])."\r\nJogviszony terv. vége: ".($attr['vegzoTanev']+1)." Június\r\n\r\n(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
-            //$def[strtolower($cfg['ld_'])][0] = $attr[''];
-            unset($def['']);
-        }
+    function attr_add_defaults($inp = array()){ //Attributes tömb feltöltése alapértékekkel
+        global $cfg, $log;
+        $ovr = array();
 
-        $dn = $def['distinguishedname'][0]; //Így egyszerű
-
-        if($log['verbose'] > 7){ echo "LDAP ->\tldap_add('".$l."', '".$dn."', \$def)\n"; } if ($log['verbose'] > 11 ){ echo "Attr: "; print_r($def); }
-        if (ldap_add($l, $dn, $def)){
-            // passwd 
-            // + enable
-            //csoportokba léptetés
+        if(!empty($inp['email'])) { 
+            $ovr['email'] = $inp['email']; 
+        } else if(!empty($inp['mail'])){
+            $ovr['email'] = $inp['mail'];
         } else {
-            $errn = ldap_errno($l);
-            echo "\nLDAP ->\t ******** LDAP Felhasználó létrehozási hiba. (infó: [$errn] ".ldap_err2str($errn)."!) ********";
+            $ovr['email'] = $cfg['default_email'];   
         }
+        $def = array('mail','oId', 'employeeId', 'osztalyJel', 'viseltNevElotag', 'viseltCsaladinev','viseltUtonev', 
+                    'szuletesiHely', 'szuletesiIdo', 'lakhelyOrszag', 'lakhelyHelyseg', 'lakhelyIrsz', 'lakHely', 
+                    'telefon', 'mobil', 'statusz', 'beoszt', 'quota', 'kezdoTanev', 'vegzoTanev', 'jel', 'diakId', 
+                    'tanarId', 'beDt', 'kiDt', 'beEv', 'userAccount', 'fullName',
+                    );
+        $defo = array('oId' => "11111111111", 'quota' => $cfg['default_quota'], 'jel' => 'x', 'vegzoTanev' => -1, 'beDt' => -1,
+                    'kezdoTanev' => -1, 'diakId' => 0, 'tanarId' => 0, 'kiDt' => -1, 'beEv' => -1, 
+                    );
+        return array_merge($def, $defo, $inp, $ovr);
     }
 
 
+    function ld_user_add($l, $user, $fullname, $attr=array()){
+        global $cfg,$log;
+        $attb = $ret = array();
+
+        $attb['objectclass'][0] = "top";                    //Alap dolgok, ami mindenképpen kell
+        $attb['objectclass'][1] = "person";
+        $attb['objectclass'][2] = "organizationalPerson";
+        $attb['objectclass'][3] = "user";
+        $attb['instancetype'][0] = "4"; 
+        $attb['useraccountcontrol'][0] = "514";
+        $attb['accountexpires'][0] = "9223372036854775807";  // vagy "0"
+        $attb['distinguishedname'][0] = "CN=".ldap_escape($user, "", LDAP_ESCAPE_DN).",CN=Users,".$cfg['ldap_baseDn'];       //Ezt még lehetne cizellálni
+        $attb[strtolower($cfg['ld_username'])][0] = $user; 
+    
+        $attr = attr_add_defaults($attr);
+        if(!empty($fullname)                ){ $attb['displayname'][0] = $fullname;}
+        else if(!empty($attr['fullName'])   ){ $attb['displayname'][0] = $attr['fullName'];}
+        else                                 { $attb['displayname'][0] = $user;}
+        $attb['mail'][0]                                 =   $attr['email'];
+        $attb[strtolower($cfg['ld_oId'])][0]             =   $attr['oId'];
+        $attb[strtolower($cfg['ld_employeeId'])][0]      =   $attr['employeeId']; 
+        $attb[strtolower($cfg['ld_osztalyJel'])][0]      =   $attr['osztalyJel']; 
+        $attb[strtolower($cfg['ld_viseltNevElotag'])][0] =   $attr['viseltNevElotag']; 
+        $attb[strtolower($cfg['ld_viseltCsaladinev'])][0]=   $attr['viseltCsaladinev']; 
+        $attb[strtolower($cfg['ld_viseltUtonev'])][0]    =   $attr['viseltUtonev']; 
+        $attb[strtolower($cfg['ld_lakhelyOrszag'])][0]   =   $attr['lakhelyOrszag']; 
+        $attb[strtolower($cfg['ld_lakhelyHelyseg'])][0]  =   $attr['lakhelyHelyseg']; 
+        $attb[strtolower($cfg['ld_lakhelyIrsz'])][0]     =   $attr['lakhelyIrsz']; 
+        $attb[strtolower($cfg['ld_lakHely'])][0]         =   $attr['lakHely']; 
+        $attb[strtolower($cfg['ld_telefon'])][0]         =   $attr['telefon']; 
+        $attb[strtolower($cfg['ld_mobil'])][0]           =   $attr['mobil']; 
+        $attb[strtolower($cfg['ld_statusz'])][0]         =   $attr['statusz']; 
+        $attb[strtolower($cfg['ld_beoszt'])][0]          =   $attr['beoszt']; 
+        $attb[strtolower($cfg['ld_nxtQuota'])][0]        =   $attr['quota']; 
+        $attb[strtolower($cfg['ld_iroda'])][0]           = "MaYor-Script-Managed";
+        $attb[strtolower($cfg['ld_info'])][0] = "Jogviszony kezdete: ".($attr['kezdoTanev'])."\r\nJogviszony terv. vége: ".($attr['vegzoTanev']+1)." Június\r\n\r\n(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
+        //$attb[strtolower($cfg['ld_'])][0] = $attr[''];
+        unset($attb['']);   //Üresek kipucolása
+        
+        $dn = $attb['distinguishedname'][0]; //Így egyszerű
+
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_add('".$l."', '".$dn."', \$attb)\n"; } if ($log['verbose'] > 11 ){ echo "Attr: "; print_r($attb); }
+        if($ret[0] = ldap_add($l, $dn, $attb)){
+            unset($attb);                           //Régiek törlése
+            $ret[2] = ldap_errno($l);
+            $ret[3] = ldap_err2str($errn);
+            $ret[1] = gen_password(16);   //Jelszó
+            $attb[strtolower('unicodePwd')][0] =  iconv( "UTF-8", "UTF-16LE", "\"".$ret[1]."\"" );
+            if($log['verbose'] > 7){ echo "LDAP ->\tldap_mod_replace('".$l."', '".$dn."', \$attb)\n"; } if ($log['verbose'] > 11 ){ echo "Attr: "; print_r($attb); }
+            
+            if(!ldap_mod_replace ($l, $dn, $attb )){        //Jelszó beállítása
+                $ret[2] = $errn = ldap_errno($l);
+                echo "\nLDAP ->\t ******** LDAP Felhasználó jelszócsere hiba. (infó: [$errn] ".ldap_err2str($errn)."!) ********\n";
+                $ret[3] = ldap_err2str($errn);
+                return $ret;
+            } 
+            unset($attb);                                   //User Engedélyezése
+            $attb[strtolower('userAccountControl')][0] = 512;   
+            if(!ldap_mod_replace ($l, $dn, $attb )){
+                $ret[2] = $errn = ldap_errno($l);
+                echo "\nLDAP ->\t ******** LDAP Felhasználó jelszócsere hiba. (infó: [$errn] ".ldap_err2str($errn)."!) ********\n";
+                $ret[3] = ldap_err2str($errn);
+                return $ret;
+            }
+        } else {
+            $ret[2] = $errn = ldap_errno($l);
+            echo "\nLDAP ->\t ******** LDAP Felhasználó létrehozási hiba. (infó: [$errn] ".ldap_err2str($errn)."!) ********\n";
+            $ret[3] = ldap_err2str($errn);
+        }
+        return $ret;
+    }
+    
+
+function ld_group_user_add(){
+
+$group_name = "CN=MyGroup,OU=Groups,DC=example,DC=com";
+$group_info['member'] = $dn; // User's DN is added to group's 'member' array
+ldap_mod_add($connect,$group_name,$group_info);
+
+}
 
 
     function script_install($l){
@@ -1095,10 +1147,10 @@ $attr['vegzoTanev']         = 3001;
 
         
 
-ld_user_add($ld, 'abcd', $attr);
+ld_user_add($ld, 'abcd', '', $attr);
 
 
-
+ 
 
 
 
@@ -1475,7 +1527,7 @@ die();
     if ($log['verbose'] > 0 ){ echo "\n(Runtime: ".$t_run." min.)\nkész.\n";} //endline
  
 } else {
-    echo "\n\n******** Legalább PHP5, php-mysql(i) és php-ldap szükséges! ********\n\n";
+    echo "\n\n******** Legalább PHP5, php-mysql, php-iconv, php-ldap szükséges! ********\n\n";
 }
  
 
