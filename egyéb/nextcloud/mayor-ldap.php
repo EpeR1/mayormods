@@ -1416,10 +1416,10 @@ echo "g u add\n";
 print_r(ld_group_user_del($ld, "(tk) 10.c Tééészta", "aaa", "own"));
 
 echo "g u add\n";
-print_r(ld_group_user_del($ld, "(tk) 10.c Tééészta", "23bbp", "own"));
+print_r(ld_group_user_del($ld, "(tk) 10.c Tééészta", "23bbmp", "own"));
 
 echo "g u del\n";
-print_r(ld_group_user_del($ld, "naplos_tanar", "gergo113"));
+//print_r(ld_group_user_del($ld, "naplos_tanar", "gergo113"));
 
 //print_r(ld_user_info($ld, "gergo1111"));
 
