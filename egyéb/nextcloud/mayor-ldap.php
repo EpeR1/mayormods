@@ -71,6 +71,7 @@ $cfg['ld_leiras'] = "description";
 $cfg['ld_iroda'] = "physicalDeliveryOfficeName";
 $cfg['ld_info'] = "info";
 $cfg['csoport_oupfx'] = "mayor";
+$cfg['manage_users'] = true;
 
 
 $occ_path = "/var/www/nextcloud/";
@@ -90,9 +91,9 @@ $pwchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_?";
 $ldap_group_attrs = array('objectCalss', 'samaccountname', 'cn', 'member', 'name', 'description', 'info', 'mail', 'gidNumber', 'samaccounttype', 'instancetype', );
 $ldap_user_attrs  = array('sn', 'serialNumber', 'c', 'l', 'st', 'street', 'title', 'description', 'postalAddress', 'postalCode', 'postOfficeBox', 'physicalDeliveryOfficeName',
                             'telephoneNumber', 'facsimileTelephoneNumber', 'givenName', 'initials', 'otherTelephone', 'info', 'memberOf', 'otherPager', 'co', 'department',
-                            'company', 'streetAddress', 'otherHomePhone', 'wWWHomePage', 'employeeNumber', 'employeeType', 'personalTitle', 'homePostalAddress', 'name',
-                            'countryCode', 'employeeID', 'homeDirectory', 'comment', 'sAMAccountName', 'division', 'otherFacsimileTelephoneNumber', 'otherMobile',
-                            'primaryTelexNumber', 'otherMailbox', 'ipPhone', 'otherIpPhone', 'url', 'uid', 'mail', 'roomNumber', 'homePhone', 'mobile', 'pager', 
+                            'company', 'streetAddress', 'otherHomePhone', 'wWWHomePage', 'employeeNumber', 'employeeType', 'personalTitle', 'homePostalAddress', 'name','accountExpires',
+                            'countryCode', 'employeeID', 'homeDirectory', 'comment', 'sAMAccountName', 'division', 'otherFacsimileTelephoneNumber', 'otherMobile', 'lastLogon',
+                            'primaryTelexNumber', 'otherMailbox', 'ipPhone', 'otherIpPhone', 'url', 'uid', 'mail', 'roomNumber', 'homePhone', 'mobile', 'pager', 'lastLogonTimestamp',
                             'jpegPhoto', 'departmentNumber', 'middleName', 'thumbnailPhoto', 'preferredLanguage', 'uidNumber', 'gidNumber', 'unixHomeDirectory', 'loginShell'
                         );   
 
@@ -358,7 +359,7 @@ function ld_find_group($l, $groupName, $scope, $attrs = array()){
 }
 
 
-    function ld_user_add($l, $user, $fullname, $attr=array()){
+    function ld_user_add($l, $userAccount, $fullname, $attr=array()){
         global $cfg,$log;
         $attrs = $ret = array();
 
@@ -366,9 +367,9 @@ function ld_find_group($l, $groupName, $scope, $attrs = array()){
         $attr = attr_add_defaults($attr);
         if(!empty($fullname)                ){ $attrs['displayname'][0] = $fullname;}
         else if(!empty($attr['fullName'])   ){ $attrs['displayname'][0] = $attr['fullName'];}
-        else                                 { $attrs['displayname'][0] = $user;}
+        else                                 { $attrs['displayname'][0] = $userAccount;}
 
-        $dn = "CN=".ldap_escape($user, "", LDAP_ESCAPE_DN).",CN=Users,".$cfg['ldap_baseDn'];       //Ezt még lehetne cizellálni
+        $dn = "CN=".ldap_escape($userAccount, "", LDAP_ESCAPE_DN).",CN=Users,".$cfg['ldap_baseDn'];       //Ezt még lehetne cizellálni
 
         $attrs['objectclass'][0] = "top";                    //Alap dolgok, ami mindenképpen kell
         $attrs['objectclass'][1] = "person";
@@ -378,7 +379,7 @@ function ld_find_group($l, $groupName, $scope, $attrs = array()){
         $attrs['useraccountcontrol'][0] = "514";
         $attrs['accountexpires'][0] = "9223372036854775807";  // vagy "0"
         $attrs['distinguishedname'][0] = $dn;
-        $attrs[strtolower($cfg['ld_username'])][0]        =   $user; 
+        $attrs[strtolower($cfg['ld_username'])][0]        =   $userAccount; 
 
         $attrs['mail'][0]                                 =   $attr['email'];
         $attrs[strtolower($cfg['ld_oId'])][0]             =   $attr['oId'];
@@ -387,7 +388,7 @@ function ld_find_group($l, $groupName, $scope, $attrs = array()){
         $attrs[strtolower($cfg['ld_viseltNevElotag'])][0] =   $attr['viseltNevElotag']; 
         $attrs[strtolower($cfg['ld_viseltCsaladinev'])][0]=   $attr['viseltCsaladinev']; 
         $attrs[strtolower($cfg['ld_viseltUtonev'])][0]    =   $attr['viseltUtonev']; 
-        $attrs[strtolower($cfg['ld_lakhelyOrszag'])][0]   =   $attr['lakhelyOrszag']; 
+        $attrs[strtolower($cfg['ld_lakhelyOrszag'])][0]   =   @$attr['lakhelyOrszag']; 
         $attrs[strtolower($cfg['ld_lakhelyHelyseg'])][0]  =   $attr['lakhelyHelyseg']; 
         $attrs[strtolower($cfg['ld_lakhelyIrsz'])][0]     =   $attr['lakhelyIrsz']; 
         $attrs[strtolower($cfg['ld_lakHely'])][0]         =   $attr['lakHely']; 
@@ -399,7 +400,10 @@ function ld_find_group($l, $groupName, $scope, $attrs = array()){
         $attrs[strtolower($cfg['ld_iroda'])][0]           = "MaYor-Script-Managed";
         $attrs[strtolower($cfg['ld_info'])][0] = "Jogviszony kezdete: ".($attr['kezdoTanev'])."\r\nJogviszony terv. vége: ".($attr['vegzoTanev']+1)." Június\r\n\r\n(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
         //$attrs[strtolower($cfg['ld_'])][0] = $attr[''];
-        unset($attrs['']);   //Üresek kipucolása
+
+        foreach($attrs as $key => $val){                    //Üresek kipucolása
+            if($key == "" or $val[0] == ""){ unset($attrs[$key]); }
+        }
         $ret[4] = $dn;
         $ret[5] = $attrs;
 
@@ -435,6 +439,64 @@ function ld_find_group($l, $groupName, $scope, $attrs = array()){
     }
     
 
+
+    function ld_user_del($l, $userAccount){
+        global $cfg, $log;
+        $ret = array();
+        $attrs = array(strtolower($cfg['ld_username']), 'lastLogonTimestamp', 'samaccountname', 'physicalDeliveryOfficeName', 'displayName', 'cn');
+
+        $user = ld_user_info($l, $userAccount, $attrs);
+        if ($log['verbose'] > 0 ){ echo "\$user = "; print_r($user); }
+
+        for($i = 0; $i < $user['count']; $i++){        //Az összeset, ha több? lenne.
+            if($user[$i][strtolower($cfg['ld_username'])][0] == $userAccount and !in_array($userAccount, $cfg['kihagy']) and $user[$i]['physicaldeliveryofficename'][0] == "MaYor-Script-Managed" ){ //Biztonság kedvéért 
+                
+                if(!empty($user[$i][strtolower('lastLogonTimestamp')])  /*and $user[$i][strtolower('lastLogonTimestamp')][0] != "0"*/ ){   //Ha egyszer már belépett, letiltja
+                
+                    unset($attrs);                          //Letiltás
+                    $attrs['useraccountcontrol'][0] = "514";
+                    $ret[0] = ldap_mod_replace($l, $user[$i]['dn'], $attrs);
+                    $ret[4] = $user[$i]['dn'];
+                    $ret[2] = ldap_errno($l);
+                    $ret[3] = ldap_err2str($ret[2]);
+                    $ret[5] = $attrs;
+ 
+                } else {                                                //Egyébként törli is
+                    $ret[0] = @ldap_delete($l, $user[$i]['dn']);
+                    $ret[4] = $user[$i]['dn'];
+                    $ret[2] = ldap_errno($l);
+                    $ret[3] = ldap_err2str($ret[2]);
+                }
+            } else { //Nem nyúl hozzá
+                echo "\nNem nyúl hozzá!\n";
+            }
+        }
+        if($i == 0){
+            $ret[3] =  "LDAP ->\t ******** LDAP Felhasználó törlés hiba! (infó: FElhasználó nem található! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
+        }
+        return $ret;
+
+    }
+
+/*
+    function user_del($userAccount){	// kitöröl vagy letilt egy felhasználót a Nextcloud-ban
+	    global $occ_path,$occ_user,$log,$dryrun;
+        $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:info ".escp($userAccount)." --output=json \"";
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+        $last_login = json_decode(shell_exec($e),true)['last_seen'] ;
+        if($last_login == "1970-01-01T00:00:00+00:00" ){	
+            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:delete ".escp($userAccount)." \"";		// Ha még soha nem lépett be
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+            if(!$dryrun){ $ret = shell_exec($e); } else { $ret = true; }											// akkor törölhető
+            if ($log['verbose'] > 11 ){ print_r($ret); }
+        } else {
+            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:disable ".escp($userAccount)." \"";
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+            if(!$dryrun){ $ret = shell_exec($e); } else { $ret = true; }											// különben csak letiltja
+            if ($log['verbose'] > 11 ){ print_r($ret); }
+        }      
+    }
+*/
 
 function ld_group_user_add($l, $groupName, $userAccount, $scope = null){
     global $cfg,$log,$ldap_group_attrs,$ldap_user_attrs;
@@ -627,7 +689,7 @@ function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
     }
 
 
- function ld_user_del(){}
+
  function ld_user_set(){}
  function ld_user_enable(){}
  function ld_user_disable(){}
@@ -635,7 +697,7 @@ function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
  function ld_user_list(){}
  function ld_group_list(){}
  function ld_user_lastlogin(){}
- 
+
  function ld_ou_add(){}
  function ld_ou_del(){}
 
@@ -1393,9 +1455,9 @@ $attr['osztalyJel']         = "12.c";
 $attr['viseltNevElotag']    = "Msgr.";
 $attr['viseltCsaladinev']   = "Teszt";
 $attr['viseltUtonev']       = "Elek";
-$attr['lakhelyOrszag']      = "Magyarország";
+//$attr['lakhelyOrszag']      = "Magyarország";
 $attr['lakhelyHelyseg']     = "Pilisborosjenő";
-$attr['lakhelyIrsz']        = "1234";
+$attr['lakhelyIrsz']        = "";
 $attr['lakHely']            = "Boros utca 19.";
 $attr['telefon']            = "1234567";
 $attr['mobil']              = "06700000000";
@@ -1406,13 +1468,13 @@ $attr['vegzoTanev']         = 3001;
 
         
 echo "\nUser:\n";
-$rv = ld_user_add($ld, 'aaa', '', $attr);
+$rv = ld_user_add($ld, 'bbb', '', $attr);
 print_r($rv);
 
 echo "g add\n";
 print_r(ld_group_add($ld, "(tk) 10.c Tééészta"));
 echo "g u add\n";
-print_r(ld_group_user_del($ld, "bmrg_cloud", "aaa", "global"));
+print_r(ld_group_user_add($ld, "bmrg_cloud", "bbb", "global"));
 echo "g u add\n";
 print_r(ld_group_user_add($ld, "(tk) 10.c Tééészta", "aaa", "own"));
 
@@ -1422,7 +1484,10 @@ print_r(ld_group_user_add($ld, "(tk) 10.c Tééészta", "23bbmp", "own"));
 echo "g del\n";
 print_r(ld_group_del($ld, "(tk) 10.c Tééészta", ""));
 
-//print_r(ld_user_info($ld, "gergo1111"));
+print_r(ld_user_info($ld, "bbb"));
+
+echo "u del\n";
+print_r(ld_user_del($ld, "gergo111"));
 
 
 ldap_close($ld);
