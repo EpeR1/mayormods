@@ -283,7 +283,7 @@ if (function_exists('mysqli_connect') and function_exists('iconv') and function_
                 }
             } while (!empty($cookie));
         }
-        if ($log['verbose'] > 11 ){ $pr = $ret; for($i = 0; $i < $pr['count']; $i++){ $pr[$i]['jpegphoto'][0] = base64_encode($pr[$i]['jpegphoto'][0]);  $pr[$i]['thumbnailphoto'][0] = base64_encode($pr[$i]['thumbnailphoto'][0]);} print_r($pr);}
+        if ($log['verbose'] > 11 ){ $pr = $ret; for($i = 0; $i < $pr['count']; $i++){ $pr[$i]['jpegphoto'][0] = @base64_encode(@$pr[$i]['jpegphoto'][0]);  $pr[$i]['thumbnailphoto'][0] = @base64_encode(@$pr[$i]['thumbnailphoto'][0]);} print_r($pr);}
         if($res !== False){
             ldap_free_result($res);
         }
@@ -614,27 +614,28 @@ function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
 
         for($i = 0; $i < $group['count']; $i++){
             if($group[$i][strtolower($cfg['ld_groupname'])][0] == $groupName){ //Biztonság kedvéért 
-                $ret[0][$i] = ldap_delete($l, $group[$i]['dn']);
-                $ret[4][$i] = $group[$i]['dn'];
-                $ret[2][$i] = ldap_errno($l);
-                $ret[3][$i] = ldap_err2str($ret[2]);
+                $ret[0] = ldap_delete($l, $group[$i]['dn']);
+                $ret[4] = $group[$i]['dn'];
+                $ret[2] = ldap_errno($l);
+                $ret[3] = ldap_err2str($ret[2]);
             }
+        }
+        if($i == 0){
+            $ret[3] =  "LDAP ->\t ******** LDAP Csoport törlés hiba! (infó: Csoport nem található! [".$groupName."]/[".$rv[4]."]) ********\n";
         }
         return $ret;
     }
 
 
-
-
-
+ function ld_user_del(){}
  function ld_user_set(){}
  function ld_user_enable(){}
  function ld_user_disable(){}
- function ld_user_del(){}
  
  function ld_user_list(){}
  function ld_group_list(){}
  function ld_user_lastlogin(){}
+ 
  function ld_ou_add(){}
  function ld_ou_del(){}
 
@@ -1413,13 +1414,13 @@ print_r(ld_group_add($ld, "(tk) 10.c Tééészta"));
 echo "g u add\n";
 print_r(ld_group_user_del($ld, "bmrg_cloud", "aaa", "global"));
 echo "g u add\n";
-print_r(ld_group_user_del($ld, "(tk) 10.c Tééészta", "aaa", "own"));
+print_r(ld_group_user_add($ld, "(tk) 10.c Tééészta", "aaa", "own"));
 
 echo "g u add\n";
-print_r(ld_group_user_del($ld, "(tk) 10.c Tééészta", "23bbmp", "own"));
+print_r(ld_group_user_add($ld, "(tk) 10.c Tééészta", "23bbmp", "own"));
 
-echo "g u del\n";
-//print_r(ld_group_user_del($ld, "naplos_tanar", "gergo113"));
+echo "g del\n";
+print_r(ld_group_del($ld, "(tk) 10.c Tééészta", ""));
 
 //print_r(ld_user_info($ld, "gergo1111"));
 
