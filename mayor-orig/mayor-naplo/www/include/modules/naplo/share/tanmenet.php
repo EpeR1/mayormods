@@ -165,7 +165,7 @@
 	$W = array();
 	if ($SET['jovahagyva']===true) $W[] = " AND statusz='publikus'";
 
-	$q = "SELECT tankorId, tanmenetId FROM tanmenetTankor LEFT JOIN tanmenet USING (tanmenetId) WHERE tankorId IN (".implode(',', array_fill(0, count($tankorIds), '%u')).") AND tanev=%u".implode($W,' ');
+	$q = "SELECT tankorId, tanmenetId FROM tanmenetTankor LEFT JOIN tanmenet USING (tanmenetId) WHERE tankorId IN (".implode(',', array_fill(0, count($tankorIds), '%u')).") AND tanev=%u".implode(' ',$W);
 	$tankorIds[] = $tanev;
 	return db_query($q, array('fv' => 'getTanmenetByTankorIds', 'modul' => 'naplo_intezmeny', 'result' => 'keyvaluepair', 'values' => $tankorIds));
 

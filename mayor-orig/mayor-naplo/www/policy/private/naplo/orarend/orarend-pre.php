@@ -210,7 +210,7 @@
 	} else {
 	    $TANKOROK = $ADAT['orarend']['tankorok'];
 	}	    
-	if (count($TANKOROK)>0) $ADAT['tankorok'] = getTankorAdatByIds($TANKOROK);
+	if (is_array($TANKOROK) && count($TANKOROK)>0) $ADAT['tankorok'] = getTankorAdatByIds($TANKOROK);
 
 	/* tankörlétszámok */
 	if (is_array($ADAT['tankorok'])) foreach ($ADAT['tankorok'] as $_tankorId =>$_T) {

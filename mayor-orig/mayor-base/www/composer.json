@@ -1,0 +1,17 @@
+{
+    "name": "mayor/mayor",
+    "description": "MaYoR elektronikus napló",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "MaYoR Support",
+            "email": "support@mayor.hu"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "^1.25",
+        "rollbar/rollbar": "^1",
+        "sentry/sentry": "^1.0"
+    }
+}

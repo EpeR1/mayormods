@@ -1,8 +1,6 @@
 <?php
 /*
     Modules: base/session
-
-    UNTESTED!!!!
 */
 
     function ldapCreateAccount(

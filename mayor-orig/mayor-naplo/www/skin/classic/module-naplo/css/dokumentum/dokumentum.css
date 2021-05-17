@@ -1,0 +1,16 @@
+      h1.dokumentumLista { text-align:center; }
+        span.dokumentumMegjegyzes { padding-left: 0.5em; font-size: x-small; }
+        table.dokumentumLista {margin-top: 2em; margin-bottom:4em; }
+        table.dokumentumLista thead tr th { background-color: #eee; padding: 10px 10px;}
+        table.dokumentumLista tbody tr th { background-color: #eee; padding: 10px 10px;}
+    table.dokumentumLista div.inline-block {display: inline-block; padding:4px 10px;}
+    table.dokumentumLista tr td a { color: #444; padding-left: 1em;}
+    table.dokumentumLista tr td:hover a { color: #111; }
+    table.dokumentumLista tr td a:hover { text-decoration: underline; color: cornflowerblue;}
+
+    table.dokumentumLista tbody tr.private th { background-color: cornflowerblue; color:white; }
+    table.dokumentumLista tbody tr.private td span.icon-lock { color: cornflowerblue; margin-left: 1em; }
+
+
+    table.dokumentumLista tbody tr td span.material-icons { display: inline-block; font-size:12px;padding-right:2px; color: white; }    
+    table.dokumentumLista tbody tr td:hover span.material-icons { display: inline-block; font-size:12px;padding-right:2px; color: #444; }    

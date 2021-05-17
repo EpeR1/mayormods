@@ -4,7 +4,6 @@
     define('_FILESELECTTITLE','A tanárok adatainak frissítése');
 
 
-
     define('_TANAR_ALAPADATAI','Tanár adatai (alap)');
     define('_TANAR_SZULETESI_ADATAI','Születési adatok');
     define('_UJ_TANAR','Új tanár felvétele');
@@ -47,6 +46,8 @@
     define('_TITULUS','Titulus');
     define('_TITULUSROVID','Titulus röviden');
     define('_EMAIL','Email');
+    define('_ELERHETOSEG','Eléthetőség (publikus)');
+    define('_KRETANEV','Kréta név');
 
     define('_TOVABBKEPZES_FORDULO_DT','A továbbképzési ciklus vége');
     define('_TOVABBKEPZES_FORDULO_DT_HELP','A továbbképzési ciklus végét jelző dátum. A dátum éve a hétéves ciklus mindenkori utolsó évét jelzi. Lásd még: továbbképzések');

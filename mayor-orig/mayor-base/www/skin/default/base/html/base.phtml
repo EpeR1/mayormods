@@ -180,7 +180,7 @@ function ajaxUpdaterForm($id, $url, $params, $method, $forEcho=false) {
 
     $t = '<form method="'.$method.'" action="'.href($url.'&toSkin='.$skin).'" class="onLoadUpdate" id="'.$id.'">'."\n";
     if ($_SESSION['mayorToken']!='') $t .= '<input class="mayorToken" type="hidden" name="mayorToken" value="'.$_SESSION['mayorToken'].'" />';
-    foreach ($params as $name => $value) $t .= '<input type="hidden" name="'.$name.'" value="'.$value.'" />'."\n";
+    if (is_array($params)) foreach ($params as $name => $value) $t .= '<input type="hidden" name="'.$name.'" value="'.$value.'" />'."\n";
     $t .= '</form>';
     if ($forEcho) return $t;
     else echo $t;

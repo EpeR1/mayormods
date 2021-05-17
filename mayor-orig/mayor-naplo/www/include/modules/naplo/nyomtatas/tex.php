@@ -640,7 +640,7 @@ $return .= '% ------------------------------------------------------------- %
                                     $pluszHIANYZASOK[ $H['ora'][$k] ] .= $k.'.';
                                 }
                             }
-                            while (list($key,$val) = each($pluszHIANYZASOK)) {
+			    foreach($pluszHIANYZASOK as $key=>$val) {
                                 $return .= ' '.$key.':'.$val;
                             }
                         } else { // nem hiányzott, csak késett

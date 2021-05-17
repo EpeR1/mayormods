@@ -23,7 +23,7 @@ function changeMyPassword($userAccount, $userPassword, $newPassword, $toPolicy =
 	if ($ds) {
 		$b_ok = ldap_bind($ds,$userDn,$userPassword);
 		if ($b_ok) {
-			$info['userPassword'][0] = '{crypt}' . crypt($newPassword);
+			$info['userPassword'][0] = '{crypt}' . crypt($newPassword, __SALTVALUE);
 			// Ezekre nincs jogosultsága a felhasználónak, nem változnak:
 			//         _SHADOWMIN, _SHADOWMAX, _SHADOWWARNING, _SHADOWINACTIVE
 			$info['shadowlastchange'][0] = $shadowLastChange;
@@ -69,7 +69,7 @@ function changePassword($userAccount, $newPassword, $toPolicy = '') {
 	if ($ds) {
 		$b_ok = ldap_bind($ds,_USERDN,_USERPASSWORD);
 		if ($b_ok) {
-			$info['userPassword'][0] = '{crypt}' . crypt($newPassword);
+			$info['userPassword'][0] = '{crypt}' . crypt($newPassword, __SALTVALUE);
 			// Ezekre nincs jogosultsága a felhasználónak, nem változnak:
 			//         _SHADOWMIN, _SHADOWMAX, _SHADOWWARNING, _SHADOWINACTIVE
 			$info['shadowlastchange'][0] = $shadowLastChange;

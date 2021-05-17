@@ -99,7 +99,7 @@
 			    if (!in_array($ADAT['orarend']['napok'][$nap]['csengetesiRendTipus'],array('normál',''))) $aznapErintettNap['megjegyzes'][] = $ADAT['orarend']['napok'][$nap]['csengetesiRendTipus'].' csengetés';
 
 			    echo '<span class="napLeiras" title="'.$ADAT['orarend']['napok'][$nap]['dt'].'/'.$ADAT['orarend']['napok'][$nap]['het'].'">';
-			    echo (count($aznapErintettNap['megjegyzes'])==0) ? $aHetNapjai[($nap-1)] : implode('; ',array_unique($aznapErintettNap['megjegyzes']));
+			    echo (!is_array($aznapErintettNap['megjegyzes']) || count($aznapErintettNap['megjegyzes'])==0) ? $aHetNapjai[($nap-1)] : implode('; ',array_unique($aznapErintettNap['megjegyzes']));
 			    echo '</span>';
 
 			    if ($ADAT['orarend']['napok'][$nap]['dt']!='') {
@@ -129,7 +129,7 @@
     		echo '</tr>';
 		echo '</thead>'."\n";
 
-		if (__ALLOWSET===true) {
+		if (defined('__ALLOWSET') && __ALLOWSET===true) {
 		    $_footclass = ($ADAT['publikusOrarend']) ? 'publikus' : 'nempublikus';
 		    echo '<tfoot class="'.$_footclass.'">';
 		    echo '<tr><th colspan="'.($ADAT['hetiMaxNap']+1).'">';
@@ -158,7 +158,8 @@
 			    $_ma_class = ($nap==date('w') && $ADAT['orarend']['napok'][$nap]['dt']==date('Y-m-d')) ? 'ma': '';
 			    echo '<td class="jegyzetContainer" data-dt="'.$dt.'" data-napindex="'.$nap.'" class="'.$_ma_class.'">';
 				//dump($ADAT['dolgozat']['tervezett'][$dt]);
-				for ($d=0; $d<count($ADAT['dolgozat']['tervezett'][$dt]); $d++) {
+				if (is_array($ADAT['dolgozat']['tervezett'][$dt])) {
+				  for ($d=0; $d<count($ADAT['dolgozat']['tervezett'][$dt]); $d++) {
 				    $_dolgozatId = $ADAT['dolgozat']['tervezett'][$dt][$d];
 				    echo '<div class="dolgozat dolgozatAdat" data-dolgozatid="'.$_dolgozatId.'">';
 				    for ($t=0; $t<count($ADAT['dolgozat'][$_dolgozatId]['tankor']); $t++) {
@@ -168,8 +169,10 @@
 				    echo '<br/>'.$ADAT['dolgozat'][$_dolgozatId]['dolgozatNev'];
 				    echo '</div>';
 				    // if (count($ADAT['dolgozat']['tervezett'][$dt])>$d+1) echo '<hr/>';
+				  }
 				}
-				for ($d=0; $d<count($ADAT['jegyzet']); $d++) {
+				if (is_array($ADAT['jegyzet'])) {
+				  for ($d=0; $d<count($ADAT['jegyzet']); $d++) {
 				    if ($ADAT['jegyzet'][$d]['dt']==$dt) {
 					$_JEGYZET = $ADAT['jegyzet'][$d];
 					$_jegyzetId = $_JEGYZET['jegyzetId'];
@@ -186,6 +189,7 @@
 					    } // erre még nincs felkészítve a jegyzet.get
 					echo '</div>';
 				    }
+				  }
 				}
 
 				//for ($d=0; $d<count($ADAT['hazifeladat'][$dt]); $d++) {
@@ -245,6 +249,7 @@
 			    echo '<td class="csr '.$_eppTartClass.' '.$_ma_class.'" id="tdid_'.$het.'_'.$nap.'_'.$ora.'" data-napindex="'.$nap.'" data-oraindex="'.$ora.'">';
 				$het = 0;
 				$ORARENDI = array();
+				if (!is_array($T[$nap][$ora]['orak'])) $T[$nap][$ora]['orak'] = array();
 				for($i=0; $i<count($T[$nap][$ora]['orak']); $i++) {
 				    $_T = $T[$nap][$ora]['orak'][$i];
 				    // itt a MAI naphoz viszonyítjuk, holott lehet hogy inkább a refDt-hez kéne. Megfontolandó.

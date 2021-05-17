@@ -46,7 +46,7 @@
 	if ($subdir!='') {
     	    foreach (array('jpg') as $ext) {
         	$img = $Id.'.'.$ext;
-        	if (@file_exists(_DOWNLOADDIR.'/'._POLICY.'/naplo/face/'.$subdir.'/'.$img)) {
+        	if (file_exists(_DOWNLOADDIR.'/'._POLICY.'/naplo/face/'.$subdir.'/'.$img)) {
         	    $file = 'index.php?policy='._POLICY.'&sessionID='._SESSIONID.'&page=session&f=download&download='.sha1($Id).'&dir=naplo/face/'.$subdir.'&file='.$img;
         	    $s = '<div class="arckep--container '.$tipus.' '.$extraClass.'" '.$extraHtmlAttrs.' style="width: '.$height.'px;height: '.$height.'px;"><img src="'.$file.'" alt="'.$Id.'" '.$extraHtmlAttrs.' /></div>';
 		    if ($return===true) {

@@ -36,7 +36,7 @@
             	    echo '<input type="password" id="userPassword"  accesskey="p" tabindex="2" name="userPassword" maxlength="20" placeholder="'._PASSWORD.'" value="" />'."\n";
 
 
-		if (intval(_MAYORAUTHRESULT)>0 || (defined('_FORCE_LOGIN_POLICY_SELECT') && _FORCE_LOGIN_POLICY_SELECT===true)) {
+		if ((defined('_MAYORAUTHRESULT') && intval(_MAYORAUTHRESULT)>0) || (defined('_FORCE_LOGIN_POLICY_SELECT') && _FORCE_LOGIN_POLICY_SELECT===true)) {
                     echo '<select class="pp" name="policyOrderIndex">'."\n";
 		    //$_SEL = array($toPolicy => ' selected="selected" ');
             	    echo '<option value="0">'._LOGIN_ALL_AUTH_LEVEL.'</option>';

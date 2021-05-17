@@ -17,13 +17,15 @@
 	$d = $r[$i];
 	if (defined('_DEVEL') && _DEVEL===true) $d['email'] = 'konczy+test@gmail.com'; // over
 	$TOLDTBYUSER[$d['naploTipus']][$d['naploId']] = ($d['utolsoEmailDt']=='') ? $_TANEV['kezdesDt'] : $d['utolsoEmailDt']; // setDt
-	if (!in_array($d['naploId'],$USER[$d['naploTipus']])) $USER[$d['naploTipus']][] = $d['naploId'];
-	$ADAT['feliratkozas'][$d['naploTipus']][$d['naploId']][] = array(
-	    'userAccount'=>$d['userAccount'], 
-	    'policy'=>$d['policy'], 
-	    'email'=>$d['email'], 
-	    'setDt'=> $refDt
-	);
+	if (is_array($USER[$d['naploTipus']])) {
+	    if (!in_array($d['naploId'],$USER[$d['naploTipus']])) $USER[$d['naploTipus']][] = $d['naploId'];
+	    $ADAT['feliratkozas'][$d['naploTipus']][$d['naploId']][] = array(
+		'userAccount'=>$d['userAccount'], 
+		'policy'=>$d['policy'], 
+		'email'=>$d['email'], 
+		'setDt'=> $refDt
+	    );
+	}
     }
 
     // Megszorítás: egy naplóbeli entitás utolsoEmailDt-je együtt kell, hogy mozogjon ebben a feldolgozási rendszerben.

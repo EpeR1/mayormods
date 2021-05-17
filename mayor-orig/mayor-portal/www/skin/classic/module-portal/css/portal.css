@@ -71,10 +71,17 @@
     div.egyHirmeta a { color: #aaa; border-bottom: dotted 1px #bbb}
     div.egyHirmeta a:hover { color: #444; border-bottom: solid 1px #bbb}
 
-    h2.hirKategoriaSelected { text-align: center; padding-left:22px; padding-right:22px; color: #7d96a0 ; text-decoration: underline solid #eee; font-weight:100; letter-spacing:2px; font-size: 24px; font-variant:small-caps}
+    h2.hirKategoriaSelected { text-align: center; padding-left:22px; padding-right:22px; 
+/*color: lightred;*/
+/*text-decoration: underline solid #eee; */
+font-weight:100; letter-spacing:2px; font-size: 24px; font-variant:small-caps;
+}
+    
+    h2.hirKategoriaSelected span { background-color: #ffdb03; color: #154733; padding-left:4px; padding-right:4px; border-bottom: solid 1px #154733;}
     h2.hirKategoriaSelected a  { display:none; color: #d64161; padding-left: 6px; font-size:14px;}
-    h2.hirKategoriaSelected:hover { padding-right:0px;}
+    h2.hirKategoriaSelected:hover { padding-right:0px; }
     h2.hirKategoriaSelected:hover a { display: inline-block;}
+    h2.hirKategoriaSelected:hover a:hover { color: darkred;}
 
 div.egyHir:after {
   clear: both;

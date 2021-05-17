@@ -75,6 +75,9 @@
 	    case 'email':
 		$return = filter_var($IN, FILTER_VALIDATE_EMAIL);
 		break;
+	    case 'url':
+		$return = filter_var($IN, FILTER_VALIDATE_URL);
+		break;
 	    case 'userAccount':
 		$return = (preg_match("#([a-z]|[A-Z]|[0-9]| |\.|,|_|[űáäéúőóüöíŰÁÄÉÚŐÓÜÖÍäÄ]|-|@)*$#", $IN) != false) ? $IN : $default;
 		break;

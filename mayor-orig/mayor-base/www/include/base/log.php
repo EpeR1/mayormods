@@ -28,9 +28,10 @@
 		fputs($fp,$msg);
 		fclose($fp);
 	    } else {
-		echo 'fatal error 004';
-		die();
+		// echo 'fatal error 004';
+		// die();
 	    }
 	}
     }
+
 ?>

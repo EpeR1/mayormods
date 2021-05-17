@@ -18,9 +18,9 @@
 	$tolDt = $SET['tolDt']; $igDt = $SET['igDt'];
 	if ($tolDt!='') $W[] = "kdt<='$tolDt'";
 	if ($igDt!='')  $W[] = "vdt>='$igDt'";
-	if (count($SET['flag'])>0) $W[] = "flag IN (".implode(',',$SET['flag']).")";
-	if (count($SET['class'])>0) $W[] = "class IN (".implode(',',$SET['class']).")";
-	if (count($SET['cid'])>0) $W[] = "cid IN (".implode(',',$SET['cid']).")";
+	if (is_array($SET['flag']) && count($SET['flag'])>0) $W[] = "flag IN (".implode(',',$SET['flag']).")";
+	if (is_array($SET['class']) && count($SET['class'])>0) $W[] = "class IN (".implode(',',$SET['class']).")";
+	if (is_array($SET['cid']) && count($SET['cid'])>0) $W[] = "cid IN (".implode(',',$SET['cid']).")";
 	if (is_array($SET['kategoria']) && count($SET['kategoria'])>0 && !is_null($SET['kategoria'][0])) 
 	    $W[] = "kategoriaId IN (".implode(',',$SET['kategoria']).")";
 	if ($SET['lang']!='')  $W[] = "lang='".$SET['lang']."'";

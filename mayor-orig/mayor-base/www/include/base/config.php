@@ -24,6 +24,7 @@ if (_RUNLEVEL === 'cron') {
     }
 }
 
+if (!defined('_ENVIRONMENT')) define('_ENVIRONMENT','production');
 if (!defined('_LOGLEVEL')) define('_LOGLEVEL',10);
 if (!defined('__DEBUG')) define('__DEBUG',false);
 

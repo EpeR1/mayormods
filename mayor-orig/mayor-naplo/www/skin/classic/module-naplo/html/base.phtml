@@ -94,7 +94,7 @@
 	    } elseif (isset($params['tipus']) && $params['tipus'] == 'sor') { $sorDb++; }
 	}
 
-	if (__PAGE_PRESET===true) {
+	if (defined('__PAGE_RESET') && __PAGE_PRESET===true) {
 	    echo '<th>';
 
 		putToolFormStart('preSetSave', '');

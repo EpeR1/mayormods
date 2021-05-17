@@ -347,7 +347,7 @@
 	}
 	if (defined('__TANEV') && __TANEV!='') $tanev = __TANEV;
 
-	if (defined('_SESSIONID') && _SESSIONID!='' && !$vanSession) {
+	if (defined('_SESSIONID') && _SESSIONID!='' && !$vanSession && _RUNLEVEL!='cron') {
 	    $q = "REPLACE INTO session (sessionID, policy, intezmeny, telephelyId, tanev) VALUES 
 		('"._SESSIONID."','"._POLICY."' , '".$intezmeny."',".$telephelyId.", ".$tanev.")";
 	    db_query($q, array('fv' => 'naploBeallitasok/session', 'modul' => 'naplo_base'), $lr);

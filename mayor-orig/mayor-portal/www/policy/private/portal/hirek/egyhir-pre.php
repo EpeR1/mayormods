@@ -10,6 +10,10 @@ if (_RIGHTS_OK !== true) die();
 //	$_SESSION['alert'][] = 'page:not_owner';
 //    }
 
+    if (__HIREKADMIN===true) {
+	$_SESSION['mayorPortalSalt']=rand();
+    }
+
     if ($action=='save' && (__HIREKADMIN || $hirId=='' || isOwner($hirId))) {
        global $LANGUAGES;
 	if (__HIREKADMIN === true) {

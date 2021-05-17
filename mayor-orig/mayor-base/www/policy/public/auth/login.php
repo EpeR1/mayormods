@@ -10,7 +10,7 @@
     else
 	putAlreadyLoggedIn();
 
-    if ($_SESSION['authStatus'] == _AUTH_FAILURE) {
+    if (defined('_AUTH_FAILURE') && $_SESSION['authStatus'] == _AUTH_FAILURE) {
 	putElfelejtettJelszoForm($ADAT);
     }
 

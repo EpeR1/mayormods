@@ -17,8 +17,8 @@
 	$diakId = readVariable($_POST['diakId'], 'id', readVariable($_GET['diakId'], 'id'));
 	$tanarId = readVariable($_POST['tanarId'], 'id', readVariable($_GET['tanarId'], 'id'));
 	$feliratkozott = getHirnokFeliratkozasok();
-	if ($diakId==0 && count($feliratkozott['diak'])>0) $diakId = $feliratkozott['diak'];
-	if ($tanarId==0 && count($feliratkozott['tanar'])>0) $tanarId = $feliratkozott['tanar'];
+	if ($diakId==0 && is_array($feliratkozott['diak']) && count($feliratkozott['diak'])>0) $diakId = $feliratkozott['diak'];
+	if ($tanarId==0 && is_array($feliratkozott['tanar']) && count($feliratkozott['tanar'])>0) $tanarId = $feliratkozott['tanar'];
 	if ($tanarId==0 && defined('__USERTANARID')) $tanarId = __USERTANARID;
 	define('_ALLOW_SUBSCRIBE',false);
     } else {

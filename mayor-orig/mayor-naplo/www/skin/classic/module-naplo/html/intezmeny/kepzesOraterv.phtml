@@ -68,6 +68,7 @@
 	formBegin(array('name'=>'kepzesOraterv','class'=>'kepzesOraterv'));
 	echo '<input type="hidden" name="kepzesId" value="'.$kepzesId.'" />';
 	echo '<input type="hidden" name="action" value="do" />';
+	echo '<input type="hidden" name="isAdmin" id="isAdmin" value="'.intval(__NAPLOADMIN===true).'" data-isadmin="'.intval(__NAPLOADMIN===true).'" />';
 	echo '<table align="center" cellspacing="1">';
 
 	    echo '<thead>';
@@ -117,6 +118,8 @@
 		    }
 		    echo '<th>&nbsp;</th>';
 		echo '</tr>';
+
+	    if (__NAPLOADMIN===true) {
 	    // EGY UJ:
 	    echo '<tr class="ures">';
 	    echo '<th>';
@@ -141,6 +144,7 @@
 	    echo '</th>';
 	    echo '</tr>';
 	    // -- idáig EGY UJ
+	    }
 	    echo '</tfoot>'."\n";
 
 
@@ -211,9 +215,10 @@
 		echo '</td>';
 	    }
 	    echo '<th>';
-	    echo '<input type="submit" value="'._OK.'" class="felvesz" />';
-	    echo '<input type="submit" name="torol_'._escape($tipus).'_'.$targyId.'" value="X" class="torol" />';
-
+		if (__NAPLOADMIN===true) {
+		    echo '<input type="submit" value="'._OK.'" class="felvesz" />';
+		    echo '<input type="submit" name="torol_'._escape($tipus).'_'.$targyId.'" value="X" class="torol" />';
+		}
 	    echo '</th>';
 	    echo '</tr>'."\n";
 	    // -- idáig TOMEG

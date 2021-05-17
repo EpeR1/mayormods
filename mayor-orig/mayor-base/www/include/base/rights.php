@@ -383,7 +383,7 @@ function validUser($sessionID,$policy,$skin='',$lang='') {
     } 
     // ---------
     //Breadcrumb
-    if (count($_SESSION['breadcrumb'])>10) array_shift($_SESSION['breadcrumb']);
+    if (is_array($_SESSION['breadcrumb']) && count($_SESSION['breadcrumb'])>10) array_shift($_SESSION['breadcrumb']);
     $_SESSION['breadcrumb'][] = array('page'=>"$page",'sub'=>"$sub",'f'=>"$f");
     // ---------
     if (file_exists($includeFile)) require($includeFile);
@@ -395,6 +395,5 @@ function validUser($sessionID,$policy,$skin='',$lang='') {
 // ---------------------------------------
     $_DEBUG = ob_get_contents();
     ob_end_clean();
-
 
 ?>

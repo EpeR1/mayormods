@@ -38,7 +38,45 @@
     }
 
     /* Írjuk felül a gyárit */
-    $old_error_handler = set_error_handler("mayorErrorHandler");
+    //$old_error_handler = set_error_handler("mayorErrorHandler");
     //restore_error_handler();
 
+
+// checkcheck
+
+#try {
+#    throw new \Exception('test exception');
+#} catch (\Exception $e) {
+#    Rollbar::log(Level::DEBUG, $e);
+#}
+
+use \Rollbar\Rollbar;
+use \Rollbar\Payload\Level;
+
+if (defined('_MAYOR_REMOTE_LOGGER_ENABLED') && _MAYOR_REMOTE_LOGGER_ENABLED===true) {
+
+    if (defined('_MAYOR_REMOTE_LOGGER_SENTRY_URL')) {
+	$sentryClient = new Raven_Client(_MAYOR_REMOTE_LOGGER_SENTRY_URL);
+	$sentryClient->release = _MAYORREV;
+	$sentryClient->environment = _ENVIRONMENT;
+	$error_handler = new Raven_ErrorHandler($sentryClient);
+	$error_handler->registerExceptionHandler();
+	$error_handler->registerErrorHandler();
+	$error_handler->registerShutdownFunction();
+    }
+
+    if (defined('_MAYOR_REMOTE_LOGGER_ROLLBAR_ACCESSTOKEN')) {
+	$rollbarconfig = array(
+	'access_token' => _MAYOR_REMOTE_LOGGER_ROLLBAR_ACCESSTOKEN,
+    	'environment' => _ENVIRONMENT,
+        'root' => _BASEDIR,
+	'use_error_reporting' => true
+	);
+
+	Rollbar::init($rollbarconfig);
+	if (is_array($_SESSION['alert']) && count($_SESSION['alert'])>0) {
+	    Rollbar::log(Level::INFO, 'mayor alert msg', array('revision'=>_MAYORREV));
+	}
+    }
+}
 ?>

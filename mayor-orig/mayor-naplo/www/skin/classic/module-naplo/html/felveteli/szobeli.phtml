@@ -1,0 +1,521 @@
+<?php
+
+
+    function putEredmenyKereso($nev,$diak,$oId) {
+
+	global $ADAT;
+	if (_SZOBELI_LEKERDEZHETO==false) {
+	    echo '<div align="center" style="margin:100px;border: solid 2px #aabbc0; background-color:darkcyan;color:white; padding:12px;">
+		<span class="icon-info-sign"></span> 
+		A lekérdezés ebben az időszakban nem aktív, kérjük látogasson vissza ';
+		if ($ADAT['szobeliPublikalasDt']!='') {
+		    echo date('Y. M. d. H:i:s',strtotime($ADAT['szobeliPublikalasDt']));echo '-kor!';
+		} else {
+		    echo 'később!';
+		}
+	    echo '</div>';
+	}
+
+	if (_SZOBELI_LEKERDEZHETO===false) {
+	    return;
+	    $_DIS = 'disabled="disabled" readonly="readonly"';
+	}
+	//echo '<form id="fform" name="fform" method="post" action="" onsubmit="xt=document.fform.gomb;xt.value=\''._PLEASE_WAIT.'\';xt.disabled=true">'."\n";
+	echo formBegin(array('id'=>'fform', 'name'=>'fform'));
+	echo '<input type="hidden" name="action" id="action" value="szobeliLekerdezes" />';
+	echo '<table align="center" class="lekerdezes">';
+	    echo '<thead><tr><th colspan="2">';
+		echo _LEKERDEZES;
+		if (__FELVETELIADMIN===true) {
+		    echo ' - ADMIN';
+		}
+	    echo '</th></tr></thead>'."\n";
+	    echo '<tfoot>';
+	    echo '<tr><th colspan="2">';
+		    echo '<input type="submit" id="gomb" value="'._LEKERDEZ.'" '.$_DIS.' />';
+	    echo '</th></tr>';
+	    echo '<tr><th colspan="2">';
+		    //echo _BEHIVOTTAK.': '.date('Y. M. d. H:i:s',strtotime(_BEHIVOTTAK_PUBLIKALAS_DT));
+	    echo '</th></tr>';
+	    echo '</tfoot>'."\n";
+	    echo '<tbody>';
+	    echo '<tr>';
+		echo '<th><label for="nev">'._NEV_JELIGE.'</label></th>'."\n";
+		echo '<td>';
+	    	    echo '<input type="text" name="nev" id="nev" value="'.$nev.'" '.$_DIS.' placeholder="Gipsz Jakab Samu" />';
+		echo '</td>'."\n";
+	    echo '</tr><tr>';
+		echo '<th><label for="oId">'._OID.'</label></th>'."\n";
+		echo '<td>';
+		    echo '<input type="text" name="oId" size="11" id="oId" value="' . $oId .'" '.$_DIS.' placeholder="7xxxxxxxxxx" />';
+		echo '</td>'."\n";
+	    echo '</tr>';
+	    echo '</tbody>';
+	echo '</table>';
+	formEnd();
+    }
+
+    function putFelvetelizoAdatok($DATA) {
+
+	    if (__FELVETELIADMIN===true) {
+		formBegin();
+		echo '<input type="hidden" name="action" 	value="modositas" />';
+	    }
+	    if (__FELVETELIADMIN===true) {
+		echo '<input type="hidden" name="_nev" 	value="'.$DATA['nev'].'" />';
+		echo '<input type="hidden" name="_oId" value="'.$DATA['oId'].'" />';
+	    }
+
+	    echo '<table align="center" class="felveteliAdatok" cellspacing="1" cellpadding="1" >';
+	    echo '<thead><tr><th colspan="3">'._ADATOK.' – '.$DATA['oId'].'</th></tr></thead>'."\n";
+	    echo '<tfoot><tr><th colspan="3">';
+		if (__FELVETELIADMIN===true) {
+		    echo '<input type="submit"> ';
+		}
+		echo _LEKERDEZES_DT.' '.date('Y.m.d. H:i:s');
+	    echo '</th></tr></tfoot>'."\n";
+	    echo '<tbody>';
+
+	    if (__FELVETELIADMIN===true) {
+		    echo '<th colspan="2">';
+			    echo '<div style="background-color: #f06; color:white; ">';
+				echo '<input type="checkbox" name="diakTorol" value="1" />';
+				echo 'Felvételiző diák és minden adatának törlése ';
+				echo '<span class="icon-exclamation-sign"></span>';
+			    echo '</div>';
+		    echo '</th>';
+	    }
+
+
+	    echo '<tr>';
+		echo '<th>'._NEV.'</th>'."\n";
+		echo '<td colspan="2">';
+		if (__FELVETELIADMIN===true) {
+		    echo '<input type="text" name="nev" 	value="'.$DATA['nev'].'" />';
+		} else {
+		    echo $DATA['nev'];
+		}
+		echo '</td>'."\n";
+	    echo '</tr>';
+
+	    if (__FELVETELIADMIN===true) {
+	    echo '<tr>';
+		echo '<th>Oktatási Azonosító:</th>'."\n";
+		    echo '<td colspan="2">';
+	    		echo '<input type="text" name="oId" 	value="'.$DATA['oId'].'" />';
+		    echo '</td>'."\n";
+	    echo '</tr>';
+	    }
+	    echo '<tr>';
+		echo '<th>'._SZULETETT.'</th>'."\n";
+		echo '<td colspan="2">';
+		if (__FELVETELIADMIN===true) {
+		    echo '<input type="text" name="szuldt" 	value="'.$DATA['szuldt'].'" />';
+		} else {
+		    echo $DATA['szuldt'];
+		}
+		echo '</td>'."\n";
+	    echo '</tr>';
+
+	    echo '<tr>';
+		echo '<th>'._AN.'</th>'."\n";
+		echo '<td colspan="2">';
+		if (__FELVETELIADMIN===true) {
+		    echo '<input type="text" name="an" 	value="'.$DATA['an'].'" />';
+		} else {
+		    echo $DATA['an'];
+		}
+		echo '</td>'."\n";
+	    echo '</tr>';
+	    // if ($DATA['lakcim_telepules']!='') {
+	    echo '<tr>';
+		echo '<th>'._CIM.'</th>'."\n";
+		echo '<td colspan="2">';
+		if (__FELVETELIADMIN===true) {
+		    echo '<input type="text" name="lakcim_irsz" size="4"	value="'.$DATA['lakcim_irsz'].'" />';
+		    echo '<input type="text" name="lakcim_telepules" size="10"	value="'.$DATA['lakcim_telepules'].'" />';
+		    echo '<input type="text" name="lakcim_utcahazszam" 	value="'.$DATA['lakcim_utcahazszam'].'" />';
+		} else {
+		    echo $DATA['lakcim_irsz'].' '.$DATA['lakcim_telepules'].', '.$DATA['lakcim_utcahazszam'];
+		    // echo $DATA['lakcim_utcahazszam'];
+		}
+		echo '</td>'."\n";
+	    echo '</tr>';
+	    // }
+	    // if ($DATA['tartozkodasi_telepules']!='') {
+	    echo '<tr>';
+		echo '<th>'._ERTESITESI_CIM.'</th>'."\n";
+		echo '<td colspan="2">';
+		if (__FELVETELIADMIN===true) {
+		    echo '<input type="text" name="tartozkodasi_irsz" size="4"	value="'.$DATA['tartozkodasi_irsz'].'" />';
+		    echo '<input type="text" name="tartozkodasi_telepules" size="10"	value="'.$DATA['tartozkodasi_telepules'].'" />';
+		    echo '<input type="text" name="tartozkodasi_utcahazszam" 	value="'.$DATA['tartozkodasi_utcahazszam'].'" />';
+		} else {
+		    echo $DATA['tartozkodasi_irsz'].' '.$DATA['tartozkodasi_telepules'].', '.$DATA['tartozkodasi_utcahazszam'];
+		    //echo $DATA['tartozkodasi_utcahazszam'];
+		}
+		echo '</td>'."\n";
+	    echo '</tr>';
+	    // }
+	    echo '<tr>';
+		echo '<th>Iskola OM kódja:</th>'."\n";
+		echo '<td colspan="2">';
+		if (__FELVETELIADMIN===true) {
+		    echo '<input type="text" name="omkod" 	value="'.$DATA['omkod'].'" />';
+		} else {
+		    echo $DATA['omkod'];
+		}
+		echo '</td>'."\n";
+
+	    echo '</tr>';
+	    if (is_array($DATA['iskolaAdat']) && $DATA['iskolaAdat']['nev'] != '') {
+		echo '<tr>';
+		echo '<th>Iskola adatai:</th>'."\n";
+		echo '<td colspan="2">'.$DATA['iskolaAdat']['nev'].', '.$DATA['iskolaAdat']['telepules'].'</td>'."\n";
+		echo '</tr>';
+	    }
+
+
+	    echo '<tr>';
+		echo '<th>'._ATLAG.'</th>'."\n";
+		echo '<td colspan="2">';
+		if (__FELVETELIADMIN===true) {
+		    echo '<input type="text" name="atlag" 	value="'.$DATA['atlag'].'" />';
+		} else {
+		    if ($DATA['atlag']>0) echo $DATA['atlag']; else echo '-';
+		}
+		echo '</td>'."\n";
+
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>'._IRASBELI.' eredmény (magyar):</th>'."\n";
+		echo '<td colspan="2">';
+		if (__FELVETELIADMIN===true) {
+		    echo '<input type="text" name="magyar" size="4" 	value="'.$DATA['magyar'].'" />';
+		} else {
+		    if ($DATA['magyar']>0) {
+			echo $DATA['magyar'];
+		    }
+		}
+		echo ' pont';
+		echo '</td>'."\n";
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>'._IRASBELI.' eredmény (matematika):</th>'."\n";
+		echo '<td colspan="2">';
+		if (__FELVETELIADMIN===true) {
+		    echo '<input type="text" name="matek" size="4" 	value="'.$DATA['matek'].'" />';
+		} else {
+		    if ($DATA['matek']>0) {
+			echo $DATA['matek'];
+		    }
+		}
+		echo ' pont';
+		echo '</td>'."\n";
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>Hozott pont:</th>'."\n";
+		echo '<td colspan="2">';
+		if (__FELVETELIADMIN===true) {
+		    echo '<input type="text" name="pont" size="4" 	value="'.$DATA['pont'].'" />';
+		} else {
+		    if ($DATA['pont']==floor($DATA['pont'])) {
+			list($a,$b) = explode('.',$DATA['pont']);
+			echo $a;
+		    } else {
+			echo $DATA['pont'];
+		    }
+		}
+		echo ' pont';
+		echo '</td>'."\n";
+	    echo '</tr>';
+
+	    if ($DATA['pontsum']!='' && $DATA['pontsum']!=0) {
+	    echo '<tr>';
+		echo '<th>Eddig elért pontszám:</th>'."\n";
+		echo '<td>'.($DATA['pontsum']).'</td>'."\n";
+	    echo '</tr>';
+	    }
+	    if (is_array($DATA['jelentkezes']) && count($DATA['jelentkezes'])>=0) {
+	    echo '<tr>';
+		echo '<th>Jelentkezett:</th>'."\n";
+		echo '<td>';
+		    if (__FELVETELIADMIN!==true) {
+			echo '<table cellspacing="1">';
+			    for ($t=0; $t<count($DATA['jelentkezes']); $t++) {
+			    echo '<tr style="height:2em; line-height:1.4em;">';
+			    echo '<td>';
+				echo $DATA['jelentkezes'][$t]['tagozatNev'];
+				echo ' ('.$DATA['jelentkezes'][$t]['tagozat'].')';
+			    echo '</td>';
+			    if ($DATA['jelentkezes'][$t]['ideiglenesRangsor']>0) {
+				echo '<td style="background-color: #9e0059; color:white; padding: 4px 10px;">';
+					echo  $DATA['jelentkezes'][$t]['ideiglenesRangsor'].'. hely';
+				echo '</td>';
+			    }
+			    echo '</tr>';
+			    }
+			echo '</table>';
+		    } else {
+			for ($t=0; $t<count($DATA['jelentkezes']); $t++) {
+			    $JEL[$DATA['jelentkezes'][$t]['tagozat']] = true;
+			    $JEL_IDEIG[$DATA['jelentkezes'][$t]['tagozat']] = $DATA['jelentkezes'][$t]['ideiglenesRangsor'];
+			}
+			echo '<table cellspacing="1">';
+			    for ($t=0; $t<count($DATA['tagozat']); $t++) {
+				$_tagozat = $DATA['tagozat'][$t]['tagozat'];
+				$_CHK = ($JEL[$_tagozat]===true) ? 'checked="checked"':'';
+				echo '<tr>';
+				echo '<td>';	
+				    echo '<label for="T_'.$_tagozat.'">'.$DATA['tagozat'][$t]['tagozatNev'].'</label>';
+				echo '</td>';
+				echo '<td>';
+				    echo '<input type="checkbox" id="T_'.$_tagozat.'" name="jelentkezesTagozat[]" value="'.$_tagozat.'" '.$_CHK.'/>';
+				echo '</td>';
+				if ($JEL_IDEIG[$_tagozat]>0) {
+				    echo '<td style="background-color: #9e0059; color:white; padding: 4px 10px;">';
+					echo  $JEL_IDEIG[$_tagozat].'. hely';
+				    echo '</td>';
+				}
+				echo '</tr>';
+			    }
+			echo '</table>';
+
+		    }
+		echo '</td>'."\n";
+	    echo '</tr>';
+	    }
+	    
+	if ($DATA['jelenleg']!='') {
+	    echo '<tr>';
+		echo '<th>Jelenleg:</th>'."\n";
+		echo '<td>'.$DATA['jelenleg'].'</td>'."\n";
+	    echo '</tr>';
+	}
+	if ($DATA['joslat']!='' && $DATA['vegeredmeny']=='') {
+	    echo '<tr style="background-color: cornflowerblue; height: 4em; color:white;">';
+		echo '<th>Jóslat:</th>'."\n";
+		echo '<td colspan="1" style="text-align:center; font-style:italic">'.$DATA['joslat'].'</td>'."\n";
+	    echo '</tr>';
+	}
+
+	if ($DATA['vegeredmeny']!='') {
+	    echo '<tr style="background-color:#448877; color:white; height: 4em;">';
+		echo '<th>Végeredmény:</th>'."\n";
+	    	echo '<td style="text-align:center">'.$DATA['vegeredmeny'].'</td>'."\n";
+	    echo '</tr>';
+	}
+
+	    echo '</tbody>';
+	    echo '</table>';
+
+	    if (__FELVETELIADMIN===true) {
+		formEnd();
+	    }
+
+
+    }
+
+    function putSzobeli($ADAT) {
+
+	$DATA = $ADAT['szobeli'];
+	if ($DATA==false) {
+	    echo '<div align="center" id="felviinfo">';
+		echo _HIANYOS_SZOBELI_ADAT;
+	    echo '</div>';
+	} elseif ($DATA == 'multi') {
+	    echo '<div align="center" id="felvierr">';
+		echo _MULTI_USER;
+	    echo '</div>';
+	} elseif (is_array($DATA)) {
+
+	    if (__FELVETELIADMIN===true) {
+		formBegin();
+		echo '<input type="hidden" name="action" value="szobeliModositas" />';
+		echo '<input type="hidden" name="nev" 	value="'.$ADAT['nev'].'" />';
+		echo '<input type="hidden" name="oId" value="'.$ADAT['oId'].'" />';
+	    }
+
+	    echo '<table align="center" class="szobeli">';
+	    echo '<thead><tr><th colspan="4">Szóbeli időpontok</th></tr></thead>'."\n";
+	    echo '<tfoot><tr><td colspan="4" style="font-size:x-small; color:white;text-align:right;">';
+
+/*
+		    if (defined('SZOBELI_EREDMENY_PLACEHOLDER')===true) {
+			// echo SZOBELI_EREDMENY_PLACEHOLDER;
+		    } 
+*/
+	    echo '</td></tr></tfoot>'."\n";
+	    echo '<tbody>';
+
+	    if (!is_array($DATA) || count($DATA)==0) {
+		echo '<tr>';
+		echo '<td colspan="2">';
+		echo '</td></tr>';
+	    }
+
+	    for($i=0; $i<count($DATA); $i++) {
+	    $D = $DATA[$i];
+	    if ($D['szobeliTipus'] == 'elutasítás') $_class='nincsbehivva';
+	    else $_class='behivva';
+	    echo '<tr>';
+		echo '<th class="'.$_class.'">'.$D['tagozatNev'].'</th>'."\n";
+		echo '<td>';
+		//echo $D['pont'].' pont';
+		//echo '<br />'.$D['rangsor'].'. hely';
+		echo '</td>';
+		echo '<td>';
+			if ($D['szobeliTipus'] == 'szóbeli nélküli ajánlat') {
+			    echo '<p style="text-align: justify; font-style:italic">';
+				echo $D['szobeliNelkulAjanlat'];
+			    echo '</p>';
+			} elseif ($D['szobeliTipus'] == 'elutasítás') {
+			    echo '<p style="text-align: justify; font-style:italic">';
+				if ($D['szobeliElutasito']!='') echo $D['szobeliElutasito'];
+				else echo 'Sajnos nem hívjuk szóbelire.';
+			    echo '</p>';
+			} else {
+
+			echo $D['bizottsag'].'. bizottság ';
+			if ($D['szoveg']!='') echo ' ('.$D['szoveg'].')';
+			echo '<br/>';
+			echo $D['napdt'].' ('.$D['nap'].') ';
+			echo substr($D['ido'],0,-3);
+
+			    if ($D['szobeliMegjegyzes']!='') {
+				echo '<p style="border-top:dotted 1px #ffffff; margin:0px; width:100%; text-align: justify; font-style:italic; font-size:x-small">'.$D['szobeliMegjegyzes'].'</p>';
+			    }
+			
+			}
+		echo '</td>'."\n";
+		if (__FELVETELIADMIN===true) {
+		    echo '<td>';
+			    echo '<input type="text" placeholder="pontszám" name="szobelipont_'.$D['felveteliSzobeliId'].'" value="'.$D['szobelipont'].'" />';
+		    echo '</td>';
+		    echo '<td>';
+			    echo '<div style="background-color: #f06; color:white;">Törlés!: <input type="checkbox" name="felveteliSzobeliId" value="'.$D['felveteliSzobeliId'].'" /></div>';
+			    echo '<input type="submit"/>';
+		    echo '</td>';
+		} else {
+		    echo '<td>';
+		    if ($D['szobelipont']>0) {
+			echo $D['szobelipont'].' pont';
+		    }
+		    echo '</td>';
+		}
+	    echo '</tr>';
+	    }
+	    echo '</tbody>';
+	    echo '</table>';
+
+	    if (__FELVETELIADMIN===true) {
+		formEnd();
+	    }
+	} else {}
+
+	putUjSzobeli($ADAT);
+
+
+    }
+
+    function putFelveteliError($nev, $oId) {
+	    if (__FELVETELIADMIN===true) {
+		echo '<div align="center" id="felviplusz">';
+		formBegin();
+		echo 'Új felvételiző felvétele: ';
+		echo '<input type="hidden" name="action" value="ujFelveteli" />';
+		echo '<input type="text" name="_nev" value="'.$nev.'" placeholder="Gipsz Rozi" />';
+		echo '<input type="text" name="_oId" value="'.$oId.'" placeholder="7xxxxxxxxxx"/>';
+		echo '<input type="submit" />';
+		formEnd();
+		echo '</div>'."\n";
+	    }
+	    echo '<div align="center" id="felvierr">';
+		echo _HIBAS_HIANYOS_ADAT;
+	    echo '</div>';
+    }
+
+    function putUjSzobeli($ADAT) {
+
+	if (__FELVETELIADMIN!==true) return;
+
+	if (count($ADAT['jelentkezes'])==0) {
+	    echo '<div align="center" class="felvierr">Szóbeli nem vehető fel, mert nincs jelentkezés rögzítve a felvételiző diákhoz!</div>';
+	    return true;
+	}
+
+	formBegin();
+	echo '<table align="center" class="szobeli">';
+	echo '<thead><tr><th>Új szóbeli időpont felvétele</th></tr></thead>';
+	echo '<tfoot><tr><th></th></tr></tfoot>';
+	echo '<tr><td>';
+	echo '<input type="hidden" name="action" 	value="ujSzobeli" />';
+
+	echo '<input type="hidden" name="oId" size="11" id="oId" value="' . $ADAT['oId'] .'" readonly="readonly" placeholder="7xxxxxxxxxx" />';
+	echo '<input type="hidden" name="nev" size="20" id="nev" value="' . $ADAT['nev'] .'" readonly="readonly"/>';
+	echo '<input type="text" name="bizottsag" id="bizottsag" value="" placeholder="bizottság" />';
+	echo '<br/><input type="text" name="nap" id="nap" value="" placeholder="nap szövegesen" />';
+	echo '<br/><input type="text" name="napdt" id="napdt" value="" placeholder="ÉÉÉÉ-HH-NN" class="datepicker" />';
+	echo '<br/><input type="text" name="ido" id="ido" value="" placeholder="ÓÓ:PP:MM" />';
+	echo '<br/><input type="text" name="szoveg" id="szoveg" value="" placeholder="szabad szöveg" />';
+
+	echo '<br/><select name="tagozat">';
+	echo '<option value=""></option>';
+	for ($i=0; $i<count($ADAT['jelentkezes']); $i++) {
+	    echo '<option value="'.$ADAT['jelentkezes'][$i]['tagozat'].'">'.$ADAT['jelentkezes'][$i]['tagozatNev'].' ('.$ADAT['jelentkezes'][$i]['tagozat'].')</option>';
+	}
+	echo '</select>';
+	$szobeliTipus = array('szóbeli','szóbeli nélküli ajánlat','elutasítás');
+	echo '<select name="szobeliTipus">';
+	for ($i=0; $i<count($szobeliTipus); $i++) {
+	    echo '<option value="'.$szobeliTipus[$i].'">'.$szobeliTipus[$i].'</option>';
+	}
+	echo '</select>';
+	echo '<input type="submit">';
+	echo '</td></tr>';
+	echo '</table>';
+	formEnd();
+    }
+
+
+    function putVegeredmeny($DATA) {
+
+	    echo '<style type="text/css" >
+
+   table.vegeredmeny tr td {
+        height: 3em;
+        background-color: #223344;
+	color:white;
+        text-align: center;
+        font-size:14px;
+    }
+    table.vegeredmeny tr td a { color:white; }
+
+    div#felviWait {
+        padding-top:    5px;
+        padding-bottom: 5px;
+        margin:10px auto;
+        width:300px;
+        border: solid 2px #667780;
+        display: none;
+    }
+    div#felviWait img {
+        vertical-align: baseline;
+    }
+</style>';
+
+            echo '<table align="center" class="felveteliAdatok vegeredmeny">';
+            echo '<thead><tr><th>'._EREDMENY.'</th></tr></thead>'."\n";
+            echo '<tfoot><tr><th>'.date('Y.m.d. H:i:s').'</th></tr></thead>'."\n";
+            echo '<tbody>';
+                echo '<tr>';
+                    echo '<td>'.$DATA['vegeredmeny'].'</td>'."\n";
+                echo '</tr>';
+                echo '<tr><td id="download">';
+                    echo '<span class="icon-download-alt"></span> ';
+                    echo '<a href="'.href('index.php?page=naplo&sub=felveteli&f=level&token='.$DATA['token']).'">Hivatalos értesítő letöltése</a> (.pdf)';
+                echo '</td></tr>';
+            echo '</tbody></table>';
+    }
+
+?>

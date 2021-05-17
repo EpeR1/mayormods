@@ -54,8 +54,11 @@ if (!__NAPLOADMIN && !__VEZETOSEG && !__TANAR && !__DIAK && !__TITKARSAG) {
 	if (isset($tankorId)) {
 		// Az aktuális szemeszter kiválasztása
 		if (__FOLYO_TANEV) {
-			foreach ($_TANEV['szemeszter'] as $szemeszter => $szemeszterAdat)
-			    if (strtotime($szemeszterAdat['kezdesDt']) <= $time && $time <= strtotime($szemeszterAdat['zarasDt'])) break;
+			foreach ($_TANEV['szemeszter'] as $szemeszter => $szemeszterAdat) {
+			    if (strtotime($szemeszterAdat['kezdesDt']) <= $time && $time <= strtotime($szemeszterAdat['zarasDt'])) {
+				break;
+			    }
+			}
 			if ($szemeszter !== false) {
 				define('__FOLYO_SZEMESZTER', $szemeszter);
 				$szemeszterKezdesDt = $szemeszeterAdat['kezdesDt'];
@@ -212,7 +215,7 @@ if (!__NAPLOADMIN && !__VEZETOSEG && !__TANAR && !__DIAK && !__TITKARSAG) {
 		&& in_array(__USERTANARID, $Jegyek['tankörök'][$tankorId]['tanarIds'])
 		&& count($tanevIdoszak['zárás']) > 0 )
 	{
-	    list($_szemeszter,$_idoszakok) = (each($tanevIdoszak['zárás']));
+	    list($_szemeszter,$_idoszakok) = (each($tanevIdoszak['zárás'])); // --TODO 8.0
 	    define('__IDOSZAK_TOLDT',$_idoszakok[0]['tolDt']); // Nem lehet két szemeszterhez tartozó ugyanolyan típusú (pl. zárás) időszak egyidőben!!!
 	    define('__IDOSZAK_IGDT',$_idoszakok[0]['igDt']);
 	    define('__IDOSZAK_SZEMESZTER',$_szemeszter);
@@ -221,7 +224,7 @@ if (!__NAPLOADMIN && !__VEZETOSEG && !__TANAR && !__DIAK && !__TITKARSAG) {
                 && !is_null($tanevIdoszak['bizonyítvány írás'])
                 && is_null($tanevIdoszak['zárás'])
         ) {
-	    list($_szemeszter,$_idoszakok) = (each($tanevIdoszak['bizonyítvány írás']));
+	    list($_szemeszter,$_idoszakok) = (each($tanevIdoszak['bizonyítvány írás'])); // --TODO 8.0
 	    define('__IDOSZAK_TOLDT',$_idoszakok[0]['tolDt']);
 	    define('__IDOSZAK_IGDT',$_idoszakok[0]['igDt']);
 	    define('__IDOSZAK_SZEMESZTER',$_szemeszter);

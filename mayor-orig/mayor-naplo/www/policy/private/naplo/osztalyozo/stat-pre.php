@@ -229,10 +229,12 @@
 			} elseif ($atlag >= _JELES_ATLAG) {
 			    reset($jegyek);
 			    $found = false;
-			    while (list($key, $jegyAdatok) = each($jegyek)) {
-				for ($i=0; $i<count($jegyAdatok); $i++)  {
+			    if (is_array($jegyek)) {
+			      foreach($jegyek as $key => $jegyAdatok) {
+				for ($i=0; $i<count($jegyAdatok); $i++) {
 				    if ($jegyAdatok[$i]['jegyTipus'] == 'jegy' && $jegyAdatok[$i]['jegy'] < _JELES_LEGGYENGEBB_JEGY) $found = true;
 				}
+			      }
 			    }
 			    if ($found===false) {
 				if ($zaraskorTag) $ADAT['stat']['jeles']++;

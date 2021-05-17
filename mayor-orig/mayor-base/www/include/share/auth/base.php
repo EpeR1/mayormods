@@ -47,8 +47,7 @@
 	    $ret = db_query($query, array('fv' => 'newSession', 'modul' => 'login', 'result' => 'idonly', 'values' => array($sessionID)), $lr);
             if (is_array($ret) && count($ret) > 0) {
 		reset($ret);
-		while ((list($key, $_policy) = each($ret)) && $toRegister) {
-                //while ((list($_policy) = m_ysql_fetch_row($r)) && $toRegister) {
+		while ((list($key, $_policy) = each($ret)) && $toRegister) { // --TODO
                     if ($_policy == $policy) $toRegister = false;
                     // mégsem kell bejegyezni, már van; és ez az. $sessionID=$sessionID
                     // else be kell jegyezni, de ezt a $sessionID-t, nem generálunk

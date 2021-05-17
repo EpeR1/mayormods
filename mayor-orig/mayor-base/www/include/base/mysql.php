@@ -1,6 +1,6 @@
 <?php
 
-    error_reporting(E_ALL && ~E_NOTICE);
+//    error_reporting(E_ALL && ~E_NOTICE);
 //    error_reporting(E_ALL);
 
     //if (!defined("MYSQLI_ENABLED")) define("MYSQLI_ENABLED",function_exists('mysqli_connect'));
@@ -162,7 +162,7 @@
             else $lr = @db_connect($SET['modul'], array('priv' => 'Write', 'fv' => $SET['fv']));
         }
         if ($lr === false) {
-            if ($SET['detailed'] === true || __DETAILED) $_SESSION['alert'][] = 'message:sql_connect_failure:db_query/'.$SET['fv'].':'.$SET['modul'].':'.$q;
+            if ($SET['detailed'] === true || (defined('__DETAILED') && __DETAILED)) $_SESSION['alert'][] = 'message:sql_connect_failure:db_query/'.$SET['fv'].':'.$SET['modul'].':'.$q;
 	    else $_SESSION['alert'][] = 'message:sql_connect_failure:db_query/'.$SET['fv'];
             return false;
         }
@@ -189,7 +189,7 @@
 	    }
 	}
 	if (
-	    ($SET['detailed'] === true || __DETAILED)
+	    ($SET['detailed'] === true || (defined('__DETAILED') && __DETAILED))
 	    && strpos($q_pattern, '%s') !== false 
 	    && (strpos($q_pattern, '`%s`') === false && strpos($q_pattern, "'%s'") === false)
 	) $_SESSION['alert'][] = 'message:lehet hiba?:db_query/'.$SET['fv'].':'.$SET['modul'].':'.$q_pattern;
@@ -204,7 +204,7 @@
 	    $_insert_id = mysql_insert_id($lr);
 	    $_affected_rows = mysql_affected_rows($lr);
 	}
-	define(MYSQL_LOGGER,false);
+	define('MYSQL_LOGGER',false);
 	if (MYSQL_LOGGER === true) {
 	    $filename = '/tmp/mysql.log';
     	    $fp = fopen($filename, "a+");
@@ -241,7 +241,7 @@
 	/* WARNING HANDLER */
 	if (!$r) {
             // if ($SET['detailed'] === true || __DETAILED) $_SESSION['alert'][] = 'message:sql_query_failure:'.$SET['fv'].':'.':'.$q;
-            if ($SET['detailed'] === true || __DETAILED) {
+            if ($SET['detailed'] === true || (defined('__DETAILED') && __DETAILED)) {
 		if (MYSQLI_ENABLED===true) {
 		    $_SESSION['alert'][] = 'message:sql_query_failure:mysqli:'.$SET['fv'].':'.mysqli_error($lr).':'.$q;
 		} else  {

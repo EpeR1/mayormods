@@ -124,7 +124,7 @@ function mayor_menu($MENU,$sessionID,$lang = _DEFAULT_LANG,$skin = _DEFAULT_SKIN
 			echo '<li class="active">';
 			$active_page=true;
 		    } else {
-			if ($page=='n4p1o' || count($NAV[1])>0)
+			if ($page=='n4p1o' || (is_array($NAV[1]) && count($NAV[1])>0))
 			    echo '<li style="display: none;" class="openable">'; //--none
 			else
 			    echo '<li style="display: ;" class="openable">'; //--none
@@ -253,7 +253,8 @@ function html_mayor_head($sessionID,$page,$sub,$f,$lang,$MENU,$skin = _DEFAULT_S
 	echo '<div id="head"></div>';
 
 	echo "<!--// NAV1 start //-->\n";
-	echo '<div id="nav1" data-nav1count="'.count($NAV[1]).'">';
+	$_nav1count = (is_array($NAV[1])) ? count($NAV[1]) : 0;
+	echo '<div id="nav1" data-nav1count="'.$_nav1count.'">';
 	
 	echo '<div class="hideShowContainer">';
 
@@ -344,7 +345,7 @@ function html_mayor_head($sessionID,$page,$sub,$f,$lang,$MENU,$skin = _DEFAULT_S
 		echo '<div class="nev hideShowContainer '.$_class.'">';
 
 		echo '<a href="'.href('index.php?page=password&f=changeMyPassword&toPolicy='.$policy.'&userAccount='._USERACCOUNT.'&policy=public',array('skin','lang','sessionID')).'"><span class="icon-key" title="'._PASSWORD.'"></span></a>';
-		echo '<a href="'.href('index.php?page=session&f=googleapi&userAccount='._USERACCOUNT).'"><span class="icon-googleplus" title="'._GOOGLEAPI.'"></span></a>';
+		echo '<a href="'.href('index.php?page=session&f=googleapi&userAccount='._USERACCOUNT).'"><span class="icon-googleplus" title="Google"></span></a>';
 		echo '<a href="'.href('index.php?page=session&f=facebookConnect&userAccount='._USERACCOUNT).'"><span class="icon-facebook" title="'._FACEBOOK_CONNECT.'"></span></a>';
 
 		echo '<span class="onClickHideShow" >'._USERCN.'</span>';

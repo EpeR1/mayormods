@@ -62,6 +62,8 @@ function isMobile() {
 	$_SESSION['alert']  - figyelmeztető üzenet (tömb)      - opcionális
     */
 
+    if (!defined('_DEFAULT_LANG')) define('_DEFAULT_LANG','hu_HU');
+
     if (($__key = array_search('blue', $SKINS)) !== false) unset($SKINS[$__key]);
     if (($__key = array_search('pda', $SKINS)) !== false) unset($SKINS[$__key]);
     if ($AUTH['public']['skin'] == 'blue') $AUTH['public']['skin'] = 'classic';

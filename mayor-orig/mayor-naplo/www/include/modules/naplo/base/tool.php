@@ -42,8 +42,7 @@ function getToolParameters() {
 	);
 
 
-	foreach ( $TOOL as $tool => $params ) if (is_array($params)) {
-
+	foreach ( $TOOL as $tool => $params ) if (is_array($params) && is_array($params['post'])) {
 	    for ($i = 0; $i < count($params['post']); $i++) {
 		$_var = $params['post'][$i];
 		//if ($TOOLVARS[$_var]=='') $_SESSION['alert'][] = '::toolvars:'.$_var; // nem üzenünk hibát

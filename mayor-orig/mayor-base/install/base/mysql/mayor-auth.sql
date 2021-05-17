@@ -20,7 +20,7 @@ CREATE TABLE accounts (
     userPassword VARBINARY(40) DEFAULT NULL,
     studyId VARCHAR(12),
     mail VARCHAR(64),
-    telephoneNumber VARCHAR(16),
+    telephoneNumber VARCHAR(32),
     shadowLastChange INT UNSIGNED,
     shadowMin TINYINT UNSIGNED,
     shadowMax TINYINT UNSIGNED,

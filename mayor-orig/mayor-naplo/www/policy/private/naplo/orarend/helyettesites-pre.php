@@ -21,7 +21,7 @@
     if (isset($_POST['targyId'])  && intval($_POST['targyId']) != 0) $targyId = intval($_POST['targyId']);
     if (isset($_POST['tankorId']) && intval($_POST['tankorId']) != 0) $tankorId = intval($_POST['tankorId']);
     if (isset($_POST['tankorId']) && intval($_POST['tankorId']) != 0) $tankorId = intval($_POST['tankorId']);
-    $telephelyId = readVariable($_POST['telephelyId'], id, null);
+    $telephelyId = readVariable($_POST['telephelyId'], 'id', null);
 
                 //$tanev = $_POST['tanev'];
                 //$action = $_POST['action'];

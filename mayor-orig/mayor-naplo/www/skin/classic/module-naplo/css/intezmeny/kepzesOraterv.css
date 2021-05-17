@@ -60,10 +60,12 @@
 	width:70px;
 
     }
+/*
     form.kepzesOraterv table td input:focus, 
     form.kepzesOraterv table td select:focus { 
-	background-color: rgb(140,160,180); color:white; }
-
+	background-color: rgb(140,160,180); color:white; 
+    }
+*/
 
     form.kepzesOraterv table td select option { font-size:smaller;} 
     form.kepzesOraterv table td.lezart input { background-color: black }

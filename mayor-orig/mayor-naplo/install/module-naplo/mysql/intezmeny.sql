@@ -215,7 +215,7 @@ CREATE TABLE `idoszak` (
   `idoszakId` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `tanev` smallint(5) unsigned NOT NULL,
   `szemeszter` tinyint(3) unsigned NOT NULL,
-  `tipus` enum('zárás','bizonyítvány írás','vizsga','előzetes tárgyválasztás','tárgyválasztás','tankörnévsor módosítás','fogadóóra jelentkezés','tanmenet leadás') COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `tipus` enum('zárás','bizonyítvány írás','vizsga','előzetes tárgyválasztás','tárgyválasztás','tankörnévsor módosítás','fogadóóra jelentkezés','tanmenet leadás','felvételi szóbeli lekérdezés','felvételi ideiglenes rangsor lekérdezés','felvételi végeredmény lekérdezés') COLLATE utf8_hungarian_ci DEFAULT NULL,
   `tolDt` datetime NOT NULL,
   `igDt` datetime NOT NULL,
   PRIMARY KEY (`idoszakId`),
@@ -286,6 +286,7 @@ CREATE TABLE `tanar` (
   `titulusRovid` varchar(10) COLLATE utf8_hungarian_ci DEFAULT '',
   `email` varchar(64) COLLATE utf8_hungarian_ci DEFAULT '',
   `kretaNev` varchar(64) COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `elerhetoseg` varchar(64) COLLATE utf8_hungarian_ci DEFAULT NULL,
   PRIMARY KEY (`tanarId`),
   UNIQUE KEY `tanarOid` (`oId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
@@ -957,6 +958,20 @@ CREATE TABLE `cimke` (
   `cimkeLeiras` varchar(16) NOT NULL,
   PRIMARY KEY (`cimkeId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+CREATE TABLE `dokumentum` (
+  `dokumentumId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `dokumentumLeiras` varchar(511) COLLATE utf8_hungarian_ci NOT NULL,
+  `dokumentumRovidLeiras` varchar(255) COLLATE utf8_hungarian_ci NOT NULL,
+  `dokumentumUrl` varchar(1023) COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `dokumentumMegjegyzes` varchar(63) COLLATE utf8_hungarian_ci NOT NULL,
+  `dokumentumSorrend` smallint(6) DEFAULT '1',
+  `dokumentumDt` datetime DEFAULT NULL,
+  `dokumentumPolicy` enum('public','parent','private') COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `dokumentumTipus` enum('general','tanev') COLLATE utf8_hungarian_ci DEFAULT NULL,
+  PRIMARY KEY (`dokumentumId`),
+  KEY `dokumentumSorrend` (`dokumentumSorrend`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
  DELIMITER //  
  DROP FUNCTION IF EXISTS diakNaploSorszam //                                                                                                                                                                                            

@@ -111,6 +111,7 @@
 	    'diakFelmentes' => array(array('txt' => 'Felmentés', 'url' => 'index.php?page=naplo&sub=intezmeny&f=diakFelmentes')),
 	    'valtas'=> array(array('txt' => 'Tanévváltás', 'url' => 'index.php?page=naplo&sub=intezmeny&f=valtas')),
 	    'tovabbkepzes' => array(array('txt' => 'Továbbképzés')),
+	    'kepzesOraterv' => array(array('txt' => 'Képzés óraterv')),
 	);
 	$MENU['modules']['naplo']['sub']['orarend'] = array(
 	    'helyettesites' => array(array('txt'=> 'Helyettesítések')),
@@ -582,6 +583,14 @@
     }
     if (__UZENO_INSTALLED===true && __UZENOADMIN===true)
 	    $MENU['modules']['naplo']['uzeno'] =  array(array('txt' => 'Üzenő', 'url' => 'index.php?page=naplo&sub=uzeno&f=uzeno'));
+
+    $MENU['modules']['naplo']['dokumentum'] = array(array('txt' => 'Dokumentumok', 'url' => 'index.php?page=naplo&sub=dokumentum'));    
+
+    // Felvételi
+    $MENU['modules']['naplo']['felveteli'] = array(array('txt' => 'Felvételi', 'url' => 'index.php?page=naplo&sub=felveteli&f=szobeli'));
+    $MENU['modules']['naplo']['sub']['felveteli'] = array(
+		'szobeli' => array(array('txt' => 'Szóbeli lekérdezés','icon'=>'icon-search'))
+    );
 
     // SNI
     if (__NAPLOADMIN || __VEZETOSEG || __TANAR) {

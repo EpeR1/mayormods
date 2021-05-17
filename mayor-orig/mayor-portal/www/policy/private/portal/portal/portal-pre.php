@@ -20,6 +20,7 @@
     $ADAT['nevnap']['ma'] = getNevnap($honap,$nap);
     $ADAT['nevnap']['holnap'] = getNevnap($honap,$nap+1);
 
+    define('_ACCESS_AS', _OTHER_ACCESS);
     if (in_array($AUTH[_POLICY]['backend'],array('mysql','ads')) && _POLICY=='private') {
 	$ADAT['hirekAdmin'] = getGroupInfo('hirekadmin','private',array('withNewAccounts' => false));
 	$ADAT['vezetoseg'] = getGroupInfo('vezetoseg','private',array('withNewAccounts' => false));

@@ -5,7 +5,7 @@
     require_once('include/modules/naplo/share/intezmenyek.php');        
     require_once('include/modules/naplo/share/kerelem.php');        
 
-    $_telephelyIdDefault = (isset($_POST['telephelyId'])?null:__TELEPHELYID);
+    $_telephelyIdDefault = (isset($_POST['telephelyId'])?null:(defined('__TELEPHELYID') ? __TELEPHELYID:null));
     $telephelyId = readVariable($_POST['telephelyId'],'id', $_telephelyIdDefault);
     $kerelemId = readVariable($_POST['kerelemId'],'id',readVariable($_GET['kerelemId'],'id'));      
     $tolDt = readVariable($_POST['tolDt'],'date',date('Y-m-d'));

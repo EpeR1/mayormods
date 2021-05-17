@@ -160,11 +160,12 @@ if [ "$EXECONLY" != "1" ]; then
 		rm -rf $TMPDIR/*
 	    fi
 	    cd $TMPDIR
-	    # Az md5sum állomány leszedáse
+	    # Az md5sum állomány
+	    PHP_VERSION=`php -r "echo phpversion();"`
 	    if [ -z $VERSION ]; then
-		wget "http://www.mayor.hu/download/md5sum"
+		wget --output-file=md5sum "http://www.mayor.hu/download/md5sum?php_version=${PHP_VERSION}"
 	    else
-		wget "http://www.mayor.hu/download/$VERSION/md5sum"
+		wget --output-file=md5sum "http://www.mayor.hu/download/$VERSION/md5sum?php_version=${PHP_VERSION}"
 		if [[ ! $HTTP_SERVER =~ .*$VERSION.* ]]; then HTTP_SERVER="$HTTP_SERVER/$VERSION"; fi
 	    fi
 	    if [ $? != 0 ]; then exit 5; fi
@@ -220,6 +221,23 @@ echo -e "\nMaYoR TeX formátum állomány újragenerálása... "
 cd $BASEDIR/print/module-naplo/tex/ && fmtutil-sys --cnffile $BASEDIR/print/module-naplo/tex/mayor.cnf --fmtdir $BASEDIR/print/module-naplo/ --byfmt mayor > /dev/null 2>&1
 echo -e "\nMaYoR XeTeX formátum állomány újragenerálása... "
 cd $BASEDIR/print/module-naplo/xetex/ && fmtutil-sys --cnffile $BASEDIR/print/module-naplo/xetex/mayor-xetex.cnf --fmtdir $BASEDIR/print/module-naplo/ --byfmt mayor-xetex > /dev/null 2>&1
+
+if [ -f "$BASEDIR/bin/composer.phar" ]; then
+    echo "Composer ok."
+else 
+    echo "Composer install..."
+    cd $BASEDIR/bin/ && bash install-composer.sh 
+fi
+if [ -f "$BASEDIR/bin/composer.phar" ]; then
+    echo "Composer ok."
+    echo "Composer installed."
+    echo "Composer optimize: "
+    cd $BASEDIR/www/; php ../bin/composer.phar --no-ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader install
+    echo "Composer deploy done."
+else
+    echo "ERROR: Composer install FAILED! Contact support support@mayor.hu"
+fi
+
 cd $PWDTEX
 echo 'kész.'
 

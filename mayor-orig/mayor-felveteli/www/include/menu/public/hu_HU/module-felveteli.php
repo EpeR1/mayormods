@@ -27,8 +27,8 @@ if (in_array(__PORTAL_CODE,array('vmg','kos'))) {
 //	    'informatika' => array(array('txt' => 'Informatika','icon'=>'icon-hand-right')),
 	    'matematika' => array(array('txt' => 'Matematika','icon'=>'icon-hand-right')),
 //    	    'kozponti' => array(array('txt' => 'Központi eredmények', 'url' => 'index.php?page=felveteli&sub=&f=kozponti')),
-	    'pontszamito' => array(array('txt' => 'Pontszámító segéd', 'url' => 'index.php?page=felveteli&sub=&f=pontszamito')),
-    	    'szobeli' => array(array('txt' => 'Eredmények', 'url' => 'index.php?page=felveteli&sub=&f=szobeli')),
+//	    'pontszamito' => array(array('txt' => 'Pontszámító segéd', 'url' => 'index.php?page=felveteli&sub=&f=pontszamito')),
+//    	    'szobeli' => array(array('txt' => 'Eredmények', 'url' => 'index.php?page=felveteli&sub=&f=szobeli')),
 //    	    'nyiltlevel2016' => array(array('txt' => 'Nyílt levél 2016', 'url' => 'index.php?page=felveteli&sub=&f=nyiltlevel2014')),
 //	    'kos' => array(array('txt'=>'Felvételi (általános iskola)', 'url'=>'index.php?page=felveteli&sub=kos')),
 	);

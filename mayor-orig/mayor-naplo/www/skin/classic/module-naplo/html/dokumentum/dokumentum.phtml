@@ -1,0 +1,149 @@
+<?php
+
+    function  putDokumentumAdmin($ADAT) {
+	formBegin();
+	    echo '<input type="hidden" name="action" value="addDokumentum">';
+
+	    echo '<table align="center" class="dokumentumLista">';
+	    echo '<tr><th colspan="2">';
+	    echo 'Új dokumentum</th><td></tr>';
+	    echo '<tr>';
+		echo '<th>Sorrend:</th>';
+		echo '<td><input type="text" id="frm_dokumentumSorrend" name="dokumentumSorrend" value="'.(count($ADAT)+1).'" size="3" /></td>';
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>Leírás:</th>';
+		echo '<td><input type="text" id="frm_dokumentumLeiras" name="dokumentumLeiras" placeholder="Szervezeti és Működési Szabályzat" size="60" /></td>';
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>Link szöveg:</th>';
+		echo '<td><input type="text" id="frm_dokumentumRovidLeiras" name="dokumentumRovidLeiras" placeholder="SzMSz" size="60" /></td>';
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>Url:</th>';
+		echo '<td><input type="text" id="frm_dokumentumUrl" name="dokumentumUrl" placeholder="https://mayor.edu.hu/doksi/meno_tanmenet.pdf" size="100" /></td>';
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>Megjegyzés a link mögött:</th>';
+		echo '<td><input type="text" id="frm_dokumentumMegjegyzes" name="dokumentumMegjegyzes" placeholder="kiadás: 2021. május 8." size="10" /></td>';
+	    echo '</tr>';
+	    echo '<tr>';
+		echo '<th>Láthatóság:</th>';
+		echo '<td>';
+		echo '<div class="inline-block">';
+		echo '<input type="radio" name="dokumentumTipus" value="general" id="dokumentumTipus_general" /><label for="dokumentumTipus_general">általános/állandó</label>';
+		echo '<input type="radio" name="dokumentumTipus" value="tanev"   id="dokumentumTipus_tanev" checked="checked" /><label for="dokumentumTipus_tanev">tanév/éves</label>';
+		echo '</div>';
+		echo '<div class="inline-block">';
+		echo '<input type="radio" name="dokumentumPolicy" value="public" id="dokumentumPolicy_public"  checked="checked"  /><label for="dokumentumPolicy_public">publikus</label>';
+		echo '<input type="radio" name="dokumentumPolicy" value="private"   id="dokumentumPolicy_private" /><label for="dokumentumPolicy_private">privát</label>';
+		echo '</div>';
+		echo '</td>';
+	    echo '</td>';
+	    echo '</td></tr>';
+	    echo '<tr><th colspan="2">';
+		echo '<input type="submit">';
+	    echo '</td></tr>';
+	    echo '</table>';
+
+	formEnd();
+    }
+
+
+    function putDokumentumListaAdmin($ADAT, $admin=false) {
+
+	if ($admin===true) {
+	    formBegin();
+	    echo '<input type="hidden" name="action" value="delDokumentum">';
+	}
+	echo '<h1 class="dokumentumLista">Adminisztráció</h1>';
+	echo '<table class="dokumentumLista" align="center" cellspacing="1">';
+	// echo '<thead><tr><th colspan="2">'.'</th></tr></thead>';
+	if ($admin===true) {
+	    echo '<tfoot><tr><th colspan="6" style="text-align:right">';
+	    echo '<input type="submit">';	    
+	    echo '</th></tr></thead>';
+	}
+	echo '<tbody>';
+	for ($i=0; $i<count($ADAT); $i++) {
+	    $D = $ADAT[$i];
+	    echo '<tr>';
+		echo '<th>';
+		    echo $D['dokumentumId'];
+		echo '</th>';
+		echo '<td>';
+		    echo $D['dokumentumDt'];
+		echo '</td>';
+		echo '<th>';
+		    echo $D['dokumentumLeiras'];
+		echo '</th>';
+		echo '<td>';
+		    echo '<a href="'.($D['dokumentumUrl']).'" target="_blank">';
+		    echo '<span class="material-icons" style="">';
+			if (stristr($D['dokumentumUrl'],'.pdf')!==false) echo 'picture_as_pdf';
+			elseif (stristr($D['dokumentumUrl'],'.htm')!==false) echo 'integration_instructions';
+			else echo 'open_in_new';
+		    echo '</span>';
+
+			echo htmlspecialchars($D['dokumentumRovidLeiras']);
+		    echo '</a>';
+		    if ($D['dokumentumMegjegyzes']!='') echo '<span class="dokumentumMegjegyzes">('.$D['dokumentumMegjegyzes'].')</span>';
+
+
+		echo '</td>';
+		if ($admin===true) {
+		    echo '<th>'.$D['dokumentumTipus'].'</th>';
+		    echo '<th>'.$D['dokumentumPolicy'].'</th>';
+		    echo '<th>'.$D['dokumentumSorrend'].'</th>';
+		    echo '<td><input type="checkbox" name="dokumentumId[]" value="'.$D['dokumentumId'].'" /></td>';
+		}
+	    echo '</tr>';
+	}
+	echo '</tbody>';
+	echo '</table>';
+	if ($admin===true) {
+	    formEnd();
+	}
+
+    }
+
+
+    function putDokumentumLista($ADAT, $admin=false) {
+	global $policy;
+	echo '<h1 class="dokumentumLista">Dokumentumok</h1>';
+	echo '<table class="dokumentumLista" align="center" cellspacing="1">';
+	echo '<tbody>';
+	if (is_array($ADAT)) foreach($ADAT as $tipus=>$DAT)
+	if (is_array($DAT)) foreach($DAT as $tanev=>$AT) {
+	    echo '<tr>';
+		echo '<th colspan="2">';
+		    if ($tipus=='general') echo 'Általános dokumentumok';
+		    else echo $tanev.'/'.($tanev+1);
+		echo '</th>';
+	    echo '</tr>';
+	for ($i=0; $i<count($AT); $i++) {
+	    $D = $AT[$i];
+	    if ($policy=='public' && $D['dokumentumPolicy']!='public') continue;
+	    echo '<tr class="'.$D['dokumentumTipus'].' '.$D['dokumentumPolicy'].'">';
+		echo '<th>';
+		    echo $D['dokumentumLeiras'];
+		echo '</th>';
+		echo '<td>';
+		    echo '<a href="'.($D['dokumentumUrl']).'" target="_blank">';
+			echo htmlspecialchars($D['dokumentumRovidLeiras']);
+			// echo '<span class="icon-download"></span> ';
+		    echo '</a>';
+		    if ($D['dokumentumMegjegyzes']!='') echo '<span class="dokumentumMegjegyzes">('.$D['dokumentumMegjegyzes'].')</span>';
+		    if ($D['dokumentumPolicy']=='private') echo '<span class="icon-lock"></span>';
+		echo '</td>';
+	    echo '</tr>';
+	}
+
+	}
+	echo '</tbody>';
+	echo '</table>';
+
+    }
+
+
+?>

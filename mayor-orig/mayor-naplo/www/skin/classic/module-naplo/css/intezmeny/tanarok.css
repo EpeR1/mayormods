@@ -1,0 +1,10 @@
+table.tanarLista {max-width:90%}
+table.tanarLista td { vertical-align:top; padding-bottom: 1.1em;}
+table.tanarLista span.tanarNev { font-weight: 600; line-height:1.4em; font-size: 14px; color: black;}
+table.tanarLista div.titulus { font-size: smaller; color:; /*font-style: italic;*/ font-weight:100;}
+table.tanarLista div.besorolas { font-size: smaller; color:#ccc;}
+table.tanarLista div.munkakozossegVezeto,
+table.tanarLista div.kepesites,
+table.tanarLista div.osztalyfonok {color:#aaa; font-size: smaller;}
+table.tanarLista div.email,
+table.tanarLista div.elerhetoseg { color: #888; font-size:smaller; padding-top:4px;}

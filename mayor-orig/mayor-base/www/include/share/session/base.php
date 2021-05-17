@@ -86,7 +86,7 @@
 		else $return[] = $_eArr;
 	    }
 	} else $cacheable = false;
-	if (count($r)>0) return $return;
+	if (is_array($r) && count($r)>0) return $return;
 	else {
     	    $return = array();
 	    if (is_array($AUTH[$toPolicy]['categories']))
@@ -144,7 +144,7 @@
 		$backendAttrDef[$attr]['rights'] = $rights;
 	    } else $rights = $def['rights'];
 
-            if ($rights[_ACCESS_AS] != '-') $attrList[] = $attr;
+            if (defined('_ACCESS_AS') && $rights[_ACCESS_AS] != '-') $attrList[] = $attr;
 
         }
 	return array($attrList,$backendAttrDef);

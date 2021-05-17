@@ -4,7 +4,7 @@
 
 	if (count($ADAT['hirek']['szovegek'])==0) {
 
-	    if (_POLICY=='public') {
+	    if (_POLICY=='public' || _POLICY == 'private') {
 		echo '<div style="width:100%;  color:#eee; text-align:center;margin-top:40px;margin-bottom:40px;"><span style="font-size:120px;" class="icon-eye-close"></span><br/>Nincs aktuális hír</div>';
 	    }
 
@@ -14,7 +14,7 @@
 
 	  if ($ADAT['kategoriaId']>0 && $KATEGORIAID2LEIRAS[$ADAT['kategoriaId']][0]['leiras']!='') {
 		echo '<h2 class="hirKategoriaSelected">';
-		    echo ucfirst($KATEGORIAID2LEIRAS[$ADAT['kategoriaId']][0]['leiras']);
+		    echo '<span>'.ucfirst($KATEGORIAID2LEIRAS[$ADAT['kategoriaId']][0]['leiras']).' hírek</span>';
 		    echo '<a href="'.href('index.php?page=portal&f=portal&sub=portal').'" class="icon-remove-sign"></a>';
 		echo '</h2>';
 	  }
@@ -57,6 +57,8 @@
 		echo $a;
 		if ($b!="") echo ' <a href="'.href('index.php?page=portal&sub=portal&f=hir&hirId='.$D['id']).'">Tovább...</a>';
 	    echo '</div>';
+
+	    if (is_array($ADAT['hirek']['linkek'][$D['id']]))
 	    for ($j=0; $j<count($ADAT['hirek']['linkek'][$D['id']]); $j++) {
 		echo '<a href="'.$ADAT['hirek']['linkek'][$D['id']][$j]['uri'].'">';
 		echo $ADAT['hirek']['linkek'][$D['id']][$j]['szoveg'];

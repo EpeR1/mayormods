@@ -80,7 +80,7 @@
     }
     if (!defined('__TANITASINAP_HETENTE')) define('__TANITASINAP_HETENTE',5);
 
-    if (!define('__ORACIMKE_ENABLED')) define('__ORACIMKE_ENABLED',true) ;
+    if (!defined('__ORACIMKE_ENABLED')) define('__ORACIMKE_ENABLED',true) ;
 
     /* üzenő szerepkor beallitasa */
 	if (__UZENOADMIN===true) {
@@ -97,8 +97,16 @@
         elseif (__UZENOADMIN===true) define('__UZENOSZEREP','admin');
         else define('__UZENOSZEREP','');
 
-    if (count($KERELEM_TAG) ==0) $KERELEM_TAG = array('névsor','jogviszony','órarend, haladási','hiányzás, igazolás','jegy, zárójegy');
+    if (!is_array($KERELEM_TAG) || count($KERELEM_TAG) ==0) $KERELEM_TAG = array('névsor','jogviszony','órarend, haladási','hiányzás, igazolás','jegy, zárójegy');
 
     if (!defined('__HABEL_GYURI_DEBUG')) define('__HABEL_GYURI_DEBUG',false);
+    if (!defined('MAYOR_SOCIAL')) define('MAYOR_SOCIAL',false);
+
+    if (_USERACCOUNT=='mayoradmin' || (_POLICY=='private' && memberOf(_USERACCOUNT, 'felveteliadmin'))) {
+        $AUTH['my']['categories'][] = 'felveteliadmin';
+        define('__FELVETELIADMIN',true);
+    } else {
+        define('__FELVETELIADMIN',false);
+    }
 
 ?>

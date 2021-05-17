@@ -12,7 +12,12 @@
     require('include/base/str.php');
     require('include/base/log.php');
     require('include/alert/base.php');
-    if ( defined('__TESTERRORREPORTER') && __TESTERRORREPORTER===true) require('include/base/error.php');    
+    if (version_compare(PHP_VERSION, '5.3.0', '>')) {
+	if (file_exists('vendor/autoload.php')) { 
+	    require_once('vendor/autoload.php');
+	    require_once('include/base/error.php'); 
+	}
+    }
     require('include/base/rights.php');
     require('include/base/login.php');
     require('include/menu/base.php') ;

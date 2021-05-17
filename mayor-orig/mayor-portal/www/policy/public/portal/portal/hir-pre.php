@@ -2,7 +2,7 @@
     global $OG;
 
     require_once('include/modules/portal/share/hirek.php');
-    $hirId = readVariable($_GET['hirId'],id);
+    $hirId = readVariable($_GET['hirId'],'id');
     if ($hirId>=1) {
 	if (_POLICY=='private')
 	    $FILTER=array('id'=>$hirId);

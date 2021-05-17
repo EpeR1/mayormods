@@ -353,8 +353,8 @@
     #mayorGlobalLogin span.failed { color: rgb(255,215,0);; text-shadow: 0px 0px 2px #ff0000;}
     #mayorGlobalLogin:hover span.failed { color: rgb(255,235,0); }
 
-    #mayorGlobalLogin form.fb button:hover span { color: #3B5998; }
-    #mayorGlobalLogin form.googleapi button:hover span { color: red; }
+    #mayorGlobalLogin form.fb button:hover span { color: #3B5998; cursor: pointer;}
+    #mayorGlobalLogin form.googleapi button:hover span { color: red; cursor: pointer; }
 
     #mayorGlobalLogin div.large { font-size:40px; padding:10px; color: #eeeeee;}
     #mayorGlobalLogin div.large:hover { font-size:40px; padding:10px; color: white; }
@@ -373,7 +373,7 @@
 	height:13px;
 	font-size:13px;
     }
-    #mayorGlobalLogin form button.dologin:hover span { color: lightgreen; }
+    #mayorGlobalLogin form button.dologin:hover span { color: lightgreen; cursor: pointer;}
     #mayorGlobalLogin form button.dologin.hint span { color: orange; 
 	-webkit-animation:colorchange 1s infinite alternate;
     }

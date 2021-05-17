@@ -94,7 +94,7 @@
 	if ($ADAT['googleSub']=='') return 0;
 	$q = "INSERT IGNORE INTO googleConnect (userAccount,policy,googleSub,googleUserCn,googleUserEmail,studyId) VALUES ('%s','%s','%s','%s','%s','%s')";
 	$v = array('userAccount'=>_USERACCOUNT,'policy'=>_POLICY,'googleSub'=>$ADAT['googleSub'],_USERACCOUNT.' ('.$ADAT['googleUserCn'].')',$ADAT['googleUserEmail'],_STUDYID);
-	return db_query($q,array('debug'=>true,'fv'=>'googleapiGrant','modul'=>'login','result'=>'insert','values'=>$v));
+	return db_query($q,array('debug'=>false,'fv'=>'googleapiGrant','modul'=>'login','result'=>'insert','values'=>$v));
     }
 
 ?>

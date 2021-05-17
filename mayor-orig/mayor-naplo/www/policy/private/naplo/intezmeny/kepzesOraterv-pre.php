@@ -1,10 +1,9 @@
 <?php
 
     if (_RIGHTS_OK !== true) die();
-    if (!__NAPLOADMIN) {
+    if (__NAPLOADMIN!==true && __TANAR !== true) {
 	$_SESSION['alert'][] = 'page:insufficient_access';
     } else {
-
 	require_once('include/modules/naplo/share/kepzes.php');
 	require_once('include/modules/naplo/share/osztaly.php');
 	require_once('include/modules/naplo/share/targy.php');
@@ -31,11 +30,12 @@
 	    }
 	}
 
-	if ($action == 'oratervMasolas') {
+	if (__NAPLOADMIN === true) {
+
+	  if ($action == 'oratervMasolas') {
 	    $masolandoKepzesId = readVariable($_POST['masolandoKepzesId'],'id');
 	    if (isset($masolandoKepzesId) && isset($kepzesId)) kepzesOratervMasolas($masolandoKepzesId, $kepzesId);
-	} else if ($action == 'do') {
-	    // prepare for walk
+	  } else if ($action == 'do') {
 	    $submit_done = false;
 	    reset($_POST);
 	    foreach($_POST as $key => $value) {
@@ -81,8 +81,8 @@
 		}
 		modifyKepzesOraterv($DDATA,$kepzesId);
 	    }
-
-	}
+	  } // action
+	} // NAPLOADMIN
 
 	if (isset($kepzesId)) {
 	    $ADAT['kepzesAdat'] = getKepzesAdatById($kepzesId);
@@ -104,11 +104,13 @@
 
 
 
-	$TOOL['kepzesSelect'] = array('tipus'=>'cella', 'post' => array());
-      $TOOL['oldalFlipper'] = array('tipus' => 'cella', 'url' => array('index.php?page=naplo&sub=intezmeny&f=osztaly','index.php?page=naplo&sub=intezmeny&f=kepzes'),   
+    $TOOL['kepzesSelect'] = array('tipus'=>'cella', 'post' => array());
+    if (__NAPLOADMIN===true) {
+       $TOOL['oldalFlipper'] = array('tipus' => 'cella', 'url' => array('index.php?page=naplo&sub=intezmeny&f=osztaly','index.php?page=naplo&sub=intezmeny&f=kepzes'),   
                                               'titleConst' => array('_OSZTALYHOZ','_KEPZESHEZ'), 'post' => array('kepzesId'),                                                   
                                                                                       'paramName'=>'kepzesId'); // paramName ?                
-	getToolParameters();
+    }
+    getToolParameters();
 
     }
 ?>
