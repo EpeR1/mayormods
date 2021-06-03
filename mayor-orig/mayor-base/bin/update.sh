@@ -163,9 +163,9 @@ if [ "$EXECONLY" != "1" ]; then
 	    # Az md5sum állomány
 	    PHP_VERSION=`php -r "echo phpversion();"`
 	    if [ -z $VERSION ]; then
-		wget --output-file=md5sum "http://www.mayor.hu/download/md5sum?php_version=${PHP_VERSION}"
+		wget -O md5sum "http://www.mayor.hu/download/md5sum?php_version=${PHP_VERSION}"
 	    else
-		wget --output-file=md5sum "http://www.mayor.hu/download/$VERSION/md5sum?php_version=${PHP_VERSION}"
+		wget -O md5sum "http://www.mayor.hu/download/$VERSION/md5sum?php_version=${PHP_VERSION}"
 		if [[ ! $HTTP_SERVER =~ .*$VERSION.* ]]; then HTTP_SERVER="$HTTP_SERVER/$VERSION"; fi
 	    fi
 	    if [ $? != 0 ]; then exit 5; fi
