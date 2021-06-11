@@ -140,7 +140,7 @@ CREATE TABLE `diak` (
   `telefon` varchar(64) COLLATE utf8_hungarian_ci DEFAULT NULL,
   `mobil` varchar(64) COLLATE utf8_hungarian_ci DEFAULT NULL,
   `email` varchar(96) COLLATE utf8_hungarian_ci DEFAULT NULL,
-  `statusz` enum('felvételt nyert','jogviszonyban van','magántanuló','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva') COLLATE utf8_hungarian_ci NOT NULL,
+  `statusz` enum('felvételt nyert','jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva')  COLLATE utf8_hungarian_ci NOT NULL,
   `penzugyiStatusz` enum('állami finanszírozás','térítési díj','tandíj') COLLATE utf8_hungarian_ci DEFAULT 'állami finanszírozás',
   `szocialisHelyzet` set('szülei elváltak','három vagy több gyerekes család','rendszeres gyermekvédelmi támogatást kap','állami gondozott','veszélyeztetett','hátrányos helyzetű','halmozottan hátrányos helyzetű','sajátos nevelési igényű') COLLATE utf8_hungarian_ci DEFAULT NULL,
   `fogyatekossag` set('tartósan beteg',
@@ -1012,14 +1012,14 @@ CREATE TABLE `dokumentum` (
 -- ------------------
 	SELECT diakId,IF(beDt<inKezdesDt,inKezdesDt,beDt) AS tolDt,IF(ifnull(kiDt,inZarasDt)<inZarasDt,kiDt,inZarasDt) AS igDt,
 	    (SELECT COUNT(*) FROM diakJogviszony AS ds 
-		WHERE ds.diakId=diak.diakId AND tolDt<dt AND dt<=igDt AND ds.statusz IN ('jogviszonyban van','magántanuló')
+		WHERE ds.diakId=diak.diakId AND tolDt<dt AND dt<=igDt AND ds.statusz IN ('jogviszonyban van','magántanuló','egyéni munkarend')
 	    ) AS aktJogviszonyDb,
 	    (SELECT statusz FROM diakJogviszony AS ds 
 		WHERE ds.diakId=diak.diakId AND dt<=tolDt ORDER BY dt DESC LIMIT 1
 	    ) AS elozoStatusz 
 	FROM osztalyDiak LEFT JOIN diak USING (diakId) 
 	WHERE osztalyId=thisOsztalyId AND beDt<=inZarasDt AND (kiDt IS NULL OR kiDt>=inKezdesDt) 
-	HAVING (aktJogviszonyDb>0 or elozoStatusz in ('magántanuló','jogviszonyban van')) 
+	HAVING (aktJogviszonyDb>0 or elozoStatusz in ('magántanuló','jogviszonyban van','egyéni munkarend')) 
 	ORDER BY tolDt, CONCAT_WS(' ',viseltCsaladinev,viseltUtonev) COLLATE utf8_hungarian_ci;
 
 -- Ha RETURN, akkor az EXIT HANDLER úgy is, nem?
