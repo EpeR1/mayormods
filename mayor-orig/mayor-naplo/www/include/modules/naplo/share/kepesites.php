@@ -17,7 +17,7 @@
 
     }
 
-    function getTanarKepesitesIds($tanarIds) {
+    function getTanarKepesitesIds($tanarIds = null) {
 
 	$q = "SELECT tanarId, kepesitesId FROM tanarKepesites";
 	if (is_array($tanarIds)) {

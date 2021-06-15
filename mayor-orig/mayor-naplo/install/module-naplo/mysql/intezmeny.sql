@@ -702,7 +702,7 @@ CREATE TABLE `kepzesOraterv` (
   `szemeszter` tinyint(3) unsigned NOT NULL,
   `hetiOraszam` decimal(4,2) DEFAULT NULL,
   `kovetelmeny` enum('jegy','négyszintű (szöveges minősítés)','százalékos','aláírás','háromszintű','egyedi felsorolás','szöveges szempontrendszer','teljesített óra','nincs') COLLATE utf8_hungarian_ci DEFAULT NULL,
-  `tipus` enum('első nyelv','második nyelv','mintatantervi','kötelezően választható 1.','kötelezően választható 2.','szabadon választható 1.','szabadon választható 2.','művészetek') COLLATE utf8_hungarian_ci DEFAULT 'mintatantervi',
+  `tipus` enum('első nyelv','második nyelv','mintatantervi','kötelezően választható 1.','kötelezően választható 2.','szabadon választható 1.','szabadon választható 2.','művészetek','természettudomány') COLLATE utf8_hungarian_ci DEFAULT 'mintatantervi',
   PRIMARY KEY (`kepzesOratervId`),
   UNIQUE KEY `kot_kulcs2` (`kepzesId`,`targyId`,`evfolyamJel`,`szemeszter`),
   KEY `kepzesOraterv_FKIndex1` (`targyId`),

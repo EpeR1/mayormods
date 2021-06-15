@@ -46,6 +46,7 @@ if (!__NAPLOADMIN && !__VEZETOSEG) {
 
 	/* MÁSOLAT */
 	foreach ($ADAT['szuro']['targyak'] as $idx => $tAdat) $ADAT['targyAdat'][ $tAdat['targyId'] ] = $tAdat;
+	foreach ($ADAT['szuro']['osztalyok'] as $idx => $tAdat) $ADAT['osztalyAdat'][ $tAdat['osztalyId'] ] = $tAdat;
 
 	// A szűrőben beállítottnak megefelő tankörök lekérése
 	$ADAT['tankorok'] = getTankorokBySzuro($ADAT['szuro']);
@@ -131,6 +132,12 @@ if (!__NAPLOADMIN && !__VEZETOSEG) {
 	$EXPORT[0][] = 'Tantárgy';
 	$EXPORT[0][] = 'Óraszám';
 	$EXPORT[0][] = 'Tanár';
+
+	$EXPORT[0][] = 'Túlóra';
+	$EXPORT[0][] = 'TTF óraszám korrekció';
+	$EXPORT[0][] = 'Nemzetiségi óra';
+	$EXPORT[0][] = 'Megbízási szerződéssel ellátott óra óraszáma';
+
 	// -------
  	$j = 1;
 	for ($i=0; $i<count($ADAT['tankorok']); $i++) {
@@ -145,13 +152,28 @@ if (!__NAPLOADMIN && !__VEZETOSEG) {
 		    $_tanarId = $ADAT['tankorok'][$i]['tanarIds'][$t];
 		    $_szulDt = $TANARADAT[intval($_tanarId)][0]['szuletesiIdo'];
 		    $_tanarNev = $TANARADAT[intval($_tanarId)][0]['tanarNev'];
-		    $EXPORT[$j][] = ''; // A oszlop: egész osztály
-		    $EXPORT[$j][] = $ADAT['tankorok'][$i]['tankorNev'] . ' ('.$ADAT['tankorok'][$i]['tankorId'].')'; // B oszlop: csoport név
-		    $EXPORT[$j][] = $ADAT['targyAdat'][ $ADAT['tankorok'][$i]['targyId'] ]['targyNev']; // C oszlop: tantárgy neve
+		    $_csoportNev = getTankorCsoportByTankorId($ADAT['tankorok'][$i]['tankorId'])[0]['csoportNev'];
+		    
+		    $_osztalyIds = getTankorOsztalyaiByTanev($ADAT['tankorok'][$i]['tankorId']); 
+		    $_osztalyJel = $ADAT['osztalyAdat'][$_osztalyIds[0]]['osztalyJel'];
+		    if (count($osztalyIds) > 1 || $_osztalyJel != $_csoportNev) {
+			$EXPORT[$j][] = '';
+			$EXPORT[$j][] = $_csoportNev; // B oszlop: csoport név
+		    } else {
+			$EXPORT[$j][] = $_osztalyJel; // A oszlop: egész osztály
+			$EXPORT[$j][] = ''; 
+		    }
+		    $EXPORT[$j][] = $ADAT['targyAdat'][ $ADAT['tankorok'][$i]['targyId'] ]['kretaTargyNev']!=''?
+			$ADAT['targyAdat'][ $ADAT['tankorok'][$i]['targyId'] ]['kretaTargyNev']:
+			$ADAT['targyAdat'][ $ADAT['tankorok'][$i]['targyId'] ]['targyNev']; // C oszlop: tantárgy neve
 		    // $EXPORT[$j][] = ''; // D oszlop: TRUE/FALSE???
 		    $EXPORT[$j][] = $ADAT['tankorok'][$i]['hetiOraszam']/count($ADAT['tankorok'][$i]['tanarIds']); // E oszlop: heti óraszám
 		    if (is_array($utkozoNevuTanarok[$_tanarId]) && $_szulDt != '0000-00-00' && $_szulDt != '') $_tanarNev .= ' ('.$_szulDt.')'; // E oszlop: pedagógus neve
 		    $EXPORT[$j][] = $_tanarNev; // F oszlop
+		    $EXPORT[$j][] = '';		// 'Túlóra';
+		    $EXPORT[$j][] = 'Nem';	// 'TTF óraszám korrekció';
+		    $EXPORT[$j][] = 'Nem';	// 'Nemzetiségi óra';
+		    $EXPORT[$j][] = '';		// 'Megbízási szerződéssel ellátott óra óraszáma';
 		    $j++;
 	    }
 	}
