@@ -155,7 +155,7 @@ if (!__NAPLOADMIN && !__VEZETOSEG) {
 		    $_csoportNev = getTankorCsoportByTankorId($ADAT['tankorok'][$i]['tankorId'])[0]['csoportNev'];
 		    
 		    $_osztalyIds = getTankorOsztalyaiByTanev($ADAT['tankorok'][$i]['tankorId']); 
-		    $_osztalyJel = $ADAT['osztalyAdat'][$_osztalyIds[0]]['osztalyJel'];
+		    $_osztalyJel = kisbetus($ADAT['osztalyAdat'][$_osztalyIds[0]]['osztalyJel']);
 		    if (count($osztalyIds) > 1 || $_osztalyJel != $_csoportNev) {
 			$EXPORT[$j][] = '';
 			$EXPORT[$j][] = $_csoportNev; // B oszlop: csoport név

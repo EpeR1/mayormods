@@ -1,7 +1,12 @@
 <?php
 
-    if (_RIGHTS_OK !== true) die();
+if (_RIGHTS_OK !== true) die();
+if (__NAPLOADMIN!==true) {
 
+    global $ADAT;
+    putOsztalyGrid($ADAT['tablo']);
+
+} else {
     global $ADAT, $fileName, $ADATOK, $MEZO_LISTA, $attrList;
 
     if ($ADAT['updatedFromFile']===true) {
@@ -10,10 +15,11 @@
 	
     } else {
 
+	putOsztalyGrid($ADAT['tablo']);
+
 	// Osztályhoz rendelés
 	if (isset($ADAT['osztalyId']) && ($ADAT['osztalyAdat']["kezdoTanev"]<=$ADAT['tanev'] && $ADAT['osztalyAdat']["vegzoTanev"]>=$ADAT['tanev'])) {
 	
-
 	    putOsztalyAdatokForm($ADAT);
 
 	    if ($ADAT['osztalyJellegek'][ $ADAT['osztalyAdat']['osztalyJellegId'] ]['kovOsztalyJellegId'] != 0) { // NyEK évfolyam
@@ -44,5 +50,5 @@
 		putUjOsztalyForm($ADAT);
 	}
     }
-
+} // naploadmin
 ?>

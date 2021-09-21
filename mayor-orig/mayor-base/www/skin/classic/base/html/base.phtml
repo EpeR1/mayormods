@@ -71,8 +71,6 @@ function html_head($page,$sub,$f,$lang,$skin) {
     echo '<title>';
 	if (defined('_SITE')) echo _SITE.' - ';
 	echo _MAIN_TITLE;
-	echo ' ';
-	echo _MAYORREV;
     echo '</title>'."\n";
     includeCSS($page,$sub,$f,$skin);
     includeCSS($page,$sub,$f,$skin,'handheld'); // install css for handheld devices
@@ -459,7 +457,7 @@ function html_mayor_head($sessionID,$page,$sub,$f,$lang,$MENU,$skin = _DEFAULT_S
 
 function html_mayor_foot() {
     $_defaultPageLayout = ($_SESSION['pageLayout']==0) ? 'leftpad' : 'toppad';
-    echo '<div class="mayorfoot '.$_defaultPageLayout.'" id="mayorfoot">'._MAIN_FOOTER.'</div>'."\n\n";
+    echo '<div class="mayorfoot '.$_defaultPageLayout.'" id="mayorfoot">'._MAIN_FOOTER.' '._MAYORREV.'</div>'."\n\n";
     echo "</body>\n</html>";
 }
 

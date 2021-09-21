@@ -20,7 +20,17 @@
 	}
 	return getOrarend($TANKORIDK, array('tolDt'=>$tolDt, 'igDt'=>$igDt));
     }
-    
+
+    function getLebegoOrarendiOra($tanarId, $SET=array('tolDt'=>'','igDt'=>'')) {
+        $tolDt = $SET['tolDt']; $igDt = $SET['igDt'];
+	initTolIgDt(__TANEV, $tolDt, $igDt);
+
+	$q = "SELECT * FROM orarendiOra LEFT JOIN orarendiOraTankor USING (tanarId,osztalyJel,targyJel) 
+		  WHERE igDt>='%s' AND tolDt<='%s' AND tanarId=%u";
+	$v = array($tolDt, $igDt, $tanarId);
+	$RES = db_query($q, array('fv' => 'getLebegoOrarendiOra', 'modul' => 'naplo', 'result' => 'indexed', 'values' => $v));
+	return $RES;
+    }    
     // ++
     function getOrarendByTanarId($tanarId, $SET=array('tolDt'=>'','igDt'=>'', 'telephely'=>null, 'orarendiOraTankor'=>false)) {
         $tolDt = $SET['tolDt']; $igDt = $SET['igDt'];

@@ -19,6 +19,7 @@
 	$ADAT['teremIds'] = array_keys($ADAT['teremAdat']);
 	$ADAT['teremTipusok'] = getSetField('naplo_intezmeny','terem','tipus');
 	$ADAT['teremId'] = readVariable($_POST['teremId'], 'id', readVariable($_GET['teremId'], 'id', null, $ADAT['teremIds']), $ADAT['teremIds']);
+	$ADAT['teremIdMod'] = readVariable($_POST['teremIdMod'], 'id', null);
 
 	if ($action == 'teremAdatModositas' || $action=='ujTerem') {
 
@@ -27,7 +28,8 @@
 	    $D['ferohely'] = readVariable($_POST['ferohely'], 'numeric unsigned');
 	    $D['tipus'] = readVariable($_POST['tipus'], 'enum', $ADAT['teremTipusok']);
 	    $D['telephelyId'] = readVariable($_POST['telephelyId'], 'id', readVariable($_GET['telephelyId'], 'id', null, $ADAT['telephelyIds']), $ADAT['telephelyIds']);
-//echo '<pre>'; var_dump($ADAT['teremIds']); echo '</pre>';
+	    $D['teremId'] = $ADAT['teremId'];
+	    $D['teremIdMod'] = $ADAT['teremIdMod'];
 
 	    teremAdatModositas($D,($action=='ujTerem'));
 

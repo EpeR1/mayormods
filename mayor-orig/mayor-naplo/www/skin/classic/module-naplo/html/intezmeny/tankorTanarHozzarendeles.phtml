@@ -122,9 +122,11 @@
 		    else { $class='tantan'; }
 		    $class .= ' col-'.$_tankorAdat['tankorId'].' row-'.$_tanarAdat['tanarId'];
 		    if (in_array($_tankorAdat['targyId'], $_tanarAdat['targyIds'])) {
+			$_CHK = in_array($_tanarAdat['tanarId'],$_tankorAdat['tanarIds']) ? ' checked="checked" ':'';
+			$_RO  = (__NAPLOADMIN===true || __VEZETOSEG===true) ? '':' disabled="disabled" readonly="readonly" ';
+			$class .= in_array($_tanarAdat['tanarId'],$_tankorAdat['tanarIds']) ? ' checked ':'';
 			echo '<td id="cell_'.$_tanarAdat['tanarId'].'_'.$_tankorAdat['tankorId'].'" class="'.$class.'">';
-			$_CHK = in_array($_tanarAdat['tanarId'],$_tankorAdat['tanarIds']) ? 'checked="checked" ':'';
-			echo '<input type="checkbox" class="chkTT" name="tanarTankor[]" value="'.$_tanarAdat['tanarId'].'_'.$_tankorAdat['tankorId'].'" '.$_CHK.'/>';
+			echo '<input type="checkbox" class="chkTT" name="tanarTankor[]" value="'.$_tanarAdat['tanarId'].'_'.$_tankorAdat['tankorId'].'" '.$_CHK.$_RO.'/>';
 			echo '</td>';
 		    } else {
 			echo '<td class="disable '. $class.'"></td>';

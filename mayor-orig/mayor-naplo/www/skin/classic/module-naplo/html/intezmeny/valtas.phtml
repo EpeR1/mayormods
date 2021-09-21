@@ -1,5 +1,102 @@
 <?php
 
+function putTanarLista_large($ADAT) {
+
+    echo '<style type="text/css">
+
+div.tanarGrid {
+  width:100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: auto;
+  align-content: start
+}
+div.tanarGrid .item {
+  flex: 0 0 auto;
+  margin: 10px;
+  width: 300px;
+  background-color: #eee;
+  text-align:center;
+  padding:4px 4px;
+  border-radius:2px;
+}
+
+h1.osztaly,h2.osztalyfonok,h3.kepzes { text-align:center; }
+
+div.tanarGrid .item:hover {
+  background-color: #ddd;
+}
+
+img.arckep {min-height:300px; height:300px; margin-bottom: 2px; border: solid 1px #ddd;}
+div.arckepPlaceholder {min-height:300px; min-width:100%; height:300px; margin-bottom: 2px; border: solid 1px #fff;}
+h2.osztalyfonok { font-size: 14px; }
+div.titulus {padding-bottom:4px;}
+div.besorolas { font-size:x-small; color: #aaa;}
+
+    </style>';
+
+    echo '<div class="tanarGrid">';
+    for($i=0; $i<count($ADAT['tanarok']); $i++) {
+	$T = $ADAT['tanarok'][$i];
+
+            echo '<div class="item tanarNev" data-tanarid="'.$T['tanarId'].'">';
+            if (($_img = getFaceURI($T['tanarId'],'tanar')) != '') echo '<img src="'.$_img.'" class="arckep">';
+	    else {
+		echo '<div class="arckepPlaceholder" style="display:flex; flex-direction: column">';
+		// echo '<div class="icon-adult" style="font-size:120px; color:#eee;"></div>';
+		echo '</div>';
+	    }
+
+	    echo '<br/>';
+
+	    echo '<div style="font-size: 14px; padding:6px 4px 2px 4px;">'.$T['tanarNev'].'</div>';
+
+	    if ($T['titulus']!='') echo '<div class="titulus">'.$T['titulus'].'</div>';
+	    if ($T['statusz']=='külső óraadó') echo '<div class="titulus">'.$T['statusz'].'</div>';
+
+	    $osztalyai = ($ADAT['tanarOsztaly'][$T['tanarId']]);
+	    for ($j=0; $j<count($osztalyai); $j++) {
+		$_osztalyId = $osztalyai[$j];
+		if ($ADAT['osztalyok'][$_osztalyId]['osztalyJel']!='') {
+		    echo '<div class="osztalyfonok osztalyAdat" data-osztalyid="'.$_osztalyId.'" style="color:#aaa; font-size:smaller">osztályfőnök '.$ADAT['osztalyok'][$_osztalyId]['osztalyJel'];
+		    if ($ADAT['osztalyok'][$_osztalyId]['leiras']!='') echo ' ('.$ADAT['osztalyok'][$_osztalyId]['leiras'].')';
+		    echo '</div>';
+		}
+	    }
+
+	    $munkakozossegei = ($ADAT['tanarMunkakozosseg'][$T['tanarId']]); // vezetett
+	    for ($j=0; $j<count($munkakozossegei); $j++) {
+		$_mkId = $munkakozossegei[$j];
+		echo '<div class="munkakozossegVezeto" style="color:#aaa; font-size:smaller">';
+		    echo $munkakozossegei[$j]['munkakozossegNev']. ' munkaközösség-vezető';
+		echo '</div>';
+	    }
+
+	    if (count($T['kepesites'])>0) {
+		echo '<div class="" style="color:#aaa; font-size:smaller">';
+		for ($j=0; $j<count($T['kepesites']); $j++) {
+		    $_kepesites = $T['kepesites'][$j];
+		    echo ($_kepesites['kepesitesNev']);
+		    echo '<br/>';
+		}
+		echo '</div>';
+	    }
+
+	    echo '<div class="besorolas">'.kisbetus($T['besorolas']).'</div>';
+
+	    // dump($T);
+	    if ($T['email']!='') echo '<div class="email" style="margin-top:0.4em; font-size:x-small; color:#888;"><span class="icon-envelope"></span> '.$T['email'].'</div>';
+
+            echo '</div>';
+
+    }
+    echo '</div>';
+}
+
+
+
 function putTanarLista($ADAT) {
 
     echo '<table class="tanarLista" align="center" cellpadding="1" cellspacing="1">';
@@ -48,55 +145,5 @@ function putTanarLista($ADAT) {
     echo '</table>';
 }
 
-/*
-function putIntezmenyValaszto($Intezmenyek) {
 
-	formBegin();
-
-	echo '<input type="hidden" name="action" value="intezmenyValasztas" />'."\n";
-
-	echo '<select name="intezmeny">'."\n";
-	$SEL = array(__INTEZMENY => ' selected="selected"');
-
-	for ($i = 0; $i < count($Intezmenyek); $i++) {
-
-		$rovidnev = $Intezmenyek[$i]['rovidNev'];
-		if ($Intezmenyek[$i]['alapertelmezett'] == 1)
-		echo '<option value="'.$rovidnev.'" class="default"'.$SEL[$rovidnev].'>';
-		else
-		echo '<option value="'.$rovidnev.'"'.$SEL[$rovidnev].'>';
-
-		echo $Intezmenyek[$i]['nev'].' ('.$Intezmenyek[$i]['OMKod'].')';
-		echo '</option>'."\n";
-
-	}
-
-	echo '</select>'."\n";
-
-	echo '<input type="submit" value="'._OK.'" />'."\n";
-
-	formEnd();
-
-}
-
-function putTanevValaszto($Tanevek) {
-
-	formBegin();
-
-	echo '<input type="hidden" name="action" value="tanevValasztas" />'."\n";
-
-	echo '<select name="tanev">'."\n";
-	$SEL = array(__TANEV => ' selected="selected"');
-	for ($i = 0; $i < count($Tanevek); $i++) {
-		echo '<option value="'.$Tanevek[$i].'"'.$SEL[$Tanevek[$i]].'>';
-		echo $Tanevek[$i];
-		echo '</option>'."\n";
-	}
-	echo '</select>'."\n";
-
-	echo '<input type="submit" value="'._OK.'" />'."\n";
-
-	formEnd();
-}
-*/
 ?>

@@ -174,8 +174,8 @@ CREATE TABLE `oraHazifeladatDiak` (
 
 CREATE TABLE `orarendiOraTankor` (
   `tanarId` int(10) unsigned NOT NULL,
-  `osztalyJel` varchar(7) COLLATE utf8_bin NOT NULL,
-  `targyJel` varchar(32) COLLATE utf8_bin NOT NULL,
+  `osztalyJel` varchar(7) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `targyJel` varchar(96) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `tankorId` int(10) unsigned NOT NULL,
   PRIMARY KEY (`tanarId`,`osztalyJel`,`targyJel`),
   KEY `orarendiOraTankor_tankorId` (`tankorId`),
@@ -233,7 +233,7 @@ CREATE TABLE `orarendiOra` (
   `ora` tinyint(3) unsigned NOT NULL,
   `tanarId` int(10) unsigned NOT NULL,
   `osztalyJel` varchar(7) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `targyJel` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `targyJel` varchar(96) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `teremId` smallint(5) unsigned DEFAULT NULL,
   `tolDt` date NOT NULL DEFAULT '0000-00-00',
   `igDt` date DEFAULT NULL,

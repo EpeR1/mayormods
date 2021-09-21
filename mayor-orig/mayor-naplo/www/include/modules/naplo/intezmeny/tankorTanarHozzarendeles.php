@@ -158,7 +158,7 @@
 		    hetiMunkaora,hetiKotelezoOraszam,
 		    hetiLekotottMinOraszam,hetiLekotottMaxOraszam,hetiKotottMaxOraszam
 		    FROM tanar WHERE statusz IN ('határozatlan idejű','határozott idejű','külső óraadó')
-		    AND beDt<'".$_TANEV['kezdesDt']."' AND (kiDt IS NULL OR kiDt<'".$_TANEV['zarasDt']."')
+		    AND beDt<='".$_TANEV['kezdesDt']."' AND (kiDt IS NULL OR kiDt<'".$_TANEV['zarasDt']."')
 		    AND tanarId IN (".implode(',', array_fill(0, count($Szuro['tanarIds']), '%u')).")";
 		$v = array_merge($v, $Szuro['tanarIds']);
 	    }
@@ -168,7 +168,7 @@
 		    hetiLekotottMinOraszam,hetiLekotottMaxOraszam,hetiKotottMaxOraszam
 		    FROM tanar LEFT JOIN mkTanar USING (tanarId) 
 		    WHERE statusz IN ('határozatlan idejű','határozott idejű','külső óraadó')
-		    AND beDt<'".$_TANEV['kezdesDt']."' AND (kiDt IS NULL OR kiDt<'".$_TANEV['zarasDt']."')
+		    AND beDt<='".$_TANEV['kezdesDt']."' AND (kiDt IS NULL OR kiDt<'".$_TANEV['zarasDt']."')
 		    AND mkId IN (".implode(',', array_fill(0, count($Szuro['mkIds']), '%u')).")";
 		$v = array_merge($v, $Szuro['mkIds']);
 	    }
@@ -179,7 +179,7 @@
 		    FROM tanar LEFT JOIN tanarKepesites USING (tanarId)
 		    LEFT JOIN kepesitesTargy USING (kepesitesId) 
 		    WHERE statusz IN ('határozatlan idejű','határozott idejű','külső óraadó')
-		    AND beDt<'".$_TANEV['kezdesDt']."' AND (kiDt IS NULL OR kiDt<'".$_TANEV['zarasDt']."')
+		    AND beDt<='".$_TANEV['kezdesDt']."' AND (kiDt IS NULL OR kiDt<'".$_TANEV['zarasDt']."')
 		    AND targyId IN (".implode(',', array_fill(0, count($targyIds), '%u')).")";
 	    $v = array_merge($v, $targyIds);
 	    $q[] = "SELECT tanarId, concat_ws(' ',viseltNevElotag,viseltCsaladinev,viseltUtonev) as tanarNev,
@@ -188,7 +188,7 @@
 		    FROM tanar LEFT JOIN mkTanar USING (tanarId)
 		    LEFT JOIN targy USING (mkId) 
 		    WHERE statusz IN ('határozatlan idejű','határozott idejű','külső óraadó')
-		    AND beDt<'".$_TANEV['kezdesDt']."' AND (kiDt IS NULL OR kiDt<'".$_TANEV['zarasDt']."')
+		    AND beDt<='".$_TANEV['kezdesDt']."' AND (kiDt IS NULL OR kiDt<'".$_TANEV['zarasDt']."')
 		    AND targyId IN (".implode(',', array_fill(0, count($targyIds), '%u')).")";
 	    $v = array_merge($v, $targyIds);
 

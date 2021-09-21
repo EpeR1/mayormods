@@ -8,6 +8,7 @@
     require_once('include/modules/naplo/share/targy.php');
     require_once('include/modules/naplo/share/osztaly.php');
     require_once('include/modules/naplo/share/munkakozosseg.php');
+    require_once('include/modules/naplo/share/kepesites.php');
 
     $intezmeny = readVariable($_POST['intezmeny'], 'strictstring', defined('__INTEZMENY') ? __INTEZMENY : null );
     if ($action == 'intezmenyValasztas') {
@@ -40,13 +41,24 @@
 	    }
 	}
     }
-    $ADAT['tanarok'] = getTanarok(array('extraAttrs'=>'titulus,statusz,besorolas','telephelyId'=>__TELEPHELYID));
+    $ADAT['tanarok'] = getTanarok(array('extraAttrs'=>'email,titulus,statusz,besorolas','telephelyId'=>__TELEPHELYID));
     $ADAT['targyak'] = getTargyak(array('arraymap'=>array('targyId')));
+
+
+    $ADAT['kepesitesek'] = getKepesitesek();
+//    $ADAT['vegzettsegek'] = getEnumField('naplo_intezmeny', 'kepesites', 'vegzettseg');
+//    $ADAT['fokozatok'] = getEnumField('naplo_intezmeny', 'kepesites', 'fokozat');
+//    $ADAT['specializaciok'] = getEnumField('naplo_intezmeny', 'kepesites', 'specializacio');
+
+//dump($ADAT['kepesitesek']);
+
     $lr = db_connect('naplo_intezmeny');
     for($i=0; $i<count($ADAT['tanarok']); $i++) {
 	$_tanarId = $ADAT['tanarok'][$i]['tanarId'];
 	$ADAT['tanarOsztaly'][$_tanarId] = getOsztalyIdsByTanarId($_tanarId, array('tanev'=>__TANEV,'csakId'=>true),$lr);
 	$ADAT['tanarMunkakozosseg'][$_tanarId] = getVezetettMunkakozossegByTanarId($_tanarId,array('result'=>'assoc'),$lr);
+	$ADAT['tanarok'][$i]['kepesites'] = getTanarKepesites($_tanarId);
+//	$ADAT['tanarok'][$i]['kepesitesNev'] = $ADAT['kepesitesek'];
     }
     $ADAT['osztalyok'] = getOsztalyok(__TANEV,array('result'=>'assoc'),$lr);
     db_close($lr);

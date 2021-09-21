@@ -2,11 +2,39 @@
 
 if (_RIGHTS_OK !== true) die();
 
-if (__NAPLOADMIN!==true) $_SESSION['alert'][]='page:insufficient_access';
+
+    require_once('include/modules/naplo/share/osztaly.php');
+    require_once('include/modules/naplo/share/szemeszter.php');
+    require_once('include/modules/naplo/share/intezmenyek.php');
+
+    $ADAT['tablo']['tanevek'] = getTanevek(true);
+    $ADAT['tablo']['telephely'] = getTelephelyek();
+    $ADAT['tablo']['telephelyIds'] = array();
+    foreach ($ADAT['tablo']['telephely'] as $i => $tAdat) $ADAT['tablo']['telephelyIds'][] = $tAdat['telephelyId'];	
+
+    $ADAT['tablo']['osztalyId'] = $osztalyId = $_POST['osztalyId'] = readVariable($_POST['osztalyId'], 'id', readVariable($_GET['osztalyId'],'id',null));
+    $ADAT['tablo']['tanev'] = $tanev = readVariable($_POST['tanev'], 'numeric unsigned', __TANEV, $ADAT['tablo']['tanevek']);
+
+    //$telephelyId = readVariable($_POST['telephelyId'], 'id');
+
+    if ($osztalyId!='') {
+	$ADAT['tablo']['osztalyAdat'] = getOsztalyAdat($osztalyId, $tanev);
+        $ADAT['tablo']['diakok'] = getDiakok(array('tanev' => $tanev,'osztalyId'=>$osztalyId));
+	$ADAT['tablo']['diakIds'] = array_keys(reindex($ADAT['tablo']['diakok'],array('diakId')));
+	$ADAT['tablo']['diakKepzes'] = getKepzesByDiakId($ADAT['tablo']['diakIds'], array('result' => 'assoc'));
+    }
+
+    $TOOL['osztalySelect'] = array('tipus'=>'cella','paramName' => 'osztalyId', 'post'=>array('tanev','telephelyId','dt'), 'telephelyId' => $telephelyId);
+
+
+// ------------------------------
+
+if (__NAPLOADMIN!==true) {
+
+} else { // naploadmin
 
 require_once('include/share/date/names.php');
 require_once('include/modules/naplo/share/file.php');
-require_once('include/modules/naplo/share/osztaly.php');
 require_once('include/modules/naplo/share/osztalyModifier.php');
 require_once('include/modules/naplo/share/intezmenyek.php');
 require_once('include/modules/naplo/share/diak.php');
@@ -24,7 +52,7 @@ require_once('include/share/net/upload.php');
 
 define('FILE_UPLOAD_DIR',_DOWNLOADDIR.'/private/naplo/upload/');
 
-if (defined('__INTEZMENY') and __INTEZMENY != '') {
+if (defined('__INTEZMENY') && __INTEZMENY != '') {
 	$ADAT['tanevek'] = getTanevek(true);
 	$ADAT['tanarok'] = getTanarok();
 	$ADAT['kepzesek'] = getKepzesek();
@@ -350,7 +378,11 @@ $TOOL['datumSelect'] = array('tipus'=>'sor','paramName'=>'dt','tolDt'=>$TA['eloz
 $TOOL['oldalFlipper'] = array('tipus' => 'cella', 'url' => array('index.php?page=naplo&sub=intezmeny&f=kepzes'),
            'titleConst' => array('_KEPZES'), 'post' => array(''),                                                                                                          
     	    'paramName'=>'kepzesId'); // paramName ?
+} // naploadmin
+
 
 getToolParameters();
+
+
 
 ?>

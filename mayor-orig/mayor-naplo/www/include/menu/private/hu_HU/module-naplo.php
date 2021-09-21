@@ -104,14 +104,16 @@
 	    'osszesites' => array(array('txt' => 'Összesítés')),
 	);
 	$MENU['modules']['naplo']['sub']['intezmeny'] = array(
-	    'tankorDiak' => array(array('txt' => 'Tankörnévsor', 'url' => 'index.php?page=naplo&sub=intezmeny&f=tankorDiak')),
+	    'valtas'=> array(array('txt' => 'Intézmény, tanévváltás', 'url' => 'index.php?page=naplo&sub=intezmeny&f=valtas')),
+	    'osztaly' => array(array('txt' => 'Osztályok', 'url' => 'index.php?page=naplo&sub=intezmeny&f=osztaly')),
+	    'diak' => array(array('txt' => 'Diákok', 'url' => 'index.php?page=naplo&sub=intezmeny&f=diak')),
 	    'diakTankor' => array(array('txt' => 'Diák tankörei', 'url'=> 'index.php?page=naplo&sub=intezmeny&f=diakTankor')),
 	    'diakTankorJelentkezes' => array(array('txt' => 'Diák választott tankörei', 'url'=> 'index.php?page=naplo&sub=intezmeny&f=diakTankorJelentkezes')),
-	    'diak' => array(array('txt' => 'Diákok', 'url' => 'index.php?page=naplo&sub=intezmeny&f=diak')),
 	    'diakFelmentes' => array(array('txt' => 'Felmentés', 'url' => 'index.php?page=naplo&sub=intezmeny&f=diakFelmentes')),
-	    'valtas'=> array(array('txt' => 'Tanévváltás', 'url' => 'index.php?page=naplo&sub=intezmeny&f=valtas')),
+	    'tankorDiak' => array(array('txt' => 'Tankörnévsor', 'url' => 'index.php?page=naplo&sub=intezmeny&f=tankorDiak')),
 	    'tovabbkepzes' => array(array('txt' => 'Továbbképzés')),
 	    'kepzesOraterv' => array(array('txt' => 'Képzés óraterv')),
+	    'tankorTanarHozzarendeles' => array(array('txt' => 'Tantárgyfelosztás, tankör-tanár')),
 	);
 	$MENU['modules']['naplo']['sub']['orarend'] = array(
 	    'helyettesites' => array(array('txt'=> 'Helyettesítések')),

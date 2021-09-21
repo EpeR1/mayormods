@@ -194,11 +194,11 @@
         $ADAT['orarend'] = getOrarendByTanarId($tanarId,array('tolDt'=>$tolDt,'igDt'=>$igDt,'telephely'=>$telephely,'orarendiOraTankor'=>true));
 	$ADAT['toPrint'] = $ADAT['tanarok'][$tanarId]['tanarNev'];
 	$ADAT['felvehetoTankorok'] = getTankorByTanarId($tanarId,$tanev, array('csakId'=>false,'tolDt'=>$refTolDt, 'igDt'=>$refIgDt));
-
 //========================
 /* illesszük ide az Órarendi óra tankör összerendezés 4.6 */
 	$ADAT['orarendioraTankor'] = getOrarendByTanarId($tanarId,array('tolDt'=>$tolDt,'igDt'=>$igDt,'orarendiOraTankor'=>true));
 //========================
+	// $ADAT['orarendiOra'] = getLebegoOrarendiOra($tanarId,array('tolDt'=>$tolDt,'igDt'=>$igDt));
 	$TANKORIDK = getTankorByTanarId($tanarId, __TANEV, array('csakId' => true, 'tolDt' => $tolDt, 'igDt' => $igDt, 'result' => 'indexed', 'tanarral' => false));
 	$ADAT['haladasi'] = getOrak($TANKORIDK, array('tolDt'=>$tolDt,'igDt'=>$igDt, 'result'=>'likeOrarend', 'elmaradokNelkul'=>false));
 	$ADAT['vanHaladasi'] = checkHaladasi(array('tolDt'=>$refTolDt,'igDt'=>$refIgDt));

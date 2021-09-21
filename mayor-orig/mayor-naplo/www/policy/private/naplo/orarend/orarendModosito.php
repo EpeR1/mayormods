@@ -10,5 +10,10 @@
 	&& count($ADAT['felvehetoTankorok']) > 0
     ) 
 	putOrarend($ADAT);
+    // if ($ADAT['orarendiOra']) putOrarendLebego($ADAT);
+
+    if (count($ADAT['felvehetoTankorok']) === 0) {
+	echo 'Nincs felvehető tanköre a megadott tanárnak!';
+    }
 
 ?>

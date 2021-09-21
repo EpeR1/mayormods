@@ -72,7 +72,9 @@ dump($Tanarok);
 	    $oJelek = explode(',', $rec[4]);
 	    if (count($oJelek) > 1) $osztalyJel = $oJelek[0].'...'; 	// Nem fér ki több, csak jelezzük, hogy volt még...
 	    else $osztalyJel = $oJelek[0];				// nem érdemes szétvágni, mert nem feleltethető meg...
+	    $osztalyJel = substr($osztalyJel,0,16);
 	    $targyJel = mb_convert_encoding($rec[6],'UTF-8','ISO-8859-2'); //.$rec[12];
+	    $targyJel = substr($targyJel,0,32);
 	    $teremIds = explode(',',$rec[9]); // szétvág
 	    $tolDt = $ADAT['tolDt'];
 	    $igDt = $ADAT['igDt'];

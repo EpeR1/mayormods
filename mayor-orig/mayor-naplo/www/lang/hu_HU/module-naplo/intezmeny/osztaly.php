@@ -1,6 +1,6 @@
 <?php
 
-    define('__PAGETITLE','Osztályok adminisztálása');
+    define('__PAGETITLE','Osztály');
     define('__PAGEHELP','Új osztály felvételének vagy a kiválasztott osztály osztályfőnökének, tagjainak és telephelyének módosító oldala. 
 			 Az osztálytagok képzéshez rendelésének előfeltétele, hogy az osztályhoz a "Képzések" menüpontban a választható képzések az osztályhoz legyenek rendelve.');
 

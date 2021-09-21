@@ -12,6 +12,11 @@
 
 	$TANKOROK = $ADAT['felvehetoTankorok'];
 	$BLOKKOK = $ADAT['felvehetoBlokkok'];
+
+	if (!is_array($ADAT['felvehetoTankorok']) || count($ADAT['felvehetoTankorok'])==0) {
+	    echo "nincs felvehető tankör!";
+	}
+
 	if (is_array($ADAT['felvehetoTankorok']) && count($ADAT['felvehetoTankorok']) > 0) {
 
 		$T = $ADAT['orarend']['assoc'];
@@ -304,6 +309,10 @@ for ($oi=0; $oi<count($ADAT['orarendioraTankor']['orarendiOra'][$het][$nap][$ora
     }
 
     function putOrarendPlain($ADAT) {
+    }
+
+    function putOrarendLebego($ADAT) {
+	// dump($ADAT['orarendiOra']);
     }
 
     function _putPluszOra($het,$nap,$ora,$TANKOROK,$BLOKKOK, $tankorIdHelper = null) {

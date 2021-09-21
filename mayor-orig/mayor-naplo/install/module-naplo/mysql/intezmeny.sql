@@ -140,6 +140,7 @@ CREATE TABLE `diak` (
   `telefon` varchar(64) COLLATE utf8_hungarian_ci DEFAULT NULL,
   `mobil` varchar(64) COLLATE utf8_hungarian_ci DEFAULT NULL,
   `email` varchar(96) COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `emailMagan` varchar(255) COLLATE utf8_hungarian_ci DEFAULT NULL,
   `statusz` enum('felvételt nyert','jogviszonyban van','magántanuló','egyéni munkarend','vendégtanuló','jogviszonya felfüggesztve','jogviszonya lezárva')  COLLATE utf8_hungarian_ci NOT NULL,
   `penzugyiStatusz` enum('állami finanszírozás','térítési díj','tandíj') COLLATE utf8_hungarian_ci DEFAULT 'állami finanszírozás',
   `szocialisHelyzet` set('szülei elváltak','három vagy több gyerekes család','rendszeres gyermekvédelmi támogatást kap','állami gondozott','veszélyeztetett','hátrányos helyzetű','halmozottan hátrányos helyzetű','sajátos nevelési igényű') COLLATE utf8_hungarian_ci DEFAULT NULL,

@@ -68,9 +68,13 @@
 
 	echo '<div style="background-color: #eeeeee; text-align:left;">';
 
-	echo '<label for="teremId">'._TEREMID.'</label>'."\n";
-	echo '<span id="teremId">'.$ADAT['teremId'].'</span><br />';
-
+	if ($ADAT['teremId']>0) {
+	    // echo '<label for="teremId">'._TEREMID.'</label>'."\n";
+	    // echo '<span id="teremId">'.$ADAT['teremId'].'</span><br/>';
+	    echo '<label for="teremIdMod">'._TEREMID.' változtatás:</label>'."\n";
+	    echo $ADAT['teremId'].'&rarr;';
+	    echo '<input type="text" id="teremIdMod" name="teremIdMod" value='.$ADAT['teremId'].'><br />';
+	}
 	echo '<label for="leiras">'._LEIRAS.'</label>'."\n";
 	echo '<input type="text" size="64" name="leiras" id="leiras" value="'.$tAdat['leiras'].'" /><br />'."\n";
 

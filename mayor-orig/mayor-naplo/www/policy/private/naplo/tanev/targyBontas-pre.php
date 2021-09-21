@@ -18,7 +18,7 @@
 	if ($ADAT['targyBontasStatus']===false && $action=='targyBontasInit') {
 	    $ADAT['targyBontasStatus'] = initFromLastYear();
 	}
-dump($ADAT);
+
 	// telephely - csak szűréshez kell
 	$ADAT['telephelyId'] = $telephelyId = readVariable($_POST['telephelyId'], 'id');
 	// kötelező szűrési opció
@@ -85,7 +85,6 @@ dump($ADAT);
 		$ADAT['oraterv'] = kepzesOratervSorrend($evfolyamJel, $ADAT['osztalyIds'], $ADAT['kepzesIds']);
 		// itt volt a targyAdat... felkerült az elejére
 		$ADAT['osztalyTargyBontas'] = getKepzesTargyBontasByOsztalyIds($osztalyIds);
-//dump($ADAT['osztalyTargyBontas']);
 	    }
 
 	    $ADAT['oratervenKivuliTankorok'] = getOratervenKivuliTankorIds();

@@ -74,7 +74,7 @@
     div.tanarTankor table tbody tr th.slctd { background-color: rgba(0,200,0,0.7); }
     div.tanarTankor table tbody tr td:hover input[type="checkbox"] { display:table-cell; }
 
-pre { text-align: left; }
+    pre { text-align: left; }
     div.tankorTanar table#tt thead tr th.szurt { display: none; }
     div.tankorTanar table#tt thead tr td.szurt { display: none; }
     div.tankorTanar table#tt tbody tr td.szurt { display: none; }
@@ -90,5 +90,5 @@ pre { text-align: left; }
         filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
     }
 
-
+    table#tt tr td.checked { background-color: lightgreen !important;}
 

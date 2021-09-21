@@ -2,8 +2,7 @@
 
     function putFileValaszto($ADAT) {
 
-	formBegin(array('class'=>'file'));
-
+	echo formBegin(array('class'=>'file','enctype'=>'multipart/form-data'));
 	echo '<input type="hidden" name="action" value="fileBetoltes" />'."\n";
 	echo '<input type="hidden" name="tanev" value="'.$ADAT['tanev'].'" />'."\n";
 	echo '<input type="hidden" name="tolDt" value="'.$ADAT['tolDt'].'" />'."\n";
@@ -12,6 +11,11 @@
 
 	echo '<label for="fileName">'._FILENAME.'</label>'."\n";
 	echo '<input type="text" id="fileName" name="fileName" value="'.$ADAT['fileName'].'" /><br />';
+
+	echo '<br/>';
+	echo '<input type="file" name="upfile"  /> (maximum méret: '.human_filesize(file_upload_max_size()).')';
+	echo '<br/>';
+
 	echo '<input type="checkbox" checked="checked" name="lezaras" value="true" id="lezaras" /><label for="lezaras">'._LEZARAS.'</label><br />';
 	echo '<select name="conv">'."\n";
 	    echo '<option value=""> - </option>'."\n";

@@ -462,5 +462,67 @@ function putOidEllenor($ADAT) {
 
 }
 
+function putOsztalyGrid($ADAT) {
+    echo '<style type="text/css">
+div.osztalyGrid {
+  width:100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: auto;
+  align-content: start
+}
+div.osztalyGrid .item {
+  flex: 0 0 auto;
+  margin: 10px;
+  width: 160px;
+  background-color: #eee;
+  text-align:center;
+  padding:4px 4px;
+  border-radius:2px;
+}
+
+h1.osztaly,h2.osztalyfonok,h3.kepzes { text-align:center; }
+div.osztalyGrid span.diakNev {display: inline-block; width:100%; background-color:white;   border-radius:2px;}
+
+div.osztalyGrid .item:hover {
+  background-color: #ddd;
+}
+
+img.arckep {height:230px; margin-bottom: 2px; border: solid 1px #ccc;}
+h2.osztalyfonok { font-size: 14px; }
+
+</style>';
+
+    echo '<h1 class="osztaly">'.$ADAT['osztalyAdat']['osztalyJel'].'</h1>';
+    echo '<h2 class="osztalyfonok">';
+	for ($i=0; $i<count($ADAT['osztalyAdat']['osztalyfonokok']); $i++) {
+	    echo '<div class="item">';
+	    echo '<img src="'.getFaceURI($ADAT['osztalyAdat']['osztalyfonokok'][$i]['tanarId'],'tanar').'" class="arckep"><br/>';
+	    echo $ADAT['osztalyAdat']['osztalyfonokok'][$i]['tanarNev'];
+	    echo '<br/><i>osztályfőnök</i>';
+	    echo '</div>';
+	}
+	// echo $ADAT['osztalyAdat']['osztalyfonokNev'];
+    echo '</h2>';
+    if (count($ADAT['osztalyAdat']['kepzes'])>0) {
+	echo '<h3 class="kepzes">';
+	for ($i=0; $i<count($ADAT['osztalyAdat']['kepzes']); $i++) {
+	    echo $ADAT['osztalyAdat']['kepzes'][$i]['kepzesNev'];
+	    if ($i+1<count($ADAT['osztalyAdat']['kepzes'])) echo ', ';
+	}
+	echo '</h3>';
+    }
+    echo '<div class="osztalyGrid">';
+	for ($i=0; $i<count($ADAT['diakok']); $i++) {
+	    $_D = $ADAT['diakok'][$i];
+	    echo '<div class="item diakNev" data-diakid="'.$_D['diakId'].'">'; // class="diakNev" -- jogosultságok!
+	    echo '<img src="'.getFaceURI($_D['diakId'],'diak').'" class="arckep" style="min-height:200px; min-width:100%"><br/>';
+	    echo '<span class="diakNev">'.$_D['diakNev'].'</span>';
+	    echo '</div>';
+	}
+    echo '</div>';
+}
 
 ?>

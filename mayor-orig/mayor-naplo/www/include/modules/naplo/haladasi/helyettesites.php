@@ -418,7 +418,7 @@
 		    $error = '';
 		    db_start_trans($lr);
 
-		    $q = "INSERT INTO csere VALUES ('')";
+		    $q = "INSERT INTO csere VALUES (NULL)";
 	    	    $csereId = db_query($q, array('fv' => 'oraMozgatas', 'modul' => 'naplo', 'result' => 'insert', 'rollback' => true), $lr);
 		    if (!$csereId) { if ($olr == '') db_close($lr); return false; }
 
@@ -561,7 +561,7 @@
 
 		    db_start_trans($lr);
 
-		    $q = "INSERT INTO csere VALUES ('')";
+		    $q = "INSERT INTO csere VALUES (NULL)";
 		    $csereId1 = db_query($q, array('fv' => 'oraCsere', 'modul' => 'naplo', 'result' => 'insert', 'rollback' => true), $lr);
 		    if (!$csereId1) { if ($olr == '') db_close($lr); return false; }
 
@@ -614,7 +614,7 @@
 
 		    db_start_trans($lr);
 
-		    $q = "INSERT INTO csere VALUES ('')";
+		    $q = "INSERT INTO csere VALUES (NULL)";
 		    $csereId2 = db_query($q, array('fv' => 'oraCsere', 'modul' => 'naplo', 'result' => 'insert', 'rollback' => true), $lr);
 		    if (!$csereId2) { if ($olr == '') db_close($lr); return false; }
 

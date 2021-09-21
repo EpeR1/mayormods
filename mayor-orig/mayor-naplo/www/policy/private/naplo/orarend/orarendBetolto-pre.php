@@ -16,6 +16,7 @@
         require_once('include/modules/naplo/share/tankor.php');
         require_once('include/modules/naplo/share/targy.php');
 //        require_once('include/modules/naplo/share/diak.php');
+	require_once('include/share/net/upload.php');
 
 	$ADAT['tanev'] = $tanev = readVariable($_POST['tanev'], 'numeric unsigned', __TANEV);
 	if ($tanev == __TANEV) $TA = $_TANEV;
@@ -37,6 +38,16 @@
     // ----- action ----- //
 
 	if ($action == 'fileBetoltes') {
+    	    if ($_FILES['upfile']['size'] > 0) {
+                    try {
+			$FILEADAT = array('subdir'=>_DOWNLOADDIR.'/private/naplo/orarend/','filename'=>$_FILES['upfile']['name']);
+			mayorFileUpload($FILEADAT, false);
+                    } catch (Exception $e) {
+                        dump($e);
+                    }
+//		$ADAT['fileName'] = $fileName = $_FILES['upfile']['tmp_name'];
+		$ADAT['fileName'] = $fileName = $FILEADAT['subdir'].$FILEADAT['filename'];
+	    }
 	    if (isset($fileName) && isset($conv) && isset($tanev) && isset($tolDt) && isset($igDt) && isset($orarendiHet)) {
 		if (file_exists($fileName)) {
 		    require_once("include/modules/naplo/orarend/convert-$conv.php");

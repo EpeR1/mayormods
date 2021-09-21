@@ -198,7 +198,7 @@ $stat['ko']++;
 		echo '<ul>';
 		foreach ($ADAT['oratervenKivuliTankorok'] as $idx => $okAdat) {
 		    if ($idx<30) {
-			echo '<li>';
+			echo '<li class="tankorAdat" data-tankorid="'.$okAdat['tankorId'].'">';
 			echo $okAdat['tankorNev'].' ('.$okAdat['tankorId'].') <span class="diff">['.(is_null($okAdat['diff'])?'-':$okAdat['diff']).']</span>';
 		        echo '</li>';
 		    }

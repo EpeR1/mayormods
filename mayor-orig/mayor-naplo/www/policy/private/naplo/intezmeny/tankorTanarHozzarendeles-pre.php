@@ -1,7 +1,7 @@
 <?php
 
     if (_RIGHTS_OK !== true) die();
-    if (!__NAPLOADMIN && !__VEZETOSEG) { $_SESSION['alert'] = 'page:insufficient_access'; }
+    if (!__NAPLOADMIN && !__VEZETOSEG && !__TANAR) { $_SESSION['alert'] = 'page:insufficient_access'; }
     else {
 
 	require_once('include/modules/naplo/share/osztaly.php');
@@ -19,7 +19,7 @@
 	    'osztalyIds'=>readVariable($_POST['osztalyIds'],'id',array()), 
 	    'mkIds'=>readVariable($_POST['mkIds'],'id',array()),
 	    'tanarNelkuliTankorok' => readVariable($_POST['tanarNelkuliTankorok'],'bool'),
-	    'tanarIds'=>readVariable($_POST['tanarIds'],'id',array()),
+	    'tanarIds'=>readVariable($_POST['tanarIds'],'id',(!__NAPLOADMIN&&!__VEZETOSEG)?array(__USERTANARID):array()),
 	    'targyIds'=>readVariable($_POST['targyIds'],'id',array()),
 	);
 	foreach ($ADAT['szuro']['targyak'] as $idx => $tAdat) $ADAT['targyAdat'][ $tAdat['targyId'] ] = $tAdat;
@@ -36,28 +36,30 @@
 	foreach ($ADAT['tankorok'] as $tAdat) if (is_array($tAdat['tanarIds']) && count($tAdat['tanarIds'])>0) $ADAT['keszTankorDb']++;
 	$ADAT['tankorStat'] = getTankorStat();
 
-	if ($action == 'tankorTanarFelvesz') {
+	if (__NAPLOADMIN===true || __VEZETOSEG===true) { 
 
-            $tankorId = readVariable($_POST['tankorId'],'id');
-            $tanarId = readVariable($_POST['tanarId'],'id');
-	    $_JSON = array(
+	    if ($action == 'tankorTanarFelvesz') {
+
+        	$tankorId = readVariable($_POST['tankorId'],'id');
+        	$tanarId = readVariable($_POST['tanarId'],'id');
+		$_JSON = array(
 		'post' => $_POST,
 		'result' => tankorTanarModosit($tankorId, $tanarId, array('tanev'=>__TANEV))
-	    );
+		);
 
-	} elseif ($action == 'tankorTanarTorol') {
+	    } elseif ($action == 'tankorTanarTorol') {
 
-            $_tankorId = readVariable($_POST['tankorId'],'id');
-            $_tanarId = readVariable($_POST['tanarId'],'id');
-            tankorTanarTorol($_tankorId,$_tanarId,array('tanev'=>$tanev));
+        	$_tankorId = readVariable($_POST['tankorId'],'id');
+        	$_tanarId = readVariable($_POST['tanarId'],'id');
+        	tankorTanarTorol($_tankorId,$_tanarId,array('tanev'=>$tanev));
 
-	    $_JSON = array(
-		'post' => $_POST,
-	    );
+		$_JSON = array(
+		    'post' => $_POST,
+		);
+	    }
 	}
 
 //dump($ADAT['tanarok']);
-
 
     }
  

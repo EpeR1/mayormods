@@ -2,6 +2,7 @@
 
     if (_RIGHTS_OK !== true) die();
     global $ADAT;
-    putTanarLista($ADAT);
+
+    putTanarLista_large($ADAT);
 
 ?>
