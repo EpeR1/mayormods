@@ -434,7 +434,7 @@
 	$q = "SELECT diak.*, TRIM(CONCAT_WS(' ',viseltNevElotag, ViseltCsaladiNev, viseltUtoNev)) AS diakNev, TIMESTAMPDIFF(YEAR, diak.szuletesiIdo, CURDATE()) AS diakEletkor, dj.dt AS jogviszonyDt, dj.statusz AS jogviszonyStatusz 
 		FROM ".__INTEZMENYDBNEV.".diak LEFT JOIN ".__INTEZMENYDBNEV.".diakJogviszony AS dj 
 		ON diak.diakId=dj.diakId AND dj.dt=(SELECT MAX(dt) FROM ".__INTEZMENYDBNEV.".diakJogviszony WHERE dt<=CURDATE() AND diakId=dj.diakId) 
-		WHERE diak.diakId IN (".implode(',', array_fill(0, count($diakIds), '%u')).")";
+		WHERE diak.diakId IN (".implode(',', array_fill(0, count($diakIds), '%u')).") ORDER BY diakNev";
 	 
 	$r = db_query($q, array('fv' => 'getDiakAdatById', 'modul' => 'naplo_intezmeny', 'result' => $result, 'keyfield'=>$SET['keyfield'],'values' => $diakIds), $lr);
 
@@ -444,15 +444,22 @@
 
     function getDiakBySzulDt($md) 
     {
+
+	$lr = db_connect('naplo_intezmeny');
 	if ($md == '') $md = date('m-d');
-	$q = "SELECT diakId FROM diak WHERE szuletesiIdo like '%%-%s' AND jogviszonyVege is NULL"; // credits: Neumayer Béla <szepi1971@gmail.com>
-	$diakIds = db_query($q, array('fv' => 'getDiakBySzulDt', 'modul' => 'naplo_intezmeny', 'result' => 'idonly', 'values' => array($md)));
+	$q = "SELECT diakId FROM diak WHERE szuletesiIdo like '%s' AND jogviszonyVege is NULL"; // credits: Neumayer Béla <szepi1971@gmail.com>
+	$diakIds = db_query($q, array('lr'=>$lr,'fv' => 'getDiakBySzulDt', 'modul' => 'naplo_intezmeny', 'result' => 'idonly', 'values' => array('____-'.$md)));
 	if (count($diakIds)>0) {
 		$RET['diak'] = getDiakAdatById($diakIds);
+		for ($i=0; $i<count($diakIds); $i++) {
+		    $diakId = $diakIds[$i];
+		    $RET['diak'][$i]['osztaly'] = getDiakOsztalya($diakId,null,$lr);
+		}
 		$RET['diakOsztaly'] = getDiakokOsztalyai($diakIds);
 	} else {
 		$RET = false;
 	}
+	db_close($lr);
 	return $RET;
     }
 

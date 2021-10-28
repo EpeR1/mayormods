@@ -17,21 +17,6 @@
 	if (is_array($Telephelyek)) foreach ($Telephelyek as $index => $tAdat) $telephelyIds[] = $tAdat['telephelyId'];
 	$tanev = readVariable($_POST['tanev'], 'id', defined('__TANEV') ? __TANEV : null, $Tanevek);
 	$telephelyId = readVariable($_POST['telephelyId'], 'id', defined('__TELEPHELYID') ? __TELEPHELYID : null, $telephelyIds);
-/*
-	if ($action == 'tanevValasztas') {
-    	    if (isset($tanev) && $tanev !== __TANEV) {
-	    	if (updateSessionTanev($tanev)) {
-	    		header('Location: '.location('index.php?page=naplo&sub=intezmeny&f=valtas'));
-	    	}
-	    }
-    	} 	elseif ($action == 'telephelyValasztas') {
-	    if (isset($telephelyId) && $telephelyId != __TELEPHELYID) {
-	    	if (updateSessionTelephelyId($telephelyId)) {
-	    		header('Location: '.location('index.php?page=naplo&sub=intezmeny&f=valtas'));
-	    	}
-	    }
-	}
-*/
     }
     $ADAT['tanarok'] = getTanarok(array('extraAttrs'=>'titulus,statusz,besorolas,email,YEAR(beDt) AS belepesEve,IFNULL("",YEAR(kiDt)) AS kilepesEve, elerhetoseg'));
     $ADAT['targyak'] = getTargyak(array('arraymap'=>array('targyId')));

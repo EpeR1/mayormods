@@ -62,7 +62,7 @@
 
     function initTanev($intezmeny, $tanev) {
 
-	global $MYSQL_DATA, $_TANEV;
+	global $MYSQL_DATA, $_TANEV, $policy;
 
     	$MYSQL_DATA['naplo'] = $MYSQL_DATA['naplo_base'];
     	$MYSQL_DATA['naplo']['db']= tanevDbNev($intezmeny, $tanev);
@@ -85,7 +85,7 @@
 	    if (__FOLYO_TANEV === true) 
 		if (__MUNKATERV_OK && __ORAREND_OK && __TANKOROK_OK) checkNaplo(date('Y-m-d'));
 		else {
-		    if (MAYOR_SOCIAL!==true) $_SESSION['alert'][]= 'info:checkNaploFailed:Tanév:'.($_TANEV['tanev']).':Részletek '.((__MUNKATERV_OK)?'munkaterv ok':'#chknaplo1 nincs munkaterv!').':'.((__ORAREND_OK)?'órarend ok':'#chknaplo2 nincs órarend!').':'.((__TANKOROK_OK)?'órarend-tankörök ok':'#chknaplo3 órarendi óra tankör összerendezési hiány!');
+		    if (MAYOR_SOCIAL!==true && $policy==='private') $_SESSION['alert'][]= 'info:checkNaploFailed:Tanév:'.($_TANEV['tanev']).':Részletek '.((__MUNKATERV_OK)?'munkaterv ok':'#chknaplo1 nincs munkaterv!').':'.((__ORAREND_OK)?'órarend ok':'#chknaplo2 nincs órarend!').':'.((__TANKOROK_OK)?'órarend-tankörök ok':'#chknaplo3 órarendi óra tankör összerendezési hiány!');
 		}
 	}
     }

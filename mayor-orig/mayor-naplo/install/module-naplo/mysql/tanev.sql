@@ -429,7 +429,7 @@ CREATE TABLE `szovegesErtekeles` (
 CREATE TABLE `szeEgyediMinosites` (
   `szeId` int(10) unsigned NOT NULL,
   `szempontId` int(10) unsigned NOT NULL,
-  `egyediMinosites` varchar(255) COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `egyediMinosites` text COLLATE utf8_hungarian_ci DEFAULT NULL,
   PRIMARY KEY (`szeId`,`szempontId`),
   KEY `szeem_FKindex1` (`szempontId`),
   KEY `szeem_FKindex2` (`szeId`),

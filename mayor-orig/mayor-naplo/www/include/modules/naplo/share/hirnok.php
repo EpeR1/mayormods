@@ -191,12 +191,17 @@ global $SZEMESZTER;
 	} // ha diák
 	if (__TANAR === true || (__NAPLOADMIN===true && $tanarId>0)) {
     	    if (defined('__USERTANARID') && is_numeric(__USERTANARID)) {
+        	$q = "SELECT COUNT(*) AS dbBeirtOra FROM ora WHERE ki=".__USERTANARID." AND dt <= CURDATE() AND (leiras!='')";
+        	$dbBeirtOra = db_query($q, array('fv' => 'getBeirasiAdatok', 'modul' => 'naplo', 'result' => 'value'));
         	$q = "SELECT COUNT(*) FROM ora WHERE ki=".__USERTANARID." AND dt <= CURDATE() AND (leiras IS NULL OR leiras='')";
         	$r = db_query($q, array('fv' => 'getBeirasiAdatok', 'modul' => 'naplo', 'result' => 'value'));
-		$R[mktime()][] = array(
-		    'hirnokTipus'=>'haladasiBeiratlan',
-		    'db'=>$r
-		);
+		if ($dbBeirtOra>0) { // csak ha van mar egy beirt oraja legalabb 
+		    $R[mktime()][] = array(
+			'hirnokTipus'=>'haladasiBeiratlan',
+			'db'=>$r,
+			'dbBeirtOra'=>$dbBeirtOra
+		    );
+		}
 		$q = "select * from idoszak where NOW() BETWEEN tolDt AND igDt ORDER BY tolDt";
         	$r = db_query($q, array('fv' => 'getIdoszakAktiv', 'modul' => 'naplo_intezmeny', 'result' => 'indexed'));
 		for ($i=0; $i<count($r); $i++) {

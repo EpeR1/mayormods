@@ -41,7 +41,16 @@ div.besorolas { font-size:x-small; color: #aaa;}
     for($i=0; $i<count($ADAT['tanarok']); $i++) {
 	$T = $ADAT['tanarok'][$i];
 
-            echo '<div class="item tanarNev" data-tanarid="'.$T['tanarId'].'">';
+	$_kulsos = ($T['statusz']=='külső óraadó');
+        $_kulsosClassName = ($_kulsos) ? 'kulsos':'';
+
+        if (isset($ADAT['kulsosview'])) {
+            if ($ADAT['kulsosview']===true && $T['statusz']!='külső óraadó') continue;
+            elseif ($ADAT['kulsosview']!==true && $T['statusz']=='külső óraadó') continue;
+        }
+
+            echo '<div class="item tanarNev '.$_kulsosClassName.'" data-tanarid="'.$T['tanarId'].'">';
+
             if (($_img = getFaceURI($T['tanarId'],'tanar')) != '') echo '<img src="'.$_img.'" class="arckep">';
 	    else {
 		echo '<div class="arckepPlaceholder" style="display:flex; flex-direction: column">';
