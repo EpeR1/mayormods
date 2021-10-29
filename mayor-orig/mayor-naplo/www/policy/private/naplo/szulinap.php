@@ -35,13 +35,15 @@
 	echo '<ul class="szulinap" style="list-style-type: none;">';
 	for ($i=0; $i<count($ADAT['heti'][$n]['diakok']['diak']); $i++) {
 	    $_D = $ADAT['heti'][$n]['diakok']['diak'][$i];
+	    $_diakId= $_D['diakId'];
+	    $_diakOsztalyId = $ADAT['heti'][$n]['diakok']['diakOsztaly'][$_diakId][0];
 	    echo '<li class="diakAdat diakNev" data-diakid="'.$_D['diakId'].'">';
 	    echo $ADAT['heti'][$n]['diakok']['diak'][$i]['viseltNevElotag'].' ';
 	    echo $ADAT['heti'][$n]['diakok']['diak'][$i]['viseltCsaladinev'].' ';
 	    echo $ADAT['heti'][$n]['diakok']['diak'][$i]['viseltUtonev'];
 	    if ($ADAT['heti'][$n]['diakok']['diak'][$i]['diakEletkor']<=20) echo '<span class="eletkor">'.$ADAT['heti'][$n]['diakok']['diak'][$i]['diakEletkor'].'</span>';
-	    if ($ADAT['heti'][$n]['diakok']['diak'][$i]['osztaly'][0]['osztalyJel']!='') {
-		echo ' ('.$ADAT['heti'][$n]['diakok']['diak'][$i]['osztaly'][0]['osztalyJel'].')';
+	    if ($ADAT['osztaly'][$_diakOsztalyId]['osztalyJel']!='') {
+		echo ' ('.($ADAT['osztaly'][$_diakOsztalyId]['osztalyJel']).')';
 	    }
 	    echo '</li>';
 	}
