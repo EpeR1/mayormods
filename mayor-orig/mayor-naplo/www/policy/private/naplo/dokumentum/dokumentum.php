@@ -7,7 +7,6 @@ global $ADAT,$ADATASSOC;
 
 if (__NAPLOADMIN===true) {
 
-
     putDokumentumLista($ADATASSOC);
     putDokumentumListaAdmin($ADAT, true);
     putDokumentumAdmin($ADAT);

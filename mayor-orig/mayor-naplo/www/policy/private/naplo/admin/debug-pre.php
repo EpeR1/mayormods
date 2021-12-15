@@ -17,6 +17,8 @@ if (__NAPLOADMIN!==true) {
     ini_set('xdebug.var_display_max_children', '4096');
     ini_set('xdebug.var_display_max_data', '4096');
 
+    $ADAT['debug_result']['post_max_size'] = ini_get('post_max_size');
+
     $ADAT['debug_result']['config']['backend'] = $config['backend'];
     $ADAT['debug_result']['config']['MYSQLI_ENABLED'] = MYSQLI_ENABLED;
     $ADAT['debug_result']['config']['__PORTAL_CODE'] = __PORTAL_CODE;

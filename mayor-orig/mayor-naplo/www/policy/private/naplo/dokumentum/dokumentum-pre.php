@@ -30,9 +30,17 @@
 		'dokumentumPolicy' => $_policy
 	    )
 	);
-    } elseif ($action=='delDokumentum') {
+    } elseif ($action=='delModDokumentum') {
 	$_ids = readVariable($_POST['dokumentumId'],'id');
-	delDokumentum($_ids);
+	for($i=0; $i<count($_ids); $i++) {
+	    $DATA = array(
+		'dokumentumId' => ($_ids[$i]),
+		'dokumentumSorrend' => readVariable($_POST['sorrend_'.$_ids[$i]],'id',1)
+	    );
+	    updateDokumentum($DATA);
+	}
+	$_delids = readVariable($_POST['delDokumentumId'],'id');
+	delDokumentum($_delids);
     }
     }
     $ADAT = getDokumentumok();

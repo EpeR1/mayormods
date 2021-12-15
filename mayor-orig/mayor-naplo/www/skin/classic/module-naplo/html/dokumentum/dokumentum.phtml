@@ -4,7 +4,7 @@
 	formBegin();
 	    echo '<input type="hidden" name="action" value="addDokumentum">';
 
-	    echo '<table align="center" class="dokumentumLista">';
+	    echo '<table align="center" class="dokumentumLista admin">';
 	    echo '<tr><th colspan="2">';
 	    echo 'Új dokumentum</th><td></tr>';
 	    echo '<tr>';
@@ -21,7 +21,11 @@
 	    echo '</tr>';
 	    echo '<tr>';
 		echo '<th>Url:</th>';
-		echo '<td><input type="text" id="frm_dokumentumUrl" name="dokumentumUrl" placeholder="https://mayor.edu.hu/doksi/meno_tanmenet.pdf" size="100" /></td>';
+		echo '<td>';
+		    // echo $INTEZMENY['honlap'];
+		    echo '<input type="text" id="frm_dokumentumUrl" name="dokumentumUrl" placeholder="https://kanizsay.edu.hu/doksi/meno_tanmenet.pdf" size="100" />';
+		    echo '<div class="dokumentumUrl_pl" style="display:none">pálda: https://mayor.edu.hu/dokumentumok/2021/meno_tanmenet.pdf</div>';
+		echo '</td>';
 	    echo '</tr>';
 	    echo '<tr>';
 		echo '<th>Megjegyzés a link mögött:</th>';
@@ -54,10 +58,10 @@
 
 	if ($admin===true) {
 	    formBegin();
-	    echo '<input type="hidden" name="action" value="delDokumentum">';
+	    echo '<input type="hidden" name="action" value="delModDokumentum">';
 	}
 	echo '<h1 class="dokumentumLista">Adminisztráció</h1>';
-	echo '<table class="dokumentumLista" align="center" cellspacing="1">';
+	echo '<table class="dokumentumLista admin" align="center" cellspacing="1">';
 	// echo '<thead><tr><th colspan="2">'.'</th></tr></thead>';
 	if ($admin===true) {
 	    echo '<tfoot><tr><th colspan="6" style="text-align:right">';
@@ -70,6 +74,7 @@
 	    echo '<tr>';
 		echo '<th>';
 		    echo $D['dokumentumId'];
+		    echo '<input type="hidden" name="dokumentumId[]" value="'.$D['dokumentumId'].'" />';
 		echo '</th>';
 		echo '<td>';
 		    echo $D['dokumentumDt'];
@@ -94,8 +99,8 @@
 		if ($admin===true) {
 		    echo '<th>'.$D['dokumentumTipus'].'</th>';
 		    echo '<th>'.$D['dokumentumPolicy'].'</th>';
-		    echo '<th>'.$D['dokumentumSorrend'].'</th>';
-		    echo '<td><input type="checkbox" name="dokumentumId[]" value="'.$D['dokumentumId'].'" /></td>';
+		    echo '<th><input type="text" name="sorrend_'.$D['dokumentumId'].'" value="'.$D['dokumentumSorrend'].'" size="3" style="text-align:center" />'.'</th>';
+		    echo '<td><input type="checkbox" name="delDokumentumId[]" value="'.$D['dokumentumId'].'" /></td>';
 		}
 	    echo '</tr>';
 	}
@@ -109,28 +114,33 @@
 
 
     function putDokumentumLista($ADAT, $admin=false) {
+
 	global $policy;
+	$genOn = false;
 	echo '<h1 class="dokumentumLista">Dokumentumok</h1>';
 	echo '<table class="dokumentumLista" align="center" cellspacing="1">';
 	echo '<tbody>';
 	if (is_array($ADAT)) foreach($ADAT as $tipus=>$DAT)
 	if (is_array($DAT)) foreach($DAT as $tanev=>$AT) {
-	    echo '<tr>';
-		echo '<th colspan="2">';
-		    if ($tipus=='general') echo 'Általános dokumentumok';
-		    else echo $tanev.'/'.($tanev+1);
+	    if ($genOn==false || $tipus!='general') {
+		echo '<tr>';
+		    echo '<th colspan="2">';
+		    if ($tipus=='general') {
+			echo 'Általános dokumentumok';
+			$genOn=true;
+		    } else echo $tanev.'/'.($tanev+1);
 		echo '</th>';
-	    echo '</tr>';
+		echo '</tr>';
+	    }
 	for ($i=0; $i<count($AT); $i++) {
 	    $D = $AT[$i];
 	    if ($policy=='public' && $D['dokumentumPolicy']!='public') continue;
 	    echo '<tr class="'.$D['dokumentumTipus'].' '.$D['dokumentumPolicy'].'">';
-		echo '<th>';
-		    echo $D['dokumentumLeiras'];
-		echo '</th>';
+		echo '<th style="font-size:x-small; background-color:#fff; font-weight:normal; color: #888;"><span class="tanev tanev'.($D['dokumentumTanev']%2).'">'.$D['dokumentumTanev'].'/'.($D['dokumentumTanev']+1).'</span></th>';
 		echo '<td>';
-		    echo '<a href="'.($D['dokumentumUrl']).'" target="_blank">';
-			echo htmlspecialchars($D['dokumentumRovidLeiras']);
+		    echo '<a href="'.($D['dokumentumUrl']).'" target="_blank" title="'.htmlspecialchars($D['dokumentumRovidLeiras']).'">';
+			if ($D['dokumentumLeiras']!='') echo htmlspecialchars($D['dokumentumLeiras']);
+			// if ($D['dokumentumRovidLeiras']!='') echo htmlspecialchars($D['dokumentumRovidLeiras']);
 			// echo '<span class="icon-download"></span> ';
 		    echo '</a>';
 		    if ($D['dokumentumMegjegyzes']!='') echo '<span class="dokumentumMegjegyzes">('.$D['dokumentumMegjegyzes'].')</span>';

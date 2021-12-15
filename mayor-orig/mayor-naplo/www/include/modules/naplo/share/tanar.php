@@ -121,7 +121,7 @@
 
         if (!is_array($tanarIds)) $tanarIds = array($tanarIds);
         $q = "SELECT *,TRIM(CONCAT_WS(' ',viseltNevElotag, ViseltCsaladiNev, viseltUtoNev)) AS tanarNev FROM ".__INTEZMENYDBNEV.".tanar WHERE tanarId IN (".implode(',', array_fill(0, count($tanarIds), '%u')).")";
-	$R = db_query($q, array('fv' => 'getTanarAdatById', 'modul' => 'naplo_intezmeny', 'result' => 'indexed', 'values' => $tanarIds));
+	$R = db_query($q, array('fv' => 'getTanarAdatById', 'modul' => 'naplo_intezmeny', 'result' => 'indexed', 'values' => $tanarIds), $olr);
 //	for ($i=0; $i<count($R); $i++) {
 //	    $q2 = "SELECT osztalyId
 //	    $R[$i]['osztalya'] = 
@@ -192,5 +192,21 @@
 	return $RET;
     }
 */
+
+   function getTanarBySzulDt($md)
+    {
+
+        $lr = db_connect('naplo_intezmeny');
+        if ($md == '') $md = date('m-d');
+        $q = "SELECT tanarId FROM tanar WHERE szuletesiIdo like '%s' AND kiDt is NULL";
+        $tanarIds = db_query($q, array('lr'=>$lr,'fv' => 'getTanarBySzulDt', 'modul' => 'naplo_intezmeny', 'result' => 'idonly', 'values' => array('____-'.$md)));
+        if (count($tanarIds)>0) {
+                $RET = getTanarAdatById($tanarIds,$lr);
+        } else {
+                $RET = false;
+        }
+        db_close($lr);
+        return $RET;
+    }
 
 ?>

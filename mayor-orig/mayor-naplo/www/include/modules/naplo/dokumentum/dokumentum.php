@@ -2,7 +2,7 @@
 
     function getDokumentumok() {
 
-        $q = "SELECT * FROM dokumentum ORDER BY dokumentumId";
+        $q = "SELECT * FROM dokumentum ORDER BY dokumentumTipus, dokumentumSorrend";
         $v = array();
         $r = db_query($q, array('modul'=>'naplo_intezmeny','fv'=>'dokumentum','values'=>$v, 'result'=>'indexed'));
         return $r;
@@ -11,17 +11,24 @@
 
     function getDokumentumokAssoc() {
 
-	$q = "select dokumentum.*,IFNULL(tanev,YEAR(dokumentumDt)) AS dokumentumTanev from dokumentum left join szemeszter ON (dokumentumDt>kezdesDt && dokumentumDt<=szemeszter.ZarasDt)";
+	$q = "select dokumentum.*,IFNULL(tanev,YEAR(dokumentumDt)) AS dokumentumTanev from dokumentum left join szemeszter ON (dokumentumDt>kezdesDt && dokumentumDt<=szemeszter.ZarasDt)
+ORDER BY dokumentumTipus, dokumentumSorrend";
         $v = array();
         $r = db_query($q, array('modul'=>'naplo_intezmeny','fv'=>'dokumentum','values'=>$v, 'result'=>'indexed'));
 
-	return reindex($r,array('dokumentumTipus','dokumentumTanev'));
+	return (reindex($r,array('dokumentumTipus','dokumentumTanev')));
         return $r;
 
     }
 
     function updateDokumentum($ADAT) {
 
+	if ($ADAT['dokumentumSorrend']>0 && readVariable($ADAT['dokumentumId'],'id')>0) {
+    	    $q = "UPDATE dokumentum SET dokumentumSorrend=%u WHERE dokumentumId=%u";
+    	    $v = array(intval($ADAT['dokumentumSorrend']),intval($ADAT['dokumentumId']));
+    	    $r = db_query($q, array('modul'=>'naplo_intezmeny','fv'=>'dokumentum','values'=>$v, 'result'=>'update'));
+	}
+        return $r;
 
     }
 

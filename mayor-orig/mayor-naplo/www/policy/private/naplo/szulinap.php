@@ -47,6 +47,16 @@
 	    }
 	    echo '</li>';
 	}
+
+	for ($i=0; $i<count($ADAT['heti'][$n]['tanarok']); $i++) {
+	    $_D = $ADAT['heti'][$n]['tanarok'][$i];
+	    $_tanarId= $_D['tanarId'];
+	    if (is_array($_D)) {
+		echo '<li class="tanarAdat tanarNev" data-tanarid="'.$_tanarId.'">';
+		echo $_D['tanarNev'].' (tanár)';
+		echo '</li>';
+	    }
+	}
 	echo '</ul>';
 
     }
@@ -59,10 +69,11 @@
 
     if ($szulinapos) echo _HAPPYBIRTHDAY;
 
+    if ($skin=='ajax') {
     echo '<a href="'.href('index.php?page=naplo&f=szulinap').'" class="btn_szulinap">';
 	echo '<button><span class="icon-th-list" style="font-size:8px; color:#888"></span> Születésnaposok</button>';
     echo '</a>';
-
+    }
     if ($skin!='ajax') echo '</div>';
 
 /*

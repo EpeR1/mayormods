@@ -5,6 +5,7 @@
 //    if ($skin=='ajax') {
 
 	require_once('include/modules/naplo/share/diak.php');
+	require_once('include/modules/naplo/share/tanar.php');
 	require_once('include/modules/naplo/share/osztaly.php');
 
 	$ADAT['ma'] = getDiakBySzulDt(date('Y-m-d'));
@@ -18,10 +19,12 @@
 	    $_md = date('m-d',strtotime('+'.$i.' day',strtotime($dt)));
 	    $ADAT['heti'][$i]['dt']= date('Y-m-d',strtotime('+'.$i.' day',strtotime($dt)));
 	    $ADAT['heti'][$i]['diakok'] = getDiakBySzulDt($_md);
+	    $ADAT['heti'][$i]['tanarok'] = getTanarBySzulDt($_md);
 	}
 	$ADAT['osztaly'] = getOsztalyok(__TANEV,array('result'=>'assoc'));
-
 //    }
+
+    dump($ADAT['heti']);
 
 
     if ($skin!='ajax') {

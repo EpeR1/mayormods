@@ -14,3 +14,15 @@
 
     table.dokumentumLista tbody tr td span.material-icons { display: inline-block; font-size:12px;padding-right:2px; color: white; }    
     table.dokumentumLista tbody tr td:hover span.material-icons { display: inline-block; font-size:12px;padding-right:2px; color: #444; }    
+    table.dokumentumLista tr td a:before { content: ""; padding-right:4px; color: #ddd;}
+    table.dokumentumLista tr td:hover a:before { content: ""; padding-right:4px; color: cornflowerblue;}
+
+    table.dokumentumLista tr td { height:1.8em;}
+    table.dokumentumLista.admin { outline: solid 2px orange; border-radius:10px;}
+    table.dokumentumLista.admin tr td:hover div.dokumentumUrl_pl {display: inline-block;}
+
+    table.dokumentumLista tr th span.tanev {
+  border-radius: 4px; padding:2px 4px; color:white; opacity:70%;
+}
+    table.dokumentumLista tr th span.tanev0 {background-color: cornflowerblue}
+    table.dokumentumLista tr th span.tanev1 {background-color: orange}
