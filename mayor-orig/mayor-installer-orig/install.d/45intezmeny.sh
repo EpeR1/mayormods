@@ -17,6 +17,8 @@ Ehhez meg kell adnia az intézmény OM kódját, nevét és rövid nevét
 
 EOF
 
+echo "Használt nyelvi beállítás: " $LANG
+
 read -n 1 -p "Létrehozzam az intézményt? (i/N)" -s DO
 if [ "$DO" != "i" ]; then echo -e "\nNem hoztam létre az intézményt.\n"; exit; fi
 

@@ -26,7 +26,8 @@ echo "Ubuntu:" ${UBUNTU}
 echo "Version:" ${RELEASE}
 
 TEST=`grep contrib /etc/apt/sources.list`
-if [ "$TEST" == "" ]
+TEST2=`grep contrib /etc/apt/sources.list.d/*`
+if [ "$TEST" == "" ] && [ "$TEST2" == "" ]
 then
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     echo "Az apt sources.list módosítása szükséges!"
@@ -35,20 +36,31 @@ then
     deb http://ftp.hu.debian.org/debian/ jessie main contrib non-free
     deb http://security.debian.org/ jessie/updates main contrib non-free
     deb http://ftp.hu.debian.org/debian/ jessie-updates main contrib non-free
+  "
+  echo "Debian Bullseye (11) esetén például:
+    deb http://ftp.debian.org/debian/ bullseye main contrib non-free
+    deb http://ftp.debian.org/debian/ bullseye-updates main contrib non-free
 	"
     fi
     exit 255;
 fi
 
-if [[ "x${RELEASE}" =~ ^x9.* ]] 
+if [[ "x${RELEASE}" =~ ^x8.* ]] 
+then
+    PKGS="apache2 php5 php5-json php5-mysqlnd php5-ldap php5-mcrypt php5-curl mysql-server recode texlive texlive-fonts-extra texlive-latex-extra texlive-binaries texlive-xetex ttf-mscorefonts-installer ntp wget ssl-cert ssh pwgen texlive-lang-european texlive-lang-hungarian"
+elif [[ "x${RELEASE}" =~ ^x9.* ]] 
 then
     PKGS="apache2 php php-json php-mysql php-ldap php-mbstring php-mcrypt php-curl mariadb-server-10.1 recode texlive texlive-fonts-extra texlive-latex-extra texlive-binaries texlive-xetex ntp wget ssl-cert ssh pwgen texlive-lang-european"
 elif [[ "x${RELEASE}" =~ ^x10.* ]]
 then
     ## PHP 7.2-től php-mcrypt deprecated --> kivettük, de a kódban még van...
     PKGS="apache2 php php-json php-mysql php-ldap php-mbstring php-curl php-bcmath mariadb-server-10.3 recode texlive texlive-fonts-extra texlive-latex-extra texlive-binaries texlive-xetex ntp wget ssl-cert ssh pwgen texlive-lang-european ghostscript"
+elif [[ "x${RELEASE}" =~ ^x11.* ]]
+then
+    PKGS="apache2 php php-json php-mysql php-ldap php-mbstring php-curl php-bcmath mariadb-server recode texlive texlive-fonts-extra texlive-latex-extra texlive-binaries texlive-xetex wget ssl-cert ssh pwgen texlive-lang-european ghostscript"
 else
-    PKGS="apache2 php5 php5-json php5-mysqlnd php5-ldap php5-mcrypt php5-curl mysql-server recode texlive texlive-fonts-extra texlive-latex-extra texlive-binaries texlive-xetex ttf-mscorefonts-installer ntp wget ssl-cert ssh pwgen texlive-lang-european texlive-lang-hungarian"
+    echo "Nem tudom meghatározni, milyen csomagokat telepítsünk. Kilépek. :("
+    exit 1
 fi
 
 if [ "$1" == "--no-deb" ]; then
