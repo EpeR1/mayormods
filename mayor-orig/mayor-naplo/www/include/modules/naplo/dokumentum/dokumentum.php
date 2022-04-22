@@ -11,7 +11,7 @@
 
     function getDokumentumokAssoc() {
 
-	$q = "select dokumentum.*,IFNULL(tanev,YEAR(dokumentumDt)) AS dokumentumTanev from dokumentum left join szemeszter ON (dokumentumDt>kezdesDt && dokumentumDt<=szemeszter.ZarasDt)
+	$q = "select dokumentum.*,IFNULL(tanev,YEAR(dokumentumDt)) AS dokumentumTanev from dokumentum left join szemeszter ON (DATE(dokumentumDt)>kezdesDt && DATE(dokumentumDt)<=szemeszter.ZarasDt)
 ORDER BY dokumentumTipus, dokumentumSorrend";
         $v = array();
         $r = db_query($q, array('modul'=>'naplo_intezmeny','fv'=>'dokumentum','values'=>$v, 'result'=>'indexed'));

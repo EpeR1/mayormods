@@ -51,7 +51,7 @@ Ez utóbbi lépés után a többi már nem végezhető el, csak ha újra megnyit
 
 ====== A következő tanév előkészítése ======
 
-A tanév lázárásával párhuzamosan mindenképp fontos, hogy előkészítsük a következő tanévet. Minden, ami előre tudható, jó ha minél hamarabb rögzítésre kerül a naplóba:
+A tanév lezárásával párhuzamosan mindenképp fontos, hogy előkészítsük a következő tanévet. Minden, ami előre tudható, jó ha minél hamarabb rögzítésre kerül a naplóba:
 
   - Új tanév felvétele, dátumok pontosítása a tanév rendje rendelet szerint
   - Éves munkaterv inicializálása (ehhez a helyes nyitó és záródátumok, valamint annak ismerete kell, hogy hány hetes órarenddel fog működni az intézmény (A-hét, B-hét pl.). A munkarendbe a központilag előírt szünetek előre felvehetők, valamint a mozgó ünnepek (húsvét, pünkösd...). A többi gondolom az év elei értekezleteken fog eldőlni.

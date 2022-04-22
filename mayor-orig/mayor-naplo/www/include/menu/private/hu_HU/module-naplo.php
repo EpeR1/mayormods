@@ -411,7 +411,7 @@
 	$MENU['modules']['naplo']['export'][] = array('txt' => 'Export', 'url' => 'index.php?page=naplo&sub=export&f=diakExport');
 	$MENU['modules']['naplo']['intezmeny'] = array(array('txt' => 'Intézményi adatok', 'url' => 'index.php?page=naplo&sub=intezmeny'));
 
-	$MENU['modules']['naplo']['stat'] = array(array('txt' => 'Látszám statisztika', 'url' => 'index.php?page=naplo&sub=stat&f=letszam'));
+	$MENU['modules']['naplo']['stat'] = array(array('txt' => 'Létszám statisztika', 'url' => 'index.php?page=naplo&sub=stat&f=letszam'));
 	$MENU['modules']['naplo']['ertekeles'] =  array(array('txt' => 'Értékelés', 'url' => 'index.php?page=naplo&sub=ertekeles', 'rejtett' => true));
 	$MENU['modules']['naplo']['admin'] = array(array('txt' => 'Admin', 'url' => 'index.php?page=naplo&sub=admin&f=tanevek'));
 	$MENU['modules']['naplo']['koszi'] =  array(array('txt' => 'Köszi', 'url' => 'index.php?page=naplo&sub=koszi&f=kosziAdmin'));

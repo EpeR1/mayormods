@@ -18,7 +18,7 @@ if (_SZOBELI_LEKERDEZHETO === true) {
 //	    (strtotime(_VEGEREDMENY_PUBLIKALAS_DT)<=$stamp 
 //	    && strtotime(_VEGEREDMENY_PUBLIKALAS_ENDDT)>$stamp)
 //	) {
-	    putVegeredmeny($ADAT);
+///////////////////////////////////////////////////	    putVegeredmeny($ADAT);
 //	}
     } elseif ($nev!='') {
 	//if (count($EREDMENY)==1 && $nev!='' && (_CATEGORY=='admin' || $oktid!='') ) {

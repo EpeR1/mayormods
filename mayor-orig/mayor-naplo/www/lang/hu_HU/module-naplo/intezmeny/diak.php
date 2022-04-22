@@ -10,7 +10,7 @@
     define('_MODOSITAS','Módosítás');
     define('_FELFUGGESZTES_OK','jogviszony szüneteltetés oka');
     define('_FELFUGGESZTES_IG_DT','jogviszony szüneteltetés (tervezett) vége');
-    define('_JOGVISZONY_LEZARAS_ZARADEK','jogviszony lázárás záradéka');
+    define('_JOGVISZONY_LEZARAS_ZARADEK','jogviszony lezárás záradéka');
     define('_LEZARAS_IGAZOLATLAN_ORAK_SZAMA','igazolatlan órák száma');
     define('_LEZARAS_ISKOLA','új iskola');
 /*

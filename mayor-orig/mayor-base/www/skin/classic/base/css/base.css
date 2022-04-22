@@ -446,7 +446,7 @@
 	border-top : solid 4px grey;
 	transition: all 300ms ease;
     }
-    #updateWindowSide.nyitva { right:0px; }
+    #updateWindowSide.nyitva { right:0px; backdrop-filter: blur(2px); }
     #updateWindowSide h1 { padding: 4px 8px; margin:0px; text-align:center; border-bottom: solid 1px #dddddd; }
     #updateWindowSide h1 div { font-size:16px; min-height: 20px; }
     #updateWindowSide h1 span#btn_updateWindowSideClose { float:left; font-size:18px; cursor: pointer; }
@@ -469,7 +469,8 @@
 	border-top : solid 4px #eee;
 	transition: all 300ms ease;
     }
-    #updateWindowSideSub.nyitva { right:0px; }
+
+    #updateWindowSideSub.nyitva { right:0px; backdrop-filter: blur(2px); }
     #updateWindowSideSub h1 { padding: 4px 8px; margin:0px; text-align:center; border-bottom: solid 1px #dddddd; }
     #updateWindowSideSub h1 div { font-size:16px; min-height: 20px; }
     #updateWindowSideSub h1 span#btn_updateWindowSideSubClose { float:left; font-size:18px; cursor: pointer; }
