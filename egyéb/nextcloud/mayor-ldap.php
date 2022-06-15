@@ -41,6 +41,39 @@ $cfg['allapot_tartas'] =  "2018-06-14";	//A jelölt napnak megfelelő állapot b
 $cfg['infotxt_szöveg'] = "info.txt";
 $cfg['verbose'] = 3 ;  
 
+
+
+$cfg['ldap_server'] = "ldaps://windows.iskola.hu:636";      //Jelszóváltoztatást csak TLS/SSL porton enged a windows!
+$cfg['ldap_reqCert'] = "allow";                             // Ellenőrizze-e a certet: "true" "allow" "never"
+$cfg['ldap_baseDn']   =   "DC=ad,DC=iskola,DC=hu";
+//$cfg['ldap_groupOuName'] = "";
+$cfg['ldap_rootBindDn'] = "CN=LDAP_ADATCSERE_ADMIN,CN=Users,DC=ad,DC=iskola,DC=hu";
+$cfg['ldap_rootBindPw'] = "<password>";
+$cfg['ldap_pageSize'] = 100;
+$cfg['ld_username'] = "sAMAccountName";
+$cfg['ld_groupname'] = "sAMAccountName";
+$cfg['ld_oId'] = "telephoneNumber";  //"serialNumber";
+$cfg['ld_employeeId'] = "employeeNumber";
+$cfg['ld_osztalyJel'] = "department";
+$cfg['ld_viseltNevElotag'] = "initials";
+$cfg['ld_viseltCsaladinev'] = "sn";
+$cfg['ld_viseltUtonev'] = "givenName";
+$cfg['ld_lakhelyOrszag'] = "st";
+$cfg['ld_lakhelyHelyseg'] = "l";
+$cfg['ld_lakhelyIrsz'] = "postalCode";
+$cfg['ld_lakHely']  = "streetAddress";
+$cfg['ld_telefon']  = "homePhone";
+$cfg['ld_mobil']    ="mobile";
+$cfg['ld_statusz'] = "company";
+$cfg['ld_beoszt'] = "title";
+$cfg['ld_nxtQuota'] = "description";
+$cfg['ld_leiras'] = "description";
+$cfg['ld_iroda'] = "physicalDeliveryOfficeName";
+$cfg['ld_info'] = "info";
+$cfg['csoport_oupfx'] = "mayor";
+$cfg['manage_users'] = true;
+
+
 $occ_path = "/var/www/nextcloud/";
 $occ_user = "www-data";
 $nxt_version = 0;
@@ -55,12 +88,24 @@ $cfgfile = realpath(pathinfo($argv[0])['dirname'])."/"."mayor-nextcloud.cfg.php"
 $search = array( 'á', 'ä', 'é', 'í', 'ó', 'ö', 'ő', 'ú', 'ü', 'ű', 'Á', 'Ä', 'É', 'Í', 'Ó', 'Ö', 'Ő', 'Ú', 'Ü', 'Ű');	// egyelőre csak a magyar betűket ismeri
 $replace = array( 'aa', 'ae', 'ee', 'ii', 'oo', 'oe', 'ooe', 'uu', 'ue', 'uue', 'Aa', 'Aae', 'Ee', 'Ii', 'Oo', 'Oe', 'Ooe', 'Uu', 'Ue', 'Uue');
 $pwchars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_?";
+$ldap_group_attrs = array('objectCalss', 'samaccountname', 'cn', 'member', 'name', 'description', 'info', 'mail', 'gidNumber', 'samaccounttype', 'instancetype', );
+$ldap_user_attrs  = array('sn', 'serialNumber', 'c', 'l', 'st', 'street', 'title', 'description', 'postalAddress', 'postalCode', 'postOfficeBox', 'physicalDeliveryOfficeName',
+                            'telephoneNumber', 'facsimileTelephoneNumber', 'givenName', 'initials', 'otherTelephone', 'info', 'memberOf', 'otherPager', 'co', 'department',
+                            'company', 'streetAddress', 'otherHomePhone', 'wWWHomePage', 'employeeNumber', 'employeeType', 'personalTitle', 'homePostalAddress', 'name','accountExpires',
+                            'countryCode', 'employeeID', 'homeDirectory', 'comment', 'sAMAccountName', 'division', 'otherFacsimileTelephoneNumber', 'otherMobile', 'lastLogon',
+                            'primaryTelexNumber', 'otherMailbox', 'ipPhone', 'otherIpPhone', 'url', 'uid', 'mail', 'roomNumber', 'homePhone', 'mobile', 'pager', 'lastLogonTimestamp',
+                            'jpegPhoto', 'departmentNumber', 'middleName', 'thumbnailPhoto', 'preferredLanguage', 'uidNumber', 'gidNumber', 'unixHomeDirectory', 'loginShell'
+                        );   
+
+
+
+
 
 for($i = 1; $i<$argc; $i++){  //Ha van külön config megadva, akkor először azt töltjük be.
     if($argv[$i] == "--config-file" ){$cfgfile = strval($argv[$i+1]); $i++;}
 }
 if(file_exists($cfgfile) === TRUE){ $cfg_o = $cfg; include($cfgfile); $cfg_n = $cfg; $cfg = array_merge($cfg, $cfg_o, $cfg_n); }   //Config betöltés
-if(!empty($m2n)){  $cfg_o = $cfg; $cfg = array_merge($cfg, $m2n, $cfg_o); }    //Ha valahol még a régi config lenne 
+if(!empty($m2n)){ $cfg = array_merge($cfg, $m2n); }    //Ha valahol még a régi config lenne 
 
 
 for($i = 1; $i<$argc; $i++){    // Kézzel felülbírált config opciók
@@ -134,7 +179,8 @@ function rnescp($str){                //Escape strings
 }
 
 
-if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '>=')) { //MySQLi (Improved) és php7  kell!
+
+if (function_exists('mysqli_connect') and function_exists('iconv') and function_exists('ldap_search') and version_compare(phpversion(), '5.0', '>=')) { //MySQLi (Improved) és php7  kell!
 
     function db_connect($db = ""){ 
         global $log,$cfg;
@@ -155,6 +201,507 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         return $l;      //Egyébként a sikeressel tér vissza
     } 
     // bezár: mysqli_close($link); 
+
+
+
+    function ldap_open($host = ""){
+        global $cfg, $log;
+        
+        if(empty($host)){
+            $host = $cfg['ldap_server']; 
+        }
+        if ($log['verbose'] > 0 ){  echo "***\tLDAP kapcsolódás. ('".$host."')\n"; }
+        $ld = ldap_connect($host);  
+        
+        if($ld !== False){
+    
+            if($cfg['ldap_reqCert'] == "never"){                                            //Mennyire legyen szigorú a CERT-ekkel
+                ldap_set_option($ld, LDAP_OPT_X_TLS_REQUIRE_CERT, LDAP_OPT_X_TLS_NEVER);
+            } else if($cfg['ldap_reqCert'] == "allow"){
+                ldap_set_option($ld, LDAP_OPT_X_TLS_REQUIRE_CERT, LDAP_OPT_X_TLS_ALLOW);
+            } else if($cfg['ldap_reqCert'] == "true"){
+                ldap_set_option($ld, LDAP_OPT_X_TLS_REQUIRE_CERT, LDAP_OPT_X_TLS_HARD);
+            } else {
+                ldap_set_option($ld, LDAP_OPT_X_TLS_REQUIRE_CERT, LDAP_OPT_X_TLS_TRY);            
+            }
+            ldap_set_option($ld, LDAP_OPT_NETWORK_TIMEOUT, 10);                             //Szerver felülbírálhatja
+            ldap_set_option($ld, LDAP_OPT_PROTOCOL_VERSION, 3);     
+            ldap_set_option($ld, LDAP_OPT_REFERRALS, 0);                                    //Így azért gyorsabb
+            ldap_set_option($ld, LDAP_OPT_MATCHED_DN, $cfg['ldap_baseDn']);                 //Jobb, ha mindjárt az elején beállítjuk
+        
+            if(ldap_bind($ld, $cfg['ldap_rootBindDn'], $cfg['ldap_rootBindPw']) === FALSE){
+                $ern = ldap_errno($ld);
+                echo "\n**** Sikertelen kapcsolódás! **** ('".$host."') info:".ldap_err2str($ern)." [$ern] \n\n";
+                return null;
+            } else {
+                if ($log['verbose'] > 0 ){ echo "*\tSikeres kapcsolódás. ('".$host."') info:".ldap_error($ld)."\n\n"; }
+                return $ld;
+            }
+        } else {
+            echo "\n**** Sikertelen kapcsolódás! **** ('".$host."') info:".ldap_error($ld)."\n\n";
+            return null;
+        }
+    }
+    // bezár: ldap_close($ldap);
+
+
+    function ldap_find($ld, $base, $filt, $attr=array()){
+        global $cfg, $log;
+        $ret = array();
+        $cookie = '';
+        $errn = $mdn = $errmsg = $refs = $ctrl = null;
+        ldap_set_option($ld, LDAP_OPT_PROTOCOL_VERSION, 3);
+    
+        if(version_compare(phpversion(), '7.4', '<')){     //PHP 5-7
+            do {
+                if ($log['verbose'] > 7 ){ echo "LDAP ->\t ldap_search('".$ld."', '".$base."', '".$filt."', \$attr,  0, 0, 0, LDAP_DEREF_NEVER);\n Attr: "; print_r($attr); }
+                ldap_control_paged_result($ld, $cfg['ldap_pageSize'], true, $cookie);
+                $res  = ldap_search($ld, $base, $filt, $attr, 0, 0, 0, LDAP_DEREF_NEVER);
+                ldap_parse_result($ld, $res, $errn , $mdn , $errmsg , $refs, $ctrl);
+                if($errn == 0){
+                    $ret = array_merge($ret, ldap_get_entries($ld, $res));
+                } else {
+                    echo "\nLDAP ->\t ******** Ldap ('".$ld."', '".$base."', '".$filt."') lekérdezési hiba. (Infó: [".$errn."]".$errmsg."!) ********";
+                }
+                ldap_control_paged_result_response($ld, $res, $cookie);      
+            } while($cookie !== null && $cookie != '');
+    
+        } else {                                            //PHP 8+
+            do {
+                if ($log['verbose'] > 7 ){ echo "LDAP ->\t ldap_search('".$ld."', '".$base."', '".$filt."', \$attr,  0, 0, 0, LDAP_DEREF_NEVER, \$ctrl);\n Attr: "; print_r($attr); }    
+                $ctrl = array(array('oid' => LDAP_CONTROL_PAGEDRESULTS, 'iscritical' => true, 'value' => array('size' => $cfg['ldap_pageSize'], 'cookie' => $cookie)));
+                $res  = ldap_search($ld, $base, $filt, $attr, 0, 0, 0, LDAP_DEREF_NEVER, $ctrl);
+                ldap_parse_result($ld, $res, $errn , $mdn , $errmsg , $refs, $ctrl);
+                if($errn == 0){
+                    $ret = array_merge($ret, ldap_get_entries($ld, $res));  
+                } else {
+                    echo "\nLDAP ->\t ******** Ldap ('".$ld."', '".$base."', '".$filt."') lekérdezési hiba. (Infó: [".$errn."]".$errmsg."!) ********";
+                }
+                if (isset($ctrl[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'])) {   //újraküldéshez
+                    $cookie = $ctrl[LDAP_CONTROL_PAGEDRESULTS]['value']['cookie'];
+                } else {
+                    $cookie = '';
+                }
+            } while (!empty($cookie));
+        }
+        if ($log['verbose'] > 11 ){ $pr = $ret; for($i = 0; $i < $pr['count']; $i++){ $pr[$i]['jpegphoto'][0] = @base64_encode(@$pr[$i]['jpegphoto'][0]);  $pr[$i]['thumbnailphoto'][0] = @base64_encode(@$pr[$i]['thumbnailphoto'][0]);} print_r($pr);}
+        if($res !== False){
+            ldap_free_result($res);
+        }
+        return $ret;
+    }
+
+
+    function attr_add_defaults($inp = array()){ //Attributes tömb feltöltése alapértékekkel
+        global $cfg, $log;
+        $ovr = array();
+
+        if(!empty($inp['email'])) { 
+            $ovr['email'] = $inp['email']; 
+        } else if(!empty($inp['mail'])){
+            $ovr['email'] = $inp['mail'];
+        } else {
+            $ovr['email'] = $cfg['default_email'];   
+        }
+        $def = array('mail','oId', 'employeeId', 'osztalyJel', 'viseltNevElotag', 'viseltCsaladinev','viseltUtonev', 
+                    'szuletesiHely', 'szuletesiIdo', 'lakhelyOrszag', 'lakhelyHelyseg', 'lakhelyIrsz', 'lakHely', 
+                    'telefon', 'mobil', 'statusz', 'beoszt', 'quota', 'kezdoTanev', 'vegzoTanev', 'jel', 'diakId', 
+                    'tanarId', 'beDt', 'kiDt', 'beEv', 'userAccount', 'fullName',
+                    );
+        $defo = array('oId' => "11111111111", 'quota' => $cfg['default_quota'], 'jel' => 'x', 'vegzoTanev' => -1, 'beDt' => -1,
+                    'kezdoTanev' => -1, 'diakId' => 0, 'tanarId' => 0, 'kiDt' => -1, 'beEv' => -1, 
+                    );
+        return array_merge($def, $defo, $inp, $ovr);
+    }
+
+
+
+function ld_user_info($l, $userAccount, $attrs = array()){    //Csak a fontosabb tulajdonságokkal
+    global $cfg,$log,$ldap_user_attrs;
+    if(empty($attrs)){
+        $attrs = $ldap_user_attrs;
+    }
+    $ret = array();
+
+    if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$cfg['ldap_baseDn']."', '(&(|(|(objectClass=person)(objectClass=organizationalPerson))(objectClass=user))(".$cfg['ld_username']."=".ldap_escape($userAccount, "", LDAP_ESCAPE_FILTER)."))', \$attrs);\n"; } 
+    if($log['verbose'] > 11 ){ echo "\$attrs = "; print_r($attrs); }
+    $users = ldap_find($l, $cfg['ldap_baseDn'], "(&(|(|(objectClass=person)(objectClass=organizationalPerson))(objectClass=user))(".$cfg['ld_username']."=".ldap_escape($userAccount, "", LDAP_ESCAPE_FILTER).") )", $attrs);
+    if ($log['verbose'] > 11 ){ $pr = $users; for($i = 0; $i < $users['count']; $i++){ $pr[$i]['jpegphoto'][0] = base64_encode($pr[$i]['jpegphoto'][0]);  $pr[$i]['thumbnailphoto'][0] = base64_encode($pr[$i]['thumbnailphoto'][0]); }    echo "Users: ";  print_r($pr); }
+
+    return $users;
+}
+
+
+function ld_find_group($l, $groupName, $scope, $attrs = array()){
+    global $cfg,$log,$ldap_group_attrs;
+    if(empty($attrs)){
+        $attrs = $ldap_group_attrs;
+    }
+    $ret = array();
+    $dn = "";
+
+    if(empty($scope) or $scope == "own"){           //A Script saját csoportjai között
+        $dn = "OU=".ldap_escape($cfg['isk_rovidnev']."-".$cfg['csoport_oupfx'], "", LDAP_ESCAPE_DN).",".$cfg['ldap_baseDn'];
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$dn."', '(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER).")', \$attrs);\n"; }  if ($log['verbose'] > 11 ) { echo "Attr: "; print_r($attrs); }
+        $ret[1] = ldap_find($l, $dn, "(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER)."))", $attrs );    
+    } else if($scope == "global"){                  //Egész szerveren
+        $dn = $cfg['ldap_baseDn'];
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$dn."', '(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER).")', \$attrs);\n"; } if ($log['verbose'] > 11 ) { echo "Attr: "; print_r($attrs); }
+        $ret[1] = ldap_find($l, $dn, "(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER)."))", $attrs );
+    } else {                                        //Csak a megadott DN-ben (OU)
+        $dn = $scope;
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$dn."', '(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER).")', \$attrs);\n"; } if ($log['verbose'] > 11 ) { echo "Attr: "; print_r($attrs); }
+        $ret[1] = ldap_find($l, $dn, "(&(objectClass=group)(cn=".ldap_escape($groupName, "", LDAP_ESCAPE_FILTER)."))", $attrs );
+    }
+    $ret[4] = $dn;
+    
+    return $ret;
+}
+
+
+    function ld_user_add($l, $userAccount, $fullname, $attr=array()){
+        global $cfg,$log;
+        $attrs = $ret = array();
+
+
+        $attr = attr_add_defaults($attr);
+        if(!empty($fullname)                ){ $attrs['displayname'][0] = $fullname;}
+        else if(!empty($attr['fullName'])   ){ $attrs['displayname'][0] = $attr['fullName'];}
+        else                                 { $attrs['displayname'][0] = $userAccount;}
+
+        $dn = "CN=".ldap_escape($userAccount, "", LDAP_ESCAPE_DN).",CN=Users,".$cfg['ldap_baseDn'];       //Ezt még lehetne cizellálni
+
+        $attrs['objectclass'][0] = "top";                    //Alap dolgok, ami mindenképpen kell
+        $attrs['objectclass'][1] = "person";
+        $attrs['objectclass'][2] = "organizationalPerson";
+        $attrs['objectclass'][3] = "user";
+        $attrs['instancetype'][0] = "4"; 
+        $attrs['useraccountcontrol'][0] = "514";
+        $attrs['accountexpires'][0] = "9223372036854775807";  // vagy "0"
+        $attrs['distinguishedname'][0] = $dn;
+        $attrs[strtolower($cfg['ld_username'])][0]        =   $userAccount; 
+
+        $attrs['mail'][0]                                 =   $attr['email'];
+        $attrs[strtolower($cfg['ld_oId'])][0]             =   $attr['oId'];
+        $attrs[strtolower($cfg['ld_employeeId'])][0]      =   $attr['employeeId']; 
+        $attrs[strtolower($cfg['ld_osztalyJel'])][0]      =   $attr['osztalyJel']; 
+        $attrs[strtolower($cfg['ld_viseltNevElotag'])][0] =   $attr['viseltNevElotag']; 
+        $attrs[strtolower($cfg['ld_viseltCsaladinev'])][0]=   $attr['viseltCsaladinev']; 
+        $attrs[strtolower($cfg['ld_viseltUtonev'])][0]    =   $attr['viseltUtonev']; 
+        $attrs[strtolower($cfg['ld_lakhelyOrszag'])][0]   =   @$attr['lakhelyOrszag']; 
+        $attrs[strtolower($cfg['ld_lakhelyHelyseg'])][0]  =   $attr['lakhelyHelyseg']; 
+        $attrs[strtolower($cfg['ld_lakhelyIrsz'])][0]     =   $attr['lakhelyIrsz']; 
+        $attrs[strtolower($cfg['ld_lakHely'])][0]         =   $attr['lakHely']; 
+        $attrs[strtolower($cfg['ld_telefon'])][0]         =   $attr['telefon']; 
+        $attrs[strtolower($cfg['ld_mobil'])][0]           =   $attr['mobil']; 
+        $attrs[strtolower($cfg['ld_statusz'])][0]         =   $attr['statusz']; 
+        $attrs[strtolower($cfg['ld_beoszt'])][0]          =   $attr['beoszt']; 
+        $attrs[strtolower($cfg['ld_nxtQuota'])][0]        =   $attr['quota']; 
+        $attrs[strtolower($cfg['ld_iroda'])][0]           = "MaYor-Script-Managed";
+        $attrs[strtolower($cfg['ld_info'])][0] = "Jogviszony kezdete: ".($attr['kezdoTanev'])."\r\nJogviszony terv. vége: ".($attr['vegzoTanev']+1)." Június\r\n\r\n(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
+        //$attrs[strtolower($cfg['ld_'])][0] = $attr[''];
+
+        foreach($attrs as $key => $val){                    //Üresek kipucolása
+            if($key == "" or $val[0] == ""){ unset($attrs[$key]); }
+        }
+        $ret[4] = $dn;
+        $ret[5] = $attrs;
+
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_add('".$l."', '".$dn."', \$attrs)\n"; } if ($log['verbose'] > 11 ){ echo "Attr: "; print_r($attrs); }
+
+        $ret[0] = @ldap_add($l, $dn, $attrs);
+        $ret[2] = ldap_errno($l);
+        $ret[3] = ldap_err2str($ret[2]);
+        if($ret[0] === true){                       //Sikeres volt a létrehozás
+            unset($attrs);                          //Attr tisztítása
+            $ret[1] = gen_password(16);             //Jelszó
+            $attrs[strtolower('unicodePwd')][0] =  iconv( "UTF-8", "UTF-16LE", "\"".$ret[1]."\"" );
+            if($log['verbose'] > 7){ echo "LDAP ->\tldap_mod_replace('".$l."', '".$dn."', \$attrs)\n"; } if ($log['verbose'] > 11 ){ echo "Attr: "; print_r($attrs); }
+            
+            if(!@ldap_mod_replace ($l, $dn, $attrs )){        //Jelszó beállítása
+                $ret[2] = ldap_errno($l);
+                $ret[3] = ldap_err2str($ret[2]);
+                echo "\nLDAP ->\t ******** LDAP Felhasználó jelszócsere hiba. (infó: [".$ret[2]."] ".$ret[3]."!) ********\n";
+                return $ret;
+            } 
+            unset($attrs);                                   //User Engedélyezése
+            $attrs[strtolower('userAccountControl')][0] = 512;   
+            if(!@ldap_mod_replace ($l, $dn, $attrs )){
+                $ret[2] = ldap_errno($l);
+                $ret[3] = ldap_err2str($errn);
+                echo "\nLDAP ->\t ******** LDAP Felhasználó jelszócsere hiba. (infó: [".$ret[2]."] ".$ret[3]."!) ********\n";
+                return $ret;
+            }
+        } else {
+            echo "\nLDAP ->\t ******** LDAP Felhasználó létrehozási hiba. (infó: [".$ret[2]."] ".$ret[3]."!) ********\n";
+        }
+        return $ret;
+    }
+    
+
+
+    function ld_user_del($l, $userAccount){
+        global $cfg, $log;
+        $ret = array();
+        $attrs = array(strtolower($cfg['ld_username']), 'lastLogonTimestamp', 'samaccountname', 'physicalDeliveryOfficeName', 'displayName', 'cn');
+
+        $user = ld_user_info($l, $userAccount, $attrs);
+        if ($log['verbose'] > 0 ){ echo "\$user = "; print_r($user); }
+
+        for($i = 0; $i < $user['count']; $i++){        //Az összeset, ha több? lenne.
+            if($user[$i][strtolower($cfg['ld_username'])][0] == $userAccount and !in_array($userAccount, $cfg['kihagy']) and $user[$i]['physicaldeliveryofficename'][0] == "MaYor-Script-Managed" ){ //Biztonság kedvéért 
+                
+                if(!empty($user[$i][strtolower('lastLogonTimestamp')])  /*and $user[$i][strtolower('lastLogonTimestamp')][0] != "0"*/ ){   //Ha egyszer már belépett, letiltja
+                
+                    unset($attrs);                          //Letiltás
+                    $attrs['useraccountcontrol'][0] = "514";
+                    $ret[0] = ldap_mod_replace($l, $user[$i]['dn'], $attrs);
+                    $ret[4] = $user[$i]['dn'];
+                    $ret[2] = ldap_errno($l);
+                    $ret[3] = ldap_err2str($ret[2]);
+                    $ret[5] = $attrs;
+ 
+                } else {                                                //Egyébként törli is
+                    $ret[0] = @ldap_delete($l, $user[$i]['dn']);
+                    $ret[4] = $user[$i]['dn'];
+                    $ret[2] = ldap_errno($l);
+                    $ret[3] = ldap_err2str($ret[2]);
+                }
+            } else { //Nem nyúl hozzá
+                echo "\nNem nyúl hozzá!\n";
+            }
+        }
+        if($i == 0){
+            $ret[3] =  "LDAP ->\t ******** LDAP Felhasználó törlés hiba! (infó: FElhasználó nem található! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
+        }
+        return $ret;
+
+    }
+
+/*
+    function user_del($userAccount){	// kitöröl vagy letilt egy felhasználót a Nextcloud-ban
+	    global $occ_path,$occ_user,$log,$dryrun;
+        $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:info ".escp($userAccount)." --output=json \"";
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+        $last_login = json_decode(shell_exec($e),true)['last_seen'] ;
+        if($last_login == "1970-01-01T00:00:00+00:00" ){	
+            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:delete ".escp($userAccount)." \"";		// Ha még soha nem lépett be
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+            if(!$dryrun){ $ret = shell_exec($e); } else { $ret = true; }											// akkor törölhető
+            if ($log['verbose'] > 11 ){ print_r($ret); }
+        } else {
+            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:disable ".escp($userAccount)." \"";
+            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+            if(!$dryrun){ $ret = shell_exec($e); } else { $ret = true; }											// különben csak letiltja
+            if ($log['verbose'] > 11 ){ print_r($ret); }
+        }      
+    }
+*/
+
+function ld_group_user_add($l, $groupName, $userAccount, $scope = null){
+    global $cfg,$log,$ldap_group_attrs,$ldap_user_attrs;
+    $ret = array(0 => true, 2 => 0);
+    //$attrs = $ldap_group_attrs;
+    $attrs = array('member', 'cn', strtolower($cfg['ld_groupname']));
+
+    $rv = ld_find_group($l, $groupName, $scope, $attrs);
+    $ret[4] = $dn = $rv[4];
+    $group = $rv[1];
+    $ret[5] = $attrs;
+    if ($log['verbose'] > 11 ){ echo "\$group = "; print_r($group); }
+
+    if(!empty($group) and $group['count'] == 1){    //Ha megvan a csoport //A felhasználókat viszont globálisan keresi!
+
+        $users = ld_user_info($l, $userAccount, array('dn'));
+
+        if(!empty($users) and $users['count'] == 1){
+            $userdn = $users[0]['dn'];
+            if(empty($group[0]['member']) or !in_array($userdn, $group[0]['member'])){
+                $ldif['member'] = $userdn;
+                $ret[0] = @ldap_mod_add($l, $group[0]['dn'], $ldif);
+                $ret[2] = ldap_errno($l);
+                $ret[3] = ldap_err2str($ret[2]);
+
+                unset($attrs);                          //Módosítási dátum frissítés
+                $attrs[strtolower($cfg['ld_info'])][0] = "(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
+                @ldap_mod_replace($l, $group[0]['dn'], $attrs);
+
+                //if ($log['verbose'] > 6 ){ echo "\nLDAP ->\t Felhasználó: [".$userAccount."] hozzáadva a: [".$groupName."]/[".$dn."] csoporthoz!\n"; }
+            } else {
+                //if ($log['verbose'] > 6 ) { echo "\nLDAP ->\t Felhasználó: [".$userAccount."] már benne volt a: [".$groupName."]/[".$dn."] csoportban!\n"; }
+            }
+        } else if($users['count'] > 1){ //Több user
+            $ret[0] = false;
+            $ret[3] = "LDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Több ugyanolyan felhasználó a létezik! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
+            echo $ret[3];
+        } else {    //vagy nincs user
+            $ret[0] = false;
+            $ret[3] = "LDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Nincs ilyen felhasználó! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
+            echo $ret[3];
+        }
+    } else if($group['count'] > 1) { //Több csoport, 
+        $ret[0] = false;
+        $ret[3] = "LDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Több ugyanolyan csoport található! [".$groupName."]/[".$dn."]) ********\n";
+        echo $ret[3];
+    } else { ///vagy nincs csoport
+        $ret[0] = false;
+        $ret[3] = "LDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Csoport nem található! [".$groupName."]/[".$dn."]) ********\n";
+        echo $ret[3];
+    }
+    return $ret;
+}
+
+
+
+function ld_group_user_del($l, $groupName, $userAccount, $scope = null){
+    global $cfg,$log,$ldap_group_attrs,$ldap_user_attrs;
+    $ret = array(0 => true, 2 => 0);
+    //$attrs = $ldap_group_attrs;
+    $attrs = array('member', 'cn', strtolower($cfg['ld_groupname']));
+    $dn = "";
+
+    $rv = ld_find_group($l, $groupName, $scope, $attrs);
+    $ret[4] = $dn = $rv[4];
+    $group = $rv[1];
+    $ret[5] = $attrs;
+    if ($log['verbose'] > 11 ){ echo "\$group = "; print_r($group); }
+
+    if(!empty($group) and $group['count'] == 1 ){    //Ha megvan a csoport //A felhasználókat viszont globálisan keresi!
+        for(  $i = 0;  (!empty($group[0]['member']) and $i < $group[0]['member']['count']);    $i++  ){            //Memebereket végigkérdezi
+
+            if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$group[0]['member'][$i]."', '', array('".strtolower($cfg['ld_username'])."'));\n"; } 
+            $users = ldap_find($l, $group[0]['member'][$i], "(objectClass=*)", array(strtolower($cfg['ld_username'])));   //lekérdezni egyesével a sAMAccountName-t
+            if ($log['verbose'] > 11 ) { echo "Users: "; print_r($users); }
+
+            if($users[0][strtolower($cfg['ld_username'])][0] == $userAccount){  //Ha ő az, törölni belőle
+                $ldif['member'] = $group[0]['member'][$i];     //vagy   $users[0]['dn'];
+                if($log['verbose'] > 7){ echo "LDAP ->\tldap_mod_del('".$l."', '".$group[0]['dn']."', '', array('".'member'."' => '".$ldif['member']."'));\n"; } 
+
+                $ret[0] = ldap_mod_del($l, $group[0]['dn'], $ldif);
+                $ret[2] = ldap_errno($l);
+                $ret[3] = ldap_err2str($ret[2]); 
+                
+                unset($attrs);                      //Módosítási dátum frissítés
+                $attrs[strtolower($cfg['ld_info'])][0] = "(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
+                @ldap_mod_replace($l, $group[0]['dn'], $attrs);
+
+                if($ret[0] === false ){
+                    $errn = ldap_errno($l);
+                    echo "\nLDAP ->\t ******** LDAP Csoportból törlés hiba! (infó: {".$groupName."/".$userAccount."} [".$errn."] ".ldap_err2str($errn)." ) ********\n";
+                }           
+            }
+        }
+        if(empty($ldif)){   //Nem töröltünk senkit
+            $ret[3] = "LDAP ->\t Felhasználó: [".$userAccount."] nincs: [".$groupName."]/[".$dn."] csoportban!\n";
+            if ($log['verbose'] > 7 ){ echo $ret[3]; }
+        }
+       
+        /*
+        //if($log['verbose'] > 7){ echo "LDAP ->\tldap_find('".$l."', '".$cfg['ldap_baseDn']."', '(&(|(|(objectClass=person)(objectClass=organizationalPerson))(objectClass=user))(".$cfg['ld_username']."=".ldap_escape($userAccount, "", LDAP_ESCAPE_FILTER)."))', array('dn'));\n"; } 
+        //$users = ldap_find($l, $cfg['ldap_baseDn'], "(&(|(|(objectClass=person)(objectClass=organizationalPerson))(objectClass=user))(".$cfg['ld_username']."=".ldap_escape($userAccount, "", LDAP_ESCAPE_FILTER).") )" , array('memberOf'));
+        $users = ld_user_info($l, $userAccount, array('memberOf'));
+        //if ($log['verbose'] > 11 ) { echo "Users: "; print_r($users); }
+
+        if(!empty($users) and $users['count'] == 1){        //Csak 1db user van
+            $userdn = $users[0]['dn'];
+            if(in_array($userdn, $group[0]['member'])){
+                $ldif['member'] = $userdn;
+                $ret[0] = @ldap_mod_del($l, $group[0]['dn'], $ldif);
+                $ret[2] = $errn = ldap_errno($l);
+                $ret[3] = ldap_err2str($errn);
+
+                unset($attrs);  //Módosítási dátum frissítés
+                $attrs[strtolower($cfg['ld_info'])][0] = "(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
+                @ldap_mod_replace($l, $group[0]['dn'], $attrs);
+
+                //if ($log['verbose'] > 7 ){ echo "\nLDAP ->\t Felhasználó: [".$userAccount."] törölve a: [".$groupName."]/[".$dn."] csoportból!\n"; }
+            } else {
+                //if ($log['verbose'] > 7 ) { echo "\nLDAP ->\t Felhasználó: [".$userAccount."] nincs benne a: [".$groupName."]/[".$dn."] csoportban!\n"; }
+            }
+        } else if($users['count'] > 1){ //Több user
+            echo "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Több ugyanolyan felhasználó a létezik! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
+        } else {    //vagy nincs user
+            echo "\nLDAP ->\t ******** LDAP Csoporthoz adás hiba! (infó: Nincs ilyen felhasználó! [".$userAccount."]/[".$cfg['ldap_baseDn']."]) ********\n";
+        }
+        */
+    } else if($group['count'] > 1) {                            //Több csoport, 
+        $ret[0] = false;
+        $ret[3] = "LDAP ->\t ******** LDAP Csoportból törlés hiba! (infó: Több ugyanolyan csoport található! [".$groupName."]/[".$dn."]) ********\n";
+    } else {                                                    /// vagy nincs ilyen csoport
+        $ret[0] = false;
+        $ret[3] =  "LDAP ->\t ******** LDAP Csoportból törlés hiba! (infó: Csoport nem található! [".$groupName."]/[".$dn."]) ********\n";
+    }
+    return $ret;
+}
+
+
+    function ld_group_add($l, $groupName, $attr=array()){
+        global $cfg,$log,$ldap_group_attrs;
+        $attrs = $ret = array();
+
+        $dn = "CN=".ldap_escape($groupName, "", LDAP_ESCAPE_DN).",OU=".ldap_escape($cfg['isk_rovidnev']."-".$cfg['csoport_oupfx'], "", LDAP_ESCAPE_DN).",".$cfg['ldap_baseDn']; 
+        
+        $attrs['objectclass'][0] = "top";                    //Alap dolgok, ami mindenképpen kell
+        $attrs['objectclass'][1] = "group";
+        $attrs['instancetype'][0] = "4"; 
+        $attrs['distinguishedname'][0] = $dn;
+        $attrs[strtolower($cfg['ld_groupname'])][0] = $groupName; 
+        $attrs[strtolower($cfg['ld_leiras'])][0] = "MaYor-Script-Managed";
+        $attrs[strtolower($cfg['ld_info'])][0] = "(Generated-by MaYor-LDAP Script.)\r\n(Updated: ".date('Y-m-d H:i:s').")\r\n";
+        unset($attrs['']);
+        $ret[4] = $dn;
+        $ret[5] = $attrs;
+        
+        if($log['verbose'] > 7){ echo "LDAP ->\tldap_add('".$l."', '".$dn."', \$attrs)\n"; } if ($log['verbose'] > 10 ){ echo "Attr: "; print_r($attrs); }
+        $ret[0] = @ldap_add($l, $dn, $attrs);
+        $ret[2] = ldap_errno($l);
+        $ret[3] = ldap_err2str($ret[2]);
+        if($ret[0] == false){
+            echo "\nLDAP ->\t ******** LDAP Csoport létrehozási hiba. (infó: {".$dn."} [".$ret[2]."] ".$ret[3]."!) ********\n";
+        }
+        return $ret;
+    }
+
+
+    function ld_group_del($l, $groupName, $scope=null){
+        global $cfg,$log,$ldap_group_attrs,$ldap_user_attrs;
+        $ret = array(0 => true, 2 => 0);
+        $attrs = array(strtolower($cfg['ld_groupname']), 'cn');
+
+        $rv = ld_find_group($l, $groupName, $scope, $attrs);
+        $ret[6] = $rv[4];
+        $group = $rv[1];
+        $ret[5] = $attrs;
+        if ($log['verbose'] > 11 ){ echo "\$group = "; print_r($group); }
+
+        for($i = 0; $i < $group['count']; $i++){
+            if($group[$i][strtolower($cfg['ld_groupname'])][0] == $groupName){ //Biztonság kedvéért 
+                $ret[0] = ldap_delete($l, $group[$i]['dn']);
+                $ret[4] = $group[$i]['dn'];
+                $ret[2] = ldap_errno($l);
+                $ret[3] = ldap_err2str($ret[2]);
+            }
+        }
+        if($i == 0){
+            $ret[3] =  "LDAP ->\t ******** LDAP Csoport törlés hiba! (infó: Csoport nem található! [".$groupName."]/[".$rv[4]."]) ********\n";
+        }
+        return $ret;
+    }
+
+
+
+ function ld_user_set(){}
+ function ld_user_enable(){}
+ function ld_user_disable(){}
+ 
+ function ld_user_list(){}
+ function ld_group_list(){}
+ function ld_user_lastlogin(){}
+
+ function ld_ou_add(){}
+ function ld_ou_del(){}
+
+
 
     function script_install($l){
         global $cfg,$log;
@@ -284,7 +831,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     }
 
     function user_del($userAccount){	// kitöröl vagy letilt egy felhasználót a Nextcloud-ban
-	global $occ_path,$occ_user,$log,$dryrun;
+	    global $occ_path,$occ_user,$log,$dryrun;
         $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:info ".escp($userAccount)." --output=json \"";
         if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
         $last_login = json_decode(shell_exec($e),true)['last_seen'] ;
@@ -304,52 +851,51 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     
     function user_info($userAccount){	// User állpot a Nextcloudban
         global $occ_path,$occ_user,$log;
-            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:info ".escp($userAccount)." --output=json \"";
-            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
-            $ret = (array)json_decode(shell_exec($e),true);
-            if ($log['verbose'] > 10 ){ print_r($ret); }
-            return $ret;
+        $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:info ".escp($userAccount)." --output=json \"";
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+        $ret = (array)json_decode(shell_exec($e),true);
+        if ($log['verbose'] > 10 ){ print_r($ret); }
+        return $ret;
     }
-
 
     function user_dis($userAccount){	// letiltja a felhasználót a Nextcloud-ban
         global $occ_path,$occ_user,$log,$dryrun;
-            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:disable ".escp($userAccount)." \"";
-            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
-            if(!$dryrun){ $ret = shell_exec($e); } else { $ret = true; }
-            if ($log['verbose'] > 11 ){ print_r($ret); }
+        $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:disable ".escp($userAccount)." \"";
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+        if(!$dryrun){ $ret = shell_exec($e); } else { $ret = true; }
+        if ($log['verbose'] > 11 ){ print_r($ret); }
     }
 
     function user_ena($userAccount){	// engedélyezi
         global $occ_path,$occ_user,$log,$dryrun;
-            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:enable ".escp($userAccount)." \"";
-            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
-            if(!$dryrun){ $ret = shell_exec($e); } else { $ret = true; }
-            if ($log['verbose'] > 11 ){ print_r($ret); }
+        $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:enable ".escp($userAccount)." \"";
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+        if(!$dryrun){ $ret = shell_exec($e); } else { $ret = true; }
+        if ($log['verbose'] > 11 ){ print_r($ret); }
     }
 
 
     function nxt_group_list() {		// Csoportok listázása a Nextcloud-ból
-            global $occ_path,$occ_user,$log;
-            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." group:list --limit=1000000 --output=json \"";  //* Jó nagy limittel dolgozzunk
-            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
-            $ret = (array)json_decode(shell_exec($e),true);
-            if ($log['verbose'] > 10 ){ print_r($ret); }
-            return $ret;
+        global $occ_path,$occ_user,$log;
+        $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." group:list --limit=1000000 --output=json \"";  //* Jó nagy limittel dolgozzunk
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+        $ret = (array)json_decode(shell_exec($e),true);
+        if ($log['verbose'] > 10 ){ print_r($ret); }
+        return $ret;
     }
     
     function nxt_user_list() {		// Felhasználók listázása a Nextcloud-ból
-            global $occ_path,$occ_user,$log;
+        global $occ_path,$occ_user,$log;
         //    $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:report | grep 'total' | sed -e 's/[^0-9]//g' | tr -d '[:blank:]\n' \"";
         //    if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
         //    $num = shell_exec($e); 
-            $num = 1000000;      //inkább kézi limit!
+        $num = 1000000;      //inkább kézi limit!
         //    $num = $num + 100; 	// Biztos-ami-biztos, a nextcloud rejtett hibái miatt...
-            $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:list --limit ".escp($num)." --output=json \"";
-            if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
-            $ret =  (array)json_decode(shell_exec($e),true);
-            if ($log['verbose'] > 10 ){ print_r($ret); }
-            return $ret;
+        $e = "su -s /bin/sh $occ_user -c \"".phpv()." ".escp($occ_path."/occ")." user:list --limit ".escp($num)." --output=json \"";
+        if($log['verbose'] > 7) { echo "bash ->\t".$e."\n"; }
+        $ret =  (array)json_decode(shell_exec($e),true);
+        if ($log['verbose'] > 10 ){ print_r($ret); }
+        return $ret;
     }
     
     function nxt_user_lastlogin($userAccount){ 	// legutóbbi belépés lekérdezése
@@ -404,8 +950,9 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         }
     } 
     
-    function group_del($groupName, $grp){	// Csoport törlése a Nextcloud-ból
+    function group_del($groupName){	// Csoport törlése a Nextcloud-ból
         global $occ_user,$occ_path,$cfg,$link,$log,$cfg,$nxt_version,$dryrun;
+        $grp = nxt_group_list();
         $groupName = rmnp($groupName);
         if(isset($grp[$groupName])){
 	        if($nxt_version < 14){	// Mivel erre csak a Nextcloud 14-től van "occ" parancs, ezért néha közvetlenül kell...
@@ -834,7 +1381,6 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     }
     
 
-
 //--------------------------------------------------------------------------------------------------------------------------------------------//
 // RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN  --  RUN //
 //--------------------------------------------------------------------------------------------------------------------------------------------//
@@ -866,7 +1412,100 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
 
     
 
-//-------------------------------------------------------------------------------------------------------------------------------    
+
+
+
+
+
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+$ld = ldap_open();
+
+
+
+
+
+
+
+
+
+
+
+
+
+$dn = "dc=ad,dc=bmrg,dc=lan"; 
+$filter = "(objectclass=*)";
+$attr = array("mail", "sn");
+
+$aa = ldap_find($ld,$dn,$filter);
+//print_r($aa);
+
+
+
+$attr=array();
+$attr['fullName']           = "fn Teszt Elek";
+$attr['email']              = "elek@suli.hu";
+$attr['oId']                = "75999888777";
+$attr['employeeId']         = "123AA";
+$attr['osztalyJel']         = "12.c";
+$attr['viseltNevElotag']    = "Msgr.";
+$attr['viseltCsaladinev']   = "Teszt";
+$attr['viseltUtonev']       = "Elek";
+//$attr['lakhelyOrszag']      = "Magyarország";
+$attr['lakhelyHelyseg']     = "Pilisborosjenő";
+$attr['lakhelyIrsz']        = "";
+$attr['lakHely']            = "Boros utca 19.";
+$attr['telefon']            = "1234567";
+$attr['mobil']              = "06700000000";
+$attr['statusz']            = "jogviszonyban van";
+$attr['beoszt']             = "Diák";
+$attr['quota']              = "4GB";
+$attr['vegzoTanev']         = 3001;
+
+        
+echo "\nUser:\n";
+$rv = ld_user_add($ld, 'bbb', '', $attr);
+print_r($rv);
+
+echo "g add\n";
+print_r(ld_group_add($ld, "(tk) 10.c Tééészta"));
+echo "g u add\n";
+print_r(ld_group_user_add($ld, "bmrg_cloud", "bbb", "global"));
+echo "g u add\n";
+print_r(ld_group_user_add($ld, "(tk) 10.c Tééészta", "aaa", "own"));
+
+echo "g u add\n";
+print_r(ld_group_user_add($ld, "(tk) 10.c Tééészta", "23bbmp", "own"));
+
+echo "g del\n";
+print_r(ld_group_del($ld, "(tk) 10.c Tééészta", ""));
+
+print_r(ld_user_info($ld, "bbb"));
+
+echo "u del\n";
+print_r(ld_user_del($ld, "gergo111"));
+
+
+ldap_close($ld);
+die();
+
+
+
+
+
+
+
+
+
+
+
+
+
+ //-------------------------------------------------------------------------------------------------------------------------------    
     $ret = nxt_get_version();
     $nxt_version = $ret[1];
     if($ret[1] < 13){         //Nextcloud 13-tól támogatott
@@ -910,7 +1549,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     // group_add($cfg['mindenki_tanar']);				// A "mindenki"/tanár csoport hozzáadása
     // group_add($cfg['mindenki_diak']);				// A "mindenki"/diák csoport hozzáadása
 
-//------------------------------------------------------------------------------------------------------------------------------
+ //------------------------------------------------------------------------------------------------------------------------------
 
 // Létrehozza az új coportokat a Mayor tankörök szerint
     if ($log['verbose'] > 0 ){ echo "\n***\tCsoportok egyeztetése.\n";}
@@ -919,7 +1558,6 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     $tankorok = array_merge($tankorok, array( array("tankorId" => 0, "tankorNev" => $cfg['mindenki_tanar'] )));
     $tankorok = array_merge($tankorok, array( array("tankorId" => 0, "tankorNev" => $cfg['mindenki_diak'] )));
     $nxt_csop = nxt_group_list();
-    $nxt_csop2 = nxt_group_list();                                                              //Gyorsítási célzattal, mert lassú
     $elozo_tcsop = "";
     $mod_nxt_group = 0;
     if($cfg['manage_groups'] === true){
@@ -945,7 +1583,7 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
         // A megszűnt tanköröket-csoportokat kitörli 
         foreach($nxt_csop as $key => $val){           
             if(substr($key, 0, strlen($cfg['csoport_prefix'])) === $cfg['csoport_prefix'] ){	//Csak a "prefix"-el kezdődő nevűekre.
-                group_del($key, $nxt_csop2);									                            //elvégzi a törlést
+                group_del($key);									                            //elvégzi a törlést
                 $mod_nxt_group++;
                 if ($log['verbose'] > 1 ){ echo "** -\t Megszűnő csop:".po("\t$key",$cfg['csoportnev_hossz'],1)."-\t eltávolítva.\n";}
             } else {
@@ -1225,9 +1863,90 @@ if (function_exists('mysqli_connect') and version_compare(phpversion(), '5.0', '
     if ($log['verbose'] > 0 ){ echo "\n(Runtime: ".$t_run." min.)\nkész.\n";} //endline
  
 } else {
-    echo "\n\n******** Legalább PHP5 és mysqli szükséges! ********\n\n";
+    echo "\n\n******** Legalább PHP5, php-mysql, php-iconv, php-ldap szükséges! ********\n\n";
 }
  
+
+
+/*
+sn:: Vezetéknév
+serialNumber:: sorozatszám2
+serialNumber:: sorozatszám1
+c: HU
+l:: Telepulés
+st:: Megyé
+street:: Utcá
+title:: Beosztás
+description:: Leirás
+postalAddress:: postaiCímx2
+postalAddress:: postaiCímX1
+postalCode:: Iranyitoszám
+postOfficeBox:: Postafiók
+physicalDeliveryOfficeName:: Irodá
+telephoneNumber:: tel0é
+facsimileTelephoneNumber:: tel_faxé0
+givenName:: Utónév
+initials:: MónoGR
+otherTelephone: 000111222333
+otherTelephone: telefon1
+info:: Megjegyzés 2.0
+memberOf: CN=suli_mail,OU=suli-mail,DC=ad,DC=suli,DC=lan
+memberOf: CN=suli_edu,OU=suli-edu,DC=ad,DC=suli,DC=lan
+memberOf: CN=suli_cloud,OU=suli-cloud,DC=ad,DC=suli,DC=lan
+otherPager: 1212
+otherPager: 2323
+otherPager: tel_szemelyhivo1
+co:: Magyarország
+department:: Ország
+company:: Cég
+streetAddress:: Utca\n Neve \n Hosszú
+otherHomePhone: 0101
+otherHomePhone: 11223344
+otherHomePhone: tel_otthon1
+wWWHomePage:: webé0
+employeeNumber:: emplNumé
+employeeType:: emltypeé
+personalTitle:: személyiCím
+homePostalAddress:: otthonicím
+name:: Teljes Név
+countryCode: 348
+employeeID:: employeIDé
+homeDirectory: C:\totalcmd
+comment:: kóómment
+sAMAccountName: ggg
+division:: diviízió
+otherFacsimileTelephoneNumber: 2323
+otherFacsimileTelephoneNumber: tel_fax1
+otherMobile: tel_mobil1
+primaryTelexNumber: Telex
+otherMailbox:: másikl1@email
+otherMailbox:: másik2@email
+ipPhone:: tel_ipí0
+otherIpPhone: 00000
+otherIpPhone: tel_ip1
+url: weblap2
+url: http://weblap1
+uid: uid2
+uid: uid1
+mail:: eméail@email.com
+roomNumber:: szobaszám2
+roomNumber:: szobaszám1
+homePhone:: tel_otthoní0
+mobile:: tel_mobiló0
+pager:: tel_szemelyhivó0
+jpegPhoto::
+departmentNumber:: departmentNumber2é
+departmentNumber:: departmentNumber1á
+middleName:: középsőNév
+thumbnailPhoto::
+preferredLanguage: nyelv
+uidNumber: 1601
+gidNumber: 1601
+unixHomeDirectory: /home/aa/bb
+loginShell: /bin/bash
+*/   
+
+
 
 
 ?>
