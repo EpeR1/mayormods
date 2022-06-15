@@ -1,7 +1,8 @@
 #!/bin/bash
 
 
-git checkout MaYor-dev
+#git checkout MaYor-dev
+git checkout master
 
 if [ $? == 0 ]; then
 	orev=$(cat rev.txt)
@@ -40,7 +41,7 @@ if [ $? == 0 ]; then
 
 	fi
 
-	git checkout @{-1}
+#	git checkout @{-1}
 fi
         
  
