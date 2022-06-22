@@ -56,7 +56,7 @@
 	    $D = $ADAT['level'][$i];
 	    $eredmeny = $D['vegeredmeny'];
 
-	    if (strstr($D['vegeredmeny'],'nem nyert')!==false) $eredmeny=0; elseif(strstr($D['extra'],'9.')!==false) $eredmeny = 3; else $eredmeny=0;
+	    if (strstr($D['vegeredmeny'],'nem nyert')!==false) $eredmeny=0; elseif(strstr($D['extra'],'202')!==false) $eredmeny = 3; else $eredmeny=0;
 
 $A['eü. 9.B']=array('osztalyJel'=>'9.B', 'tagozatNev'=>'Technikumi képzés egészségügyi ágazatban');
 $A['eü. 9.C']=array('osztalyJel'=>'9.C', 'tagozatNev'=>'Technikumi képzés egészségügyi ágazatban');
@@ -65,6 +65,11 @@ $A['nyek 9/Ny.N']=array('osztalyJel'=>'9/Ny.N', 'tagozatNev'=>'Gimnáziumi képz
 $A['ped 9.C']=array('osztalyJel'=>'9.C', 'tagozatNev'=>'Szakgimnáziumi képzés pedagógiai ágazatban');
 $A['szoc 9.C']=array('osztalyJel'=>'9.C', 'tagozatNev'=>'Technikumi képzés szociális ágazatban');
 
+$A['2022/a/eü']=array('osztalyJel'=>'9.A', 'tagozatNev'=>'Technikumi képzés egészségügyi ágazatban');
+$A['2022/b/szoc']=array('osztalyJel'=>'9.B', 'tagozatNev'=>'Technikumi képzés szociális ágazatban');
+$A['2022/g/gimi']=array('osztalyJel'=>'9.G', 'tagozatNev'=>'Gimnáziumi képzés');
+$A['2022/ny/nyek']=array('osztalyJel'=>'9/Ny.N', 'tagozatNev'=>'Gimnáziumi képzés nyelvi előkészítő évfolyammal');
+$A['2022/b/ped']=array('osztalyJel'=>'9.B', 'tagozatNev'=>'Szakgimnáziumi képzés pedagógiai ágazatban');
 
 	    $nev = $D['nev'];
 	    $kernev = $nev;
@@ -98,10 +103,10 @@ $A['szoc 9.C']=array('osztalyJel'=>'9.C', 'tagozatNev'=>'Technikumi képzés szo
 		$TeX .= '('.$A[$D['extra']]['tagozatNev'].")\n\n";
 		$TeX .= '\end{center}'."\n\n";
 		//if (defined('_SZULOI_ERTEKEZLET_IDOPONTBAN')) {
-		    $TeX .= 'Tájékoztatom, hogy az első szülői értekezlet 2021. május 17-én (hétfőn) 17:30-kor lesz, amelyre ezúton hívom meg a Szülőket. A további teendőkkel (pl. beiratkozás, nyelvi szintfelmérő stb.) kapcsolatos teendőkért kérjük ne felejtsék el rendszeresen felkeresni honlapunkat.'."\n";
+		    $TeX .= 'Tájékoztatom, hogy az első szülői értekezlet 2022. május 16-án (hétfőn) 17:00-kor lesz, amelyre ezúton hívom meg a Szülőket. A további teendőkkel (pl. beiratkozás, nyelvi szintfelmérő stb.) kapcsolatos teendőkért kérjük ne felejtsék el rendszeresen felkeresni honlapunkat.'."\n";
 		//}
 
-		$TeX .= 'Figyelembe véve a jelenlegi vírushelyzetet, a nyár folyamán két (egymástól különböző) gólya-napot fogunk tartani. Ezekről bővebb tájékoztatást a szülői értekezleten kapnak majd.'."\n";
+#		$TeX .= 'Figyelembe véve a jelenlegi vírushelyzetet, a nyár folyamán két (egymástól különböző) gólya-napot fogunk tartani. Ezekről bővebb tájékoztatást a szülői értekezleten kapnak majd.'."\n";
 		$TeX .= "\n\n";
         	$TeX .= '\vspace{14pt}'."\n";
 		$TeX .= 'Remélem, az iskolánkban eltöltött évek hasznosak és eredményesek lesznek.'."\n\n";
@@ -130,7 +135,7 @@ $A['szoc 9.C']=array('osztalyJel'=>'9.C', 'tagozatNev'=>'Technikumi képzés szo
     	    }
 	    $TeX .= '}'."\n";
             $TeX .= '\vspace{20pt}'."\n";
-            $TeX .= '\noindent Budapest, 2021. április 26.'.' \par%'."\n";
+            $TeX .= '\noindent Budapest, 2022. április 23.'.' \par%'."\n";
 
 
             $TeX .= '\vspace{14pt}'."\n\n";
@@ -173,7 +178,7 @@ $TeX .= '\end{tabular}'."\n";
         if ($ADAT['tartozkodasi_telepules']!='') $TeX.= "Levelezési cím: ".$ADAT['tartozkodasi_telepules'].', '.$ADAT['tartozkodasi_irsz'].' '.$ADAT['tartozkodasi_utcahazszam']."\n\n";
 	$TeX.= "Oktatási azonosító: ".$ADAT['oId']."\n\n";
 	$TeX.= "MaYoR azonosító: ".$ADAT['felveteliId'].'/'.$ADAT['omkod']."\n\n";
-	$TeX.= "Iktatószám: C8-62/2021"."\n\n";
+	$TeX.= "Iktatószám: C8-144/2022"."\n\n";
 	$TeX.= "Tárgy: Értesítés ".$ADAT['nev']." (".str_replace('_','',$ADAT['an'])." ".str_replace('-','.',$ADAT['szuldt']).".) felvételi eredményéről\n\n";
 
 #        $TeX.= '\hrule%'."\n";

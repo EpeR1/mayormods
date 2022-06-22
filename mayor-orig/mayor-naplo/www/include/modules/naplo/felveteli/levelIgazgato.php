@@ -5,7 +5,8 @@
 	for ($i=0; $i<count($ADAT['diak']); $i++) {
 	    $D = $ADAT['diak'][$i];
 	    $omkod = $ADAT['diak'][$i]['omkod'];
-	    if (strstr($D['vegeredmeny'],'nem nyert')!==false) $eredmeny=0; elseif(strstr($D['extra'],'9.')!==false) $eredmeny = 3; else $eredmeny=0;
+	    //if (strstr($D['vegeredmeny'],'nem nyert')!==false) $eredmeny=0; elseif(strstr($D['extra'],'9.')!==false) $eredmeny = 3; else $eredmeny=0;
+      if (strstr($D['vegeredmeny'],'nem nyert')!==false) $eredmeny=0; elseif(strstr($D['extra'],'202')!==false) $eredmeny = 3; else $eredmeny=0;
 	    if ($eredmeny>2) $DATA[$omkod]['ok'][] = $ADAT['diak'][$i];
 	    else $DATA[$omkod]['nemok'][] = $ADAT['diak'][$i];
 	}
@@ -55,7 +56,7 @@
 
 	    $TeX .= '\begin{flushleft}'."\n";
 
-	    $TeX .= putTeXIgLevelFejlec($ADAT['iskola'][$omkod],'C8-62/2021');
+	    $TeX .= putTeXIgLevelFejlec($ADAT['iskola'][$omkod],'C8-165/2022');
 
 	    $TeX .= '\end{flushleft}'."\n";
 
@@ -108,7 +109,7 @@
 
 	    $TeX .= '}'."\n";
             $TeX .= '\vspace{20pt}'."\n";
-            $TeX .= '\noindent Budapest, 2021. április 30. \par%'."\n";
+            $TeX .= '\noindent Budapest, 2022. május 10. \par%'."\n";
 
             $TeX .= '\vspace{14pt}'."\n\n";
 	    if ($eredmeny > 2 ) $TeX .= '\vspace{14pt}'."\n\n";

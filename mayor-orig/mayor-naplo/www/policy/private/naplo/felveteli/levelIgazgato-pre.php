@@ -39,11 +39,11 @@
 //		$mail->SMTPAuth = true;
 //		$mail->Username = _FELVETELI_SMTP_USERNAME;
 //		$mail->Password = _FELVETELI_SMTP_PASSWORD;
-		$mail->setFrom('ig@kanizsay.sulinet.hu', 'Kanizsay Dorottya Katolikus Gimnázium, Egészségügyi Technikum és Szakképző Iskola');
-		$mail->addReplyTo('titkarsag@kanizsay.sulinet.hu', 'Kanizsay Dorottya');
-//		$mail->addAddress($ADAT['iskola'][$_om]['email'], 'Igazgató');
-		$mail->addAddress('konczy@gmail.com', 'Igazgató');  //echo $ADAT['iskola'][$_om]['email'];
-		$mail->Subject = 'Értesítés felvételi eredményekről - 2021/2022-es beiskolázás';
+		$mail->setFrom('ig@kanizsay.edu.hu', 'Kanizsay Dorottya Katolikus Gimnázium, Egészségügyi Technikum és Szakképző Iskola');
+		$mail->addReplyTo('titkarsag@kanizsay.edu.hu', 'Kanizsay Dorottya');
+//!		$mail->addAddress($ADAT['iskola'][$_om]['email'], 'Igazgató');
+		$mail->addAddress('konczy@gmail.com', 'Igazgató');
+		$mail->Subject = 'Értesítés felvételi eredményekről - 2022/2023-as beiskolázás';
 		$mail->msgHTML("A levelet a MaYoR elektronikus napló generálta PDF csatolmány tartalmazza.");
 		$mail->AltBody="A levelet a MaYoR elektronikus napló generálta PDF csatolmány tartalmazza.";
 		$mail->addAttachment(_DOWNLOADDIR."/private/naplo/felveteli/levelIgazgato/".$file.'.pdf');
