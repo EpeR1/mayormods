@@ -525,7 +525,7 @@ function getOsztalyfonok($osztalyId, $tanev=__TANEV, $olr = null) {
 	initTolIgDt($tanev, $kDt, $zDt);
         
 	$q = "SELECT osztalyTanar.tanarId,
-		TRIM(CONCAT(viseltNevElotag,' ',viseltCsaladiNev,' ',viseltUtonev)) As tanarNev, osztalyTanar.beDt, osztalyTanar.kiDt
+		TRIM(CONCAT(IFNULL(viseltNevElotag,''),' ',viseltCsaladiNev,' ',viseltUtonev)) As tanarNev, osztalyTanar.beDt, osztalyTanar.kiDt
 			FROM osztalyTanar LEFT JOIN tanar USING (tanarId)
 			WHERE osztalyId = %u
 			AND osztalyTanar.beDt <= '%s'
@@ -544,7 +544,7 @@ function getOsztalyfonokok($osztalyId, $tanev = null, $olr = null) {
     if (is_null($tanev)) {
 
 	$q = "SELECT osztalyTanar.tanarId AS tanarId,
-		    TRIM(CONCAT(viseltNevElotag,' ',viseltCsaladiNev,' ',viseltUtonev)) AS tanarNev,
+		    TRIM(CONCAT(IFNULL(viseltNevElotag,''),' ',viseltCsaladiNev,' ',viseltUtonev)) AS tanarNev,
 		    osztalyTanar.beDt AS beDt,
 		    osztalyTanar.kiDt AS kiDt
 		FROM osztalyTanar LEFT JOIN tanar USING (tanarId)
@@ -561,7 +561,7 @@ function getOsztalyfonokok($osztalyId, $tanev = null, $olr = null) {
 	$kDt = $tanevAdat['kezdesDt']; $zDt = $tanevAdat['zarasDt']; 
 
 	$q = "SELECT osztalyTanar.tanarId AS tanarId,
-		    TRIM(CONCAT(viseltNevElotag,' ',viseltCsaladiNev,' ',viseltUtonev)) AS tanarNev,
+		    TRIM(CONCAT(IFNULL(viseltNevElotag,''),' ',viseltCsaladiNev,' ',viseltUtonev)) AS tanarNev,
 		    osztalyTanar.beDt AS beDt,
 		    osztalyTanar.kiDt AS kiDt
 		FROM osztalyTanar LEFT JOIN tanar USING (tanarId)
