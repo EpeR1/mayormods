@@ -50,12 +50,12 @@
 	if ($SET['targyId'] != '') {
 	    if (count($where) > 0) $W = 'AND ' . implode(' AND ',$where);
 	    
-	    $q1 = "SELECT tanar.tanarId AS tanarId, TRIM(CONCAT_WS(' ',viseltNevElotag, ViseltCsaladiNev, viseltUtoNev)) AS tanarNev, statusz, 
+	    $q1 = "SELECT tanar.tanarId AS tanarId, TRIM(CONCAT_WS(' ',IFNULL(viseltNevElotag,''), ViseltCsaladiNev, viseltUtoNev)) AS tanarNev, statusz, 
 		    hetiKotelezoOraszam,hetiLekotottMinOraszam,hetiLekotottMaxOraszam,hetiKotottMaxOraszam,hetiMunkaora
 			$extraAttrs
 		FROM ".__INTEZMENYDBNEV.".targy LEFT JOIN ".__INTEZMENYDBNEV.".mkTanar USING (mkId) LEFT JOIN ".__INTEZMENYDBNEV.".tanar USING (tanarId)
 		WHERE targyId=%u AND tanarId IS NOT NULL ".$W;
-	    $q2 = "SELECT tanar.tanarId AS tanarId, TRIM(CONCAT_WS(' ',viseltNevElotag, ViseltCsaladiNev, viseltUtoNev)) AS tanarNev, statusz,
+	    $q2 = "SELECT tanar.tanarId AS tanarId, TRIM(CONCAT_WS(' ',IFNULL(viseltNevElotag,''), ViseltCsaladiNev, viseltUtoNev)) AS tanarNev, statusz,
 		    hetiKotelezoOraszam,hetiLekotottMinOraszam,hetiLekotottMaxOraszam,hetiKotottMaxOraszam,hetiMunkaora
 			$extraAttrs
 		FROM ".__INTEZMENYDBNEV.".kepesitesTargy LEFT JOIN ".__INTEZMENYDBNEV.".tanarKepesites USING (kepesitesId) LEFT JOIN ".__INTEZMENYDBNEV.".tanar USING (tanarId)
@@ -65,7 +65,7 @@
 	    $q = "(".$q1.") UNION DISTINCT (".$q2.") ORDER BY tanarNev,tanarId";
 	} elseif ($SET['mkId'] == '') {
 	    if (count($where) > 0) $W = 'WHERE ' . implode(' AND ',$where);
-	    $q = "SELECT tanarId, TRIM(CONCAT_WS(' ',viseltNevElotag, ViseltCsaladiNev, viseltUtoNev)) AS tanarNev, statusz,
+	    $q = "SELECT tanarId, TRIM(CONCAT_WS(' ',IFNULL(viseltNevElotag,''), ViseltCsaladiNev, viseltUtoNev)) AS tanarNev, statusz,
 		    hetiKotelezoOraszam,hetiLekotottMinOraszam,hetiLekotottMaxOraszam,hetiKotottMaxOraszam,hetiMunkaora 
 			$extraAttrs
 		FROM ".__INTEZMENYDBNEV.".tanar 
@@ -73,7 +73,7 @@
 		$W ORDER BY CONCAT_WS(' ', ViseltCsaladiNev, viseltUtoNev)";
 	} else {
 	    if (count($where) > 0) $W = 'AND ' . implode(' AND ',$where);
-	    $q = "SELECT tanar.tanarId AS tanarId, TRIM(CONCAT_WS(' ',viseltNevElotag, ViseltCsaladiNev, viseltUtoNev)) AS tanarNev, statusz,
+	    $q = "SELECT tanar.tanarId AS tanarId, TRIM(CONCAT_WS(' ',IFNULL(viseltNevElotag,''), ViseltCsaladiNev, viseltUtoNev)) AS tanarNev, statusz,
 		    hetiKotelezoOraszam,hetiLekotottMinOraszam,hetiLekotottMaxOraszam,hetiKotottMaxOraszam,hetiMunkaora
 			$extraAttrs
 		FROM ".__INTEZMENYDBNEV.".tanar LEFT JOIN ".__INTEZMENYDBNEV.".mkTanar USING (tanarId)
@@ -86,7 +86,7 @@
 
     function getTanarNevById($tanarId, $olr = null) {
 
-	$q = "SELECT TRIM(CONCAT_WS(' ', viseltNevElotag, viseltCsaladiNev, viseltUtonev)) AS tanarNev
+	$q = "SELECT TRIM(CONCAT_WS(' ', IFNULL(viseltNevElotag,''), viseltCsaladiNev, viseltUtonev)) AS tanarNev
 		FROM ".__INTEZMENYDBNEV.".tanar WHERE tanarId=%u";
 	return db_query($q, array('fv' => 'getTanarNevById', 'modul' => 'naplo_intezmeny', 'result' => 'value', 'values' => array($tanarId)), $olr);
 
@@ -99,7 +99,7 @@
 
     function getSzabadTanarok($dt, $ora, $olr = '') {
 
-	$q = "SELECT tanar.tanarId AS tanarId, TRIM(CONCAT_WS(' ',viseltNevElotag, ViseltCsaladiNev, viseltUtoNev)) AS tanarNev
+	$q = "SELECT tanar.tanarId AS tanarId, TRIM(CONCAT_WS(' ',IFNULL(viseltNevElotag,''), ViseltCsaladiNev, viseltUtoNev)) AS tanarNev
 		FROM ".__INTEZMENYDBNEV.".tanar LEFT JOIN ora ON tanarId=ki AND dt='%1\$s' and ora=%2\$u
 		WHERE ki IS NULL AND beDt<='%1\$s' and (kiDt IS NULL OR kiDt>='%1\$s')
 		ORDER BY CONCAT_WS(' ', ViseltCsaladiNev, viseltUtoNev)";
@@ -109,7 +109,7 @@
 
     function getFoglaltTanarok($dt, $ora, $olr = '') {
 
-	$q = "SELECT DISTINCT tanar.tanarId AS tanarId, TRIM(CONCAT_WS(' ',viseltNevElotag, ViseltCsaladiNev, viseltUtoNev)) AS tanarNev
+	$q = "SELECT DISTINCT tanar.tanarId AS tanarId, TRIM(CONCAT_WS(' ',IFNULL(viseltNevElotag,''), ViseltCsaladiNev, viseltUtoNev)) AS tanarNev
 		FROM ".__INTEZMENYDBNEV.".tanar LEFT JOIN ora ON tanarId=ki AND dt='%1\$s' and ora=%2\$u
 		WHERE ki IS NOT NULL AND beDt<='%1\$s' and (kiDt IS NULL OR kiDt>='%1\$s')
 		ORDER BY CONCAT_WS(' ', ViseltCsaladiNev, viseltUtoNev)";
@@ -120,7 +120,7 @@
     function getTanarAdatById($tanarIds, $olr = '') {
 
         if (!is_array($tanarIds)) $tanarIds = array($tanarIds);
-        $q = "SELECT *,TRIM(CONCAT_WS(' ',viseltNevElotag, ViseltCsaladiNev, viseltUtoNev)) AS tanarNev FROM ".__INTEZMENYDBNEV.".tanar WHERE tanarId IN (".implode(',', array_fill(0, count($tanarIds), '%u')).")";
+        $q = "SELECT *,TRIM(CONCAT_WS(' ',IFNULL(viseltNevElotag,''), ViseltCsaladiNev, viseltUtoNev)) AS tanarNev FROM ".__INTEZMENYDBNEV.".tanar WHERE tanarId IN (".implode(',', array_fill(0, count($tanarIds), '%u')).")";
 	$R = db_query($q, array('fv' => 'getTanarAdatById', 'modul' => 'naplo_intezmeny', 'result' => 'indexed', 'values' => $tanarIds), $olr);
 //	for ($i=0; $i<count($R); $i++) {
 //	    $q2 = "SELECT osztalyId
