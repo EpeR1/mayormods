@@ -185,6 +185,7 @@
 
 
     $ADAT['termek'] = getTermek(array('result'=>'assoc'));
+    $ADAT['szabadTermek'] = getSzabadTermekByDtInterval($tolDt,$igDt,'');
     $ADAT['tanarok'] = getTanarok(array('result'=>'assoc'));
 // =====================
     if ($tankorId!='') {

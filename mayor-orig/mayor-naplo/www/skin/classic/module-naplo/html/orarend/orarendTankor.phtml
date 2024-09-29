@@ -38,7 +38,14 @@
 				    $_targyJel = $T[$nap][$ora][$i]['targyJel'];
 				    $_osztalyJel = $T[$nap][$ora][$i]['osztalyJel'];
 				    $_teremId = ($T[$nap][$ora][$i]['teremId']=='')?'-':$T[$nap][$ora][$i]['teremId'];
-				    echo '<pre style="text-align: left">';
+
+            // INFOBOX
+            if ($ADAT['assoc'][$nap][$ora]['orak'][$i]['tankorId'] >0 ) {
+              $_cls="background-color: lightgreen; ";
+            } else {
+              $_cls='';
+            }
+            echo '<pre style="text-align: left ;'.$_cls.'">';
 				    echo "targyJel:    $_targyJel\n";
 				    echo "osztalyJel:  $_osztalyJel\n";
 				    echo "teremId:     $_teremId\n";

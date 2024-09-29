@@ -156,6 +156,7 @@ CREATE TABLE `diak` (
   `megjegyzes` varchar(255) collate utf8_hungarian_ci default null,
   `NEKAzonosito` varchar(16) COLLATE utf8_hungarian_ci DEFAULT NULL,
   `torzslapszam` varchar(32) COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `kretaFelhasznaloId` int(11) DEFAULT NULL,
   PRIMARY KEY (`diakId`),
   UNIQUE KEY `diakOid` (`oId`),
   KEY `kezdoTanev` (`kezdoTanev`,`kezdoSzemeszter`),
