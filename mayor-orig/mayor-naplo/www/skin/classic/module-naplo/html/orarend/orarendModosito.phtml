@@ -146,7 +146,7 @@
 					}
 					echo ', ';
 					echo '<span title="'.$_ferohely.'/'.$_letszam.'" class="t'.( ($_ferohely!=0 && $_ferohely<$_letszam) ? 0 : 1).'">'.$ADAT['termek'][$_T['teremId']]['leiras'].'</span>';
-					_putTerem(array('name'=>'T_'.$het.'_'.$nap.'_'.$ora.'_'.$_T['tanarId'].'_'.$_kulcsTolDt, 'teremId'=>$_T['teremId']),$ADAT['termek']);
+          _putTerem(array('name'=>'T_'.$het.'_'.$nap.'_'.$ora.'_'.$_T['tanarId'].'_'.$_kulcsTolDt, 'teremId'=>$_T['teremId'], 'szabadTermek'=> $ADAT['szabadTermek'][$dt][$ora]),$ADAT['termek']);
 					echo '<br/>';
 					if ($_ORA['kit']!='') {
 					    echo '<span class="helyett tanarAdat tanarNev" data-tanarid="'.$_T['tanarId'].'">';
@@ -346,12 +346,13 @@ for ($oi=0; $oi<count($ADAT['orarendioraTankor']['orarendiOra'][$het][$nap][$ora
 	    echo '<option value="NULL" >'.'</option>'."\n";
 	    foreach ($TERMEK as $_teremId => $_T) { // leiras|ferohely|tipus|telephely
 		$_SEL = ($ADAT['teremId']==$_T['teremId']) ? ' selected="selected" ' : '';
+    $_elerheto = (in_array($_teremId,$ADAT['szabadTermek'])) ? '': ($_SEL=='' ? ' FOGLALT! ': '***');
 		if ($_T['tipus'] == $_T['leiras']) $_leiras = $_T['tipus']; else $_leiras = $_T['leiras'].' ('.$_T['tipus'].')';
-		if ($ADAT['teremId']==$_T['teremId']) {
-		    echo '<option class="orig" value="" '.$_SEL.'>***'.$_T['leiras'].' ['.$_T['ferohely'].'] '.$_T['tipus'].'</option>'."\n";
-		} else {
-		    echo '<option value="'.$_T['teremId'].'" '.$_SEL.'>'. $_leiras .' ['.$_T['ferohely'].']'.'</option>'."\n";
-		}
+    if ($ADAT['teremId']==$_T['teremId']) {
+        echo '<option class="orig" value="" '.$_SEL.'>***'.$_T['leiras'].' ['.$_T['ferohely'].'] '.$_T['tipus'].' '.$_elerheto.'</option>'."\n";
+    } else {
+        echo '<option value="'.$_T['teremId'].'" '.$_SEL.'>'. $_leiras .' ['.$_T['ferohely'].']'.$_elerheto.'</option>'."\n";
+    }
 	    }
 	echo '</select>';
     }
